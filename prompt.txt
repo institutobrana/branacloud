@@ -1,0 +1,325 @@
+📘 RESUMO DO PROJETO – SISTEMA DE PRECIFICAÇÃO
+
+Python + PySide2 + Peewee + PyInstaller
+
+🔹 VISÃO GERAL
+
+Este projeto é um sistema desktop de precificação, desenvolvido em Python 3.10, utilizando PySide2 (Qt Designer) para a interface gráfica, Peewee ORM para persistência de dados e SQLite como banco local.
+
+O sistema gerencia listas de materiais, custos, preços, relações e cálculos financeiros, servindo como base para análises de lucratividade e expansão futura (ex.: cenários, indicadores, gráficos).
+
+O projeto está estruturado para funcionar tanto em ambiente Python quanto empacotado em executável (.exe) para Windows.
+
+🔹 TECNOLOGIAS UTILIZADAS
+
+Linguagem: Python 3.10.x
+
+Interface gráfica: PySide2 (Qt for Python)
+
+ORM: Peewee
+
+Banco de dados: SQLite (dados.db)
+
+Gráficos: Matplotlib
+
+Empacotamento: PyInstaller
+
+Sistema alvo: Windows 64-bit
+
+🔹 ESTRUTURA ATUAL DO PROJETO
+PROJETO_PRECIFICACAO/
+│
+├── main.py                         → Arquivo principal de execução
+├── precificacao.spec               → Arquivo .spec oficial do PyInstaller
+├── dados.db                        → Banco de dados SQLite
+│
+├── app/
+│   ├── database.py                 → Conexão com o banco
+│   ├── models.py                   → Modelos Peewee
+│   └── views/
+│       ├── interface_principal.py  → Menu principal
+│       ├── materiais_view.py       → Tela de materiais
+│       ├── novo_material_view.py   → Cadastro/edição de material
+│       └── painel_lucratividade_view.py → Painel com gráficos (Matplotlib)
+│
+├── ui/
+│   ├── menu_principal.ui
+│   ├── materiais.ui
+│   ├── novo_material.ui
+│   └── painel_lucratividade.ui
+│
+├── dist/                           → Executável gerado
+├── build/                          → Arquivos temporários do PyInstaller
+│
+├── venv_qt5/                       → Ambiente virtual de DESENVOLVIMENTO
+├── venv_py310/                     → Ambiente virtual de EMPACOTAMENTO
+│
+└── _static/                        → Recursos estáticos (se houver)
+
+🔹 AMBIENTES VIRTUAIS (PADRÃO DEFINITIVO)
+🟢 venv_qt5 — DESENVOLVIMENTO
+
+Usar para:
+
+Programar no VS Code
+
+Abrir e editar .ui no Qt Designer
+
+Testar com python main.py
+
+Ativação:
+
+venv_qt5\Scripts\activate
+
+🔵 venv_py310 — EMPACOTAMENTO (BUILD)
+
+Usar exclusivamente para:
+
+Rodar PyInstaller
+
+Gerar o executável
+
+Testes finais do .exe
+
+Ativação:
+
+venv_py310\Scripts\activate
+
+
+📌 Os ambientes são independentes e devem ser mantidos separados.
+
+🔹 MENU PRINCIPAL (interface_principal.py)
+
+Tipo: QMainWindow
+
+Carrega: menu_principal.ui
+
+Responsável por:
+
+Navegação entre módulos
+
+Inicialização da aplicação
+
+Botões principais:
+
+Materiais
+
+Painel de Lucratividade
+
+Estrutura pronta para Cenário
+
+🔹 TELA DE MATERIAIS (materiais_view.py)
+
+Tipo: QMainWindow
+
+Carrega: materiais.ui
+
+Funcionalidades:
+
+Selecionar Lista de Materiais
+
+Visualizar materiais em QTableWidget
+
+Pesquisar por código ou nome
+
+Criar, editar e excluir materiais
+
+Exibição do total de registros
+
+Ordem das colunas:
+
+Código
+
+Material
+
+Preço
+
+Relação
+
+Custo
+
+🔹 FORMULÁRIO DE MATERIAL (novo_material_view.py)
+
+Tipo real: QDialog
+
+Carregado via QUiLoader
+
+Interface: novo_material.ui
+
+Campos:
+
+Código (numérico, zeros à esquerda)
+
+Nome
+
+Preço
+
+Relação
+
+Custo (somente leitura)
+
+Regras:
+
+Código não pode se repetir dentro da mesma lista
+
+Novo material sugere automaticamente o menor código livre
+
+Cálculo automático:
+
+custo = preco / relacao
+
+
+Exclusão exige confirmação
+
+🔹 PAINEL DE LUCRATIVIDADE
+
+Usa Matplotlib
+
+Exibe gráficos financeiros
+
+Integrado ao PyInstaller via .spec
+
+Dependência incluída corretamente no build
+
+🔹 BANCO DE DADOS
+
+Arquivo: dados.db
+
+ORM: Peewee
+
+O banco não é embutido no executável
+
+O .exe deve estar na mesma pasta do dados.db
+
+Caso não exista, o SQLite cria automaticamente
+
+🔹 RESOURCE_PATH (ESSENCIAL PARA O EXE)
+
+Todos os arquivos .ui e recursos são carregados com:
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
+✔ Funciona no Python
+✔ Funciona no .exe
+
+🔹 EMPACOTAMENTO COM PYINSTALLER (PADRÃO ATUAL)
+Arquivo oficial:
+precificacao.spec
+
+Comando correto:
+pyinstaller precificacao.spec --clean --noconfirm
+
+
+Resultado:
+
+dist\Precificacao.exe
+
+
+📌 Inclusões no .spec:
+
+Pasta ui/
+
+Arquivo dados.db
+
+PySide2
+
+Peewee
+
+Matplotlib
+
+🔹 ESTADO ATUAL DO PROJETO
+
+✅ Menu principal funcional
+✅ Tela de materiais completa
+✅ Cadastro / edição / exclusão funcionando
+✅ Cálculos automáticos corretos
+✅ Painel de lucratividade com gráfico
+✅ Executável funcionando corretamente
+
+🔹 PRÓXIMOS PASSOS PLANEJADOS
+
+Criar módulo Cenário
+
+Consolidar indicadores financeiros
+
+Otimizar tamanho do executável
+
+Criar instalador (setup.exe / MSI)
+
+🔹 COMANDOS ESSENCIAIS (RESUMO RÁPIDO)
+Entrar no projeto:
+cd /d "D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO"
+cd /d "D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO\saas\backend"
+
+cd /d "D:\BRANA ARQUIVOS\BRANA CLOUD"
+venv\Scripts\activate
+cd backend
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+window.DEBUG_TAB_ENGINE = true
+
+Desenvolvimento SaaS:
+venv_saas\Scripts\activate
+uvicorn saas_app:app --reload
+
+http://127.0.0.1:8000/app
+
+Alternativa equivalente:
+cd /d "E:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO\\saas\\backend"
+venv_saas\Scripts\activate
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+venv_qt5\Scripts\activate
+python main.py
+
+Build do EXE:
+venv_py310\Scripts\activate
+pyinstaller Brana.spec --clean --noconfirm
+pyinstaller --clean --noconfirm --upx-dir=. Brana.spec
+
+Gerador de chaves:
+python app/views/gerador_chaves_view.py
+pyinstaller GeradorChaves.spec --clean --noconfirm
+
+
+https://mpago.li/1SPPiiG - plano vitalicio
+https://mpago.li/1yGWto9 - polano anual
+
+http://127.0.0.1:8000/app
+
+🔹 PADRÃO OFICIAL DE SOLICITAÇÃO VISUAL
+
+Quando eu solicitar:
+
+Padronização de tela
+
+isso deve significar que o ajuste precisa ser aplicado em todas as telas existentes no projeto, mantendo o título, a função e a identidade de cada tela, sem alterar regras de negócio.
+
+Padronização de tela passa a ser o nome oficial e equivalente a:
+
+Padronização visual dos painéis e botões do sistema
+
+Esse pedido passa a incluir obrigatoriamente:
+
+- Padronização dos painéis com cantos arredondados.
+- Padronização dos botões de ação do sistema.
+- Padronização dos ícones, alturas, larguras e espaçamentos dos botões.
+- Manutenção do título original de cada tela.
+- Cabeçalho superior no mesmo padrão visual da tela Ficha pessoal -, com fundo verde, título da tela e botão X dentro desse mesmo cabeçalho verde.
+- Botão X (fechar) com comportamento padronizado.
+- Ao passar o mouse sobre o botão X, a cor deve mudar para vermelho.
+- Correção de qualquer sobreposição, duplicidade ou posicionamento incorreto do botão X.
+- Correção de casos em que o botão X fique sobre outro bloco, faixa, painel ou componente.
+- Uniformização visual entre telas principais, modais e painéis auxiliares.
+- Preservação do conteúdo e do funcionamento atual de cada tela.
+
+Referências visuais principais:
+
+- Tela Tabela de materiais para proporção e padrão dos botões.
+- Tela Ficha pessoal - para padrão do cabeçalho verde com título e botão X.

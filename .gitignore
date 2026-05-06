@@ -1,0 +1,112 @@
+# Brana Cloude - raiz
+
+# Segredos
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+venv_py310/
+venv_qt5/
+venv_saas/
+saas/venv_saas/
+
+# Bancos e dumps
+*.db
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+*.dump
+*.backup
+*.bak
+EasyBackup.EBF
+
+# Backups e builds
+BACKUP_*/
+backup_*/
+backup_estavel_*/
+backups/
+**/backups/
+build/
+dist/
+instalador/
+*.zip
+*.rar
+*.7z
+
+# Temporarios e logs
+tmp_*
+temp_*
+tmp_front_debug*/
+stdout
+*.log
+*.tmp
+~$*
+relatorio_repo.txt
+relatorio_repo.json
+
+# Dados sensiveis / migracao local
+Dados/
+output/
+*.xls
+*.xlsm
+*.docx
+*.pdf
+
+# Storage e arquivos gerados por clinica
+saas/storage/modelos/clinicas/
+saas/backend/tmp/
+saas/backend/reports/
+
+# Frontend/backups gerados
+*.bak_*
+*.bak-sync-combo
+*backup_check.js
+*from_fullbackup_check.js
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+storage/modelos/clinicas/
+backend/tmp/
+backend/reports/
+local_bridge/.env
+
+# Itens importantes do Brana Cloud que devem entrar no Git
+
+# Templates PDF do backend
+!backend/data/
+!backend/data/pdf_templates/
+!backend/data/pdf_templates/**
+
+# Modelos de clínicas
+!storage/
+!storage/modelos/
+!storage/modelos/clinicas/
+!storage/modelos/clinicas/**
+
+# Documento específico importante
+!Textos/
+!Textos/Textos/
+!Textos/Textos/e-mail_flash.docx
+
+# Temporario do Google Drive / upload
+.tmp.driveupload/

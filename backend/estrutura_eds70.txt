@@ -1,0 +1,2030 @@
+Listagem de caminhos de pasta
+O número de série do volume é 06C2-96DE
+Y:\EDS70
+|   Alarme.wav
+|   atwdll.dll
+|   CKS.exe
+|   crp32002.ngn
+|   crp32dll.dll
+|   Digital.fnt
+|   EasyConduit.dll
+|   EasyCtrl.dll
+|   EasyPhLb.dll
+|   ED.ckn
+|   ED.LIC
+|   EDBKP.DLL
+|   EDBKP70.exe
+|   EDCAP70.DLL
+|   EDCAP70.EXE
+|   EDCAP70CTRL.DLL
+|   EDCAP70MENU.dll
+|   EDCAP70RES.DLL
+|   EDCAP70RTL.DLL
+|   EDCON.dll
+|   EDIMP70.exe
+|   EDIMP71.exe
+|   EDIMP75.exe
+|   eds70.dsn
+|   EDS70.exe
+|   EDSSH70.exe
+|   EDUTL70.exe
+|   firewall.reg
+|   GeraArqHTML.dll
+|   Jet.REG
+|   LFAVI80N.DLL
+|   LFAWD80N.DLL
+|   LFBMP80N.DLL
+|   LFCAL80N.DLL
+|   LFCMP80n.DLL
+|   LFEPS80N.DLL
+|   LFFAX80N.DLL
+|   lffpx7.dll
+|   lffpx80n.dll
+|   LFGIF80N.DLL
+|   LFICA80N.DLL
+|   LFIMG80N.DLL
+|   lfkodak.dll
+|   LFLMA80N.DLL
+|   LFLMB80N.DLL
+|   LFMAC80N.DLL
+|   LFMSP80N.DLL
+|   LFPCD80N.DLL
+|   LFPCT80N.DLL
+|   LFPCX80N.DLL
+|   LFPNG80N.DLL
+|   LFPSD80N.DLL
+|   LFRAS80N.DLL
+|   LFTGA80N.DLL
+|   lftif80n.dll
+|   LFWFX80N.DLL
+|   LFWMF80N.DLL
+|   LFWPG80N.DLL
+|   Logo2.bmp
+|   Logo3.bmp
+|   ltefx80n.dll
+|   Ltfil80N.dll
+|   ltimg80n.dll
+|   ltkrn80n.dll
+|   lttwn80n.dll
+|   LTWND80n.DLL
+|   Mensagens.txt
+|   MergeList.tmp
+|   Mesclagem.txt
+|   Microsoft.VC80.CRT.manifest
+|   msvcr80.dll
+|   msxml3sp2Setup.exe
+|   SetupEx.exe
+|   setupex.xco
+|   splash_edc76.jpg
+|   splash_eds76.jpg
+|   Wait.avi
+|   Xck16db.exe
+|   ZLIB.DLL
+|   
++---Bitmaps
+|   |   arc_ades_i.bmp
+|   |   arc_ades_s.bmp
+|   |   arc_apicecto_i.bmp
+|   |   arc_apicecto_s.bmp
+|   |   arc_aumento_i.bmp
+|   |   arc_aumento_s.bmp
+|   |   arc_bandagem_11.bmp
+|   |   arc_bandagem_12.bmp
+|   |   arc_bandagem_13.bmp
+|   |   arc_bandagem_14.bmp
+|   |   arc_bandagem_15.bmp
+|   |   arc_bandagem_16.bmp
+|   |   arc_bandagem_17.bmp
+|   |   arc_bandagem_18.bmp
+|   |   arc_bandagem_21.bmp
+|   |   arc_bandagem_22.bmp
+|   |   arc_bandagem_23.bmp
+|   |   arc_bandagem_24.bmp
+|   |   arc_bandagem_25.bmp
+|   |   arc_bandagem_26.bmp
+|   |   arc_bandagem_27.bmp
+|   |   arc_bandagem_28.bmp
+|   |   arc_bandagem_31.bmp
+|   |   arc_bandagem_32.bmp
+|   |   arc_bandagem_33.bmp
+|   |   arc_bandagem_34.bmp
+|   |   arc_bandagem_35.bmp
+|   |   arc_bandagem_36.bmp
+|   |   arc_bandagem_37.bmp
+|   |   arc_bandagem_38.bmp
+|   |   arc_bandagem_41.bmp
+|   |   arc_bandagem_42.bmp
+|   |   arc_bandagem_43.bmp
+|   |   arc_bandagem_44.bmp
+|   |   arc_bandagem_45.bmp
+|   |   arc_bandagem_46.bmp
+|   |   arc_bandagem_47.bmp
+|   |   arc_bandagem_48.bmp
+|   |   arc_bloco_11.bmp
+|   |   arc_bloco_12.bmp
+|   |   arc_bloco_13.bmp
+|   |   arc_bloco_14.bmp
+|   |   arc_bloco_15.bmp
+|   |   arc_bloco_16.bmp
+|   |   arc_bloco_17.bmp
+|   |   arc_bloco_18.bmp
+|   |   arc_bloco_21.bmp
+|   |   arc_bloco_22.bmp
+|   |   arc_bloco_23.bmp
+|   |   arc_bloco_24.bmp
+|   |   arc_bloco_25.bmp
+|   |   arc_bloco_26.bmp
+|   |   arc_bloco_27.bmp
+|   |   arc_bloco_28.bmp
+|   |   arc_bloco_31.bmp
+|   |   arc_bloco_32.bmp
+|   |   arc_bloco_33.bmp
+|   |   arc_bloco_34.bmp
+|   |   arc_bloco_35.bmp
+|   |   arc_bloco_36.bmp
+|   |   arc_bloco_37.bmp
+|   |   arc_bloco_38.bmp
+|   |   arc_bloco_41.bmp
+|   |   arc_bloco_42.bmp
+|   |   arc_bloco_43.bmp
+|   |   arc_bloco_44.bmp
+|   |   arc_bloco_45.bmp
+|   |   arc_bloco_46.bmp
+|   |   arc_bloco_47.bmp
+|   |   arc_bloco_48.bmp
+|   |   arc_bloco_51.bmp
+|   |   arc_bloco_52.bmp
+|   |   arc_bloco_53.bmp
+|   |   arc_bloco_54.bmp
+|   |   arc_bloco_55.bmp
+|   |   arc_bloco_61.bmp
+|   |   arc_bloco_62.bmp
+|   |   arc_bloco_63.bmp
+|   |   arc_bloco_64.bmp
+|   |   arc_bloco_65.bmp
+|   |   arc_bloco_71.bmp
+|   |   arc_bloco_72.bmp
+|   |   arc_bloco_73.bmp
+|   |   arc_bloco_74.bmp
+|   |   arc_bloco_75.bmp
+|   |   arc_bloco_81.bmp
+|   |   arc_bloco_82.bmp
+|   |   arc_bloco_83.bmp
+|   |   arc_bloco_84.bmp
+|   |   arc_bloco_85.bmp
+|   |   arc_bracket_i.bmp
+|   |   arc_bracket_s.bmp
+|   |   arc_canal_11.bmp
+|   |   arc_canal_12.bmp
+|   |   arc_canal_13.bmp
+|   |   arc_canal_14.bmp
+|   |   arc_canal_15.bmp
+|   |   arc_canal_16.bmp
+|   |   arc_canal_17.bmp
+|   |   arc_canal_18.bmp
+|   |   arc_canal_21.bmp
+|   |   arc_canal_22.bmp
+|   |   arc_canal_23.bmp
+|   |   arc_canal_24.bmp
+|   |   arc_canal_25.bmp
+|   |   arc_canal_26.bmp
+|   |   arc_canal_27.bmp
+|   |   arc_canal_28.bmp
+|   |   arc_canal_31.bmp
+|   |   arc_canal_32.bmp
+|   |   arc_canal_33.bmp
+|   |   arc_canal_34.bmp
+|   |   arc_canal_35.bmp
+|   |   arc_canal_36.bmp
+|   |   arc_canal_37.bmp
+|   |   arc_canal_38.bmp
+|   |   arc_canal_41.bmp
+|   |   arc_canal_42.bmp
+|   |   arc_canal_43.bmp
+|   |   arc_canal_44.bmp
+|   |   arc_canal_45.bmp
+|   |   arc_canal_46.bmp
+|   |   arc_canal_47.bmp
+|   |   arc_canal_48.bmp
+|   |   arc_canal_51.bmp
+|   |   arc_canal_52.bmp
+|   |   arc_canal_53.bmp
+|   |   arc_canal_54.bmp
+|   |   arc_canal_55.bmp
+|   |   arc_canal_61.bmp
+|   |   arc_canal_62.bmp
+|   |   arc_canal_63.bmp
+|   |   arc_canal_64.bmp
+|   |   arc_canal_65.bmp
+|   |   arc_canal_71.bmp
+|   |   arc_canal_72.bmp
+|   |   arc_canal_73.bmp
+|   |   arc_canal_74.bmp
+|   |   arc_canal_75.bmp
+|   |   arc_canal_81.bmp
+|   |   arc_canal_82.bmp
+|   |   arc_canal_83.bmp
+|   |   arc_canal_84.bmp
+|   |   arc_canal_85.bmp
+|   |   arc_capeamento_11.bmp
+|   |   arc_capeamento_12.bmp
+|   |   arc_capeamento_13.bmp
+|   |   arc_capeamento_14.bmp
+|   |   arc_capeamento_15.bmp
+|   |   arc_capeamento_16.bmp
+|   |   arc_capeamento_17.bmp
+|   |   arc_capeamento_18.bmp
+|   |   arc_capeamento_21.bmp
+|   |   arc_capeamento_22.bmp
+|   |   arc_capeamento_23.bmp
+|   |   arc_capeamento_24.bmp
+|   |   arc_capeamento_25.bmp
+|   |   arc_capeamento_26.bmp
+|   |   arc_capeamento_27.bmp
+|   |   arc_capeamento_28.bmp
+|   |   arc_capeamento_31.bmp
+|   |   arc_capeamento_32.bmp
+|   |   arc_capeamento_33.bmp
+|   |   arc_capeamento_34.bmp
+|   |   arc_capeamento_35.bmp
+|   |   arc_capeamento_36.bmp
+|   |   arc_capeamento_37.bmp
+|   |   arc_capeamento_38.bmp
+|   |   arc_capeamento_41.bmp
+|   |   arc_capeamento_42.bmp
+|   |   arc_capeamento_43.bmp
+|   |   arc_capeamento_44.bmp
+|   |   arc_capeamento_45.bmp
+|   |   arc_capeamento_46.bmp
+|   |   arc_capeamento_47.bmp
+|   |   arc_capeamento_48.bmp
+|   |   arc_coroa_11.bmp
+|   |   arc_coroa_12.bmp
+|   |   arc_coroa_13.bmp
+|   |   arc_coroa_14.bmp
+|   |   arc_coroa_15.bmp
+|   |   arc_coroa_16.bmp
+|   |   arc_coroa_17.bmp
+|   |   arc_coroa_18.bmp
+|   |   arc_coroa_21.bmp
+|   |   arc_coroa_22.bmp
+|   |   arc_coroa_23.bmp
+|   |   arc_coroa_24.bmp
+|   |   arc_coroa_25.bmp
+|   |   arc_coroa_26.bmp
+|   |   arc_coroa_27.bmp
+|   |   arc_coroa_28.bmp
+|   |   arc_coroa_31.bmp
+|   |   arc_coroa_32.bmp
+|   |   arc_coroa_33.bmp
+|   |   arc_coroa_34.bmp
+|   |   arc_coroa_35.bmp
+|   |   arc_coroa_36.bmp
+|   |   arc_coroa_37.bmp
+|   |   arc_coroa_38.bmp
+|   |   arc_coroa_41.bmp
+|   |   arc_coroa_42.bmp
+|   |   arc_coroa_43.bmp
+|   |   arc_coroa_44.bmp
+|   |   arc_coroa_45.bmp
+|   |   arc_coroa_46.bmp
+|   |   arc_coroa_47.bmp
+|   |   arc_coroa_48.bmp
+|   |   arc_coroa_51.bmp
+|   |   arc_coroa_52.bmp
+|   |   arc_coroa_53.bmp
+|   |   arc_coroa_54.bmp
+|   |   arc_coroa_55.bmp
+|   |   arc_coroa_61.bmp
+|   |   arc_coroa_62.bmp
+|   |   arc_coroa_63.bmp
+|   |   arc_coroa_64.bmp
+|   |   arc_coroa_65.bmp
+|   |   arc_coroa_71.bmp
+|   |   arc_coroa_72.bmp
+|   |   arc_coroa_73.bmp
+|   |   arc_coroa_74.bmp
+|   |   arc_coroa_75.bmp
+|   |   arc_coroa_81.bmp
+|   |   arc_coroa_82.bmp
+|   |   arc_coroa_83.bmp
+|   |   arc_coroa_84.bmp
+|   |   arc_coroa_85.bmp
+|   |   arc_dente11.bmp
+|   |   arc_dente11a.bmp
+|   |   arc_dente11b.bmp
+|   |   arc_dente12.bmp
+|   |   arc_dente12a.bmp
+|   |   arc_dente12b.bmp
+|   |   arc_dente13.bmp
+|   |   arc_dente13a.bmp
+|   |   arc_dente13b.bmp
+|   |   arc_dente14.bmp
+|   |   arc_dente14a.bmp
+|   |   arc_dente14b.bmp
+|   |   arc_dente15.bmp
+|   |   arc_dente15a.bmp
+|   |   arc_dente15b.bmp
+|   |   arc_dente16.bmp
+|   |   arc_dente16a.bmp
+|   |   arc_dente16b.bmp
+|   |   arc_dente17.bmp
+|   |   arc_dente17a.bmp
+|   |   arc_dente17b.bmp
+|   |   arc_dente18.bmp
+|   |   arc_dente18a.bmp
+|   |   arc_dente18b.bmp
+|   |   arc_dente21.bmp
+|   |   arc_dente21a.bmp
+|   |   arc_dente21b.bmp
+|   |   arc_dente22.bmp
+|   |   arc_dente22a.bmp
+|   |   arc_dente22b.bmp
+|   |   arc_dente23.bmp
+|   |   arc_dente23a.bmp
+|   |   arc_dente23b.bmp
+|   |   arc_dente24.bmp
+|   |   arc_dente24a.bmp
+|   |   arc_dente24b.bmp
+|   |   arc_dente25.bmp
+|   |   arc_dente25a.bmp
+|   |   arc_dente25b.bmp
+|   |   arc_dente26.bmp
+|   |   arc_dente26a.bmp
+|   |   arc_dente26b.bmp
+|   |   arc_dente27.bmp
+|   |   arc_dente27a.bmp
+|   |   arc_dente27b.bmp
+|   |   arc_dente28.bmp
+|   |   arc_dente28a.bmp
+|   |   arc_dente28b.bmp
+|   |   arc_dente31.bmp
+|   |   arc_dente31a.bmp
+|   |   arc_dente31b.bmp
+|   |   arc_dente32.bmp
+|   |   arc_dente32a.bmp
+|   |   arc_dente32b.bmp
+|   |   arc_dente33.bmp
+|   |   arc_dente33a.bmp
+|   |   arc_dente33b.bmp
+|   |   arc_dente34.bmp
+|   |   arc_dente34a.bmp
+|   |   arc_dente34b.bmp
+|   |   arc_dente35.bmp
+|   |   arc_dente35a.bmp
+|   |   arc_dente35b.bmp
+|   |   arc_dente36.bmp
+|   |   arc_dente36a.bmp
+|   |   arc_dente36b.bmp
+|   |   arc_dente37.bmp
+|   |   arc_dente37a.bmp
+|   |   arc_dente37b.bmp
+|   |   arc_dente38.bmp
+|   |   arc_dente38a.bmp
+|   |   arc_dente38b.bmp
+|   |   arc_dente41.bmp
+|   |   arc_dente41a.bmp
+|   |   arc_dente41b.bmp
+|   |   arc_dente42.bmp
+|   |   arc_dente42a.bmp
+|   |   arc_dente42b.bmp
+|   |   arc_dente43.bmp
+|   |   arc_dente43a.bmp
+|   |   arc_dente43b.bmp
+|   |   arc_dente44.bmp
+|   |   arc_dente44a.bmp
+|   |   arc_dente44b.bmp
+|   |   arc_dente45.bmp
+|   |   arc_dente45a.bmp
+|   |   arc_dente45b.bmp
+|   |   arc_dente46.bmp
+|   |   arc_dente46a.bmp
+|   |   arc_dente46b.bmp
+|   |   arc_dente47.bmp
+|   |   arc_dente47a.bmp
+|   |   arc_dente47b.bmp
+|   |   arc_dente48.bmp
+|   |   arc_dente48a.bmp
+|   |   arc_dente48b.bmp
+|   |   arc_dente51.bmp
+|   |   arc_dente51a.bmp
+|   |   arc_dente52.bmp
+|   |   arc_dente52a.bmp
+|   |   arc_dente53.bmp
+|   |   arc_dente53a.bmp
+|   |   arc_dente54.bmp
+|   |   arc_dente54a.bmp
+|   |   arc_dente55.bmp
+|   |   arc_dente55a.bmp
+|   |   arc_dente61.bmp
+|   |   arc_dente61a.bmp
+|   |   arc_dente62.bmp
+|   |   arc_dente62a.bmp
+|   |   arc_dente63.bmp
+|   |   arc_dente63a.bmp
+|   |   arc_dente64.bmp
+|   |   arc_dente64a.bmp
+|   |   arc_dente65.bmp
+|   |   arc_dente65a.bmp
+|   |   arc_dente71.bmp
+|   |   arc_dente71a.bmp
+|   |   arc_dente72.bmp
+|   |   arc_dente72a.bmp
+|   |   arc_dente73.bmp
+|   |   arc_dente73a.bmp
+|   |   arc_dente74.bmp
+|   |   arc_dente74a.bmp
+|   |   arc_dente75.bmp
+|   |   arc_dente75a.bmp
+|   |   arc_dente81.bmp
+|   |   arc_dente81a.bmp
+|   |   arc_dente82.bmp
+|   |   arc_dente82a.bmp
+|   |   arc_dente83.bmp
+|   |   arc_dente83a.bmp
+|   |   arc_dente84.bmp
+|   |   arc_dente84a.bmp
+|   |   arc_dente85.bmp
+|   |   arc_dente85a.bmp
+|   |   arc_descal_11.bmp
+|   |   arc_descal_12.bmp
+|   |   arc_descal_13.bmp
+|   |   arc_descal_14.bmp
+|   |   arc_descal_15.bmp
+|   |   arc_descal_16.bmp
+|   |   arc_descal_17.bmp
+|   |   arc_descal_18.bmp
+|   |   arc_descal_21.bmp
+|   |   arc_descal_22.bmp
+|   |   arc_descal_23.bmp
+|   |   arc_descal_24.bmp
+|   |   arc_descal_25.bmp
+|   |   arc_descal_26.bmp
+|   |   arc_descal_27.bmp
+|   |   arc_descal_28.bmp
+|   |   arc_descal_31.bmp
+|   |   arc_descal_32.bmp
+|   |   arc_descal_33.bmp
+|   |   arc_descal_34.bmp
+|   |   arc_descal_35.bmp
+|   |   arc_descal_36.bmp
+|   |   arc_descal_37.bmp
+|   |   arc_descal_38.bmp
+|   |   arc_descal_41.bmp
+|   |   arc_descal_42.bmp
+|   |   arc_descal_43.bmp
+|   |   arc_descal_44.bmp
+|   |   arc_descal_45.bmp
+|   |   arc_descal_46.bmp
+|   |   arc_descal_47.bmp
+|   |   arc_descal_48.bmp
+|   |   arc_enxerto_i.bmp
+|   |   arc_enxerto_s.bmp
+|   |   arc_erosao_11.bmp
+|   |   arc_erosao_12.bmp
+|   |   arc_erosao_13.bmp
+|   |   arc_erosao_14.bmp
+|   |   arc_erosao_15.bmp
+|   |   arc_erosao_16.bmp
+|   |   arc_erosao_17.bmp
+|   |   arc_erosao_18.bmp
+|   |   arc_erosao_21.bmp
+|   |   arc_erosao_22.bmp
+|   |   arc_erosao_23.bmp
+|   |   arc_erosao_24.bmp
+|   |   arc_erosao_25.bmp
+|   |   arc_erosao_26.bmp
+|   |   arc_erosao_27.bmp
+|   |   arc_erosao_28.bmp
+|   |   arc_erosao_31.bmp
+|   |   arc_erosao_32.bmp
+|   |   arc_erosao_33.bmp
+|   |   arc_erosao_34.bmp
+|   |   arc_erosao_35.bmp
+|   |   arc_erosao_36.bmp
+|   |   arc_erosao_37.bmp
+|   |   arc_erosao_38.bmp
+|   |   arc_erosao_41.bmp
+|   |   arc_erosao_42.bmp
+|   |   arc_erosao_43.bmp
+|   |   arc_erosao_44.bmp
+|   |   arc_erosao_45.bmp
+|   |   arc_erosao_46.bmp
+|   |   arc_erosao_47.bmp
+|   |   arc_erosao_48.bmp
+|   |   arc_extracao_i.bmp
+|   |   arc_extracao_s.bmp
+|   |   arc_extru_i.bmp
+|   |   arc_extru_s.bmp
+|   |   arc_faces.bmp
+|   |   arc_facet_11.bmp
+|   |   arc_facet_12.bmp
+|   |   arc_facet_13.bmp
+|   |   arc_facet_14.bmp
+|   |   arc_facet_15.bmp
+|   |   arc_facet_16.bmp
+|   |   arc_facet_17.bmp
+|   |   arc_facet_18.bmp
+|   |   arc_facet_21.bmp
+|   |   arc_facet_22.bmp
+|   |   arc_facet_23.bmp
+|   |   arc_facet_24.bmp
+|   |   arc_facet_25.bmp
+|   |   arc_facet_26.bmp
+|   |   arc_facet_27.bmp
+|   |   arc_facet_28.bmp
+|   |   arc_facet_31.bmp
+|   |   arc_facet_32.bmp
+|   |   arc_facet_33.bmp
+|   |   arc_facet_34.bmp
+|   |   arc_facet_35.bmp
+|   |   arc_facet_36.bmp
+|   |   arc_facet_37.bmp
+|   |   arc_facet_38.bmp
+|   |   arc_facet_41.bmp
+|   |   arc_facet_42.bmp
+|   |   arc_facet_43.bmp
+|   |   arc_facet_44.bmp
+|   |   arc_facet_45.bmp
+|   |   arc_facet_46.bmp
+|   |   arc_facet_47.bmp
+|   |   arc_facet_48.bmp
+|   |   arc_fissu_11.bmp
+|   |   arc_fissu_12.bmp
+|   |   arc_fissu_13.bmp
+|   |   arc_fissu_14.bmp
+|   |   arc_fissu_15.bmp
+|   |   arc_fissu_16.bmp
+|   |   arc_fissu_17.bmp
+|   |   arc_fissu_18.bmp
+|   |   arc_fissu_21.bmp
+|   |   arc_fissu_22.bmp
+|   |   arc_fissu_23.bmp
+|   |   arc_fissu_24.bmp
+|   |   arc_fissu_25.bmp
+|   |   arc_fissu_26.bmp
+|   |   arc_fissu_27.bmp
+|   |   arc_fissu_28.bmp
+|   |   arc_fissu_31.bmp
+|   |   arc_fissu_32.bmp
+|   |   arc_fissu_33.bmp
+|   |   arc_fissu_34.bmp
+|   |   arc_fissu_35.bmp
+|   |   arc_fissu_36.bmp
+|   |   arc_fissu_37.bmp
+|   |   arc_fissu_38.bmp
+|   |   arc_fissu_41.bmp
+|   |   arc_fissu_42.bmp
+|   |   arc_fissu_43.bmp
+|   |   arc_fissu_44.bmp
+|   |   arc_fissu_45.bmp
+|   |   arc_fissu_46.bmp
+|   |   arc_fissu_47.bmp
+|   |   arc_fissu_48.bmp
+|   |   arc_fixa1_11.bmp
+|   |   arc_fixa1_12.bmp
+|   |   arc_fixa1_13.bmp
+|   |   arc_fixa1_14.bmp
+|   |   arc_fixa1_15.bmp
+|   |   arc_fixa1_16.bmp
+|   |   arc_fixa1_17.bmp
+|   |   arc_fixa1_18.bmp
+|   |   arc_fixa1_21.bmp
+|   |   arc_fixa1_22.bmp
+|   |   arc_fixa1_23.bmp
+|   |   arc_fixa1_24.bmp
+|   |   arc_fixa1_25.bmp
+|   |   arc_fixa1_26.bmp
+|   |   arc_fixa1_27.bmp
+|   |   arc_fixa1_28.bmp
+|   |   arc_fixa1_31.bmp
+|   |   arc_fixa1_32.bmp
+|   |   arc_fixa1_33.bmp
+|   |   arc_fixa1_34.bmp
+|   |   arc_fixa1_35.bmp
+|   |   arc_fixa1_36.bmp
+|   |   arc_fixa1_37.bmp
+|   |   arc_fixa1_38.bmp
+|   |   arc_fixa1_41.bmp
+|   |   arc_fixa1_42.bmp
+|   |   arc_fixa1_43.bmp
+|   |   arc_fixa1_44.bmp
+|   |   arc_fixa1_45.bmp
+|   |   arc_fixa1_46.bmp
+|   |   arc_fixa1_47.bmp
+|   |   arc_fixa1_48.bmp
+|   |   arc_fixa2_11.bmp
+|   |   arc_fixa2_12.bmp
+|   |   arc_fixa2_13.bmp
+|   |   arc_fixa2_14.bmp
+|   |   arc_fixa2_15.bmp
+|   |   arc_fixa2_16.bmp
+|   |   arc_fixa2_17.bmp
+|   |   arc_fixa2_18.bmp
+|   |   arc_fixa2_21.bmp
+|   |   arc_fixa2_22.bmp
+|   |   arc_fixa2_23.bmp
+|   |   arc_fixa2_24.bmp
+|   |   arc_fixa2_25.bmp
+|   |   arc_fixa2_26.bmp
+|   |   arc_fixa2_27.bmp
+|   |   arc_fixa2_28.bmp
+|   |   arc_fixa2_31.bmp
+|   |   arc_fixa2_32.bmp
+|   |   arc_fixa2_33.bmp
+|   |   arc_fixa2_34.bmp
+|   |   arc_fixa2_35.bmp
+|   |   arc_fixa2_36.bmp
+|   |   arc_fixa2_37.bmp
+|   |   arc_fixa2_38.bmp
+|   |   arc_fixa2_41.bmp
+|   |   arc_fixa2_42.bmp
+|   |   arc_fixa2_43.bmp
+|   |   arc_fixa2_44.bmp
+|   |   arc_fixa2_45.bmp
+|   |   arc_fixa2_46.bmp
+|   |   arc_fixa2_47.bmp
+|   |   arc_fixa2_48.bmp
+|   |   arc_fixa3_11.bmp
+|   |   arc_fixa3_12.bmp
+|   |   arc_fixa3_13.bmp
+|   |   arc_fixa3_14.bmp
+|   |   arc_fixa3_15.bmp
+|   |   arc_fixa3_16.bmp
+|   |   arc_fixa3_17.bmp
+|   |   arc_fixa3_18.bmp
+|   |   arc_fixa3_21.bmp
+|   |   arc_fixa3_22.bmp
+|   |   arc_fixa3_23.bmp
+|   |   arc_fixa3_24.bmp
+|   |   arc_fixa3_25.bmp
+|   |   arc_fixa3_26.bmp
+|   |   arc_fixa3_27.bmp
+|   |   arc_fixa3_28.bmp
+|   |   arc_fixa3_31.bmp
+|   |   arc_fixa3_32.bmp
+|   |   arc_fixa3_33.bmp
+|   |   arc_fixa3_34.bmp
+|   |   arc_fixa3_35.bmp
+|   |   arc_fixa3_36.bmp
+|   |   arc_fixa3_37.bmp
+|   |   arc_fixa3_38.bmp
+|   |   arc_fixa3_41.bmp
+|   |   arc_fixa3_42.bmp
+|   |   arc_fixa3_43.bmp
+|   |   arc_fixa3_44.bmp
+|   |   arc_fixa3_45.bmp
+|   |   arc_fixa3_46.bmp
+|   |   arc_fixa3_47.bmp
+|   |   arc_fixa3_48.bmp
+|   |   arc_fluor_11.bmp
+|   |   arc_fluor_12.bmp
+|   |   arc_fluor_13.bmp
+|   |   arc_fluor_14.bmp
+|   |   arc_fluor_15.bmp
+|   |   arc_fluor_16.bmp
+|   |   arc_fluor_17.bmp
+|   |   arc_fluor_18.bmp
+|   |   arc_fluor_21.bmp
+|   |   arc_fluor_22.bmp
+|   |   arc_fluor_23.bmp
+|   |   arc_fluor_24.bmp
+|   |   arc_fluor_25.bmp
+|   |   arc_fluor_26.bmp
+|   |   arc_fluor_27.bmp
+|   |   arc_fluor_28.bmp
+|   |   arc_fluor_31.bmp
+|   |   arc_fluor_32.bmp
+|   |   arc_fluor_33.bmp
+|   |   arc_fluor_34.bmp
+|   |   arc_fluor_35.bmp
+|   |   arc_fluor_36.bmp
+|   |   arc_fluor_37.bmp
+|   |   arc_fluor_38.bmp
+|   |   arc_fluor_41.bmp
+|   |   arc_fluor_42.bmp
+|   |   arc_fluor_43.bmp
+|   |   arc_fluor_44.bmp
+|   |   arc_fluor_45.bmp
+|   |   arc_fluor_46.bmp
+|   |   arc_fluor_47.bmp
+|   |   arc_fluor_48.bmp
+|   |   arc_gengivecto_i.bmp
+|   |   arc_gengivecto_s.bmp
+|   |   arc_girov_i.bmp
+|   |   arc_girov_s.bmp
+|   |   arc_hemi_i.bmp
+|   |   arc_hemi_s.bmp
+|   |   arc_implante_i.bmp
+|   |   arc_implante_s.bmp
+|   |   arc_inferior_dec.bmp
+|   |   arc_inferior_mista.bmp
+|   |   arc_inferior_perm.bmp
+|   |   arc_intru_i.bmp
+|   |   arc_intru_s.bmp
+|   |   arc_lesao_11.bmp
+|   |   arc_lesao_12.bmp
+|   |   arc_lesao_13.bmp
+|   |   arc_lesao_14.bmp
+|   |   arc_lesao_15.bmp
+|   |   arc_lesao_16.bmp
+|   |   arc_lesao_17.bmp
+|   |   arc_lesao_18.bmp
+|   |   arc_lesao_21.bmp
+|   |   arc_lesao_22.bmp
+|   |   arc_lesao_23.bmp
+|   |   arc_lesao_24.bmp
+|   |   arc_lesao_25.bmp
+|   |   arc_lesao_26.bmp
+|   |   arc_lesao_27.bmp
+|   |   arc_lesao_28.bmp
+|   |   arc_lesao_31.bmp
+|   |   arc_lesao_32.bmp
+|   |   arc_lesao_33.bmp
+|   |   arc_lesao_34.bmp
+|   |   arc_lesao_35.bmp
+|   |   arc_lesao_36.bmp
+|   |   arc_lesao_37.bmp
+|   |   arc_lesao_38.bmp
+|   |   arc_lesao_41.bmp
+|   |   arc_lesao_42.bmp
+|   |   arc_lesao_43.bmp
+|   |   arc_lesao_44.bmp
+|   |   arc_lesao_45.bmp
+|   |   arc_lesao_46.bmp
+|   |   arc_lesao_47.bmp
+|   |   arc_lesao_48.bmp
+|   |   arc_mantenedor_i.bmp
+|   |   arc_mantenedor_s.bmp
+|   |   arc_migdir.bmp
+|   |   arc_migesq.bmp
+|   |   arc_nucleo_11.bmp
+|   |   arc_nucleo_12.bmp
+|   |   arc_nucleo_13.bmp
+|   |   arc_nucleo_14.bmp
+|   |   arc_nucleo_15.bmp
+|   |   arc_nucleo_16.bmp
+|   |   arc_nucleo_17.bmp
+|   |   arc_nucleo_18.bmp
+|   |   arc_nucleo_21.bmp
+|   |   arc_nucleo_22.bmp
+|   |   arc_nucleo_23.bmp
+|   |   arc_nucleo_24.bmp
+|   |   arc_nucleo_25.bmp
+|   |   arc_nucleo_26.bmp
+|   |   arc_nucleo_27.bmp
+|   |   arc_nucleo_28.bmp
+|   |   arc_nucleo_31.bmp
+|   |   arc_nucleo_32.bmp
+|   |   arc_nucleo_33.bmp
+|   |   arc_nucleo_34.bmp
+|   |   arc_nucleo_35.bmp
+|   |   arc_nucleo_36.bmp
+|   |   arc_nucleo_37.bmp
+|   |   arc_nucleo_38.bmp
+|   |   arc_nucleo_41.bmp
+|   |   arc_nucleo_42.bmp
+|   |   arc_nucleo_43.bmp
+|   |   arc_nucleo_44.bmp
+|   |   arc_nucleo_45.bmp
+|   |   arc_nucleo_46.bmp
+|   |   arc_nucleo_47.bmp
+|   |   arc_nucleo_48.bmp
+|   |   arc_nucleo_51.bmp
+|   |   arc_nucleo_52.bmp
+|   |   arc_nucleo_53.bmp
+|   |   arc_nucleo_54.bmp
+|   |   arc_nucleo_55.bmp
+|   |   arc_nucleo_61.bmp
+|   |   arc_nucleo_62.bmp
+|   |   arc_nucleo_63.bmp
+|   |   arc_nucleo_64.bmp
+|   |   arc_nucleo_65.bmp
+|   |   arc_nucleo_71.bmp
+|   |   arc_nucleo_72.bmp
+|   |   arc_nucleo_73.bmp
+|   |   arc_nucleo_74.bmp
+|   |   arc_nucleo_75.bmp
+|   |   arc_nucleo_81.bmp
+|   |   arc_nucleo_82.bmp
+|   |   arc_nucleo_83.bmp
+|   |   arc_nucleo_84.bmp
+|   |   arc_nucleo_85.bmp
+|   |   arc_radi_11.bmp
+|   |   arc_radi_12.bmp
+|   |   arc_radi_13.bmp
+|   |   arc_radi_14.bmp
+|   |   arc_radi_15.bmp
+|   |   arc_radi_16.bmp
+|   |   arc_radi_17.bmp
+|   |   arc_radi_18.bmp
+|   |   arc_radi_21.bmp
+|   |   arc_radi_22.bmp
+|   |   arc_radi_23.bmp
+|   |   arc_radi_24.bmp
+|   |   arc_radi_25.bmp
+|   |   arc_radi_26.bmp
+|   |   arc_radi_27.bmp
+|   |   arc_radi_28.bmp
+|   |   arc_radi_31.bmp
+|   |   arc_radi_32.bmp
+|   |   arc_radi_33.bmp
+|   |   arc_radi_34.bmp
+|   |   arc_radi_35.bmp
+|   |   arc_radi_36.bmp
+|   |   arc_radi_37.bmp
+|   |   arc_radi_38.bmp
+|   |   arc_radi_41.bmp
+|   |   arc_radi_42.bmp
+|   |   arc_radi_43.bmp
+|   |   arc_radi_44.bmp
+|   |   arc_radi_45.bmp
+|   |   arc_radi_46.bmp
+|   |   arc_radi_47.bmp
+|   |   arc_radi_48.bmp
+|   |   arc_raspagem_i.bmp
+|   |   arc_raspagem_s.bmp
+|   |   arc_remov1_i.bmp
+|   |   arc_remov1_s.bmp
+|   |   arc_remov2_i.bmp
+|   |   arc_remov2_s.bmp
+|   |   arc_remov3_i.bmp
+|   |   arc_remov3_s.bmp
+|   |   arc_retalho_i.bmp
+|   |   arc_retalho_s.bmp
+|   |   arc_rizectomia_14.bmp
+|   |   arc_rizectomia_15.bmp
+|   |   arc_rizectomia_16.bmp
+|   |   arc_rizectomia_17.bmp
+|   |   arc_rizectomia_18.bmp
+|   |   arc_rizectomia_24.bmp
+|   |   arc_rizectomia_25.bmp
+|   |   arc_rizectomia_26.bmp
+|   |   arc_rizectomia_27.bmp
+|   |   arc_rizectomia_28.bmp
+|   |   arc_rizectomia_34.bmp
+|   |   arc_rizectomia_35.bmp
+|   |   arc_rizectomia_36.bmp
+|   |   arc_rizectomia_37.bmp
+|   |   arc_rizectomia_38.bmp
+|   |   arc_rizectomia_44.bmp
+|   |   arc_rizectomia_45.bmp
+|   |   arc_rizectomia_46.bmp
+|   |   arc_rizectomia_47.bmp
+|   |   arc_rizectomia_48.bmp
+|   |   arc_superior_dec.bmp
+|   |   arc_superior_mista.bmp
+|   |   arc_superior_perm.bmp
+|   |   arc_supra_i.bmp
+|   |   arc_supra_s.bmp
+|   |   arc_total1_i.bmp
+|   |   arc_total1_s.bmp
+|   |   arc_total2_i.bmp
+|   |   arc_total2_s.bmp
+|   |   arc_total3_i.bmp
+|   |   arc_total3_s.bmp
+|   |   arc_trep_11.bmp
+|   |   arc_trep_12.bmp
+|   |   arc_trep_13.bmp
+|   |   arc_trep_14.bmp
+|   |   arc_trep_15.bmp
+|   |   arc_trep_16.bmp
+|   |   arc_trep_17.bmp
+|   |   arc_trep_18.bmp
+|   |   arc_trep_21.bmp
+|   |   arc_trep_22.bmp
+|   |   arc_trep_23.bmp
+|   |   arc_trep_24.bmp
+|   |   arc_trep_25.bmp
+|   |   arc_trep_26.bmp
+|   |   arc_trep_27.bmp
+|   |   arc_trep_28.bmp
+|   |   arc_trep_31.bmp
+|   |   arc_trep_32.bmp
+|   |   arc_trep_33.bmp
+|   |   arc_trep_34.bmp
+|   |   arc_trep_35.bmp
+|   |   arc_trep_36.bmp
+|   |   arc_trep_37.bmp
+|   |   arc_trep_38.bmp
+|   |   arc_trep_41.bmp
+|   |   arc_trep_42.bmp
+|   |   arc_trep_43.bmp
+|   |   arc_trep_44.bmp
+|   |   arc_trep_45.bmp
+|   |   arc_trep_46.bmp
+|   |   arc_trep_47.bmp
+|   |   arc_trep_48.bmp
+|   |   arc_tunel_i.bmp
+|   |   arc_tunel_s.bmp
+|   |   ger_cirurgia.bmp
+|   |   ger_consulta.bmp
+|   |   ger_desgaste.bmp
+|   |   ger_eho.bmp
+|   |   ger_emergencia.bmp
+|   |   ger_fluor.bmp
+|   |   ger_fotos.bmp
+|   |   ger_frenectomia.bmp
+|   |   ger_lateral.bmp
+|   |   ger_manutencao.bmp
+|   |   ger_maopunho.bmp
+|   |   ger_modelo.bmp
+|   |   ger_mordida.bmp
+|   |   ger_oclusal.bmp
+|   |   ger_panoramica.bmp
+|   |   ger_pericia.bmp
+|   |   ger_placa.bmp
+|   |   ger_profilaxia.bmp
+|   |   ger_protese.bmp
+|   |   ger_raspagem.bmp
+|   |   ger_reembasa.bmp
+|   |   NotFound.bmp
+|   |   placa.bmp
+|   |   
+|   +---Dentes2d
+|   |       arc_dente11.bmp
+|   |       arc_dente11a.bmp
+|   |       arc_dente11b.bmp
+|   |       arc_dente12.bmp
+|   |       arc_dente12a.bmp
+|   |       arc_dente12b.bmp
+|   |       arc_dente13.bmp
+|   |       arc_dente13a.bmp
+|   |       arc_dente13b.bmp
+|   |       arc_dente14.bmp
+|   |       arc_dente14a.bmp
+|   |       arc_dente14b.bmp
+|   |       arc_dente15.bmp
+|   |       arc_dente15a.bmp
+|   |       arc_dente15b.bmp
+|   |       arc_dente16.bmp
+|   |       arc_dente16a.bmp
+|   |       arc_dente16b.bmp
+|   |       arc_dente17.bmp
+|   |       arc_dente17a.bmp
+|   |       arc_dente17b.bmp
+|   |       arc_dente18.bmp
+|   |       arc_dente18a.bmp
+|   |       arc_dente18b.bmp
+|   |       arc_dente21.bmp
+|   |       arc_dente21a.bmp
+|   |       arc_dente21b.bmp
+|   |       arc_dente22.bmp
+|   |       arc_dente22a.bmp
+|   |       arc_dente22b.bmp
+|   |       arc_dente23.bmp
+|   |       arc_dente23a.bmp
+|   |       arc_dente23b.bmp
+|   |       arc_dente24.bmp
+|   |       arc_dente24a.bmp
+|   |       arc_dente24b.bmp
+|   |       arc_dente25.bmp
+|   |       arc_dente25a.bmp
+|   |       arc_dente25b.bmp
+|   |       arc_dente26.bmp
+|   |       arc_dente26a.bmp
+|   |       arc_dente26b.bmp
+|   |       arc_dente27.bmp
+|   |       arc_dente27a.bmp
+|   |       arc_dente27b.bmp
+|   |       arc_dente28.bmp
+|   |       arc_dente28a.bmp
+|   |       arc_dente28b.bmp
+|   |       arc_dente31.bmp
+|   |       arc_dente31a.bmp
+|   |       arc_dente31b.bmp
+|   |       arc_dente32.bmp
+|   |       arc_dente32a.bmp
+|   |       arc_dente32b.bmp
+|   |       arc_dente33.bmp
+|   |       arc_dente33a.bmp
+|   |       arc_dente33b.bmp
+|   |       arc_dente34.bmp
+|   |       arc_dente34a.bmp
+|   |       arc_dente34b.bmp
+|   |       arc_dente35.bmp
+|   |       arc_dente35a.bmp
+|   |       arc_dente35b.bmp
+|   |       arc_dente36.bmp
+|   |       arc_dente36a.bmp
+|   |       arc_dente36b.bmp
+|   |       arc_dente37.bmp
+|   |       arc_dente37a.bmp
+|   |       arc_dente37b.bmp
+|   |       arc_dente38.bmp
+|   |       arc_dente38a.bmp
+|   |       arc_dente38b.bmp
+|   |       arc_dente41.bmp
+|   |       arc_dente41a.bmp
+|   |       arc_dente41b.bmp
+|   |       arc_dente42.bmp
+|   |       arc_dente42a.bmp
+|   |       arc_dente42b.bmp
+|   |       arc_dente43.bmp
+|   |       arc_dente43a.bmp
+|   |       arc_dente43b.bmp
+|   |       arc_dente44.bmp
+|   |       arc_dente44a.bmp
+|   |       arc_dente44b.bmp
+|   |       arc_dente45.bmp
+|   |       arc_dente45a.bmp
+|   |       arc_dente45b.bmp
+|   |       arc_dente46.bmp
+|   |       arc_dente46a.bmp
+|   |       arc_dente46b.bmp
+|   |       arc_dente47.bmp
+|   |       arc_dente47a.bmp
+|   |       arc_dente47b.bmp
+|   |       arc_dente48.bmp
+|   |       arc_dente48a.bmp
+|   |       arc_dente48b.bmp
+|   |       arc_dente51.bmp
+|   |       arc_dente51a.bmp
+|   |       arc_dente52.bmp
+|   |       arc_dente52a.bmp
+|   |       arc_dente53.bmp
+|   |       arc_dente53a.bmp
+|   |       arc_dente54.bmp
+|   |       arc_dente54a.bmp
+|   |       arc_dente55.bmp
+|   |       arc_dente55a.bmp
+|   |       arc_dente61.bmp
+|   |       arc_dente61a.bmp
+|   |       arc_dente62.bmp
+|   |       arc_dente62a.bmp
+|   |       arc_dente63.bmp
+|   |       arc_dente63a.bmp
+|   |       arc_dente64.bmp
+|   |       arc_dente64a.bmp
+|   |       arc_dente65.bmp
+|   |       arc_dente65a.bmp
+|   |       arc_dente71.bmp
+|   |       arc_dente71a.bmp
+|   |       arc_dente72.bmp
+|   |       arc_dente72a.bmp
+|   |       arc_dente73.bmp
+|   |       arc_dente73a.bmp
+|   |       arc_dente74.bmp
+|   |       arc_dente74a.bmp
+|   |       arc_dente75.bmp
+|   |       arc_dente75a.bmp
+|   |       arc_dente81.bmp
+|   |       arc_dente81a.bmp
+|   |       arc_dente82.bmp
+|   |       arc_dente82a.bmp
+|   |       arc_dente83.bmp
+|   |       arc_dente83a.bmp
+|   |       arc_dente84.bmp
+|   |       arc_dente84a.bmp
+|   |       arc_dente85.bmp
+|   |       arc_dente85a.bmp
+|   |       arc_inferior_dec.bmp
+|   |       arc_inferior_mista.bmp
+|   |       arc_inferior_perm.bmp
+|   |       arc_superior_dec.bmp
+|   |       arc_superior_mista.bmp
+|   |       arc_superior_perm.bmp
+|   |       
+|   \---Dentes3d
+|           arc_dente11.bmp
+|           arc_dente12.bmp
+|           arc_dente13.bmp
+|           arc_dente14.bmp
+|           arc_dente15.bmp
+|           arc_dente16.bmp
+|           arc_dente17.bmp
+|           arc_dente18.bmp
+|           arc_dente21.bmp
+|           arc_dente22.bmp
+|           arc_dente23.bmp
+|           arc_dente24.bmp
+|           arc_dente25.bmp
+|           arc_dente26.bmp
+|           arc_dente27.bmp
+|           arc_dente28.bmp
+|           arc_dente31.bmp
+|           arc_dente32.bmp
+|           arc_dente33.bmp
+|           arc_dente34.bmp
+|           arc_dente35.bmp
+|           arc_dente36.bmp
+|           arc_dente37.bmp
+|           arc_dente38.bmp
+|           arc_dente41.bmp
+|           arc_dente42.bmp
+|           arc_dente43.bmp
+|           arc_dente44.bmp
+|           arc_dente45.bmp
+|           arc_dente46.bmp
+|           arc_dente47.bmp
+|           arc_dente48.bmp
+|           arc_dente51.bmp
+|           arc_dente52.bmp
+|           arc_dente53.bmp
+|           arc_dente54.bmp
+|           arc_dente55.bmp
+|           arc_dente61.bmp
+|           arc_dente62.bmp
+|           arc_dente63.bmp
+|           arc_dente64.bmp
+|           arc_dente65.bmp
+|           arc_dente71.bmp
+|           arc_dente72.bmp
+|           arc_dente73.bmp
+|           arc_dente74.bmp
+|           arc_dente75.bmp
+|           arc_dente81.bmp
+|           arc_dente82.bmp
+|           arc_dente83.bmp
+|           arc_dente84.bmp
+|           arc_dente85.bmp
+|           arc_inferior_dec.bmp
+|           arc_inferior_mista.bmp
+|           arc_inferior_perm.bmp
+|           arc_superior_dec.bmp
+|           arc_superior_mista.bmp
+|           arc_superior_perm.bmp
+|           
++---Dados
+|   |   eds70.bak
+|   |   eds70.sql
+|   |   eds70dat.mdf
+|   |   eds70log.ldf
+|   |   eds70_build_0603.sql
+|   |   eds70_build_0608.sql
+|   |   eds75_build_0809_1.sql
+|   |   eds75_build_0809_2.sql
+|   |   eds75_build_0809_3.sql
+|   |   eds75_build_0809_4.sql
+|   |   eds75_build_0809_5.sql
+|   |   eds75_build_0809_6.sql
+|   |   eds75_build_0809_7.sql
+|   |   eds75_build_0809_8.sql
+|   |   eds75_build_090415_1.sql
+|   |   eds75_build_090415_2.sql
+|   |   eds75_build_090505.sql
+|   |   eds75_build_090514_1.sql
+|   |   eds75_build_090514_2.sql
+|   |   eds75_build_090617.sql
+|   |   eds75_build_091123.sql
+|   |   eds75_build_100115_1.sql
+|   |   eds75_build_100115_2.sql
+|   |   eds75_build_100115_3.sql
+|   |   
+|   \---Dist
+|           ANAMNESE_PERG.raw
+|           ANAMNESE_QUEST.raw
+|           CID_ITEM.raw
+|           CONVENIO.raw
+|           CUSTOMCONTROL.raw
+|           CUSTOMPAGE.raw
+|           DEF_GRUPO.raw
+|           PLANO.raw
+|           PRESTADOR.raw
+|           SISTEMA.raw
+|           SIS_FUNCAO.raw
+|           SIS_MODULO.raw
+|           SIS_PERFIL.raw
+|           TAB_GEN_ITEM.raw
+|           TAB_MAT.raw
+|           TAB_PRC.raw
+|           TAB_PRC_ITEM.raw
+|           UNIDADE.raw
+|           USUARIO.raw
+|           _BANCO.raw
+|           _COMPROMISSO.raw
+|           _ESPECIALIDADE.raw
+|           _ESTADO_CIVIL.raw
+|           _FASE_PROCEDIMENTO.raw
+|           _GRUPO_CONTA.raw
+|           _INDICE.raw
+|           _MODELO_ETIQUETA.raw
+|           _MOTIVO_ATESTADO.raw
+|           _PADRAO_ETIQUETA.raw
+|           _PLANO_CONTA.raw
+|           _PREFIXO_PESSOA.raw
+|           _SIMBOLO_ANOMALIA.raw
+|           _SIMBOLO_ODONTO.raw
+|           _STATUS_AGENDA.raw
+|           _STATUS_CCCIR.raw
+|           _STATUS_INTERV.raw
+|           _STATUS_PACIENTE.raw
+|           _STATUS_PT.raw
+|           _TIPO_APRESENTACAO.raw
+|           _TIPO_CONTATO.raw
+|           _TIPO_INDICA.raw
+|           _TIPO_LOGRADOURO.raw
+|           _TIPO_MAT.raw
+|           _TIPO_PAGTO.raw
+|           _TIPO_PREST.raw
+|           _TIPO_USO.raw
+|           _TIPO_USUARIO.raw
+|           _UNID_MEDIDA.raw
+|           
++---Fotos
+|       221.711.968-07_pan.IMG
+|       221.711.968-07_pan.jpg
+|       75331_roberto_luiz_de_oliveira_junior.png
+|       
++---Help
+|       Manual_EDS70_CAP_01.pdf
+|       Manual_EDS70_CAP_02.pdf
+|       Manual_EDS70_CAP_03.pdf
+|       Manual_EDS70_CAP_04.pdf
+|       Manual_EDS70_CAP_05.pdf
+|       Manual_EDS70_CAP_06.pdf
+|       Manual_EDS70_CAP_07.pdf
+|       Manual_EDS70_CAP_08.pdf
+|       Manual_EDS70_CAP_09.pdf
+|       Manual_EDS70_CAP_10.pdf
+|       Manual_EDS70_CAP_11.pdf
+|       Manual_EDS70_CAP_12.pdf
+|       Manual_EDS70_CAP_13.pdf
+|       Manual_EDS70_Completo.pdf
+|       
++---Icones
+|       avi_aniversariantes.bmp
+|       avi_estoque.bmp
+|       avi_pagar.bmp
+|       avi_protetico.bmp
+|       avi_recados.bmp
+|       avi_receber.bmp
+|       avi_retorno.bmp
+|       avi_validade.bmp
+|       cmd_agepes.bmp
+|       cmd_altera.bmp
+|       cmd_anamnese.bmp
+|       cmd_avancames.bmp
+|       cmd_avancasemana.bmp
+|       cmd_aviso.bmp
+|       cmd_avisos.bmp
+|       cmd_backup.bmp
+|       cmd_baixa.bmp
+|       cmd_baixaest.bmp
+|       cmd_bloqueia.bmp
+|       cmd_calendario.bmp
+|       cmd_campo.bmp
+|       cmd_cancela.bmp
+|       cmd_capture.bmp
+|       cmd_cccir.bmp
+|       cmd_ccpac.bmp
+|       cmd_cnfetiqueta.bmp
+|       cmd_cnfindice.bmp
+|       cmd_compraest.bmp
+|       cmd_config.bmp
+|       cmd_contato.bmp
+|       cmd_convenio.bmp
+|       cmd_copia.bmp
+|       cmd_copiabkp.bmp
+|       cmd_detalhes.bmp
+|       cmd_detalhes2.bmp
+|       cmd_distribui.bmp
+|       cmd_down.bmp
+|       cmd_editaint.bmp
+|       cmd_editor.bmp
+|       cmd_etiqueta.bmp
+|       cmd_falar.bmp
+|       cmd_fichapes.bmp
+|       cmd_filtra.bmp
+|       cmd_filtra2.bmp
+|       cmd_finalizaint.bmp
+|       cmd_first.bmp
+|       cmd_fone.bmp
+|       cmd_fonte.bmp
+|       cmd_grafico.bmp
+|       cmd_grava.bmp
+|       cmd_gravaesta.bmp
+|       cmd_gravatodas.bmp
+|       cmd_help.bmp
+|       cmd_historico.bmp
+|       cmd_imprime.bmp
+|       cmd_insere.bmp
+|       cmd_last.bmp
+|       cmd_lixo.bmp
+|       cmd_maladir.bmp
+|       cmd_menuint.bmp
+|       cmd_menupac.bmp
+|       cmd_nao.bmp
+|       cmd_next.bmp
+|       cmd_novo.bmp
+|       cmd_novopac.bmp
+|       cmd_novotra.bmp
+|       cmd_odontograma.bmp
+|       cmd_ok.bmp
+|       cmd_orcamento.bmp
+|       cmd_padrao.bmp
+|       cmd_preferencias.bmp
+|       cmd_previous.bmp
+|       cmd_procura.bmp
+|       cmd_proxage.bmp
+|       cmd_rapido.bmp
+|       cmd_reajusta.bmp
+|       cmd_receita.bmp
+|       cmd_recibo.bmp
+|       cmd_remove.bmp
+|       cmd_renumera.bmp
+|       cmd_restaurabkp.bmp
+|       cmd_retornames.bmp
+|       cmd_retornasemana.bmp
+|       cmd_senha.bmp
+|       cmd_setapreview1.bmp
+|       cmd_setapreview2.bmp
+|       cmd_sim.bmp
+|       cmd_tela.bmp
+|       cmd_testa.bmp
+|       cmd_up.bmp
+|       cmd_valores.bmp
+|       cmd_verificabkp.bmp
+|       dia_auscoroa.bmp
+|       dia_ausraiz.bmp
+|       dia_descalcif.bmp
+|       dia_distal.bmp
+|       dia_erosao.bmp
+|       dia_extrusao.bmp
+|       dia_fissura.bmp
+|       dia_fluorose.bmp
+|       dia_fratura.bmp
+|       dia_giroversao.bmp
+|       dia_impactado.bmp
+|       dia_incluso.bmp
+|       dia_intrusao.bmp
+|       dia_lesao.bmp
+|       dia_mesial.bmp
+|       dia_semi.bmp
+|       dia_supranum.bmp
+|       dia_trepanacao.bmp
+|       dragcopy.cur
+|       dragmove.cur
+|       esp_Cirurgia.bmp
+|       esp_Dentística.bmp
+|       esp_Diagnóstico.bmp
+|       esp_Endodontia.bmp
+|       esp_Estética.bmp
+|       esp_Generico.bmp
+|       esp_Gerais.bmp
+|       esp_Implantodontia.bmp
+|       esp_Indefinido.bmp
+|       esp_Odontopediatria.bmp
+|       esp_Ortodontia.bmp
+|       esp_Periodontia.bmp
+|       esp_Prevenção.bmp
+|       esp_Prótese.bmp
+|       esp_Radiologia.bmp
+|       ico_alert.bmp
+|       ico_alert.ico
+|       ico_alerta.bmp
+|       ico_aniversario.bmp
+|       ico_calendario.bmp
+|       ico_caution.bmp
+|       ico_caution.ico
+|       ico_check.bmp
+|       ico_check_prn.bmp
+|       ico_debito.bmp
+|       ico_dedo.bmp
+|       ico_dedoanamnese.bmp
+|       ico_foto.bmp
+|       ico_memo.bmp
+|       ico_quest.bmp
+|       ico_quest.ico
+|       int_adesiva.bmp
+|       int_ajuste.bmp
+|       int_apicecto.bmp
+|       int_attach.bmp
+|       int_aumen.bmp
+|       int_banda.bmp
+|       int_bloco.bmp
+|       int_boticao.bmp
+|       int_bracket.bmp
+|       int_bran.bmp
+|       int_byte.bmp
+|       int_canal.bmp
+|       int_capea.bmp
+|       int_cirur.bmp
+|       int_consulta.bmp
+|       int_coroa.bmp
+|       int_desgas.bmp
+|       int_eho.bmp
+|       int_emerg.bmp
+|       int_enxerto.bmp
+|       int_escova.bmp
+|       int_faceta.bmp
+|       int_fixa.bmp
+|       int_fluor.bmp
+|       int_fotos.bmp
+|       int_frenec.bmp
+|       int_gengivec.bmp
+|       int_hemi.bmp
+|       int_implante.bmp
+|       int_lateral.bmp
+|       int_mantene.bmp
+|       int_manut.bmp
+|       int_manuten.bmp
+|       int_maopunho.bmp
+|       int_modelo.bmp
+|       int_mordida.bmp
+|       int_movel.bmp
+|       int_nucleo.bmp
+|       int_oclusal.bmp
+|       int_panoram.bmp
+|       int_peric.bmp
+|       int_placa.bmp
+|       int_poli.bmp
+|       int_prof.bmp
+|       int_protese.bmp
+|       int_provele.bmp
+|       int_provgru.bmp
+|       int_pulpo.bmp
+|       int_raiox.bmp
+|       int_raspagem.bmp
+|       int_raspger.bmp
+|       int_reemb.bmp
+|       int_remove.bmp
+|       int_restaura.bmp
+|       int_RestDO.bmp
+|       int_RestMO.bmp
+|       int_RestMOD.bmp
+|       int_RestO.bmp
+|       int_retalho.bmp
+|       int_rizec.bmp
+|       int_selante.bmp
+|       int_total.bmp
+|       int_tunel.bmp
+|       int_ulecto.bmp
+|       sim_30.bmp
+|       sim_ajuste.bmp
+|       sim_attach.bmp
+|       sim_bra.bmp
+|       sim_bra_40.bmp
+|       sim_byte.bmp
+|       sim_default.bmp
+|       sim_down.bmp
+|       sim_face.bmp
+|       sim_face_40.bmp
+|       sim_modelo.bmp
+|       sim_outras.bmp
+|       sim_poli.bmp
+|       sim_prov.bmp
+|       sim_raiox.bmp
+|       sim_rx.bmp
+|       sim_sel.bmp
+|       sim_simb1.bmp
+|       sim_simb10.bmp
+|       sim_simb11.bmp
+|       sim_simb12.bmp
+|       sim_simb13.bmp
+|       sim_simb14.bmp
+|       sim_simb15.bmp
+|       sim_simb16.bmp
+|       sim_simb17.bmp
+|       sim_simb18.bmp
+|       sim_simb19.bmp
+|       sim_simb2.bmp
+|       sim_simb20.bmp
+|       sim_simb21.bmp
+|       sim_simb22.bmp
+|       sim_simb23.bmp
+|       sim_simb24.bmp
+|       sim_simb25.bmp
+|       sim_simb26.bmp
+|       sim_simb27.bmp
+|       sim_simb28.bmp
+|       sim_simb28_40.bmp
+|       sim_simb29.bmp
+|       sim_simb3.bmp
+|       sim_simb30.bmp
+|       sim_simb31.bmp
+|       sim_simb32.bmp
+|       sim_simb33.bmp
+|       sim_simb34.bmp
+|       sim_simb35.bmp
+|       sim_simb36.bmp
+|       sim_simb4.bmp
+|       sim_simb5.bmp
+|       sim_simb6.bmp
+|       sim_simb7.bmp
+|       sim_simb8.bmp
+|       sim_simb8_40.bmp
+|       sim_simb9.bmp
+|       sim_ulec.bmp
+|       
++---Import
+|       EDIMP50.exe
+|       EDIMP50Q.exe
+|       eds60.dsn
+|       eds60q.dsn
+|       EDS60Q_Vazio.mdb
+|       EDS60_Vazio.mdb
+|       
++---MSDE
+|   |   autorun.inf
+|   |   EDSQL70.exe
+|   |   license.txt
+|   |   msvcr71.dll
+|   |   readme.txt
+|   |   ReadmeSql2k32desksp4.htm
+|   |   setup.exe
+|   |   setup.ini
+|   |   setup.rll
+|   |   sqdedev.dll
+|   |   sqlresld.dll
+|   |   sqlsut.dll
+|   |   sqlunirl.dll
+|   |   
+|   +---Msi
+|   |       InstMsi.exe
+|   |       InstMsi20.exe
+|   |       InstMsiW.exe
+|   |       InstMsiW20.exe
+|   |       
+|   +---MSM
+|   |   |   atl.msm
+|   |   |   CONNECT.MSM
+|   |   |   DEV_SCM.MSM
+|   |   |   DMO.MSM
+|   |   |   DTC.MSM
+|   |   |   DTS.MSM
+|   |   |   mfc42.msm
+|   |   |   msstkprp.msm
+|   |   |   msvcirt.msm
+|   |   |   msvcrt.msm
+|   |   |   MSXMLSQL32.MSM
+|   |   |   QFEPATCH.MSM
+|   |   |   REPL.MSM
+|   |   |   SEM.MSM
+|   |   |   SHARED.MSM
+|   |   |   SQLAGENT.MSM
+|   |   |   SQLSVR.MSM
+|   |   |   TOOLS.MSM
+|   |   |   UPGRADE.MSM
+|   |   |   
+|   |   \---1033
+|   |           DMO_RES.MSM
+|   |           DTS_RES.MSM
+|   |           MSXMLSQLR32.MSM
+|   |           REPL_RES.MSM
+|   |           SEM_RES.MSM
+|   |           SQLAGENT_RES.MSM
+|   |           SQLBASE.MSM
+|   |           SQLSVR_RES.MSM
+|   |           TOOLS_RES.MSM
+|   |           
+|   \---Setup
+|           Sql01P.msp
+|           Sql02P.msp
+|           Sql03P.msp
+|           Sql04P.msp
+|           Sql05P.msp
+|           Sql06P.msp
+|           Sql07P.msp
+|           Sql08P.msp
+|           Sql09P.msp
+|           Sql10P.msp
+|           Sql11P.msp
+|           Sql12P.msp
+|           Sql13P.msp
+|           Sql14P.msp
+|           Sql15P.msp
+|           Sql16P.msp
+|           sql17P.msp
+|           Sql2000.msi
+|           SqlRun.cab
+|           SqlRun01.msi
+|           SqlRun02.msi
+|           SqlRun03.msi
+|           SqlRun04.msi
+|           SqlRun05.msi
+|           SqlRun06.msi
+|           SqlRun07.msi
+|           SqlRun08.msi
+|           SqlRun09.msi
+|           SqlRun10.msi
+|           SqlRun11.msi
+|           SqlRun12.msi
+|           SqlRun13.msi
+|           SqlRun14.msi
+|           SqlRun15.msi
+|           SqlRun16.msi
+|           
++---Objetos
+|       arc_dente11.dat
+|       arc_dente12.dat
+|       arc_dente13.dat
+|       arc_dente14.dat
+|       arc_dente15.dat
+|       arc_dente16.dat
+|       arc_dente17.dat
+|       arc_dente18.dat
+|       arc_dente21.dat
+|       arc_dente22.dat
+|       arc_dente23.dat
+|       arc_dente24.dat
+|       arc_dente25.dat
+|       arc_dente26.dat
+|       arc_dente27.dat
+|       arc_dente28.dat
+|       arc_dente31.dat
+|       arc_dente32.dat
+|       arc_dente33.dat
+|       arc_dente34.dat
+|       arc_dente35.dat
+|       arc_dente36.dat
+|       arc_dente37.dat
+|       arc_dente38.dat
+|       arc_dente41.dat
+|       arc_dente42.dat
+|       arc_dente43.dat
+|       arc_dente44.dat
+|       arc_dente45.dat
+|       arc_dente46.dat
+|       arc_dente47.dat
+|       arc_dente48.dat
+|       arc_dente51.dat
+|       arc_dente52.dat
+|       arc_dente53.dat
+|       arc_dente54.dat
+|       arc_dente55.dat
+|       arc_dente61.dat
+|       arc_dente62.dat
+|       arc_dente63.dat
+|       arc_dente64.dat
+|       arc_dente65.dat
+|       arc_dente71.dat
+|       arc_dente72.dat
+|       arc_dente73.dat
+|       arc_dente74.dat
+|       arc_dente75.dat
+|       arc_dente81.dat
+|       arc_dente82.dat
+|       arc_dente83.dat
+|       arc_dente84.dat
+|       arc_dente85.dat
+|       
++---Outbox
+|       Orcamento.pdf
+|       
++---Reports
+|       TISS_COB.fr3
+|       TISS_GTO.fr3
+|       TISS_SIT.fr3
+|       
++---Safe
+|       Easy.BKP
+|       EDS70Tmp.MDB
+|       
++---Slide
+|       slide.htm
+|       
++---Temp
+|       ANAMNESE_PERG.log
+|       ANAMNESE_QUEST.log
+|       anexo.jpg
+|       arc_inferior.bmp
+|       arc_superior.bmp
+|       CID_ITEM.log
+|       CONVENIO.log
+|       CUSTOMCONTROL.log
+|       CUSTOMPAGE.log
+|       dbcreate.log
+|       DEF_GRUPO.log
+|       DELL_SERVIDOR_eds70.log
+|       EasyBackup.CMP
+|       EDS70Tmp.MDB
+|       gerais.bmp
+|       PLANO.log
+|       PRESTADOR.log
+|       SISTEMA.log
+|       SIS_FUNCAO.log
+|       SIS_MODULO.log
+|       SIS_PERFIL.log
+|       TAB_GEN_ITEM.log
+|       TAB_MAT.log
+|       TAB_PRC.log
+|       TAB_PRC_ITEM.log
+|       UNIDADE.log
+|       USUARIO.log
+|       _BANCO.log
+|       _COMPROMISSO.log
+|       _ESPECIALIDADE.log
+|       _ESTADO_CIVIL.log
+|       _FASE_PROCEDIMENTO.log
+|       _GRUPO_CONTA.log
+|       _INDICE.log
+|       _MODELO_ETIQUETA.log
+|       _MOTIVO_ATESTADO.log
+|       _PADRAO_ETIQUETA.log
+|       _PLANO_CONTA.log
+|       _PREFIXO_PESSOA.log
+|       _SIMBOLO_ANOMALIA.log
+|       _SIMBOLO_ODONTO.log
+|       _STATUS_AGENDA.log
+|       _STATUS_CCCIR.log
+|       _STATUS_INTERV.log
+|       _STATUS_PACIENTE.log
+|       _STATUS_PT.log
+|       _TIPO_APRESENTACAO.log
+|       _TIPO_CONTATO.log
+|       _TIPO_INDICA.log
+|       _TIPO_LOGRADOURO.log
+|       _TIPO_MAT.log
+|       _TIPO_PAGTO.log
+|       _TIPO_PREST.log
+|       _TIPO_USO.log
+|       _TIPO_USUARIO.log
+|       _UNID_MEDIDA.log
+|       
++---Textos
+|   |   Agradecimento 1.doc
+|   |   Agradecimento 1.rtf
+|   |   Agradecimento 1.txt
+|   |   Agradecimento 2.doc
+|   |   Agradecimento 2.rtf
+|   |   Agradecimento 2.txt
+|   |   Aniversario 1.doc
+|   |   Aniversario 1.rtf
+|   |   Aniversario 1.txt
+|   |   Aniversario 2.doc
+|   |   Aniversario 2.rtf
+|   |   Aniversario 2.txt
+|   |   assinatura.bmp
+|   |   Assistente.rtf
+|   |   Atestado.mod
+|   |   ATESTADO_BRANA.mod
+|   |   ATESTADO_TEL_BRANA.mod
+|   |   Boasvindas 1.doc
+|   |   Boasvindas 1.rtf
+|   |   Boasvindas 1.txt
+|   |   CABEÇALHO.bmp
+|   |   cabeçalho_easy_brana.bmp
+|   |   CartaoHorario.rtf
+|   |   CartaPaciente.mod
+|   |   CartaSimples.mod
+|   |   CARTA_CARDIO_BRANA.rtf
+|   |   CARTA_GUIA_CANINA_BRANA.rtf
+|   |   Cobranca 1.doc
+|   |   Contrato Implante.doc
+|   |   CONTR_genilda_PRESTAÇÃO_SERVIÇO_BRANA.rtf
+|   |   CONTR_MENOR_PRESTAÇÃO_SERVIÇO_BRANA.rtf
+|   |   CONTR_PRESTAÇÃO_SERVIÇO_BRANA.rtf
+|   |   CONTR_PRESTAÇÃO_SERVIÇO_NOVO_BRANA.rtf
+|   |   CONTR_TERCEIRO_PRESTAÇÃO_SERVIÇO_BRANA.rtf
+|   |   Cuidados 1.doc
+|   |   Cuidados 2.doc
+|   |   Dia das criancas 1.txt
+|   |   Dias da crianças 1.rtf
+|   |   Dias das criancas 1.doc
+|   |   EasyTemplate.dot
+|   |   ECG_BRANA.rtf
+|   |   Email Agendamento 1.rtf
+|   |   Email Orcamento.rtf
+|   |   EMAIL_AGENDAMENTO_BRANA.rtf
+|   |   Envelope.mod
+|   |   Escovacao 1.doc
+|   |   ETIQUETA-pimaco6083.mod
+|   |   Etiqueta_LAB.mod
+|   |   EXAME_ELETRO_BRANA.rtf
+|   |   EXAME_SANGUE_COLESTEROL_BRANA.rtf
+|   |   EXAME_SANGUE_COMPLETO_BRANA.rtf
+|   |   EXAME_SANGUE_HORMONIO_BRANA.rtf
+|   |   EXAME_SANGUE_IMPLANTE_BRANA.rtf
+|   |   ISCA_ABELHAS.mod
+|   |   LAB_PimacoA4255.mod
+|   |   MergeList.tmp
+|   |   Modelo1.rec
+|   |   Modelo2.rec
+|   |   Normal.dotm
+|   |   ORIENTAÇOES_CLAREAMENTO_BRANA.rtf
+|   |   ORIENTAÇOES_PLACA_BRANA.rtf
+|   |   Pimaco6080.mod
+|   |   Pimaco6081.mod
+|   |   PimacoA4254.mod
+|   |   PimacoA4255.mod
+|   |   PimacoA4256.mod
+|   |   POS_OPERATORIO_BRANA.rtf
+|   |   POS_OPERATORIO_SEIO_BRANA.rtf
+|   |   qr_code_zap.bmp
+|   |   Receita.mod
+|   |   RECEITA_ALISSON_BRANA.mod
+|   |   RECEITA_TEL_BRANA.mod
+|   |   Recibo1.mod
+|   |   Recibo2.mod
+|   |   Recibo3.mod
+|   |   RECIBO_TEL_BRANA.mod
+|   |   RECIBO_TESTE.mod
+|   |   RECISÃO_CONTRATO.rtf
+|   |   Recomendacoes 1.doc
+|   |   Retorno 1.doc
+|   |   Retorno 1.rtf
+|   |   Retorno 1.txt
+|   |   Retorno 2.doc
+|   |   Retorno 2.rtf
+|   |   Retorno 2.txt
+|   |   Retorno 3.doc
+|   |   Retorno 3.rtf
+|   |   Retorno 3.txt
+|   |   Retorno 4.doc
+|   |   Retorno 4.rtf
+|   |   Retorno 4.txt
+|   |   Retorno 5.doc
+|   |   Retorno 5.rtf
+|   |   Retorno 5.txt
+|   |   RX_ATM_BRANA.rtf
+|   |   RX_PAN.rtf
+|   |   RX_PAN_BRANA.rtf
+|   |   RX_PAN_E_PERIAPICAL_COD_NOVO_UNIMED.rtf
+|   |   RX_PAN_E_PERIAPICAL_UNIMED.rtf
+|   |   RX_PAN_UNIMED_BRANA.rtf
+|   |   RX_PERIAPICAL_UNIMED.rtf
+|   |   RX_SEIOS_DA_FACE_BRANA.rtf
+|   |   SMS Agendamento 1.txt
+|   |   TERMO_BOTOX_BRANA.rtf
+|   |   TERMO_CLAREAMENTOS_BRANA.rtf
+|   |   TERMO_CLAREAMENTO_BRANA.rtf
+|   |   TERMO_CURATIVO_60_DIAS_BRANA.rtf
+|   |   TERMO_ENDO_BRANA.rtf
+|   |   TERMO_ENXERTO_GENGIVAL_BRANA.rtf
+|   |   TERMO_ESCOLHA PESSOAL.rtf
+|   |   TERMO_EXO+BIOMATERIAL_BRANA.rtf
+|   |   TERMO_EXODONTIA_BRANA.rtf
+|   |   TERMO_EXO_BRANA.rtf
+|   |   TERMO_FASE_PROVISORIA_BRANA.rtf
+|   |   TERMO_GERAL_BRANA.rtf
+|   |   TERMO_GERAL_MOD_BRANA.rtf
+|   |   TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf
+|   |   TERMO_INSTRUÇAO_CLAREAMENTO_BRANA.rtf
+|   |   TERMO_ORTO_CONTENCAO_BRANA.rtf
+|   |   TERMO_ORTO_DESISTENCIA_BRANA.rtf
+|   |   TERMO_PERIODONTIA_BRANA.rtf
+|   |   TERMO_PLACA_BRANA.rtf
+|   |   TERMO_PROTESE_FIXA_BRANA.rtf
+|   |   TERMO_PROTOCOLO_BRANA.rtf
+|   |   TERMO_PROTOCOLO_IMEDIATA_BRANA.rtf
+|   |   TOMO_BRANA.rtf
+|   |   
+|   +---LiveContent
+|   |   +---15
+|   |   |   +---Managed
+|   |   |   |   +---Document Themes
+|   |   |   |   |   \---1046
+|   |   |   |   |       |   TM02807606[[fn=Folha de rosto para fax (tema Pontos)]].dotx
+|   |   |   |   |       |   TM03457452[[fn=Celeste]].thmx
+|   |   |   |   |       |   TM03457485[[fn=Malha]].thmx
+|   |   |   |   |       |   TM04033919[[fn=Circuito]].thmx
+|   |   |   |   |       |   TM04033921[[fn=Damasco]].thmx
+|   |   |   |   |       |   TM04033923[[fn=Profundidade]].thmx
+|   |   |   |   |       |   TM04033925[[fn=Gotícula]].thmx
+|   |   |   |   |       |   TM04033927[[fn=Evento Principal]].thmx
+|   |   |   |   |       |   TM04033929[[fn=Ardósia]].thmx
+|   |   |   |   |       |   
+|   |   |   |   |       +---Theme Colors
+|   |   |   |   |       +---Theme Effects
+|   |   |   |   |       \---Theme Fonts
+|   |   |   |   +---SmartArt Graphics
+|   |   |   |   |   \---1046
+|   |   |   |   +---Word Document Bibliography Styles
+|   |   |   |   \---Word Document Building Blocks
+|   |   |   |       \---1046
+|   |   |   \---User
+|   |   |       +---Document Themes
+|   |   |       |   \---1046
+|   |   |       +---Word Document Bibliography Styles
+|   |   |       \---Word Document Building Blocks
+|   |   |           \---1046
+|   |   \---16
+|   |       +---Managed
+|   |       |   +---Document Themes
+|   |       |   |   \---1046
+|   |       |   |           TM02807606[[fn=Folha de rosto para fax (tema Pontos)]].dotx
+|   |       |   |           TM03090430[[fn=Em Tiras]].thmx
+|   |       |   |           TM03090434[[fn=Tipo de Madeira]].thmx
+|   |       |   |           TM03457444[[fn=Base]].thmx
+|   |       |   |           TM03457464[[fn=Dividendo]].thmx
+|   |       |   |           TM03457475[[fn=Quadro]].thmx
+|   |       |   |           TM03457485[[fn=Malha]].thmx
+|   |       |   |           TM03457491[[fn=Metropolitano]].thmx
+|   |       |   |           TM03457503[[fn=Citável]].thmx
+|   |       |   |           TM03457510[[fn=Savon]].thmx
+|   |       |   |           TM03457515[[fn=Exibir]].thmx
+|   |       |   |           TM04033917[[fn=Berlim]].thmx
+|   |       |   |           TM04033919[[fn=Circuito]].thmx
+|   |       |   |           TM04033921[[fn=Damasco]].thmx
+|   |       |   |           TM04033925[[fn=Gotícula]].thmx
+|   |       |   |           TM04033927[[fn=Evento Principal]].thmx
+|   |       |   |           TM04033929[[fn=Ardósia]].thmx
+|   |       |   |           TM04033937[[fn=Trilha de Vapor]].thmx
+|   |       |   |           TM10001105[[fn=Cortar]].thmx
+|   |       |   |           TM10001106[[fn=Selo]].thmx
+|   |       |   |           TM10001114[[fn=Galeria]].thmx
+|   |       |   |           TM10001115[[fn=Pacote]].thmx
+|   |       |   |           
+|   |       |   +---SmartArt Graphics
+|   |       |   |   \---1046
+|   |       |   +---Word Document Bibliography Styles
+|   |       |   |       TM02851216[[fn=apasixtheditionofficeonline]].xsl
+|   |       |   |       TM02851217[[fn=chicago]].xsl
+|   |       |   |       TM02851218[[fn=gb]].xsl
+|   |       |   |       TM02851219[[fn=gostname]].xsl
+|   |       |   |       TM02851220[[fn=gosttitle]].xsl
+|   |       |   |       TM02851221[[fn=harvardanglia2008officeonline]].xsl
+|   |       |   |       TM02851222[[fn=ieee2006officeonline]].xsl
+|   |       |   |       TM02851223[[fn=iso690]].xsl
+|   |       |   |       TM02851224[[fn=iso690nmerical]].xsl
+|   |       |   |       TM02851225[[fn=mlaseventheditionofficeonline]].xsl
+|   |       |   |       TM02851226[[fn=turabian]].xsl
+|   |       |   |       TM02851227[[fn=sist02]].xsl
+|   |       |   |       
+|   |       |   \---Word Document Building Blocks
+|   |       |       \---1046
+|   |       |               TM01840907[[fn=Equations]].dotx
+|   |       |               
+|   |       \---User
+|   |           +---Document Themes
+|   |           |   \---1046
+|   |           +---Word Document Bibliography Styles
+|   |           \---Word Document Building Blocks
+|   |               \---1046
+|   \---Textos
+|           60_dias_emergencia.rtf
+|           Agradecimento 1.doc
+|           Agradecimento 1.rtf
+|           Agradecimento 1.txt
+|           Agradecimento 2.doc
+|           Agradecimento 2.rtf
+|           Agradecimento 2.txt
+|           Aniversario 1.doc
+|           Aniversario 1.rtf
+|           Aniversario 1.txt
+|           Aniversario 2.doc
+|           Aniversario 2.rtf
+|           Aniversario 2.txt
+|           aniversario.rtf
+|           aniversario_mes.rtf
+|           Assistente.rtf
+|           Atestado.mod
+|           aviso_brana.rtf
+|           aviso_brana_SIMPLES.rtf
+|           Bem-vindo ao Word.dotx
+|           Boasvindas 1.doc
+|           Boasvindas 1.rtf
+|           Boasvindas 1.txt
+|           campanha_clareamento.rtf
+|           CartaoHorario.rtf
+|           CartaPaciente.mod
+|           CartaSimples.mod
+|           Carta_Boas_Vindas.rtf
+|           Cobranca 1.doc
+|           Cobranca.rtf
+|           Contrato Implante.doc
+|           Convite.rtf
+|           Convite_Geral.rtf
+|           Cuidados 1.doc
+|           Cuidados 2.doc
+|           Dia das criancas 1.txt
+|           Dias da crianças 1.rtf
+|           Dias das criancas 1.doc
+|           e-mail_flash.docx
+|           EasyTemplate.dot
+|           Email Agendamento 1.rtf
+|           Email Orcamento.rtf
+|           Email_agendamento.rtf
+|           Envelope.mod
+|           Escovacao 1.doc
+|           LOGO_BRANA.bmp
+|           LOGO_FACE.rtf
+|           logo_playsafe.mod
+|           logo_playsafe.rtf
+|           Manutencao_ORTO.rtf
+|           Manutencao_ORTO_BRANA.rtf
+|           MergeList.tmp
+|           Modelo1.rec
+|           Modelo2.rec
+|           Natal_2013.rtf
+|           Normal.dotm
+|           NormalEmail.dotm
+|           Orçamento_vencido.rtf
+|           Receita.mod
+|           Recibo1.mod
+|           Recibo2.mod
+|           Recibo3.mod
+|           Recibo_tel.rtf
+|           Recomendacoes 1.doc
+|           Retorno 1.doc
+|           Retorno 1.rtf
+|           Retorno 1.txt
+|           Retorno 2.doc
+|           Retorno 2.rtf
+|           Retorno 2.txt
+|           Retorno 3.doc
+|           Retorno 3.rtf
+|           Retorno 3.txt
+|           Retorno 4.doc
+|           Retorno 4.rtf
+|           Retorno 4.txt
+|           Retorno 5.doc
+|           Retorno 5.rtf
+|           Retorno 5.txt
+|           Retorno_6meses.rtf
+|           SMS Agendamento 1.txt
+|           telmeinbergodontologia.rtf
+|           Tratamento_interrompido.rtf
+|           
+\---TISS

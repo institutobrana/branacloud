@@ -1,0 +1,46 @@
+{\rtf1\ansi\deff0\deftab720{\fonttbl{\f0\fnil\fcharset1 Arial;}{\f1\fnil\fcharset1 MS Sans Serif;}{\f2\fnil\fcharset2 Symbol;}{\f3\fnil\fcharset1 Times New Roman;}{\f4\fnil\fcharset0 Times New Roman;}{\f5\fnil\fcharset0 Calibri;}{\f6\fnil\fcharset238 Times New Roman CE;}{\f7\fnil\fcharset204 Times New Roman Cyr;}{\f8\fnil\fcharset161 Times New Roman Greek;}{\f9\fnil\fcharset162 Times New Roman Tur;}{\f10\fnil\fcharset177 Times New Roman (Hebrew);}{\f11\fnil\fcharset178 Times New Roman (Arabic);}{\f12\fnil\fcharset186 Times New Roman Baltic;}{\f13\fnil\fcharset163 Times New Roman (Vietnamese);}{\f14\fnil\fcharset238 Arial CE;}{\f15\fnil\fcharset204 Arial Cyr;}{\f16\fnil\fcharset161 Arial Greek;}{\f17\fnil\fcharset162 Arial Tur;}{\f18\fnil\fcharset177 Arial (Hebrew);}{\f19\fnil\fcharset178 Arial (Arabic);}{\f20\fnil\fcharset186 Arial Baltic;}{\f21\fnil\fcharset163 Arial (Vietnamese);}{\f22\fnil\fcharset0 Cachex;}{\f23\fnil\fcharset0 Chow Fun;}{\f24\fnil\fcharset0 System;}{\f25\fnil\fcharset0 A Cut Above The Rest;}{\f26\fnil\fcharset0 Arial;}{\f27\fnil\fcharset0 Courier New;}{\f28\fnil\fcharset0 Tahoma;}{\f29\fnil\fcharset0 CHR32;}{\f30\fnil\fcharset0 Frutiger95-UltraBlack;}}{\colortbl\red0\green0\blue0;\red255\green0\blue0;\red0\green128\blue0;\red0\green0\blue255;\red255\green255\blue0;\red255\green0\blue255;\red128\green0\blue128;\red128\green0\blue0;\red0\green255\blue0;\red0\green255\blue255;\red0\green128\blue128;\red0\green0\blue128;\red255\green255\blue255;\red192\green192\blue192;\red128\green128\blue128;\red0\green0\blue0;}\wpprheadfoot0\paperw12240\paperh15840\margl283\margr283\margt283\margb0\margh720\margf720{\*\pnseclvl1\pnucrm\pnstart1\pnhang\pnindent720{\pntxtb}{\pntxta{.}}}
+{\*\pnseclvl2\pnucltr\pnstart1\pnhang\pnindent720{\pntxtb}{\pntxta{.}}}
+{\*\pnseclvl3\pndec\pnstart1\pnhang\pnindent720{\pntxtb}{\pntxta{.}}}
+{\*\pnseclvl4\pnlcltr\pnstart1\pnhang\pnindent720{\pntxtb}{\pntxta{)}}}
+{\*\pnseclvl5\pndec\pnstart1\pnhang\pnindent720{\pntxtb{(}}{\pntxta{)}}}
+{\*\pnseclvl6\pnlcltr\pnstart1\pnhang\pnindent720{\pntxtb{(}}{\pntxta{)}}}
+{\*\pnseclvl7\pnlcrm\pnstart1\pnhang\pnindent720{\pntxtb{(}}{\pntxta{)}}}
+{\*\pnseclvl8\pnlcltr\pnstart1\pnhang\pnindent720{\pntxtb{(}}{\pntxta{)}}}
+{\*\pnseclvl9\pnlcrm\pnstart1\pnhang\pnindent720{\pntxtb{(}}{\pntxta{)}}}
+\endnhere\sectdefaultcl{\pard{\qc\li0\fi0\ri0\sb0\sl\sa0 \plain\f30\fs24\cf0\b                                                                                                                \plain\f30\fs20\cf0\b Whatsapp\par
+\ql\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs24\cf0\b {\*\wptools{110e0a005457504f496d6167650054504630095457504f496d616765025f31075769647468545703c20b084865696768745457037503064f626a54616702000c57726974655254464d6f64650707776f62426f74680a53747265616d4e616d6514440000005c5c496e737069726f6e5c645c4252414e41204152515549564f535c4c4f474f5f4252414e415c504e475c63616265c3a7616c686f5f656173795f6272616e612e626d700b5472616e73706172656e7408105472616e73706172656e74436f6c6f720707636c426c61636b000000000000}}{\field{\*\fldinst{INCLUDEPICTURE "\\\\\\\\Inspiron\\\\d\\\\BRANA ARQUIVOS\\\\LOGO_BRANA\\\\PNG\\\\cabeçalho_easy_brana.bmp" MERGEFORMAT}}}\plain\f26\fs24\cf0\b                                                                                                                          \plain\f26\fs24\cf0\b {\*\wptools{110e0a005457504f496d6167650054504630095457504f496d616765025f310757696474685457032704084865696768745457034704064f626a54616702000c57726974655254464d6f64650707776f62426f74680a53747265616d4e616d65063a5c5c496e737069726f6e5c645c4252414e41204152515549564f535c4c4f474f5f4252414e415c504e475c71725f636f64655f7a61702e626d700b5472616e73706172656e7408105472616e73706172656e74436f6c6f720707636c426c61636b000000000000}}{\field{\*\fldinst{INCLUDEPICTURE "\\\\\\\\Inspiron\\\\d\\\\BRANA ARQUIVOS\\\\LOGO_BRANA\\\\PNG\\\\qr_code_zap.bmp" MERGEFORMAT}}}\par
+\ql\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs24\cf10 _____________________________________________________________________________________\par
+\qc\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs24\cf0\b \par
+\ql\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs24\cf0\b ORIENTA\'c7\'d5ES P\'d3S-OPERAT\'d3RIAS\par
+\ql\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs28\cf0\b \par
+\ql\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs24\cf0\b \par
+{\tqc\tx4320\tqr\tx8496 \ql\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs28\cf0\b Sr.(a)\plain\f0\fs24\cf0  \plain\f26\fs28\cf0\b <<Paciente.NomeCompleto>> \par
+}\ql\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs24\cf0\b \par
+\qj\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs24\cf0   \plain\f26\fs22\cf0   \par
+\qj\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs22\cf0 \par
+\qj\li0\fi708\ri0\sb0\sl\sa0\toc1 \plain\f26\fs22\cf0 Voc\'ea se submeteu a uma interven\'e7\'e3o cir\'fargica, por isso \'e9 importante que tenha em mente que o pleno restabelecimento da cirurgia depende tamb\'e9m dos seus cuidados e da sua participa\'e7\'e3o, seguindo as recomenda\'e7\'f5es abaixo:\par
+\qj\li0\fi708\ri0\sb0\sl\sa0\toc1 \plain\f26\fs22\cf0 \par
+\qj\li0\fi708\ri0\sb0\sl\sa0\toc1 \plain\f26\fs22\cf0 \par
+{\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx4896\tx5616\tx6336\tx7056\tx7776\tx8496\tx9216\tx9936 \qj\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f26\fs22\cf0\b 1-Incha\'e7o\plain\f26\fs22\cf0 : \plain\f4\fs22\cf0 algum incha\'e7o \'e9 normal ap\'f3s a cirurgia. Aplique a bolsa de gelo no lado operado da face por 5 (cinco) minutos, com intervalo de 15 (quinze) minutos.Repetir essa aplica\'e7\'e3o v\'e1rias vezes durante o dia da cirurgia. Tomando-se cuidado em proteger a pele, na regi\'e3o da aplica\'e7\'e3o da bolsa de gelo, com vaselina ou cremes hidratantes para evitar queimaduras. Eventualmente poder\'e3o ocorrer hematomas ou equimoses (manchas arroxeadas na pele), isso \'e9 mais comum em pessoas de pele clara, essas manchas geralmente desaparecem espontaneamente entre 7 e 14 dias;\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0 \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 2-Sangramento:\plain\f26\fs22\cf0  \plain\f4\fs22\cf0 Um pequeno sangramento \'e9 normal nas primeiras horas. N\'e3o cuspir nem fazer bochechos vigorosos nas primeiras 24 horas ap\'f3s a cirurgia. Em caso de sangramentos ativos e de grandes volumes, comprima entre as arcadas uma gaze e entre em contato conosco;\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0 \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 3-Alimenta\'e7\'e3o:\plain\f26\fs22\cf0  \plain\f4\fs22\cf0 N\'e3o pare a alimenta\'e7\'e3o! Nas primeiras 48 horas, d\'ea prefer\'eancia a alimentos l\'edquidos e pastosos, frio e gelado, (sucos, vitaminas, sopas, iogurte, sorvetes, etc.), evitando alimentos quentes e de dif\'edcil mastiga\'e7\'e3o;\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0 \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 4-Atividades: \plain\f4\fs22\cf0 Reduza as atividades nos primeiros dias. Evite exposi\'e7\'e3o prolongada ao sol. Evite correr ou fazer exerc\'edcios f\'edsicos. Ao deitar, manter a cabe\'e7a mais elevada que o resto do corpo;\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 5-Escova\'e7\'e3o e Bochechos: \plain\f4\fs22\cf0 Boca higienizada cura mais depressa! Mas tenha cuidado ao escovar os dentes para n\'e3o lesar o local da cirurgia. Ap\'f3s alimenta\'e7\'e3o fazer higiene oral normal na \'e1rea que n\'e3o sofreu cirurgia. Fa\'e7a bochechos suaves, usando o enxaguat\'f3rio bucal prescrito, na forma indicada, iniciando um dia ap\'f3s a cirurgia;\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0 \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 6-Medicamentos:\plain\f26\fs22\cf0  \plain\f4\fs22\cf0 Tome a medica\'e7\'e3o de acordo com o receitu\'e1rio. Qualquer rea\'e7\'e3o desagrad\'e1vel relacionada com a medica\'e7\'e3o deve ser comunicada imediatamente;\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 7-Evitar: \plain\f4\fs22\cf0 Evite fumar ou consumir bebidas alco\'f3licas durante a recupera\'e7\'e3o. Evite comidas muito condimentadas, salgadas ou temperadas com vinagre, durante no m\'ednimo 72 horas ap\'f3s a cirurgia. Evite cuspir e fazer bochecho no dia da cirurgia, isso pode romper o co\'e1gulo e provocar sangramento. Evite tocar o local operado com palitos, l\'edngua e principalmente com os dedos.\plain\f26\fs22\cf0   \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0 \par
+}\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f26\fs22\cf0\b 8- \plain\f4\fs22\cf0 Retornar no dia recomendado para exame e curativo. Qualquer anormalidade entre em contato imediatamente.\par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f4\fs22\cf0 \par
+\qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f4\fs22\cf0 \par
+{\tqc\tx4320\tqr\tx8496 \qc\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f0\fs24\cf0 \par
+\qc\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f0\fs24\cf0 \par
+\qc\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f0\fs24\cf0 \par
+\qc\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f0\fs24\cf0 Rua Joaquim M. de Oliveira, 96 \'96 Vila Santo Antonio - CEP 15014-310\par
+\qc\li0\fi0\ri0\sb0\sl\sa0\toc1 \plain\f0\fs24\cf0 S\'e3o Jos\'e9 do Rio Preto / SP  \'96  Fone/WhatsApp: 17 - 3222-6894}}}
+}

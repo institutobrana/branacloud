@@ -1,0 +1,768 @@
+﻿{
+    "fonte":  "storage/modelos/clinicas/1/MergeList.tmp",
+    "gerado_em":  "2026-05-04",
+    "formato":  "merge_list_tmp_linha_1_tab_separated",
+    "total_campos":  107,
+    "categorias_ordem_arquivo":  [
+                                     "Atestado",
+                                     "Data",
+                                     "Clínica",
+                                     "Cirurgião",
+                                     "Paciente",
+                                     "Contato",
+                                     "Receita",
+                                     "Recibo",
+                                     "Etiqueta"
+                                 ],
+    "campos":  [
+                   {
+                       "categoria":  "Atestado",
+                       "campo":  "Corpo",
+                       "descricao":  "Corpo",
+                       "token":  "\u003c\u003cAtestado.Corpo\u003e\u003e",
+                       "ordem":  1
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "DataHoje",
+                       "descricao":  "DataHoje",
+                       "token":  "\u003c\u003cData.DataHoje\u003e\u003e",
+                       "ordem":  2
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "DiaHoje",
+                       "descricao":  "DiaHoje",
+                       "token":  "\u003c\u003cData.DiaHoje\u003e\u003e",
+                       "ordem":  3
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "DiaSemana",
+                       "descricao":  "DiaSemana",
+                       "token":  "\u003c\u003cData.DiaSemana\u003e\u003e",
+                       "ordem":  4
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "MêsHoje",
+                       "descricao":  "MêsHoje",
+                       "token":  "\u003c\u003cData.MêsHoje\u003e\u003e",
+                       "ordem":  5
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "MêsExt",
+                       "descricao":  "MêsExt",
+                       "token":  "\u003c\u003cData.MêsExt\u003e\u003e",
+                       "ordem":  6
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "AnoHoje",
+                       "descricao":  "AnoHoje",
+                       "token":  "\u003c\u003cData.AnoHoje\u003e\u003e",
+                       "ordem":  7
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Nome",
+                       "descricao":  "Nome",
+                       "token":  "\u003c\u003cClínica.Nome\u003e\u003e",
+                       "ordem":  8
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Endereço",
+                       "descricao":  "Endereço",
+                       "token":  "\u003c\u003cClínica.Endereço\u003e\u003e",
+                       "ordem":  9
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Bairro",
+                       "descricao":  "Bairro",
+                       "token":  "\u003c\u003cClínica.Bairro\u003e\u003e",
+                       "ordem":  10
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Cidade",
+                       "descricao":  "Cidade",
+                       "token":  "\u003c\u003cClínica.Cidade\u003e\u003e",
+                       "ordem":  11
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "CEP",
+                       "descricao":  "CEP",
+                       "token":  "\u003c\u003cClínica.CEP\u003e\u003e",
+                       "ordem":  12
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Estado",
+                       "descricao":  "Estado",
+                       "token":  "\u003c\u003cClínica.Estado\u003e\u003e",
+                       "ordem":  13
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Cabeçalho",
+                       "descricao":  "Cabeçalho",
+                       "token":  "\u003c\u003cClínica.Cabeçalho\u003e\u003e",
+                       "ordem":  14
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "CGC",
+                       "descricao":  "CGC",
+                       "token":  "\u003c\u003cClínica.CGC\u003e\u003e",
+                       "ordem":  15
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "IE",
+                       "descricao":  "IE",
+                       "token":  "\u003c\u003cClínica.IE\u003e\u003e",
+                       "ordem":  16
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Telefones",
+                       "descricao":  "Telefones",
+                       "token":  "\u003c\u003cClínica.Telefones\u003e\u003e",
+                       "ordem":  17
+                   },
+                   {
+                       "categoria":  "Cirurgião",
+                       "campo":  "Nome",
+                       "descricao":  "Nome",
+                       "token":  "\u003c\u003cCirurgião.Nome\u003e\u003e",
+                       "ordem":  18
+                   },
+                   {
+                       "categoria":  "Cirurgião",
+                       "campo":  "CPF",
+                       "descricao":  "CPF",
+                       "token":  "\u003c\u003cCirurgião.CPF\u003e\u003e",
+                       "ordem":  19
+                   },
+                   {
+                       "categoria":  "Cirurgião",
+                       "campo":  "CRO",
+                       "descricao":  "CRO",
+                       "token":  "\u003c\u003cCirurgião.CRO\u003e\u003e",
+                       "ordem":  20
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Número",
+                       "descricao":  "Número",
+                       "token":  "\u003c\u003cPaciente.Número\u003e\u003e",
+                       "ordem":  21
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Nome",
+                       "descricao":  "Nome",
+                       "token":  "\u003c\u003cPaciente.Nome\u003e\u003e",
+                       "ordem":  22
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Sobrenome",
+                       "descricao":  "Sobrenome",
+                       "token":  "\u003c\u003cPaciente.Sobrenome\u003e\u003e",
+                       "ordem":  23
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "NomeCompleto",
+                       "descricao":  "NomeCompleto",
+                       "token":  "\u003c\u003cPaciente.NomeCompleto\u003e\u003e",
+                       "ordem":  24
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Apelido",
+                       "descricao":  "Apelido",
+                       "token":  "\u003c\u003cPaciente.Apelido\u003e\u003e",
+                       "ordem":  25
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "EndereçoCom",
+                       "descricao":  "EndereçoCom",
+                       "token":  "\u003c\u003cPaciente.EndereçoCom\u003e\u003e",
+                       "ordem":  26
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "EndereçoRes",
+                       "descricao":  "EndereçoRes",
+                       "token":  "\u003c\u003cPaciente.EndereçoRes\u003e\u003e",
+                       "ordem":  27
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "ComplementoCom",
+                       "descricao":  "ComplementoCom",
+                       "token":  "\u003c\u003cPaciente.ComplementoCom\u003e\u003e",
+                       "ordem":  28
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "ComplementoRes",
+                       "descricao":  "ComplementoRes",
+                       "token":  "\u003c\u003cPaciente.ComplementoRes\u003e\u003e",
+                       "ordem":  29
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "EstadoCom",
+                       "descricao":  "EstadoCom",
+                       "token":  "\u003c\u003cPaciente.EstadoCom\u003e\u003e",
+                       "ordem":  30
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "EstadoRes",
+                       "descricao":  "EstadoRes",
+                       "token":  "\u003c\u003cPaciente.EstadoRes\u003e\u003e",
+                       "ordem":  31
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "BairroCom",
+                       "descricao":  "BairroCom",
+                       "token":  "\u003c\u003cPaciente.BairroCom\u003e\u003e",
+                       "ordem":  32
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "BairroRes",
+                       "descricao":  "BairroRes",
+                       "token":  "\u003c\u003cPaciente.BairroRes\u003e\u003e",
+                       "ordem":  33
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CEPCom",
+                       "descricao":  "CEPCom",
+                       "token":  "\u003c\u003cPaciente.CEPCom\u003e\u003e",
+                       "ordem":  34
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CEPRes",
+                       "descricao":  "CEPRes",
+                       "token":  "\u003c\u003cPaciente.CEPRes\u003e\u003e",
+                       "ordem":  35
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CidadeCom",
+                       "descricao":  "CidadeCom",
+                       "token":  "\u003c\u003cPaciente.CidadeCom\u003e\u003e",
+                       "ordem":  36
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CidadeRes",
+                       "descricao":  "CidadeRes",
+                       "token":  "\u003c\u003cPaciente.CidadeRes\u003e\u003e",
+                       "ordem":  37
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "EMail",
+                       "descricao":  "EMail",
+                       "token":  "\u003c\u003cPaciente.EMail\u003e\u003e",
+                       "ordem":  38
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "DiaAniversário",
+                       "descricao":  "DiaAniversário",
+                       "token":  "\u003c\u003cPaciente.DiaAniversário\u003e\u003e",
+                       "ordem":  39
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "MêsAniversário",
+                       "descricao":  "MêsAniversário",
+                       "token":  "\u003c\u003cPaciente.MêsAniversário\u003e\u003e",
+                       "ordem":  40
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "MêsAniversárioExt",
+                       "descricao":  "MêsAniversárioExt",
+                       "token":  "\u003c\u003cPaciente.MêsAniversárioExt\u003e\u003e",
+                       "ordem":  41
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "PalavraChave1",
+                       "descricao":  "PalavraChave1",
+                       "token":  "\u003c\u003cPaciente.PalavraChave1\u003e\u003e",
+                       "ordem":  42
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "PalavraChave2",
+                       "descricao":  "PalavraChave2",
+                       "token":  "\u003c\u003cPaciente.PalavraChave2\u003e\u003e",
+                       "ordem":  43
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "PalavraChave3",
+                       "descricao":  "PalavraChave3",
+                       "token":  "\u003c\u003cPaciente.PalavraChave3\u003e\u003e",
+                       "ordem":  44
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "PalavraChave4",
+                       "descricao":  "PalavraChave4",
+                       "token":  "\u003c\u003cPaciente.PalavraChave4\u003e\u003e",
+                       "ordem":  45
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Responsável",
+                       "descricao":  "Responsável",
+                       "token":  "\u003c\u003cPaciente.Responsável\u003e\u003e",
+                       "ordem":  46
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "DataCadastro",
+                       "descricao":  "DataCadastro",
+                       "token":  "\u003c\u003cPaciente.DataCadastro\u003e\u003e",
+                       "ordem":  47
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "IndicadoPor",
+                       "descricao":  "IndicadoPor",
+                       "token":  "\u003c\u003cPaciente.IndicadoPor\u003e\u003e",
+                       "ordem":  48
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CPF",
+                       "descricao":  "CPF",
+                       "token":  "\u003c\u003cPaciente.CPF\u003e\u003e",
+                       "ordem":  49
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "RG",
+                       "descricao":  "RG",
+                       "token":  "\u003c\u003cPaciente.RG\u003e\u003e",
+                       "ordem":  50
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "ÍndiceDébito",
+                       "descricao":  "ÍndiceDébito",
+                       "token":  "\u003c\u003cPaciente.ÍndiceDébito\u003e\u003e",
+                       "ordem":  51
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "ValorDébito",
+                       "descricao":  "ValorDébito",
+                       "token":  "\u003c\u003cPaciente.ValorDébito\u003e\u003e",
+                       "ordem":  52
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Idade",
+                       "descricao":  "Idade",
+                       "token":  "\u003c\u003cPaciente.Idade\u003e\u003e",
+                       "ordem":  53
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "DataÚltimaVisita",
+                       "descricao":  "DataÚltimaVisita",
+                       "token":  "\u003c\u003cPaciente.DataÚltimaVisita\u003e\u003e",
+                       "ordem":  54
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "DataÚltimoTratamento",
+                       "descricao":  "DataÚltimoTratamento",
+                       "token":  "\u003c\u003cPaciente.DataÚltimoTratamento\u003e\u003e",
+                       "ordem":  55
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "MêsRetorno",
+                       "descricao":  "MêsRetorno",
+                       "token":  "\u003c\u003cPaciente.MêsRetorno\u003e\u003e",
+                       "ordem":  56
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "AnoRetorno",
+                       "descricao":  "AnoRetorno",
+                       "token":  "\u003c\u003cPaciente.AnoRetorno\u003e\u003e",
+                       "ordem":  57
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "MotivoRetorno",
+                       "descricao":  "MotivoRetorno",
+                       "token":  "\u003c\u003cPaciente.MotivoRetorno\u003e\u003e",
+                       "ordem":  58
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CirurgiãoRetorno",
+                       "descricao":  "CirurgiãoRetorno",
+                       "token":  "\u003c\u003cPaciente.CirurgiãoRetorno\u003e\u003e",
+                       "ordem":  59
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Convênio",
+                       "descricao":  "Convênio",
+                       "token":  "\u003c\u003cPaciente.Convênio\u003e\u003e",
+                       "ordem":  60
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Plano",
+                       "descricao":  "Plano",
+                       "token":  "\u003c\u003cPaciente.Plano\u003e\u003e",
+                       "ordem":  61
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Tabela",
+                       "descricao":  "Tabela",
+                       "token":  "\u003c\u003cPaciente.Tabela\u003e\u003e",
+                       "ordem":  62
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CirurgiãoResp",
+                       "descricao":  "CirurgiãoResp",
+                       "token":  "\u003c\u003cPaciente.CirurgiãoResp\u003e\u003e",
+                       "ordem":  63
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Prontuário",
+                       "descricao":  "Prontuário",
+                       "token":  "\u003c\u003cPaciente.Prontuário\u003e\u003e",
+                       "ordem":  64
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Naturalidade",
+                       "descricao":  "Naturalidade",
+                       "token":  "\u003c\u003cPaciente.Naturalidade\u003e\u003e",
+                       "ordem":  65
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Nacionalidade",
+                       "descricao":  "Nacionalidade",
+                       "token":  "\u003c\u003cPaciente.Nacionalidade\u003e\u003e",
+                       "ordem":  66
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "Profissão",
+                       "descricao":  "Profissão",
+                       "token":  "\u003c\u003cPaciente.Profissão\u003e\u003e",
+                       "ordem":  67
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "LocalTrabalho",
+                       "descricao":  "LocalTrabalho",
+                       "token":  "\u003c\u003cPaciente.LocalTrabalho\u003e\u003e",
+                       "ordem":  68
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "HorarioTrabalho",
+                       "descricao":  "HorarioTrabalho",
+                       "token":  "\u003c\u003cPaciente.HorarioTrabalho\u003e\u003e",
+                       "ordem":  69
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "CPFCônjuge",
+                       "descricao":  "CPFCônjuge",
+                       "token":  "\u003c\u003cPaciente.CPFCônjuge\u003e\u003e",
+                       "ordem":  70
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "ProfissãoCônjuge",
+                       "descricao":  "ProfissãoCônjuge",
+                       "token":  "\u003c\u003cPaciente.ProfissãoCônjuge\u003e\u003e",
+                       "ordem":  71
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "DataNasc",
+                       "descricao":  "DataNasc",
+                       "token":  "\u003c\u003cPaciente.DataNasc\u003e\u003e",
+                       "ordem":  72
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "TelRes",
+                       "descricao":  "TelRes",
+                       "token":  "\u003c\u003cPaciente.TelRes\u003e\u003e",
+                       "ordem":  73
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "TelCom",
+                       "descricao":  "TelCom",
+                       "token":  "\u003c\u003cPaciente.TelCom\u003e\u003e",
+                       "ordem":  74
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "TelFax",
+                       "descricao":  "TelFax",
+                       "token":  "\u003c\u003cPaciente.TelFax\u003e\u003e",
+                       "ordem":  75
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "TelCel",
+                       "descricao":  "TelCel",
+                       "token":  "\u003c\u003cPaciente.TelCel\u003e\u003e",
+                       "ordem":  76
+                   },
+                   {
+                       "categoria":  "Paciente",
+                       "campo":  "TelRec",
+                       "descricao":  "TelRec",
+                       "token":  "\u003c\u003cPaciente.TelRec\u003e\u003e",
+                       "ordem":  77
+                   },
+                   {
+                       "categoria":  "Contato",
+                       "campo":  "Nome",
+                       "descricao":  "Nome",
+                       "token":  "\u003c\u003cContato.Nome\u003e\u003e",
+                       "ordem":  78
+                   },
+                   {
+                       "categoria":  "Contato",
+                       "campo":  "Empresa",
+                       "descricao":  "Empresa",
+                       "token":  "\u003c\u003cContato.Empresa\u003e\u003e",
+                       "ordem":  79
+                   },
+                   {
+                       "categoria":  "Contato",
+                       "campo":  "DiaAniversário",
+                       "descricao":  "DiaAniversário",
+                       "token":  "\u003c\u003cContato.DiaAniversário\u003e\u003e",
+                       "ordem":  80
+                   },
+                   {
+                       "categoria":  "Contato",
+                       "campo":  "MêsAniversário",
+                       "descricao":  "MêsAniversário",
+                       "token":  "\u003c\u003cContato.MêsAniversário\u003e\u003e",
+                       "ordem":  81
+                   },
+                   {
+                       "categoria":  "Contato",
+                       "campo":  "MêsAniversárioExt",
+                       "descricao":  "MêsAniversárioExt",
+                       "token":  "\u003c\u003cContato.MêsAniversárioExt\u003e\u003e",
+                       "ordem":  82
+                   },
+                   {
+                       "categoria":  "Contato",
+                       "campo":  "EMail",
+                       "descricao":  "EMail",
+                       "token":  "\u003c\u003cContato.EMail\u003e\u003e",
+                       "ordem":  83
+                   },
+                   {
+                       "categoria":  "Receita",
+                       "campo":  "Corpo",
+                       "descricao":  "Corpo",
+                       "token":  "\u003c\u003cReceita.Corpo\u003e\u003e",
+                       "ordem":  84
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "Número",
+                       "descricao":  "Número",
+                       "token":  "\u003c\u003cRecibo.Número\u003e\u003e",
+                       "ordem":  85
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "DataEmissão",
+                       "descricao":  "DataEmissão",
+                       "token":  "\u003c\u003cRecibo.DataEmissão\u003e\u003e",
+                       "ordem":  86
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "Valor",
+                       "descricao":  "Valor",
+                       "token":  "\u003c\u003cRecibo.Valor\u003e\u003e",
+                       "ordem":  87
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "ValorExtenso",
+                       "descricao":  "ValorExtenso",
+                       "token":  "\u003c\u003cRecibo.ValorExtenso\u003e\u003e",
+                       "ordem":  88
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "Serviço",
+                       "descricao":  "Serviço",
+                       "token":  "\u003c\u003cRecibo.Serviço\u003e\u003e",
+                       "ordem":  89
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "NroCheque",
+                       "descricao":  "NroCheque",
+                       "token":  "\u003c\u003cRecibo.NroCheque\u003e\u003e",
+                       "ordem":  90
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "Cidade",
+                       "descricao":  "Cidade",
+                       "token":  "\u003c\u003cRecibo.Cidade\u003e\u003e",
+                       "ordem":  91
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "Observações",
+                       "descricao":  "Observações",
+                       "token":  "\u003c\u003cRecibo.Observações\u003e\u003e",
+                       "ordem":  92
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "NomePaciente",
+                       "descricao":  "NomePaciente",
+                       "token":  "\u003c\u003cRecibo.NomePaciente\u003e\u003e",
+                       "ordem":  93
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "NomeCirurgião",
+                       "descricao":  "NomeCirurgião",
+                       "token":  "\u003c\u003cRecibo.NomeCirurgião\u003e\u003e",
+                       "ordem":  94
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "CPFPaciente",
+                       "descricao":  "CPFPaciente",
+                       "token":  "\u003c\u003cRecibo.CPFPaciente\u003e\u003e",
+                       "ordem":  95
+                   },
+                   {
+                       "categoria":  "Recibo",
+                       "campo":  "CPFCirurgião",
+                       "descricao":  "CPFCirurgião",
+                       "token":  "\u003c\u003cRecibo.CPFCirurgião\u003e\u003e",
+                       "ordem":  96
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Bairro",
+                       "descricao":  "Bairro",
+                       "token":  "\u003c\u003cEtiqueta.Bairro\u003e\u003e",
+                       "ordem":  97
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "CEP",
+                       "descricao":  "CEP",
+                       "token":  "\u003c\u003cEtiqueta.CEP\u003e\u003e",
+                       "ordem":  98
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Cidade",
+                       "descricao":  "Cidade",
+                       "token":  "\u003c\u003cEtiqueta.Cidade\u003e\u003e",
+                       "ordem":  99
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Endereço",
+                       "descricao":  "Endereço",
+                       "token":  "\u003c\u003cEtiqueta.Endereço\u003e\u003e",
+                       "ordem":  100
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Estado",
+                       "descricao":  "Estado",
+                       "token":  "\u003c\u003cEtiqueta.Estado\u003e\u003e",
+                       "ordem":  101
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Nome",
+                       "descricao":  "Nome",
+                       "token":  "\u003c\u003cEtiqueta.Nome\u003e\u003e",
+                       "ordem":  102
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Número",
+                       "descricao":  "Número",
+                       "token":  "\u003c\u003cEtiqueta.Número\u003e\u003e",
+                       "ordem":  103
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "País",
+                       "descricao":  "País",
+                       "token":  "\u003c\u003cEtiqueta.País\u003e\u003e",
+                       "ordem":  104
+                   },
+                   {
+                       "categoria":  "Etiqueta",
+                       "campo":  "Telefone",
+                       "descricao":  "Telefone",
+                       "token":  "\u003c\u003cEtiqueta.Telefone\u003e\u003e",
+                       "ordem":  105
+                   },
+                   {
+                       "categoria":  "Data",
+                       "campo":  "MêsExtenso",
+                       "descricao":  "MêsExtenso",
+                       "token":  "\u003c\u003cData.MêsExtenso\u003e\u003e",
+                       "ordem":  106
+                   },
+                   {
+                       "categoria":  "Clínica",
+                       "campo":  "Complemento",
+                       "descricao":  "Complemento",
+                       "token":  "\u003c\u003cClínica.Complemento\u003e\u003e",
+                       "ordem":  107
+                   }
+               ]
+}

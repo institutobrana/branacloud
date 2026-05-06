@@ -1,0 +1,12 @@
+{
+  "email_alvo": "gleissontel@gmail.com",
+  "usuario": {
+    "id": 1,
+    "nome": "Gleisson Tel",
+    "email": "gleissontel@gmail.com",
+    "clinica_id": 1
+  },
+  "medicamentos_count_pre": 0,
+  "item_aux_grupo_medicamento_count": 309,
+  "medicamentos_pre": []
+}

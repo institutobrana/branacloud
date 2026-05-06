@@ -1,0 +1,97 @@
+{
+  "email_alvo": "gleissontel@gmail.com",
+  "clinica_id": 1,
+  "medicamentos_count_pos": 67,
+  "sample": [
+    {
+      "id": 1,
+      "nome": "Aciclovir 200mg",
+      "grupo": "Antivirais",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 2,
+      "nome": "Água Micelar",
+      "grupo": "Antissépticos dermatológicos",
+      "uso": "Uso externo"
+    },
+    {
+      "id": 3,
+      "nome": "Água Termal",
+      "grupo": "Hidratantes",
+      "uso": "Uso externo"
+    },
+    {
+      "id": 4,
+      "nome": "Amitriptilina 25 mg",
+      "grupo": "Antidepressivos",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 5,
+      "nome": "Amoxicilina - 500mg",
+      "grupo": "Antibióticos sistêmicos",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 6,
+      "nome": "Ansiedade/Estresse - MANIPULAÇÃO",
+      "grupo": "Betabloqueadores",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 7,
+      "nome": "Antietanol - 250mg",
+      "grupo": "Antidepressivos",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 8,
+      "nome": "Aturgyl - 0,5mg/mL",
+      "grupo": "Descongestionantes nasais tópicos",
+      "uso": "Uso nasal"
+    },
+    {
+      "id": 9,
+      "nome": "Azitromicina - 500 mg",
+      "grupo": "Antibióticos sistêmicos",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 10,
+      "nome": "Bepantol",
+      "grupo": "Hidratantes",
+      "uso": "Uso externo"
+    },
+    {
+      "id": 11,
+      "nome": "Bi-profenid - 150mg",
+      "grupo": "Antiinflamatórios",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 12,
+      "nome": "Calmante Natural Manipulado",
+      "grupo": "Ansiolíticos",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 13,
+      "nome": "Celebra - 200 mg",
+      "grupo": "Antiinflamatórios",
+      "uso": "Uso interno"
+    },
+    {
+      "id": 14,
+      "nome": "Celestone Soluspan",
+      "grupo": "Corticosteroides sistêmicos",
+      "uso": "Uso intramuscular"
+    },
+    {
+      "id": 15,
+      "nome": "Cicaplast Baume B5",
+      "grupo": "Cicatrizantes",
+      "uso": "Uso externo"
+    }
+  ]
+}
