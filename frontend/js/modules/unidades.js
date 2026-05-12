@@ -37,8 +37,18 @@
   }
 
   if (typeof ns.helpers.telefonePadrao !== "function") {
-    ns.helpers.telefonePadrao = function (idx) {
-      return TELEFONE_PADRAO_FALLBACK[idx - 1] || "";
+    ns.helpers.telefonePadrao = function (idx, tipos) {
+      const fallback = [
+        ["Comercial 1", "Comercial"],
+        ["Comercial 2", "Comercial"],
+        ["Comercial 3", "Comercial"],
+        ["Fax", "Fax"]
+      ][idx - 1] || ["", ""];
+      const lista = Array.isArray(tipos) ? tipos : [];
+      for (const item of fallback) {
+        if (lista.some(t => String(t).toLowerCase() === String(item).toLowerCase())) return item;
+      }
+      return lista[0] || "";
     };
   }
 
