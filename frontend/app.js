@@ -97,7 +97,6 @@ const formatScenarioNum=(v)=>{const n=Number(v||0);if(!Number.isFinite(n))return
 const MATERIAIS_INDICES_FALLBACK=[{id:255,sigla:"R$",nome:"Reais"},{id:2,sigla:"UHO",nome:"Unid. Honorario"},{id:3,sigla:"UPO",nome:"Unid. Procedimento Odontologico"},{id:1,sigla:"USO",nome:"Unid. Servico"}];
 let sessaoAtual=null;let usersCache=[];let usersSelecionadoId=null;let usersRefreshTimer=null;let usersModalMode="novo";let usersModalEditId=null;let usersTiposCache=[];let usersPrestadoresLookup=[];let usersUnidadesLookup=[];let usersPermSchema=null;let usersPermEditId=null;let usersPermModules=[];let usersPermLevels=[];let usersPermCurrent={};let usersPermSelectedModule="";let usersPermProfiles=[];let usersPermSelectedProfileCode="";let usersPermFunctionsByModule={};let usersPermActiveTab="acesso";let usersPermFuncLevels={};let usersPermSelectedFuncId="";let usersPermEasyMode=false;let usersPermAutosaveTimer=null;let usersPermSelectionScope="module";let usersPerfProfiles=[];let usersPerfPrestadores=[];let usersPerfAssignments={};let usersPerfSelectedPerfilId=null;let usersPanelOverlay=null;let usersPanelPlaceholder=null;let usersGrantOverride=null;let usersChangePassContext=null;let materiaisCache=[];let materialSelecionadoId=null;let materialModalId=null;let materiaisAuxTiposCache=[];let materiaisAuxUndsCache=[];let materiaisListasCache=[];let materiaisIndicesCache=[];let materiaisTabelaModalModo="nova";let materiaisTabelaModalListaId=0;let procedimentosCache=[];let procedimentoSelecionadoId=null;let procedimentoAtualId=null;let procedimentoLinks=[];let procCenario={cfpm:0,ir:0,cd:0,cartao:0};let procMaterialSelecionadoId=null;let vinculaMateriaisCache=[];let procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};let procSimbolosCache=[];let procTabelaModalModo="nova";let procTabelaModalCodigo="";let procRelatorio=null;let procRelatorioView=null;let prefCfg=null;let sysOptCfg=null;let prot=null;let proteticosCache=[];let proteticoSelecionadoId=null;let protServicosCache=[];let protServicoSelecionadoId=null;let ctrlProt=null;let ctrlProtRegistrosCache=[];let convPlanCfg=null;let convPlanConveniosCache=[];let convPlanPlanosCache=[];let convPlanSelConvenioId=null;let convPlanSelPlanoId=null;let prestCfg=null;let prestadoresCache=[];let prestadorSelId=null;let unidadeCfg=null;let unidadesCache=[];let unidadeSelId=null;let prestCredCfg=null;let prestCredItens=[];let prestCredSelId=null;let prestCredConvenios=[];let prestComCfg=null;let prestComItens=[];let prestComSelId=null;let pgen=null;let pgenCache=[];let pgenSelId=null;let pgenEditorId=null;let pgenEditorState=null;let pgenEditorBuscaMateriais=[];let pgenFasesAuxCache=[];let pgenFasesSelecionadaIdx=-1;let pgenFasesState=null;let pgenFaseEditIdx=null;let pgenMaterialSelecionadoIdx=-1;let pgenMaterialEditIdx=null;let ficha=null;let fichaTabAtual="dados";let fichaPacienteAtualId=null;let fichaPacientesBuscaCache=[];let fichaCodigoUltimoResolvido="";let fichaConveniosCache=[];let fichaPlanosCache=[];let fichaTabelasCache=[];let fichaMenuPac=null;let fichaInativoAtual=false;let cc=null;let ccLancCache=[];let ccSelecionadoId=null;let ccEditId=null;let ccTipoAtual="debito";let rcc=null;let fcx=null;let fcxData=null;let dash=null;let dashData=[];let dashGrafico=[];let dashTabela=[];let dashSelecionadoId=null;let plano=null;let gruposCache=[];let grupoSelId=null;let catSelId=null;let aux=null;let auxItensCache=[];let auxSelId=null;let licInfoCache=null;let saClinicasCache=[];let saUsuariosCache=[];let agendaContatos=null;let agendaContatosCache=[];let agendaContatosTiposCache=[];let agendaContatosEspecialidadesCache=[];let agendaContatosSelId=null;let agendaLegado=null;let agendaLegadoCache=[];let agendaLegadoSelId=null;let agendaLegadoContatosCache=[];let agendaLegadoContatosMap=new Map();let agendaSemana=null;let agendaSemanaCache=[];let agendaSemanaSlots=[];let agendaSemanaState={};let cid=null;let cidCache=[];let cidSelId=null;let cidBuscaTimer=null;let cidRenderToken=0;let simbolosCfg=null;let simbolosCache=[];let simbolosBibliotecaCache=[];let simbolosSelId=null;let simbolosEspecialidadesMap=new Map();let anamneseCfg=null;let anamneseQuestionariosCache=[];let anamneseQuestionarioSelId=null;let anamneseCache=[];let anamneseSelId=null;let fichaMenuPacMode="paciente";
 let editorTextosCfg=null;
-let editorTextosProtegendoCursor=false;
 let editorTextosFontesCache=null;
 let editorTextosFontesPromise=null;
 let editorTextosAssistMedMenuFiltroTimer=null;
@@ -146,8 +145,6 @@ const EDITOR_TEXTOS_PAGE_DEFAULT={
   margem_esquerda_mm:33.16,
   margem_direita_mm:33.16
 };
-const EDITOR_TEXTOS_PAGE_BREAK_GAP_PX=24;
-const EDITOR_TEXTOS_PAGE_BREAK_TOLERANCE_PX=3;
 const EDITOR_TEXTOS_OPEN_TIPO_OPCOES=[
   {value:"rich",label:"Arquivo texto rico"},
   {value:"text",label:"Arquivo de texto"},
@@ -570,7 +567,7 @@ async function forgotResetPassword(){const p={email:forgotEmailEl.value.trim(),c
 function abrirTelaSetup(user){if(setupEmailEl)setupEmailEl.value=String(user?.email||"");if(setupSenhaEl)setupSenhaEl.value="";if(setupConfirmaEl)setupConfirmaEl.value="";loginWrap.classList.remove("hidden");shell.classList.add("hidden");showPanel(panelSetup||panelLogin);setLoginStatus("Primeiro acesso: defina a senha interna para continuar.",false)}
 async function setupComplete(){const senha=String(setupSenhaEl?.value||"");const confirma=String(setupConfirmaEl?.value||"");if(!senha||!confirma){setLoginStatus("Informe e confirme a senha interna.",true);return}if(senha.length<6){setLoginStatus("A senha deve ter no minimo 6 digitos.",true);return}if(senha!==confirma){setLoginStatus("A confirmacao de senha nao confere.",true);return}try{const{res,data}=await postJson("/auth/setup/complete",{senha,confirma_senha:confirma},true);if(!res.ok){setLoginStatus(data.detail||"Falha ao concluir primeiro acesso.",true);return}setLoginStatus(data.detail||"Configuracao inicial concluida.",false);await carregarSessao()}catch{setLoginStatus("Erro de conexao ao concluir primeiro acesso.",true)}}
 async function setupLogout(){try{await postJson("/logout",{},true)}catch{}stopSessionHeartbeat();setToken("");sessaoAtual=null;if(setupSenhaEl)setupSenhaEl.value="";if(setupConfirmaEl)setupConfirmaEl.value="";setLoginStatus("Sessao encerrada.",false);showPanel(panelLogin)}
-let hideAllPanels=()=>{if(preserveProtectedGrantOnHide){preserveProtectedGrantOnHide=false}else{clearProtectedGrants()}usersDetachOverlay();cenarioPanel.classList.add("hidden");materiaisPanel.classList.add("hidden");proc.panel.classList.add("hidden");proc.novoPanel.classList.add("hidden");usersPanel.classList.add("hidden");if(sa&&sa.panel){sa.panel.classList.add("hidden")}if(prot&&prot.panel){prot.panel.classList.add("hidden")}if(ctrlProt&&ctrlProt.panel){ctrlProt.panel.classList.add("hidden")}if(convPlanCfg&&convPlanCfg.panel){convPlanCfg.panel.classList.add("hidden")}if(convPlanCalCfg&&convPlanCalCfg.panel){convPlanCalCfg.panel.classList.add("hidden")}if(prestCfg&&prestCfg.panel){prestCfg.panel.classList.add("hidden")}if(unidadeCfg&&unidadeCfg.panel){unidadeCfg.panel.classList.add("hidden")}if(pgen&&pgen.panel){pgen.panel.classList.add("hidden")}if(ficha&&ficha.panel){ficha.panel.classList.add("hidden")}if(fichaMenuPac)fichaMenuPacFechar();if(cc){cc.panel.classList.add("hidden")}if(rcc){rcc.panel.classList.add("hidden");rcc.viewPanel.classList.add("hidden")}if(fcx&&fcx.panel){fcx.panel.classList.add("hidden")}if(dash&&dash.panel){dash.panel.classList.add("hidden")}if(plano){plano.panel.classList.add("hidden")}if(aux){aux.panel.classList.add("hidden")}if(agendaContatos&&agendaContatos.panel){agendaContatos.panel.classList.add("hidden")}if(agendaLegado&&agendaLegado.panel){agendaLegado.panel.classList.add("hidden")}if(agendaSemana&&agendaSemana.panel){agendaSemanaDesconectarResizeObserver();agendaSemana.panel.classList.add("hidden")}if(cid&&cid.panel){cid.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.panel){editorTextosCfg.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.openBackdrop){editorTextosCfg.openBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.newBackdrop){editorTextosCfg.newBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.saveAsBackdrop){editorTextosCfg.saveAsBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.mergeBackdrop){editorTextosCfg.mergeBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.tableBackdrop){editorTextosCfg.tableBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageBackdrop){editorTextosCfg.imageBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageOverlay){editorTextosCfg.imageOverlay.style.display="none";editorTextosCfg.imageSelectedEl=null;editorTextosCfg.imageResize=null}if(editorTextosCfg&&editorTextosCfg.assistBackdrop){editorTextosCfg.assistBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistMedMenuBackdrop){editorTextosCfg.assistMedMenuBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoBackdrop){editorTextosCfg.assistAtestadoBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoCidMenuBackdrop){editorTextosCfg.assistAtestadoCidMenuBackdrop.classList.add("hidden")}usersStopRefresh();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();workspaceEmpty.classList.remove("hidden")};
+let hideAllPanels=()=>{if(preserveProtectedGrantOnHide){preserveProtectedGrantOnHide=false}else{clearProtectedGrants()}usersDetachOverlay();cenarioPanel.classList.add("hidden");materiaisPanel.classList.add("hidden");proc.panel.classList.add("hidden");proc.novoPanel.classList.add("hidden");usersPanel.classList.add("hidden");if(sa&&sa.panel){sa.panel.classList.add("hidden")}if(prot&&prot.panel){prot.panel.classList.add("hidden")}if(ctrlProt&&ctrlProt.panel){ctrlProt.panel.classList.add("hidden")}if(convPlanCfg&&convPlanCfg.panel){convPlanCfg.panel.classList.add("hidden")}if(convPlanCalCfg&&convPlanCalCfg.panel){convPlanCalCfg.panel.classList.add("hidden")}if(prestCfg&&prestCfg.panel){prestCfg.panel.classList.add("hidden")}if(unidadeCfg&&unidadeCfg.panel){unidadeCfg.panel.classList.add("hidden")}if(pgen&&pgen.panel){pgen.panel.classList.add("hidden")}if(ficha&&ficha.panel){ficha.panel.classList.add("hidden")}if(fichaMenuPac)fichaMenuPacFechar();if(cc){cc.panel.classList.add("hidden")}if(rcc){rcc.panel.classList.add("hidden");rcc.viewPanel.classList.add("hidden")}if(fcx&&fcx.panel){fcx.panel.classList.add("hidden")}if(dash&&dash.panel){dash.panel.classList.add("hidden")}if(plano){plano.panel.classList.add("hidden")}if(aux){aux.panel.classList.add("hidden")}if(agendaContatos&&agendaContatos.panel){agendaContatos.panel.classList.add("hidden")}if(agendaLegado&&agendaLegado.panel){agendaLegado.panel.classList.add("hidden")}if(agendaSemana&&agendaSemana.panel){agendaSemanaDesconectarResizeObserver();agendaSemana.panel.classList.add("hidden")}if(cid&&cid.panel){cid.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.panel){editorTextosCfg.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.openBackdrop){editorTextosCfg.openBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.newBackdrop){editorTextosCfg.newBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.mergeBackdrop){editorTextosCfg.mergeBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.tableBackdrop){editorTextosCfg.tableBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageBackdrop){editorTextosCfg.imageBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageOverlay){editorTextosCfg.imageOverlay.style.display="none";editorTextosCfg.imageSelectedEl=null;editorTextosCfg.imageResize=null}if(editorTextosCfg&&editorTextosCfg.assistBackdrop){editorTextosCfg.assistBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistMedMenuBackdrop){editorTextosCfg.assistMedMenuBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoBackdrop){editorTextosCfg.assistAtestadoBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoCidMenuBackdrop){editorTextosCfg.assistAtestadoCidMenuBackdrop.classList.add("hidden")}usersStopRefresh();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();workspaceEmpty.classList.remove("hidden")};
 const showScenarioPanel=(s)=>{hideAllPanels();if(s){cenarioPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden")}};
 const showMateriaisPanel=(s)=>{hideAllPanels();if(s){materiaisPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden")}};
 const usersAttachOverlay=()=>{if(usersPanelOverlay)return;const panel=usersPanel;if(!panel||!panel.parentElement)return;const backdrop=document.createElement("div");backdrop.id="users-panel-backdrop";backdrop.className="modal-backdrop";backdrop.style.background="rgba(0,0,0,0)";backdrop.style.zIndex="1100";usersPanelPlaceholder=document.createComment("users-panel-placeholder");panel.parentElement.insertBefore(usersPanelPlaceholder,panel);backdrop.appendChild(panel);document.body.appendChild(backdrop);panel.classList.add("panel-floating");chromeResetDragOffset(panel);ensurePanelChrome(panel);usersPanelOverlay=backdrop;if(!usersGrantOverride){const grant=getProtectedGrantFromCache("configuracao","usuarios","*");usersGrantOverride=grant||null}};
@@ -671,7 +668,7 @@ async function materiaisExcluirTabela(){const listaId=materiaisListaIdAtual();if
 async function abrirMateriais(){showMateriaisPanel(true);await materiaisCarregarListas();footerMsg.textContent="Modulo Tabela de materiais aberto."}
 function materiaisSetModalTab(tab){const detalhes=tab==="detalhes";if(m.tabBtnPrincipal)m.tabBtnPrincipal.classList.toggle("active",!detalhes);if(m.tabBtnDetalhes)m.tabBtnDetalhes.classList.toggle("active",detalhes);if(m.tabPrincipal)m.tabPrincipal.classList.toggle("hidden",detalhes);if(m.tabDetalhes)m.tabDetalhes.classList.toggle("hidden",!detalhes)}
 const procParse=(v)=>{const s=String(v??"").replace("R$","").trim().replace(",",".");if(!s)return 0;const n=Number(s);if(!Number.isFinite(n))throw new Error("invalid");return n};
-const procFmtMoeda=(v)=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const procFmtMoeda=(v)=>formatMoney(toFloat(v));
 const procFmtBr=(v)=>{const n=Number(v||0);return Number.isFinite(n)?n.toFixed(2).replace(".",","):"0,00"};
 const procSetSelectValue=(el,val)=>{if(!el)return;const alvo=String(val??"");const ok=[...el.options].some(x=>x.value===alvo);el.value=ok?alvo:(el.options.length?el.options[0].value:"")};
 const procIndiceSiglaFromValor=(valor)=>{
@@ -740,7 +737,26 @@ async function procExcluirTabela(){const codigo=procTabelaAtualId();if(!codigo){
 function procReajustarTabela(){footerMsg.textContent="Procedimentos: reajuste de tabela em planejamento."}
 async function procCarregarCenario(){const{res,data}=await requestJson("GET","/cenario",undefined,true);if(res.ok){procCenario={cfph:Number(data.cfph||0),cfpm:Number(data.cfpm||0),ir:Number(data.ir||0),cd:Number(data.cd||0),cartao:Number(data.cartao||0)}}}
 function procAtualizarFinanceiro(){let tempo=0,preco=0,lab=0;try{tempo=Number(proc.txtTempo.value||0)}catch{};try{preco=procParse(proc.txtPreco.value)}catch{};try{lab=procParse(proc.txtLab.value)}catch{};const material=Number((proc.totalCusto.dataset.valor)||0);const custo_fph=procCenario.cfpm*tempo;const irv=preco*procCenario.ir/100;const cdv=preco*procCenario.cd/100;const cartv=preco*procCenario.cartao/100;const custo_proc=custo_fph+material+lab;const valor_min=custo_proc+(custo_proc*procCenario.ir/100)+(custo_proc*procCenario.cd/100)+(custo_proc*procCenario.cartao/100)+(custo_proc*0.1);const lucro_bruto=preco-custo_proc;const lucro_liq=preco-custo_proc-irv-cdv-cartv;const rend_proc=custo_proc>0?(lucro_bruto*100/custo_proc):0;const rend3040=preco>0?(lucro_bruto*100/preco):0;const rend1020=preco>0?(lucro_liq*100/preco):0;const lucro_hora=tempo>0?(lucro_liq*60/tempo):0;proc.lblCFPH.textContent=procFmtMoeda(custo_fph);proc.lblMaterialConsumo.textContent=procFmtMoeda(material);proc.lblCustoProc.textContent=procFmtMoeda(custo_proc);proc.lblIR.textContent=procFmtMoeda(irv);proc.lblCD.textContent=procFmtMoeda(cdv);proc.lblCartao.textContent=procFmtMoeda(cartv);proc.lblValorMinimo.textContent=procFmtMoeda(valor_min);proc.lblLucroBruto.textContent=procFmtMoeda(lucro_bruto);proc.lblLucroLiquido.textContent=procFmtMoeda(lucro_liq);proc.lblRendProc.textContent=rend_proc.toFixed(2);proc.lblRend3040.textContent=rend3040.toFixed(2);proc.lblRend1020.textContent=rend1020.toFixed(2);proc.lblRend3040.className="nproc-box note "+(rend3040>=30?"good":"bad");proc.lblRend1020.className="nproc-box note "+(rend1020>=10?"good":"bad");proc.lblLucroHora.textContent=procFmtMoeda(lucro_hora)}
-function procRenderLinks(data){procedimentoLinks=data?.itens||[];proc.linksTbody.innerHTML=procedimentoLinks.map(x=>`<tr data-codigo="${esc(x.codigo)}"><td>${esc(x.codigo)}</td><td>${esc(x.nome)}</td><td>${Number.isInteger(x.relacao)?x.relacao:x.relacao}</td><td>${x.preco.toFixed(2)}</td><td>${x.custo_und.toFixed(2)}</td><td>${Number.isInteger(x.quantidade)?x.quantidade:x.quantidade}</td><td>${x.custo_total.toFixed(2)}</td></tr>`).join("");proc.totalMats.textContent=String(data?.total_materiais||0);proc.totalCustoUnd.textContent=procFmtMoeda(data?.total_custo_und||0);proc.totalCusto.textContent=procFmtMoeda(data?.total_custo||0);proc.totalCusto.dataset.valor=String(Number(data?.total_custo||0));procAtualizarFinanceiro()}
+function procRenderLinks(data){
+  const info=data&&typeof data==="object"?data:procEditorLinksVazio;
+  const itens=Array.isArray(info.itens)?info.itens:[];
+  procedimentoLinks=itens;
+  proc.linksTbody.innerHTML=itens.map(x=>{
+    const codigo=String(x?.codigo??"");
+    const nome=String(x?.nome??"");
+    const relacao=x?.relacao??"";
+    const preco=Number(x?.preco??0);
+    const custoUnd=Number(x?.custo_und??0);
+    const quantidade=x?.quantidade??"";
+    const custoTotal=Number(x?.custo_total??0);
+    return `<tr data-codigo="${esc(codigo)}"><td>${esc(codigo)}</td><td>${esc(nome)}</td><td>${esc(String(relacao))}</td><td>${procFmtBr(preco)}</td><td>${procFmtBr(custoUnd)}</td><td>${esc(String(quantidade))}</td><td>${procFmtBr(custoTotal)}</td></tr>`;
+  }).join("");
+  proc.totalMats.textContent=String(info.total_materiais||0);
+  proc.totalCustoUnd.textContent=procFmtMoeda(info.total_custo_und||0);
+  proc.totalCusto.textContent=procFmtMoeda(info.total_custo||0);
+  proc.totalCusto.dataset.valor=String(Number(info.total_custo||0));
+  procAtualizarFinanceiro()
+}
 async function procAbrirEditor(id=null){const tabSel=procTabelaSelecionadaAtual();if(tabSel?.inativo){window.alert("Tabela inativa. Reative a tabela antes de alterar procedimentos.");return}hideAllPanels();proc.novoPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");procedimentoAtualId=id;procMaterialSelecionadoId=null;await Promise.all([procCarregarCenario(),procCarregarCombosEditor()]);if(id){const{res,data}=await requestJson("GET",`/procedimentos/${id}`,undefined,true);if(!res.ok){window.alert(data.detail||"Procedimento não encontrado.");return}procAplicarDadosEditor(data);if(!Object.prototype.hasOwnProperty.call(data||{},"materiais_vinculados"))await procRecarregarLinks()}else{const tabela=encodeURIComponent(String(proc.cboTabela?.value||"1"));const{res,data}=await requestJson("GET",`/procedimentos/proximo-codigo?tabela_id=${tabela}`,undefined,true);procAplicarDadosEditor({codigo:res?String(data.codigo||1):"1",nome:"",tempo:0,preco:0,custo_lab:0,garantia_meses:0,valor_repasse:0,especialidade:"",procedimento_generico_id:null,simbolo_grafico:"",forma_cobranca:"",preferido:false,inativo:false,observacoes:"",data_inclusao:"",data_alteracao:""},true)}}
 async function procSalvar(){const tabSel=procTabelaSelecionadaAtual();if(tabSel?.inativo){window.alert("Tabela inativa. Reative a tabela antes de gravar procedimentos.");return}let codigo=0,tempo=0,preco=0,lab=0,repasse=0,garantia=0;const nome=proc.txtNome.value.trim();try{codigo=parseInt(proc.txtCodigo.value||"0",10);tempo=parseInt(proc.txtTempo.value||"0",10);preco=procParse(proc.txtPreco.value);lab=procParse(proc.txtLab.value);repasse=procParse(proc.txtRepasse?.value||"0");garantia=Math.max(0,parseInt(proc.txtGarantia?.value||"0",10)||0)}catch{window.alert("Valores numéricos inválidos.");return}if(!nome){window.alert("Informe o nome.");return}const genericoValue=String(proc.cboGenerico?.value||"").trim();const simboloSelecionado=String(proc.cboSimbolo?.value||"").trim();const payload={codigo,nome,tempo,preco,custo_lab:lab,custo:0,tabela_id:String(proc.cboTabela?.value||"1"),especialidade:String(proc.cboEditorEspecialidade?.value||"").trim(),procedimento_generico_id:genericoValue?Number(genericoValue):null,simbolo_grafico:simboloSelecionado,mostrar_simbolo:!!simboloSelecionado,garantia_meses:garantia,forma_cobranca:String(proc.cboCobranca?.value||"").trim(),valor_repasse:repasse,preferido:!!proc.chkPreferidos?.checked,inativo:!!proc.chkInativar?.checked,observacoes:String(proc.txtObs?.value||"").trim()};const method=procedimentoAtualId?"PUT":"POST";const path=procedimentoAtualId?`/procedimentos/${procedimentoAtualId}`:"/procedimentos";const{res,data}=await requestJson(method,path,payload,true);if(!res.ok){window.alert(data.detail||"Falha ao gravar procedimento.");return}if(!procedimentoAtualId)procedimentoAtualId=data.id;procAplicarDadosEditor(data);if(!Object.prototype.hasOwnProperty.call(data||{},"materiais_vinculados"))await procRecarregarLinks();window.alert("Procedimento salvo.");await procCarregarLista()}
 async function procExcluirSelecionado(){const p=procSelecionado();if(!p){window.alert("Selecione um procedimento.");return}if(!window.confirm(`Deseja excluir definitivamente o procedimento:\n${p.nome}?`))return;const{res,data}=await requestJson("DELETE",`/procedimentos/${p.id}`,undefined,true);if(!res.ok){window.alert(data.detail||"Erro ao excluir.");return}await procCarregarLista();window.alert("Procedimento excluído.")}
@@ -12895,7 +12911,7 @@ const EDITOR_TEXTOS_SIZE_UI_TO_CMD={
   "8":"1","9":"1","10":"2","11":"2","12":"3","14":"4","16":"5","18":"5","20":"6","24":"6","28":"7","36":"7"
 };
 const EDITOR_TEXTOS_SIZE_CMD_TO_UI={
-  "1":"8","2":"10","3":"12","4":"14","5":"18","6":"24","7":"36"
+  "1":"8","2":"11","3":"12","4":"14","5":"18","6":"24","7":"36"
 };
 const EDITOR_TEXTOS_SIZE_OPCOES=[8,9,10,11,12,14,16,18,20,24,28,36];
 async function editorTextosAtualizarComboFonte(){
@@ -12967,63 +12983,7 @@ function editorTextosCorParaHex(valor){
   };
   return named[raw]||"";
 }
-function editorTextosRangeDentroEditor(range){
-  try{
-    if(!editorTextosCfg?.page||!range)return false;
-    const start=range.startContainer;
-    const end=range.endContainer;
-    return !!(start&&end&&editorTextosCfg.page.contains(start)&&editorTextosCfg.page.contains(end));
-  }catch{}
-  return false;
-}
-function editorTextosCorSelecaoSnapshotSalvar(origem="selection"){
-  try{
-    if(!editorTextosCfg?.page)return false;
-    const sel=window.getSelection?.();
-    if(!sel||!sel.rangeCount)return false;
-    const range=sel.getRangeAt(0);
-    if(!range||range.collapsed||!editorTextosRangeDentroEditor(range))return false;
-    const text=String(sel.toString?.()||"");
-    if(!text)return false;
-    editorTextosCfg.colorSelectionSnapshot={
-      range:range.cloneRange(),
-      text,
-      origem:String(origem||"selection"),
-      updatedAt:Date.now()
-    };
-    editorTextosDebugLog("EDITOR COLOR SELECTION SNAPSHOT",{
-      origem:String(origem||"selection"),
-      selectionText:text,
-      anchorNode:editorTextosParagrafoSerializarNodeDebug(sel.anchorNode||null),
-      focusNode:editorTextosParagrafoSerializarNodeDebug(sel.focusNode||null)
-    },"render");
-    return true;
-  }catch(err){
-    editorTextosDebugLog("EDITOR COLOR SELECTION LOST",{motivo:"snapshot_erro",erro:String(err?.message||err||"")},"render");
-  }
-  return false;
-}
-function editorTextosCorSelecaoSnapshotRestaurar(){
-  try{
-    const snap=editorTextosCfg?.colorSelectionSnapshot;
-    const range=snap?.range;
-    if(!range||!editorTextosRangeDentroEditor(range))return false;
-    const sel=window.getSelection?.();
-    if(!sel)return false;
-    editorTextosCfg.page.focus();
-    sel.removeAllRanges();
-    sel.addRange(range.cloneRange());
-    editorTextosDebugLog("EDITOR COLOR SELECTION RESTORED",{
-      origem:String(snap.origem||""),
-      selectionText:String(sel.toString?.()||""),
-      idadeMs:Date.now()-Number(snap.updatedAt||0)
-    },"render");
-    return true;
-  }catch(err){
-    editorTextosDebugLog("EDITOR COLOR SELECTION LOST",{motivo:"restore_erro",erro:String(err?.message||err||"")},"render");
-  }
-  return false;
-}function editorTextosAplicarCorSelecaoFallback(valor){
+function editorTextosAplicarCorSelecaoFallback(valor){
   if(!editorTextosCfg?.page)return false;
   const cor=editorTextosCorParaHex(valor);
   if(!cor)return false;
@@ -13058,993 +13018,7 @@ function editorTextosCorSelecaoSnapshotRestaurar(){
   sel.addRange(nextRange);
   return true;
 }
-function editorTextosFonteSelecaoSnapshotSalvar(origem="selection"){
-  try{
-    if(!editorTextosCfg?.page)return false;
-    const sel=window.getSelection?.();
-    if(!sel||!sel.rangeCount)return false;
-    const range=sel.getRangeAt(0);
-    if(!range||range.collapsed||!editorTextosRangeDentroEditor(range))return false;
-    const text=String(sel.toString?.()||"");
-    if(!text)return false;
-    editorTextosCfg.fontSelectionSnapshot={
-      range:range.cloneRange(),
-      text,
-      origem:String(origem||"selection"),
-      updatedAt:Date.now()
-    };
-    return true;
-  }catch{}
-  return false;
-}
-function editorTextosFonteSelecaoSnapshotRestaurar(){
-  try{
-    const snap=editorTextosCfg?.fontSelectionSnapshot;
-    const range=snap?.range;
-    if(!range||!editorTextosRangeDentroEditor(range))return false;
-    const sel=window.getSelection?.();
-    if(!sel)return false;
-    editorTextosCfg.page.focus();
-    sel.removeAllRanges();
-    sel.addRange(range.cloneRange());
-    return true;
-  }catch{}
-  return false;
-}
-function editorTextosFonteNormalizarFamilia(valor){
-  return String(valor||"").trim().replace(/^["']+|["']+$/g,"");
-}
-function editorTextosFonteNormalizarTamanho(valor){
-  const raw=String(valor||"").trim().toLowerCase();
-  if(!raw)return"";
-  const match=raw.match(/([\d.]+)\s*(px|pt)?/);
-  const num=Number.parseFloat(match?match[1]:raw);
-  if(!Number.isFinite(num)||num<=0)return"";
-  return `${Math.max(1,Math.round(num))}px`;
-}
-function editorTextosFonteDropdownState(){
-  return{
-    fontValue:String(editorTextosCfg?.font?.value||""),
-    fontSelectedIndex:Number(editorTextosCfg?.font?.selectedIndex??-1),
-    sizeValue:String(editorTextosCfg?.size?.value||""),
-    sizeSelectedIndex:Number(editorTextosCfg?.size?.selectedIndex??-1)
-  };
-}
-function editorTextosPendingStyleSelectionSignature(range=null){
-  try{
-    const sel=window.getSelection?.();
-    const r=range||(sel&&sel.rangeCount?sel.getRangeAt(0):null);
-    if(!r||!editorTextosRangeDentroEditor(r))return"";
-    const node=sel?.focusNode||sel?.anchorNode||r.startContainer||r.commonAncestorContainer||null;
-    const block=editorTextosResolverBlocoDeNode(node);
-    const pos=block instanceof HTMLElement?editorTextosParagrafoObterPosicaoLogicaAtual(block,null):null;
-    return `${String(block?.dataset?.etBlockId||block?.id||"")}:${Number(pos?.textOffset??r.startOffset??0)||0}`;
-  }catch{}
-  return"";
-}
-function editorTextosPendingStyleBlockSignature(range=null){
-  try{
-    const sel=window.getSelection?.();
-    const r=range||(sel&&sel.rangeCount?sel.getRangeAt(0):null);
-    if(!r||!editorTextosRangeDentroEditor(r))return"";
-    const node=sel?.focusNode||sel?.anchorNode||r.startContainer||r.commonAncestorContainer||null;
-    const block=editorTextosResolverBlocoDeNode(node);
-    return String(block?.dataset?.etBlockId||block?.id||"");
-  }catch{}
-  return"";
-}
-function editorTextosPendingStyleContextByRange(range=null){
-  try{
-    const sig=editorTextosPendingStyleSelectionSignature(range);
-    const blockSig=editorTextosPendingStyleBlockSignature(range);
-    return{signature:String(sig||""),blockSignature:String(blockSig||"")};
-  }catch{}
-  return{signature:"",blockSignature:""};
-}
-function editorTextosPendingStyleContextFallback(){
-  const atual=editorTextosPendingStyleContextByRange();
-  if(atual.blockSignature)return atual;
-  const salvo=editorTextosPendingStyleContextByRange(editorTextosCfg?.savedRange||null);
-  return salvo.blockSignature?salvo:atual;
-}
-function editorTextosPendingStyleNormalizar(partial={}){
-  return{
-    color:editorTextosCorParaHex(partial?.color||"")||"",
-    fontFamily:editorTextosFonteNormalizarFamilia(partial?.fontFamily||""),
-    fontSize:editorTextosFonteNormalizarTamanho(partial?.fontSize||"")
-  };
-}
-function editorTextosPendingStyleAtivo(){
-  const style=editorTextosCfg?.pendingInlineStyle;
-  if(!style)return false;
-  return !!(style.color||style.fontFamily||style.fontSize);
-}
-function editorTextosPendingStyleSnapshotAtual(){
-  return editorTextosPendingStyleNormalizar(editorTextosCfg?.pendingInlineStyle||{});
-}
-function editorTextosPendingStyleSnapshotDomFallback(){
-  try{
-    const sel=window.getSelection?.();
-    const rangeAtual=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    const range=(rangeAtual&&editorTextosRangeDentroEditor(rangeAtual))
-      ?rangeAtual
-      :(editorTextosCfg?.savedRange&&editorTextosRangeDentroEditor(editorTextosCfg.savedRange)?editorTextosCfg.savedRange:null);
-    const base=editorTextosFonteEstiloEfetivo(range,null);
-    return editorTextosPendingStyleNormalizar({
-      color:base?.color||base?.computedColor||"",
-      fontFamily:base?.fontFamily||base?.computedFontFamily||"",
-      fontSize:base?.fontSize||base?.computedFontSize||""
-    });
-  }catch{}
-  return{color:"",fontFamily:"",fontSize:""};
-}
-function editorTextosPendingStyleMarcarInteracaoToolbar(origem="toolbar"){
-  if(!editorTextosCfg)return;
-  editorTextosCfg.lastPendingInlineStyleBeforeToolbar=editorTextosPendingStyleSnapshotAtual();
-  editorTextosCfg.pendingToolbarInteractionOrigin=String(origem||"toolbar");
-  editorTextosCfg.pendingToolbarInteractionUntil=Date.now()+1500;
-}
-function editorTextosPendingStyleContextoToolbarAtivo(){
-  try{
-    const active=document.activeElement;
-    if(!(active instanceof HTMLElement))return false;
-    if(active.closest(".editor-textos-toolbar"))return true;
-    if(active.closest(".aux-cor-combo"))return true;
-  }catch{}
-  try{
-    const until=Number(editorTextosCfg?.pendingToolbarInteractionUntil||0)||0;
-    if(until&&Date.now()<=until)return true;
-  }catch{}
-  return false;
-}
-function editorTextosPendingStyleSet(partial={},origem="manual"){
-  if(!editorTextosCfg)return false;
-  const prev=editorTextosPendingStyleSnapshotAtual();
-  const next=editorTextosPendingStyleNormalizar({
-    color:partial?.color!=null?partial.color:prev.color,
-    fontFamily:partial?.fontFamily!=null?partial.fontFamily:prev.fontFamily,
-    fontSize:partial?.fontSize!=null?partial.fontSize:prev.fontSize
-  });
-  editorTextosCfg.pendingInlineStyle=next;
-  editorTextosCfg.lastKnownPendingInlineStyle=editorTextosPendingStyleNormalizar(next);
-  editorTextosCfg.pendingInlineStyleSelectionSignature=editorTextosPendingStyleSelectionSignature();
-  editorTextosCfg.pendingInlineStyleBlockSignature=editorTextosPendingStyleBlockSignature();
-  editorTextosDebugLog("EDITOR PENDING STYLE SET",{
-    origem:String(origem||"manual"),
-    color:next.color||"",
-    fontFamily:next.fontFamily||"",
-    fontSize:next.fontSize||"",
-    signature:String(editorTextosCfg.pendingInlineStyleSelectionSignature||""),
-    blockSignature:String(editorTextosCfg.pendingInlineStyleBlockSignature||"")
-  },"render");
-  return true;
-}
-function editorTextosColorPendingSet(color,origem="color_collapsed"){
-  if(!editorTextosCfg)return false;
-  const colorNorm=editorTextosCorParaHex(color)||"";
-  if(!colorNorm)return false;
-  const before=editorTextosPendingStyleSnapshotAtual();
-  const known=editorTextosPendingStyleNormalizar(editorTextosCfg.lastKnownPendingInlineStyle||{});
-  const rescue=editorTextosPendingStyleNormalizar(editorTextosCfg.lastPendingInlineStyleBeforeToolbar||{});
-  const domFallback=editorTextosPendingStyleSnapshotDomFallback();
-  const base={
-    color:before.color||known.color||rescue.color||domFallback.color||"",
-    fontFamily:before.fontFamily||known.fontFamily||rescue.fontFamily||domFallback.fontFamily||"",
-    fontSize:before.fontSize||known.fontSize||rescue.fontSize||domFallback.fontSize||""
-  };
-  editorTextosPendingStyleSet({
-    color:colorNorm,
-    fontFamily:base.fontFamily,
-    fontSize:base.fontSize
-  },origem);
-  const ctx=editorTextosPendingStyleContextFallback();
-  if(ctx.signature)editorTextosCfg.pendingInlineStyleSelectionSignature=ctx.signature;
-  if(ctx.blockSignature)editorTextosCfg.pendingInlineStyleBlockSignature=ctx.blockSignature;
-  editorTextosDebugLog("EDITOR COLOR PENDING BLOCK CONTEXT",{
-    origem:String(origem||"color_collapsed"),
-    blockSignature:String(editorTextosCfg.pendingInlineStyleBlockSignature||""),
-    signature:String(editorTextosCfg.pendingInlineStyleSelectionSignature||""),
-    hadPendingBefore:!!(before.color||before.fontFamily||before.fontSize)
-  },"render");
-  editorTextosDebugLog("EDITOR COLOR PENDING SET",{
-    origem:String(origem||"color_collapsed"),
-    color:colorNorm,
-    pendingInlineStyle:editorTextosCfg.pendingInlineStyle||null,
-    mergedFromToolbarSnapshot:!!(rescue.fontFamily||rescue.fontSize),
-    toolbarSnapshot:rescue,
-    knownPendingSnapshot:known,
-    domFallback
-  },"render");
-  return true;
-}
-function editorTextosPendingStyleClear(motivo="clear"){
-  if(!editorTextosCfg||!editorTextosCfg.pendingInlineStyle)return;
-  editorTextosCfg.lastKnownPendingInlineStyle=editorTextosPendingStyleSnapshotAtual();
-  const hadColor=!!String(editorTextosCfg.pendingInlineStyle?.color||"").trim();
-  editorTextosDebugLog("EDITOR PENDING STYLE CLEAR DECISION",{
-    motivo:String(motivo||"clear"),
-    pendingInlineStyle:editorTextosCfg.pendingInlineStyle||null,
-    signature:String(editorTextosCfg.pendingInlineStyleSelectionSignature||""),
-    blockSignature:String(editorTextosCfg.pendingInlineStyleBlockSignature||"")
-  },"render");
-  if(hadColor){
-    editorTextosDebugLog("EDITOR COLOR PENDING CLEAR",{
-      motivo:String(motivo||"clear"),
-      color:String(editorTextosCfg.pendingInlineStyle?.color||"")
-    },"render");
-  }
-  editorTextosCfg.pendingInlineStyle={color:"",fontFamily:"",fontSize:""};
-  editorTextosCfg.pendingInlineStyleSelectionSignature="";
-  editorTextosCfg.pendingInlineStyleBlockSignature="";
-  editorTextosDebugLog("EDITOR PENDING STYLE CLEARED",{
-    motivo:String(motivo||"clear")
-  },"render");
-}
-function editorTextosPendingStyleSyncComCursor(motivo="sync"){
-  if(!editorTextosCfg||!editorTextosPendingStyleAtivo())return;
-  try{
-    editorTextosDebugLog("EDITOR PENDING STYLE REENTRY",{
-      motivo:String(motivo||"sync"),
-      pendingInlineStyle:editorTextosCfg.pendingInlineStyle||null,
-      assinaturaCursor:String(editorTextosCfg.pendingInlineStyleSelectionSignature||""),
-      assinaturaBloco:String(editorTextosCfg.pendingInlineStyleBlockSignature||"")
-    },"render");
-    const sel=window.getSelection?.();
-    const range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    if(!range||!editorTextosRangeDentroEditor(range)){
-      if(editorTextosPendingStyleContextoToolbarAtivo()){
-        editorTextosDebugLog("EDITOR PENDING STYLE KEEP",{
-          motivo:`${motivo}:fora_editor_toolbar`,
-          toolbarContext:true,
-          activeTag:String(document.activeElement?.tagName||"").toLowerCase(),
-          activeId:String(document.activeElement?.id||""),
-          toolbarUntil:Number(editorTextosCfg?.pendingToolbarInteractionUntil||0)||0,
-          toolbarOrigin:String(editorTextosCfg?.pendingToolbarInteractionOrigin||"")
-        },"render");
-        if(String(editorTextosCfg.pendingInlineStyle?.color||"").trim()){
-          editorTextosDebugLog("EDITOR COLOR PENDING KEEP",{
-            motivo:`${motivo}:fora_editor_toolbar`,
-            color:String(editorTextosCfg.pendingInlineStyle.color||"")
-          },"render");
-        }
-        return;
-      }
-      editorTextosDebugLog("EDITOR PENDING STYLE REENTRY CLEAR",{
-        motivo:`${motivo}:fora_editor`
-      },"render");
-      editorTextosPendingStyleClear(`${motivo}:fora_editor`);
-      return;
-    }
-    if(!range.collapsed){
-      editorTextosDebugLog("EDITOR PENDING STYLE REENTRY CLEAR",{
-        motivo:`${motivo}:selecao_expandida`
-      },"render");
-      editorTextosPendingStyleClear(`${motivo}:selecao_expandida`);
-      return;
-    }
-    const blockAtual=editorTextosPendingStyleBlockSignature(range);
-    const blockEsperado=String(editorTextosCfg.pendingInlineStyleBlockSignature||"");
-    const signatureAtual=editorTextosPendingStyleSelectionSignature(range);
-    const signatureEsperada=String(editorTextosCfg.pendingInlineStyleSelectionSignature||"");
-    if(blockEsperado&&blockAtual&&blockAtual!==blockEsperado){
-      editorTextosDebugLog("EDITOR PENDING STYLE REENTRY CLEAR",{
-        motivo:`${motivo}:bloco_alterado`,
-        blockAtual,
-        blockEsperado
-      },"render");
-      editorTextosPendingStyleClear(`${motivo}:bloco_alterado`);
-      return;
-    }
-    if(!blockEsperado&&blockAtual){
-      editorTextosCfg.pendingInlineStyleBlockSignature=blockAtual;
-    }
-    editorTextosDebugLog("EDITOR PENDING STYLE KEEP",{
-      motivo:String(motivo||"sync"),
-      blockAtual,
-      blockEsperado,
-      signatureAtual,
-      signatureEsperada
-    },"render");
-    if(String(editorTextosCfg.pendingInlineStyle?.color||"").trim()){
-      editorTextosDebugLog("EDITOR COLOR PENDING KEEP",{
-        motivo:String(motivo||"sync"),
-        color:String(editorTextosCfg.pendingInlineStyle.color||""),
-        blockAtual,
-        blockEsperado:String(editorTextosCfg.pendingInlineStyleBlockSignature||"")
-      },"render");
-    }
-    editorTextosDebugLog("EDITOR PENDING STYLE REENTRY KEEP",{
-      motivo:String(motivo||"sync"),
-      blockAtual,
-      blockEsperado:String(editorTextosCfg.pendingInlineStyleBlockSignature||"")
-    },"render");
-  }catch{}
-}
-function editorTextosPendingStyleAplicarNoBeforeInput(ev){
-  if(!editorTextosCfg?.page||!editorTextosPendingStyleAtivo())return false;
-  const inputType=String(ev?.inputType||"");
-  if(!inputType.startsWith("insert"))return false;
-  if(inputType==="insertParagraph"||inputType==="insertLineBreak")return false;
-  const texto=String(ev?.data??"");
-  if(!texto)return false;
-  const sel=window.getSelection?.();
-  if(!sel||!sel.rangeCount)return false;
-  const range=sel.getRangeAt(0);
-  if(!range.collapsed||!editorTextosRangeDentroEditor(range))return false;
-  const pending=editorTextosPendingStyleNormalizar(editorTextosCfg.pendingInlineStyle||{});
-  if(!(pending.color||pending.fontFamily||pending.fontSize))return false;
-  const span=document.createElement("span");
-  if(pending.color)span.style.color=pending.color;
-  if(pending.fontFamily)span.style.fontFamily=pending.fontFamily;
-  if(pending.fontSize)span.style.fontSize=pending.fontSize;
-  span.appendChild(document.createTextNode(texto));
-  range.insertNode(span);
-  const nextRange=document.createRange();
-  nextRange.setStartAfter(span);
-  nextRange.collapse(true);
-  sel.removeAllRanges();
-  sel.addRange(nextRange);
-  editorTextosCfg.pendingInlineStyleSelectionSignature=editorTextosPendingStyleSelectionSignature(nextRange);
-  editorTextosCfg.pendingInlineStyleBlockSignature=editorTextosPendingStyleBlockSignature(nextRange);
-  editorTextosCfg.lastPendingInlineStyleBeforeToolbar=editorTextosPendingStyleSnapshotAtual();
-  editorTextosDebugLog("EDITOR PENDING STYLE APPLY ON INPUT",{
-    inputType,
-    texto:editorTextosDebugPreview(texto,120),
-    color:pending.color||"",
-    fontFamily:pending.fontFamily||"",
-    fontSize:pending.fontSize||"",
-    signature:String(editorTextosCfg.pendingInlineStyleSelectionSignature||"")
-  },"render");
-  if(pending.color){
-    editorTextosDebugLog("EDITOR COLOR PENDING APPLY ON INPUT",{
-      inputType,
-      texto:editorTextosDebugPreview(texto,120),
-      color:pending.color
-    },"render");
-  }
-  try{ev.preventDefault()}catch{}
-  return true;
-}
-function editorTextosFonteElementoParaRange(range,block=null){
-  try{
-    const node=range?.startContainer||range?.commonAncestorContainer||null;
-    let el=node?.nodeType===Node.TEXT_NODE?node.parentElement:(node instanceof HTMLElement?node:null);
-    if(el&&editorTextosCfg?.page?.contains(el))return el;
-    if(block instanceof HTMLElement)return block;
-    return editorTextosResolverBlocoDeNode(node)||editorTextosCfg?.page||null;
-  }catch{}
-  return block instanceof HTMLElement?block:null;
-}
-function editorTextosFonteEstiloInlineMaisProximo(range,block,prop){
-  try{
-    const page=editorTextosCfg?.page;
-    let el=editorTextosFonteElementoParaRange(range,block);
-    while(el instanceof HTMLElement&&page?.contains(el)){
-      const valor=String(el.style?.[prop]||"").trim();
-      if(valor)return valor;
-      if(el===block||el===page)break;
-      el=el.parentElement;
-    }
-  }catch{}
-  return"";
-}
-function editorTextosFonteEstiloEfetivo(range,block=null){
-  const el=editorTextosFonteElementoParaRange(range,block);
-  let estilo=null;
-  try{estilo=el?window.getComputedStyle(el):null}catch{}
-  const familiaInline=editorTextosFonteEstiloInlineMaisProximo(range,block,"fontFamily");
-  const tamanhoInline=editorTextosFonteEstiloInlineMaisProximo(range,block,"fontSize");
-  const corInline=editorTextosFonteEstiloInlineMaisProximo(range,block,"color");
-  return{
-    fontFamily:editorTextosFonteNormalizarFamilia(familiaInline||estilo?.fontFamily||""),
-    fontSize:editorTextosFonteNormalizarTamanho(tamanhoInline||estilo?.fontSize||""),
-    color:editorTextosCorParaHex(corInline||"")||"",
-    computedFontFamily:editorTextosFonteNormalizarFamilia(estilo?.fontFamily||""),
-    computedFontSize:editorTextosFonteNormalizarTamanho(estilo?.fontSize||""),
-    computedColor:editorTextosCorParaHex(estilo?.color||"")||""
-  };
-}
-function editorTextosFonteAplicarEstiloMesclado(span,{family="",size=""}={},base={}){
-  if(!(span instanceof HTMLElement))return{fontFamily:"",fontSize:"",color:""};
-  const finalFamily=family||editorTextosFonteNormalizarFamilia(base.fontFamily||base.computedFontFamily||"");
-  const finalSize=size||editorTextosFonteNormalizarTamanho(base.fontSize||base.computedFontSize||"");
-  const finalColor=editorTextosCorParaHex(base.color||"")||"";
-  if(finalColor)span.style.color=finalColor;
-  if(finalFamily)span.style.fontFamily=finalFamily;
-  if(finalSize)span.style.fontSize=finalSize;
-  return{
-    fontFamily:String(span.style.fontFamily||""),
-    fontSize:String(span.style.fontSize||""),
-    color:String(span.style.color||"")
-  };
-}
-function editorTextosFonteAtualizarFragmentoEstilos(fragment,{family="",size=""}={}){
-  let atualizados=0;
-  try{
-    if(!fragment?.querySelectorAll)return 0;
-    fragment.querySelectorAll("[style]").forEach(el=>{
-      if(!(el instanceof HTMLElement))return;
-      let mudou=false;
-      if(family&&String(el.style.fontFamily||"").trim()){
-        el.style.fontFamily=family;
-        mudou=true;
-      }
-      if(size&&String(el.style.fontSize||"").trim()){
-        el.style.fontSize=size;
-        mudou=true;
-      }
-      if(mudou)atualizados+=1;
-    });
-  }catch{}
-  return atualizados;
-}
-function editorTextosFonteResumoNode(node){
-  try{
-    if(!node)return"";
-    if(node.nodeType===Node.TEXT_NODE)return`#text:${editorTextosDebugPreview(node.textContent||"",80)}`;
-    if(node instanceof HTMLElement){
-      return `${String(node.tagName||"").toLowerCase()}#${String(node.id||"")}.${String(node.className||"").replace(/\s+/g,".").slice(0,80)}`;
-    }
-    return String(node.nodeName||"node");
-  }catch{}
-  return"";
-}
-function editorTextosFonteCriarRangeParaBloco(range,block){
-  if(!range||!(block instanceof HTMLElement))return null;
-  try{
-    const sub=document.createRange();
-    const starts=block.contains(range.startContainer);
-    const ends=block.contains(range.endContainer);
-    if(starts)sub.setStart(range.startContainer,range.startOffset);
-    else sub.setStart(block,0);
-    if(ends)sub.setEnd(range.endContainer,range.endOffset);
-    else sub.setEnd(block,block.childNodes.length);
-    if(sub.collapsed)return null;
-    const text=String(sub.cloneContents?.()?.textContent||"");
-    if(!text.replace(/\u00a0/g," ").trim())return null;
-    return sub;
-  }catch{}
-  return null;
-}
-function editorTextosFonteBlocosDaSelecao(range){
-  if(!editorTextosCfg?.page||!range||!editorTextosRangeDentroEditor(range))return[];
-  const page=editorTextosCfg.page;
-  let candidatos=[];
-  try{
-    candidatos=[...page.querySelectorAll(EDITOR_TEXTOS_BLOCK_SELECTOR)]
-      .filter(el=>el instanceof HTMLElement&&el!==page)
-      .filter(el=>{
-        try{return range.intersectsNode(el)&&!!editorTextosFonteCriarRangeParaBloco(range,el)}catch{return false}
-      });
-  }catch{}
-  if(!candidatos.length){
-    const block=editorTextosResolverBlocoDeNode(range.commonAncestorContainer||range.startContainer);
-    if(block instanceof HTMLElement&&block!==page&&editorTextosFonteCriarRangeParaBloco(range,block))candidatos=[block];
-  }
-  const leaf=candidatos.filter(el=>!candidatos.some(other=>other!==el&&el.contains(other)));
-  return (leaf.length?leaf:candidatos).sort((a,b)=>{
-    if(a===b)return 0;
-    return (a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_PRECEDING)?1:-1;
-  });
-}
-function editorTextosFonteResumoSelecao(range,blocks=[]){
-  const base=Array.isArray(blocks)?blocks:[];
-  return{
-    totalBlocos:base.length,
-    blockIds:base.map(block=>String(block?.dataset?.etBlockId||block?.id||block?.tagName||"")),
-    startContainer:editorTextosFonteResumoNode(range?.startContainer||null),
-    endContainer:editorTextosFonteResumoNode(range?.endContainer||null),
-    textoSelecionado:editorTextosDebugPreview(String(window.getSelection?.()?.toString?.()||""),700),
-    tipoSelecao:base.length>1?"multi-bloco":"intra-bloco"
-  };
-}
-function editorTextosAplicarEstiloFonteMultiBloco(range,{family="",size="",selector=""}={}){
-  const blocks=editorTextosFonteBlocosDaSelecao(range);
-  const resumo=editorTextosFonteResumoSelecao(range,blocks);
-  editorTextosDebugLog("EDITOR FONT MULTIBLOCK DETECT",resumo,"render");
-  if(blocks.length<=1)return{aplicado:false,multi:false,blocks};
-  editorTextosDebugLog("EDITOR FONT MULTIBLOCK APPLY START",{
-    ...resumo,
-    fontFamily:family,
-    fontSize:size
-  },"render");
-  const spansCriados=[];
-  let totalBlocosAfetados=0;
-  let totalSpansCriadosOuAlterados=0;
-  let houveFalhaParcial=false;
-  const processar=[...blocks].reverse();
-  processar.forEach(block=>{
-    const blockId=String(block?.dataset?.etBlockId||block?.id||block?.tagName||"");
-    const spansAntes=block instanceof HTMLElement?block.querySelectorAll?.(selector)?.length||0:0;
-    let ok=false;
-    let erro="";
-    let spansAtualizados=0;
-    let estiloAntes={};
-    let estiloDepois={};
-    try{
-      const sub=editorTextosFonteCriarRangeParaBloco(range,block);
-      if(!sub){
-        erro="range_bloco_vazio";
-      }else{
-        estiloAntes=editorTextosFonteEstiloEfetivo(sub,block);
-        editorTextosDebugLog("EDITOR FONT STYLE MERGE REQUEST",{
-          contexto:"multi-bloco",
-          blockId,
-          aplicarFontFamily:family,
-          aplicarFontSize:size,
-          preservar:["color","font-family","font-size"]
-        },"render");
-        editorTextosDebugLog("EDITOR FONT STYLE MERGE BEFORE",{
-          contexto:"multi-bloco",
-          blockId,
-          fontFamilyAntes:estiloAntes.fontFamily||estiloAntes.computedFontFamily||"",
-          fontSizeAntes:estiloAntes.fontSize||estiloAntes.computedFontSize||"",
-          colorAntes:estiloAntes.color||estiloAntes.computedColor||""
-        },"render");
-        const span=document.createElement("span");
-        const frag=sub.extractContents();
-        spansAtualizados=editorTextosFonteAtualizarFragmentoEstilos(frag,{family,size});
-        estiloDepois=editorTextosFonteAplicarEstiloMesclado(span,{family,size},estiloAntes);
-        span.appendChild(frag);
-        sub.insertNode(span);
-        ok=block.contains(span)&&String(span.textContent||"").length>0;
-        if(ok)spansCriados.push(span);
-      }
-    }catch(err){
-      erro=String(err?.message||err||"");
-    }
-    const spansDepois=block instanceof HTMLElement?block.querySelectorAll?.(selector)?.length||0:0;
-    const delta=Math.max(0,spansDepois-spansAntes);
-    if(ok&&delta>0){
-      totalBlocosAfetados+=1;
-      totalSpansCriadosOuAlterados+=delta;
-    }else{
-      houveFalhaParcial=true;
-    }
-    editorTextosDebugLog("EDITOR FONT MULTIBLOCK APPLY BLOCK",{
-      blockId,
-      ok:ok&&delta>0,
-      spansAntes,
-      spansDepois,
-      spansAlteradosOuCriados:delta,
-      spansAtualizados,
-      spansCriados:delta,
-      erro,
-      htmlDepois:block instanceof HTMLElement?editorTextosParagrafoResumoHTML(block.innerHTML,500):""
-    },"render");
-    editorTextosDebugLog("EDITOR FONT STYLE MERGE AFTER",{
-      contexto:"multi-bloco",
-      blockId,
-      fontFamilyAntes:estiloAntes.fontFamily||estiloAntes.computedFontFamily||"",
-      fontSizeAntes:estiloAntes.fontSize||estiloAntes.computedFontSize||"",
-      fontFamilyDepois:estiloDepois.fontFamily||"",
-      fontSizeDepois:estiloDepois.fontSize||"",
-      colorDepois:estiloDepois.color||"",
-      spansAtualizados,
-      spansCriados:delta
-    },"render");
-  });
-  const spansOrdenados=spansCriados.filter(span=>span instanceof HTMLElement&&editorTextosCfg.page.contains(span)).sort((a,b)=>{
-    if(a===b)return 0;
-    return (a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_PRECEDING)?1:-1;
-  });
-  try{
-    const sel=window.getSelection?.();
-    if(sel&&spansOrdenados.length){
-      const next=document.createRange();
-      next.setStartBefore(spansOrdenados[0]);
-      next.setEndAfter(spansOrdenados[spansOrdenados.length-1]);
-      sel.removeAllRanges();
-      sel.addRange(next);
-    }
-  }catch{}
-  const sucesso=totalSpansCriadosOuAlterados>0;
-  editorTextosDebugLog("EDITOR FONT MULTIBLOCK APPLY RESULT",{
-    sucesso,
-    totalBlocosSelecao:blocks.length,
-    totalBlocosAfetados,
-    totalSpansCriadosOuAlterados,
-    houveFalhaParcial
-  },"render");
-  return{aplicado:true,multi:true,sucesso,totalBlocosAfetados,totalSpansCriadosOuAlterados,houveFalhaParcial,blocks};
-}
-function editorTextosAplicarEstiloFonteSelecao({fontFamily="",fontSize=""}={}){
-  if(!editorTextosCfg?.page)return false;
-  const family=editorTextosFonteNormalizarFamilia(fontFamily);
-  const size=editorTextosFonteNormalizarTamanho(fontSize);
-  if(!family&&!size)return false;
-  const isSize=!!size&&!family;
-  const labelRequest=isSize?"EDITOR FONT SIZE APPLY REQUEST":"EDITOR FONT APPLY REQUEST";
-  const labelResult=isSize?"EDITOR FONT SIZE APPLY RESULT":"EDITOR FONT APPLY RESULT";
-  let sucesso=false;
-  let spansAntes=0;
-  let restaurado=false;
-  try{
-    const dropdownAntes=editorTextosFonteDropdownState();
-    editorTextosDebugLog("EDITOR FONT DROPDOWN STATE BEFORE",{
-      ...dropdownAntes,
-      aplicando:family?"font-family":"font-size",
-      valorSolicitado:family||size
-    },"render");
-    let sel=window.getSelection?.();
-    let range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    if(!range||range.collapsed||!editorTextosRangeDentroEditor(range)){
-      restaurado=editorTextosFonteSelecaoSnapshotRestaurar();
-      sel=window.getSelection?.();
-      range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    }
-    const block=editorTextosResolverBlocoDeNode(sel?.focusNode||sel?.anchorNode||range?.commonAncestorContainer||null);
-    const selector=family?'span[style*="font-family"]':'span[style*="font-size"]';
-    spansAntes=block instanceof HTMLElement?block.querySelectorAll?.(selector)?.length||0:0;
-    const blocksSelecao=range?editorTextosFonteBlocosDaSelecao(range):[];
-    const resumoSelecao=editorTextosFonteResumoSelecao(range,blocksSelecao);
-    editorTextosDebugLog("EDITOR FONT MULTIBLOCK DETECT",resumoSelecao,"render");
-    editorTextosDebugLog(labelRequest,{
-      valorSolicitado:family||size,
-      fontFamily:family,
-      fontSize:size,
-      selectionText:String(sel?.toString?.()||""),
-      rangeCollapsed:!!range?.collapsed,
-      restaurado,
-      bloco:String(block?.dataset?.etBlockId||""),
-      htmlAntes:block instanceof HTMLElement?editorTextosParagrafoResumoHTML(block.innerHTML,900):""
-    },"render");
-    editorTextosDebugLog("EDITOR FONT SANITIZE CHECK",{
-      stylePermitido:["color","font-family","font-size"],
-      persistencia:"style color/font-family/font-size preservado pelo sanitizador"
-    },"render");
-    if(range&&range.collapsed&&editorTextosRangeDentroEditor(range)){
-      editorTextosPendingStyleSet({
-        fontFamily:family||undefined,
-        fontSize:size||undefined
-      },family?"font_collapsed":"font_size_collapsed");
-      editorTextosDebugLog("EDITOR CURRENT INLINE STYLE SYNC",{
-        origem:family?"font_collapsed":"font_size_collapsed",
-        pendingInlineStyle:editorTextosCfg?.pendingInlineStyle||null
-      },"render");
-      editorTextosAgendarSincronizarToolbar(true);
-      editorTextosDebugLog("EDITOR FONT DROPDOWN STATE AFTER",{
-        ...editorTextosFonteDropdownState(),
-        sucesso:true,
-        pendente:true,
-        aplicando:family?"font-family":"font-size",
-        valorSolicitado:family||size
-      },"render");
-      return true;
-    }
-    if(!sel||!range||range.collapsed||!editorTextosRangeDentroEditor(range)||!String(sel.toString?.()||"")){
-      editorTextosDebugLog(labelResult,{
-        sucesso:false,
-        restaurado,
-        spansAlteradosOuCriados:0,
-        motivo:!range?"sem_range":(range?.collapsed?"range_colapsado":"sem_texto_ou_fora_editor")
-      },"render");
-      editorTextosDebugLog("EDITOR FONT DROPDOWN STATE AFTER",{
-        ...editorTextosFonteDropdownState(),
-        sucesso:false,
-        aplicando:family?"font-family":"font-size",
-        valorSolicitado:family||size
-      },"render");
-      return false;
-    }
-    if(blocksSelecao.length>1){
-      const multi=editorTextosAplicarEstiloFonteMultiBloco(range.cloneRange(),{family,size,selector});
-      sucesso=!!multi.sucesso;
-      if(sucesso){
-        editorTextosPendingStyleClear("font_noncollapsed_multibloco_apply");
-        editorTextosSalvarRangeAtual();
-        editorTextosFonteSelecaoSnapshotSalvar(family?"apos_aplicar_fonte_multibloco":"apos_aplicar_tamanho_multibloco");
-        editorTextosSincronizarEstruturaParagrafoAtual();
-        editorTextosDocumentoModelAgendarAtualizacao(50);
-        if(editorTextosCfg?.status)editorTextosCfg.status.textContent="Alteracoes pendentes...";
-        editorTextosCfg.alterado=true;
-      }
-      editorTextosDebugLog(labelResult,{
-        sucesso,
-        restaurado,
-        multiBloco:true,
-        totalBlocosAfetados:multi.totalBlocosAfetados||0,
-        totalSpansCriadosOuAlterados:multi.totalSpansCriadosOuAlterados||0,
-        houveFalhaParcial:!!multi.houveFalhaParcial
-      },"render");
-      editorTextosAgendarSincronizarToolbar();
-      editorTextosDebugLog("EDITOR FONT DROPDOWN STATE AFTER",{
-        ...editorTextosFonteDropdownState(),
-        sucesso,
-        aplicando:family?"font-family":"font-size",
-        valorSolicitado:family||size
-      },"render");
-      return sucesso;
-    }
-    const workRange=range.cloneRange();
-    const estiloAntes=editorTextosFonteEstiloEfetivo(workRange,block);
-    editorTextosDebugLog("EDITOR FONT STYLE MERGE REQUEST",{
-      contexto:"intra-bloco",
-      aplicarFontFamily:family,
-      aplicarFontSize:size,
-      preservar:["color","font-family","font-size"]
-    },"render");
-    editorTextosDebugLog("EDITOR FONT STYLE MERGE BEFORE",{
-      contexto:"intra-bloco",
-      fontFamilyAntes:estiloAntes.fontFamily||estiloAntes.computedFontFamily||"",
-      fontSizeAntes:estiloAntes.fontSize||estiloAntes.computedFontSize||"",
-      colorAntes:estiloAntes.color||estiloAntes.computedColor||""
-    },"render");
-    const span=document.createElement("span");
-    const frag=workRange.extractContents();
-    const spansAtualizados=editorTextosFonteAtualizarFragmentoEstilos(frag,{family,size});
-    const estiloDepois=editorTextosFonteAplicarEstiloMesclado(span,{family,size},estiloAntes);
-    span.appendChild(frag);
-    workRange.insertNode(span);
-    const nextRange=document.createRange();
-    nextRange.selectNodeContents(span);
-    sel.removeAllRanges();
-    sel.addRange(nextRange);
-    editorTextosPendingStyleClear("font_noncollapsed_apply");
-    sucesso=editorTextosCfg.page.contains(span)&&String(span.textContent||"").length>0;
-    editorTextosSalvarRangeAtual();
-    editorTextosFonteSelecaoSnapshotSalvar(family?"apos_aplicar_fonte":"apos_aplicar_tamanho");
-    editorTextosSincronizarEstruturaParagrafoAtual();
-    editorTextosDocumentoModelAgendarAtualizacao(50);
-    if(editorTextosCfg?.status)editorTextosCfg.status.textContent="Alteracoes pendentes...";
-    editorTextosCfg.alterado=true;
-    const blocoDepois=block instanceof HTMLElement?block:editorTextosResolverBlocoDeNode(window.getSelection?.()?.focusNode||null);
-    const spansDepois=blocoDepois instanceof HTMLElement?blocoDepois.querySelectorAll?.(selector)?.length||0:0;
-    sucesso=!!sucesso&&spansDepois>spansAntes;
-    editorTextosDebugLog(labelResult,{
-      sucesso:!!sucesso,
-      restaurado,
-      spansAntes,
-      spansDepois,
-      spansAlteradosOuCriados:Math.max(0,spansDepois-spansAntes),
-      spansAtualizados,
-      spansCriados:Math.max(0,spansDepois-spansAntes),
-      htmlDepois:blocoDepois instanceof HTMLElement?editorTextosParagrafoResumoHTML(blocoDepois.innerHTML,900):""
-    },"render");
-    editorTextosDebugLog("EDITOR FONT STYLE MERGE AFTER",{
-      contexto:"intra-bloco",
-      fontFamilyAntes:estiloAntes.fontFamily||estiloAntes.computedFontFamily||"",
-      fontSizeAntes:estiloAntes.fontSize||estiloAntes.computedFontSize||"",
-      fontFamilyDepois:estiloDepois.fontFamily||"",
-      fontSizeDepois:estiloDepois.fontSize||"",
-      colorDepois:estiloDepois.color||"",
-      spansAtualizados,
-      spansCriados:Math.max(0,spansDepois-spansAntes)
-    },"render");
-  }catch(err){
-    editorTextosDebugLog(labelResult,{
-      sucesso:false,
-      restaurado,
-      spansAntes,
-      erro:String(err?.message||err||"")
-    },"render");
-  }
-  editorTextosAgendarSincronizarToolbar();
-  editorTextosDebugLog("EDITOR FONT DROPDOWN STATE AFTER",{
-    ...editorTextosFonteDropdownState(),
-    sucesso:!!sucesso,
-    aplicando:family?"font-family":"font-size",
-    valorSolicitado:family||size
-  },"render");
-  return !!sucesso;
-}
-function editorTextosMergeFieldSelecaoResumo(range=null){
-  try{
-    const sel=window.getSelection?.();
-    const r=range||(sel&&sel.rangeCount?sel.getRangeAt(0):null);
-    const node=sel?.focusNode||sel?.anchorNode||r?.commonAncestorContainer||null;
-    const block=editorTextosResolverBlocoDeNode(node);
-    let pos=null;
-    try{if(block instanceof HTMLElement)pos=editorTextosParagrafoObterPosicaoLogicaAtual(block,null)}catch{}
-    return{
-      selectionText:String(sel?.toString?.()||""),
-      rangeCollapsed:!!r?.collapsed,
-      dentroEditor:!!(r&&editorTextosRangeDentroEditor(r)),
-      blockId:String(block?.dataset?.etBlockId||""),
-      textOffsetLinear:pos?.textOffset??null,
-      offset:Number(sel?.focusOffset??sel?.anchorOffset??NaN),
-      anchorNode:editorTextosParagrafoSerializarNodeDebug(sel?.anchorNode||null),
-      focusNode:editorTextosParagrafoSerializarNodeDebug(sel?.focusNode||null),
-      htmlAntes:block instanceof HTMLElement?editorTextosParagrafoResumoHTML(block.innerHTML,900):""
-    };
-  }catch(err){
-    return{erro:String(err?.message||err||"")};
-  }
-}
-function editorTextosMergeFieldSnapshotResumo(){
-  try{
-    const snap=editorTextosCfg?.mergeFieldSelectionSnapshot;
-    if(!snap?.range)return null;
-    const block=editorTextosResolverBlocoDeNode(snap.range.commonAncestorContainer||snap.range.startContainer||null);
-    return{
-      origem:String(snap.origem||""),
-      selectionText:String(snap.selectionText||""),
-      rangeCollapsed:!!snap.collapsed,
-      valido:editorTextosRangeDentroEditor(snap.range),
-      blockId:String(block?.dataset?.etBlockId||snap.blockId||""),
-      textOffsetLinear:snap.textOffsetLinear??null,
-      idadeMs:Date.now()-Number(snap.updatedAt||0)
-    };
-  }catch(err){
-    return{erro:String(err?.message||err||"")};
-  }
-}
-function editorTextosMergeFieldSnapshotSalvar(origem="selection"){
-  try{
-    if(!editorTextosCfg?.page)return false;
-    const sel=window.getSelection?.();
-    if(!sel||!sel.rangeCount)return false;
-    const range=sel.getRangeAt(0);
-    if(!range||!editorTextosRangeDentroEditor(range))return false;
-    const node=sel.focusNode||sel.anchorNode||range.commonAncestorContainer;
-    const block=editorTextosResolverBlocoDeNode(node);
-    let pos=null;
-    try{if(block instanceof HTMLElement)pos=editorTextosParagrafoObterPosicaoLogicaAtual(block,null)}catch{}
-    editorTextosCfg.mergeFieldSelectionSnapshot={
-      range:range.cloneRange(),
-      selectionText:String(sel.toString?.()||""),
-      collapsed:!!range.collapsed,
-      origem:String(origem||"selection"),
-      blockId:String(block?.dataset?.etBlockId||""),
-      textOffsetLinear:pos?.textOffset??null,
-      updatedAt:Date.now()
-    };
-    editorTextosDebugLog("EDITOR MERGE FIELD SNAPSHOT",{
-      origem:String(origem||"selection"),
-      ...editorTextosMergeFieldSelecaoResumo(range)
-    },"render");
-    return true;
-  }catch(err){
-    editorTextosDebugLog("EDITOR MERGE FIELD INSERT FALLBACK",{motivo:"snapshot_erro",erro:String(err?.message||err||"")},"render");
-  }
-  return false;
-}
-function editorTextosMergeFieldSnapshotRestaurar(){
-  try{
-    const snap=editorTextosCfg?.mergeFieldSelectionSnapshot;
-    const range=snap?.range;
-    if(!range||!editorTextosRangeDentroEditor(range))return false;
-    const sel=window.getSelection?.();
-    if(!sel)return false;
-    editorTextosCfg.page.focus();
-    sel.removeAllRanges();
-    sel.addRange(range.cloneRange());
-    editorTextosDebugLog("EDITOR MERGE FIELD SELECTION RESTORED",{
-      snapshot:editorTextosMergeFieldSnapshotResumo(),
-      atual:editorTextosMergeFieldSelecaoResumo()
-    },"render");
-    return true;
-  }catch(err){
-    editorTextosDebugLog("EDITOR MERGE FIELD INSERT FALLBACK",{motivo:"restore_erro",erro:String(err?.message||err||"")},"render");
-  }
-  return false;
-}
-function editorTextosMergeFieldRangeAtualValido(){
-  try{
-    const sel=window.getSelection?.();
-    if(!sel||!sel.rangeCount)return false;
-    return editorTextosRangeDentroEditor(sel.getRangeAt(0));
-  }catch{}
-  return false;
-}
-function editorTextosCorAplicarOuPending(valor){
-  const color=editorTextosCorParaHex(valor)||String(valor||"").trim();
-  if(!editorTextosCfg?.page||!color)return false;
-  let sel=window.getSelection?.();
-  let range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-  const rangeEditor=!!(range&&editorTextosRangeDentroEditor(range));
-  const selecaoExpandidaAtual=!!(rangeEditor&&!range.collapsed&&String(sel?.toString?.()||"").trim());
-  const savedRange=editorTextosCfg?.savedRange instanceof Range?editorTextosCfg.savedRange:null;
-  const savedRangeEditor=!!(savedRange&&editorTextosRangeDentroEditor(savedRange));
-  const savedRangeExpandida=!!(savedRangeEditor&&!savedRange.collapsed&&String(savedRange.toString?.()||"").trim());
-  editorTextosDebugLog("EDITOR COLOR PENDING BLOCK CONTEXT",{
-    origem:"color_change_handler_decision",
-    rangeEditor,
-    selecaoExpandidaAtual,
-    savedRangeEditor,
-    savedRangeExpandida,
-    blockAtual:editorTextosPendingStyleBlockSignature(range),
-    blockSaved:editorTextosPendingStyleBlockSignature(savedRange)
-  },"render");
-  if(selecaoExpandidaAtual){
-    return !!editorTextosAplicarCorSelecao(color);
-  }
-  if(!selecaoExpandidaAtual&&savedRangeExpandida){
-    try{editorTextosRestaurarRangeAtual()}catch{}
-    sel=window.getSelection?.();
-    range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    if(range&&!range.collapsed&&editorTextosRangeDentroEditor(range)){
-      return !!editorTextosAplicarCorSelecao(color);
-    }
-  }
-  const okPending=editorTextosColorPendingSet(color,"color_collapsed_change_handler");
-  if(okPending){
-    editorTextosAgendarSincronizarToolbar(true);
-    return true;
-  }
-  return !!editorTextosAplicarCorSelecao(color);
-}
-function editorTextosAplicarCorSelecao(valor){
-  const color=editorTextosCorParaHex(valor)||String(valor||"").trim();
-  if(!editorTextosCfg?.page||!color)return false;
-  let sucesso=false;
-  let spansColoridosAntes=0;
-  try{
-    let sel=window.getSelection?.();
-    let range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    if(!range||range.collapsed||!editorTextosRangeDentroEditor(range)){
-      editorTextosCorSelecaoSnapshotRestaurar();
-      sel=window.getSelection?.();
-      range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    }
-    const block=editorTextosResolverBlocoDeNode(sel?.focusNode||sel?.anchorNode||range?.commonAncestorContainer||null);
-    spansColoridosAntes=block instanceof HTMLElement?block.querySelectorAll?.('span[style*="color"]')?.length||0:0;
-    editorTextosDebugLog("EDITOR COLOR APPLY REQUEST",{
-      color,
-      selectionText:String(sel?.toString?.()||""),
-      rangeCollapsed:!!range?.collapsed,
-      anchorNode:editorTextosParagrafoSerializarNodeDebug(sel?.anchorNode||null),
-      focusNode:editorTextosParagrafoSerializarNodeDebug(sel?.focusNode||null),
-      bloco:String(block?.dataset?.etBlockId||""),
-      htmlAntes:block instanceof HTMLElement?editorTextosParagrafoResumoHTML(block.innerHTML,700):""
-    },"render");
-    editorTextosDebugLog("EDITOR COLOR SANITIZE CHECK",{
-      color,
-      stylePermitido:"color",
-      persistencia:"style color preservado pelo sanitizador"
-    },"render");
-    const focoNoEditor=!!(document.activeElement&&editorTextosCfg.page.contains(document.activeElement));
-    const hasSavedRange=!!(editorTextosCfg?.savedRange&&editorTextosRangeDentroEditor(editorTextosCfg.savedRange));
-    if((range&&range.collapsed&&editorTextosRangeDentroEditor(range))||(!range&&focoNoEditor)||hasSavedRange){
-      editorTextosColorPendingSet(color,"color_collapsed");
-      editorTextosDebugLog("EDITOR CURRENT INLINE STYLE SYNC",{
-        origem:"color_collapsed",
-        pendingInlineStyle:editorTextosCfg?.pendingInlineStyle||null
-      },"render");
-      editorTextosAgendarSincronizarToolbar(true);
-      return true;
-    }
-    if(!sel||!range||range.collapsed||!editorTextosRangeDentroEditor(range)||!String(sel.toString?.()||"")){
-      editorTextosDebugLog("EDITOR COLOR SELECTION LOST",{
-        motivo:!range?"sem_range":(range?.collapsed?"range_colapsado":"sem_texto_ou_fora_editor"),
-        color,
-        selectionText:String(sel?.toString?.()||"")
-      },"render");
-      editorTextosDebugLog("EDITOR COLOR APPLY RESULT",{sucesso:false,spansColoridos:spansColoridosAntes},"render");
-      return false;
-    }
-    const workRange=range.cloneRange();
-    const span=document.createElement("span");
-    span.style.color=color;
-    const frag=workRange.extractContents();
-    span.appendChild(frag);
-    workRange.insertNode(span);
-    const nextRange=document.createRange();
-    nextRange.selectNodeContents(span);
-    sel.removeAllRanges();
-    sel.addRange(nextRange);
-    editorTextosPendingStyleClear("color_noncollapsed_apply");
-    sucesso=editorTextosCfg.page.contains(span)&&String(span.textContent||"").length>0;
-    editorTextosSalvarRangeAtual();
-    editorTextosCorSelecaoSnapshotSalvar("apos_aplicar_cor");
-    editorTextosSincronizarEstruturaParagrafoAtual();
-    editorTextosDocumentoModelAgendarAtualizacao(50);
-    if(editorTextosCfg?.status)editorTextosCfg.status.textContent="Alteracoes pendentes...";
-    if(editorTextosCfg)editorTextosCfg.alterado=true;
-    const blocoDepois=block instanceof HTMLElement?block:editorTextosResolverBlocoDeNode(window.getSelection?.()?.focusNode||null);
-    const spansColoridos=blocoDepois instanceof HTMLElement?blocoDepois.querySelectorAll?.('span[style*="color"]')?.length||0:0;
-    editorTextosDebugLog("EDITOR COLOR APPLY RESULT",{
-      htmlDepois:blocoDepois instanceof HTMLElement?editorTextosParagrafoResumoHTML(blocoDepois.innerHTML,700):"",
-      spansColoridos,
-      spansColoridosAntes,
-      sucesso:!!sucesso
-    },"render");
-  }catch(err){
-    editorTextosDebugLog("EDITOR COLOR APPLY RESULT",{sucesso:false,spansColoridos:spansColoridosAntes,erro:String(err?.message||err||"")},"render");
-  }
-  editorTextosAgendarSincronizarToolbar();
-  return !!sucesso;
-}function editorTextosObterElementoSelecao(){
+function editorTextosObterElementoSelecao(){
   const sel=window.getSelection?.();
   if(!sel||!sel.rangeCount)return null;
   const range=sel.getRangeAt(0);
@@ -14056,7 +13030,6 @@ function editorTextosAplicarCorSelecao(valor){
 const EDITOR_TEXTOS_BLOCK_SELECTOR="p,div,li,td,th,section,article,h1,h2,h3,h4,h5,h6,blockquote,pre";
 const EDITOR_TEXTOS_DOCUMENT_MODEL_FLAG_KEY="brana_editor_textos_model_v2";
 const EDITOR_TEXTOS_DOCUMENT_MODEL_BLOCK_TYPES=new Set(["paragraph","table","image","list","quote","preformatted","heading"]);
-const EDITOR_TEXTOS_DEBUG=false;
 try{
   if(typeof window!=="undefined"&&typeof window.DEBUG_EDITOR_MODEL==="undefined"){
     window.DEBUG_EDITOR_MODEL=false;
@@ -14069,49 +13042,7 @@ try{
   if(typeof window!=="undefined"&&typeof window.DEBUG_TAB_ENGINE_VERBOSE==="undefined"){
     window.DEBUG_TAB_ENGINE_VERBOSE=false;
   }
-  if(typeof window!=="undefined"&&typeof window.EDITOR_TEXTOS_DEBUG==="undefined"){
-    window.EDITOR_TEXTOS_DEBUG=EDITOR_TEXTOS_DEBUG;
-  }
 }catch{}
-function editorTextosDebugAtivo(nivel=""){
-  try{
-    if(EDITOR_TEXTOS_DEBUG===true)return true;
-    if(typeof window!=="undefined"&&window.EDITOR_TEXTOS_DEBUG===true)return true;
-    if(editorTextosCfg?.debug===true||editorTextosCfg?.debugEditorTextos===true)return true;
-    if(typeof localStorage!=="undefined"&&localStorage.getItem("brana_editor_textos_debug")==="1")return true;
-    if(String(nivel||"")==="tab"&&typeof window!=="undefined"&&window.DEBUG_TAB_ENGINE===true)return true;
-    if(String(nivel||"")==="verbose"&&typeof window!=="undefined"&&window.DEBUG_TAB_ENGINE_VERBOSE===true)return true;
-  }catch{}
-  return false;
-}
-function editorTextosDebugLog(label,payload=null,nivel="tab"){
-  if(!editorTextosDebugAtivo(nivel))return;
-  try{
-    if(arguments.length>1)console.log(label,payload);
-    else console.log(label);
-  }catch{}
-}
-function editorTextosDebugPreview(value,max=500){
-  const text=String(value??"").replace(/\u200B/g,"\\u200B");
-  const limite=Math.max(80,Number(max||500)||500);
-  return text.length>limite?`${text.slice(0,limite)}...`:text;
-}
-function editorTextosMergeFieldsResumoCategorias(categorias){
-  const base=Array.isArray(categorias)?categorias:[];
-  const grupos=base.map(cat=>{
-    const campos=Array.isArray(cat?.campos)?cat.campos:[];
-    return {
-      nome:String(cat?.nome||""),
-      total:campos.length,
-      campos:campos.map(row=>String(row?.campo||row?.label||row?.token||"")).filter(Boolean)
-    };
-  });
-  return {
-    totalGrupos:grupos.length,
-    totalCampos:grupos.reduce((sum,item)=>sum+Number(item.total||0),0),
-    grupos
-  };
-}
 function editorTextosDocumentoModelFeatureAtiva(){
   try{
     if(editorTextosCfg?.documentModelFeatureEnabled===true)return true;
@@ -14155,12 +13086,6 @@ function editorTextosDocumentoModelCriarInline(data={}){
     }
   };
 }
-function editorTextosDocumentoModelNormalizarTipoTabOperacao(type){
-  const raw=String(type||"").trim().toLowerCase();
-  if(raw==="inline-tab")return"inline-tab";
-  if(raw==="paragraph-indent")return"paragraph-indent";
-  return"paragraph-indent";
-}
 function editorTextosDocumentoModelCriarBloco(data={}){
   const rawType=String(data?.type||"paragraph").trim().toLowerCase();
   const type=EDITOR_TEXTOS_DOCUMENT_MODEL_BLOCK_TYPES.has(rawType)?rawType:"paragraph";
@@ -14188,7 +13113,7 @@ function editorTextosDocumentoModelCriarBloco(data={}){
       const anchor=op.anchor&&typeof op.anchor==="object"?op.anchor:null;
       acc.push({
         id:String(op.id||editorTextosDocumentoModelProximoId("tabop")),
-        type:editorTextosDocumentoModelNormalizarTipoTabOperacao(op.type),
+        type:"indent",
         anchor:anchor?{
           textIndex:Math.max(0,Math.round(Number(anchor.textIndex||0)||0)),
           beforeHint:String(anchor.beforeHint||""),
@@ -14283,14 +13208,10 @@ function editorTextosDocumentoModelMarksDoElemento(el,baseMarks={}){
 function editorTextosDocumentoModelExtrairInlinesDeNode(node,inlines,baseMarks={}){
   if(!(node instanceof Node)||!Array.isArray(inlines))return;
   if(node.nodeType===Node.TEXT_NODE){
-    const text=editorTextosTextoRemoverAnchorsCaret(String(node.textContent||""));
-    editorTextosDocumentoModelAppendInline(inlines,text,baseMarks);
+    editorTextosDocumentoModelAppendInline(inlines,String(node.textContent||""),baseMarks);
     return;
   }
   if(!(node instanceof HTMLElement))return;
-  if(node.matches?.("[data-et-tab-pad],[data-et-tab-break],[data-editor-tab],[data-editor-tab-break],.editor-textos-tab-marker")){
-    return;
-  }
   const tag=String(node.tagName||"").toLowerCase();
   if(tag==="br"){
     editorTextosDocumentoModelAppendInline(inlines,"\n",baseMarks);
@@ -14333,10 +13254,10 @@ function editorTextosExtrairModeloDoDOM(page){
         }
       });
     }
-    if(node.nodeType===Node.TEXT_NODE&&editorTextosTextoRemoverAnchorsCaret(node.textContent||"").trim()){
+    if(node.nodeType===Node.TEXT_NODE&&String(node.textContent||"").trim()){
       return editorTextosDocumentoModelCriarBloco({
         type:"paragraph",
-        inlines:[editorTextosDocumentoModelCriarInline({text:editorTextosTextoRemoverAnchorsCaret(node.textContent||"")})],
+        inlines:[editorTextosDocumentoModelCriarInline({text:String(node.textContent||"")})],
         meta:{tagName:"p"}
       });
     }
@@ -14348,7 +13269,7 @@ function editorTextosExtrairModeloDoDOM(page){
   });
   try{
     if(typeof window!=="undefined"&&window.DEBUG_EDITOR_MODEL===true){
-      editorTextosDebugLog("MODEL:",model,"render");
+      console.log("MODEL:",model);
     }
   }catch{}
   return model;
@@ -14363,13 +13284,13 @@ function editorTextosDocumentoModelRegistrarTab(blockId,operacao){
     if(!Array.isArray(block.tabOperations))block.tabOperations=[];
     block.tabOperations.push({
       id:String(operacao?.id||editorTextosDocumentoModelProximoId("tabop")),
-      type:editorTextosDocumentoModelNormalizarTipoTabOperacao(operacao?.type),
+      type:"indent",
       targetStopPx:Math.max(0,Number(operacao?.targetStopPx||0)||0),
       padPx:Math.max(0,Number(operacao?.padPx||0)||0),
       breakLine:!!operacao?.breakLine
     });
     if(editorTextosParagrafoDebugEstruturadoAtivo()){
-      editorTextosDebugLog("MODEL TAB OP",{
+      console.log("MODEL TAB OP",{
         blockId:id,
         totalOps:block.tabOperations.length
       });
@@ -14389,7 +13310,7 @@ function editorTextosDocumentoModelClonarTabOperations(ops){
     if(!id||!Number.isFinite(targetStopPx)||!Number.isFinite(padPx))return acc;
     acc.push({
       id,
-      type:editorTextosDocumentoModelNormalizarTipoTabOperacao(op.type),
+      type:"indent",
       anchor:anchor?{
         textIndex:Math.max(0,Math.round(Number(anchor.textIndex||0)||0)),
         beforeHint:String(anchor.beforeHint||""),
@@ -14470,24 +13391,6 @@ function editorTextosDocumentoModelCalcularXDoBloco(modelBlock,tabStateKey=null)
   const ops=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,tabStateKey);
   return ops.reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
 }
-function editorTextosDocumentoModelOperacaoEhInlineTab(op){
-  return editorTextosDocumentoModelNormalizarTipoTabOperacao(op?.type)==="inline-tab";
-}
-function editorTextosDocumentoModelOperacaoEhIndentParagrafo(op){
-  return !editorTextosDocumentoModelOperacaoEhInlineTab(op);
-}
-function editorTextosDocumentoModelCalcularIndentParagrafoDoBloco(modelBlock,tabStateKey=null){
-  const ops=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,tabStateKey);
-  return ops
-    .filter(op=>editorTextosDocumentoModelOperacaoEhIndentParagrafo(op))
-    .reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
-}
-function editorTextosDocumentoModelCalcularInlineTabDoBloco(modelBlock,tabStateKey=null){
-  const ops=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,tabStateKey);
-  return ops
-    .filter(op=>editorTextosDocumentoModelOperacaoEhInlineTab(op))
-    .reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
-}
 function editorTextosDocumentoModelClonarTabStates(tabStates){
   const source=tabStates&&typeof tabStates==="object"?tabStates:{};
   return Object.keys(source).reduce((acc,key)=>{
@@ -14525,8 +13428,6 @@ function editorTextosDocumentoModelNormalizarSnapshotBloco(block){
   keysFromOps.forEach(key=>{
     const ops=editorTextosDocumentoModelOperacoesPorTabStateKey({tabOperations},key);
     const totalPx=ops.reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
-    const paragraphIndentPx=editorTextosDocumentoModelCalcularIndentParagrafoDoBloco({tabOperations},key);
-    const inlineTabPx=editorTextosDocumentoModelCalcularInlineTabDoBloco({tabOperations},key);
     const base=tabStates[key]||{};
     const lineIndex=Number.isFinite(Number(base.lineIndex))
       ?Math.max(0,Math.round(Number(base.lineIndex)))
@@ -14542,9 +13443,7 @@ function editorTextosDocumentoModelNormalizarSnapshotBloco(block){
       totalOps:ops.length,
       totalPx,
       xPx:totalPx,
-      indentXPx:paragraphIndentPx,
-      paragraphIndentPx,
-      inlineTabPx
+      indentXPx:totalPx
     };
   });
   const activeState=modelFirstState||tabState;
@@ -14582,8 +13481,6 @@ function editorTextosDocumentoModelMesclarSnapshotBloco(blocksById,block){
   Object.keys(tabStates).forEach(key=>{
     const ops=editorTextosDocumentoModelOperacoesPorTabStateKey({tabOperations},key);
     const totalPx=ops.reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
-    const paragraphIndentPx=editorTextosDocumentoModelCalcularIndentParagrafoDoBloco({tabOperations},key);
-    const inlineTabPx=editorTextosDocumentoModelCalcularInlineTabDoBloco({tabOperations},key);
     tabStates[key]={
       ...tabStates[key],
       blockId:incoming.id,
@@ -14592,9 +13489,7 @@ function editorTextosDocumentoModelMesclarSnapshotBloco(blocksById,block){
       totalOps:ops.length,
       totalPx,
       xPx:totalPx,
-      indentXPx:paragraphIndentPx,
-      paragraphIndentPx,
-      inlineTabPx
+      indentXPx:totalPx
     };
   });
   const activeKey=String(incoming.tabState?.tabStateKey||current.tabState?.tabStateKey||"").trim();
@@ -14763,208 +13658,6 @@ function editorTextosDocumentoModelContarPadsDOM(block,tabStateKey){
   const px=nodes.reduce((sum,node)=>sum+(Number.parseFloat(String(node.style.width||"").replace(/[^\d.-]/g,""))||0),0);
   return{ops:nodes.length,px:Math.max(0,Math.round(px))};
 }
-function editorTextosTabDOMResumoOuterHTML(el){
-  if(!(el instanceof HTMLElement))return"";
-  const html=String(el.outerHTML||"").replace(/\s+/g," ").trim();
-  return html.length>260?`${html.slice(0,260)}...`:html;
-}
-function editorTextosTabResumoRect(rect){
-  if(!rect)return null;
-  const n=value=>Number.isFinite(Number(value))?Math.round(Number(value)*100)/100:0;
-  return{
-    x:n(rect.x),
-    y:n(rect.y),
-    left:n(rect.left),
-    top:n(rect.top),
-    right:n(rect.right),
-    bottom:n(rect.bottom),
-    width:n(rect.width),
-    height:n(rect.height)
-  };
-}
-function editorTextosTabResumoDataset(el){
-  if(!(el instanceof HTMLElement))return{};
-  return Object.keys(el.dataset||{}).reduce((acc,key)=>{
-    acc[key]=String(el.dataset[key]||"");
-    return acc;
-  },{});
-}
-function editorTextosTabPrimeiroTextNodeReal(rootEl){
-  if(!(rootEl instanceof HTMLElement))return null;
-  try{
-    const walker=document.createTreeWalker(rootEl,NodeFilter.SHOW_TEXT,{
-      acceptNode(node){
-        const parent=node?.parentElement;
-        if(!parent)return NodeFilter.FILTER_REJECT;
-        if(parent.closest("[data-et-tab-pad],[data-et-tab-break],[data-editor-tab],[data-editor-tab-break],.editor-textos-tab-marker"))return NodeFilter.FILTER_REJECT;
-        return String(node.nodeValue||"").trim().length?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
-      }
-    });
-    return walker.nextNode()?walker.currentNode:null;
-  }catch{
-    return null;
-  }
-}
-function editorTextosTabMedirRangeTexto(rootEl){
-  const node=editorTextosTabPrimeiroTextNodeReal(rootEl);
-  if(!(node instanceof Text))return{nodeText:"",rect:null};
-  try{
-    const range=document.createRange();
-    range.setStart(node,0);
-    range.setEnd(node,Math.max(1,Math.min(node.length,1)));
-    const rect=editorTextosTabResumoRect(range.getBoundingClientRect?.());
-    range.detach?.();
-    return{nodeText:String(node.nodeValue||""),rect};
-  }catch{
-    return{nodeText:String(node.nodeValue||""),rect:null};
-  }
-}
-function editorTextosTabColetarElementosTexto(rootEl,texto){
-  if(!(rootEl instanceof HTMLElement))return[];
-  const needle=String(texto||"").trim();
-  if(!needle)return[];
-  const root=editorTextosCfg?.page instanceof HTMLElement?editorTextosCfg.page:rootEl;
-  const nodes=[root,...root.querySelectorAll("*")];
-  return nodes.reduce((acc,el)=>{
-    if(!(el instanceof HTMLElement))return acc;
-    const textContent=String(el.textContent||"").trim();
-    if(!textContent||!textContent.includes(needle))return acc;
-    let computed=null;
-    let rect=null;
-    try{
-      computed=window.getComputedStyle?.(el);
-      rect=el.getBoundingClientRect?.();
-    }catch{}
-    const display=String(computed?.display||"");
-    const visibility=String(computed?.visibility||"");
-    const resumoRect=editorTextosTabResumoRect(rect);
-    const visible=display!=="none"&&visibility!=="hidden"&&!!resumoRect&&resumoRect.width>0&&resumoRect.height>0;
-    if(!visible)return acc;
-    const parent=el.parentElement instanceof HTMLElement?el.parentElement:null;
-    acc.push({
-      el,
-      tag:String(el.tagName||"").toLowerCase(),
-      className:String(el.className||""),
-      id:String(el.id||""),
-      dataset:editorTextosTabResumoDataset(el),
-      textContent:textContent.slice(0,120),
-      innerHTML:editorTextosParagrafoResumoHTML(el.innerHTML,360),
-      inlineTabSpanCount:el.querySelectorAll?.("[data-et-tab-inline='true']")?.length||0,
-      inlineTabWidths:[...el.querySelectorAll?.("[data-et-tab-inline='true']")||[]]
-        .filter(span=>span instanceof HTMLElement)
-        .map(span=>String(span.getAttribute("data-et-tab-width")||span.style.width||"")),
-      rect:resumoRect,
-      paddingLeft:String(computed?.paddingLeft||""),
-      marginLeft:String(computed?.marginLeft||""),
-      opacity:String(computed?.opacity||""),
-      display,
-      visibility,
-      isConnected:!!el.isConnected,
-      parentTag:parent?String(parent.tagName||"").toLowerCase():"",
-      parentClass:parent?String(parent.className||""):"",
-      parentDataset:parent?editorTextosTabResumoDataset(parent):{},
-      hasDataEtBlockId:!!(el.closest?.("[data-et-block-id]")),
-      dataEtBlockId:String(el.closest?.("[data-et-block-id]")?.dataset?.etBlockId||"")
-    });
-    return acc;
-  },[]);
-}
-function editorTextosTabElementoContemNode(el,node){
-  if(!(el instanceof HTMLElement)||!(node instanceof Node))return false;
-  const ref=node.nodeType===Node.ELEMENT_NODE?node:node.parentNode;
-  return !!(ref&&el.contains(ref));
-}
-function editorTextosTabEscolherElementoVisualAlternativo(found,targetEl,options={}){
-  const page=editorTextosCfg?.page instanceof HTMLElement?editorTextosCfg.page:null;
-  const focusNode=options?.focusNode instanceof Node?options.focusNode:null;
-  const blockId=String(options?.blockId||"").trim();
-  const refRect=options?.rangeRect||options?.targetRect||null;
-  const candidates=(Array.isArray(found)?found:[]).filter(item=>{
-    if(!(item?.el instanceof HTMLElement)||item.el===targetEl||item.el===page)return false;
-    if(String(item.display||"")==="none"||String(item.visibility||"")==="hidden")return false;
-    return Number(item.rect?.width||0)>0&&Number(item.rect?.height||0)>0;
-  });
-  if(!candidates.length)return null;
-  const scored=candidates.map(item=>{
-    const rect=item.rect||{};
-    const area=Math.max(0,Number(rect.width||0))*Math.max(0,Number(rect.height||0));
-    const sameBlock=!!(blockId&&String(item.dataEtBlockId||item.dataset?.etBlockId||"")===blockId);
-    const containsFocus=focusNode?editorTextosTabElementoContemNode(item.el,focusNode):false;
-    const containsTarget=targetEl instanceof HTMLElement?item.el.contains(targetEl):false;
-    const insideTarget=targetEl instanceof HTMLElement?targetEl.contains(item.el):false;
-    const dx=refRect?Math.abs(Number(rect.left||0)-Number(refRect.left||0)):0;
-    const dy=refRect?Math.abs(Number(rect.top||0)-Number(refRect.top||0)):0;
-    const proximityScore=refRect?Math.max(0,260-dx-dy):0;
-    const areaPenalty=Math.min(160,area/4000);
-    const score=
-      (containsFocus?1000:0)
-      +(sameBlock?520:0)
-      +(insideTarget?260:0)
-      +(containsTarget?80:0)
-      +proximityScore
-      -areaPenalty;
-    return{
-      item,
-      score,
-      origem:containsFocus?"selection.focusNode":sameBlock?"mesmo_blockId":insideTarget?"filho_do_target":containsTarget?"parent_do_target":"proximidade_visual",
-      detalhes:{containsFocus,sameBlock,insideTarget,containsTarget,dx,dy,area}
-    };
-  }).sort((a,b)=>b.score-a.score);
-  const best=scored[0];
-  if(!best)return null;
-  return{el:best.item.el,origem:best.origem,score:best.score,detalhes:best.detalhes,item:best.item};
-}
-function editorTextosResolverElementoVisualTab(domBlock){
-  if(!(domBlock instanceof HTMLElement))return{target:null,origem:"invalido"};
-  const page=editorTextosCfg?.page instanceof HTMLElement?editorTextosCfg.page:null;
-  const selectors=["[data-block-id]",".editor-textos-bloco",".editor-line"];
-  for(const selector of selectors){
-    const candidate=domBlock.closest?.(selector);
-    if(candidate instanceof HTMLElement&&candidate!==page){
-      return{target:candidate,origem:selector};
-    }
-  }
-  return{target:domBlock,origem:"data-et-block-id"};
-}
-function editorTextosAplicarIndentVisualTab(targetEl,totalPx,tabStateKey,lineIndex){
-  if(!(targetEl instanceof HTMLElement))return null;
-  const px=Math.max(0,Math.round(Number(totalPx||0)||0));
-  const styleAntes={
-    paddingLeft:String(targetEl.style.paddingLeft||""),
-    marginLeft:String(targetEl.style.marginLeft||""),
-    transform:String(targetEl.style.transform||"")
-  };
-  targetEl.style.paddingLeft=`${px}px`;
-  targetEl.style.marginLeft="0px";
-  try{
-    targetEl.style.setProperty("padding-left",`${px}px`,"important");
-    targetEl.style.setProperty("margin-left","0px","important");
-  }catch{}
-  targetEl.dataset.tabIndentPx=String(px);
-  targetEl.dataset.tabStateKey=String(tabStateKey||"");
-  if(lineIndex!==null&&lineIndex!==undefined)targetEl.dataset.tabLineIndex=String(lineIndex);
-  const styleDepois={
-    paddingLeft:String(targetEl.style.paddingLeft||""),
-    marginLeft:String(targetEl.style.marginLeft||""),
-    transform:String(targetEl.style.transform||"")
-  };
-  let computedPaddingLeft="";
-  let computedMarginLeft="";
-  let computedTransform="";
-  try{
-    const computed=window.getComputedStyle?.(targetEl);
-    computedPaddingLeft=String(computed?.paddingLeft||"");
-    computedMarginLeft=String(computed?.marginLeft||"");
-    computedTransform=String(computed?.transform||"");
-  }catch{}
-  return{
-    styleAntes,
-    styleDepois,
-    computedPaddingLeft,
-    computedMarginLeft,
-    computedTransform
-  };
-}
 function editorTextosDocumentoModelSincronizarTabState(block,paragraphModel,options={}){
   const modelBlock=editorTextosDocumentoModelGarantirBlocoParaDOM(block,paragraphModel);
   if(!modelBlock)return{modelBlock:null,origem:"fallback_dom",state:null};
@@ -15000,8 +13693,6 @@ function editorTextosDocumentoModelSincronizarTabState(block,paragraphModel,opti
   paragraphModel.tabOperations=editorTextosDocumentoModelClonarTabOperations(ops);
   const lineOps=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,context.tabStateKey);
   const xPx=editorTextosDocumentoModelCalcularXDoBloco(modelBlock,context.tabStateKey);
-  const paragraphIndentPx=editorTextosDocumentoModelCalcularIndentParagrafoDoBloco(modelBlock,context.tabStateKey);
-  const inlineTabPx=editorTextosDocumentoModelCalcularInlineTabDoBloco(modelBlock,context.tabStateKey);
   const state={
     fonte:"modelo",
     origem,
@@ -15012,9 +13703,7 @@ function editorTextosDocumentoModelSincronizarTabState(block,paragraphModel,opti
     totalOps:lineOps.length,
     totalPx:xPx,
     xPx,
-    indentXPx:paragraphIndentPx,
-    paragraphIndentPx,
-    inlineTabPx,
+    indentXPx:xPx,
     textOffset:context.textOffset,
     updatedAt:Date.now()
   };
@@ -15034,11 +13723,10 @@ function editorTextosDocumentoModelRegistrarTabModelFirst(block,paragraphModel,o
   const ops=editorTextosDocumentoModelClonarTabOperations(modelBlock.tabOperations);
   const opId=String(operacao?.id||editorTextosDocumentoModelProximoId("tabop"));
   const opsAntes=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,context.tabStateKey).length;
-  const indentAntes=editorTextosDocumentoModelCalcularIndentParagrafoDoBloco(modelBlock,context.tabStateKey);
-  const tipoOperacao=editorTextosDocumentoModelNormalizarTipoTabOperacao(operacao?.type);
+  const indentAntes=editorTextosDocumentoModelCalcularXDoBloco(modelBlock,context.tabStateKey);
   const novaOp={
     id:opId,
-    type:tipoOperacao,
+    type:"indent",
     anchor:operacao?.anchor&&typeof operacao.anchor==="object"?{
       textIndex:Math.max(0,Math.round(Number(operacao.anchor.textIndex||0)||0)),
       beforeHint:String(operacao.anchor.beforeHint||""),
@@ -15054,8 +13742,6 @@ function editorTextosDocumentoModelRegistrarTabModelFirst(block,paragraphModel,o
   modelBlock.tabOperations=ops;
   const lineOps=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,context.tabStateKey);
   const xPx=editorTextosDocumentoModelCalcularXDoBloco(modelBlock,context.tabStateKey);
-  const paragraphIndentPx=editorTextosDocumentoModelCalcularIndentParagrafoDoBloco(modelBlock,context.tabStateKey);
-  const inlineTabPx=editorTextosDocumentoModelCalcularInlineTabDoBloco(modelBlock,context.tabStateKey);
   const state={
     fonte:"modelo",
     origem:"modelo",
@@ -15066,12 +13752,9 @@ function editorTextosDocumentoModelRegistrarTabModelFirst(block,paragraphModel,o
     totalOps:lineOps.length,
     totalPx:xPx,
     xPx,
-    indentXPx:paragraphIndentPx,
-    paragraphIndentPx,
-    inlineTabPx,
+    indentXPx:xPx,
     textOffset:context.textOffset,
     lastOpId:opId,
-    lastOpType:tipoOperacao,
     opsAntes,
     indentAntes,
     updatedAt:Date.now()
@@ -15096,8 +13779,6 @@ function editorTextosDocumentoModelRemoverTabModelFirst(block,paragraphModel,opI
   modelBlock.tabOperations=ops;
   const lineOps=editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,context.tabStateKey);
   const xPx=editorTextosDocumentoModelCalcularXDoBloco(modelBlock,context.tabStateKey);
-  const paragraphIndentPx=editorTextosDocumentoModelCalcularIndentParagrafoDoBloco(modelBlock,context.tabStateKey);
-  const inlineTabPx=editorTextosDocumentoModelCalcularInlineTabDoBloco(modelBlock,context.tabStateKey);
   const state={
     fonte:"modelo",
     origem:"modelo",
@@ -15108,11 +13789,8 @@ function editorTextosDocumentoModelRemoverTabModelFirst(block,paragraphModel,opI
     totalOps:lineOps.length,
     totalPx:xPx,
     xPx,
-    indentXPx:paragraphIndentPx,
-    paragraphIndentPx,
-    inlineTabPx,
+    indentXPx:xPx,
     lastRemovedOpId:id,
-    lastRemovedOpType:removed?.type||"",
     updatedAt:Date.now()
   };
   modelBlock.tabStates[context.tabStateKey]={...(modelBlock.tabStates[context.tabStateKey]||{}),...state};
@@ -15132,228 +13810,25 @@ function editorTextosAplicarTabOperationsNoDOM(blockId){
     const domBlock=editorTextosCfg.page.querySelector?.(`[data-et-block-id="${CSS.escape(id)}"]`);
     if(!(domBlock instanceof HTMLElement)||!modelBlock||typeof modelBlock!=="object")return false;
     const ops=Array.isArray(modelBlock.tabOperations)?modelBlock.tabOperations:[];
-    const activeState=modelBlock.__modelFirstTabState&&typeof modelBlock.__modelFirstTabState==="object"
-      ?modelBlock.__modelFirstTabState
-      :modelBlock.tabState&&typeof modelBlock.tabState==="object"
-        ?modelBlock.tabState
-        :null;
-    const tabStateKey=String(activeState?.tabStateKey||"").trim();
-    const lineIndex=Number.isFinite(Number(activeState?.lineIndex))?Math.max(0,Math.round(Number(activeState.lineIndex))):null;
-    const lineOps=tabStateKey?editorTextosDocumentoModelOperacoesPorTabStateKey(modelBlock,tabStateKey):ops;
-    const paragraphOps=lineOps.filter(op=>editorTextosDocumentoModelOperacaoEhIndentParagrafo(op));
-    const inlineOps=lineOps.filter(op=>editorTextosDocumentoModelOperacaoEhInlineTab(op));
-    const totalPx=tabStateKey
-      ?editorTextosDocumentoModelCalcularIndentParagrafoDoBloco(modelBlock,tabStateKey)
-      :ops.filter(op=>editorTextosDocumentoModelOperacaoEhIndentParagrafo(op)).reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
-    const totalPxRounded=Math.max(0,Math.round(Number(totalPx||0)||0));
-    const targetInfo=editorTextosResolverElementoVisualTab(domBlock);
-    const targetEl=targetInfo.target instanceof HTMLElement?targetInfo.target:domBlock;
-    const baseRaw=targetEl.dataset.etModelBasePaddingLeft;
+    const totalPx=ops.reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0);
+    const baseRaw=domBlock.dataset.etModelBasePaddingLeft;
     let basePx=Number(baseRaw);
     if(!Number.isFinite(basePx)){
-      const stylePx=Number.parseFloat(String(targetEl.style.paddingLeft||"").replace(/[^\d.-]/g,""))||0;
-      const previousGlobalPx=Number.parseFloat(String(targetEl.dataset.etModelTabPad||"").replace(/[^\d.-]/g,""))||0;
+      const stylePx=Number.parseFloat(String(domBlock.style.paddingLeft||"").replace(/[^\d.-]/g,""))||0;
+      const previousGlobalPx=Number.parseFloat(String(domBlock.dataset.etModelTabPad||"").replace(/[^\d.-]/g,""))||0;
       basePx=Math.max(0,stylePx-Math.max(0,previousGlobalPx));
-      targetEl.dataset.etModelBasePaddingLeft=String(basePx);
+      domBlock.dataset.etModelBasePaddingLeft=String(basePx);
     }
-    domBlock.dataset.etModelTabPad=String(totalPxRounded);
-    domBlock.dataset.tabIndentPx=String(totalPxRounded);
-    if(tabStateKey)domBlock.dataset.etModelTabKey=tabStateKey;
-    if(tabStateKey)domBlock.dataset.tabStateKey=tabStateKey;
-    if(lineIndex!==null)domBlock.dataset.etModelTabLineIndex=String(lineIndex);
-    targetEl.dataset.etModelTabPad=String(totalPxRounded);
-    if(tabStateKey)targetEl.dataset.etModelTabKey=tabStateKey;
-    if(lineIndex!==null)targetEl.dataset.etModelTabLineIndex=String(lineIndex);
-    const targetRectAntes=editorTextosTabResumoRect(targetEl.getBoundingClientRect?.());
-    const rangeAntes=editorTextosTabMedirRangeTexto(targetEl);
-    const paddingAntesPx=Number.parseFloat(String(targetEl.style.paddingLeft||"").replace(/[^\d.-]/g,""))||0;
-    const styleInfo=editorTextosAplicarIndentVisualTab(targetEl,totalPxRounded,tabStateKey,lineIndex);
-    const targetRectDepois=editorTextosTabResumoRect(targetEl.getBoundingClientRect?.());
-    let rangeDepois=editorTextosTabMedirRangeTexto(targetEl);
-    let visualFallbackInfo=null;
-    let visualTargetEscolhidoLog=null;
-    const selectionAtual=window.getSelection?.();
-    const focusNodeAtual=selectionAtual?.focusNode instanceof Node?selectionAtual.focusNode:null;
-    if(
-      totalPxRounded>0
-      && Math.abs(paddingAntesPx-totalPxRounded)>0.5
-      && rangeAntes?.rect
-      && rangeDepois?.rect
-      && Math.abs(Number(rangeDepois.rect.left||0)-Number(rangeAntes.rect.left||0))<Math.max(2,totalPxRounded*0.45)
-    ){
-      const foundForFallback=editorTextosTabColetarElementosTexto(targetEl,editorTextosParagrafoObterTextoLinear(targetEl));
-      const visualChoice=editorTextosTabEscolherElementoVisualAlternativo(foundForFallback,targetEl,{
-        blockId:id,
-        focusNode:focusNodeAtual,
-        rangeRect:rangeAntes?.rect,
-        targetRect:targetRectAntes
-      });
-      const visualEl=visualChoice?.el;
-      if(visualEl instanceof HTMLElement){
-        const visualRectAntes=editorTextosTabResumoRect(visualEl.getBoundingClientRect?.());
-        const paddingLeftAntes=String(visualEl.style.paddingLeft||"");
-        const visualStyleInfo=editorTextosAplicarIndentVisualTab(visualEl,totalPxRounded,tabStateKey,lineIndex);
-        const visualRectDepois=editorTextosTabResumoRect(visualEl.getBoundingClientRect?.());
-        rangeDepois=editorTextosTabMedirRangeTexto(visualEl);
-        visualTargetEscolhidoLog={
-          origem:visualChoice?.origem||"alternativo",
-          score:visualChoice?.score??null,
-          detalhes:visualChoice?.detalhes||{},
-          tag:String(visualEl.tagName||"").toLowerCase(),
-          className:String(visualEl.className||""),
-          textContent:String(visualEl.textContent||"").trim().slice(0,120),
-          paddingLeftAntes,
-          paddingLeftDepois:String(visualEl.style.paddingLeft||""),
-          rectAntes:visualRectAntes,
-          rectDepois:visualRectDepois
-        };
-        visualFallbackInfo={
-          motivo:"range_do_target_nao_deslocou",
-          targetTag:String(visualEl.tagName||"").toLowerCase(),
-          targetClass:String(visualEl.className||""),
-          targetOuterHTML:editorTextosTabDOMResumoOuterHTML(visualEl),
-          styleDepois:visualStyleInfo?.styleDepois||{},
-          computedPaddingLeft:visualStyleInfo?.computedPaddingLeft||"",
-          computedMarginLeft:visualStyleInfo?.computedMarginLeft||""
-        };
-      }
-    }
-    const parentEl=targetEl.parentElement instanceof HTMLElement?targetEl.parentElement:null;
-    const parentRect=editorTextosTabResumoRect(parentEl?.getBoundingClientRect?.());
-    let parentComputedPaddingLeft="";
-    let parentComputedMarginLeft="";
-    try{
-      const parentComputed=parentEl?window.getComputedStyle?.(parentEl):null;
-      parentComputedPaddingLeft=String(parentComputed?.paddingLeft||"");
-      parentComputedMarginLeft=String(parentComputed?.marginLeft||"");
-    }catch{}
-    let targetComputedDisplay="";
-    let targetComputedPosition="";
-    try{
-      const targetComputed=window.getComputedStyle?.(targetEl);
-      targetComputedDisplay=String(targetComputed?.display||"");
-      targetComputedPosition=String(targetComputed?.position||"");
-    }catch{}
-    const activeElement=document.activeElement instanceof HTMLElement?document.activeElement:null;
-    const targetTextForSearch=String(editorTextosParagrafoObterTextoLinear(targetEl)||"").trim();
-    const textElementsFound=editorTextosTabColetarElementosTexto(targetEl,targetTextForSearch);
-    const textElementsLog=textElementsFound.map(({el,...item},index)=>({
-      index,
-      ...item,
-      isTargetAtual:el===targetEl,
-      containsFocusNode:focusNodeAtual?editorTextosTabElementoContemNode(el,focusNodeAtual):false
-    }));
-    const deltaTargetLeft=targetRectAntes&&targetRectDepois
-      ?Math.round((Number(targetRectDepois.left||0)-Number(targetRectAntes.left||0))*100)/100
-      :null;
-    const deltaRangeLeft=rangeAntes?.rect&&rangeDepois?.rect
-      ?Math.round((Number(rangeDepois.rect.left||0)-Number(rangeAntes.rect.left||0))*100)/100
-      :null;
+    domBlock.dataset.etModelTabPad="0";
+    domBlock.style.paddingLeft=`${Math.max(0,Math.round(basePx))}px`;
     if(editorTextosParagrafoDebugEstruturadoAtivo()){
-      editorTextosDebugLog("APLICANDO TAB NO DOM",{
+      console.log("APLICANDO TAB NO DOM",{
         modo:"render_semantico_por_linha",
-        blockId:id,
-        lineIndex,
-        tabStateKey,
-        totalPx:totalPxRounded,
-        totalOps:paragraphOps.length,
-        inlineOps:inlineOps.length,
-        totalPxGlobalIgnorado:ops.reduce((sum,op)=>sum+Math.max(0,Number(op?.padPx||0)||0),0),
+        totalPxGlobalIgnorado:Math.max(0,Math.round(totalPx)),
         totalOpsGlobal:ops.length
-      });
-      editorTextosDebugLog("TAB VISUAL RECT",{
-        blockId:id,
-        lineIndex,
-        tabStateKey,
-        totalPx:totalPxRounded,
-        targetTag:String(targetEl.tagName||"").toLowerCase(),
-        targetText:targetTextForSearch.slice(0,120),
-        firstTextNode:rangeDepois?.nodeText||rangeAntes?.nodeText||"",
-        targetRectAntes,
-        targetRectDepois,
-        targetRectAntesLeft:targetRectAntes?.left??null,
-        targetRectDepoisLeft:targetRectDepois?.left??null,
-        parentTag:parentEl?String(parentEl.tagName||"").toLowerCase():"",
-        parentClass:parentEl?String(parentEl.className||""):"",
-        parentRect,
-        rangeRectAntes:rangeAntes?.rect||null,
-        rangeRectDepois:rangeDepois?.rect||null,
-        rangeRectAntesLeft:rangeAntes?.rect?.left??null,
-        rangeRectDepoisLeft:rangeDepois?.rect?.left??null,
-        deltaTargetLeft,
-        deltaRangeLeft,
-        computedDisplay:targetComputedDisplay,
-        computedPosition:targetComputedPosition,
-        computedPaddingLeft:styleInfo?.computedPaddingLeft||"",
-        computedTransform:styleInfo?.computedTransform||"",
-        isConnected:!!targetEl.isConnected,
-        activeElementTag:activeElement?String(activeElement.tagName||"").toLowerCase():"",
-        activeElementClass:activeElement?String(activeElement.className||""):"",
-        visualFallbackInfo
-      });
-      if(visualTargetEscolhidoLog){
-        editorTextosDebugLog("TAB VISUAL TARGET ESCOLHIDO",visualTargetEscolhidoLog);
-      }
-      editorTextosDebugLog("TAB TEXT ELEMENTS FOUND",{
-        count:textElementsFound.length,
-        elements:textElementsLog
-      });
-      try{
-        editorTextosDebugLog("TAB TEXT ELEMENTS FOUND DETALHADO",JSON.stringify({
-          count:textElementsLog.length,
-          elements:textElementsLog
-        },null,2));
-      }catch{}
-      editorTextosDebugLog("TAB DOM TARGET",{
-        blockId:id,
-        lineIndex,
-        tabStateKey,
-        targetOrigem:targetInfo.origem,
-        targetTag:String(targetEl.tagName||"").toLowerCase(),
-        targetClass:String(targetEl.className||""),
-        targetText:String(editorTextosParagrafoObterTextoLinear(targetEl)||"").slice(0,120),
-        targetOuterHTML:editorTextosTabDOMResumoOuterHTML(targetEl),
-        parentTag:parentEl?String(parentEl.tagName||"").toLowerCase():"",
-        parentClass:parentEl?String(parentEl.className||""):"",
-        parentStyle:parentEl?String(parentEl.getAttribute("style")||""):"",
-        parentComputedPaddingLeft,
-        parentComputedMarginLeft,
-        totalPx:totalPxRounded,
-        styleAntes:styleInfo?.styleAntes||{},
-        styleDepois:styleInfo?.styleDepois||{},
-        computedPaddingLeft:styleInfo?.computedPaddingLeft||"",
-        computedMarginLeft:styleInfo?.computedMarginLeft||"",
-        computedTransform:styleInfo?.computedTransform||""
-      });
-      const confirmed=window.getComputedStyle?.(targetEl);
-      editorTextosDebugLog("TAB DOM STYLE CONFIRMADO",{
-        paddingLeft:String(confirmed?.paddingLeft||""),
-        marginLeft:String(confirmed?.marginLeft||""),
-        inlinePaddingLeft:String(targetEl.style.paddingLeft||""),
-        datasetIndent:String(targetEl.dataset.tabIndentPx||"")
       });
     }
     return true;
-  }catch{
-    return false;
-  }
-}
-function editorTextosReaplicarTabIndentsDOM(model=null){
-  try{
-    if(!editorTextosDocumentoModelFeatureAtiva())return false;
-    if(!(editorTextosCfg?.page instanceof HTMLElement))return false;
-    const doc=model&&typeof model==="object"?model:editorTextosDocumentoModelObterEstado();
-    const blocks=Array.isArray(doc?.blocks)?doc.blocks:[];
-    let applied=false;
-    blocks.forEach(block=>{
-      const blockId=String(block?.id||"").trim();
-      if(!blockId)return;
-      const hasTabs=Array.isArray(block?.tabOperations)&&block.tabOperations.length>0;
-      const hasState=!!(block?.tabState&&typeof block.tabState==="object"&&String(block.tabState.tabStateKey||"").trim());
-      if(!hasTabs&&!hasState)return;
-      if(editorTextosAplicarTabOperationsNoDOM(blockId))applied=true;
-    });
-    return applied;
   }catch{
     return false;
   }
@@ -15543,10 +14018,6 @@ function editorTextosDocumentoModelCompararComDOM(model,page){
   };
 }
 function editorTextosDocumentoModelAtualizar(){
-  if(editorTextosProtegendoCursor){
-    editorTextosDebugLog("REBUILD BLOQUEADO (proteção de cursor)",null,"cursor");
-    return editorTextosCfg?.documentModel||null;
-  }
   if(!editorTextosCfg?.page)return null;
   if(!editorTextosDocumentoModelFeatureAtiva())return null;
   if(editorTextosCfg.documentModelUpdating)return editorTextosCfg.documentModel||null;
@@ -15558,14 +14029,10 @@ function editorTextosDocumentoModelAtualizar(){
     editorTextosDocumentoModelMesclarTabStatePreservado(previousTabStateSnapshot,model,"editorTextosDocumentoModelAtualizar");
     editorTextosDocumentoModelDetectarResetTabStates(previousTabStateSnapshot,model,"editorTextosDocumentoModelAtualizar");
     editorTextosCfg.documentModel=model;
-    editorTextosReaplicarTabIndentsDOM(model);
-    editorTextosParagrafoLogPosRebuildInlineTab(model);
     const signature=editorTextosDocumentoModelCalcularAssinatura(model);
     if(String(editorTextosCfg.documentModelLastSignature||"")!==signature){
       editorTextosCfg.documentModelLastSignature=signature;
       editorTextosCfg.documentModelDirtyFlag=true;
-      editorTextosCfg.pageLayoutDirty=true;
-      editorTextosAgendarAtualizarLayoutPaginado(0,{reason:"document_model_update"});
     }
     try{
       if(typeof window!=="undefined"&&window.DEBUG_EDITOR_MODEL===true){
@@ -15646,17 +14113,6 @@ function editorTextosGarantirIdBloco(block){
   block.dataset.etBlockId=id;
   return id;
 }
-function editorTextosPaginaGarantirIdentidadeBloco(node){
-  if(!(node instanceof HTMLElement))return"";
-  const blocoDireto=node.matches?.(EDITOR_TEXTOS_BLOCK_SELECTOR)?node:null;
-  const bloco=blocoDireto instanceof HTMLElement
-    ?blocoDireto
-    :editorTextosResolverBlocoDeNode(node);
-  if(bloco instanceof HTMLElement){
-    return String(bloco.dataset.etBlockId||editorTextosGarantirIdBloco(bloco)||"").trim();
-  }
-  return String(node.dataset?.etBlockId||node.id||"").trim();
-}
 function editorTextosLerAlinhamentoBloco(block){
   if(!(block instanceof HTMLElement))return"left";
   const textAlign=String(window.getComputedStyle(block).textAlign||"").toLowerCase();
@@ -15687,22 +14143,6 @@ function editorTextosResolverBlocoDeNode(node){
 function editorTextosGarantirBlocosEstruturais(){
   if(!(editorTextosCfg?.page instanceof HTMLElement))return false;
   const page=editorTextosCfg.page;
-  if(!page.childNodes.length){
-    const p=document.createElement("p");
-    p.appendChild(document.createElement("br"));
-    page.appendChild(p);
-    try{
-      const sel=window.getSelection?.();
-      if(sel){
-        const range=document.createRange();
-        range.setStart(p,0);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    }catch{}
-    return true;
-  }
   const children=[...page.childNodes];
   let changed=false;
   const criarWrapper=node=>{
@@ -15738,23 +14178,7 @@ function editorTextosGarantirBlocosEstruturais(){
       changed=true;
     }
   });
-  if(!page.querySelector?.("p,div")&&!page.textContent.trim()){
-    const p=document.createElement("p");
-    p.appendChild(document.createElement("br"));
-    page.appendChild(p);
-    changed=true;
-  }
   return changed;
-}
-function editorTextosParagrafoLogLegacyMarkerBloqueado(block,motivo,operationType=""){
-  try{
-    editorTextosDebugLog("TAB LEGACY MARKER BLOQUEADO",{
-      blockId:String(block?.dataset?.etBlockId||""),
-      motivo:String(motivo||""),
-      operationType:String(operationType||""),
-      pInnerHTMLAntes:block instanceof HTMLElement?editorTextosParagrafoResumoHTML(block.innerHTML,700):""
-    });
-  }catch{}
 }
 function editorTextosObterBlocoAtual(){
   if(!editorTextosCfg?.page)return null;
@@ -15876,7 +14300,6 @@ function editorTextosParagrafoGarantirOperacoesTab(model){
     if(!id||!Number.isFinite(textIndexRaw)||!Number.isFinite(targetStopPx)||!Number.isFinite(padPx))return acc;
     acc.push({
       id,
-      type:editorTextosDocumentoModelNormalizarTipoTabOperacao(op.type),
       anchor:{
         textIndex:Math.max(0,Math.round(textIndexRaw)),
         beforeHint:String(anchorRaw?.beforeHint||""),
@@ -15894,7 +14317,7 @@ function editorTextosParagrafoGarantirOperacoesTab(model){
 }
 function editorTextosParagrafoDebugEstruturadoAtivo(){
   try{
-    return editorTextosDebugAtivo("tab");
+    return typeof window!=="undefined"&&window.DEBUG_TAB_ENGINE===true;
   }catch{}
   return false;
 }
@@ -15914,12 +14337,12 @@ function editorTextosParagrafoDebugEstruturado(level,label,payload={}){
       }
       return value;
     }));
-    if(level==="warn")console.warn(String(label||"TAB"),safePayload);
-    else editorTextosDebugLog(String(label||"TAB"),safePayload,"tab");
+    const fn=level==="warn"?console.warn:console.log;
+    fn(String(label||"TAB"),safePayload);
   }catch{
     try{
-      if(level==="warn")console.warn(String(label||"TAB"),{erro:"payload_nao_serializavel"});
-      else editorTextosDebugLog(String(label||"TAB"),{erro:"payload_nao_serializavel"},"tab");
+      const fn=level==="warn"?console.warn:console.log;
+      fn(String(label||"TAB"),{erro:"payload_nao_serializavel"});
     }catch{}
   }
 }
@@ -15935,7 +14358,6 @@ function editorTextosParagrafoDebugAtivo(){
 function editorTextosParagrafoSnapshotOperacoes(model){
   return editorTextosParagrafoGarantirOperacoesTab(model).map(op=>({
     id:String(op?.id||""),
-    type:editorTextosDocumentoModelNormalizarTipoTabOperacao(op?.type),
     textIndex:Number(op?.anchor?.textIndex||0)||0,
     beforeHint:String(op?.anchor?.beforeHint||""),
     afterHint:String(op?.anchor?.afterHint||""),
@@ -15974,26 +14396,7 @@ function editorTextosParagrafoNoIgnoravel(node){
   return false;
 }
 function editorTextosParagrafoNormalizarTexto(value){
-  return editorTextosTextoRemoverAnchorsCaret(value).replace(/\r\n?/g,"\n").replace(/\u00A0/g," ");
-}
-function editorTextosTextoRemoverAnchorsCaret(value){
-  return String(value||"").replace(/\u200B/g,"");
-}
-function editorTextosTextoOffsetDomParaLogico(value,offset){
-  const raw=String(value||"");
-  const limite=Math.max(0,Math.min(raw.length,Math.round(Number(offset||0)||0)));
-  return editorTextosTextoRemoverAnchorsCaret(raw.slice(0,limite)).length;
-}
-function editorTextosTextoOffsetLogicoParaDom(value,offset){
-  const raw=String(value||"");
-  const alvo=Math.max(0,Math.round(Number(offset||0)||0));
-  if(alvo<=0)return 0;
-  let logico=0;
-  for(let i=0;i<raw.length;i+=1){
-    if(raw[i]!=="\u200B")logico+=1;
-    if(logico>=alvo)return i+1;
-  }
-  return raw.length;
+  return String(value||"").replace(/\r\n?/g,"\n").replace(/\u00A0/g," ");
 }
 function editorTextosParagrafoElementoEhBreakLogico(node){
   return !!(node instanceof HTMLElement&&node.matches?.("br,[data-et-tab-break],[data-editor-tab-break]"));
@@ -16001,272 +14404,12 @@ function editorTextosParagrafoElementoEhBreakLogico(node){
 function editorTextosParagrafoElementoEhIgnoravelParaTexto(node){
   return !!(node instanceof HTMLElement&&node.matches?.("[data-et-tab-pad],.editor-textos-tab-marker,[data-editor-tab]"));
 }
-const EDITOR_TEXTOS_TAB_RICH_SAFE_TEXT="\u00A0\u00A0\u00A0\u00A0";
-function editorTextosTabRichSafeMotivosUnicos(motivos){
-  const out=[];
-  (Array.isArray(motivos)?motivos:[]).forEach(motivo=>{
-    const item=String(motivo||"").trim();
-    if(item&&!out.includes(item))out.push(item);
-  });
-  return out;
-}
-function editorTextosTabRichSafeTextoNodeSignificativo(node){
-  if(!(node instanceof Text))return false;
-  return String(node.nodeValue||"").replace(/\u200B/g,"").length>0;
-}
-function editorTextosParagrafoConteudoRico(el){
-  const motivos=[];
-  try{
-    if(!(el instanceof HTMLElement))return{rico:false,motivos:[]};
-    const textContent=String(el.textContent||"");
-    if(/<<[^>]+>>/.test(textContent))motivos.push("campo");
-    if(textContent.includes("\u00A0"))motivos.push("nbsp_importado");
-    if(el.matches?.("[style],[class],[contenteditable='false']")){
-      if(String(el.getAttribute("style")||"").trim()||String(el.className||"").trim())motivos.push("style_class_herdado");
-      if(String(el.getAttribute("contenteditable")||"").toLowerCase()==="false")motivos.push("contenteditable_false");
-    }
-    const significativos=[];
-    [...el.childNodes].forEach(node=>{
-      if(node instanceof Text){
-        if(editorTextosTabRichSafeTextoNodeSignificativo(node))significativos.push(node);
-        return;
-      }
-      if(!(node instanceof HTMLElement))return;
-      if(node.matches?.("br,[data-et-tab-inline='true'],[data-et-tab-pad],[data-et-tab-break],.editor-textos-tab-marker,[data-editor-tab],[data-editor-tab-break]"))return;
-      const temTexto=String(node.textContent||"").replace(/\u200B/g,"").length>0;
-      const ehMidia=node.matches?.("img,svg,canvas,video,table,iframe,object,embed")||false;
-      if(temTexto||ehMidia||node.childNodes.length)significativos.push(node);
-    });
-    if(significativos.length>1)motivos.push("multiplos_nodes");
-    el.querySelectorAll?.("*").forEach(node=>{
-      if(!(node instanceof HTMLElement))return;
-      if(node.matches?.("[data-et-tab-inline='true'],[data-et-tab-pad],[data-et-tab-break],.editor-textos-tab-marker,[data-editor-tab],[data-editor-tab-break]"))return;
-      const tag=String(node.tagName||"").toLowerCase();
-      if(tag==="img")motivos.push("imagem");
-      if(node.matches?.("[contenteditable='false']"))motivos.push("contenteditable_false");
-      if(tag==="span"&&!node.matches?.("[data-et-tab-inline='true']"))motivos.push("span_legado");
-      if(tag!=="span"&&tag!=="br"&&tag!=="b"&&tag!=="strong"&&tag!=="i"&&tag!=="em"&&tag!=="u")motivos.push("html_complexo");
-      if(String(node.getAttribute("style")||"").trim()||String(node.className||"").trim())motivos.push("style_class_herdado");
-      [...node.attributes||[]].forEach(attr=>{
-        const name=String(attr?.name||"").toLowerCase();
-        if(name.startsWith("data-")&&name!=="data-et-tab-inline"&&name!=="data-et-tab-width"&&name!=="data-et-tab-op"&&name!=="data-et-tab-key"&&name!=="data-et-tab-offset-logico")motivos.push("data_legado");
-      });
-    });
-  }catch(err){
-    motivos.push("erro_analise_rico");
-  }
-  const unicos=editorTextosTabRichSafeMotivosUnicos(motivos);
-  return{rico:unicos.length>0,motivos:unicos};
-}
-function editorTextosTabRichSafeNoEditavelBloqueado(node,bloco){
-  try{
-    const el=node?.nodeType===Node.ELEMENT_NODE?node:node?.parentElement||null;
-    if(!(el instanceof HTMLElement))return false;
-    const bloqueado=el.closest?.("img,[contenteditable='false']");
-    return !!(bloqueado&&(!bloco||bloco.contains(bloqueado)));
-  }catch{}
-  return false;
-}
-function editorTextosTabRichSafeMarcarAlteracao(bloco,statusMsg){
-  try{editorTextosSalvarRangeAtual()}catch{}
-  try{if(editorTextosCfg)editorTextosCfg.alterado=true}catch{}
-  try{if(editorTextosCfg?.status)editorTextosCfg.status.textContent=statusMsg||"Alteracoes pendentes..."}catch{}
-  try{editorTextosAgendarSincronizarToolbar()}catch{}
-  try{editorTextosSincronizarEstruturaParagrafoAtual()}catch{}
-  try{editorTextosDocumentoModelAgendarAtualizacao(50)}catch{}
-}
-function editorTextosTabRichSafeInserir(selection,bloco,contexto={}){
-  try{
-    const sel=selection||window.getSelection?.();
-    if(!(bloco instanceof HTMLElement)||!sel||!sel.rangeCount)return false;
-    const range=sel.getRangeAt(0);
-    if(!range||!range.collapsed||!bloco.contains(range.startContainer))return false;
-    if(editorTextosTabRichSafeNoEditavelBloqueado(range.startContainer,bloco))return false;
-    const textoInserido=EDITOR_TEXTOS_TAB_RICH_SAFE_TEXT;
-    if(range.startContainer instanceof Text){
-      const node=range.startContainer;
-      const antes=String(node.nodeValue||"");
-      const offset=Math.max(0,Math.min(antes.length,Math.round(Number(range.startOffset||0)||0)));
-      node.nodeValue=antes.slice(0,offset)+textoInserido+antes.slice(offset);
-      const novoRange=document.createRange();
-      novoRange.setStart(node,offset+textoInserido.length);
-      novoRange.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(novoRange);
-    }else{
-      const textNode=document.createTextNode(textoInserido);
-      range.insertNode(textNode);
-      const novoRange=document.createRange();
-      novoRange.setStart(textNode,textoInserido.length);
-      novoRange.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(novoRange);
-    }
-    editorTextosDebugLog("TAB SAFE INSERIDO",{
-      blockId:String(bloco.dataset.etBlockId||""),
-      textoInserido,
-      htmlDepois:editorTextosParagrafoResumoHTML(bloco.innerHTML,900),
-      textContentDepois:String(bloco.textContent||"").replace(/\u200B/g,"\\u200B")
-    },"tab");
-    editorTextosTabRichSafeMarcarAlteracao(bloco,"Tabulacao segura inserida.");
-    return true;
-  }catch(err){
-    editorTextosParagrafoDebugEstruturado("warn","TAB RICH SAFE FALHOU",{motivo:"inserir",erro:err,contexto});
-  }
-  return false;
-}
-function editorTextosTabRichSafeTextoAnterior(range,bloco){
-  try{
-    if(!range||!(bloco instanceof HTMLElement))return null;
-    if(range.startContainer instanceof Text){
-      return{node:range.startContainer,offset:Math.max(0,Math.min(range.startContainer.nodeValue.length,range.startOffset))};
-    }
-    const container=range.startContainer;
-    if(container instanceof Node&&container.nodeType===Node.ELEMENT_NODE){
-      const prev=container.childNodes[Math.max(0,Number(range.startOffset||0))-1]||null;
-      if(prev instanceof Text)return{node:prev,offset:String(prev.nodeValue||"").length};
-    }
-    const walker=document.createTreeWalker(bloco,NodeFilter.SHOW_TEXT,null);
-    let last=null;
-    while(walker.nextNode()){
-      const current=walker.currentNode;
-      if(current===range.startContainer)break;
-      last=current;
-    }
-    if(last instanceof Text)return{node:last,offset:String(last.nodeValue||"").length};
-  }catch{}
-  return null;
-}
-function editorTextosTabRichSafeRemover(selection,bloco,contexto={}){
-  try{
-    const sel=selection||window.getSelection?.();
-    if(!(bloco instanceof HTMLElement)||!sel||!sel.rangeCount)return false;
-    const range=sel.getRangeAt(0);
-    if(!range||!range.collapsed||!bloco.contains(range.startContainer))return false;
-    if(editorTextosTabRichSafeNoEditavelBloqueado(range.startContainer,bloco))return true;
-    const alvo=editorTextosTabRichSafeTextoAnterior(range,bloco);
-    let removido=false;
-    if(alvo?.node instanceof Text){
-      const unit=EDITOR_TEXTOS_TAB_RICH_SAFE_TEXT;
-      const texto=String(alvo.node.nodeValue||"");
-      const offset=Math.max(0,Math.min(texto.length,Math.round(Number(alvo.offset||0)||0)));
-      const antes=texto.slice(0,offset);
-      const depois=texto.slice(offset);
-      const mixedMatch=antes.match(/[\u00A0 ]{4}$/);
-      if(antes.endsWith(unit)||mixedMatch){
-        const removeLen=mixedMatch?mixedMatch[0].length:unit.length;
-        alvo.node.nodeValue=antes.slice(0,-removeLen)+depois;
-        const novoRange=document.createRange();
-        novoRange.setStart(alvo.node,offset-removeLen);
-        novoRange.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(novoRange);
-        removido=true;
-      }else{
-        const matches=[...antes.matchAll(/[\u00A0 ]{4}/g)];
-        const last=matches.length?matches[matches.length-1]:null;
-        if(last&&Number.isFinite(Number(last.index))){
-          const idx=Number(last.index);
-          alvo.node.nodeValue=antes.slice(0,idx)+antes.slice(idx+last[0].length)+depois;
-          const novoRange=document.createRange();
-          novoRange.setStart(alvo.node,Math.max(idx,offset-last[0].length));
-          novoRange.collapse(true);
-          sel.removeAllRanges();
-          sel.addRange(novoRange);
-          removido=true;
-        }
-      }
-      if(!removido&&antes.endsWith("\u2003")){
-        alvo.node.nodeValue=antes.slice(0,-1)+depois;
-        const novoRange=document.createRange();
-        novoRange.setStart(alvo.node,offset-1);
-        novoRange.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(novoRange);
-        removido=true;
-      }
-    }
-    editorTextosDebugLog("TAB SAFE SHIFT_REMOVIDO",{
-      blockId:String(bloco.dataset.etBlockId||""),
-      removido,
-      htmlDepois:editorTextosParagrafoResumoHTML(bloco.innerHTML,900)
-    },"tab");
-    if(removido)editorTextosTabRichSafeMarcarAlteracao(bloco,"Tabulacao segura removida.");
-    return true;
-  }catch(err){
-    editorTextosParagrafoDebugEstruturado("warn","TAB RICH SAFE FALHOU",{motivo:"remover",erro:err,contexto});
-  }
-  return false;
-}
-function editorTextosTabRichSafeAtivarSeNecessario(bloco,selection,contexto={}){
-  const analise=editorTextosParagrafoConteudoRico(bloco);
-  if(!analise.rico)return null;
-  const sel=selection||window.getSelection?.();
-  const node=sel?.focusNode||sel?.anchorNode||null;
-  editorTextosDebugLog("TAB SAFE ATIVADO",{
-    blockId:String(bloco?.dataset?.etBlockId||""),
-    motivos:analise.motivos,
-    selectionNode:editorTextosParagrafoSerializarNodeDebug(node),
-    offset:Number(sel?.focusOffset??sel?.anchorOffset??NaN),
-    htmlAntes:editorTextosParagrafoResumoHTML(bloco?.innerHTML||"",900)
-  },"tab");
-  return{...analise,contexto};
-}
-function editorTextosTabSeguroEhMarcadorLegado(node){
-  return !!(node instanceof HTMLElement&&node.matches?.("span[data-et-tab-inline],span[data-et-tab-pad],span.editor-textos-sem-tab-pad,span[data-editor-tab],span.editor-textos-tab-marker"));
-}
-function editorTextosTabSeguroConverterMarcadoresLegados(root,origem="manual"){
-  try{
-    if(!(root instanceof HTMLElement))return false;
-    const spans=[...root.querySelectorAll?.("span[data-et-tab-inline],span[data-et-tab-pad],span.editor-textos-sem-tab-pad,span[data-editor-tab],span.editor-textos-tab-marker")||[]]
-      .filter(node=>node instanceof HTMLElement);
-    let alterou=false;
-    spans.forEach(span=>{
-      const texto=String(span.textContent||"").replace(/\u200B/g,"");
-      const width=Number.parseFloat(String(span.getAttribute("data-et-tab-width")||span.style.width||""));
-      const unidades=Number.isFinite(width)?Math.max(1,Math.round(width/32)):1;
-      const seguro=texto.trim()?texto:EDITOR_TEXTOS_TAB_RICH_SAFE_TEXT.repeat(unidades);
-      span.replaceWith(document.createTextNode(seguro));
-      alterou=true;
-    });
-    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null);
-    const limpar=[];
-    while(walker.nextNode()){
-      const node=walker.currentNode;
-      if(String(node.nodeValue||"").includes("\u200B"))limpar.push(node);
-    }
-    limpar.forEach(node=>{
-      node.nodeValue=String(node.nodeValue||"").replace(/\u200B/g,"");
-      alterou=true;
-    });
-    if(alterou){
-      root.normalize();
-      editorTextosDebugLog("TAB INLINE LEGADO DESATIVADO",{
-        origem:String(origem||""),
-        convertidos:spans.length,
-        htmlDepois:editorTextosParagrafoResumoHTML(root.innerHTML,900)
-      },"tab");
-    }
-    return alterou;
-  }catch(err){
-    editorTextosParagrafoDebugEstruturado("warn","TAB INLINE LEGADO DESATIVADO",{origem,erro:err});
-  }
-  return false;
-}
-function editorTextosTabSeguroDeveUsarEspaco(block,pos=null){
-  if(!(block instanceof HTMLElement))return true;
-  const texto=editorTextosParagrafoObterTextoLinear(block);
-  const offset=Math.max(0,Math.round(Number(pos?.textOffset??0)||0));
-  if(!texto.length)return false;
-  if(offset<=0)return false;
-  return true;
-}
 function editorTextosParagrafoEhCompativelComTabSemantica(block){
   if (!(block instanceof HTMLElement) || !editorTextosCfg?.page.contains(block)) return false;
 
   // bloquear apenas casos realmente problemáticos
   if (block.matches("td,th")) return false;
-  if (block.querySelector("table")) return false;
+  if (block.querySelector("table,img")) return false;
 
   // permitir todos os demais blocos (inclusive múltiplas linhas e wrappers comuns)
   return true;
@@ -16279,7 +14422,6 @@ function editorTextosParagrafoObterTextoNodesLogicos(block){
       if(!parent)return NodeFilter.FILTER_REJECT;
       if(parent.closest("[data-et-tab-pad],[data-editor-tab],.editor-textos-tab-marker"))return NodeFilter.FILTER_REJECT;
       if(parent.closest("[data-et-tab-break],[data-editor-tab-break]"))return NodeFilter.FILTER_REJECT;
-      if(!editorTextosTextoRemoverAnchorsCaret(node.textContent||"").length)return NodeFilter.FILTER_REJECT;
       return NodeFilter.FILTER_ACCEPT;
     }
   });
@@ -16326,29 +14468,6 @@ function editorTextosParagrafoObterTextoLinear(block){
   };
   [...(block?.childNodes||[])].forEach(append);
   return parts.join("");
-}
-function editorTextosCalcularOffsetLinear(rootEl,targetNode,targetOffset){
-  if(!(rootEl instanceof HTMLElement)||!(targetNode instanceof Node))return 0;
-  const walker=document.createTreeWalker(rootEl,NodeFilter.SHOW_TEXT,{
-    acceptNode(node){
-      const parent=node?.parentElement;
-      if(!parent)return NodeFilter.FILTER_REJECT;
-      if(parent.closest("[data-et-tab-pad],[data-et-tab-break],[data-editor-tab],[data-editor-tab-break],.editor-textos-tab-marker"))return NodeFilter.FILTER_REJECT;
-      if(!editorTextosTextoRemoverAnchorsCaret(node.nodeValue||"").length)return NodeFilter.FILTER_REJECT;
-      return NodeFilter.FILTER_ACCEPT;
-    }
-  });
-  let acumulado=0;
-  while(walker.nextNode()){
-    const node=walker.currentNode;
-    const nodeText=String(node?.nodeValue||"");
-    if(node===targetNode){
-      const offset=editorTextosTextoOffsetDomParaLogico(nodeText,targetOffset);
-      return acumulado+offset;
-    }
-    acumulado+=editorTextosTextoRemoverAnchorsCaret(nodeText).length;
-  }
-  return acumulado;
 }
 function editorTextosParagrafoCalcularIndiceTextoBoundary(block,container,offset){
   if(!(block instanceof HTMLElement)||!(container instanceof Node))return null;
@@ -16464,13 +14583,11 @@ function editorTextosParagrafoResolverPosicaoDomPorIndiceTexto(block,index){
     if(found||!(node instanceof Node))return;
     if(node.nodeType===Node.TEXT_NODE){
       const text=editorTextosParagrafoNormalizarTexto(node.textContent||"");
-      const len=text.length;
-      if(!len)return;
-      if(restante<=len){
-        found={container:node,offset:editorTextosTextoOffsetLogicoParaDom(node.textContent||"",restante)};
+      if(restante<=text.length){
+        found={container:node,offset:restante};
         return;
       }
-      restante-=len;
+      restante-=text.length;
       return;
     }
     if(!(node instanceof HTMLElement))return;
@@ -16513,7 +14630,7 @@ function editorTextosResolverPrimeiroTextNode(el){
       const parent=node?.parentElement;
       if(!parent)return NodeFilter.FILTER_REJECT;
       if(parent.closest("[data-et-tab-pad],[data-et-tab-break],[data-editor-tab],[data-editor-tab-break],.editor-textos-tab-marker"))return NodeFilter.FILTER_REJECT;
-      return editorTextosTextoRemoverAnchorsCaret(node.textContent||"").length>0?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+      return String(node.textContent||"").length>0?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
     }
   });
   const node=walker.nextNode()?walker.currentNode:null;
@@ -16531,7 +14648,7 @@ function editorTextosResolverTextNodePorOffset(el,targetOffset){
       const parent=node?.parentElement;
       if(!parent)return NodeFilter.FILTER_REJECT;
       if(parent.closest("[data-et-tab-pad],[data-et-tab-break],[data-editor-tab],[data-editor-tab-break],.editor-textos-tab-marker"))return NodeFilter.FILTER_REJECT;
-      return editorTextosTextoRemoverAnchorsCaret(node.textContent||"").length>0?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+      return String(node.textContent||"").length>0?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
     }
   });
   let acumulado=0;
@@ -16540,21 +14657,19 @@ function editorTextosResolverTextNodePorOffset(el,targetOffset){
     const node=walker.currentNode;
     if(!(node instanceof Text))continue;
     ultimo=node;
-    const len=editorTextosTextoRemoverAnchorsCaret(node.nodeValue||"").length;
-    if(!len)continue;
+    const len=node.length;
     if(acumulado+len>=target){
       return{
         node,
-        offset:editorTextosTextoOffsetLogicoParaDom(node.nodeValue||"",Math.max(0,Math.min(len,target-acumulado)))
+        offset:Math.max(0,Math.min(len,target-acumulado))
       };
     }
     acumulado+=len;
   }
   if(ultimo instanceof Text){
-    const ultimoLen=editorTextosTextoRemoverAnchorsCaret(ultimo.nodeValue||"").length;
     return{
       node:ultimo,
-      offset:editorTextosTextoOffsetLogicoParaDom(ultimo.nodeValue||"",ultimoLen)
+      offset:ultimo.length
     };
   }
   const fallback=document.createTextNode("");
@@ -16578,7 +14693,7 @@ function editorTextosParagrafoReancorarCursorDoModelo(blockId,posDepois){
   if(!(block instanceof HTMLElement))return false;
   const targetOffset=Math.max(0,Math.round(Number(posDepois?.textOffset||0)||0));
   const blockTextDepois=editorTextosParagrafoObterTextoLinear(block);
-  editorTextosDebugLog("REANCORAGEM ALVO",{
+  console.log("REANCORAGEM ALVO",{
     blockId:id,
     targetOffset,
     blockTextAntes:String(posDepois?.blockTextAntes??posDepois?.blockText??""),
@@ -16595,12 +14710,12 @@ function editorTextosParagrafoReancorarCursorDoModelo(blockId,posDepois){
   if(!sel)return false;
   sel.removeAllRanges();
   sel.addRange(range);
-  editorTextosDebugLog("REANCORAGEM DETALHE",{
+  console.log("REANCORAGEM DETALHE",{
     targetOffset,
     nodeText:node.nodeValue,
     offset
   });
-  editorTextosDebugLog("CURSOR REANCORADO",{
+  console.log("CURSOR REANCORADO",{
     blockId:id,
     textOffset:posDepois?.textOffset,
     xPx:posDepois?.xPx
@@ -16643,7 +14758,7 @@ function editorTextosParagrafoSalvarCursorTextual(block,data={}){
     && !allowZeroOverride
   ){
     if(typeof window!=="undefined"&&window.DEBUG_TAB_ENGINE_VERBOSE===true){
-      editorTextosDebugLog("CURSOR TEXTUAL ZERO IGNORADO",{
+      console.log("CURSOR TEXTUAL ZERO IGNORADO",{
         blockId,
         origem,
         textOffset,
@@ -16754,218 +14869,9 @@ function editorTextosParagrafoAtualizarCursorPorIndice(block,index){
     return true;
   }catch{return false}
 }
-function editorTextosParagrafoLimparRenderSemantica(block,origem="render_semantica"){
+function editorTextosParagrafoLimparRenderSemantica(block){
   if(!(block instanceof HTMLElement))return;
-  editorTextosParagrafoRemoverMarcadoresSemanticosObsoletos(block,[],origem);
-}
-function editorTextosParagrafoNoEhAnchorCaretInlineTab(node){
-  return !!(node instanceof Text&&String(node.nodeValue||"")==="\u200B");
-}
-function editorTextosParagrafoNoContemAnchorCaretInlineTab(node){
-  return !!(node instanceof Text&&String(node.nodeValue||"").includes("\u200B"));
-}
-function editorTextosParagrafoLimparAnchorsInlineTabOrfaos(block){
-  const cleanup=[];
-  if(!(block instanceof HTMLElement))return cleanup;
-  const walker=document.createTreeWalker(block,NodeFilter.SHOW_TEXT);
-  const anchors=[];
-  while(walker.nextNode()){
-    const node=walker.currentNode;
-    if(editorTextosParagrafoNoContemAnchorCaretInlineTab(node))anchors.push(node);
-  }
-  anchors.forEach(node=>{
-    const prev=node.previousSibling;
-    const next=node.nextSibling;
-    const juntoDeTab=!!(
-      (prev instanceof HTMLElement&&prev.matches?.("[data-et-tab-inline='true']"))
-      ||(next instanceof HTMLElement&&next.matches?.("[data-et-tab-inline='true']"))
-    );
-    if(juntoDeTab)return;
-    const antes=String(node.nodeValue||"");
-    const limpo=editorTextosTextoRemoverAnchorsCaret(node.nodeValue||"");
-    if(limpo){
-      node.nodeValue=limpo;
-      cleanup.push({
-        tipo:"anchor_misto_preservou_texto",
-        antes:antes.replace(/\u200B/g,"\\u200B"),
-        depois:limpo
-      });
-      editorTextosParagrafoLogTextoPreservadoInlineTab({
-        antes,
-        depois:limpo,
-        textoPreservado:limpo,
-        removeuSomenteZWSP:true
-      });
-    }else{
-      node.remove();
-      cleanup.push({tipo:"anchor_orfao_removido"});
-    }
-  });
-  return cleanup;
-}
-function editorTextosParagrafoLogShiftCleanupInlineTab(block,origem,cleanup=[]){
-  if(!(block instanceof HTMLElement)||!Array.isArray(cleanup)||!cleanup.length)return;
-  try{
-    editorTextosDebugLog("INLINE TAB SHIFT CLEANUP",{
-      origem:String(origem||""),
-      blockId:String(block.dataset.etBlockId||""),
-      cleanup,
-      pInnerHTML:editorTextosParagrafoResumoHTML(block.innerHTML,700),
-      spanCount:block.querySelectorAll?.("[data-et-tab-inline='true']")?.length||0
-    });
-  }catch{}
-}
-function editorTextosParagrafoLogTextoPreservadoInlineTab(payload={}){
-  try{
-    editorTextosDebugLog("INLINE TAB TEXTO PRESERVADO",{
-      antes:String(payload?.antes||"").replace(/\u200B/g,"\\u200B"),
-      depois:String(payload?.depois||"").replace(/\u200B/g,"\\u200B"),
-      textoPreservado:String(payload?.textoPreservado||""),
-      removeuSomenteZWSP:!!payload?.removeuSomenteZWSP
-    });
-  }catch{}
-}
-function editorTextosParagrafoElementoEhInlineTabCompativel(node,op){
-  if(!(node instanceof HTMLElement)||!node.matches?.("[data-et-tab-inline='true']"))return false;
-  const key=String(op?.tabStateKey||"").trim();
-  if(key&&String(node.getAttribute("data-et-tab-key")||"").trim()!==key)return false;
-  const logicalOffsetEsperado=Number(op?.logicalTextOffset??op?.anchor?.textIndex);
-  if(Number.isFinite(logicalOffsetEsperado)){
-    const logicalOffsetNode=Number(node.getAttribute("data-et-tab-offset-logico"));
-    if(Number.isFinite(logicalOffsetNode)&&logicalOffsetNode!==Math.max(0,Math.round(logicalOffsetEsperado)))return false;
-  }
-  return true;
-}
-function editorTextosParagrafoMoverRangeAposInlineTabsExistentes(range,op){
-  if(!(range instanceof Range))return false;
-  let next=null;
-  const container=range.startContainer;
-  const offset=Math.max(0,Number(range.startOffset||0)||0);
-  if(container instanceof Text){
-    if(offset<container.length)return false;
-    next=container.nextSibling;
-  }else if(container instanceof Element){
-    next=container.childNodes[offset]||null;
-  }
-  let ultimo=null;
-  while(next instanceof Node){
-    if(editorTextosParagrafoElementoEhInlineTabCompativel(next,op)||editorTextosParagrafoNoEhAnchorCaretInlineTab(next)){
-      ultimo=next;
-      next=next.nextSibling;
-      continue;
-    }
-    break;
-  }
-  if(!ultimo)return false;
-  try{
-    range.setStartAfter(ultimo);
-    range.collapse(true);
-    return true;
-  }catch{return false}
-}
-function editorTextosParagrafoResumoHTML(value,max=420){
-  const html=String(value||"").replace(/\s+/g," ").trim();
-  const limit=Math.max(60,Number(max||420)||420);
-  return html.length>limit?`${html.slice(0,limit)}...`:html;
-}
-function editorTextosParagrafoCamposDetectados(block){
-  const text=editorTextosParagrafoObterTextoLinear(block);
-  const matches=[...String(text||"").matchAll(/<<[^>]+>>/g)].map(item=>String(item?.[0]||""));
-  return [...new Set(matches)].slice(0,20);
-}
-function editorTextosParagrafoResumirChildNodes(block){
-  if(!(block instanceof HTMLElement))return[];
-  return [...block.childNodes].map((node,index)=>{
-    const el=node instanceof HTMLElement?node:null;
-    const text=(node.nodeType===Node.TEXT_NODE?String(node.nodeValue||""):String(node.textContent||"")).replace(/\u200B/g,"\\u200B");
-    const resumo={
-      index,
-      nodeType:node.nodeType,
-      nodeName:String(node.nodeName||""),
-      textContent:text.length>80?`${text.slice(0,80)}...`:text
-    };
-    if(el){
-      resumo.dataset={...el.dataset};
-      resumo.className=String(el.className||"");
-      resumo.contenteditable=String(el.getAttribute("contenteditable")||"");
-      resumo.dataEtTabInline=el.getAttribute("data-et-tab-inline")==="true";
-      resumo.semTabPad=el.classList.contains("editor-textos-sem-tab-pad");
-      resumo.isImage=el.tagName.toLowerCase()==="img";
-      resumo.isCampo=/<<[^>]+>>/.test(String(el.textContent||""));
-    }
-    return resumo;
-  });
-}
-function editorTextosParagrafoLogRichTabContexto(block,pos,context={}){
-  if(!(block instanceof HTMLElement))return;
-  const legacySpanCount=block.querySelectorAll?.("span:not([data-et-tab-inline='true']).editor-textos-sem-tab-pad,span.editor-textos-tab-marker,[data-editor-tab]")?.length||0;
-  editorTextosDebugLog("EDITOR RICH TAB CONTEXTO",{
-    blockId:String(block.dataset.etBlockId||""),
-    lineIndex:context?.lineIndex??pos?.lineIndex??null,
-    tabStateKey:String(context?.tabStateKey||""),
-    selectionNode:editorTextosParagrafoSerializarNodeDebug(window.getSelection?.()?.focusNode||null),
-    selectionOffset:Number(window.getSelection?.()?.focusOffset??NaN),
-    textOffsetLinear:Number(pos?.textOffset??NaN),
-    pInnerHTMLAntes:editorTextosParagrafoResumoHTML(block.innerHTML,900),
-    pTextContentAntes:String(block.textContent||"").replace(/\u200B/g,"\\u200B"),
-    childNodesResumo:editorTextosParagrafoResumirChildNodes(block),
-    inlineTabSpanCountAntes:block.querySelectorAll?.("[data-et-tab-inline='true']")?.length||0,
-    legacySpanCountAntes:legacySpanCount,
-    imagensCount:block.querySelectorAll?.("img")?.length||0,
-    camposDetectados:editorTextosParagrafoCamposDetectados(block)
-  },"tab");
-}
-function editorTextosParagrafoLogLegacySpanPreservado(node,origem="render_operacoes"){
-  if(!(node instanceof HTMLElement))return;
-  editorTextosDebugLog("EDITOR RICH TAB LEGACY SPAN PRESERVADO",{
-    origem:String(origem||""),
-    blockId:String(node.closest?.("[data-et-block-id]")?.dataset?.etBlockId||""),
-    tag:String(node.tagName||"").toLowerCase(),
-    className:String(node.className||""),
-    dataset:{...node.dataset},
-    outerHTML:editorTextosParagrafoResumoHTML(node.outerHTML,220)
-  },"tab");
-}
-function editorTextosParagrafoRemoverMarcadoresSemanticosObsoletos(block,validOpIds,origem="render_operacoes"){
-  if(!(block instanceof HTMLElement))return[];
-  const validIds=new Set((validOpIds||[]).map(id=>String(id||"")).filter(Boolean));
-  const cleanup=[];
-  block.querySelectorAll(".editor-textos-tab-marker,[data-editor-tab],[data-editor-tab-break]").forEach(node=>{
-    if(node instanceof HTMLElement)editorTextosParagrafoLogLegacySpanPreservado(node,origem);
-  });
-  block.querySelectorAll("[data-et-tab-pad],[data-et-tab-break]").forEach(node=>{
-    const opId=String(node.getAttribute?.("data-et-tab-op")||"");
-    if(opId&&validIds.has(opId))return;
-    const before=node.previousSibling;
-    const after=node.nextSibling;
-    node.remove();
-    cleanup.push({tipo:"marcador_semantico_obsoleto_removido",opId});
-    if(editorTextosParagrafoNoEhAnchorCaretInlineTab(before)){
-      before.remove();
-      cleanup.push({tipo:"anchor_puro_antes_removido",opId});
-    }
-    if(editorTextosParagrafoNoEhAnchorCaretInlineTab(after)){
-      after.remove();
-      cleanup.push({tipo:"anchor_puro_depois_removido",opId});
-    }
-  });
-  cleanup.push(...editorTextosParagrafoLimparAnchorsInlineTabOrfaos(block));
-  editorTextosParagrafoLogShiftCleanupInlineTab(block,origem,cleanup);
-  return cleanup;
-}
-function editorTextosParagrafoListarInlineTabs(block){
-  if(!(block instanceof HTMLElement))return[];
-  return [...block.querySelectorAll("[data-et-tab-inline='true']")]
-    .filter(node=>node instanceof HTMLElement)
-    .map((span,index)=>({
-      index,
-      opId:String(span.getAttribute("data-et-tab-op")||""),
-      tabStateKey:String(span.getAttribute("data-et-tab-key")||""),
-      logicalOffset:Number(span.getAttribute("data-et-tab-offset-logico")||0)||0,
-      width:String(span.getAttribute("data-et-tab-width")||span.style.width||""),
-      style:String(span.getAttribute("style")||""),
-      outerHTML:editorTextosParagrafoResumoHTML(span.outerHTML,220)
-    }));
+  block.querySelectorAll("[data-et-tab-pad],[data-et-tab-break]").forEach(node=>node.remove());
 }
 function editorTextosParagrafoObterMedidor(){
   if(editorTextosCfg?.paragraphMeasure instanceof HTMLElement)return editorTextosCfg.paragraphMeasure;
@@ -17139,18 +15045,6 @@ function editorTextosParagrafoTextoNodeDebug(node){
   }catch{}
   return "";
 }
-function editorTextosLiberarProtecaoCursorAposFrame(){
-  const liberar=()=>{editorTextosProtegendoCursor=false;};
-  try{
-    if(typeof requestAnimationFrame==="function"){
-      requestAnimationFrame(liberar);
-    }else{
-      setTimeout(liberar,0);
-    }
-  }catch{
-    editorTextosProtegendoCursor=false;
-  }
-}
 function editorTextosParagrafoCapturarSelectionRawNoKeydown(){
   try{
     const sel=window.getSelection?.();
@@ -17164,13 +15058,11 @@ function editorTextosParagrafoCapturarSelectionRawNoKeydown(){
     let tabStateKey="";
     let blockText="";
     let offsetCorrigidoPor="";
-    let rawTextOffsetLinear=null;
     let pos=null;
     if(block instanceof HTMLElement&&caretNode instanceof Node&&editorTextosCfg?.page?.contains(block)){
       const blockId=editorTextosGarantirIdBloco(block);
       blockText=editorTextosParagrafoObterTextoLinear(block);
-      const rawOffset=editorTextosCalcularOffsetLinear(block,caretNode,caretOffset);
-      rawTextOffsetLinear=Number.isFinite(rawOffset)?Math.max(0,Math.min(blockText.length,Math.round(Number(rawOffset)||0))):null;
+      const rawOffset=editorTextosParagrafoCalcularIndiceTextoBoundary(block,caretNode,caretOffset);
       if(Number.isFinite(rawOffset)){
         textOffsetLinear=Math.max(0,Math.min(blockText.length,Math.round(Number(rawOffset)||0)));
         const cached=editorTextosParagrafoLerCursorTextual(block);
@@ -17236,19 +15128,16 @@ function editorTextosParagrafoCapturarSelectionRawNoKeydown(){
         textOffset:textOffsetLinear
       }:null
     };
-    editorTextosDebugLog("SELECTION RAW",{
+    console.log("SELECTION RAW NO KEYDOWN",{
       anchorNodeText:editorTextosParagrafoTextoNodeDebug(sel?.anchorNode||null),
       anchorOffset:Number(sel?.anchorOffset??NaN),
       focusNodeText:editorTextosParagrafoTextoNodeDebug(sel?.focusNode||null),
       focusOffset:Number(sel?.focusOffset??NaN),
-      isCollapsed
-    });
-    editorTextosDebugLog("OFFSET LINEAR CALCULADO",{
-      activeElement:editorTextosParagrafoSerializarNodeDebug(document.activeElement||null),
-      textOffsetLinear,
-      rawTextOffsetLinear,
       rangeStartOffset:Number(range?.startOffset??NaN),
       rangeEndOffset:Number(range?.endOffset??NaN),
+      isCollapsed,
+      activeElement:editorTextosParagrafoSerializarNodeDebug(document.activeElement||null),
+      textOffsetLinear,
       cachedTextOffset:block instanceof HTMLElement?editorTextosParagrafoLerCursorTextual(block)?.textOffset??null:null,
       offsetCorrigidoPor,
       blockText
@@ -17289,51 +15178,9 @@ function editorTextosParagrafoCapturarCursorReal(block=null,model=null,options={
     const targetBlock=block instanceof HTMLElement&&block.contains(caretNode)?block:selectionBlock;
     if(!(targetBlock instanceof HTMLElement)||!editorTextosCfg?.page?.contains(targetBlock))return null;
     const blockText=editorTextosParagrafoObterTextoLinear(targetBlock);
-    const rawTextOffset=editorTextosCalcularOffsetLinear(targetBlock,caretNode,caretOffset);
+    const rawTextOffset=editorTextosParagrafoCalcularIndiceTextoBoundary(targetBlock,caretNode,caretOffset);
     if(!Number.isFinite(rawTextOffset))return null;
-    let textOffset=Math.max(0,Math.min(blockText.length,Math.round(Number(rawTextOffset)||0)));
-    let offsetCorrigidoPor="";
-    if(range.collapsed&&editorTextosParagrafoNoEhAnchorCaretInlineTab(caretNode)){
-      const prev=caretNode.previousSibling;
-      const next=caretNode.nextSibling;
-      const refTab=
-        (prev instanceof HTMLElement&&prev.matches?.("[data-et-tab-inline='true']")?prev:null)
-        ||(next instanceof HTMLElement&&next.matches?.("[data-et-tab-inline='true']")?next:null);
-      if(refTab instanceof HTMLElement){
-        const logicalOffset=Number(refTab.getAttribute("data-et-tab-offset-logico"));
-        if(Number.isFinite(logicalOffset)){
-          textOffset=Math.max(0,Math.min(blockText.length,Math.round(logicalOffset)));
-          offsetCorrigidoPor="inline_tab_anchor";
-        }
-      }
-    }
-    if(textOffset===0&&blockText.length>0&&range.collapsed){
-      const cached=editorTextosParagrafoLerCursorTextual(targetBlock);
-      const cacheFresh=!!(cached&&Date.now()-Number(cached.updatedAt||0)<15000);
-      const cachedOffset=Number(cached?.textOffset);
-      const explicitZeroFresh=!!(
-        cached
-        && cacheFresh
-        && Number(cached.textOffset)===0
-        && String(cached.blockText||"")===blockText
-        && ["click","mouseup","keyup_nav"].includes(String(cached.origem||""))
-      );
-      if(cacheFresh&&String(cached.blockText||"")===blockText&&Number.isFinite(cachedOffset)&&cachedOffset>0){
-        textOffset=Math.max(0,Math.min(blockText.length,Math.round(cachedOffset)));
-        offsetCorrigidoPor="cache_textual";
-      }else if(!explicitZeroFresh){
-        const focusText=editorTextosParagrafoTextoNodeDebug(sel?.focusNode||null);
-        const anchorText=editorTextosParagrafoTextoNodeDebug(sel?.anchorNode||null);
-        if(
-          Number(sel?.focusOffset??caretOffset)===0
-          && Number(sel?.anchorOffset??caretOffset)===0
-          && (focusText===blockText||anchorText===blockText)
-        ){
-          textOffset=blockText.length;
-          offsetCorrigidoPor="heuristica_fim_texto";
-        }
-      }
-    }
+    const textOffset=Math.max(0,Math.min(blockText.length,Math.round(Number(rawTextOffset)||0)));
     const anchor=editorTextosParagrafoAtualizarAnchorPorIndice(targetBlock,{anchor:{}},textOffset).anchor;
     if(!anchor||typeof anchor!=="object")return null;
     const lineStartIndex=Math.max(0,blockText.lastIndexOf("\n",Math.max(0,textOffset-1))+1);
@@ -17370,7 +15217,7 @@ function editorTextosParagrafoCapturarCursorReal(block=null,model=null,options={
       origem:"selection_real"
     };
     if(options?.log!==false){
-      editorTextosDebugLog("CURSOR OFFSET REAL CAPTURADO",{
+      console.log("CURSOR OFFSET REAL CAPTURADO",{
         blockId,
         lineIndex,
         tabStateKey:context.tabStateKey,
@@ -17381,8 +15228,6 @@ function editorTextosParagrafoCapturarCursorReal(block=null,model=null,options={
         rangeEndOffset:range.endOffset,
         offsetOrigem,
         textOffsetLinear:textOffset,
-        rawTextOffsetLinear:Math.max(0,Math.min(blockText.length,Math.round(Number(rawTextOffset)||0))),
-        offsetCorrigidoPor,
         blockText
       });
     }
@@ -17658,284 +15503,29 @@ function editorTextosParagrafoCalcularTabStopAnterior(model,currentXPx){
   const step=Math.max(16,Number(model?.defaultTabPx||32)||32);
   return Math.max(0,(Math.floor((atual-1)/step))*step);
 }
-function editorTextosParagrafoTipoTabPorPosicao(block,pos){
-  try{
-    if(!(block instanceof HTMLElement)||!pos)return"paragraph-indent";
-    const text=editorTextosParagrafoObterTextoLinear(block);
-    const textOffset=Math.max(0,Math.min(text.length,Math.round(Number(pos?.textOffset||0)||0)));
-    const lineStart=Math.max(0,text.lastIndexOf("\n",Math.max(0,textOffset-1))+1);
-    const antesNaLinha=text.slice(lineStart,textOffset);
-    return antesNaLinha.length>0?"inline-tab":"paragraph-indent";
-  }catch{
-    return"paragraph-indent";
-  }
-}
-function editorTextosParagrafoCriarPad(widthPx,opId,tabStateKey="",opType="inline-tab"){
+function editorTextosParagrafoCriarPad(widthPx,opId,tabStateKey=""){
   const span=document.createElement("span");
-  const width=Math.max(0,Math.round(Number(widthPx||0)));
   span.className="editor-textos-sem-tab-pad";
   span.setAttribute("data-et-tab-pad","1");
-  if(editorTextosDocumentoModelNormalizarTipoTabOperacao(opType)==="inline-tab"){
-    span.setAttribute("data-et-tab-inline","true");
-    span.setAttribute("data-et-tab-width",String(width));
-  }
   span.setAttribute("data-et-tab-op",String(opId||""));
   if(tabStateKey)span.setAttribute("data-et-tab-key",String(tabStateKey||""));
   span.setAttribute("contenteditable","false");
-  span.style.display="inline-block";
-  span.style.width=`${width}px`;
-  span.style.height="1em";
-  span.style.verticalAlign="baseline";
-  span.style.pointerEvents="none";
-  span.style.userSelect="none";
+  span.style.width=`${Math.max(0,Math.round(Number(widthPx||0)))}px`;
   span.innerHTML="&nbsp;";
   return span;
 }
-function editorTextosParagrafoCriarBreak(opId,tabStateKey="",logicalOffset=null){
+function editorTextosParagrafoCriarBreak(opId,tabStateKey=""){
   const br=document.createElement("br");
   br.setAttribute("data-et-tab-break","1");
   br.setAttribute("data-et-tab-op",String(opId||""));
   if(tabStateKey)br.setAttribute("data-et-tab-key",String(tabStateKey||""));
-  if(Number.isFinite(Number(logicalOffset)))br.setAttribute("data-et-tab-offset-logico",String(Math.max(0,Math.round(Number(logicalOffset)))));
   return br;
 }
-function editorTextosParagrafoInserirInlineTabMarcador(block,op,textOffset=null,origem="render"){
-  editorTextosDebugLog("TAB INLINE LEGADO DESATIVADO",{origem:String(origem||""),blockId:String(block?.dataset?.etBlockId||""),opId:String(op?.id||""),motivo:"criacao_inline_tab_bloqueada"},"tab");
-  return false;
-  if(!(block instanceof HTMLElement)||!op)return false;
-  const idx=Number.isFinite(Number(textOffset))?Math.max(0,Math.round(Number(textOffset))):Number(op.resolvedIndex??op.anchor?.textIndex);
-  const pos=editorTextosParagrafoResolverPosicaoDomPorIndiceTexto(block,idx);
-  if(!pos)return false;
-  const range=document.createRange();
-  try{
-    if(!editorTextosParagrafoAplicarPosicaoAoRange(range,pos,"start"))return false;
-    range.collapse(true);
-    editorTextosParagrafoMoverRangeAposInlineTabsExistentes(range,op);
-    editorTextosDebugLog("INLINE TAB INSERINDO",{
-      origem,
-      blockId:String(block.dataset.etBlockId||""),
-      lineIndex:op.lineIndex??null,
-      tabStateKey:String(op.tabStateKey||""),
-      textOffset:idx,
-      rangeStartContainerText:range.startContainer?.nodeType===Node.TEXT_NODE?String(range.startContainer.nodeValue||""):String(range.startContainer?.textContent||"").slice(0,80),
-      rangeStartOffset:Number(range.startOffset||0)||0,
-      widthPx:Math.max(0,Math.round(Number(op.padPx||0)||0))
-    });
-    const frag=document.createDocumentFragment();
-    if(op.breakLine)frag.appendChild(editorTextosParagrafoCriarBreak(op.id,op.tabStateKey,op.logicalTextOffset));
-    const span=editorTextosParagrafoCriarPad(op.padPx,op.id,op.tabStateKey,op.type);
-    if(Number.isFinite(Number(op.logicalTextOffset)))span.setAttribute("data-et-tab-offset-logico",String(Math.max(0,Math.round(Number(op.logicalTextOffset)))));
-    const caretAnchor=document.createTextNode("\u200B");
-    frag.appendChild(span);
-    frag.appendChild(caretAnchor);
-    range.insertNode(frag);
-    const sel=window.getSelection?.();
-    if(sel){
-      const caretRange=document.createRange();
-      caretRange.setStart(caretAnchor,1);
-      caretRange.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(caretRange);
-    }
-    editorTextosParagrafoLogInlineTabAposInserir(block);
-    editorTextosParagrafoLogInlineTabCaretAnchor(block,caretAnchor);
-    return true;
-  }catch{
-    return false;
-  }
-}
-function editorTextosParagrafoLogInlineTabAposInserir(block){
-  if(!(block instanceof HTMLElement))return;
-  const spans=editorTextosParagrafoListarInlineTabs(block);
-  editorTextosDebugLog("INLINE TAB DOM APOS INSERIR",{
-    blockId:String(block.dataset.etBlockId||""),
-    pInnerHTML:editorTextosParagrafoResumoHTML(block.innerHTML,700),
-    spanCount:spans.length,
-    spans
-  });
-}
-function editorTextosParagrafoLogCursorInlineTab(){
-  try{
-    const sel=window.getSelection?.();
-    editorTextosDebugLog("INLINE TAB CURSOR APOS INSERIR",{
-      anchorNode:editorTextosParagrafoSerializarNodeDebug(sel?.anchorNode||null),
-      anchorOffset:Number(sel?.anchorOffset??NaN),
-      focusNode:editorTextosParagrafoSerializarNodeDebug(sel?.focusNode||null),
-      focusOffset:Number(sel?.focusOffset??NaN)
-    });
-  }catch{}
-}
-function editorTextosParagrafoLogInlineTabCaretAnchor(block,caretAnchor=null){
-  try{
-    if(!(block instanceof HTMLElement))return;
-    const sel=window.getSelection?.();
-    editorTextosDebugLog("INLINE TAB CARET ANCHOR",{
-      pInnerHTML:editorTextosParagrafoResumoHTML(block.innerHTML,700),
-      spanCount:block.querySelectorAll?.("[data-et-tab-inline='true']")?.length||0,
-      caretAnchorPresente:!!(caretAnchor instanceof Text&&String(caretAnchor.nodeValue||"")==="\u200B"&&block.contains(caretAnchor)),
-      selectionAnchorText:sel?.anchorNode?.nodeType===Node.TEXT_NODE?String(sel.anchorNode.nodeValue||"").replace(/\u200B/g,"\\u200B"):String(sel?.anchorNode?.textContent||"").slice(0,80),
-      selectionAnchorOffset:Number(sel?.anchorOffset??NaN)
-    });
-  }catch{}
-}
-function editorTextosParagrafoResolverContextoInputInlineTab(ev=null){
-  try{
-    const sel=window.getSelection?.();
-    const anchorNode=sel?.focusNode||sel?.anchorNode||null;
-    const anchorOffset=Number(sel?.focusOffset??sel?.anchorOffset??0)||0;
-    const targetBlock=editorTextosResolverBlocoDeNode(anchorNode||ev?.target||null);
-    const textNode=anchorNode instanceof Text?anchorNode:null;
-    const textValue=String(textNode?.nodeValue||"");
-    const prev=textNode?.previousSibling||null;
-    const next=textNode?.nextSibling||null;
-    const ligadoAInlineTab=!!(
-      textNode
-      && textValue.includes("\u200B")
-      && (
-        (prev instanceof HTMLElement&&prev.matches?.("[data-et-tab-inline='true']"))
-        ||(next instanceof HTMLElement&&next.matches?.("[data-et-tab-inline='true']"))
-      )
-    );
-    return{
-      sel,
-      block:targetBlock instanceof HTMLElement?targetBlock:null,
-      textNode,
-      anchorOffset,
-      ligadoAInlineTab
-    };
-  }catch{}
-  return{sel:null,block:null,textNode:null,anchorOffset:0,ligadoAInlineTab:false};
-}
-function editorTextosParagrafoLogInputInlineTabDebug(ev,ctx,etapa="antes"){
-  try{
-    const block=ctx?.block instanceof HTMLElement?ctx.block:editorTextosResolverBlocoDeNode(ev?.target||null);
-    if(!(block instanceof HTMLElement))return;
-    if(!ctx?.ligadoAInlineTab&&!block.querySelector?.("[data-et-tab-inline='true']"))return;
-    const sel=window.getSelection?.();
-    const inputData=String(ev?.data??editorTextosCfg?.inlineTabUltimoInputData??"");
-    const htmlAtual=String(block.innerHTML||"");
-    const textAtual=String(block.textContent||"");
-    editorTextosDebugLog(etapa==="apos"?"INLINE TAB INPUT APOS":"INLINE TAB INPUT DEBUG",etapa==="apos"?{
-      pInnerHTMLDepois:editorTextosParagrafoResumoHTML(block.innerHTML,700),
-      pTextContentDepois:textAtual.replace(/\u200B/g,"\\u200B"),
-      inputData,
-      contemInputData:!!(inputData&&(htmlAtual.includes(inputData)||textAtual.includes(inputData))),
-      contemXMaiusculo:htmlAtual.includes("X")||textAtual.includes("X"),
-      contemXMinusculo:htmlAtual.includes("x")||textAtual.includes("x"),
-      contemZWSP:textAtual.includes("\u200B"),
-      inlineTabSpanCount:block.querySelectorAll?.("[data-et-tab-inline='true']")?.length||0
-    }:{
-      eventType:String(ev?.type||""),
-      inputType:String(ev?.inputType||""),
-      data:String(ev?.data||""),
-      activeElementTag:String(document.activeElement?.tagName||""),
-      selectionAnchorText:sel?.anchorNode?.nodeType===Node.TEXT_NODE?String(sel.anchorNode.nodeValue||"").replace(/\u200B/g,"\\u200B"):String(sel?.anchorNode?.textContent||"").slice(0,80),
-      selectionAnchorOffset:Number(sel?.anchorOffset??NaN),
-      pInnerHTMLAntes:editorTextosParagrafoResumoHTML(block.innerHTML,700),
-      pTextContentAntes:String(block.textContent||"").replace(/\u200B/g,"\\u200B")
-    });
-  }catch{}
-}
-function editorTextosParagrafoLogInputInlineTabApos(ev,ctx=null){
-  const contexto=ctx||editorTextosParagrafoResolverContextoInputInlineTab(ev);
-  try{
-    setTimeout(()=>editorTextosParagrafoLogInputInlineTabDebug(ev,contexto,"apos"),0);
-  }catch{}
-}
-function editorTextosParagrafoProcessarInputInlineTab(ev){
-  return false;
-  const ctx=editorTextosParagrafoResolverContextoInputInlineTab(ev);
-  editorTextosParagrafoLogInputInlineTabDebug(ev,ctx,"antes");
-  if(ctx?.block instanceof HTMLElement&&editorTextosParagrafoConteudoRico(ctx.block).rico)return false;
-  try{
-    const inputType=String(ev?.inputType||"");
-    const data=String(ev?.data||"");
-    if(ctx?.ligadoAInlineTab&&data&&editorTextosCfg){
-      editorTextosCfg.inlineTabUltimoInputData=data;
-      editorTextosCfg.inlineTabUltimoInputBlockId=String(ctx?.block?.dataset?.etBlockId||"");
-    }
-    if(!(ctx?.ligadoAInlineTab&&ctx.textNode instanceof Text&&inputType.startsWith("insert")&&data))return false;
-    const antes=String(ctx.textNode.nodeValue||"");
-    const offset=Math.max(0,Math.min(antes.length,Math.round(Number(ctx.anchorOffset||0)||0)));
-    if(typeof ev?.preventDefault==="function")ev.preventDefault();
-    const depois=antes.slice(0,offset)+data+antes.slice(offset);
-    ctx.textNode.nodeValue=depois;
-    const sel=window.getSelection?.();
-    if(sel){
-      const range=document.createRange();
-      range.setStart(ctx.textNode,offset+data.length);
-      range.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
-    editorTextosParagrafoLogTextoPreservadoInlineTab({
-      antes,
-      depois,
-      textoPreservado:editorTextosTextoRemoverAnchorsCaret(depois),
-      removeuSomenteZWSP:false
-    });
-    if(ctx.block instanceof HTMLElement){
-      editorTextosParagrafoAtualizarCursorTextualPorEvento({
-        type:"input",
-        inputType,
-        data,
-        target:ctx.block
-      });
-      editorTextosCfg.alterado=true;
-      if(editorTextosCfg.status)editorTextosCfg.status.textContent="Alteracoes pendentes...";
-      try{editorTextosAgendarSincronizarToolbar()}catch{}
-      try{editorTextosSincronizarEstruturaParagrafoAtual()}catch{}
-      try{editorTextosDocumentoModelAgendarAtualizacao(50)}catch{}
-    }
-    editorTextosParagrafoLogInputInlineTabApos(ev,ctx);
-    return true;
-  }catch{}
-  return false;
-}
-function editorTextosDocumentoModelTextoBloco(block){
-  try{
-    return (Array.isArray(block?.inlines)?block.inlines:[])
-      .map(inline=>editorTextosTextoRemoverAnchorsCaret(String(inline?.text||"")))
-      .join("");
-  }catch{}
-  return "";
-}
-function editorTextosParagrafoLogPosRebuildInlineTab(model){
-  try{
-    if(!editorTextosCfg?.page||!model||!Array.isArray(model.blocks))return;
-    const inputData=String(editorTextosCfg.inlineTabUltimoInputData||"");
-    const lastBlockId=String(editorTextosCfg.inlineTabUltimoInputBlockId||"");
-    model.blocks.forEach(blockModel=>{
-      const blockId=String(blockModel?.id||"");
-      const ops=Array.isArray(blockModel?.tabOperations)?blockModel.tabOperations:[];
-      const temInlineOp=ops.some(op=>editorTextosDocumentoModelOperacaoEhInlineTab(op));
-      const selector=blockId?`[data-et-block-id="${typeof CSS!=="undefined"&&CSS.escape?CSS.escape(blockId):blockId.replace(/"/g,'\\"')}"]`:"";
-      const blockEl=selector?editorTextosCfg.page.querySelector?.(selector):null;
-      const inlineTabSpanCount=blockEl?.querySelectorAll?.("[data-et-tab-inline='true']")?.length||0;
-      if(!temInlineOp&&!inlineTabSpanCount&&blockId!==lastBlockId)return;
-      const html=String(blockEl?.innerHTML||"");
-      const text=String(blockEl?.textContent||"");
-      const textoModelo=editorTextosDocumentoModelTextoBloco(blockModel);
-      editorTextosDebugLog("INLINE TAB POS REBUILD",{
-        blockId,
-        pInnerHTML:editorTextosParagrafoResumoHTML(html,700),
-        pTextContent:text.replace(/\u200B/g,"\\u200B"),
-        inlineTabSpanCount,
-        inputData,
-        contemInputData:!!(inputData&&(html.includes(inputData)||text.includes(inputData)||textoModelo.includes(inputData))),
-        textoModelo,
-        tabOperationsCount:ops.length
-      });
-    });
-  }catch{}
-}
-function editorTextosParagrafoRenderizarOperacoes(block,model,options={}){
+function editorTextosParagrafoRenderizarOperacoes(block,model){
   if(!(block instanceof HTMLElement)||!model)return false;
   try{
-    editorTextosParagrafoLogRichTabContexto(block,editorTextosParagrafoObterPosicaoLogicaAtual(block,model),{
-      lineIndex:model?.__modelFirstTabState?.lineIndex,
-      tabStateKey:model?.__modelFirstTabState?.tabStateKey
-    });
+    block.querySelectorAll(".editor-textos-tab-marker,[data-editor-tab],[data-editor-tab-break]").forEach(node=>node.remove());
+    editorTextosParagrafoLimparRenderSemantica(block);
     const rawOps=editorTextosParagrafoGarantirOperacoesTab(model);
     const ops=[];
     for(let i=rawOps.length-1;i>=0;i-=1){
@@ -17953,26 +15543,23 @@ function editorTextosParagrafoRenderizarOperacoes(block,model,options={}){
       }
     }
     ops.sort((a,b)=>(a.resolvedIndex-b.resolvedIndex)||String(a.id||"").localeCompare(String(b.id||"")));
-    editorTextosParagrafoRemoverMarcadoresSemanticosObsoletos(block,ops.map(op=>op.id),options?.origem||"render_operacoes");
     for(const op of ops){
-      if(!editorTextosDocumentoModelOperacaoEhInlineTab(op))continue;
-      const existente=block.querySelector?.(`[data-et-tab-inline='true'][data-et-tab-op="${CSS.escape(String(op.id||""))}"]`);
-      if(existente instanceof HTMLElement){
-        existente.setAttribute("data-et-tab-width",String(Math.max(0,Math.round(Number(op.padPx||0)||0))));
-        existente.setAttribute("data-et-tab-key",String(op.tabStateKey||""));
-        if(Number.isFinite(Number(op.logicalTextOffset)))existente.setAttribute("data-et-tab-offset-logico",String(Math.max(0,Math.round(Number(op.logicalTextOffset)))));
-        existente.style.width=`${Math.max(0,Math.round(Number(op.padPx||0)||0))}px`;
-        continue;
-      }
-      editorTextosParagrafoInserirInlineTabMarcador(block,op,op.resolvedIndex,"render");
+      const pos=editorTextosParagrafoResolverPosicaoDomPorIndiceTexto(block,op.resolvedIndex);
+      if(!pos)continue;
+      const range=document.createRange();
+      try{
+        if(!editorTextosParagrafoAplicarPosicaoAoRange(range,pos,"start"))continue;
+        range.collapse(true);
+        const frag=document.createDocumentFragment();
+        if(op.breakLine)frag.appendChild(editorTextosParagrafoCriarBreak(op.id,op.tabStateKey));
+        frag.appendChild(editorTextosParagrafoCriarPad(op.padPx,op.id,op.tabStateKey));
+        range.insertNode(frag);
+      }catch{}
     }
     editorTextosParagrafoLog("render",{
       blockId:String(block.dataset.etBlockId||""),
       tabOperations:editorTextosParagrafoSnapshotOperacoes(model)
     });
-    if(editorTextosDocumentoModelFeatureAtiva()){
-      try{editorTextosAplicarTabOperationsNoDOM(String(block.dataset.etBlockId||""))}catch{}
-    }
     return true;
   }catch(err){
     try{console.warn("Erro no motor semântico (render):",err)}catch{}
@@ -17989,31 +15576,17 @@ function editorTextosParagrafoObterOperacaoAnteriorPorCursor(block,model){
     const ops=editorTextosDocumentoModelOperacoesPorTabStateKey(modelState?.modelBlock,modelState?.context?.tabStateKey);
     if(ops.length){
       const cursorIndex=Math.max(0,Math.round(Number(pos?.textOffset??model?.__lastCursor?.textIndex??0)||0));
-      const candidatos=[];
+      let best=null;
       for(const op of ops){
         const idx=Number(op?.anchor?.textIndex);
         if(!Number.isFinite(idx))continue;
-        if(idx<=cursorIndex+0.5)candidatos.push(op);
+        if(idx<=cursorIndex+0.5)best=op;
       }
-      candidatos.sort((a,b)=>{
-        const inlineA=editorTextosDocumentoModelOperacaoEhInlineTab(a)?1:0;
-        const inlineB=editorTextosDocumentoModelOperacaoEhInlineTab(b)?1:0;
-        if(inlineA!==inlineB)return inlineB-inlineA;
-        const distA=Math.abs(cursorIndex-(Number(a?.anchor?.textIndex)||0));
-        const distB=Math.abs(cursorIndex-(Number(b?.anchor?.textIndex)||0));
-        if(distA!==distB)return distA-distB;
-        const seqA=Number(String(a?.id||"").match(/(\d+)$/)?.[1]||0)||0;
-        const seqB=Number(String(b?.id||"").match(/(\d+)$/)?.[1]||0)||0;
-        if(seqA!==seqB)return seqB-seqA;
-        return String(b?.id||"").localeCompare(String(a?.id||""));
-      });
-      const best=candidatos[0]||null;
       if(best){
-        editorTextosDebugLog("SHIFT_TAB MODEL-FIRST OPERACAO",{
+        console.log("SHIFT_TAB MODEL-FIRST OPERACAO",{
           blockId:String(block.dataset.etBlockId||""),
           lineIndex:modelState?.context?.lineIndex,
           tabStateKey:modelState?.context?.tabStateKey,
-          opType:best?.type||"",
           totalOps:ops.length,
           totalPx:editorTextosDocumentoModelCalcularXDoBloco(modelState?.modelBlock,modelState?.context?.tabStateKey),
           origem:"modelo",
@@ -18031,10 +15604,6 @@ function editorTextosParagrafoObterOperacaoAnteriorPorCursor(block,model){
   const candidates=[];
   const pushCandidate=node=>{if(node instanceof Node)candidates.push(node)};
   if(container.nodeType===Node.TEXT_NODE){
-    if(editorTextosParagrafoNoContemAnchorCaretInlineTab(container)){
-      pushCandidate(container.previousSibling);
-      pushCandidate(container.nextSibling);
-    }
     if(offset===0){
       pushCandidate(container.previousSibling);
       pushCandidate(container.parentElement?.previousSibling||null);
@@ -18055,12 +15624,11 @@ function editorTextosParagrafoObterOperacaoAnteriorPorCursor(block,model){
   const op=ops.find(op=>String(op?.id||"")===opId)||null;
   if(op){
     const lineIndex=Number.isFinite(Number(op.lineIndex))?Math.max(0,Math.round(Number(op.lineIndex))):null;
-    editorTextosDebugLog("SHIFT_TAB MODEL-FIRST OPERACAO",{
+    console.log("SHIFT_TAB MODEL-FIRST OPERACAO",{
       blockId:String(block.dataset.etBlockId||""),
       lineIndex,
       tabStateKey:String(op.tabStateKey||""),
       origem:"fallback_dom",
-      opType:String(op.type||""),
       opId:String(op.id||"")
     });
   }
@@ -18077,25 +15645,10 @@ function editorTextosParagrafoAtualizarCursorPorOperacao(block,opId){
     const sel=window.getSelection?.();
     if(target&&sel){
       const range=document.createRange();
-      let caretAnchor=null;
-      if(target instanceof HTMLElement&&target.matches?.("[data-et-tab-inline='true']")){
-        const next=target.nextSibling;
-        if(editorTextosParagrafoNoEhAnchorCaretInlineTab(next)){
-          caretAnchor=next;
-        }else{
-          caretAnchor=document.createTextNode("\u200B");
-          target.after(caretAnchor);
-        }
-      }
-      if(caretAnchor instanceof Text){
-        range.setStart(caretAnchor,1);
-      }else{
-        range.setStartAfter(target);
-      }
+      range.setStartAfter(target);
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
-      if(caretAnchor instanceof Text)editorTextosParagrafoLogInlineTabCaretAnchor(block,caretAnchor);
       const resolved=op?editorTextosParagrafoResolverAnchor(block,op.anchor):NaN;
       editorTextosParagrafoMemorizarUltimaPosicao(block,model,{
         textIndex:Number.isFinite(resolved)?resolved:editorTextosParagrafoObterTextoLinear(block).length,
@@ -18137,20 +15690,6 @@ function editorTextosParagrafoTabAvancar(){
       model=editorTextosGarantirModeloParagrafo(block)||model;
       capturaCursorReal=(selectionRawArg?.block===block&&selectionRawArg?.pos?selectionRawArg:null)||editorTextosParagrafoCapturarCursorReal(block,model,{log:false})||capturaCursorReal;
     }
-    const selectionAtual=window.getSelection?.();
-    editorTextosTabSeguroConverterMarcadoresLegados(block,"tab_keydown");
-    const selectionNodeAtual=selectionAtual?.focusNode||selectionAtual?.anchorNode||null;
-    const selectionElementAtual=selectionNodeAtual?.nodeType===Node.ELEMENT_NODE?selectionNodeAtual:selectionNodeAtual?.parentElement||null;
-    const richSafeContexto=editorTextosTabRichSafeAtivarSeNecessario(block,selectionAtual,{acao:"tab"});
-    if(richSafeContexto)return editorTextosTabRichSafeInserir(selectionAtual,block,richSafeContexto);
-    if(selectionElementAtual instanceof HTMLElement&&selectionElementAtual.closest?.("img,[contenteditable='false']:not([data-et-tab-inline='true'])")){
-      editorTextosDebugLog("TAB RICH ELEMENTO NAO SUPORTADO",{
-        blockId:String(block?.dataset?.etBlockId||""),
-        selectionNode:editorTextosParagrafoSerializarNodeDebug(selectionNodeAtual),
-        target:editorTextosParagrafoSerializarNodeDebug(selectionElementAtual)
-      },"tab");
-      return false;
-    }
     if(!editorTextosParagrafoEhCompativelComTabSemantica(block)){
       editorTextosParagrafoDebugEstruturado("warn","TAB FALHOU",{motivo:"bloco_incompativel",bloco:block});
       return false;
@@ -18174,7 +15713,6 @@ function editorTextosParagrafoTabAvancar(){
       xPx:indentAntes,
       origem:usarModeloAntes?"modelo":"fallback_dom"
     }:null;
-    if(posAntes)editorTextosParagrafoLogRichTabContexto(block,posAntes,modelStateAntes?.context||{});
     editorTextosParagrafoDebugEstruturado("log","TAB INPUT",{
       posAntes,
       bloco:String(block.dataset.etBlockId||block.tagName||""),
@@ -18182,7 +15720,7 @@ function editorTextosParagrafoTabAvancar(){
       modelState:modelStateAntes?.state||null,
       model:{id:String(model.id||""),ops:editorTextosParagrafoSnapshotOperacoes(model)}
     });
-    editorTextosDebugLog("TAB MODEL-FIRST ANTES",{
+    console.log("TAB MODEL-FIRST ANTES",{
       blockId:String(block.dataset.etBlockId||""),
       lineIndex:modelStateAntes?.context?.lineIndex,
       tabStateKey:modelStateAntes?.context?.tabStateKey,
@@ -18204,33 +15742,19 @@ function editorTextosParagrafoTabAvancar(){
     const domAntes=editorTextosDocumentoModelContarPadsDOM(block,modelStateAntes?.context?.tabStateKey);
     const areaUtil=editorTextosParagrafoCalcularAreaUtil(block,model);
     const tabWidthPx=Math.max(16,Number(model.defaultTabPx||32)||32);
-    const operationType=editorTextosParagrafoTipoTabPorPosicao(block,posAntes);
-    const inlineTab=operationType==="inline-tab";
-    if(inlineTab||editorTextosTabSeguroDeveUsarEspaco(block,posAntes)){
-      editorTextosDebugLog("TAB INLINE LEGADO DESATIVADO",{
-        blockId:String(block.dataset.etBlockId||""),
-        motivo:"tab_inline_redirecionado_para_tab_safe",
-        operationType,
-        textOffset:posAntes?.textOffset
-      },"tab");
-      return editorTextosTabRichSafeInserir(selectionAtual,block,{acao:"tab",modo:"tab_safe",operationType,posAntes});
-    }
-    const baseXPx=inlineTab?cursorXPx:indentAntes;
-    const nextStop=baseXPx+tabWidthPx;
+    const nextStop=indentAntes+tabWidthPx;
     if(!Number.isFinite(areaUtil)||!Number.isFinite(nextStop)){
       editorTextosParagrafoDebugEstruturado("warn","TAB FALHOU",{motivo:"medicao_invalida",contexto:{areaUtil,nextStop}});
       return false;
     }
-    const breakLine=!inlineTab&&nextStop>areaUtil;
+    const breakLine=nextStop>areaUtil;
     const targetStop=nextStop;
     const padPx=Math.max(0,Math.round(tabWidthPx));
-    const indentDepois=inlineTab?indentAntes:Math.max(0,Math.round(indentAntes+padPx));
+    const indentDepois=Math.max(0,Math.round(indentAntes+padPx));
     const opId=editorTextosParagrafoProximoIdOperacao();
     const tabOp={
       id:opId,
-      type:operationType,
       anchor:posAntes.anchor,
-      logicalTextOffset:Math.max(0,Math.round(Number(posAntes?.textOffset||0)||0)),
       targetStopPx:Math.round(targetStop),
       padPx,
       breakLine:!!breakLine
@@ -18245,28 +15769,12 @@ function editorTextosParagrafoTabAvancar(){
         editorTextosParagrafoDebugEstruturado("warn","TAB FALHOU",{motivo:"render_falhou",contexto:{blockId:String(block.dataset.etBlockId||""),opId}});
         return false;
       }
-      if(inlineTab){
-        const inlineCount=block.querySelectorAll?.(`[data-et-tab-inline='true'][data-et-tab-op="${CSS.escape(String(opId))}"]`)?.length||0;
-        if(!inlineCount){
-          console.warn("INLINE TAB MARCADOR AUSENTE APOS RENDER",{
-            blockId:String(block.dataset.etBlockId||""),
-            opId,
-            pInnerHTML:editorTextosParagrafoResumoHTML(block.innerHTML,700)
-          });
-          const fallbackOp={...(registroModelo?.op||tabOp),type:"inline-tab"};
-          editorTextosParagrafoInserirInlineTabMarcador(block,fallbackOp,posAntes?.textOffset,"fallback_pos_render");
-        }
-      }
       const cursorOk=editorTextosParagrafoAtualizarCursorPorOperacao(block, opId);
-      if(inlineTab)editorTextosParagrafoLogCursorInlineTab();
       const domDepoisRender=editorTextosDocumentoModelContarPadsDOM(block,registroModelo?.context?.tabStateKey||modelStateAntes?.context?.tabStateKey);
       editorTextosSalvarRangeAtual();
       editorTextosCfg.alterado = true;
       const blockTextDepois=editorTextosParagrafoObterTextoLinear(block);
       const textOffsetDepois=Math.max(0,Math.min(blockTextDepois.length,Math.round(Number(posAntes?.textOffset||0)||0)));
-      const posDepoisIndentPx=Math.max(0,Number(registroModelo?.state?.indentDepois??registroModelo?.state?.indentXPx??registroModelo?.state?.totalPx??indentDepois)||0);
-      const registroInlinePx=Math.max(0,Number(registroModelo?.state?.inlineTabPx??(inlineTab?editorTextosDocumentoModelCalcularInlineTabDoBloco(registroModelo?.modelBlock,registroModelo?.context?.tabStateKey):0))||0);
-      const posDepoisCursorPx=inlineTab?registroInlinePx:posDepoisIndentPx;
       const posDepois={
         ...posAntes,
         lineIndex:editorTextosParagrafoCalcularLineIndexPorOffset(block,textOffsetDepois),
@@ -18274,10 +15782,7 @@ function editorTextosParagrafoTabAvancar(){
         anchor:editorTextosParagrafoAtualizarAnchorPorIndice(block,{anchor:{}},textOffsetDepois).anchor||posAntes.anchor,
         blockTextAntes:posAntes.blockText,
         blockTextDepois,
-        indentXPx:posDepoisIndentPx,
-        cursorXPx:posDepoisCursorPx,
-        xPx:posDepoisCursorPx,
-        tabOperationType:operationType
+        xPx:Number(posAntes?.xPx||0)||0
       };
       editorTextosParagrafoMemorizarUltimaPosicao(block,model,posDepois);
 
@@ -18292,17 +15797,16 @@ function editorTextosParagrafoTabAvancar(){
         targetStopPx: Number(targetStop || 0),
         padPx: Number(padPx || 0),
         breakLine: !!breakLine,
-        operationType,
         tabOperations: editorTextosParagrafoSnapshotOperacoes(model)
       });
       editorTextosParagrafoDebugEstruturado("log","TAB RESULT",{
         posDepois,
-        operacao:{id:opId,type:operationType,targetStopPx:Number(targetStop||0),padPx:Number(padPx||0),breakLine:!!breakLine},
+        operacao:{id:opId,targetStopPx:Number(targetStop||0),padPx:Number(padPx||0),breakLine:!!breakLine},
         sucesso:!!cursorOk
       });
-      editorTextosDebugLog("DEBUG POSDEPOIS LOGO APOS RESULT", posDepois);
+      console.log("DEBUG POSDEPOIS LOGO APOS RESULT", posDepois);
       try{
-        editorTextosDebugLog("FEATURE FLAG MODELO ATIVA?", editorTextosDocumentoModelFeatureAtiva());
+        console.log("FEATURE FLAG MODELO ATIVA?", editorTextosDocumentoModelFeatureAtiva());
         if(editorTextosDocumentoModelFeatureAtiva()){
           const modelBlockId=String(block.dataset.etBlockId||"");
           editorTextosAplicarTabOperationsNoDOM(modelBlockId);
@@ -18311,61 +15815,26 @@ function editorTextosParagrafoTabAvancar(){
             lineIndex:posDepois?.lineIndex,
             textOffset:posDepois?.textOffset
           });
-          const modelIndentPx=Number(modelStateDepois?.state?.indentXPx??modelStateDepois?.state?.paragraphIndentPx??0)||0;
-          const totalInlineOps=inlineTab
-            ?editorTextosDocumentoModelOperacoesPorTabStateKey(modelStateDepois?.modelBlock,modelStateDepois?.context?.tabStateKey).filter(op=>editorTextosDocumentoModelOperacaoEhInlineTab(op)).length
-            :0;
-          const totalInlinePx=inlineTab
-            ?Math.max(0,Number(modelStateDepois?.state?.inlineTabPx??editorTextosDocumentoModelCalcularInlineTabDoBloco(modelStateDepois?.modelBlock,modelStateDepois?.context?.tabStateKey))||0)
-            :0;
-          const modelCursorPx=inlineTab?totalInlinePx:modelIndentPx;
-          editorTextosDebugLog("X MODELO CALCULADO", modelIndentPx);
+          const modelIndentPx=Number(modelStateDepois?.state?.indentXPx??modelStateDepois?.state?.xPx??editorTextosParagrafoCalcularXDoModeloPorLinha(modelBlockId,posDepois?.lineIndex)??0)||0;
+          console.log("X MODELO CALCULADO", modelIndentPx);
           if(posDepois&&typeof modelIndentPx==="number"&&!isNaN(modelIndentPx)){
-            const cursorAntesSync={
-              cursorXPx:Number(posDepois?.cursorXPx??0)||0,
-              indentXPx:Number(posDepois?.indentXPx??0)||0,
-              xPx:Number(posDepois?.xPx??0)||0
-            };
             posDepois.indentXPx=modelIndentPx;
-            posDepois.cursorXPx=modelCursorPx;
-            posDepois.xPx=modelCursorPx;
-            editorTextosDebugLog("CURSOR XPX SINCRONIZADO",{
-              antes:cursorAntesSync,
-              depois:{
-                cursorXPx:Number(posDepois?.cursorXPx??0)||0,
-                indentXPx:Number(posDepois?.indentXPx??0)||0,
-                xPx:Number(posDepois?.xPx??0)||0
-              },
-              modelIndentPx,
-              totalInlineOps,
-              totalInlinePx,
-              modelCursorPx,
-              operationType,
-              textOffset:posDepois?.textOffset
-            });
+            posDepois.cursorXPx=modelIndentPx;
+            posDepois.xPx=modelIndentPx;
             try {
-              if(inlineTab){
-                editorTextosParagrafoAtualizarCursorPorOperacao(block,opId);
-              }else{
-                editorTextosParagrafoReancorarCursorDoModelo(modelBlockId, posDepois);
-              }
+              editorTextosParagrafoReancorarCursorDoModelo(modelBlockId, posDepois);
             } catch (e) {
               if (window.DEBUG_TAB_ENGINE) {
                 console.warn("ERRO REANCORAGEM CURSOR", e);
               }
             }
-            editorTextosLiberarProtecaoCursorAposFrame();
-            editorTextosDebugLog("APOS AJUSTE MODELO", {
+            console.log("APOS AJUSTE MODELO", {
               modelIndentPx,
-              totalInlineOps,
-              totalInlinePx,
-              modelCursorPx,
-              operationType,
               cursorXPx:Number(posDepois?.cursorXPx??posDepois?.xPx??0)||0,
               indentXPx:posDepois.indentXPx
             });
           }
-          editorTextosDebugLog("TAB MODEL-FIRST DEPOIS",{
+          console.log("TAB MODEL-FIRST DEPOIS",{
             blockId:modelBlockId,
             lineIndex:modelStateDepois?.context?.lineIndex,
             tabStateKey:modelStateDepois?.context?.tabStateKey,
@@ -18373,19 +15842,15 @@ function editorTextosParagrafoTabAvancar(){
             totalPx:modelStateDepois?.state?.totalPx??modelStateDepois?.state?.xPx??0,
             textOffset:posDepois?.textOffset,
             cursorXPx:Number(posDepois?.cursorXPx??posDepois?.xPx??0)||0,
-            modelCursorPx:Number(posDepois?.cursorXPx??posDepois?.xPx??0)||0,
-            totalInlineOps:inlineTab?totalInlineOps:undefined,
-            totalInlinePx:inlineTab?totalInlinePx:undefined,
             indentAntes,
             indentDepois:modelIndentPx,
             indentXPx:modelIndentPx,
-            operationType,
             origem:modelStateDepois?.origem||"modelo",
             posDepois,
             modelState:modelStateDepois?.state||null,
             tabOperations:editorTextosParagrafoSnapshotOperacoes(model)
           });
-          editorTextosDebugLog("TAB MODEL-FIRST ACUMULO",{
+          console.log("TAB MODEL-FIRST ACUMULO",{
             blockId:modelBlockId,
             lineIndex:modelStateDepois?.context?.lineIndex,
             tabStateKey:modelStateDepois?.context?.tabStateKey,
@@ -18393,14 +15858,11 @@ function editorTextosParagrafoTabAvancar(){
             opsDepois:modelStateDepois?.state?.totalOps??modelStateDepois?.state?.indentLevel??0,
             indentAntes:registroModelo?.state?.indentAntes??indentAntes,
             indentDepois:modelIndentPx,
-            totalInlineOps:inlineTab?totalInlineOps:undefined,
-            totalInlinePx:inlineTab?totalInlinePx:undefined,
-            operationType,
             domAntes,
             domDepois:domDepoisRender
           });
           if(editorTextosParagrafoDebugEstruturadoAtivo()){
-            editorTextosDebugLog("POSICAO AJUSTADA MODELO",{
+            console.log("POSICAO AJUSTADA MODELO",{
               xAntes,
               modelIndentPx,
               diferenca:modelIndentPx-xAntes
@@ -18408,8 +15870,7 @@ function editorTextosParagrafoTabAvancar(){
           }
         }
       }catch{}
-      if(editorTextosProtegendoCursor)editorTextosLiberarProtecaoCursorAposFrame();
-      editorTextosDebugLog("POSICAO FINAL POSDEPOIS", posDepois?.xPx);
+      console.log("POSICAO FINAL POSDEPOIS", posDepois?.xPx);
 
     } catch (err) {
       editorTextosParagrafoDebugEstruturado("warn","TAB FALHOU",{motivo:"erro_execucao",contexto:{erro:err,blockId:String(block.dataset.etBlockId||"")}});
@@ -18442,7 +15903,7 @@ function editorTextosParagrafoRemoverOperacaoPorId(block,model,opId){
     op=ops[idx];
     ops.splice(idx,1);
   }
-  if(!editorTextosParagrafoRenderizarOperacoes(block,model,{origem:"shift_tab"}))return false;
+  if(!editorTextosParagrafoRenderizarOperacoes(block,model))return false;
   if(editorTextosDocumentoModelFeatureAtiva()){
     try{
       editorTextosAplicarTabOperationsNoDOM(String(block.dataset.etBlockId||""));
@@ -18454,7 +15915,6 @@ function editorTextosParagrafoRemoverOperacaoPorId(block,model,opId){
   if(Number.isFinite(cursorIndex))editorTextosParagrafoAtualizarCursorPorIndice(block,cursorIndex);
   editorTextosSalvarRangeAtual();
   editorTextosCfg.alterado=true;
-  const shiftIndentPx=Math.max(0,Number(model?.__modelFirstTabState?.indentXPx??model?.__modelFirstTabState?.xPx??model?.__modelFirstTabState?.totalPx??0)||0);
   editorTextosParagrafoLog("backspace",{
     blockId:String(block.dataset.etBlockId||""),
     removedOpId:String(opId||""),
@@ -18465,15 +15925,15 @@ function editorTextosParagrafoRemoverOperacaoPorId(block,model,opId){
     tabStateKey:remocaoModelo?.context?.tabStateKey||op?.tabStateKey||"",
     tabOperations:editorTextosParagrafoSnapshotOperacoes(model)
   });
-  editorTextosDebugLog("SHIFT_TAB MODEL-FIRST DEPOIS",{
+  console.log("SHIFT_TAB MODEL-FIRST DEPOIS",{
     blockId:String(block.dataset.etBlockId||""),
     lineIndex:remocaoModelo?.context?.lineIndex??op?.lineIndex??posAtual?.lineIndex,
     tabStateKey:remocaoModelo?.context?.tabStateKey||op?.tabStateKey||"",
     totalOps:model?.__modelFirstTabState?.totalOps??model?.__modelFirstTabState?.indentLevel??0,
     totalPx:model?.__modelFirstTabState?.totalPx??model?.__modelFirstTabState?.xPx??0,
     textOffset:cursorIndex,
-    cursorXPx:shiftIndentPx,
-    indentXPx:shiftIndentPx,
+    cursorXPx:Number(posAtual?.xPx||0)||0,
+    indentXPx:model?.__modelFirstTabState?.indentXPx??model?.__modelFirstTabState?.xPx??0,
     origem,
     removedOpId:String(opId||""),
     cursorIndex:Number(cursorIndex||0),
@@ -18498,12 +15958,6 @@ function editorTextosParagrafoTabRecuar(){
       model=editorTextosGarantirModeloParagrafo(block)||model;
       capturaCursorReal=(selectionRawArg?.block===block&&selectionRawArg?.pos?selectionRawArg:null)||editorTextosParagrafoCapturarCursorReal(block,model,{log:false})||capturaCursorReal;
     }
-    const selectionAtual=window.getSelection?.();
-    editorTextosTabSeguroConverterMarcadoresLegados(block,"shift_tab_keydown");
-    const richSafeContexto=editorTextosTabRichSafeAtivarSeNecessario(block,selectionAtual,{acao:"shift_tab"});
-    if(richSafeContexto)return editorTextosTabRichSafeRemover(selectionAtual,block,richSafeContexto);
-    const safeShift=editorTextosTabRichSafeRemover(selectionAtual,block,{acao:"shift_tab",modo:"tab_safe",requireRemoval:true});
-    if(safeShift)return true;
     if(!editorTextosParagrafoEhCompativelComTabSemantica(block))return false;
     editorTextosParagrafoReancorarOperacoesDoBloco(block,model,{forceLog:true});
     const posAntes=(capturaCursorReal?.block===block&&capturaCursorReal?.pos)
@@ -18513,7 +15967,7 @@ function editorTextosParagrafoTabRecuar(){
       lineIndex:posAntes?.lineIndex,
       textOffset:posAntes?.textOffset
     });
-    editorTextosDebugLog("SHIFT_TAB MODEL-FIRST ANTES",{
+    console.log("SHIFT_TAB MODEL-FIRST ANTES",{
       blockId:String(block.dataset.etBlockId||""),
       lineIndex:modelStateAntes?.context?.lineIndex,
       tabStateKey:modelStateAntes?.context?.tabStateKey,
@@ -18553,44 +16007,14 @@ function editorTextosParagrafoBackspaceSemantico(){
 }
 function editorTextosResolverTamanhoFonteUi(valor){
   const raw=String(valor||"").trim().toLowerCase();
-  editorTextosDebugLog("EDITOR FONT SIZE DROPDOWN MAP REQUEST",{
-    valorRaw:String(valor??""),
-    valorNormalizado:raw
-  },"render");
   if(!raw)return"";
-  if(EDITOR_TEXTOS_SIZE_CMD_TO_UI[raw]){
-    const mapped=String(EDITOR_TEXTOS_SIZE_CMD_TO_UI[raw]||"");
-    editorTextosDebugLog("EDITOR FONT SIZE DROPDOWN MAP RESULT",{
-      origem:"legacy_command_scale",
-      entrada:raw,
-      resultado:mapped
-    },"render");
-    return mapped;
+  if(EDITOR_TEXTOS_SIZE_CMD_TO_UI[raw])return EDITOR_TEXTOS_SIZE_CMD_TO_UI[raw];
+  let num=Number.parseFloat(raw);
+  if(!Number.isFinite(num)){
+    const match=raw.match(/([\d.]+)\s*px/);
+    if(match)num=Number.parseFloat(match[1]);
   }
-  let num=Number.NaN;
-  let unidade="desconhecida";
-  const pxMatch=raw.match(/([\d.]+)\s*px\b/);
-  const ptMatch=raw.match(/([\d.]+)\s*pt\b/);
-  if(pxMatch){
-    num=Number.parseFloat(pxMatch[1]);
-    unidade="px";
-  }else if(ptMatch){
-    const pt=Number.parseFloat(ptMatch[1]);
-    num=Number.isFinite(pt)?(pt*96)/72:Number.NaN;
-    unidade="pt";
-  }else{
-    num=Number.parseFloat(raw);
-    unidade="numero";
-  }
-  if(!Number.isFinite(num)||num<=0){
-    editorTextosDebugLog("EDITOR FONT SIZE DROPDOWN MAP RESULT",{
-      origem:unidade,
-      entrada:raw,
-      resultado:"",
-      motivo:"numero_invalido"
-    },"render");
-    return"";
-  }
+  if(!Number.isFinite(num)||num<=0)return"";
   const alvo=Math.round(num);
   let melhor=EDITOR_TEXTOS_SIZE_OPCOES[0];
   let dist=Math.abs(melhor-alvo);
@@ -18601,39 +16025,7 @@ function editorTextosResolverTamanhoFonteUi(valor){
       dist=d;
     }
   }
-  const resultado=String(melhor);
-  editorTextosDebugLog("EDITOR FONT SIZE DROPDOWN MAP RESULT",{
-    origem:unidade,
-    entrada:raw,
-    alvoPx:alvo,
-    resultado
-  },"render");
-  return resultado;
-}
-function editorTextosFonteEstadoMistoSelecao(){
-  try{
-    const sel=window.getSelection?.();
-    const range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    if(!range||range.collapsed||!editorTextosRangeDentroEditor(range))return{multi:false,mixedFamily:false,mixedSize:false};
-    const blocks=editorTextosFonteBlocosDaSelecao(range);
-    if(blocks.length<=1)return{multi:false,mixedFamily:false,mixedSize:false};
-    const families=new Set();
-    const sizes=new Set();
-    blocks.forEach(block=>{
-      const style=window.getComputedStyle?.(block);
-      const family=editorTextosNormalizarFonteNome(style?.fontFamily||"");
-      const size=editorTextosResolverTamanhoFonteUi(style?.fontSize||"");
-      if(family)families.add(family.toLowerCase());
-      if(size)sizes.add(size);
-    });
-    return{
-      multi:true,
-      blockIds:blocks.map(block=>String(block?.dataset?.etBlockId||block?.id||block?.tagName||"")),
-      mixedFamily:families.size>1,
-      mixedSize:sizes.size>1
-    };
-  }catch{}
-  return{multi:false,mixedFamily:false,mixedSize:false};
+  return String(melhor);
 }
 function editorTextosAtualizarVisualComboCor(){
   if(!(editorTextosCfg?.color instanceof HTMLSelectElement))return;
@@ -18664,13 +16056,6 @@ function editorTextosSincronizarToolbarFormato(force=false){
   editorTextosSincronizarEstruturaParagrafoAtual();
   const focoEl=editorTextosObterElementoSelecao()||editorTextosCfg.page;
   const estilo=focoEl?window.getComputedStyle(focoEl):null;
-  editorTextosDebugLog("EDITOR FONT SIZE TOOLBAR SYNC REQUEST",{
-    force:!!force,
-    selecaoDentro:!!dentro,
-    ativoNoEditor:!!ativoNoEditor,
-    focoTag:String(focoEl?.tagName||"").toLowerCase(),
-    focoFontSize:String(estilo?.fontSize||"")
-  },"render");
   let bold=editorTextosQueryCommandState("bold");
   let italic=editorTextosQueryCommandState("italic");
   let underline=editorTextosQueryCommandState("underline");
@@ -18716,95 +16101,32 @@ function editorTextosSincronizarToolbarFormato(force=false){
     const viaCss=editorTextosNormalizarFonteNome(estilo?.fontFamily||"");
     return viaCss||"Arial";
   })();
-  const pendingAtivo=editorTextosPendingStyleAtivo();
-  const selAtual=window.getSelection?.();
-  const rangeAtual=selAtual&&selAtual.rangeCount?selAtual.getRangeAt(0):null;
-  const pendingAplicavel=!!(pendingAtivo&&rangeAtual&&rangeAtual.collapsed&&editorTextosRangeDentroEditor(rangeAtual));
-  const pendingVisualAtivo=!!pendingAtivo;
-  if(pendingVisualAtivo){
-    editorTextosDebugLog("EDITOR TOOLBAR SYNC SKIPPED_FOR_PENDING",{
-      pendingAplicavel,
-      pendingInlineStyle:editorTextosCfg?.pendingInlineStyle||null,
-      blockSignature:String(editorTextosCfg?.pendingInlineStyleBlockSignature||"")
-    },"render");
-  }
-  const fontMixedState=editorTextosFonteEstadoMistoSelecao();
-  const fontAtualEfetivo=pendingVisualAtivo&&String(editorTextosCfg?.pendingInlineStyle?.fontFamily||"").trim()
-    ?editorTextosNormalizarFonteNome(editorTextosCfg.pendingInlineStyle.fontFamily)
-    :fontAtual;
   if(editorTextosCfg.font instanceof HTMLSelectElement){
-    if(fontMixedState.mixedFamily){
-      editorTextosCfg.font.selectedIndex=-1;
-    }else{
-      const opts=[...editorTextosCfg.font.options];
-      const alvo=fontAtualEfetivo.toLowerCase();
-      const match=opts.find(opt=>String(opt.value||"").trim().toLowerCase()===alvo)
-        ||opts.find(opt=>String(opt.textContent||"").trim().toLowerCase()===alvo);
-      if(match&&editorTextosCfg.font.value!==match.value){
-        editorTextosCfg.font.value=match.value;
-      }
+    const opts=[...editorTextosCfg.font.options];
+    const alvo=fontAtual.toLowerCase();
+    const match=opts.find(opt=>String(opt.value||"").trim().toLowerCase()===alvo)
+      ||opts.find(opt=>String(opt.textContent||"").trim().toLowerCase()===alvo);
+    if(match&&editorTextosCfg.font.value!==match.value){
+      editorTextosCfg.font.value=match.value;
     }
   }
-  const tamanhoAtualBase=(()=>{
-    const cssFontSizeRaw=String(estilo?.fontSize||"").trim();
-    const viaCss=editorTextosResolverTamanhoFonteUi(cssFontSizeRaw);
-    const cmdRaw=editorTextosQueryCommandValue("fontSize");
-    const viaCmd=editorTextosResolverTamanhoFonteUi(cmdRaw);
-    editorTextosDebugLog("EDITOR FONT SIZE CURRENT STYLE READ",{
-      cssFontSizeRaw,
-      cssMapped:viaCss,
-      cmdRaw:String(cmdRaw||""),
-      cmdMapped:viaCmd
-    },"render");
-    if(viaCss){
-      editorTextosDebugLog("EDITOR FONT SIZE TOOLBAR SOURCE DECISION",{
-        fonte:"css_real",
-        cssFontSizeRaw,
-        cssMapped:viaCss,
-        cmdRaw:String(cmdRaw||""),
-        cmdMapped:viaCmd
-      },"render");
-      return viaCss;
-    }
-    editorTextosDebugLog("EDITOR FONT SIZE TOOLBAR SOURCE DECISION",{
-      fonte:"fallback_padrao",
-      cssFontSizeRaw,
-      cssMapped:viaCss,
-      cmdRaw:String(cmdRaw||""),
-      cmdMapped:viaCmd,
-      fallback:"11"
-    },"render");
-    return "11";
+  const tamanhoAtual=(()=>{
+    const viaCmd=editorTextosResolverTamanhoFonteUi(editorTextosQueryCommandValue("fontSize"));
+    if(viaCmd)return viaCmd;
+    const viaCss=editorTextosResolverTamanhoFonteUi(estilo?.fontSize||"");
+    return viaCss||"11";
   })();
-  const tamanhoAtual=pendingVisualAtivo&&String(editorTextosCfg?.pendingInlineStyle?.fontSize||"").trim()
-    ?editorTextosResolverTamanhoFonteUi(editorTextosCfg.pendingInlineStyle.fontSize)||tamanhoAtualBase
-    :tamanhoAtualBase;
   if(editorTextosCfg.size instanceof HTMLSelectElement){
-    if(fontMixedState.mixedSize){
-      editorTextosCfg.size.selectedIndex=-1;
-    }else{
-      const has=[...editorTextosCfg.size.options].some(opt=>String(opt.value||"")===tamanhoAtual);
-      if(has&&editorTextosCfg.size.value!==tamanhoAtual){
-        editorTextosCfg.size.value=tamanhoAtual;
-      }
+    const has=[...editorTextosCfg.size.options].some(opt=>String(opt.value||"")===tamanhoAtual);
+    if(has&&editorTextosCfg.size.value!==tamanhoAtual){
+      editorTextosCfg.size.value=tamanhoAtual;
     }
   }
-  const corAtualBase=(()=>{
+  const corAtual=(()=>{
     const viaCmd=editorTextosCorParaHex(editorTextosQueryCommandValue("foreColor"));
     if(viaCmd)return viaCmd;
     return editorTextosCorParaHex(estilo?.color||"")||"#000000";
   })();
-  const corAtual=pendingVisualAtivo&&String(editorTextosCfg?.pendingInlineStyle?.color||"").trim()
-    ?editorTextosCorParaHex(editorTextosCfg.pendingInlineStyle.color)||corAtualBase
-    :corAtualBase;
-  if(pendingVisualAtivo&&String(editorTextosCfg?.pendingInlineStyle?.color||"").trim()){
-    editorTextosDebugLog("EDITOR COLOR TOOLBAR SYNC SKIPPED_FOR_PENDING",{
-      pendingColor:String(editorTextosCfg.pendingInlineStyle.color||""),
-      corAtualBase,
-      corAtual,
-      pendingAplicavel
-    },"render");
-  }
   if(editorTextosCfg.color instanceof HTMLSelectElement){
     const opts=[...editorTextosCfg.color.options];
     const match=opts.find(opt=>String(opt.value||"").trim().toLowerCase()===corAtual);
@@ -18816,40 +16138,6 @@ function editorTextosSincronizarToolbarFormato(force=false){
   if(editorTextosCfg.colorSwatch instanceof HTMLElement){
     editorTextosCfg.colorSwatch.style.backgroundColor=corAtual||"#000000";
   }
-  editorTextosDebugLog("EDITOR FONT SIZE TOOLBAR SYNC RESULT",{
-    tamanhoAtual,
-    mixedSize:!!fontMixedState.mixedSize,
-    selectSizeValue:String(editorTextosCfg?.size?.value||""),
-    selectSizeIndex:Number(editorTextosCfg?.size?.selectedIndex??-1)
-  },"render");
-  editorTextosDebugLog("EDITOR CURRENT INLINE STYLE SYNC",{
-    pendingAtivo:!!pendingAtivo,
-    pendingAplicavel:!!pendingAplicavel,
-    pendingInlineStyle:editorTextosCfg?.pendingInlineStyle||null,
-    fontAtual:fontAtualEfetivo,
-    tamanhoAtual,
-    corAtual
-  },"render");
-  editorTextosDebugLog("EDITOR FONT DROPDOWN STATE AFTER",{
-    ...editorTextosFonteDropdownState(),
-    origem:"toolbar_sync",
-    mixedFamily:!!fontMixedState.mixedFamily,
-    mixedSize:!!fontMixedState.mixedSize,
-    fontAtual:fontAtualEfetivo,
-    tamanhoAtual
-  },"render");
-  editorTextosDebugLog("EDITOR COLOR TOOLBAR SYNC APPLIED",{
-    pendingVisualAtivo,
-    pendingColor:String(editorTextosCfg?.pendingInlineStyle?.color||""),
-    corAtual
-  },"render");
-  editorTextosDebugLog("EDITOR TOOLBAR SYNC APPLIED",{
-    pendingVisualAtivo,
-    pendingAplicavel,
-    fontAtual:fontAtualEfetivo,
-    tamanhoAtual,
-    corAtual
-  },"render");
 }
 function editorTextosAgendarSincronizarToolbar(force=false){
   if(!editorTextosCfg)return;
@@ -18943,54 +16231,8 @@ function editorTextosEnsureUI(){
     .editor-textos-ruler-scale .drag-marker.active::after{background:#1f2b3a}
     .editor-textos-ruler-scale .drag-guide{position:absolute;top:0;bottom:0;width:1px;background:#2d3f54;opacity:.42;pointer-events:none;z-index:3}
     .editor-textos-ruler-line{position:absolute;left:24px;right:0;top:22px;height:12px;border-top:2px solid #2f2f2f;background:#efefef}
-    .editor-textos-work{flex:1;padding:18px 24px 18px 32px;overflow:auto;background:#aeb4bd}
-    .editor-textos-work.editor-textos-work-paginated{background:linear-gradient(180deg,#b8bec7 0%,#adb4be 100%)}
-    .editor-textos-page{
-      width:860px;min-height:var(--editor-page-height,1060px);margin:0 auto;background:#fff;border:1px solid #888;padding:22px;outline:none;box-sizing:border-box;color:#000;line-height:1.05;
-      box-shadow:0 10px 26px rgba(24,34,48,.16),0 2px 8px rgba(24,34,48,.10);
-      position:relative;
-      --editor-page-height:1060px;
-      --editor-page-gap:24px;
-      --editor-page-border-top:1px;
-      --editor-page-border-bottom:1px;
-      --editor-page-padding-top:22px;
-      --editor-page-padding-bottom:22px;
-      --editor-page-padding-left:22px;
-      --editor-page-padding-right:22px;
-    }
-    .editor-textos-page [data-editor-page-break="1"]{
-      display:block;
-      height:calc(
-        var(--editor-page-break-remaining,0px)
-        + var(--editor-page-border-bottom,0px)
-        + var(--editor-page-gap,24px)
-        + var(--editor-page-border-top,0px)
-        + var(--editor-page-next-padding-top,0px)
-      );
-      margin:0 calc(-1 * var(--editor-page-padding-right,22px)) 0 calc(-1 * var(--editor-page-padding-left,22px));
-      border:0;
-      pointer-events:none;
-      user-select:none;
-      break-inside:avoid;
-      background-color:#fff;
-      background:
-        linear-gradient(
-          to bottom,
-          transparent 0,
-          transparent calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px)),
-          rgba(109,120,134,.18) calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px)),
-          rgba(109,120,134,.08) calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + 3px),
-          #aeb4bd calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + 3px),
-          #aeb4bd calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px) - 3px),
-          rgba(109,120,134,.08) calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px) - 3px),
-          rgba(109,120,134,.18) calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px)),
-          #8d959f calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px)),
-          rgba(24,34,48,.08) calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px) + var(--editor-page-border-top,0px)),
-          rgba(24,34,48,.03) calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px) + var(--editor-page-border-top,0px) + 3px),
-          transparent calc(var(--editor-page-break-remaining,0px) + var(--editor-page-border-bottom,0px) + var(--editor-page-gap,24px) + var(--editor-page-border-top,0px) + 6px),
-          transparent 100%
-        );
-    }
+    .editor-textos-work{flex:1;padding:10px 24px 10px 32px;overflow:auto;background:#b8b8b8}
+    .editor-textos-page{width:860px;min-height:1060px;margin:0 auto;background:#fff;border:1px solid #888;padding:22px;outline:none;box-sizing:border-box;color:#000;line-height:1.05}
     .editor-textos-page p,
     .editor-textos-page div,
     .editor-textos-page li,
@@ -19002,16 +16244,6 @@ function editorTextosEnsureUI(){
     .editor-textos-page h6,
     .editor-textos-page blockquote,
     .editor-textos-page pre{margin:0;line-height:1.05}
-    .editor-textos-page [data-editor-break-leading-empty="1"]{
-      margin:0 !important;
-      padding:0 !important;
-      border:0 !important;
-      min-height:0 !important;
-      height:0 !important;
-      line-height:0 !important;
-      font-size:0 !important;
-      overflow:hidden !important;
-    }
     .editor-textos-page p,
     .editor-textos-page div,
     .editor-textos-page li,
@@ -19086,28 +16318,14 @@ function editorTextosEnsureUI(){
     .editor-textos-new-option:last-of-type{margin-bottom:8px}
     .editor-textos-new-list{width:100%;height:112px;border:1px solid #b9c4d3;font:12px Tahoma,sans-serif;box-sizing:border-box}
     .editor-textos-new-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:10px}
-    .editor-textos-saveas-modal{width:min(440px,94vw);background:#f6f6f4;border:1px solid #bfc9d6;padding:10px;box-sizing:border-box}
-    .editor-textos-saveas-group{border:1px solid #c7ced8;background:#fff;padding:10px}
-    .editor-textos-saveas-row{display:grid;grid-template-columns:126px 1fr;gap:8px;align-items:center;margin-bottom:8px}
-    .editor-textos-saveas-row:last-child{margin-bottom:0}
-    .editor-textos-saveas-row label{white-space:nowrap}
-    .editor-textos-saveas-row input,.editor-textos-saveas-row select{width:100%;height:26px;border:1px solid #b9c4d3;padding:0 6px;box-sizing:border-box;background:#fff;font:12px Tahoma,sans-serif}
-    .editor-textos-saveas-preview{margin-top:8px;padding:6px 8px;border:1px solid #d8dee8;background:#f7f9fc;color:#334a66;word-break:break-word}
-    .editor-textos-saveas-preview .lbl{color:#4d5f79;margin-right:6px}
-    .editor-textos-saveas-error{margin-top:8px;min-height:16px;color:#b3261e}
-    .editor-textos-saveas-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:10px}
-    .editor-textos-merge-modal{width:min(700px,96vw);background:#f6f6f4;border:1px solid #bfc9d6;padding:10px;box-sizing:border-box}
+    .editor-textos-merge-modal{width:min(560px,94vw);background:#f6f6f4;border:1px solid #bfc9d6;padding:10px;box-sizing:border-box}
     .editor-textos-merge-group{border:1px solid #c7ced8;background:#fff;padding:8px}
     .editor-textos-merge-group label{display:block;margin-bottom:6px}
     .editor-textos-merge-category{width:100%;height:24px;border:1px solid #b9c4d3;padding:0 6px;box-sizing:border-box;background:#fff;font:12px Tahoma,sans-serif;margin-bottom:8px}
     .editor-textos-merge-grid{border:1px solid #cfd8e3;height:280px;overflow:auto;background:#fff}
     .editor-textos-merge-grid table{width:100%;border-collapse:collapse;table-layout:fixed}
-    .editor-textos-merge-grid th,.editor-textos-merge-grid td{padding:6px 8px;border-bottom:1px solid #edf1f6;vertical-align:top}
+    .editor-textos-merge-grid th,.editor-textos-merge-grid td{padding:4px 6px;border-bottom:1px solid #edf1f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .editor-textos-merge-grid th{text-align:left;background:#f2f6fb}
-    .editor-textos-merge-grid th.col-campo{width:46%}
-    .editor-textos-merge-grid th.col-descricao{width:54%}
-    .editor-textos-merge-field-main{font:600 12px Tahoma,sans-serif;color:#1f2f45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .editor-textos-merge-field-token{font:11px Tahoma,sans-serif;color:#607289;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .editor-textos-merge-grid tr.selected{background:#d9e8fb}
     .editor-textos-merge-grid tr.empty td{text-align:center;color:#5f6f84}
     .editor-textos-merge-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:10px}
@@ -19398,32 +16616,6 @@ function editorTextosEnsureUI(){
         </div>
       </div>
     </div>
-    <div id="editor-textos-saveas-backdrop" class="cad-modal-backdrop hidden" tabindex="-1">
-      <div class="editor-textos-saveas-modal">
-        <div class="modal-header"><div class="modal-title">Salvar como</div></div>
-        <div class="editor-textos-saveas-group">
-          <div class="editor-textos-saveas-row">
-            <label for="editor-textos-saveas-nome">Nome do arquivo/modelo:</label>
-            <input id="editor-textos-saveas-nome" type="text" autocomplete="off">
-          </div>
-          <div class="editor-textos-saveas-row">
-            <label for="editor-textos-saveas-tipo">Tipo de arquivo:</label>
-            <select id="editor-textos-saveas-tipo">
-              <option value=".mod">.MOD (modelo editável principal)</option>
-              <option value=".rtf">.RTF (texto rico editável)</option>
-              <option value=".txt">.TXT (texto simples editável)</option>
-              <option value=".pdf">PDF (exportação não editável)</option>
-            </select>
-          </div>
-          <div class="editor-textos-saveas-preview"><span class="lbl">Nome final:</span><strong id="editor-textos-saveas-preview">-</strong></div>
-          <div id="editor-textos-saveas-error" class="editor-textos-saveas-error"></div>
-        </div>
-        <div class="editor-textos-saveas-actions">
-          <button id="editor-textos-saveas-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Salvar</button>
-          <button id="editor-textos-saveas-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancelar</button>
-        </div>
-      </div>
-    </div>
     <div id="editor-textos-merge-backdrop" class="cad-modal-backdrop hidden">
       <div class="editor-textos-merge-modal">
         <div class="modal-header"><div class="modal-title">Insere campo de mesclagem</div></div>
@@ -19432,7 +16624,7 @@ function editorTextosEnsureUI(){
           <select id="editor-textos-merge-category" class="editor-textos-merge-category"></select>
           <div class="editor-textos-merge-grid">
             <table>
-              <thead><tr><th class="col-campo">Campo</th><th class="col-descricao">Descrição</th></tr></thead>
+              <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
               <tbody id="editor-textos-merge-tbody"></tbody>
             </table>
           </div>
@@ -19886,13 +17078,6 @@ function editorTextosEnsureUI(){
     newType:newTypeSelect,
     newOk:document.getElementById("editor-textos-new-ok"),
     newCancelar:document.getElementById("editor-textos-new-cancelar"),
-    saveAsBackdrop:document.getElementById("editor-textos-saveas-backdrop"),
-    saveAsNome:document.getElementById("editor-textos-saveas-nome"),
-    saveAsTipo:document.getElementById("editor-textos-saveas-tipo"),
-    saveAsPreview:document.getElementById("editor-textos-saveas-preview"),
-    saveAsError:document.getElementById("editor-textos-saveas-error"),
-    saveAsOk:document.getElementById("editor-textos-saveas-ok"),
-    saveAsCancelar:document.getElementById("editor-textos-saveas-cancelar"),
     mergeBackdrop:document.getElementById("editor-textos-merge-backdrop"),
     mergeCategory:document.getElementById("editor-textos-merge-category"),
     mergeTbody:document.getElementById("editor-textos-merge-tbody"),
@@ -20039,7 +17224,6 @@ function editorTextosEnsureUI(){
     signBridgeCerts:[],
     signBridgeSelectedThumbprint:"",
     imagePending:null,
-    saveAsResolve:null,
       toolbarSyncScheduled:false,
       toolbarSelectionHandler:null,
       documentModelFeatureEnabled:false,
@@ -20055,10 +17239,6 @@ function editorTextosEnsureUI(){
       paragraphModels:new Map(),
       paragraphSeq:0,
       paragraphTabOpSeq:0
-      ,pendingInlineStyle:{color:"",fontFamily:"",fontSize:""},
-      lastKnownPendingInlineStyle:{color:"",fontFamily:"",fontSize:""},
-      pendingInlineStyleSelectionSignature:"",
-      pendingInlineStyleBlockSignature:""
   };
   editorTextosDocumentoModelAtivar();
   if(editorTextosCfg.openTipo){
@@ -20120,19 +17300,12 @@ function editorTextosEnsureUI(){
     editorTextosAgendarSincronizarToolbar();
   };
   const markDirty=()=>{if(editorTextosCfg.alterado)return;editorTextosCfg.alterado=true;editorTextosCfg.status.textContent="Alteracoes pendentes...";};
-  editorTextosCfg.page.addEventListener("beforeinput",ev=>editorTextosParagrafoProcessarInputInlineTab(ev));
-  editorTextosCfg.page.addEventListener("beforeinput",ev=>editorTextosPaginaRegistrarMutacao(ev));
   editorTextosCfg.page.addEventListener("beforeinput",ev=>editorTextosParagrafoAtualizarCursorTextualPorEvento(ev));
-  editorTextosCfg.page.addEventListener("beforeinput",ev=>editorTextosPendingStyleAplicarNoBeforeInput(ev));
-  editorTextosCfg.page.addEventListener("input",ev=>editorTextosParagrafoLogInputInlineTabApos(ev));
   editorTextosCfg.page.addEventListener("input",ev=>editorTextosParagrafoAtualizarCursorTextualPorEvento(ev));
-  editorTextosCfg.page.addEventListener("input",()=>editorTextosPendingStyleSyncComCursor("input"));
   editorTextosCfg.page.addEventListener("input",markDirty);
-  editorTextosCfg.page.addEventListener("input",()=>{editorTextosCfg.pageLayoutDirty=true;});
   editorTextosCfg.page.addEventListener("input",()=>editorTextosAgendarSincronizarToolbar());
   editorTextosCfg.page.addEventListener("input",()=>editorTextosSincronizarEstruturaParagrafoAtual());
   editorTextosCfg.page.addEventListener("input",()=>editorTextosDocumentoModelAgendarAtualizacao(50));
-  editorTextosCfg.page.addEventListener("input",()=>editorTextosAgendarAtualizarLayoutPaginado(60,{reason:"input"}));
   editorTextosCfg.page.addEventListener("compositionstart",()=>{
     if(!editorTextosCfg)return;
     editorTextosCfg.documentModelComposing=true;
@@ -20140,51 +17313,37 @@ function editorTextosEnsureUI(){
   editorTextosCfg.page.addEventListener("compositionend",()=>{
     if(!editorTextosCfg)return;
     editorTextosCfg.documentModelComposing=false;
-    editorTextosCfg.pageLayoutDirty=true;
     editorTextosDocumentoModelAgendarAtualizacao(50);
-    editorTextosAgendarAtualizarLayoutPaginado(60,{reason:"compositionend"});
   });
   editorTextosCfg.page.addEventListener("mousemove",editorTextosTabelaHoverMove);
   editorTextosCfg.page.addEventListener("mouseleave",editorTextosTabelaHoverLeave);
   editorTextosCfg.page.addEventListener("mousedown",editorTextosTabelaMouseDown);
   editorTextosCfg.page.addEventListener("mouseup",()=>{
     editorTextosSalvarRangeAtual();
-    editorTextosCorSelecaoSnapshotSalvar("mouseup");
-    editorTextosMergeFieldSnapshotSalvar("mouseup");
     editorTextosParagrafoAtualizarCursorTextualPorEvento({type:"mouseup",target:editorTextosCfg.page});
     editorTextosSincronizarEstruturaParagrafoAtual();
     editorTextosAgendarSincronizarToolbar();
     editorTextosDocumentoModelAgendarAtualizacao(50);
-    editorTextosPendingStyleSyncComCursor("mouseup");
   });
   editorTextosCfg.page.addEventListener("dblclick",editorTextosTabelaDoubleClick);
   editorTextosCfg.page.addEventListener("keydown",editorTextosPageKeyDown);
   editorTextosCfg.page.addEventListener("click",editorTextosImagemPageClick);
   editorTextosCfg.page.addEventListener("click",()=>{
     editorTextosSalvarRangeAtual();
-    editorTextosCorSelecaoSnapshotSalvar("click");
-    editorTextosMergeFieldSnapshotSalvar("click");
     editorTextosParagrafoAtualizarCursorTextualPorEvento({type:"click",target:editorTextosCfg.page});
     editorTextosSincronizarEstruturaParagrafoAtual();
     editorTextosAgendarSincronizarToolbar();
-    editorTextosPendingStyleSyncComCursor("click");
   });
   editorTextosCfg.page.addEventListener("keyup",editorTextosImagemAtualizarOverlay);
   editorTextosCfg.page.addEventListener("keyup",ev=>{
     editorTextosSalvarRangeAtual();
-    editorTextosCorSelecaoSnapshotSalvar("keyup");
-    editorTextosMergeFieldSnapshotSalvar("keyup");
     editorTextosParagrafoAtualizarCursorTextualPorEvento(ev);
     editorTextosSincronizarEstruturaParagrafoAtual();
     editorTextosAgendarSincronizarToolbar();
     editorTextosDocumentoModelAgendarAtualizacao(50);
-    editorTextosPendingStyleSyncComCursor("keyup");
   });
-  editorTextosCfg.page.addEventListener("blur",()=>{editorTextosCorSelecaoSnapshotSalvar("blur");editorTextosMergeFieldSnapshotSalvar("blur")},true);
   editorTextosCfg.page.addEventListener("focus",()=>{
     editorTextosSalvarRangeAtual();
-    editorTextosCorSelecaoSnapshotSalvar("focus");
-    editorTextosMergeFieldSnapshotSalvar("focus");
     editorTextosParagrafoAtualizarCursorTextualPorEvento({type:"focus",target:editorTextosCfg.page});
     editorTextosSincronizarEstruturaParagrafoAtual();
     editorTextosAgendarSincronizarToolbar(true);
@@ -20196,10 +17355,8 @@ function editorTextosEnsureUI(){
     editorTextosSalvarRangeAtual();
     editorTextosSincronizarEstruturaParagrafoAtual();
     editorTextosAgendarSincronizarToolbar();
-    editorTextosPendingStyleSyncComCursor("selectionchange");
   };
   document.addEventListener("selectionchange",editorTextosCfg.toolbarSelectionHandler);
-  document.addEventListener("selectionchange",()=>{editorTextosCorSelecaoSnapshotSalvar("selectionchange");editorTextosFonteSelecaoSnapshotSalvar("selectionchange");editorTextosMergeFieldSnapshotSalvar("selectionchange")});
   if(editorTextosCfg.rulerScale){
     editorTextosCfg.rulerScale.addEventListener("mousedown",editorTextosReguaMouseDown);
     editorTextosCfg.rulerScale.addEventListener("dblclick",editorTextosReguaDoubleClick);
@@ -20330,29 +17487,21 @@ function editorTextosEnsureUI(){
   if(editorTextosCfg.btnTabela)editorTextosCfg.btnTabela.addEventListener("click",editorTextosAbrirModalTabela);
   if(editorTextosCfg.btnPagina)editorTextosCfg.btnPagina.addEventListener("click",editorTextosPaginaAtual);
   if(editorTextosCfg.btnGerarPdf)editorTextosCfg.btnGerarPdf.addEventListener("click",async()=>{await editorTextosGerarPdfParaAssinaturaAtual()});
-  editorTextosCfg.font.addEventListener("pointerdown",()=>{try{editorTextosPendingStyleMarcarInteracaoToolbar("font_pointerdown");editorTextosFonteSelecaoSnapshotSalvar("font_pointerdown")||editorTextosSalvarRangeAtual()}catch{}});
-  editorTextosCfg.font.addEventListener("mousedown",()=>{try{editorTextosPendingStyleMarcarInteracaoToolbar("font_mousedown");editorTextosFonteSelecaoSnapshotSalvar("font_mousedown")||editorTextosSalvarRangeAtual()}catch{}});
   editorTextosCfg.font.addEventListener("change",()=>{
     if(!editorTextosCfg?.font)return;
-    editorTextosAplicarEstiloFonteSelecao({fontFamily:editorTextosCfg.font.value||"Tahoma"});
+    runCmd("fontName",editorTextosCfg.font.value||"Tahoma");
   });
-  editorTextosCfg.size.addEventListener("pointerdown",()=>{try{editorTextosPendingStyleMarcarInteracaoToolbar("font_size_pointerdown");editorTextosFonteSelecaoSnapshotSalvar("font_size_pointerdown")||editorTextosSalvarRangeAtual()}catch{}});
-  editorTextosCfg.size.addEventListener("mousedown",()=>{try{editorTextosPendingStyleMarcarInteracaoToolbar("font_size_mousedown");editorTextosFonteSelecaoSnapshotSalvar("font_size_mousedown")||editorTextosSalvarRangeAtual()}catch{}});
   editorTextosCfg.size.addEventListener("change",()=>{
     if(!editorTextosCfg?.size)return;
-    editorTextosAplicarEstiloFonteSelecao({fontSize:editorTextosCfg.size.value||"11"});
+    runCmd("fontSize",EDITOR_TEXTOS_SIZE_UI_TO_CMD[String(editorTextosCfg.size.value||"11")]||"2");
   });
-  editorTextosCfg.color.addEventListener("pointerdown",()=>{try{editorTextosPendingStyleMarcarInteracaoToolbar("color_pointerdown");editorTextosCorSelecaoSnapshotSalvar("color_pointerdown")||editorTextosSalvarRangeAtual()}catch{}});
-  editorTextosCfg.color.addEventListener("mousedown",()=>{try{editorTextosPendingStyleMarcarInteracaoToolbar("color_mousedown");editorTextosCorSelecaoSnapshotSalvar("color_mousedown")||editorTextosSalvarRangeAtual()}catch{}});
   editorTextosCfg.color.addEventListener("change",()=>{
     if(!editorTextosCfg?.color)return;
     const color=editorTextosCfg.color.value||"#000000";
-    editorTextosCorAplicarOuPending(color);
+    runCmd("foreColor",color);
     if(editorTextosCfg.colorSwatch)editorTextosCfg.colorSwatch.style.backgroundColor=color;
     editorTextosAtualizarVisualComboCor();
   });
-  editorTextosCfg.btnInserirCampo.addEventListener("pointerdown",()=>{try{editorTextosMergeFieldSnapshotSalvar("merge_button_pointerdown")||editorTextosSalvarRangeAtual()}catch{}});
-  editorTextosCfg.btnInserirCampo.addEventListener("mousedown",()=>{try{editorTextosMergeFieldSnapshotSalvar("merge_button_mousedown")||editorTextosSalvarRangeAtual()}catch{}});
   editorTextosCfg.btnInserirCampo.addEventListener("click",editorTextosAbrirModalMesclagem);
   editorTextosCfg.btnNovo.addEventListener("click",()=>{if(editorTextosConfirmarDescartar())editorTextosAbrirModalNovo()});
   editorTextosCfg.openTbody.addEventListener("click",ev=>{
@@ -20467,34 +17616,6 @@ function editorTextosEnsureUI(){
       if(ev.target?.closest?.("button"))return;
       ev.preventDefault();
       await editorTextosNovoExecutar();
-    }
-  });
-  if(editorTextosCfg.saveAsNome)editorTextosCfg.saveAsNome.addEventListener("input",()=>{
-    editorTextosSaveAsLimparErro();
-    editorTextosSaveAsAtualizarPreview();
-  });
-  if(editorTextosCfg.saveAsTipo)editorTextosCfg.saveAsTipo.addEventListener("change",editorTextosSaveAsAtualizarPreview);
-  if(editorTextosCfg.saveAsOk)editorTextosCfg.saveAsOk.addEventListener("click",editorTextosConfirmarModalSalvarComo);
-  if(editorTextosCfg.saveAsCancelar)editorTextosCfg.saveAsCancelar.addEventListener("click",()=>{
-    editorTextosDebugLog("EDITOR SAVE AS CANCEL",{origem:"botao_cancelar"},"render");
-    editorTextosFecharModalSalvarComo();
-  });
-  if(editorTextosCfg.saveAsBackdrop)editorTextosCfg.saveAsBackdrop.addEventListener("click",ev=>{
-    if(ev.target!==editorTextosCfg.saveAsBackdrop)return;
-    editorTextosDebugLog("EDITOR SAVE AS CANCEL",{origem:"backdrop"},"render");
-    editorTextosFecharModalSalvarComo();
-  });
-  if(editorTextosCfg.saveAsBackdrop)editorTextosCfg.saveAsBackdrop.addEventListener("keydown",ev=>{
-    if(ev.key==="Escape"){
-      ev.preventDefault();
-      editorTextosDebugLog("EDITOR SAVE AS CANCEL",{origem:"tecla_esc"},"render");
-      editorTextosFecharModalSalvarComo();
-      return;
-    }
-    if(ev.key==="Enter"){
-      if(ev.target?.closest?.("button"))return;
-      ev.preventDefault();
-      editorTextosConfirmarModalSalvarComo();
     }
   });
   if(editorTextosCfg.mergeCategory)editorTextosCfg.mergeCategory.addEventListener("change",editorTextosMesclagemTrocarCategoria);
@@ -20924,8 +18045,6 @@ function editorTextosAplicarFormatacaoRegua(){
   rightPx=Math.min(rightPx,Math.max(0,maxPad-leftPx));
   page.style.paddingLeft=`${Math.round(leftPx)}px`;
   page.style.paddingRight=`${Math.round(rightPx)}px`;
-  page.style.setProperty("--editor-page-padding-left",`${Math.round(leftPx)}px`);
-  page.style.setProperty("--editor-page-padding-right",`${Math.round(rightPx)}px`);
   const tabRef=Number(st.tabStops?.[0]||st.leftMarginUnit+4);
   const tabInterval=Math.max(1,tabRef-st.leftMarginUnit);
   const tabSize=Math.max(2,Math.min(32,Math.round(tabInterval*4)));
@@ -21058,7 +18177,6 @@ function editorTextosPageKeyDown(ev){
   if (ev.key === "Tab") {
     const bloco = tabSelectionRaw?.block instanceof HTMLElement?tabSelectionRaw.block:editorTextosObterBlocoAtual();
     let handled = false;
-    if(!ev.shiftKey)editorTextosProtegendoCursor=true;
 
     try {
       if (ev.shiftKey) {
@@ -21078,18 +18196,7 @@ function editorTextosPageKeyDown(ev){
       ev.preventDefault();
       return;
     }
-    editorTextosProtegendoCursor=false;
     if(editorTextosCfg)editorTextosCfg.pendingTabSelectionRaw=null;
-    const fallbackBlock=bloco instanceof HTMLElement?bloco:editorTextosObterBlocoAtual();
-    if(editorTextosDocumentoModelFeatureAtiva()&&fallbackBlock instanceof HTMLElement&&editorTextosParagrafoEhCompativelComTabSemantica(fallbackBlock)){
-      editorTextosParagrafoLogLegacyMarkerBloqueado(
-        fallbackBlock,
-        handled?"ja_tratado":"fallback_legado_tab_model_first",
-        ev.shiftKey?"shift-tab":"tab"
-      );
-      ev.preventDefault();
-      return;
-    }
   }
 
   if (ev.key === "Backspace") {
@@ -22901,7 +20008,6 @@ function editorTextosNormalizarPaginaConfig(cfg){
 }
 function editorTextosAplicarConfiguracaoPagina(markDirty=false){
   if(!editorTextosCfg?.page)return;
-  editorTextosCfg.pageLayoutDirty=true;
   const pagina=editorTextosNormalizarPaginaConfig(editorTextosCfg.paginaConfig);
   editorTextosCfg.paginaConfig=pagina;
   const larguraPx=Math.max(360,Math.round(pagina.largura_mm*EDITOR_TEXTOS_MM_TO_PX));
@@ -22925,3258 +20031,10 @@ function editorTextosAplicarConfiguracaoPagina(markDirty=false){
   };
   editorTextosAplicarFormatacaoRegua();
   editorTextosRenderRegua();
-  editorTextosAtualizarLayoutPaginado({origem:"configuracao_pagina",reason:"configuracao_pagina",force:true});
   if(markDirty){
     editorTextosCfg.alterado=true;
     if(editorTextosCfg.status)editorTextosCfg.status.textContent="Configuração de página atualizada.";
   }
-}
-function editorTextosElementoEhQuebraVisualPagina(node){
-  return !!(node instanceof HTMLElement&&node.getAttribute("data-editor-page-break")==="1");
-}
-function editorTextosPaginaRemoverQuebrasVisuais(root){
-  if(!(root instanceof HTMLElement))return 0;
-  const breaks=[...root.querySelectorAll("[data-editor-page-break='1']")];
-  breaks.forEach(node=>node.remove());
-  return breaks.length;
-}
-function editorTextosPaginaElementoTemConteudoSignificativo(node){
-  if(!(node instanceof HTMLElement))return false;
-  if(node.querySelector("img,br,table,ul,ol,li"))return true;
-  return !!String(node.textContent||"").replace(/\u200B/g,"").replace(/\u00a0/g," ").trim();
-}
-function editorTextosPaginaElementoOcupaEspacoVisual(node){
-  if(!(node instanceof HTMLElement))return false;
-  if(editorTextosPaginaElementoTemConteudoSignificativo(node))return true;
-  try{
-    const computed=window.getComputedStyle?.(node)||null;
-    if(String(computed?.display||"").toLowerCase()==="none")return false;
-    if(String(computed?.visibility||"").toLowerCase()==="hidden")return false;
-    const rectHeight=Math.max(0,Number(node.getBoundingClientRect?.().height||0)||0);
-    const offsetHeight=Math.max(0,Number(node.offsetHeight||0)||0);
-    const marginTop=Math.max(0,Number.parseFloat(computed?.marginTop||"0")||0);
-    const marginBottom=Math.max(0,Number.parseFloat(computed?.marginBottom||"0")||0);
-    const paddingTop=Math.max(0,Number.parseFloat(computed?.paddingTop||"0")||0);
-    const paddingBottom=Math.max(0,Number.parseFloat(computed?.paddingBottom||"0")||0);
-    const borderTop=Math.max(0,Number.parseFloat(computed?.borderTopWidth||"0")||0);
-    const borderBottom=Math.max(0,Number.parseFloat(computed?.borderBottomWidth||"0")||0);
-    const verticalBox=marginTop+marginBottom+paddingTop+paddingBottom+borderTop+borderBottom;
-    return rectHeight>0.5||offsetHeight>0.5||verticalBox>0.5;
-  }catch{}
-  return false;
-}
-function editorTextosPaginaRegistrarMutacao(ev=null){
-  if(!editorTextosCfg)return null;
-  const inputType=String(ev?.inputType||"").trim();
-  const data=String(ev?.data||"");
-  const key=String(ev?.key||"");
-  let direction="neutral";
-  let kind="unknown";
-  if(inputType.startsWith("delete")||key==="Backspace"||key==="Delete"){
-    direction="up";
-    kind=(inputType==="deleteContentBackward"||key==="Backspace")?"delete_backspace":"delete_forward";
-  }else if(inputType.startsWith("insert")){
-    direction="down";
-    kind=inputType==="insertParagraph"?"insert_paragraph":"insert_content";
-  }else if(inputType.startsWith("history")){
-    kind=inputType;
-  }
-  const payload={
-    inputType,
-    key,
-    data,
-    direction,
-    kind,
-    at:Date.now()
-  };
-  editorTextosCfg.pageLayoutLastMutation=payload;
-  if(direction!=="neutral")editorTextosCfg.pageLayoutDirty=true;
-  if(direction==="up"){
-    editorTextosDebugLog("EDITOR PAGE DELETE_BACKSPACE DETECTED",payload,"render");
-  }
-  return payload;
-}
-function editorTextosPaginaCriarQuebraVisual(remainingHeight,pageGapPx,nextPaddingTopPx,pageIndex){
-  const marker=document.createElement("figure");
-  marker.setAttribute("data-editor-page-break","1");
-  marker.setAttribute("contenteditable","false");
-  marker.setAttribute("aria-hidden","true");
-  marker.dataset.pageIndex=String(pageIndex||1);
-  marker.style.setProperty("--editor-page-break-remaining",`${Math.max(0,Math.round(Number(remainingHeight||0)))}px`);
-  marker.style.setProperty("--editor-page-gap",`${Math.max(16,Math.round(Number(pageGapPx||EDITOR_TEXTOS_PAGE_BREAK_GAP_PX)))}px`);
-  marker.style.setProperty("--editor-page-next-padding-top",`${Math.max(0,Math.round(Number(nextPaddingTopPx||0)))}px`);
-  return marker;
-}
-function editorTextosPaginaEhBlocoVazioNormalizavel(node){
-  if(!(node instanceof HTMLElement))return false;
-  if(!node.matches?.("p,div"))return false;
-  if(node.querySelector("img,table,ul,ol,li,hr,iframe,canvas,svg,video,audio,input,textarea,select"))return false;
-  const text=String(node.textContent||"").replace(/\u200B/g,"").replace(/\u00a0/g," ").trim();
-  if(text)return false;
-  const children=[...node.childNodes];
-  return children.every(child=>{
-    if(child.nodeType===Node.TEXT_NODE){
-      return !String(child.nodeValue||"").replace(/\u200B/g,"").replace(/\u00a0/g," ").trim();
-    }
-    if(!(child instanceof HTMLElement))return false;
-    if(child.tagName==="BR")return true;
-    if(child.querySelector("img,table,ul,ol,li,hr,iframe,canvas,svg,video,audio,input,textarea,select"))return false;
-    return !String(child.textContent||"").replace(/\u200B/g,"").replace(/\u00a0/g," ").trim()&&[...child.querySelectorAll("*")].every(desc=>desc.tagName==="BR");
-  });
-}
-function editorTextosPaginaResumoEspacamentoBloco(node,page){
-  if(!(node instanceof HTMLElement))return null;
-  const metrics=editorTextosPaginaMedirItemRenderizado(node,page);
-  const computed=window.getComputedStyle?.(node)||null;
-  const renderedHeight=Math.max(0,Number(node.offsetHeight||node.getBoundingClientRect?.().height||0)||0);
-  return{
-    ...editorTextosPaginaResumoNodeLayout(node),
-    empty:editorTextosPaginaEhBlocoVazioNormalizavel(node),
-    top:Math.max(0,Number(metrics?.top||0)||0),
-    height:Math.max(0,Number(metrics?.height||0)||0),
-    renderedHeight,
-    marginTop:Math.max(0,Number.parseFloat(computed?.marginTop||"0")||0),
-    marginBottom:Math.max(0,Number.parseFloat(computed?.marginBottom||"0")||0),
-    paddingTop:Math.max(0,Number.parseFloat(computed?.paddingTop||"0")||0),
-    paddingBottom:Math.max(0,Number.parseFloat(computed?.paddingBottom||"0")||0),
-    lineHeight:String(computed?.lineHeight||"")
-  };
-}
-function editorTextosPaginaColetarContextoQuebrasVisuais(page){
-  if(!(page instanceof HTMLElement))return[];
-  return [...page.querySelectorAll("[data-editor-page-break='1']")]
-    .filter(node=>node instanceof HTMLElement)
-    .map((marker,idx)=>({
-      breakIndex:idx+1,
-      parentTag:String(marker.parentElement?.tagName||"").toLowerCase(),
-      prevElement:marker.previousElementSibling instanceof HTMLElement?marker.previousElementSibling:null,
-      nextElement:marker.nextElementSibling instanceof HTMLElement?marker.nextElementSibling:null
-    }));
-}
-function editorTextosPaginaNodeContemSelecaoAtiva(node){
-  if(!(node instanceof HTMLElement))return false;
-  const sel=window.getSelection?.();
-  if(!sel)return false;
-  const anchor=sel.anchorNode||null;
-  const focus=sel.focusNode||null;
-  return !!((anchor&&node.contains(anchor))||(focus&&node.contains(focus)));
-}
-function editorTextosPaginaResumoCoberturaBloco(node,page){
-  const sample=editorTextosPaginaResumoEspacamentoBloco(node,page);
-  if(sample){
-    return{
-      nodeType:String(sample?.nodeType||""),
-      blockId:String(sample?.blockId||""),
-      className:String(sample?.className||""),
-      text:String(sample?.text||""),
-      empty:sample?.empty===true,
-      top:Number(sample?.top||0)||0,
-      height:Number(sample?.height||0)||0,
-      renderedHeight:Number(sample?.renderedHeight||0)||0,
-      lineHeight:String(sample?.lineHeight||"")
-    };
-  }
-  return editorTextosPaginaResumoNodeLayout(node);
-}
-function editorTextosPaginaResolverIndicePaginaRenderizada(node,page,distributionMap=null){
-  if(distributionMap instanceof Map&&distributionMap.has(node)){
-    return Math.max(1,Number(distributionMap.get(node)||1)||1);
-  }
-  if(!(page instanceof HTMLElement)||!(node instanceof Node))return 1;
-  let pageIndex=1;
-  [...page.querySelectorAll("[data-editor-page-break='1']")].forEach(marker=>{
-    if(!(marker instanceof HTMLElement)||marker===node)return;
-    try{
-      if(marker.compareDocumentPosition(node)&Node.DOCUMENT_POSITION_FOLLOWING){
-        pageIndex+=1;
-      }
-    }catch{}
-  });
-  return pageIndex;
-}
-function editorTextosPaginaColetarDiagnosticoEspacamento(page,distributionMap=null){
-  if(!(page instanceof HTMLElement))return{
-    blockCount:0,
-    totalEditorBlockCount:0,
-    layoutBlockCount:0,
-    auditBlockCount:0,
-    emptyBlockCount:0,
-    maxGap:0,
-    maxNormalizedGap:0,
-    emptyRunCount:0,
-    gaps:[],
-    normalizedGapValues:[],
-    normalizedGapSamples:[],
-    transitionSampleIndices:[],
-    pageTransitions:[],
-    pageTransitionCount:0,
-    coverage:null,
-    maxVisualTransitionDiff:0,
-      visualTransitionMismatchCount:0
-  };
-  const layoutBlocks=editorTextosPaginaColetarItensLayout(page,{includeVisualSpacingBlocks:false}).filter(node=>node instanceof HTMLElement);
-  const coverageBlocks=editorTextosPaginaColetarItensLayout(page,{auditVisualCoverage:true,includeVisualSpacingBlocks:false}).filter(node=>node instanceof HTMLElement);
-  const layoutSet=new Set(layoutBlocks);
-  const omittedVisualBlocks=coverageBlocks.filter(node=>!layoutSet.has(node));
-  const visualOnlyLayoutBlocks=layoutBlocks.filter(node=>!editorTextosPaginaElementoTemConteudoSignificativo(node));
-  const pairingBlocks=layoutBlocks.length?layoutBlocks:coverageBlocks;
-  const samplePairingStrategy=layoutBlocks.length
-    ?(visualOnlyLayoutBlocks.length?"visual_layout_union":"logical_layout_blocks")
-    :"visual_coverage_fallback";
-  const coverage={
-    totalEditorBlockCount:page.querySelectorAll?.(EDITOR_TEXTOS_BLOCK_SELECTOR)?.length||0,
-    layoutBlockCount:layoutBlocks.length,
-    auditBlockCount:coverageBlocks.length,
-    pairingBlockCount:pairingBlocks.length,
-    samplePairingStrategy,
-    visualOnlyLayoutBlockCount:visualOnlyLayoutBlocks.length,
-    visualOnlyLayoutBlocks:visualOnlyLayoutBlocks.slice(0,8).map(node=>editorTextosPaginaResumoCoberturaBloco(node,page)),
-    omittedVisualBlockCount:omittedVisualBlocks.length,
-    omittedVisualBlocks:omittedVisualBlocks.slice(0,8).map(node=>editorTextosPaginaResumoCoberturaBloco(node,page))
-  };
-  const breakMetaByPage=new Map();
-  const pageComputed=window.getComputedStyle?.(page)||null;
-  const borderTopPx=Math.max(0,Math.round(Number.parseFloat(pageComputed?.borderTopWidth||"0")||0));
-  const borderBottomPx=Math.max(0,Math.round(Number.parseFloat(pageComputed?.borderBottomWidth||"0")||0));
-  [...page.querySelectorAll("[data-editor-page-break='1']")]
-    .filter(node=>node instanceof HTMLElement)
-    .forEach((marker,idx)=>{
-      const remainingHeight=Math.max(0,Math.round(Number.parseFloat(marker.style.getPropertyValue("--editor-page-break-remaining"))||0));
-      const pageGapPx=Math.max(0,Math.round(Number.parseFloat(marker.style.getPropertyValue("--editor-page-gap"))||0));
-      const nextPaddingTopPx=Math.max(0,Math.round(Number.parseFloat(marker.style.getPropertyValue("--editor-page-next-padding-top"))||0));
-      const markerHeight=Math.max(0,Math.round(Number(marker.offsetHeight||0)||0));
-      breakMetaByPage.set(idx+1,{
-        breakIndex:idx+1,
-        markerHeight,
-        remainingHeight,
-        pageGapPx,
-        nextPaddingTopPx,
-        borderTopPx,
-        borderBottomPx,
-        expectedScaffoldHeight:remainingHeight+borderBottomPx+pageGapPx+borderTopPx+nextPaddingTopPx
-      });
-    });
-  const samples=pairingBlocks.map(node=>{
-    const sample=editorTextosPaginaResumoEspacamentoBloco(node,page);
-    if(!sample)return null;
-    sample.pageIndex=editorTextosPaginaResolverIndicePaginaRenderizada(node,page,distributionMap);
-    return sample;
-  }).filter(Boolean);
-  const gaps=[];
-  const pageTransitions=[];
-  const normalizedGapValues=[];
-  const normalizedGapSamples=[];
-  const transitionSampleIndices=[];
-  let maxGap=0;
-  let maxNormalizedGap=0;
-  let emptyRunCount=0;
-  let maxVisualTransitionDiff=0;
-  let visualTransitionMismatchCount=0;
-  let pageTransitionCount=0;
-  let currentEmptyRun=0;
-  const lineHeights=new Set();
-  for(let idx=0;idx<samples.length;idx+=1){
-    const current=samples[idx];
-    if(String(current?.lineHeight||"").trim())lineHeights.add(String(current.lineHeight).trim());
-    if(current?.empty){
-      currentEmptyRun+=1;
-    }else if(currentEmptyRun>0){
-      if(currentEmptyRun>1)emptyRunCount+=1;
-      currentEmptyRun=0;
-    }
-    if(idx===0)continue;
-    const prev=samples[idx-1];
-    const prevPage=Math.max(1,Number(prev?.pageIndex||1)||1);
-    const currentPage=Math.max(1,Number(current?.pageIndex||1)||1);
-    const prevRenderedHeight=Math.max(0,Number(prev?.renderedHeight||prev?.height||0)||0);
-    const rawGap=Math.max(0,Math.round((Number(current?.top||0)||0)-((Number(prev?.top||0)||0)+prevRenderedHeight)));
-    let normalizedGap=rawGap;
-    let visualTransitionDiff=0;
-    let scaffoldHeightDiff=0;
-    let breakMeta=null;
-    if(prevPage!==currentPage){
-      pageTransitionCount+=1;
-      breakMeta=breakMetaByPage.get(prevPage)||null;
-      const scaffoldHeight=Math.max(0,Math.round(Number(breakMeta?.markerHeight||0)||0));
-      const expectedScaffoldHeight=Math.max(0,Math.round(Number(breakMeta?.expectedScaffoldHeight||scaffoldHeight)||0));
-      normalizedGap=Math.max(0,Math.round(rawGap-scaffoldHeight));
-      scaffoldHeightDiff=Math.round(scaffoldHeight-expectedScaffoldHeight);
-      visualTransitionDiff=scaffoldHeightDiff;
-      if(Math.abs(visualTransitionDiff)>maxVisualTransitionDiff)maxVisualTransitionDiff=Math.abs(visualTransitionDiff);
-      if(Math.abs(visualTransitionDiff)>1)visualTransitionMismatchCount+=1;
-      if(pageTransitions.length<8){
-        pageTransitions.push({
-          fromPage:prevPage,
-          toPage:currentPage,
-          from:prev,
-          to:current,
-          rawGap,
-          normalizedGap,
-          scaffoldHeight,
-          nextPaddingTopPx:Math.max(0,Math.round(Number(breakMeta?.nextPaddingTopPx||0)||0)),
-          expectedScaffoldHeight,
-          scaffoldHeightDiff,
-          visualTransitionDiff
-        });
-      }
-    }else{
-      const gap=rawGap;
-      if(gap>0){
-        if(gap>maxGap)maxGap=gap;
-        if(gaps.length<8){
-          gaps.push({
-            gap,
-            from:prev,
-            to:current
-          });
-        }
-      }
-    }
-    normalizedGapValues.push(normalizedGap);
-    if(normalizedGap>maxNormalizedGap)maxNormalizedGap=normalizedGap;
-    const sampleIndex=normalizedGapSamples.length;
-    normalizedGapSamples.push({
-      fromPage:prevPage,
-      toPage:currentPage,
-      rawGap,
-      normalizedGap,
-      transition:prevPage!==currentPage,
-      scaffoldHeight:Math.max(0,Math.round(Number(breakMeta?.markerHeight||0)||0)),
-      nextPaddingTopPx:Math.max(0,Math.round(Number(breakMeta?.nextPaddingTopPx||0)||0)),
-      expectedScaffoldHeight:Math.max(0,Math.round(Number(breakMeta?.expectedScaffoldHeight||0)||0)),
-      scaffoldHeightDiff,
-      visualTransitionDiff,
-      from:prev,
-      to:current
-    });
-    if(prevPage!==currentPage)transitionSampleIndices.push(sampleIndex);
-    if(prevPage!==currentPage)continue;
-    const gap=rawGap;
-    if(gap<=0)continue;
-  }
-  if(currentEmptyRun>1)emptyRunCount+=1;
-  return{
-    blockCount:samples.length,
-    totalEditorBlockCount:coverage.totalEditorBlockCount,
-    layoutBlockCount:coverage.layoutBlockCount,
-    auditBlockCount:coverage.auditBlockCount,
-    emptyBlockCount:samples.filter(sample=>sample?.empty).length,
-    maxGap,
-    maxNormalizedGap,
-    emptyRunCount,
-    gaps,
-    normalizedGapValues,
-    normalizedGapSamples,
-    transitionSampleIndices,
-    pageTransitionCount,
-    pageTransitions,
-    coverage,
-    samplePairingStrategy,
-    lineHeights:[...lineHeights],
-    maxVisualTransitionDiff,
-    visualTransitionMismatchCount
-  };
-}
-function editorTextosPaginaCompararSequenciaNumerica(beforeValues,afterValues,tolerancePx=1){
-  const before=Array.isArray(beforeValues)?beforeValues:[];
-  const after=Array.isArray(afterValues)?afterValues:[];
-  if(before.length!==after.length)return false;
-  const tolerance=Math.max(0,Number(tolerancePx||0)||0);
-  for(let idx=0;idx<before.length;idx+=1){
-    const beforeValue=Number(before[idx]||0)||0;
-    const afterValue=Number(after[idx]||0)||0;
-    if(Math.abs(beforeValue-afterValue)>tolerance)return false;
-  }
-  return true;
-}
-function editorTextosPaginaConstruirChaveBlocoEspacamento(block){
-  if(!block||typeof block!=="object")return"";
-  return String(block?.blockId||"").trim()
-    ||`${String(block?.nodeType||"")}::${String(block?.text||"")}`;
-}
-function editorTextosPaginaConstruirChaveAmostraEspacamento(sample,index=0){
-  if(!sample||typeof sample!=="object")return`sample:${Math.max(0,Number(index||0)||0)}`;
-  const fromKey=editorTextosPaginaConstruirChaveBlocoEspacamento(sample?.from?.block);
-  const toKey=editorTextosPaginaConstruirChaveBlocoEspacamento(sample?.to?.block);
-  const base=`${fromKey}>>${toKey}`;
-  if(fromKey||toKey)return base;
-  return`sample:${Math.max(1,Number(sample?.fromPage||1)||1)}:${Math.max(1,Number(sample?.toPage||1)||1)}:${Math.max(0,Number(index||0)||0)}`;
-}
-function editorTextosPaginaExtrairDiffSequenciaNumerica(beforeValues,afterValues,tolerancePx=1,maxItems=8){
-  const before=Array.isArray(beforeValues)?beforeValues:[];
-  const after=Array.isArray(afterValues)?afterValues:[];
-  const tolerance=Math.max(0,Number(tolerancePx||0)||0);
-  const limit=Math.max(1,Number(maxItems||8)||8);
-  const length=Math.max(before.length,after.length);
-  const diffs=[];
-  let diffCount=0;
-  for(let idx=0;idx<length;idx+=1){
-    const beforeValue=Number(before[idx]||0)||0;
-    const afterValue=Number(after[idx]||0)||0;
-    const delta=afterValue-beforeValue;
-    const missing=idx>=before.length||idx>=after.length;
-    if(missing||Math.abs(delta)>tolerance){
-      diffCount+=1;
-      if(diffs.length<limit){
-        diffs.push({
-          index:idx,
-          before:idx<before.length?beforeValue:null,
-          after:idx<after.length?afterValue:null,
-          delta
-        });
-      }
-    }
-  }
-  return{
-    diffCount,
-    diffs,
-    lengthBefore:before.length,
-    lengthAfter:after.length
-  };
-}
-function editorTextosPaginaSelecionarIndicesEspacamentoRenderizado(samples,maxItems=6,transitionRadius=2,explicitTransitionIndices=[],options={}){
-  const list=Array.isArray(samples)?samples:[];
-  if(!list.length)return[];
-  const limit=Math.max(1,Number(maxItems||6)||6);
-  const includeDocumentAnchors=options?.includeDocumentAnchors!==false;
-  const radius=Math.max(0,Number(transitionRadius||2)||2);
-  const selected=new Set();
-  const transitions=(Array.isArray(explicitTransitionIndices)?explicitTransitionIndices:[])
-    .map(idx=>Number(idx))
-    .filter(idx=>Number.isInteger(idx)&&idx>=0&&idx<list.length);
-  if(!transitions.length){
-    list.forEach((sample,idx)=>{
-      if(sample?.transition===true)transitions.push(idx);
-    });
-  }
-  const addIndex=idx=>{
-    if(idx>=0&&idx<list.length)selected.add(idx);
-  };
-  if(transitions.length){
-    transitions.forEach(idx=>{
-      for(let cursor=idx-radius;cursor<=idx+radius;cursor+=1){
-        addIndex(cursor);
-      }
-    });
-    if(includeDocumentAnchors){
-      addIndex(0);
-      addIndex(list.length-1);
-    }
-    return [...selected].sort((a,b)=>a-b);
-  }
-  if(list.length<=limit){
-    return list.map((_,idx)=>idx);
-  }
-  for(let idx=0;idx<Math.min(limit,list.length);idx+=1){
-    addIndex(idx);
-  }
-  for(let idx=list.length-1;idx>=0&&selected.size<Math.min(limit,list.length);idx-=1){
-    addIndex(idx);
-  }
-  return [...selected].sort((a,b)=>a-b);
-}
-function editorTextosPaginaNormalizarIndicesTransicao(samples,indices){
-  const list=Array.isArray(samples)?samples:[];
-  return [...new Set((Array.isArray(indices)?indices:[])
-    .map(idx=>Number(idx))
-    .filter(idx=>Number.isInteger(idx)&&idx>=0&&idx<list.length)
-  )].sort((a,b)=>a-b);
-}
-function editorTextosPaginaResolverIndicesTransicaoAudit(audit,breakRegionAudit,side="before"){
-  const samples=Array.isArray(audit?.normalizedGapSamples)?audit.normalizedGapSamples:[];
-  const rawIndices=editorTextosPaginaNormalizarIndicesTransicao(
-    samples,
-    Array.isArray(audit?.transitionSampleIndices)?audit.transitionSampleIndices:[]
-  );
-  const assertionField=String(side||"before")==="after"
-    ?"afterPairSampleIndex"
-    :"beforePairSampleIndex";
-  const assertionIndices=editorTextosPaginaNormalizarIndicesTransicao(
-    samples,
-    (Array.isArray(breakRegionAudit?.assertions)?breakRegionAudit.assertions:[]).map(assertion=>assertion?.[assertionField])
-  );
-  if(assertionIndices.length){
-    return assertionIndices;
-  }
-  return rawIndices;
-}
-function editorTextosPaginaColetarIdsRegiaoTransicao(breakRegionAudit){
-  const buckets={
-    planned:new Set(),
-    before:new Set(),
-    after:new Set(),
-    plannedPrevious:new Set(),
-    beforePrevious:new Set(),
-    afterPrevious:new Set(),
-    plannedMoved:new Set(),
-    beforeMoved:new Set(),
-    afterMoved:new Set()
-  };
-  (Array.isArray(breakRegionAudit?.assertions)?breakRegionAudit.assertions:[]).forEach(assertion=>{
-    const blockIds=assertion?.auditedBreakRegionBlockIds&&typeof assertion.auditedBreakRegionBlockIds==="object"
-      ?assertion.auditedBreakRegionBlockIds
-      :{};
-    ["planned","before","after"].forEach(key=>{
-      (Array.isArray(blockIds?.[key])?blockIds[key]:[]).forEach(blockId=>{
-        const normalized=String(blockId||"").trim();
-        if(normalized)buckets[key].add(normalized);
-      });
-    });
-    const plannedPrevious=String(assertion?.fromBlockId||"").trim();
-    const plannedMoved=String(assertion?.toBlockId||"").trim();
-    const beforePair=Array.isArray(blockIds?.before)?blockIds.before:[];
-    const afterPair=Array.isArray(blockIds?.after)?blockIds.after:[];
-    const beforePrevious=String(beforePair[0]||"").trim();
-    const beforeMoved=String(beforePair[1]||"").trim();
-    const afterPrevious=String(afterPair[0]||"").trim();
-    const afterMoved=String(afterPair[1]||"").trim();
-    if(plannedPrevious)buckets.plannedPrevious.add(plannedPrevious);
-    if(plannedMoved)buckets.plannedMoved.add(plannedMoved);
-    if(beforePrevious)buckets.beforePrevious.add(beforePrevious);
-    if(beforeMoved)buckets.beforeMoved.add(beforeMoved);
-    if(afterPrevious)buckets.afterPrevious.add(afterPrevious);
-    if(afterMoved)buckets.afterMoved.add(afterMoved);
-  });
-  return{
-    planned:[...buckets.planned],
-    before:[...buckets.before],
-    after:[...buckets.after],
-    previousBoundaryBlockIds:{
-      planned:[...buckets.plannedPrevious],
-      before:[...buckets.beforePrevious],
-      after:[...buckets.afterPrevious]
-    },
-    movedBoundaryBlockIds:{
-      planned:[...buckets.plannedMoved],
-      before:[...buckets.beforeMoved],
-      after:[...buckets.afterMoved]
-    }
-  };
-}
-function editorTextosPaginaNormalizarAlinhamentoTransicao({
-  breakCount=0,
-  distributionChangedPlanned=false,
-  distributionChangedDom=false,
-  domChanged=false,
-  layoutSignature="",
-  moveAuditStats=null,
-  transitionRegionBlockIds=null
-}={}){
-  const rawMovedBlockIds=Array.isArray(moveAuditStats?.movedNextBlockIds)?moveAuditStats.movedNextBlockIds:[];
-  const rawEffectiveMovedBlockIds=Array.isArray(moveAuditStats?.movedNextEffectiveBlockIds)?moveAuditStats.movedNextEffectiveBlockIds:[];
-  const duplicateSkippedBlockIds=Array.isArray(moveAuditStats?.movedNextDuplicateSkippedBlockIds)?moveAuditStats.movedNextDuplicateSkippedBlockIds:[];
-  const auditedTransitionBlockIds=Array.isArray(transitionRegionBlockIds?.movedBoundaryBlockIds?.after)&&transitionRegionBlockIds.movedBoundaryBlockIds.after.length
-    ?transitionRegionBlockIds.movedBoundaryBlockIds.after
-    :(Array.isArray(transitionRegionBlockIds?.movedBoundaryBlockIds?.planned)?transitionRegionBlockIds.movedBoundaryBlockIds.planned:[]);
-  const auditedBoundaryPairBlockIds=Array.isArray(transitionRegionBlockIds?.after)?transitionRegionBlockIds.after:[];
-  const resolvedTransitionBlocks={
-    previousBoundaryBlockIds:Array.isArray(transitionRegionBlockIds?.previousBoundaryBlockIds?.after)&&transitionRegionBlockIds.previousBoundaryBlockIds.after.length
-      ?transitionRegionBlockIds.previousBoundaryBlockIds.after
-      :(Array.isArray(transitionRegionBlockIds?.previousBoundaryBlockIds?.planned)?transitionRegionBlockIds.previousBoundaryBlockIds.planned:[]),
-    movedBoundaryBlockIds:auditedTransitionBlockIds,
-    pairBlockIds:auditedBoundaryPairBlockIds
-  };
-  const hasAuditedTransition=Math.max(0,Number(breakCount||0)||0)>0&&auditedTransitionBlockIds.length>0;
-  const hasRawEffectiveMove=rawEffectiveMovedBlockIds.length>0;
-  const hasRawMovedBlock=rawMovedBlockIds.length>0;
-  const movedBlockIds=hasRawMovedBlock?rawMovedBlockIds:(hasAuditedTransition?auditedTransitionBlockIds.slice():[]);
-  const effectiveMovedBlockIds=hasRawEffectiveMove?rawEffectiveMovedBlockIds:(hasAuditedTransition?auditedTransitionBlockIds.slice():[]);
-  const movedBlockIdsResolved=hasAuditedTransition
-    ?(movedBlockIds.length?movedBlockIds.slice():auditedTransitionBlockIds.slice())
-    :movedBlockIds.slice();
-  const effectiveMovedBlockIdsResolved=hasAuditedTransition
-    ?(effectiveMovedBlockIds.length?effectiveMovedBlockIds.slice():auditedTransitionBlockIds.slice())
-    :effectiveMovedBlockIds.slice();
-  const effectiveMovedCountRaw=Math.max(0,Number(rawEffectiveMovedBlockIds.length||0)||0);
-  const effectiveMovedCountResolved=Math.max(0,Number(effectiveMovedBlockIdsResolved.length||0)||0);
-  const missingMovedInAudit=effectiveMovedBlockIds.filter(blockId=>!auditedTransitionBlockIds.includes(blockId));
-  const extraAuditedVsMoved=auditedTransitionBlockIds.filter(blockId=>!effectiveMovedBlockIds.includes(blockId));
-  const neutralNoBreakCycle=!hasAuditedTransition&&Math.max(0,Number(breakCount||0)||0)===0;
-  const cyclePhase=!hasAuditedTransition
-    ?(Math.max(0,Number(breakCount||0)||0)>0?"break_without_audited_transition":"no_break")
-    :(hasRawEffectiveMove||hasRawMovedBlock||distributionChangedDom||distributionChangedPlanned
-      ?"new_break_transition"
-      :"steady_break_transition");
-  const effectiveMoveDecisionReason=hasRawEffectiveMove
-    ?"new_distribution_move_detected"
-    :(hasAuditedTransition?"persisted_transition_from_existing_layout":"no_active_transition");
-  const movedEffectiveAuditedConsistency=!auditedTransitionBlockIds.length
-    ?(Math.max(0,Number(breakCount||0)||0)>0?"break_without_resolved_moved_block":"no_break")
-    :(!missingMovedInAudit.length&&!extraAuditedVsMoved.length
-      ?(hasRawEffectiveMove?"coherent_new_move":"coherent_persisted_transition")
-      :(missingMovedInAudit.length?"effective_move_missing_from_audit":"audited_transition_contains_extra_blocks"));
-  const alignmentMismatchReason=neutralNoBreakCycle
-    ? ""
-    :(String(movedEffectiveAuditedConsistency||"").startsWith("coherent_")
-      ? ""
-      : movedEffectiveAuditedConsistency);
-  const alignmentMismatchClass=neutralNoBreakCycle
-    ? "neutral_no_break"
-    :(alignmentMismatchReason
-      ? "break_transition_mismatch"
-      : "aligned_or_coherent");
-  const cycleIdentity=[
-    `break:${Math.max(0,Number(breakCount||0)||0)}`,
-    `phase:${cyclePhase}`,
-    `layout:${String(layoutSignature||"")}`,
-    `moved:${effectiveMovedBlockIds.join(",")}`,
-    `audited:${auditedTransitionBlockIds.join(",")}`
-  ].join("|");
-  return{
-    rawMovedBlockIds,
-    rawEffectiveMovedBlockIds,
-    duplicateSkippedBlockIds,
-    movedBlockIds,
-    effectiveMovedBlockIds,
-    movedBlockIdsResolved,
-    effectiveMovedBlockIdsResolved,
-    effectiveMovedCountRaw,
-    effectiveMovedCountResolved,
-    auditedTransitionBlockIds,
-    auditedBoundaryPairBlockIds,
-    resolvedTransitionBlocks,
-    movedVsAuditedBlockDiff:{
-      missingMovedInAudit,
-      extraAuditedVsMoved
-    },
-    alignmentMismatchReason,
-    alignmentMismatchClass,
-    movedEffectiveAuditedConsistency,
-    effectiveMoveDecisionReason,
-    cyclePhase,
-    cycleIdentity,
-    breakPipelineState:{
-      breakCount:Math.max(0,Number(breakCount||0)||0),
-      distributionChangedPlanned:distributionChangedPlanned===true,
-      distributionChangedDom:distributionChangedDom===true,
-      domChanged:domChanged===true,
-      neutralNoBreakCycle,
-      hasAuditedTransition,
-      hasRawMovedBlock,
-      hasRawEffectiveMove,
-      effectiveMovedCountRaw,
-      effectiveMovedCountResolved
-    }
-  };
-}
-function editorTextosPaginaResumirSampleEspacamentoRenderizado(sample,index){
-  if(!sample)return null;
-  return{
-    sampleIndex:Math.max(0,Number(index||0)||0),
-    sampleKey:editorTextosPaginaConstruirChaveAmostraEspacamento(sample,index),
-    fromPage:Math.max(1,Number(sample?.fromPage||1)||1),
-    toPage:Math.max(1,Number(sample?.toPage||1)||1),
-    transition:sample?.transition===true,
-    rawGap:Number(sample?.rawGap||0)||0,
-    normalizedGap:Number(sample?.normalizedGap||0)||0,
-    scaffoldHeight:Number(sample?.scaffoldHeight||0)||0,
-    nextPaddingTopPx:Number(sample?.nextPaddingTopPx||0)||0,
-    expectedScaffoldHeight:Number(sample?.expectedScaffoldHeight||0)||0,
-    scaffoldHeightDiff:Number(sample?.scaffoldHeightDiff||0)||0,
-    visualTransitionDiff:Number(sample?.visualTransitionDiff||0)||0,
-    from:{
-      top:Number(sample?.from?.top||0)||0,
-      height:Number(sample?.from?.height||0)||0,
-      renderedHeight:Number(sample?.from?.renderedHeight||0)||0,
-      lineHeight:String(sample?.from?.lineHeight||""),
-      marginTop:Number(sample?.from?.marginTop||0)||0,
-      marginBottom:Number(sample?.from?.marginBottom||0)||0,
-      paddingTop:Number(sample?.from?.paddingTop||0)||0,
-      paddingBottom:Number(sample?.from?.paddingBottom||0)||0,
-      block:{
-        nodeType:String(sample?.from?.nodeType||""),
-        blockId:String(sample?.from?.blockId||""),
-        className:String(sample?.from?.className||""),
-        text:String(sample?.from?.text||"")
-      }
-    },
-    to:{
-      top:Number(sample?.to?.top||0)||0,
-      height:Number(sample?.to?.height||0)||0,
-      renderedHeight:Number(sample?.to?.renderedHeight||0)||0,
-      lineHeight:String(sample?.to?.lineHeight||""),
-      marginTop:Number(sample?.to?.marginTop||0)||0,
-      marginBottom:Number(sample?.to?.marginBottom||0)||0,
-      paddingTop:Number(sample?.to?.paddingTop||0)||0,
-      paddingBottom:Number(sample?.to?.paddingBottom||0)||0,
-      block:{
-        nodeType:String(sample?.to?.nodeType||""),
-        blockId:String(sample?.to?.blockId||""),
-        className:String(sample?.to?.className||""),
-        text:String(sample?.to?.text||"")
-      }
-    }
-  };
-}
-function editorTextosPaginaCriarMudancaRenderizada(propertyName,beforeValue,afterValue,options={}){
-  const detail={
-    propertyName:String(propertyName||""),
-    beforeValue,
-    afterValue
-  };
-  if(Object.prototype.hasOwnProperty.call(options,"expectedAfterValue")){
-    detail.expectedAfterValue=options.expectedAfterValue;
-  }
-  if(Object.prototype.hasOwnProperty.call(options,"delta")){
-    detail.delta=options.delta;
-  }
-  if(Object.prototype.hasOwnProperty.call(options,"tolerancePx")){
-    detail.tolerancePx=options.tolerancePx;
-  }
-  return detail;
-}
-function editorTextosPaginaResumirCoberturaAuditoria(audit){
-  const coverage=audit?.coverage&&typeof audit.coverage==="object"?audit.coverage:{};
-  return{
-    totalEditorBlockCount:Math.max(0,Number(coverage?.totalEditorBlockCount||audit?.totalEditorBlockCount||0)||0),
-    layoutBlockCount:Math.max(0,Number(coverage?.layoutBlockCount||audit?.layoutBlockCount||0)||0),
-    auditBlockCount:Math.max(0,Number(coverage?.auditBlockCount||audit?.auditBlockCount||audit?.blockCount||0)||0),
-    pairingBlockCount:Math.max(0,Number(coverage?.pairingBlockCount||0)||0),
-    samplePairingStrategy:String(coverage?.samplePairingStrategy||audit?.samplePairingStrategy||""),
-    visualOnlyLayoutBlockCount:Math.max(0,Number(coverage?.visualOnlyLayoutBlockCount||0)||0),
-    visualOnlyLayoutBlocks:Array.isArray(coverage?.visualOnlyLayoutBlocks)?coverage.visualOnlyLayoutBlocks:[],
-    omittedVisualBlockCount:Math.max(0,Number(coverage?.omittedVisualBlockCount||0)||0),
-    omittedVisualBlocks:Array.isArray(coverage?.omittedVisualBlocks)?coverage.omittedVisualBlocks:[],
-    normalizedGapSampleCount:Array.isArray(audit?.normalizedGapSamples)?audit.normalizedGapSamples.length:0,
-    transitionSampleIndices:Array.isArray(audit?.transitionSampleIndices)?audit.transitionSampleIndices:[],
-    transitionSampleIndicesResolved:Array.isArray(audit?.transitionSampleIndicesResolved)?audit.transitionSampleIndicesResolved:[],
-    pageTransitionCount:Math.max(0,Number(audit?.pageTransitionCount||0)||0)
-  };
-}
-function editorTextosPaginaResumirEspacamentoRenderizado(audit,maxItems=6,explicitTransitionIndices=null){
-  const samples=Array.isArray(audit?.normalizedGapSamples)?audit.normalizedGapSamples:[];
-  const resolvedIndices=Array.isArray(explicitTransitionIndices)
-    ?explicitTransitionIndices
-    :(Array.isArray(audit?.transitionSampleIndicesResolved)
-      ?audit.transitionSampleIndicesResolved
-      :(Array.isArray(audit?.transitionSampleIndices)?audit.transitionSampleIndices:[]));
-  const indices=editorTextosPaginaSelecionarIndicesEspacamentoRenderizado(
-    samples,
-    Math.max(1,Number(maxItems||6)||6),
-    2,
-    resolvedIndices,
-    {includeDocumentAnchors:false}
-  );
-  return indices.map(index=>editorTextosPaginaResumirSampleEspacamentoRenderizado(samples[index],index)).filter(Boolean);
-}
-function editorTextosPaginaDiffEspacamentoRenderizado(beforeAudit,afterAudit,maxItems=8,options={}){
-  const limit=Math.max(1,Number(maxItems||8)||8);
-  const beforeSamples=Array.isArray(beforeAudit?.normalizedGapSamples)?beforeAudit.normalizedGapSamples:[];
-  const afterSamples=Array.isArray(afterAudit?.normalizedGapSamples)?afterAudit.normalizedGapSamples:[];
-  const beforeTransitionIndices=Array.isArray(options?.beforeTransitionIndices)
-    ?options.beforeTransitionIndices
-    :(Array.isArray(beforeAudit?.transitionSampleIndicesResolved)
-      ?beforeAudit.transitionSampleIndicesResolved
-      :(Array.isArray(beforeAudit?.transitionSampleIndices)?beforeAudit.transitionSampleIndices:[]));
-  const afterTransitionIndices=Array.isArray(options?.afterTransitionIndices)
-    ?options.afterTransitionIndices
-    :(Array.isArray(afterAudit?.transitionSampleIndicesResolved)
-      ?afterAudit.transitionSampleIndicesResolved
-      :(Array.isArray(afterAudit?.transitionSampleIndices)?afterAudit.transitionSampleIndices:[]));
-  const beforeIndices=editorTextosPaginaSelecionarIndicesEspacamentoRenderizado(
-    beforeSamples,
-    limit,
-    2,
-    beforeTransitionIndices,
-    {includeDocumentAnchors:false}
-  );
-  const afterIndices=editorTextosPaginaSelecionarIndicesEspacamentoRenderizado(
-    afterSamples,
-    limit,
-    2,
-    afterTransitionIndices,
-    {includeDocumentAnchors:false}
-  );
-  const beforeAll=beforeSamples.map((sample,index)=>editorTextosPaginaResumirSampleEspacamentoRenderizado(sample,index)).filter(Boolean);
-  const afterAll=afterSamples.map((sample,index)=>editorTextosPaginaResumirSampleEspacamentoRenderizado(sample,index)).filter(Boolean);
-  const beforeSelected=beforeIndices.map(index=>editorTextosPaginaResumirSampleEspacamentoRenderizado(beforeSamples[index],index)).filter(Boolean);
-  const afterSelected=afterIndices.map(index=>editorTextosPaginaResumirSampleEspacamentoRenderizado(afterSamples[index],index)).filter(Boolean);
-  const beforeMap=new Map(beforeAll.map(sample=>[String(sample?.sampleKey||""),sample]));
-  const afterMap=new Map(afterAll.map(sample=>[String(sample?.sampleKey||""),sample]));
-  const orderedKeys=[];
-  const seenKeys=new Set();
-  const addKey=sample=>{
-    const key=String(sample?.sampleKey||"").trim();
-    if(!key||seenKeys.has(key))return;
-    seenKeys.add(key);
-    orderedKeys.push(key);
-  };
-  afterSelected.forEach(addKey);
-  beforeSelected.forEach(addKey);
-  if(!orderedKeys.length){
-    afterAll.slice(0,limit).forEach(addKey);
-    beforeAll.slice(0,limit).forEach(addKey);
-  }
-  const diffs=[];
-  let diffCount=0;
-  let transitionMismatchCount=0;
-  let maxTransitionDelta=0;
-  let coverageMismatchCount=0;
-  const compareNumeric=(beforeValue,afterValue,tolerancePx=1)=>Math.abs((Number(afterValue||0)||0)-(Number(beforeValue||0)||0))>Math.max(0,Number(tolerancePx||0)||0);
-  const pushChange=(changes,propertyName,beforeValue,afterValue,options={})=>{
-    changes.push(editorTextosPaginaCriarMudancaRenderizada(propertyName,beforeValue,afterValue,options));
-  };
-  for(let idx=0;idx<orderedKeys.length;idx+=1){
-    const sampleKey=orderedKeys[idx];
-    const beforeItem=beforeMap.get(sampleKey)||null;
-    const afterItem=afterMap.get(sampleKey)||null;
-    if(!beforeItem||!afterItem){
-      const missingSampleSide=beforeItem&&!afterItem?"after":(!beforeItem&&afterItem?"before":"both");
-      const missingReference=beforeItem||afterItem||null;
-      const missingSampleIndex=Number(missingReference?.sampleIndex??null);
-      const missingSampleBlockId=String(
-        missingReference?.to?.block?.blockId
-        ||missingReference?.from?.block?.blockId
-        ||""
-      ).trim();
-      const missingSampleTag=String(
-        missingReference?.to?.block?.nodeType
-        ||missingReference?.from?.block?.nodeType
-        ||""
-      ).trim();
-      diffCount+=1;
-      coverageMismatchCount+=1;
-      if(diffs.length<Math.max(1,Number(maxItems||8)||8)){
-        diffs.push({
-          index:idx,
-          kind:"sample_missing",
-          sampleKey,
-          missingSampleSide,
-          missingSampleIndex:Number.isFinite(missingSampleIndex)?missingSampleIndex:null,
-          missingSampleBlockId,
-          missingSampleTag,
-          before:beforeItem,
-          after:afterItem,
-          changes:[editorTextosPaginaCriarMudancaRenderizada(
-            "sample.missing",
-            beforeItem?.sampleIndex??null,
-            afterItem?.sampleIndex??null
-          )]
-        });
-      }
-      continue;
-    }
-    const changes=[];
-    const isTransition=afterItem.transition===true||beforeItem.transition===true;
-    const beforeFromKey=editorTextosPaginaConstruirChaveBlocoEspacamento(beforeItem?.from?.block);
-    const afterFromKey=editorTextosPaginaConstruirChaveBlocoEspacamento(afterItem?.from?.block);
-    const beforeToKey=editorTextosPaginaConstruirChaveBlocoEspacamento(beforeItem?.to?.block);
-    const afterToKey=editorTextosPaginaConstruirChaveBlocoEspacamento(afterItem?.to?.block);
-    if(beforeFromKey!==afterFromKey)pushChange(changes,"from.block",beforeFromKey,afterFromKey);
-    if(beforeToKey!==afterToKey)pushChange(changes,"to.block",beforeToKey,afterToKey);
-    if(compareNumeric(beforeItem.normalizedGap,afterItem.normalizedGap,1)){
-      pushChange(changes,"normalizedGap",beforeItem.normalizedGap,afterItem.normalizedGap,{delta:(Number(afterItem.normalizedGap||0)||0)-(Number(beforeItem.normalizedGap||0)||0),tolerancePx:1});
-    }
-    if(compareNumeric(beforeItem.from.height,afterItem.from.height,1)){
-      pushChange(changes,"from.height",beforeItem.from.height,afterItem.from.height,{delta:(Number(afterItem.from.height||0)||0)-(Number(beforeItem.from.height||0)||0),tolerancePx:1});
-    }
-    if(compareNumeric(beforeItem.from.renderedHeight,afterItem.from.renderedHeight,1)){
-      pushChange(changes,"from.renderedHeight",beforeItem.from.renderedHeight,afterItem.from.renderedHeight,{delta:(Number(afterItem.from.renderedHeight||0)||0)-(Number(beforeItem.from.renderedHeight||0)||0),tolerancePx:1});
-    }
-    if(compareNumeric(beforeItem.to.height,afterItem.to.height,1)){
-      pushChange(changes,"to.height",beforeItem.to.height,afterItem.to.height,{delta:(Number(afterItem.to.height||0)||0)-(Number(beforeItem.to.height||0)||0),tolerancePx:1});
-    }
-    if(compareNumeric(beforeItem.to.renderedHeight,afterItem.to.renderedHeight,1)){
-      pushChange(changes,"to.renderedHeight",beforeItem.to.renderedHeight,afterItem.to.renderedHeight,{delta:(Number(afterItem.to.renderedHeight||0)||0)-(Number(beforeItem.to.renderedHeight||0)||0),tolerancePx:1});
-    }
-    if(compareNumeric(beforeItem.from.marginTop,afterItem.from.marginTop,0.5)){
-      pushChange(changes,"from.marginTop",beforeItem.from.marginTop,afterItem.from.marginTop,{delta:(Number(afterItem.from.marginTop||0)||0)-(Number(beforeItem.from.marginTop||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.from.marginBottom,afterItem.from.marginBottom,0.5)){
-      pushChange(changes,"from.marginBottom",beforeItem.from.marginBottom,afterItem.from.marginBottom,{delta:(Number(afterItem.from.marginBottom||0)||0)-(Number(beforeItem.from.marginBottom||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.to.marginTop,afterItem.to.marginTop,0.5)){
-      pushChange(changes,"to.marginTop",beforeItem.to.marginTop,afterItem.to.marginTop,{delta:(Number(afterItem.to.marginTop||0)||0)-(Number(beforeItem.to.marginTop||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.to.marginBottom,afterItem.to.marginBottom,0.5)){
-      pushChange(changes,"to.marginBottom",beforeItem.to.marginBottom,afterItem.to.marginBottom,{delta:(Number(afterItem.to.marginBottom||0)||0)-(Number(beforeItem.to.marginBottom||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.from.paddingTop,afterItem.from.paddingTop,0.5)){
-      pushChange(changes,"from.paddingTop",beforeItem.from.paddingTop,afterItem.from.paddingTop,{delta:(Number(afterItem.from.paddingTop||0)||0)-(Number(beforeItem.from.paddingTop||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.from.paddingBottom,afterItem.from.paddingBottom,0.5)){
-      pushChange(changes,"from.paddingBottom",beforeItem.from.paddingBottom,afterItem.from.paddingBottom,{delta:(Number(afterItem.from.paddingBottom||0)||0)-(Number(beforeItem.from.paddingBottom||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.to.paddingTop,afterItem.to.paddingTop,0.5)){
-      pushChange(changes,"to.paddingTop",beforeItem.to.paddingTop,afterItem.to.paddingTop,{delta:(Number(afterItem.to.paddingTop||0)||0)-(Number(beforeItem.to.paddingTop||0)||0),tolerancePx:0.5});
-    }
-    if(compareNumeric(beforeItem.to.paddingBottom,afterItem.to.paddingBottom,0.5)){
-      pushChange(changes,"to.paddingBottom",beforeItem.to.paddingBottom,afterItem.to.paddingBottom,{delta:(Number(afterItem.to.paddingBottom||0)||0)-(Number(beforeItem.to.paddingBottom||0)||0),tolerancePx:0.5});
-    }
-    if(String(beforeItem.from.lineHeight||"")!==String(afterItem.from.lineHeight||"")){
-      pushChange(changes,"from.lineHeight",String(beforeItem.from.lineHeight||""),String(afterItem.from.lineHeight||""));
-    }
-    if(String(beforeItem.to.lineHeight||"")!==String(afterItem.to.lineHeight||"")){
-      pushChange(changes,"to.lineHeight",String(beforeItem.to.lineHeight||""),String(afterItem.to.lineHeight||""));
-    }
-    if(isTransition){
-      let transitionSampleMismatch=false;
-      const expectedScaffoldHeight=Math.max(0,Number(afterItem.expectedScaffoldHeight||afterItem.scaffoldHeight||0)||0);
-      const actualScaffoldHeight=Math.max(0,Number(afterItem.scaffoldHeight||0)||0);
-      const scaffoldDelta=actualScaffoldHeight-expectedScaffoldHeight;
-      if(Math.abs(scaffoldDelta)>1){
-        transitionSampleMismatch=true;
-        if(Math.abs(scaffoldDelta)>maxTransitionDelta)maxTransitionDelta=Math.abs(scaffoldDelta);
-        pushChange(changes,"transition.scaffoldHeightMismatch",expectedScaffoldHeight,actualScaffoldHeight,{
-          expectedAfterValue:expectedScaffoldHeight,
-          delta:scaffoldDelta,
-          tolerancePx:1
-        });
-      }
-      const expectedRawGap=(Number(beforeItem.rawGap||0)||0)+expectedScaffoldHeight;
-      const rawGapDelta=(Number(afterItem.rawGap||0)||0)-expectedRawGap;
-      if(Math.abs(rawGapDelta)>1){
-        transitionSampleMismatch=true;
-        if(Math.abs(rawGapDelta)>maxTransitionDelta)maxTransitionDelta=Math.abs(rawGapDelta);
-        pushChange(changes,"transition.rawGapUnexpected",beforeItem.rawGap,afterItem.rawGap,{
-          expectedAfterValue:expectedRawGap,
-          delta:rawGapDelta,
-          tolerancePx:1
-        });
-      }
-      const expectedToTop=(Number(beforeItem.to.top||0)||0)+expectedScaffoldHeight;
-      const toTopDelta=(Number(afterItem.to.top||0)||0)-expectedToTop;
-      if(Math.abs(toTopDelta)>1){
-        transitionSampleMismatch=true;
-        if(Math.abs(toTopDelta)>maxTransitionDelta)maxTransitionDelta=Math.abs(toTopDelta);
-        pushChange(changes,"transition.toTopUnexpected",beforeItem.to.top,afterItem.to.top,{
-          expectedAfterValue:expectedToTop,
-          delta:toTopDelta,
-          tolerancePx:1
-        });
-      }
-      const expectedFromTop=Number(beforeItem.from.top||0)||0;
-      const fromTopDelta=(Number(afterItem.from.top||0)||0)-expectedFromTop;
-      if(Math.abs(fromTopDelta)>1){
-        transitionSampleMismatch=true;
-        if(Math.abs(fromTopDelta)>maxTransitionDelta)maxTransitionDelta=Math.abs(fromTopDelta);
-        pushChange(changes,"transition.fromTopUnexpected",beforeItem.from.top,afterItem.from.top,{
-          expectedAfterValue:expectedFromTop,
-          delta:fromTopDelta,
-          tolerancePx:1
-        });
-      }
-      if(transitionSampleMismatch)transitionMismatchCount+=1;
-    }else if(compareNumeric(beforeItem.rawGap,afterItem.rawGap,1)){
-      pushChange(changes,"rawGap",beforeItem.rawGap,afterItem.rawGap,{delta:(Number(afterItem.rawGap||0)||0)-(Number(beforeItem.rawGap||0)||0),tolerancePx:1});
-    }
-    if(!changes.length)continue;
-    diffCount+=1;
-    if(diffs.length<Math.max(1,Number(maxItems||8)||8)){
-      diffs.push({
-        index:idx,
-        changes,
-        before:beforeItem,
-        after:afterItem
-      });
-    }
-  }
-  return{
-    diffCount,
-    diffs,
-    indices:[...beforeIndices,...afterIndices],
-    sampleKeys:orderedKeys,
-    comparedSamplePairs:orderedKeys.length,
-    comparedSamplePairsExpanded:orderedKeys.map(sampleKey=>{
-      const beforeItem=beforeMap.get(sampleKey)||null;
-      const afterItem=afterMap.get(sampleKey)||null;
-      return{
-        sampleKey,
-        beforeSampleIndex:Number.isFinite(Number(beforeItem?.sampleIndex))?Number(beforeItem.sampleIndex):null,
-        afterSampleIndex:Number.isFinite(Number(afterItem?.sampleIndex))?Number(afterItem.sampleIndex):null,
-        fromBlockId:String(afterItem?.from?.block?.blockId||beforeItem?.from?.block?.blockId||""),
-        toBlockId:String(afterItem?.to?.block?.blockId||beforeItem?.to?.block?.blockId||"")
-      };
-    }),
-    beforeTotalCount:beforeAll.length,
-    afterTotalCount:afterAll.length,
-    beforePairingStrategy:String(beforeAudit?.samplePairingStrategy||beforeAudit?.coverage?.samplePairingStrategy||""),
-    afterPairingStrategy:String(afterAudit?.samplePairingStrategy||afterAudit?.coverage?.samplePairingStrategy||""),
-    before:beforeSelected,
-    after:afterSelected,
-    transitionMismatchCount,
-    maxTransitionDelta,
-    coverageMismatchCount
-  };
-}
-function editorTextosPaginaLerValorDiffRenderizado(sample,path){
-  if(!sample||!path)return undefined;
-  return String(path)
-    .split(".")
-    .reduce((acc,key)=>(acc&&typeof acc==="object")?acc[key]:undefined,sample);
-}
-function editorTextosPaginaResumirDiffPropriedadesRenderizadas(diff,maxProperties=8){
-  const diffs=Array.isArray(diff?.diffs)?diff.diffs:[];
-  const limit=Math.max(1,Number(maxProperties||8)||8);
-  return diffs.map(item=>{
-    const before=item?.before||null;
-    const after=item?.after||null;
-    const changes=Array.isArray(item?.changes)?item.changes:[];
-    return{
-      index:Number(item?.index||0)||0,
-      sampleIndex:Number(after?.sampleIndex??before?.sampleIndex??0)||0,
-      transition:(after?.transition===true)||(before?.transition===true),
-      sampleKey:String(item?.sampleKey||after?.sampleKey||before?.sampleKey||""),
-      missingSampleSide:String(item?.missingSampleSide||""),
-      missingSampleIndex:Number.isFinite(Number(item?.missingSampleIndex))?Number(item.missingSampleIndex):null,
-      missingSampleBlockId:String(item?.missingSampleBlockId||""),
-      missingSampleTag:String(item?.missingSampleTag||""),
-      fromBlockId:String(after?.from?.block?.blockId||before?.from?.block?.blockId||""),
-      toBlockId:String(after?.to?.block?.blockId||before?.to?.block?.blockId||""),
-      changedProperties:changes.slice(0,limit).map(change=>{
-        if(change&&typeof change==="object"&&typeof change.propertyName==="string"){
-          return{
-            propertyName:String(change.propertyName||""),
-            beforeValue:Object.prototype.hasOwnProperty.call(change,"beforeValue")?change.beforeValue:editorTextosPaginaLerValorDiffRenderizado(before,change.propertyName),
-            afterValue:Object.prototype.hasOwnProperty.call(change,"afterValue")?change.afterValue:editorTextosPaginaLerValorDiffRenderizado(after,change.propertyName),
-            ...(Object.prototype.hasOwnProperty.call(change,"expectedAfterValue")?{expectedAfterValue:change.expectedAfterValue}:{}),
-            ...(Object.prototype.hasOwnProperty.call(change,"delta")?{delta:change.delta}:{}),
-            ...(Object.prototype.hasOwnProperty.call(change,"tolerancePx")?{tolerancePx:change.tolerancePx}:{}),
-          };
-        }
-        const propertyName=String(change||"");
-        return{
-          propertyName,
-          beforeValue:editorTextosPaginaLerValorDiffRenderizado(before,propertyName),
-          afterValue:editorTextosPaginaLerValorDiffRenderizado(after,propertyName)
-        };
-      })
-    };
-  });
-}
-function editorTextosPaginaCalcularPropriedadeDominanteDiffRenderizado(diff){
-  const diffs=Array.isArray(diff?.diffs)?diff.diffs:[];
-  const stats=new Map();
-  diffs.forEach(item=>{
-    const after=item?.after||null;
-    const before=item?.before||null;
-    const sampleIndex=Number(after?.sampleIndex??before?.sampleIndex??0)||0;
-    const fromBlockId=String(after?.from?.block?.blockId||before?.from?.block?.blockId||"").trim();
-    const toBlockId=String(after?.to?.block?.blockId||before?.to?.block?.blockId||"").trim();
-    const changes=Array.isArray(item?.changes)?item.changes:[];
-    changes.forEach(change=>{
-      const propertyName=String(change?.propertyName||change||"").trim();
-      if(!propertyName)return;
-      const deltaRaw=Object.prototype.hasOwnProperty.call(change||{},"delta")
-        ?Number(change.delta||0)||0
-        :(Number(change?.afterValue||0)||0)-(Number(change?.beforeValue||0)||0);
-      const deltaAbs=Math.abs(deltaRaw);
-      const current=stats.get(propertyName)||{
-        propertyName,
-        occurrences:0,
-        transitionOccurrences:0,
-        maxAbsDelta:0,
-        sampleIndices:new Set(),
-        fromBlockIds:new Set(),
-        toBlockIds:new Set(),
-        beforeValue:Object.prototype.hasOwnProperty.call(change||{},"beforeValue")?change.beforeValue:undefined,
-        afterValue:Object.prototype.hasOwnProperty.call(change||{},"afterValue")?change.afterValue:undefined,
-        missingSampleSide:"",
-        missingSampleIndex:null,
-        missingSampleBlockId:"",
-        missingSampleTag:"",
-        sampleKeys:new Set()
-      };
-      current.occurrences+=1;
-      if(after?.transition===true||before?.transition===true)current.transitionOccurrences+=1;
-      if(deltaAbs>current.maxAbsDelta)current.maxAbsDelta=deltaAbs;
-      current.sampleIndices.add(sampleIndex);
-      if(fromBlockId)current.fromBlockIds.add(fromBlockId);
-      if(toBlockId)current.toBlockIds.add(toBlockId);
-      if(String(item?.sampleKey||"").trim())current.sampleKeys.add(String(item.sampleKey).trim());
-      if(current.beforeValue===undefined&&Object.prototype.hasOwnProperty.call(change||{},"beforeValue"))current.beforeValue=change.beforeValue;
-      if(current.afterValue===undefined&&Object.prototype.hasOwnProperty.call(change||{},"afterValue"))current.afterValue=change.afterValue;
-      if(propertyName==="sample.missing"&&String(current.missingSampleSide||"").trim()===""){
-        current.missingSampleSide=String(item?.missingSampleSide||"");
-        current.missingSampleIndex=Number.isFinite(Number(item?.missingSampleIndex))?Number(item.missingSampleIndex):null;
-        current.missingSampleBlockId=String(item?.missingSampleBlockId||"");
-        current.missingSampleTag=String(item?.missingSampleTag||"");
-      }
-      stats.set(propertyName,current);
-    });
-  });
-  const dominant=[...stats.values()].sort((a,b)=>{
-    if(b.transitionOccurrences!==a.transitionOccurrences)return b.transitionOccurrences-a.transitionOccurrences;
-    if(b.occurrences!==a.occurrences)return b.occurrences-a.occurrences;
-    if(b.maxAbsDelta!==a.maxAbsDelta)return b.maxAbsDelta-a.maxAbsDelta;
-    return String(a.propertyName||"").localeCompare(String(b.propertyName||""));
-  })[0]||null;
-  if(!dominant)return null;
-  return{
-    propertyName:String(dominant.propertyName||""),
-    occurrences:Number(dominant.occurrences||0)||0,
-    transitionOccurrences:Number(dominant.transitionOccurrences||0)||0,
-    maxAbsDelta:Number(dominant.maxAbsDelta||0)||0,
-    beforeValue:dominant.beforeValue,
-    afterValue:dominant.afterValue,
-    sampleIndices:[...dominant.sampleIndices].sort((a,b)=>a-b),
-    sampleKeys:[...dominant.sampleKeys],
-    fromBlockIds:[...dominant.fromBlockIds],
-    toBlockIds:[...dominant.toBlockIds],
-    firstBlockAfterBreak:String([...dominant.toBlockIds][0]||""),
-    missingSampleSide:String(dominant.missingSampleSide||""),
-    missingSampleIndex:Number.isFinite(Number(dominant.missingSampleIndex))?Number(dominant.missingSampleIndex):null,
-    missingSampleBlockId:String(dominant.missingSampleBlockId||""),
-    missingSampleTag:String(dominant.missingSampleTag||"")
-  };
-}
-function editorTextosPaginaExpandirPropriedadeDominante(diff){
-  const dominant=diff&&typeof diff==="object"?diff:null;
-  return{
-    dominantProperty:dominant,
-    dominantPropertyName:String(dominant?.propertyName||""),
-    dominantPropertyBeforeValue:Object.prototype.hasOwnProperty.call(dominant||{},"beforeValue")?dominant.beforeValue:null,
-    dominantPropertyAfterValue:Object.prototype.hasOwnProperty.call(dominant||{},"afterValue")?dominant.afterValue:null,
-    dominantPropertyOccurrences:Number(dominant?.occurrences||0)||0,
-    dominantPropertyTransitionOccurrences:Number(dominant?.transitionOccurrences||0)||0,
-    dominantPropertyMaxAbsDelta:Number(dominant?.maxAbsDelta||0)||0,
-    dominantPropertySampleIndices:Array.isArray(dominant?.sampleIndices)?dominant.sampleIndices:[],
-    dominantPropertySampleKeys:Array.isArray(dominant?.sampleKeys)?dominant.sampleKeys:[],
-    dominantPropertyFromBlockIds:Array.isArray(dominant?.fromBlockIds)?dominant.fromBlockIds:[],
-    dominantPropertyToBlockIds:Array.isArray(dominant?.toBlockIds)?dominant.toBlockIds:[],
-    dominantPropertyMissingSampleSide:String(dominant?.missingSampleSide||""),
-    dominantPropertyMissingSampleIndex:Number.isFinite(Number(dominant?.missingSampleIndex))?Number(dominant.missingSampleIndex):null,
-    dominantPropertyMissingSampleBlockId:String(dominant?.missingSampleBlockId||""),
-    dominantPropertyMissingSampleTag:String(dominant?.missingSampleTag||""),
-    firstBlockAfterBreak:String(dominant?.firstBlockAfterBreak||"")
-  };
-}
-function editorTextosPaginaColetarAssertivasRegiaoQuebra(pages,beforeAudit,afterAudit,plannedSpaceMap,markerSpaceMap,pageGapPx,paddingTopPx){
-  const grupos=Array.isArray(pages)?pages:[];
-  const beforeSamples=Array.isArray(beforeAudit?.normalizedGapSamples)?beforeAudit.normalizedGapSamples:[];
-  const afterSamples=Array.isArray(afterAudit?.normalizedGapSamples)?afterAudit.normalizedGapSamples:[];
-  const beforeMap=new Map(beforeSamples.map((sample,index)=>{
-    const summary=editorTextosPaginaResumirSampleEspacamentoRenderizado(sample,index);
-    return[String(summary?.sampleKey||""),summary];
-  }).filter(entry=>String(entry?.[0]||"").trim()));
-  const afterMap=new Map(afterSamples.map((sample,index)=>{
-    const summary=editorTextosPaginaResumirSampleEspacamentoRenderizado(sample,index);
-    return[String(summary?.sampleKey||""),summary];
-  }).filter(entry=>String(entry?.[0]||"").trim()));
-  const assertions=[];
-  const currentCycleAssertionIds=[];
-  const discardedAssertionIds=[];
-  const staleAssertions=[];
-  let coverageMismatchCount=0;
-  let geometryMismatchCount=0;
-  let rawCoverageMismatchCount=0;
-  let rawGeometryMismatchCount=0;
-  let staleAssertionDetectedCount=0;
-  let staleAssertionResetAppliedCount=0;
-  for(let pageIndex=1;pageIndex<grupos.length;pageIndex+=1){
-    const prevGroup=Array.isArray(grupos[pageIndex-1])?grupos[pageIndex-1]:[];
-    const nextGroup=Array.isArray(grupos[pageIndex])?grupos[pageIndex]:[];
-    if(!prevGroup.length||!nextGroup.length)continue;
-    const prevItem=prevGroup[prevGroup.length-1]||null;
-    const nextItem=nextGroup[0]||null;
-    const pairKey=editorTextosPaginaConstruirChaveAmostraEspacamento({
-      fromPage:pageIndex,
-      toPage:pageIndex+1,
-      from:{block:editorTextosPaginaResumoNodeLayout(prevItem?.node||null)},
-      to:{block:editorTextosPaginaResumoNodeLayout(nextItem?.node||null)}
-    },pageIndex-1);
-    const beforePair=beforeMap.get(pairKey)||null;
-    const afterPair=afterMap.get(pairKey)||null;
-    const plannedSpace=plannedSpaceMap instanceof Map?plannedSpaceMap.get(pageIndex):null;
-    const markerSpace=markerSpaceMap instanceof Map?markerSpaceMap.get(pageIndex):null;
-    const plannedRemainingVisualHeight=Math.max(0,Number(plannedSpace?.remainingVisualHeight||0)||0);
-    const actualRemainingVisualHeight=Math.max(0,Number(markerSpace?.remainingVisualHeight||0)||0);
-    const storedRemainingVisualHeight=Math.max(0,Number(markerSpace?.storedVisualHeight||0)||0);
-    const borderTopPx=Math.max(0,Math.round(Number(markerSpace?.borderTopPx||0)||0));
-    const borderBottomPx=Math.max(0,Math.round(Number(markerSpace?.borderBottomPx||0)||0));
-    const expectedScaffoldHeight=Math.max(0,Math.round(
-      plannedRemainingVisualHeight
-      +borderBottomPx
-      +Math.max(0,Number(pageGapPx||0)||0)
-      +borderTopPx
-      +Math.max(0,Number(paddingTopPx||0)||0)
-    ));
-    const actualScaffoldHeight=Math.max(0,Number(markerSpace?.markerHeight||0)||0);
-    const actualPageLocalTop=afterPair
-      ?Math.max(0,(Number(afterPair?.to?.top||0)||0)-((Number(markerSpace?.markerTop||0)||0)+(Number(markerSpace?.markerHeight||0)||0)))
-      :null;
-    const plannedPageLocalTop=Math.max(0,Number(nextItem?.top||0)||0);
-    const beforeAuditedBreakRegionBlockIds=beforePair
-      ?[
-        String(beforePair?.from?.block?.blockId||"").trim(),
-        String(beforePair?.to?.block?.blockId||"").trim()
-      ].filter(Boolean)
-      :[];
-    const afterAuditedBreakRegionBlockIds=afterPair
-      ?[
-        String(afterPair?.from?.block?.blockId||"").trim(),
-        String(afterPair?.to?.block?.blockId||"").trim()
-      ].filter(Boolean)
-      :[];
-    const assertionId=`break:${pageIndex}:${pairKey}`;
-    currentCycleAssertionIds.push(assertionId);
-    const rawReasons=[];
-    if(!beforePair||!afterPair){
-      rawCoverageMismatchCount+=1;
-      rawReasons.push("transition_pair_missing");
-    }
-    if(Math.abs(storedRemainingVisualHeight-plannedRemainingVisualHeight)>1){
-      rawGeometryMismatchCount+=1;
-      rawReasons.push("stored_remaining_visual_height_mismatch");
-    }
-    if(Math.abs(actualRemainingVisualHeight-plannedRemainingVisualHeight)>1){
-      rawGeometryMismatchCount+=1;
-      rawReasons.push("actual_remaining_visual_height_mismatch");
-    }
-    if(Math.abs(actualScaffoldHeight-expectedScaffoldHeight)>1){
-      rawGeometryMismatchCount+=1;
-      rawReasons.push("scaffold_height_mismatch");
-    }
-    if(beforePair&&afterPair&&Math.abs((Number(afterPair?.normalizedGap||0)||0)-(Number(beforePair?.normalizedGap||0)||0))>1){
-      rawGeometryMismatchCount+=1;
-      rawReasons.push("normalized_gap_changed");
-    }
-    if(beforePair&&afterPair&&actualPageLocalTop!=null&&Math.abs(actualPageLocalTop-plannedPageLocalTop)>1){
-      rawGeometryMismatchCount+=1;
-      rawReasons.push("page_local_top_changed");
-    }
-    const currentCycleTransitionStable=
-      !!beforePair
-      &&!!afterPair
-      &&Math.abs((Number(afterPair?.normalizedGap||0)||0)-(Number(beforePair?.normalizedGap||0)||0))<=1
-      &&(actualPageLocalTop==null||Math.abs(actualPageLocalTop-plannedPageLocalTop)<=1);
-    const staleReasonSet=new Set([
-      "stored_remaining_visual_height_mismatch",
-      "actual_remaining_visual_height_mismatch",
-      "scaffold_height_mismatch"
-    ]);
-    const staleReasons=rawReasons.filter(reason=>staleReasonSet.has(String(reason||"")));
-    const nonStaleReasons=rawReasons.filter(reason=>!staleReasonSet.has(String(reason||"")));
-    const staleAssertionDetected=currentCycleTransitionStable&&staleReasons.length>0;
-    const staleAssertionResetApplied=staleAssertionDetected&&nonStaleReasons.length===0;
-    const discardedReasons=staleAssertionResetApplied?staleReasons.slice():[];
-    const reasons=staleAssertionResetApplied?[]:rawReasons.slice();
-    if(staleAssertionDetected){
-      staleAssertionDetectedCount+=1;
-    }
-    if(staleAssertionResetApplied){
-      staleAssertionResetAppliedCount+=1;
-      discardedAssertionIds.push(assertionId);
-      staleAssertions.push({
-        assertionId,
-        rawReasons:rawReasons.slice(),
-        discardedReasons:discardedReasons.slice(),
-        staleAssertionSourceCycle:"break_region_assertion_current_cycle",
-        currentCycleTransitionStable
-      });
-    }
-    if(reasons.includes("transition_pair_missing"))coverageMismatchCount+=1;
-    reasons.forEach(reason=>{
-      if(reason!=="transition_pair_missing")geometryMismatchCount+=1;
-    });
-    assertions.push({
-      assertionId,
-      breakIndex:pageIndex,
-      pageIndexAnterior:pageIndex,
-      pageIndexAtual:pageIndex+1,
-      pairKey,
-      fromBlockId:String(prevItem?.node?.dataset?.etBlockId||prevItem?.node?.id||prevItem?.node?.tagName||""),
-      toBlockId:String(nextItem?.node?.dataset?.etBlockId||nextItem?.node?.id||nextItem?.node?.tagName||""),
-      plannedRemainingVisualHeight,
-      actualRemainingVisualHeight,
-      storedRemainingVisualHeight,
-      expectedScaffoldHeight,
-      actualScaffoldHeight,
-      borderTopPx,
-      borderBottomPx,
-      plannedPageLocalTop,
-      actualPageLocalTop,
-      beforePairPresent:!!beforePair,
-      afterPairPresent:!!afterPair,
-      beforePairSampleIndex:Number.isFinite(Number(beforePair?.sampleIndex))?Number(beforePair.sampleIndex):null,
-      afterPairSampleIndex:Number.isFinite(Number(afterPair?.sampleIndex))?Number(afterPair.sampleIndex):null,
-      auditedBreakRegionBlockIds:{
-        planned:[
-          String(prevItem?.node?.dataset?.etBlockId||prevItem?.node?.id||prevItem?.node?.tagName||"").trim(),
-          String(nextItem?.node?.dataset?.etBlockId||nextItem?.node?.id||nextItem?.node?.tagName||"").trim()
-        ].filter(Boolean),
-        before:beforeAuditedBreakRegionBlockIds,
-        after:afterAuditedBreakRegionBlockIds
-      },
-      rawReasons:rawReasons.slice(),
-      discardedReasons:discardedReasons.slice(),
-      staleAssertionDetected,
-      staleAssertionResetApplied,
-      staleAssertionSourceCycle:staleAssertionDetected?"break_region_assertion_current_cycle":"",
-      staleRegressionReasonCleared:staleAssertionResetApplied,
-      currentCycleTransitionStable,
-      stable:reasons.length===0,
-      reasons
-    });
-  }
-  return{
-    breakCount:assertions.length,
-    coverageMismatchCount,
-    geometryMismatchCount,
-    rawCoverageMismatchCount,
-    rawGeometryMismatchCount,
-    staleAssertionDetectedCount,
-    staleAssertionResetAppliedCount,
-    currentCycleAssertionIds,
-    discardedAssertionIds,
-    staleAssertions,
-    stable:assertions.every(assertion=>assertion?.stable===true),
-    assertions
-  };
-}
-function editorTextosPaginaNormalizarBlocosVaziosAposQuebras(page,breakContexts,{origem="manual",reason="manual"}={}){
-  if(!(page instanceof HTMLElement)||!Array.isArray(breakContexts)||!breakContexts.length){
-    return{removedCount:0,collapsedRuns:0,removedBlocks:[]};
-  }
-  const handled=new Set();
-  const candidateRuns=[];
-  const collectFromAnchor=anchor=>{
-    if(!(anchor instanceof HTMLElement)||handled.has(anchor)||!editorTextosPaginaEhBlocoVazioNormalizavel(anchor))return;
-    const parent=anchor.parentElement;
-    if(!(parent instanceof HTMLElement))return;
-    const run=[anchor];
-    let cursor=anchor.previousElementSibling;
-    while(cursor instanceof HTMLElement&&cursor.parentElement===parent&&editorTextosPaginaEhBlocoVazioNormalizavel(cursor)){
-      run.unshift(cursor);
-      cursor=cursor.previousElementSibling;
-    }
-    cursor=anchor.nextElementSibling;
-    while(cursor instanceof HTMLElement&&cursor.parentElement===parent&&editorTextosPaginaEhBlocoVazioNormalizavel(cursor)){
-      run.push(cursor);
-      cursor=cursor.nextElementSibling;
-    }
-    run.forEach(node=>handled.add(node));
-    if(run.length<=1)return;
-    candidateRuns.push({
-      parentTag:String(parent.tagName||"").toLowerCase(),
-      runLength:run.length,
-      hasActiveSelection:run.some(node=>editorTextosPaginaNodeContemSelecaoAtiva(node)),
-      blocks:run.map(node=>editorTextosPaginaResumoEspacamentoBloco(node,page))
-    });
-  };
-  breakContexts.forEach(ctx=>{
-    collectFromAnchor(ctx?.prevElement||null);
-    collectFromAnchor(ctx?.nextElement||null);
-  });
-  const safeMode=true;
-  const removedBlocks=[];
-  const collapsedRuns=0;
-  editorTextosDebugLog("EDITOR PAGE SPACING_SAFE_MODE",{
-    origem:String(origem||"manual"),
-    reason:String(reason||"manual"),
-    enabled:safeMode,
-    candidateRunCount:candidateRuns.length
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE SPACING_MUTATION_GUARD",{
-    origem:String(origem||"manual"),
-    reason:String(reason||"manual"),
-    safeMode,
-    mutationAllowed:false,
-    candidateRunCount:candidateRuns.length
-  },"render");
-  if(candidateRuns.length){
-    editorTextosDebugLog("EDITOR PAGE EMPTY_BLOCK_NORMALIZATION_RESTRICTED",{
-      origem:String(origem||"manual"),
-      reason:String(reason||"manual"),
-      motivo:"safe_mode_preserva_estrutura_real_do_documento",
-      candidateRuns
-    },"render");
-  }else{
-    editorTextosDebugLog("EDITOR PAGE EMPTY_BLOCK_NORMALIZATION_SKIPPED",{
-      origem:String(origem||"manual"),
-      reason:String(reason||"manual"),
-      motivo:"nenhum_run_vazio_artificial_detectado"
-    },"render");
-  }
-  editorTextosDebugLog("EDITOR PAGE EMPTY_BLOCK_NORMALIZATION",{
-    origem:String(origem||"manual"),
-    reason:String(reason||"manual"),
-    removedCount:0,
-    collapsedRuns,
-    removedBlocks,
-    candidateRuns
-  },"render");
-  return{
-    removedCount:0,
-    collapsedRuns,
-    removedBlocks,
-    candidateRuns,
-    safeMode
-  };
-}
-function editorTextosPaginaLimparCompactacaoVisualQuebras(page){
-  if(!(page instanceof HTMLElement))return 0;
-  const nodes=[...page.querySelectorAll('[data-editor-break-leading-empty="1"]')];
-  nodes.forEach(node=>{
-    if(node instanceof HTMLElement){
-      node.removeAttribute("data-editor-break-leading-empty");
-    }
-  });
-  return nodes.length;
-}
-function editorTextosPaginaCompactarBlocosVaziosVisuaisAposQuebras(page,{origem="manual",reason="manual"}={}){
-  if(!(page instanceof HTMLElement)){
-    return{collapsedBlockCount:0,breakCount:0,collapsedBlockIds:[]};
-  }
-  const collapsedBlockIds=[];
-  const breakSummaries=[];
-  [...page.querySelectorAll("[data-editor-page-break='1']")].forEach((marker,idx)=>{
-    if(!(marker instanceof HTMLElement))return;
-    const run=[];
-    let cursor=marker.nextElementSibling;
-    while(cursor instanceof HTMLElement&&editorTextosPaginaEhBlocoVazioNormalizavel(cursor)){
-      if(editorTextosPaginaNodeContemSelecaoAtiva(cursor))break;
-      cursor.setAttribute("data-editor-break-leading-empty","1");
-      const blockId=String(editorTextosPaginaGarantirIdentidadeBloco(cursor)||cursor.id||"").trim();
-      if(blockId){
-        collapsedBlockIds.push(blockId);
-        run.push(blockId);
-      }else{
-        run.push(`break-${idx+1}-empty-${run.length+1}`);
-      }
-      cursor=cursor.nextElementSibling;
-    }
-    if(run.length){
-      breakSummaries.push({
-        breakIndex:idx+1,
-        collapsedCount:run.length,
-        collapsedBlockIds:run
-      });
-    }
-  });
-  if(breakSummaries.length){
-    editorTextosDebugLog("EDITOR PAGE LEADING_EMPTY_BREAK_VISUAL_COMPACTION",{
-      origem:String(origem||"manual"),
-      reason:String(reason||"manual"),
-      breakCount:breakSummaries.length,
-      collapsedBlockCount:collapsedBlockIds.length,
-      collapsedBlockIds,
-      breaks:breakSummaries
-    },"render");
-  }
-  return{
-    collapsedBlockCount:collapsedBlockIds.length,
-    breakCount:breakSummaries.length,
-    collapsedBlockIds,
-    breaks:breakSummaries
-  };
-}
-function editorTextosPaginaColetarItensLayout(page,options={}){
-  if(!(page instanceof HTMLElement))return[];
-  const auditVisualCoverage=options?.auditVisualCoverage===true;
-  const includeVisualSpacingBlocks=options?.includeVisualSpacingBlocks!==false;
-  const garantirIdentidade=candidatosLista=>(Array.isArray(candidatosLista)?candidatosLista:[]).map(node=>{
-    if(node instanceof HTMLElement)editorTextosPaginaGarantirIdentidadeBloco(node);
-    return node;
-  });
-  const sortNodes=nodes=>(Array.isArray(nodes)?nodes:[]).sort((a,b)=>{
-    if(a===b)return 0;
-    return (a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_PRECEDING)?1:-1;
-  });
-  const filtrarFolha=candidatosLista=>(Array.isArray(candidatosLista)?candidatosLista:[])
-    .filter(node=>!candidatosLista.some(other=>other!==node&&node.contains(other)));
-  const baseCandidatos=[...page.querySelectorAll(EDITOR_TEXTOS_BLOCK_SELECTOR)]
-    .filter(node=>node instanceof HTMLElement&&node!==page)
-    .filter(node=>!editorTextosElementoEhQuebraVisualPagina(node))
-    .filter(node=>!node.closest?.("[data-editor-page-break='1']"))
-    .filter(node=>!node.closest?.("td,th"));
-  const candidatosLogicos=baseCandidatos.filter(node=>editorTextosPaginaElementoTemConteudoSignificativo(node));
-  const candidatosVisuais=baseCandidatos.filter(node=>editorTextosPaginaElementoOcupaEspacoVisual(node));
-  const candidatosLayout=includeVisualSpacingBlocks
-    ?[...new Set([...candidatosLogicos,...candidatosVisuais])]
-    :candidatosLogicos;
-  const candidatos=auditVisualCoverage
-    ?[...new Set([...candidatosLayout,...candidatosVisuais])]
-    :candidatosLayout;
-  let folha=filtrarFolha(candidatos);
-  if(auditVisualCoverage&&candidatosLayout.length){
-    const folhaLogica=filtrarFolha(candidatosLayout);
-    const faltantesLogicos=folhaLogica.filter(node=>!folha.includes(node));
-    if(faltantesLogicos.length){
-      folha=[...new Set([...folha,...faltantesLogicos])];
-    }
-  }
-  if(folha.length){
-    return garantirIdentidade(sortNodes(folha));
-  }
-  return garantirIdentidade([...page.childNodes].filter(node=>{
-    if(editorTextosElementoEhQuebraVisualPagina(node))return false;
-    if(node.nodeType===Node.TEXT_NODE){
-      return !!String(node.nodeValue||"").replace(/\u200B/g,"").trim();
-    }
-    return node instanceof HTMLElement;
-  }));
-}
-function editorTextosPaginaResumoNodeLayout(node){
-  if(node instanceof Text){
-    return{
-      nodeType:"text",
-      text:editorTextosDebugPreview(String(node.nodeValue||"").replace(/\u200B/g,"\\u200B"),80)
-    };
-  }
-  if(node instanceof HTMLElement){
-    const blockId=editorTextosPaginaGarantirIdentidadeBloco(node);
-    return{
-      nodeType:String(node.tagName||"").toLowerCase(),
-      blockId,
-      className:String(node.className||""),
-      text:editorTextosDebugPreview(String(node.textContent||"").replace(/\u200B/g,"\\u200B"),80)
-    };
-  }
-  return{nodeType:String(node?.nodeName||"")};
-}
-function editorTextosPaginaAssinaturaConteudo(page,pagina){
-  if(!(page instanceof HTMLElement))return"";
-  const clone=page.cloneNode(true);
-  if(clone instanceof HTMLElement){
-    editorTextosPaginaRemoverQuebrasVisuais(clone);
-  }
-  const html=String(clone instanceof HTMLElement?clone.innerHTML:page.innerHTML||"");
-  const cfg=pagina&&typeof pagina==="object"?pagina:{};
-  return JSON.stringify({
-    html,
-    largura_mm:Number(cfg?.largura_mm||0)||0,
-    altura_mm:Number(cfg?.altura_mm||0)||0,
-    margem_superior_mm:Number(cfg?.margem_superior_mm||0)||0,
-    margem_esquerda_mm:Number(cfg?.margem_esquerda_mm||0)||0,
-    margem_direita_mm:Number(cfg?.margem_direita_mm||0)||0
-  });
-}
-function editorTextosPaginaAssinaturaLayout(page){
-  if(!(page instanceof HTMLElement))return"";
-  return [...page.querySelectorAll("[data-editor-page-break='1']")]
-    .map(node=>[
-      String(node.dataset.pageIndex||""),
-      String(node.style.getPropertyValue("--editor-page-break-remaining")||""),
-      String(node.style.getPropertyValue("--editor-page-gap")||""),
-      String(node.style.getPropertyValue("--editor-page-next-padding-top")||""),
-      String(node.nextElementSibling?.dataset?.etBlockId||node.nextElementSibling?.id||node.nextElementSibling?.tagName||node.nextSibling?.nodeName||"")
-    ].join("|"))
-    .join("||");
-}
-function editorTextosPaginaMapearDistribuicao(page,items=null){
-  if(!(page instanceof HTMLElement))return new Map();
-  const breaks=[...page.querySelectorAll("[data-editor-page-break='1']")];
-  const nodes=Array.isArray(items)?items.filter(node=>node instanceof Node&&page.contains(node)):[];
-  const map=new Map();
-  nodes.forEach(node=>{
-    let pageIndex=1;
-    breaks.forEach(br=>{
-      try{
-        if(br.compareDocumentPosition(node)&Node.DOCUMENT_POSITION_FOLLOWING)pageIndex+=1;
-      }catch{}
-    });
-    map.set(node,pageIndex);
-  });
-  return map;
-}
-function editorTextosPaginaMapearDistribuicaoGrupos(groups){
-  const map=new Map();
-  (Array.isArray(groups)?groups:[]).forEach((group,pageIndex)=>{
-    (Array.isArray(group)?group:[]).forEach(item=>{
-      const node=item?.node;
-      if(node instanceof Node)map.set(node,pageIndex+1);
-    });
-  });
-  return map;
-}
-function editorTextosPaginaCriarChaveMovimento(node,oldPage,newPage){
-  const bloco=editorTextosPaginaResumoNodeLayout(node);
-  const blockId=node instanceof HTMLElement?editorTextosPaginaGarantirIdentidadeBloco(node):"";
-  const blockKey=String(
-    blockId
-      ||(node instanceof HTMLElement
-      ?node.id||node.tagName||""
-      :(node instanceof Text?String(node.nodeValue||"").slice(0,40):String(node?.nodeName||""))
-      )
-  ).trim()||String(bloco?.text||"").slice(0,40)||"sem_bloco";
-  return`${blockKey}|${Math.max(1,Number(oldPage||1)||1)}|${Math.max(1,Number(newPage||1)||1)}`;
-}
-function editorTextosPaginaCriarAuditoriaMovimento(){
-  return{
-    exactMoves:new Set(),
-    forwardTransitions:new Set(),
-    stats:{
-      movedNextEffectiveCount:0,
-      movedNextDuplicateSkipped:0,
-      movedNextWrapperDetected:0,
-      movedNextBlockIds:[],
-      movedNextEffectiveBlockIds:[],
-      movedNextDuplicateSkippedBlockIds:[]
-    }
-  };
-}
-function editorTextosPaginaDistribuicaoMudou(items,distributionBefore,distributionAfter,{origem="manual",reason="manual",emitLogs=true,moveAudit=null,collapseForwardMoves=false}={}){
-  let changed=false;
-  const exactMoves=moveAudit?.exactMoves instanceof Set
-    ?moveAudit.exactMoves
-    :(moveAudit instanceof Set?moveAudit:null);
-  const forwardTransitions=moveAudit?.forwardTransitions instanceof Set
-    ?moveAudit.forwardTransitions
-    :null;
-  const stats=moveAudit?.stats&&typeof moveAudit.stats==="object"
-    ?moveAudit.stats
-    :null;
-  (Array.isArray(items)?items:[]).forEach(node=>{
-    const oldPage=Math.max(1,Number(distributionBefore?.get(node)||1)||1);
-    const newPage=Math.max(1,Number(distributionAfter?.get(node)||1)||1);
-    if(oldPage===newPage)return;
-    changed=true;
-    const moveKey=editorTextosPaginaCriarChaveMovimento(node,oldPage,newPage);
-    const blockId=String(node instanceof HTMLElement?editorTextosPaginaGarantirIdentidadeBloco(node):"").trim()
-      ||String(editorTextosPaginaResumoNodeLayout(node)?.blockId||"").trim()
-      ||String(node instanceof HTMLElement?node.id||node.tagName||"":node?.nodeName||"").trim();
-    const alreadyLogged=exactMoves instanceof Set&&exactMoves.has(moveKey);
-    if(exactMoves instanceof Set){
-      editorTextosDebugLog("EDITOR PAGE DUPLICATE_MOVE_CHECK",{
-        origem:String(origem||"manual"),
-        reason:String(reason||"manual"),
-        from:oldPage,
-        to:newPage,
-        moveKey,
-        alreadyLogged,
-        block:editorTextosPaginaResumoNodeLayout(node)
-      },"render");
-      if(alreadyLogged){
-        if(emitLogs){
-          editorTextosDebugLog("EDITOR PAGE DUPLICATE_MOVE_SKIPPED",{
-            origem:String(origem||"manual"),
-            reason:String(reason||"manual"),
-            from:oldPage,
-            to:newPage,
-            moveKey,
-            block:editorTextosPaginaResumoNodeLayout(node)
-          },"render");
-        }
-        return;
-      }
-      exactMoves.add(moveKey);
-    }
-    const movingNext=newPage>oldPage;
-    if(movingNext&&collapseForwardMoves&&forwardTransitions instanceof Set){
-      const transitionKey=`${oldPage}->${newPage}`;
-      const wrapperDetected=!!(node instanceof HTMLElement&&String(node.tagName||"").toUpperCase()==="DIV"&&!String(node.dataset?.etBlockId||node.id||"").trim());
-      const transitionAlreadyLogged=forwardTransitions.has(transitionKey);
-      if(transitionAlreadyLogged){
-        if(stats){
-          stats.movedNextDuplicateSkipped+=1;
-          if(wrapperDetected)stats.movedNextWrapperDetected+=1;
-          if(blockId)stats.movedNextDuplicateSkippedBlockIds.push(blockId);
-        }
-        if(emitLogs){
-          editorTextosDebugLog("EDITOR PAGE MOVED_NEXT_DUPLICATE_SKIPPED",{
-            origem:String(origem||"manual"),
-            reason:String(reason||"manual"),
-            from:oldPage,
-            to:newPage,
-            transitionKey,
-            block:editorTextosPaginaResumoNodeLayout(node)
-          },"render");
-          if(wrapperDetected){
-            editorTextosDebugLog("EDITOR PAGE MOVED_NEXT_WRAPPER_DETECTED",{
-              origem:String(origem||"manual"),
-              reason:String(reason||"manual"),
-              from:oldPage,
-              to:newPage,
-              transitionKey,
-              block:editorTextosPaginaResumoNodeLayout(node)
-            },"render");
-          }
-        }
-        return;
-      }
-      forwardTransitions.add(transitionKey);
-      if(stats){
-        stats.movedNextEffectiveCount+=1;
-        if(wrapperDetected)stats.movedNextWrapperDetected+=1;
-        if(blockId)stats.movedNextEffectiveBlockIds.push(blockId);
-      }
-    }
-    if(movingNext&&stats&&blockId){
-      stats.movedNextBlockIds.push(blockId);
-    }
-    if(!emitLogs)return;
-    editorTextosDebugLog(newPage<oldPage?"EDITOR PAGE BLOCK MOVED_PREV":"EDITOR PAGE BLOCK MOVED_NEXT",{
-      origem:String(origem||"manual"),
-      reason:String(reason||"manual"),
-      from:oldPage,
-      to:newPage,
-      block:editorTextosPaginaResumoNodeLayout(node)
-    },"render");
-  });
-  return changed;
-}
-function editorTextosPaginaConstruirGrupos(items,itemMeta,distributionBefore){
-  const grupos=[];
-  let currentPage=1;
-  let atual=[];
-  items.forEach(node=>{
-    const targetPage=Math.max(1,Number(distributionBefore?.get(node)||1)||1);
-    while(currentPage<targetPage){
-      grupos.push(atual);
-      atual=[];
-      currentPage+=1;
-    }
-    atual.push(itemMeta.get(node));
-  });
-  grupos.push(atual);
-  return grupos.filter((grupo,idx)=>grupo.length||idx===0);
-}
-function editorTextosPaginaTotalAlturaGrupo(grupo){
-  return (Array.isArray(grupo)?grupo:[]).reduce((sum,item)=>sum+Math.max(0,Number(item?.height||0)||0),0);
-}
-function editorTextosPaginaCalcularEspacoGrupo(grupo,usableHeightPx,paddingBottomPx=0){
-  const base=Array.isArray(grupo)?grupo:[];
-  const usable=Math.max(0,Number(usableHeightPx||0)||0);
-  const paddingBottom=Math.max(0,Number(paddingBottomPx||0)||0);
-  let usedHeightByBottom=0;
-  let usedHeightBySum=0;
-  let positionalCount=0;
-  base.forEach(item=>{
-    const height=Math.max(0,Number(item?.height||0)||0);
-    usedHeightBySum+=height;
-    const top=Number(item?.top);
-    if(!Number.isFinite(top))return;
-    positionalCount+=1;
-    const bottom=Math.max(0,Math.round(top+height));
-    if(bottom>usedHeightByBottom)usedHeightByBottom=bottom;
-  });
-  const usedHeightRaw=positionalCount?usedHeightByBottom:usedHeightBySum;
-  const usedHeightClamped=Math.min(usable,usedHeightRaw);
-  const remainingContentHeight=Math.max(0,usable-usedHeightClamped);
-  return{
-    itemCount:base.length,
-    positionalCount,
-    usedHeightByBottom,
-    usedHeightBySum,
-    usedHeightRaw,
-    usedHeightClamped,
-    remainingContentHeight,
-    remainingVisualHeight:remainingContentHeight+paddingBottom,
-    usableHeightPx:usable,
-    paddingBottomPx:paddingBottom
-  };
-}
-function editorTextosPaginaSerializarEspacos(spaceMap){
-  if(!(spaceMap instanceof Map))return[];
-  return [...spaceMap.entries()].map(([pageIndex,space])=>({
-    pageIndex:Number(pageIndex||space?.pageIndex||0)||0,
-    source:String(space?.source||""),
-    itemCount:Number(space?.itemCount||0)||0,
-    remainingContentHeight:Number(space?.remainingContentHeight||0)||0,
-    remainingVisualHeight:Number(space?.remainingVisualHeight||0)||0,
-    usedHeightRaw:Number(space?.usedHeightRaw||0)||0,
-    usedHeightClamped:Number(space?.usedHeightClamped||0)||0,
-    positionalCount:Number(space?.positionalCount||0)||0
-  }));
-}
-function editorTextosPaginaSnapshotEspaco(snapshot,pageIndex){
-  const targetPage=Math.max(1,Number(pageIndex||1)||1);
-  const spaces=Array.isArray(snapshot?.spaces)?snapshot.spaces:[];
-  return spaces.find(space=>Math.max(1,Number(space?.pageIndex||0)||1)===targetPage)||null;
-}
-function editorTextosPaginaNormalizarGruposFluxo(pages,usableHeightPx,paddingBottomPx=0){
-  const normalizedPages=(Array.isArray(pages)?pages:[]).map((group,pageIndex)=>{
-    let cursorTop=0;
-    return (Array.isArray(group)?group:[]).map(item=>{
-      const height=Math.max(0,Number(item?.height||0)||0);
-      const normalized={
-        ...(item&&typeof item==="object"?item:{}),
-        top:cursorTop,
-        originalTop:Number(item?.top||0)||0,
-        flowPageIndex:pageIndex+1
-      };
-      cursorTop+=height;
-      return normalized;
-    });
-  });
-  const spaceMap=new Map();
-  normalizedPages.forEach((group,pageIndex)=>{
-    spaceMap.set(pageIndex+1,{
-      source:"group_flow_recomputed",
-      pageIndex:pageIndex+1,
-      ...editorTextosPaginaCalcularEspacoGrupo(group,usableHeightPx,paddingBottomPx)
-    });
-  });
-  return{pages:normalizedPages,spaceMap};
-}
-function editorTextosPaginaCriarSnapshotDistribuicao(contentSignature,pages,spaceMap,extra={}){
-  return{
-    contentSignature:String(contentSignature||""),
-    createdAt:Date.now(),
-    pages:(Array.isArray(pages)?pages:[]).map((group,pageIndex)=>({
-      pageIndex:pageIndex+1,
-      itemCount:Array.isArray(group)?group.length:0,
-      blockIds:(Array.isArray(group)?group:[]).map(item=>String(item?.node?.dataset?.etBlockId||item?.node?.id||item?.node?.tagName||"")).filter(Boolean)
-    })),
-    spaces:editorTextosPaginaSerializarEspacos(spaceMap),
-    ...((extra&&typeof extra==="object")?extra:{})
-  };
-}
-function editorTextosPaginaCriarCommitPosUp(contentSignature,pages,spaceMap,markerSpaces,extra={}){
-  return{
-    contentSignature:String(contentSignature||""),
-    committedAt:Date.now(),
-    pages:(Array.isArray(pages)?pages:[]).map((group,pageIndex)=>({
-      pageIndex:pageIndex+1,
-      itemCount:Array.isArray(group)?group.length:0,
-      blockIds:(Array.isArray(group)?group:[]).map(item=>String(item?.node?.dataset?.etBlockId||item?.node?.id||item?.node?.tagName||"")).filter(Boolean)
-    })),
-    spaces:editorTextosPaginaSerializarEspacos(spaceMap),
-    markerSpaces:editorTextosPaginaSerializarEspacos(markerSpaces),
-    ...((extra&&typeof extra==="object")?extra:{})
-  };
-}
-function editorTextosPaginaMapearDiagnosticoEspaco(candidates,referenceSpace=null){
-  const base=Array.isArray(candidates)?candidates:[];
-  const refContent=Number(referenceSpace?.remainingContentHeight||0)||0;
-  const refVisual=Number(referenceSpace?.remainingVisualHeight||0)||0;
-  return base.map(candidate=>{
-    const space=candidate?.space&&typeof candidate.space==="object"?candidate.space:{};
-    const content=Number(space?.remainingContentHeight||0)||0;
-    const visual=Number(space?.remainingVisualHeight||0)||0;
-    return{
-      label:String(candidate?.label||""),
-      source:String(space?.source||candidate?.label||""),
-      remainingContentHeight:content,
-      remainingVisualHeight:visual,
-      deltaContentFromReference:content-refContent,
-      deltaVisualFromReference:visual-refVisual
-    };
-  });
-}
-function editorTextosPaginaMapearEspacoQuebrasVisuais(page,usableHeightPx,paddingBottomPx=0){
-  if(!(page instanceof HTMLElement))return new Map();
-  const usable=Math.max(0,Number(usableHeightPx||0)||0);
-  const paddingBottom=Math.max(0,Number(paddingBottomPx||0)||0);
-  const computed=window.getComputedStyle?.(page)||null;
-  const borderTopPx=Math.max(0,Math.round(Number.parseFloat(computed?.borderTopWidth||"0")||0));
-  const borderBottomPx=Math.max(0,Math.round(Number.parseFloat(computed?.borderBottomWidth||"0")||0));
-  const paddingTopPx=Math.max(0,Math.round(Number.parseFloat(computed?.paddingTop||"0")||0));
-  const contentStartTop=Math.max(0,borderTopPx+paddingTopPx);
-  const breaks=[...page.querySelectorAll("[data-editor-page-break='1']")];
-  const map=new Map();
-  let pageStartTop=contentStartTop;
-  const pageRect=page.getBoundingClientRect?.()||null;
-  breaks.forEach((marker,idx)=>{
-    if(!(marker instanceof HTMLElement))return;
-    const markerRect=marker.getBoundingClientRect?.()||null;
-    const markerTop=Math.max(0,Math.round(
-      markerRect&&pageRect
-        ?Number(markerRect.top-pageRect.top)||0
-        :(Number(marker.offsetTop||0)||0)
-    ));
-    const markerHeight=Math.max(0,Math.round(Number(marker.offsetHeight||0)||0));
-    const storedVisualHeight=Math.max(0,Math.round(Number.parseFloat(marker.style.getPropertyValue("--editor-page-break-remaining"))||0));
-    const storedContentHeight=Math.max(0,storedVisualHeight-paddingBottom);
-    const nextPaddingTopPx=Math.max(0,Math.round(Number.parseFloat(marker.style.getPropertyValue("--editor-page-next-padding-top"))||0));
-    const usedHeightRaw=Math.max(0,markerTop-pageStartTop);
-    const usedHeightClamped=Math.min(usable,usedHeightRaw);
-    const remainingContentHeight=Math.max(0,usable-usedHeightClamped);
-    map.set(idx+1,{
-      source:"marker_offset",
-      pageIndex:idx+1,
-      markerTop,
-      pageStartTop,
-      contentStartTop,
-      markerHeight,
-      storedVisualHeight,
-      storedContentHeight,
-      borderTopPx,
-      borderBottomPx,
-      nextPaddingTopPx,
-      usedHeightRaw,
-      usedHeightClamped,
-      remainingContentHeight,
-      remainingVisualHeight:remainingContentHeight+paddingBottom,
-      usableHeightPx:usable,
-      paddingBottomPx:paddingBottom
-    });
-    pageStartTop=markerTop+markerHeight;
-  });
-  return map;
-}
-function editorTextosPaginaRenderizarGrupos(page,pages,usableHeightPx,pageGapPx,paddingTopPx,paddingBottomPx,reason){
-  let breakCount=0;
-  const pageSummaries=[];
-  for(let idx=0;idx<pages.length;idx+=1){
-    const grupo=pages[idx];
-    const totalHeight=editorTextosPaginaTotalAlturaGrupo(grupo);
-    pageSummaries.push({page:idx+1,totalHeight,items:grupo.length});
-    if(idx===0)continue;
-    const prevGroup=pages[idx-1]||[];
-    const prevSpace=editorTextosPaginaCalcularEspacoGrupo(prevGroup,usableHeightPx,paddingBottomPx);
-    const usedHeight=prevSpace.usedHeightClamped;
-    const remainingHeight=prevSpace.remainingVisualHeight;
-    const target=grupo[0]?.node||null;
-    if(!(target instanceof Node)||!(target.parentNode instanceof Node))continue;
-    const marker=editorTextosPaginaCriarQuebraVisual(remainingHeight,pageGapPx,paddingTopPx,idx);
-    target.parentNode.insertBefore(marker,target);
-    breakCount+=1;
-    editorTextosDebugLog("EDITOR PAGE BREAK CALCULATED",{
-      origem:"manual",
-      reason,
-      breakIndex:breakCount,
-      pageIndexAnterior:idx,
-      remainingHeight,
-      remainingContentHeight:prevSpace.remainingContentHeight,
-      usedHeightRaw:prevSpace.usedHeightRaw,
-      usedHeightClamped:prevSpace.usedHeightClamped,
-      itemHeight:Number(grupo[0]?.height||0)||0,
-      nextPaddingTopPx:paddingTopPx,
-      nextNode:editorTextosPaginaResumoNodeLayout(target)
-    },"render");
-  }
-  return{breakCount,pageSummaries};
-}
-function editorTextosPaginaMedirItemRenderizado(node,page){
-  if(!(page instanceof HTMLElement)||!(node instanceof Node))return null;
-  try{
-    const pageRect=page.getBoundingClientRect?.()||null;
-    if(node instanceof HTMLElement){
-      const rect=node.getBoundingClientRect?.()||null;
-      if(rect&&pageRect){
-        return{
-          top:Math.max(0,Math.round(Number(rect.top-pageRect.top)||0)),
-          height:Math.max(1,Math.round(Number(rect.height||0)||0))
-        };
-      }
-      return{
-        top:Math.max(0,Number(node.offsetTop||0)||0),
-        height:Math.max(1,Math.round(Number(node.offsetHeight||node.getBoundingClientRect?.().height||0)||0))
-      };
-    }
-    if(node instanceof Text){
-      const range=document.createRange();
-      range.selectNodeContents(node);
-      const rect=range.getBoundingClientRect();
-      if(pageRect){
-        return{
-          top:Math.max(0,Math.round(Number(rect.top-pageRect.top)||0)),
-          height:Math.max(1,Math.round(Number(rect.height||0)||0))
-        };
-      }
-    }
-  }catch{}
-  return editorTextosPaginaMedirItemLayout(node,page);
-}
-function editorTextosPaginaMedirItemLayout(node,page){
-  if(!(page instanceof HTMLElement)||!(node instanceof Node))return null;
-  try{
-    if(node instanceof HTMLElement){
-      return{
-        top:Math.max(0,Number(node.offsetTop||0)||0),
-        height:Math.max(1,Math.round(Number(node.offsetHeight||node.getBoundingClientRect?.().height||0)||0))
-      };
-    }
-    if(node instanceof Text){
-      const range=document.createRange();
-      range.selectNodeContents(node);
-      const rect=range.getBoundingClientRect();
-      const pageRect=page.getBoundingClientRect();
-      return{
-        top:Math.max(0,Math.round(Number(rect.top-pageRect.top)||0)),
-        height:Math.max(1,Math.round(Number(rect.height||0)||0))
-      };
-    }
-  }catch{}
-  return null;
-}
-function editorTextosAtualizarLayoutPaginado(options={}){
-  if(!editorTextosCfg?.page||!editorTextosCfg?.work)return;
-  const page=editorTextosCfg.page;
-  const work=editorTextosCfg.work;
-  const pagina=editorTextosNormalizarPaginaConfig(editorTextosCfg.paginaConfig||EDITOR_TEXTOS_PAGE_DEFAULT);
-  const reason=String(options?.reason||options?.origem||"manual");
-  const force=options?.force===true;
-  const mutation=editorTextosCfg?.pageLayoutLastMutation||null;
-  const directionDecision=String(options?.direction||mutation?.direction||"neutral");
-  const beforeCursor=editorTextosParagrafoCapturarCursorReal(null,null,{log:false})||null;
-  const contentSignature=editorTextosPaginaAssinaturaConteudo(page,pagina);
-  const stableSnapshotBefore=editorTextosCfg?.pageLayoutStableDistributionSnapshot||null;
-  const postUpCommitBefore=editorTextosCfg?.pageLayoutPostUpReflowCommit||null;
-  if(!force&&!editorTextosCfg?.pageLayoutDirty&&String(editorTextosCfg.pageLayoutContentSignature||"")===contentSignature){
-    editorTextosDebugLog("EDITOR PAGE REPAGINATION SKIPPED",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      motivo:"conteudo_inalterado"
-    },"render");
-    editorTextosDebugLog("EDITOR PAGE REPAGINATION REASON",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      changed:false
-    },"render");
-    editorTextosDebugLog("EDITOR PAGE DOM UNCHANGED",{
-      origem:String(options?.origem||"manual"),
-      reason
-    },"render");
-    return false;
-  }
-  editorTextosPaginaLimparCompactacaoVisualQuebras(page);
-  const pageHeightPx=Math.max(480,Math.round(Number(pagina.altura_mm||EDITOR_TEXTOS_PAGE_DEFAULT.altura_mm)*EDITOR_TEXTOS_MM_TO_PX));
-  const computed=window.getComputedStyle(page);
-  const paddingTopPx=Math.max(0,Math.round(Number.parseFloat(computed.paddingTop)||0));
-  const paddingBottomPx=Math.max(0,Math.round(Number.parseFloat(computed.paddingBottom)||0));
-  const paddingLeftPx=Math.max(0,Math.round(Number.parseFloat(computed.paddingLeft)||0));
-  const paddingRightPx=Math.max(0,Math.round(Number.parseFloat(computed.paddingRight)||0));
-  const borderTopPx=Math.max(0,Math.round(Number.parseFloat(computed.borderTopWidth)||0));
-  const borderBottomPx=Math.max(0,Math.round(Number.parseFloat(computed.borderBottomWidth)||0));
-  const usableHeightPx=Math.max(160,pageHeightPx-paddingTopPx-paddingBottomPx-borderTopPx-borderBottomPx);
-  const pageGapPx=Math.max(24,Number(editorTextosCfg.pageGapPx||EDITOR_TEXTOS_PAGE_BREAK_GAP_PX)||EDITOR_TEXTOS_PAGE_BREAK_GAP_PX);
-  const overflowTolerancePx=directionDecision==="up"
-    ?EDITOR_TEXTOS_PAGE_BREAK_TOLERANCE_PX+4
-    :EDITOR_TEXTOS_PAGE_BREAK_TOLERANCE_PX;
-  const itemsBefore=editorTextosPaginaColetarItensLayout(page);
-  const distributionBefore=editorTextosPaginaMapearDistribuicao(page,itemsBefore);
-  const breakSpaceBefore=editorTextosPaginaMapearEspacoQuebrasVisuais(page,usableHeightPx,paddingBottomPx);
-  const breakContextsBefore=editorTextosPaginaColetarContextoQuebrasVisuais(page);
-  const stableSnapshotMatch=stableSnapshotBefore&&String(stableSnapshotBefore?.contentSignature||"")===contentSignature
-    ?stableSnapshotBefore
-    :null;
-  const postUpCommitMatch=postUpCommitBefore&&String(postUpCommitBefore?.contentSignature||"")===contentSignature
-    ?postUpCommitBefore
-    :null;
-  if(postUpCommitBefore&&!postUpCommitMatch){
-    editorTextosCfg.pageLayoutPostUpReflowCommit=null;
-  }
-  const removed=editorTextosPaginaRemoverQuebrasVisuais(page);
-  let spacingBeforeMove=null;
-  let spacingAfterMove=null;
-  let emptyBlockNormalization={removedCount:0,collapsedRuns:0,removedBlocks:[]};
-  if(removed>0){
-    spacingBeforeMove=editorTextosPaginaColetarDiagnosticoEspacamento(page);
-    editorTextosDebugLog("EDITOR PAGE BLOCK SPACING BEFORE_MOVE",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      removedBreakCount:removed,
-      breakContexts:breakContextsBefore.map(ctx=>({
-        breakIndex:ctx.breakIndex,
-        parentTag:ctx.parentTag,
-        prevBlock:editorTextosPaginaResumoEspacamentoBloco(ctx.prevElement,page),
-        nextBlock:editorTextosPaginaResumoEspacamentoBloco(ctx.nextElement,page)
-      })),
-      spacing:spacingBeforeMove
-    },"render");
-    emptyBlockNormalization=editorTextosPaginaNormalizarBlocosVaziosAposQuebras(page,breakContextsBefore,{
-      origem:String(options?.origem||"manual"),
-      reason
-    });
-    spacingAfterMove=editorTextosPaginaColetarDiagnosticoEspacamento(page);
-    editorTextosDebugLog("EDITOR PAGE BLOCK SPACING AFTER_MOVE",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      removedBreakCount:removed,
-      emptyBlockNormalization,
-      spacing:spacingAfterMove
-    },"render");
-    editorTextosDebugLog("EDITOR PAGE VERTICAL_GAP_CHECK",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      before:spacingBeforeMove,
-      after:spacingAfterMove
-    },"render");
-  }
-  const spacingAuditInput=spacingAfterMove||editorTextosPaginaColetarDiagnosticoEspacamento(page);
-  const spacingCoverageBeforeCommit=editorTextosPaginaResumirCoberturaAuditoria(spacingAuditInput);
-  editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_AUDIT_INPUT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    removedBreakCount:removed,
-    coverage:spacingCoverageBeforeCommit,
-    spacing:spacingAuditInput
-  },"render");
-  page.style.setProperty("--editor-page-height",`${pageHeightPx}px`);
-  page.style.setProperty("--editor-page-gap",`${pageGapPx}px`);
-  page.style.setProperty("--editor-page-border-top",`${borderTopPx}px`);
-  page.style.setProperty("--editor-page-border-bottom",`${borderBottomPx}px`);
-  page.style.setProperty("--editor-page-padding-top",`${paddingTopPx}px`);
-  page.style.setProperty("--editor-page-padding-bottom",`${paddingBottomPx}px`);
-  page.style.setProperty("--editor-page-padding-left",`${paddingLeftPx}px`);
-  page.style.setProperty("--editor-page-padding-right",`${paddingRightPx}px`);
-  work.classList.add("editor-textos-work-paginated");
-  editorTextosDebugLog("EDITOR PAGE LAYOUT INIT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    pageHeightPx,
-    usableHeightPx,
-    pageGapPx,
-    paddingTopPx,
-    paddingBottomPx,
-    paddingLeftPx,
-    paddingRightPx,
-    borderTopPx,
-    borderBottomPx,
-    singleContainer:true,
-    removedBefore:removed,
-    childCount:page.childNodes.length
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE REFLOW DIRECTION DECISION",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    mutation
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE POST_UP_REFLOW_NEXT_CYCLE_INPUT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    stableSnapshotBefore:stableSnapshotMatch,
-    postUpCommitBefore:postUpCommitMatch,
-    markerSpacesBefore:editorTextosPaginaSerializarEspacos(breakSpaceBefore)
-  },"render");
-  const items=editorTextosPaginaColetarItensLayout(page);
-  const itemMeta=new Map();
-  const moveAudit=editorTextosPaginaCriarAuditoriaMovimento();
-  items.forEach(node=>{
-    const metrics=editorTextosPaginaMedirItemLayout(node,page);
-    const top=Math.max(0,Math.round(Number(metrics?.top||0)||0));
-    const height=Math.max(1,Math.round(Number(metrics?.height||0)||0));
-    itemMeta.set(node,{node,top,height,oldPage:Number(distributionBefore.get(node)||1)||1});
-  });
-  const previousPages=editorTextosPaginaConstruirGrupos(items,itemMeta,distributionBefore);
-  let pages=directionDecision==="up"
-    ?previousPages.map(group=>Array.isArray(group)?group.slice():[])
-    :[items.map(node=>itemMeta.get(node)).filter(Boolean)];
-  let breakCount=0;
-  let movedPrevCount=0;
-  editorTextosDebugLog("EDITOR PAGE REFLOW DOWN CHECK",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    itemCount:items.length,
-    usableHeightPx,
-    tolerancePx:overflowTolerancePx
-  },"render");
-  if(directionDecision==="up"){
-    editorTextosDebugLog("EDITOR PAGE REFLOW UP START",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      previousPages:previousPages.map(group=>Array.isArray(group)?group.length:0),
-      itemCount:items.length,
-      usableHeightPx,
-      tolerancePx:overflowTolerancePx
-    },"render");
-    pages=previousPages.map(group=>Array.isArray(group)?group.slice():[]);
-    for(let idx=0;idx<pages.length-1;idx+=1){
-      const atual=pages[idx];
-      const proxima=pages[idx+1];
-      if(!Array.isArray(atual)||!Array.isArray(proxima)||!proxima.length)continue;
-      while(proxima.length){
-        const normalizedCurrent=editorTextosPaginaNormalizarGruposFluxo([atual],usableHeightPx,paddingBottomPx);
-        const currentSpace=normalizedCurrent.spaceMap.get(1)||editorTextosPaginaCalcularEspacoGrupo(atual,usableHeightPx,paddingBottomPx);
-        const candidate=proxima[0];
-        const oldPage=Math.max(1,Number(candidate?.oldPage||distributionBefore.get(candidate?.node)||idx+2)||idx+2);
-        const remainingContentHeight=Math.max(0,Number(currentSpace?.remainingContentHeight||0)||0);
-        const remainingVisualHeight=Math.max(0,Number(currentSpace?.remainingVisualHeight||0)||0);
-        const remainingHeight=remainingVisualHeight;
-        const visualLiftHeight=Math.max(0,remainingHeight+paddingTopPx);
-        const candidateHeight=Math.max(0,Number(candidate?.height||0)||0);
-        const currentTotalHeight=Math.max(0,editorTextosPaginaTotalAlturaGrupo(atual));
-        const fitRemainingHeightContent=Math.max(0,usableHeightPx-currentTotalHeight);
-        const fitRemainingHeightVisual=Math.max(0,fitRemainingHeightContent+paddingBottomPx+paddingTopPx);
-        const simulatedLayout=editorTextosPaginaNormalizarGruposFluxo([[...atual,candidate]],usableHeightPx,paddingBottomPx);
-        const simulatedPage=Array.isArray(simulatedLayout?.pages?.[0])?simulatedLayout.pages[0]:[...atual,candidate];
-        const simulatedSpace=simulatedLayout?.spaceMap?.get(1)||editorTextosPaginaCalcularEspacoGrupo(simulatedPage,usableHeightPx,paddingBottomPx);
-        const simulatedTotalHeight=Math.max(0,editorTextosPaginaTotalAlturaGrupo(simulatedPage));
-        const overflowAfterMovePx=Math.max(0,simulatedTotalHeight-usableHeightPx);
-        const overflowAfterMoveVisualPx=Math.max(0,simulatedTotalHeight-(usableHeightPx+paddingBottomPx+paddingTopPx));
-        const fitByVisualMetric=atual.length===0||candidateHeight<=visualLiftHeight+overflowTolerancePx;
-        const fitBySimulatedVisual=atual.length===0||simulatedTotalHeight<=usableHeightPx+paddingBottomPx+paddingTopPx+overflowTolerancePx;
-        const fitBySimulatedContent=atual.length===0||simulatedTotalHeight<=usableHeightPx+overflowTolerancePx;
-        const decisionSources=[
-          {
-            source:"break_visual_lift_height",
-            priority:1,
-            remainingHeight:visualLiftHeight,
-            fits:fitByVisualMetric
-          },
-          {
-            source:"simulated_group_lift_height",
-            priority:2,
-            remainingHeight:fitRemainingHeightVisual,
-            fits:fitBySimulatedVisual
-          },
-          {
-            source:"simulated_group_total_height",
-            priority:3,
-            remainingHeight:fitRemainingHeightContent,
-            fits:fitBySimulatedContent
-          }
-        ];
-        let decisionSource="break_visual_lift_height";
-        let fitRemainingHeightSelected=visualLiftHeight;
-        let fits=fitByVisualMetric;
-        if(!fitByVisualMetric&&fitBySimulatedVisual){
-          decisionSource="simulated_group_lift_height";
-          fitRemainingHeightSelected=fitRemainingHeightVisual;
-          fits=true;
-        }
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP SPACE_SOURCE",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          nextPageIndex:idx+2,
-          source:decisionSource,
-          breakVisualLiftHeightBefore:remainingVisualHeight,
-          breakVisualLiftHeightAfter:visualLiftHeight,
-          breakVisualLiftSourceBlocks:{
-            currentTail:String(atual[atual.length-1]?.node?.dataset?.etBlockId||atual[atual.length-1]?.node?.id||atual[atual.length-1]?.node?.tagName||"").trim(),
-            nextHead:String(proxima[0]?.node?.dataset?.etBlockId||proxima[0]?.node?.id||proxima[0]?.node?.tagName||"").trim(),
-            candidate:String(candidate?.node?.dataset?.etBlockId||candidate?.node?.id||candidate?.node?.tagName||"").trim()
-          },
-          currentSpace,
-          simulatedSpace
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP DECISION_SOURCE_PRIORITY",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          nextPageIndex:idx+2,
-          decisionSources
-        },"render");
-        if(fitByVisualMetric&&!fitBySimulatedContent){
-          editorTextosDebugLog("EDITOR PAGE REFLOW UP DECISION_SOURCE_REJECTED",{
-            origem:String(options?.origem||"manual"),
-            reason,
-            pageIndex:idx+1,
-            nextPageIndex:idx+2,
-            source:"simulated_group_total_height",
-            motivo:"subestima_espaco_util_por_descontar_padding_top_e_bottom",
-            remainingHeightContent:fitRemainingHeightContent,
-            remainingHeightVisual:visualLiftHeight,
-            remainingHeightBase:remainingHeight,
-            paddingTopPx,
-            paddingBottomPx,
-            candidateHeight
-          },"render");
-        }
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP SPACE_COMPARE",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          nextPageIndex:idx+2,
-          remainingContentHeight,
-          remainingVisualHeight,
-          visualLiftHeight,
-          fitRemainingHeightContent,
-          fitRemainingHeightVisual,
-          currentTotalHeight,
-          simulatedTotalHeight,
-          breakCalculatedComparableHeight:remainingVisualHeight,
-          candidateHeight
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP PAGE_STATE",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          nextPageIndex:idx+2,
-          currentCount:atual.length,
-          nextCount:proxima.length,
-          remainingHeight,
-          visualLiftHeight,
-          fitRemainingHeightContent,
-          fitRemainingHeightVisual,
-          currentTotalHeight,
-          simulatedTotalHeight,
-          remainingContentHeight,
-          remainingVisualHeight,
-          candidateHeight,
-          currentSpace,
-          simulatedSpace
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP CANDIDATE",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          remainingHeight,
-          visualLiftHeight,
-          candidate:editorTextosPaginaResumoNodeLayout(candidate?.node||null),
-          candidateHeight
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP FIT_INPUT",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          remainingContentHeight,
-          remainingVisualHeight,
-          visualLiftHeight,
-          fitRemainingHeightContent,
-          fitRemainingHeightVisual,
-          fitRemainingHeight:fitRemainingHeightSelected,
-          currentTotalHeight,
-          simulatedTotalHeight,
-          candidateHeight,
-          tolerancePx:overflowTolerancePx
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP DECISION_INPUT",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          remainingContentHeight,
-          remainingVisualHeight,
-          visualLiftHeight,
-          fitRemainingHeightContent,
-          fitRemainingHeightVisual,
-          currentTotalHeight,
-          simulatedTotalHeight,
-          candidateHeight,
-          tolerancePx:overflowTolerancePx
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP VISUAL_FIT_ASSERT",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          remainingHeight,
-          paddingTopPx,
-          visualLiftHeight,
-          candidateHeight,
-          tolerancePx:overflowTolerancePx,
-          fitByVisualMetric
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP CONTENT_FIT_ASSERT",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          remainingContentHeight,
-          fitRemainingHeightContent,
-          fitRemainingHeightVisual,
-          candidateHeight,
-          tolerancePx:overflowTolerancePx,
-          fitBySimulatedContent,
-          fitBySimulatedVisual
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP FIT CHECK",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          remainingHeight:visualLiftHeight,
-          candidateHeight,
-          fits
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP FIT_NORMALIZATION_DETAIL",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          paddingTopPx,
-          paddingBottomPx,
-          remainingContentHeight,
-          remainingVisualHeight,
-          visualLiftHeight,
-          fitRemainingHeightContent,
-          fitRemainingHeightVisual,
-          currentTotalHeight,
-          simulatedTotalHeight
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP FIT_NORMALIZED",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          fitRemainingHeight:fitRemainingHeightSelected,
-          availableWithTolerance:fitRemainingHeightSelected+overflowTolerancePx,
-          decisionSource,
-          currentTotalHeight,
-          simulatedTotalHeight,
-          candidateHeight,
-          fits
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP DECISION_BLOCKERS",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          fitByVisualMetric,
-          fitBySimulatedVisual,
-          fitBySimulatedContent,
-          overflowAfterMovePx,
-          overflowAfterMoveVisualPx,
-          usableHeightPx,
-          visualLiftHeight,
-          paddingBottomPx,
-          paddingTopPx,
-          tolerancePx:overflowTolerancePx,
-          candidateHeight
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP DECISION_SOURCE_SELECTED",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          decisionSource,
-          fitRemainingHeightSelected,
-          fits
-        },"render");
-        editorTextosDebugLog("EDITOR PAGE REFLOW UP DECISION_FINAL",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          pageIndex:idx+1,
-          oldPage,
-          decisionSource,
-          fits,
-          fitByVisualMetric,
-          fitBySimulatedVisual,
-          fitBySimulatedContent
-        },"render");
-        if(!fits){
-          editorTextosDebugLog("EDITOR PAGE REFLOW UP RESIDUAL_BLOCKER",{
-            origem:String(options?.origem||"manual"),
-            reason,
-            pageIndex:idx+1,
-            oldPage,
-            decisionSource,
-            remainingContentHeight,
-            remainingHeight,
-            visualLiftHeight,
-            fitRemainingHeightSelected,
-            candidateHeight,
-            overflowAfterMovePx,
-            overflowAfterMoveVisualPx,
-            fitByVisualMetric,
-            fitBySimulatedVisual,
-            fitBySimulatedContent
-          },"render");
-        }
-        if(!fits){
-          editorTextosDebugLog("EDITOR PAGE REFLOW UP BLOCK_REJECT_REASON",{
-            origem:String(options?.origem||"manual"),
-            reason,
-            pageIndex:idx+1,
-            nextPageIndex:idx+2,
-            motivo:"candidate_nao_cabe_na_pagina_anterior",
-            remainingHeight,
-            visualLiftHeight,
-            remainingContentHeight,
-            fitRemainingHeightContent,
-            fitRemainingHeightVisual,
-            fitRemainingHeightSelected,
-            currentTotalHeight,
-            simulatedTotalHeight,
-            candidateHeight,
-            overflowAfterMovePx,
-            overflowAfterMoveVisualPx,
-            decisionSource,
-            tolerancePx:overflowTolerancePx,
-            candidate:editorTextosPaginaResumoNodeLayout(candidate?.node||null)
-          },"render");
-          break;
-        }
-        const movedItem=proxima.shift();
-        atual.push(movedItem);
-        movedPrevCount+=1;
-        const moveKey=editorTextosPaginaCriarChaveMovimento(movedItem?.node||null,oldPage,idx+1);
-        const alreadyLogged=moveAudit.exactMoves.has(moveKey);
-        editorTextosDebugLog("EDITOR PAGE DUPLICATE_MOVE_CHECK",{
-          origem:String(options?.origem||"manual"),
-          reason,
-          from:oldPage,
-          to:idx+1,
-          moveKey,
-          alreadyLogged,
-          block:editorTextosPaginaResumoNodeLayout(movedItem?.node||null)
-        },"render");
-        if(alreadyLogged){
-          editorTextosDebugLog("EDITOR PAGE DUPLICATE_MOVE_SKIPPED",{
-            origem:String(options?.origem||"manual"),
-            reason,
-            from:oldPage,
-            to:idx+1,
-            moveKey,
-            block:editorTextosPaginaResumoNodeLayout(movedItem?.node||null)
-          },"render");
-        }else{
-          moveAudit.exactMoves.add(moveKey);
-          editorTextosDebugLog("EDITOR PAGE BLOCK MOVED_PREV",{
-            origem:String(options?.origem||"manual"),
-            reason,
-            from:oldPage,
-            to:idx+1,
-            block:editorTextosPaginaResumoNodeLayout(movedItem?.node||null)
-          },"render");
-        }
-      }
-    }
-    pages=pages.filter((grupo,idx)=>grupo.length||idx===0);
-    editorTextosDebugLog("EDITOR PAGE REFLOW UP RESULT",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      movedPrevCount,
-      pagesAfterLift:pages.map(grupo=>grupo.length)
-    },"render");
-  }
-  if(directionDecision!=="up"){
-    pages=[[]];
-    let current=pages[0];
-    items.forEach(node=>{
-      const item=itemMeta.get(node);
-      if(!item)return;
-      const usadoAtual=editorTextosPaginaTotalAlturaGrupo(current);
-      if(current.length&&usadoAtual+item.height>usableHeightPx+overflowTolerancePx){
-        current=[];
-        pages.push(current);
-      }
-      current.push(item);
-    });
-  }
-  const pagesBeforeConsolidation=pages.map(group=>Array.isArray(group)?group.length:0);
-  const normalizedLayout=editorTextosPaginaNormalizarGruposFluxo(pages,usableHeightPx,paddingBottomPx);
-  pages=normalizedLayout.pages;
-  const stableSpacePlanned=normalizedLayout.spaceMap;
-  if(directionDecision==="up"){
-    editorTextosDebugLog("EDITOR PAGE REFLOW UP CONSOLIDATION",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      movedPrevCount,
-      pagesBeforeConsolidation,
-      pagesAfterConsolidation:pages.map(group=>Array.isArray(group)?group.length:0),
-      spaces:editorTextosPaginaSerializarEspacos(stableSpacePlanned)
-    },"render");
-    if(movedPrevCount>0){
-      editorTextosDebugLog("EDITOR PAGE MARKER RECOMPUTED",{
-        origem:String(options?.origem||"manual"),
-        reason,
-        spaces:editorTextosPaginaSerializarEspacos(stableSpacePlanned)
-      },"render");
-    }
-  }
-  const distributionPlanned=editorTextosPaginaMapearDistribuicaoGrupos(pages);
-  const rendered=editorTextosPaginaRenderizarGrupos(page,pages,usableHeightPx,pageGapPx,paddingTopPx,paddingBottomPx,reason);
-  breakCount=rendered.breakCount;
-  const distributionAfter=editorTextosPaginaMapearDistribuicao(page,items);
-  const distributionChangedPlanned=editorTextosPaginaDistribuicaoMudou(items,distributionBefore,distributionPlanned,{
-    origem:String(options?.origem||"manual"),
-    reason,
-    emitLogs:false
-  });
-  const distributionChangedDom=editorTextosPaginaDistribuicaoMudou(items,distributionBefore,distributionAfter,{
-    origem:String(options?.origem||"manual"),
-    reason,
-    emitLogs:true,
-    moveAudit,
-    collapseForwardMoves:directionDecision!=="up"
-  });
-  const distributionChanged=distributionChangedPlanned||distributionChangedDom||movedPrevCount>0;
-  editorTextosDebugLog("EDITOR PAGE REFLOW UP CHECK",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    distributionChangedPlanned,
-    distributionChangedDom,
-    distributionChanged,
-    breakCount
-  },"render");
-  const layoutSignature=editorTextosPaginaAssinaturaLayout(page);
-  const domChanged=String(editorTextosCfg.pageLayoutSignature||"")!==layoutSignature;
-  const stableSnapshot=editorTextosPaginaCriarSnapshotDistribuicao(contentSignature,pages,stableSpacePlanned,{
-    layoutSignature,
-    breakCount,
-    directionDecision
-  });
-  editorTextosCfg.pageLayoutStableDistributionSnapshot=stableSnapshot;
-  editorTextosCfg.pageLayoutContentSignature=contentSignature;
-  editorTextosCfg.pageLayoutSignature=layoutSignature;
-  editorTextosCfg.pageLayoutDirty=false;
-  editorTextosDebugLog("EDITOR PAGE STABLE DISTRIBUTION SNAPSHOT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    breakCount,
-    movedPrevCount,
-    snapshot:stableSnapshot
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE RENDER RESULT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    totalPages:Math.max(1,breakCount+1),
-    breakCount,
-    pageHeightPx,
-    pageGapPx,
-    finalContentHeight:Math.max(Number(page.scrollHeight||0),pageHeightPx)
-  },"render");
-  if(distributionChanged){
-    editorTextosDebugLog("EDITOR PAGE DISTRIBUTION CHANGED",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      planned:distributionChangedPlanned,
-      dom:distributionChangedDom,
-      breakCount
-    },"render");
-  }
-  if(directionDecision!=="up"){
-    editorTextosDebugLog("EDITOR PAGE MOVED_NEXT_EFFECTIVE_COUNT_RAW",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      effectiveCount:Number(moveAudit?.stats?.movedNextEffectiveCount||0)||0,
-      duplicateSkipped:Number(moveAudit?.stats?.movedNextDuplicateSkipped||0)||0,
-      wrapperDetected:Number(moveAudit?.stats?.movedNextWrapperDetected||0)||0,
-      movedBlockIds:Array.isArray(moveAudit?.stats?.movedNextBlockIds)?moveAudit.stats.movedNextBlockIds:[],
-      effectiveMovedBlockIds:Array.isArray(moveAudit?.stats?.movedNextEffectiveBlockIds)?moveAudit.stats.movedNextEffectiveBlockIds:[],
-      duplicateSkippedBlockIds:Array.isArray(moveAudit?.stats?.movedNextDuplicateSkippedBlockIds)?moveAudit.stats.movedNextDuplicateSkippedBlockIds:[],
-      cyclePhase:"pre_audit_distribution_counter",
-      effectiveMoveDecisionReason:"raw_distribution_transition_counter"
-    },"render");
-  }
-  const postReflowMarkerSpace=editorTextosPaginaMapearEspacoQuebrasVisuais(page,usableHeightPx,paddingBottomPx);
-  if(movedPrevCount>0){
-    const postUpCommit=editorTextosPaginaCriarCommitPosUp(contentSignature,pages,stableSpacePlanned,postReflowMarkerSpace,{
-      layoutSignature,
-      breakCount,
-      directionDecision,
-      reason
-    });
-    editorTextosCfg.pageLayoutPostUpReflowCommit=postUpCommit;
-    editorTextosDebugLog("EDITOR PAGE POST_UP_REFLOW_COMMIT",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      movedPrevCount,
-      commit:postUpCommit
-    },"render");
-  }
-  editorTextosDebugLog("EDITOR PAGE POST_REFLOW_RECHECK",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    movedPrevCount,
-    markerSpaces:editorTextosPaginaSerializarEspacos(postReflowMarkerSpace),
-    plannedSpaces:editorTextosPaginaSerializarEspacos(stableSpacePlanned),
-    distributionChanged
-  },"render");
-  const finalSpacingAudit=editorTextosPaginaColetarDiagnosticoEspacamento(page,distributionAfter);
-  const breakRegionAudit=editorTextosPaginaColetarAssertivasRegiaoQuebra(
-    pages,
-    spacingAuditInput,
-    finalSpacingAudit,
-    stableSpacePlanned,
-    postReflowMarkerSpace,
-    pageGapPx,
-    paddingTopPx
-  );
-  const resolvedBeforeTransitionIndices=editorTextosPaginaResolverIndicesTransicaoAudit(spacingAuditInput,breakRegionAudit,"before");
-  const resolvedAfterTransitionIndices=editorTextosPaginaResolverIndicesTransicaoAudit(finalSpacingAudit,breakRegionAudit,"after");
-  spacingAuditInput.transitionSampleIndicesResolved=resolvedBeforeTransitionIndices;
-  finalSpacingAudit.transitionSampleIndicesResolved=resolvedAfterTransitionIndices;
-  const transitionRegionBlockIds=editorTextosPaginaColetarIdsRegiaoTransicao(breakRegionAudit);
-  const spacingCoverageAfterCommit=editorTextosPaginaResumirCoberturaAuditoria(finalSpacingAudit);
-  const spacingCoverageBeforeResolved={
-    ...spacingCoverageBeforeCommit,
-    transitionSampleIndicesResolved:resolvedBeforeTransitionIndices,
-    transitionRegionBlockIds
-  };
-  const spacingCoverageAfterResolved={
-    ...spacingCoverageAfterCommit,
-    transitionSampleIndicesResolved:resolvedAfterTransitionIndices,
-    transitionRegionBlockIds
-  };
-  const realRenderedSpacingBefore=editorTextosPaginaResumirEspacamentoRenderizado(spacingAuditInput,8,resolvedBeforeTransitionIndices);
-  const realRenderedSpacingAfter=editorTextosPaginaResumirEspacamentoRenderizado(finalSpacingAudit,8,resolvedAfterTransitionIndices);
-  const realRenderedSpacingDiff=editorTextosPaginaDiffEspacamentoRenderizado(spacingAuditInput,finalSpacingAudit,8,{
-    beforeTransitionIndices:resolvedBeforeTransitionIndices,
-    afterTransitionIndices:resolvedAfterTransitionIndices
-  });
-  const resolvedBeforeTransitionIndicesExpanded=resolvedBeforeTransitionIndices
-    .map(index=>editorTextosPaginaResumirSampleEspacamentoRenderizado(
-      Array.isArray(spacingAuditInput?.normalizedGapSamples)?spacingAuditInput.normalizedGapSamples[index]:null,
-      index
-    ))
-    .filter(Boolean);
-  const resolvedAfterTransitionIndicesExpanded=resolvedAfterTransitionIndices
-    .map(index=>editorTextosPaginaResumirSampleEspacamentoRenderizado(
-      Array.isArray(finalSpacingAudit?.normalizedGapSamples)?finalSpacingAudit.normalizedGapSamples[index]:null,
-      index
-    ))
-    .filter(Boolean);
-  const beforeSampleKeysSet=new Set((Array.isArray(realRenderedSpacingBefore)?realRenderedSpacingBefore:[]).map(sample=>String(sample?.sampleKey||"")));
-  const afterSampleKeysSet=new Set((Array.isArray(realRenderedSpacingAfter)?realRenderedSpacingAfter:[]).map(sample=>String(sample?.sampleKey||"")));
-  const extraAfterSamples=(Array.isArray(realRenderedSpacingAfter)?realRenderedSpacingAfter:[]).filter(sample=>!beforeSampleKeysSet.has(String(sample?.sampleKey||"")));
-  const missingBeforeSamples=(Array.isArray(realRenderedSpacingBefore)?realRenderedSpacingBefore:[]).filter(sample=>!afterSampleKeysSet.has(String(sample?.sampleKey||"")));
-  const dominantRenderedPropertyDiff=editorTextosPaginaCalcularPropriedadeDominanteDiffRenderizado(realRenderedSpacingDiff);
-  editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_COVERAGE",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    before:spacingCoverageBeforeResolved,
-    after:spacingCoverageAfterResolved
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE REAL_RENDERED_SPACING_BEFORE",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    beforeSampleCountReal:Array.isArray(realRenderedSpacingBefore)?realRenderedSpacingBefore.length:0,
-    beforeSampleBlockIds:(Array.isArray(realRenderedSpacingBefore)?realRenderedSpacingBefore:[]).map(sample=>({
-      sampleKey:String(sample?.sampleKey||""),
-      fromBlockId:String(sample?.from?.block?.blockId||""),
-      toBlockId:String(sample?.to?.block?.blockId||"")
-    })),
-    coverage:spacingCoverageBeforeResolved,
-    spacing:realRenderedSpacingBefore
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE REAL_RENDERED_SPACING_AFTER",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    afterSampleCountReal:Array.isArray(realRenderedSpacingAfter)?realRenderedSpacingAfter.length:0,
-    afterSampleBlockIds:(Array.isArray(realRenderedSpacingAfter)?realRenderedSpacingAfter:[]).map(sample=>({
-      sampleKey:String(sample?.sampleKey||""),
-      fromBlockId:String(sample?.from?.block?.blockId||""),
-      toBlockId:String(sample?.to?.block?.blockId||"")
-    })),
-    coverage:spacingCoverageAfterResolved,
-    spacing:realRenderedSpacingAfter
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_BREAK_REGION_AUDIT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    before:{
-      coverage:spacingCoverageBeforeResolved,
-      transitions:Array.isArray(spacingAuditInput?.pageTransitions)?spacingAuditInput.pageTransitions:[],
-      spacing:realRenderedSpacingBefore
-    },
-    after:{
-      coverage:spacingCoverageAfterResolved,
-      transitions:Array.isArray(finalSpacingAudit?.pageTransitions)?finalSpacingAudit.pageTransitions:[],
-      spacing:realRenderedSpacingAfter
-    },
-    transitionRegionBlockIds
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_BREAK_ASSERT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    breakRegionAudit
-  },"render");
-  if(Math.max(0,Number(breakRegionAudit?.staleAssertionResetAppliedCount||0)||0)>0){
-    editorTextosDebugLog("EDITOR PAGE BREAK_REGION_STALE_ASSERTION_RESET",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      staleAssertionDetected:Boolean((Number(breakRegionAudit?.staleAssertionDetectedCount||0)||0)>0),
-      staleAssertionResetApplied:Boolean((Number(breakRegionAudit?.staleAssertionResetAppliedCount||0)||0)>0),
-      staleAssertionSourceCycle:"break_region_assertion_current_cycle",
-      currentCycleAssertionIds:Array.isArray(breakRegionAudit?.currentCycleAssertionIds)?breakRegionAudit.currentCycleAssertionIds:[],
-      discardedAssertionIds:Array.isArray(breakRegionAudit?.discardedAssertionIds)?breakRegionAudit.discardedAssertionIds:[],
-      staleAssertions:Array.isArray(breakRegionAudit?.staleAssertions)?breakRegionAudit.staleAssertions:[]
-    },"render");
-  }
-  if(Math.max(0,Number(breakRegionAudit?.coverageMismatchCount||0)||0)>0){
-    editorTextosDebugLog("EDITOR PAGE COVERAGE_MISMATCH_DETAIL",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      coverageMismatchReasonExpanded:{
-        beforeSampleCountReal:Array.isArray(realRenderedSpacingBefore)?realRenderedSpacingBefore.length:0,
-        afterSampleCountReal:Array.isArray(realRenderedSpacingAfter)?realRenderedSpacingAfter.length:0,
-        beforeSampleBlockIds:(Array.isArray(realRenderedSpacingBefore)?realRenderedSpacingBefore:[]).map(sample=>String(sample?.sampleKey||"")),
-        afterSampleBlockIds:(Array.isArray(realRenderedSpacingAfter)?realRenderedSpacingAfter:[]).map(sample=>String(sample?.sampleKey||"")),
-        extraAfterSampleBlockIds:extraAfterSamples.map(sample=>({
-          sampleKey:String(sample?.sampleKey||""),
-          fromBlockId:String(sample?.from?.block?.blockId||""),
-          toBlockId:String(sample?.to?.block?.blockId||"")
-        })),
-        missingBeforeSampleBlockIds:missingBeforeSamples.map(sample=>({
-          sampleKey:String(sample?.sampleKey||""),
-          fromBlockId:String(sample?.from?.block?.blockId||""),
-          toBlockId:String(sample?.to?.block?.blockId||"")
-        })),
-        beforeCoverageWindowStart:(Array.isArray(realRenderedSpacingBefore)&&realRenderedSpacingBefore.length)?Math.min(...realRenderedSpacingBefore.map(sample=>Number(sample?.sampleIndex||0)||0)):null,
-        beforeCoverageWindowEnd:(Array.isArray(realRenderedSpacingBefore)&&realRenderedSpacingBefore.length)?Math.max(...realRenderedSpacingBefore.map(sample=>Number(sample?.sampleIndex||0)||0)):null,
-        afterCoverageWindowStart:(Array.isArray(realRenderedSpacingAfter)&&realRenderedSpacingAfter.length)?Math.min(...realRenderedSpacingAfter.map(sample=>Number(sample?.sampleIndex||0)||0)):null,
-        afterCoverageWindowEnd:(Array.isArray(realRenderedSpacingAfter)&&realRenderedSpacingAfter.length)?Math.max(...realRenderedSpacingAfter.map(sample=>Number(sample?.sampleIndex||0)||0)):null
-      },
-      breakRegionAudit,
-      coverageBefore:spacingCoverageBeforeResolved,
-      coverageAfter:spacingCoverageAfterResolved
-    },"render");
-  }
-  if(Array.isArray(breakRegionAudit?.assertions)&&breakRegionAudit.assertions.length){
-    editorTextosDebugLog("EDITOR PAGE BREAK_REGION_SAMPLE_DETAIL",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      assertions:breakRegionAudit.assertions
-    },"render");
-  }
-  if(Number(realRenderedSpacingDiff?.diffCount||0)>0){
-    const dominantPropertyExpanded=editorTextosPaginaExpandirPropriedadeDominante(dominantRenderedPropertyDiff);
-    editorTextosDebugLog("EDITOR PAGE REAL_RENDERED_SPACING_DIFF",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      diff:realRenderedSpacingDiff
-    },"render");
-    editorTextosDebugLog("EDITOR PAGE REAL_RENDERED_PROPERTY_DIFF",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      transitionSampleIndices:resolvedBeforeTransitionIndices,
-      transitionSampleIndicesRaw:{
-        before:Array.isArray(spacingAuditInput?.transitionSampleIndices)?spacingAuditInput.transitionSampleIndices:[],
-        after:Array.isArray(finalSpacingAudit?.transitionSampleIndices)?finalSpacingAudit.transitionSampleIndices:[]
-      },
-      transitionSampleIndicesResolved:{
-        before:resolvedBeforeTransitionIndices,
-        after:resolvedAfterTransitionIndices
-      },
-      resolvedBeforeTransitionIndicesExpanded,
-      resolvedAfterTransitionIndicesExpanded,
-      transitionSampleIndicesExpanded:{
-        before:editorTextosPaginaSelecionarIndicesEspacamentoRenderizado(
-          Array.isArray(spacingAuditInput?.normalizedGapSamples)?spacingAuditInput.normalizedGapSamples:[],
-          8,
-          2,
-          resolvedBeforeTransitionIndices,
-          {includeDocumentAnchors:false}
-        ),
-        after:editorTextosPaginaSelecionarIndicesEspacamentoRenderizado(
-          Array.isArray(finalSpacingAudit?.normalizedGapSamples)?finalSpacingAudit.normalizedGapSamples:[],
-          8,
-          2,
-          resolvedAfterTransitionIndices,
-          {includeDocumentAnchors:false}
-        )
-      },
-      transitionRegionBlockIds,
-      pairingStrategy:{
-        before:String(spacingCoverageBeforeResolved?.samplePairingStrategy||""),
-        after:String(spacingCoverageAfterResolved?.samplePairingStrategy||"")
-      },
-      ...dominantPropertyExpanded,
-      diffs:editorTextosPaginaResumirDiffPropriedadesRenderizadas(realRenderedSpacingDiff,8),
-      comparedSamplePairsExpanded:Array.isArray(realRenderedSpacingDiff?.comparedSamplePairsExpanded)?realRenderedSpacingDiff.comparedSamplePairsExpanded:[],
-      diff:realRenderedSpacingDiff
-    },"render");
-  }
-  if(directionDecision!=="up"){
-    const transitionAlignment=editorTextosPaginaNormalizarAlinhamentoTransicao({
-      breakCount,
-      distributionChangedPlanned,
-      distributionChangedDom,
-      domChanged,
-      layoutSignature,
-      moveAuditStats:moveAudit?.stats,
-      transitionRegionBlockIds
-    });
-    editorTextosDebugLog("EDITOR PAGE MOVED_NEXT_EFFECTIVE_AUDIT_ALIGNMENT",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      movedBlockIds:transitionAlignment.movedBlockIds,
-      movedBlockIdsResolved:transitionAlignment.movedBlockIdsResolved,
-      effectiveMovedBlockIds:transitionAlignment.effectiveMovedBlockIds,
-      effectiveMovedBlockIdsResolved:transitionAlignment.effectiveMovedBlockIdsResolved,
-      auditedTransitionBlockIds:transitionAlignment.auditedTransitionBlockIds,
-      auditedBoundaryPairBlockIds:transitionAlignment.auditedBoundaryPairBlockIds,
-      resolvedTransitionBlocks:transitionAlignment.resolvedTransitionBlocks,
-      effectiveAlignedBlockIds:transitionAlignment.effectiveMovedBlockIds.filter(blockId=>transitionAlignment.auditedTransitionBlockIds.includes(blockId)),
-      cyclePhase:transitionAlignment.cyclePhase,
-      cycleIdentity:transitionAlignment.cycleIdentity
-    },"render");
-    editorTextosDebugLog("EDITOR PAGE MOVED_NEXT_EFFECTIVE_COUNT",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      effectiveCount:Number(transitionAlignment?.effectiveMovedCountResolved||0)||0,
-      rawEffectiveCount:Number(transitionAlignment?.effectiveMovedCountRaw||0)||0,
-      persistedTransitionCount:Array.isArray(transitionAlignment?.auditedTransitionBlockIds)?transitionAlignment.auditedTransitionBlockIds.length:0,
-      duplicateSkipped:Number(moveAudit?.stats?.movedNextDuplicateSkipped||0)||0,
-      wrapperDetected:Number(moveAudit?.stats?.movedNextWrapperDetected||0)||0,
-      movedBlockIds:Array.isArray(transitionAlignment?.movedBlockIdsResolved)?transitionAlignment.movedBlockIdsResolved:[],
-      effectiveMovedBlockIds:Array.isArray(transitionAlignment?.effectiveMovedBlockIdsResolved)?transitionAlignment.effectiveMovedBlockIdsResolved:[],
-      rawMovedBlockIds:Array.isArray(transitionAlignment?.rawMovedBlockIds)?transitionAlignment.rawMovedBlockIds:[],
-      rawEffectiveMovedBlockIds:Array.isArray(transitionAlignment?.rawEffectiveMovedBlockIds)?transitionAlignment.rawEffectiveMovedBlockIds:[],
-      auditedTransitionBlockIds:Array.isArray(transitionAlignment?.auditedTransitionBlockIds)?transitionAlignment.auditedTransitionBlockIds:[],
-      duplicateSkippedBlockIds:Array.isArray(transitionAlignment?.duplicateSkippedBlockIds)?transitionAlignment.duplicateSkippedBlockIds:[],
-      cyclePhase:String(transitionAlignment?.cyclePhase||""),
-      effectiveMoveDecisionReason:String(transitionAlignment?.effectiveMoveDecisionReason||""),
-      movedEffectiveAuditedConsistency:String(transitionAlignment?.movedEffectiveAuditedConsistency||"")
-    },"render");
-    editorTextosDebugLog("EDITOR PAGE MOVED_NEXT_EFFECTIVE_AUDIT_ALIGNMENT_DETAIL",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      alignmentMismatchReason:transitionAlignment.alignmentMismatchReason,
-      movedVsAuditedBlockDiff:transitionAlignment.movedVsAuditedBlockDiff,
-      resolvedTransitionBlocksExpanded:transitionAlignment.resolvedTransitionBlocks,
-      effectiveMovedCountRaw:Number(transitionAlignment?.effectiveMovedCountRaw||0)||0,
-      effectiveMovedCountResolved:Number(transitionAlignment?.effectiveMovedCountResolved||0)||0,
-      effectiveMoveDecisionReason:transitionAlignment.effectiveMoveDecisionReason,
-      movedEffectiveAuditedConsistency:transitionAlignment.movedEffectiveAuditedConsistency,
-      cyclePhase:transitionAlignment.cyclePhase,
-      cycleIdentity:transitionAlignment.cycleIdentity,
-      breakPipelineState:transitionAlignment.breakPipelineState,
-      rawMovedBlockIds:transitionAlignment.rawMovedBlockIds,
-      rawEffectiveMovedBlockIds:transitionAlignment.rawEffectiveMovedBlockIds,
-      duplicateSkippedBlockIds:transitionAlignment.duplicateSkippedBlockIds
-    },"render");
-    finalSpacingAudit.transitionAlignment=transitionAlignment;
-  }
-  editorTextosDebugLog("EDITOR PAGE BLOCK SPACING AFTER_COMMIT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    emptyBlockNormalization,
-    spacing:finalSpacingAudit
-  },"render");
-  const legacyPostCommitSpacingStable=!spacingAfterMove||(
-    Math.max(0,Number(finalSpacingAudit?.maxGap||0)||0)<=Math.max(0,Number(spacingAfterMove?.maxGap||0)||0)
-    &&Math.max(0,Number(finalSpacingAudit?.emptyBlockCount||0)||0)===Math.max(0,Number(spacingAfterMove?.emptyBlockCount||0)||0)
-    &&Math.max(0,Number(finalSpacingAudit?.emptyRunCount||0)||0)===Math.max(0,Number(spacingAfterMove?.emptyRunCount||0)||0)
-    &&JSON.stringify(Array.isArray(finalSpacingAudit?.lineHeights)?finalSpacingAudit.lineHeights:[])===JSON.stringify(Array.isArray(spacingAfterMove?.lineHeights)?spacingAfterMove.lineHeights:[])
-  );
-  const normalizedGapPreserved=editorTextosPaginaCompararSequenciaNumerica(
-    spacingAuditInput?.normalizedGapValues,
-    finalSpacingAudit?.normalizedGapValues,
-    1
-  );
-  const lineHeightPreserved=JSON.stringify(Array.isArray(finalSpacingAudit?.lineHeights)?finalSpacingAudit.lineHeights:[])===JSON.stringify(Array.isArray(spacingAuditInput?.lineHeights)?spacingAuditInput.lineHeights:[]);
-  const visualTransitionStable=Math.max(0,Number(realRenderedSpacingDiff?.transitionMismatchCount||0)||0)===0
-    &&Math.max(0,Number(realRenderedSpacingDiff?.maxTransitionDelta||0)||0)<=1;
-  const renderedSpacingStable=Math.max(0,Number(realRenderedSpacingDiff?.diffCount||0)||0)===0
-    &&Math.max(0,Number(realRenderedSpacingDiff?.coverageMismatchCount||0)||0)===0;
-  const postCommitSpacingDiff=editorTextosPaginaExtrairDiffSequenciaNumerica(
-    spacingAuditInput?.normalizedGapValues,
-    finalSpacingAudit?.normalizedGapValues,
-    1,
-    8
-  );
-  const transitionAlignment=finalSpacingAudit?.transitionAlignment&&typeof finalSpacingAudit.transitionAlignment==="object"
-    ?finalSpacingAudit.transitionAlignment
-    :{};
-  const alignmentStableForDecision=String(transitionAlignment?.alignmentMismatchReason||"").trim()==="";
-  const dominantBreakRegionDiff=Array.isArray(breakRegionAudit?.assertions)
-    ?breakRegionAudit.assertions.find(assertion=>assertion?.stable!==true)||null
-    :null;
-  const breakCountBefore=Math.max(0,Number(spacingAuditInput?.pageTransitionCount||0)||0);
-  const breakCountAfter=Math.max(0,Number(finalSpacingAudit?.pageTransitionCount||0)||0);
-  const transitionCountBefore=Math.max(0,Number(resolvedBeforeTransitionIndices?.length||0)||0);
-  const transitionCountAfter=Math.max(0,Number(resolvedAfterTransitionIndices?.length||0)||0);
-  const noBreakAuditState=
-    Math.max(0,Number(breakCount||0)||0)===0
-    &&Math.max(0,Number(breakRegionAudit?.breakCount||0)||0)===0
-    &&breakCountBefore===0
-    &&breakCountAfter===0
-    &&transitionCountBefore===0
-    &&transitionCountAfter===0
-    &&dominantBreakRegionDiff==null;
-  const currentCycleRenderedDiffCount=Math.max(0,Number(realRenderedSpacingDiff?.diffCount||0)||0);
-  const currentCycleCoverageMismatchCount=Math.max(0,Number(realRenderedSpacingDiff?.coverageMismatchCount||0)||0);
-  const currentCycleTransitionMismatchCount=Math.max(0,Number(realRenderedSpacingDiff?.transitionMismatchCount||0)||0);
-  const currentCycleGapDiffCount=Math.max(0,Number(postCommitSpacingDiff?.diffCount||0)||0);
-  const currentCycleLengthsEqual=Math.max(0,Number(postCommitSpacingDiff?.lengthBefore||0)||0)===Math.max(0,Number(postCommitSpacingDiff?.lengthAfter||0)||0);
-  const currentCycleComparableDiff=
-    currentCycleRenderedDiffCount>0
-    ||currentCycleCoverageMismatchCount>0
-    ||currentCycleTransitionMismatchCount>0
-    ||currentCycleGapDiffCount>0;
-  const staleDominantDiffDetected=
-    dominantBreakRegionDiff!=null
-    &&!currentCycleComparableDiff
-    &&currentCycleLengthsEqual
-    &&alignmentStableForDecision
-    &&Math.max(0,Number(breakCount||0)||0)>0
-    &&transitionCountBefore>0
-    &&transitionCountAfter>0;
-  const breakRegionHasCoherentRenderedDiff=
-    !staleDominantDiffDetected&&(
-    Math.max(0,Number(realRenderedSpacingDiff?.diffCount||0)||0)>0
-    ||Math.max(0,Number(realRenderedSpacingDiff?.coverageMismatchCount||0)||0)>0
-    ||Math.max(0,Number(realRenderedSpacingDiff?.transitionMismatchCount||0)||0)>0
-    ||Math.max(0,Number(postCommitSpacingDiff?.diffCount||0)||0)>0
-    );
-  const breaklessAuditBypassApplied=noBreakAuditState===true;
-  const noBreakFinalDecisionReason=breaklessAuditBypassApplied
-    ? "no_break_sem_transicao_real"
-    : "";
-  const alignmentMismatchClass=String(transitionAlignment?.alignmentMismatchClass||"").trim()
-    ||(alignmentStableForDecision?"aligned_or_coherent":"break_transition_mismatch");
-  const breakRegionAuditClass=breaklessAuditBypassApplied
-    ? "no_break_neutral"
-    :(staleDominantDiffDetected
-      ? "stale_break_assertion_ignored"
-      :(breakRegionHasCoherentRenderedDiff
-        ? "break_region_diff_real"
-        :(breakRegionAudit?.stable===true?"break_region_stable":"break_region_alignment_only")));
-  const diffDecisionSource=breaklessAuditBypassApplied
-    ? "breakless_bypass"
-    :(staleDominantDiffDetected
-      ? "stale_break_region_assertion_ignored"
-      :(currentCycleGapDiffCount>0
-        ? "post_commit_gap_diff"
-        :(currentCycleTransitionMismatchCount>0
-          ? "rendered_transition_geometry_diff"
-          :(currentCycleCoverageMismatchCount>0
-            ? "rendered_coverage_mismatch"
-            :(currentCycleRenderedDiffCount>0
-              ? "rendered_property_diff"
-              :(breakRegionHasCoherentRenderedDiff
-                ? "rendered_spacing_diff"
-                :(alignmentStableForDecision?"stable":"transition_alignment_mismatch")))))));
-  const finalStableDecisionReason=breaklessAuditBypassApplied
-    ? noBreakFinalDecisionReason
-    :(staleDominantDiffDetected
-      ? "stale_break_region_assertion_ignored"
-      :(alignmentStableForDecision
-        ?(breakRegionHasCoherentRenderedDiff?diffDecisionSource:"stable")
-        :(alignmentStableForDecision?"stable":"transition_alignment_mismatch")));
-  const breakRegionStableForDecision=breaklessAuditBypassApplied
-    ? true
-    :(staleDominantDiffDetected
-      ? true
-    :(alignmentStableForDecision&&(
-      !breakRegionHasCoherentRenderedDiff||breakRegionAudit?.stable===true
-    )));
-  const noBreakStructuralStable=
-    lineHeightPreserved
-    &&Math.max(0,Number(finalSpacingAudit?.emptyBlockCount||0)||0)===Math.max(0,Number(spacingAuditInput?.emptyBlockCount||0)||0)
-    &&Math.max(0,Number(finalSpacingAudit?.emptyRunCount||0)||0)===Math.max(0,Number(spacingAuditInput?.emptyRunCount||0)||0)
-    &&breakCountBefore===0
-    &&breakCountAfter===0;
-  const finalStableDecisionInputs={
-    normalizedGapPreserved,
-    lineHeightPreserved,
-    visualTransitionStable,
-    renderedSpacingStable,
-    breakRegionStableForDecision,
-    breakRegionRawStable:breakRegionAudit?.stable===true,
-    breakRegionHasCoherentRenderedDiff,
-    alignmentStableForDecision,
-    alignmentMismatchReason:String(transitionAlignment?.alignmentMismatchReason||""),
-    movedVsAuditedBlockDiff:transitionAlignment?.movedVsAuditedBlockDiff||null,
-    effectiveMovedCountRaw:Number(transitionAlignment?.effectiveMovedCountRaw||0)||0,
-    effectiveMovedCountResolved:Number(transitionAlignment?.effectiveMovedCountResolved||0)||0,
-    cyclePhase:String(transitionAlignment?.cyclePhase||""),
-    cycleIdentity:String(transitionAlignment?.cycleIdentity||""),
-    effectiveMoveDecisionReason:String(transitionAlignment?.effectiveMoveDecisionReason||""),
-    movedEffectiveAuditedConsistency:String(transitionAlignment?.movedEffectiveAuditedConsistency||""),
-    breakPipelineState:transitionAlignment?.breakPipelineState||null,
-    noBreakAuditState,
-    breaklessAuditBypassApplied,
-    noBreakFinalDecisionReason,
-    finalStableDecisionReason,
-    transitionCountBefore,
-    transitionCountAfter,
-    dominantBreakRegionDiffPresent:dominantBreakRegionDiff!=null,
-    staleDominantDiffDetected,
-    staleAssertionDetectedCount:Number(breakRegionAudit?.staleAssertionDetectedCount||0)||0,
-    staleAssertionResetAppliedCount:Number(breakRegionAudit?.staleAssertionResetAppliedCount||0)||0,
-    currentCycleAssertionIds:Array.isArray(breakRegionAudit?.currentCycleAssertionIds)?breakRegionAudit.currentCycleAssertionIds:[],
-    discardedAssertionIds:Array.isArray(breakRegionAudit?.discardedAssertionIds)?breakRegionAudit.discardedAssertionIds:[],
-    currentCycleComparableDiff,
-    currentCycleLengthsEqual,
-    currentCycleRenderedDiffCount,
-    currentCycleCoverageMismatchCount,
-    currentCycleTransitionMismatchCount,
-    currentCycleGapDiffCount,
-    alignmentMismatchClass,
-    breakRegionAuditClass,
-    diffDecisionSource,
-    noBreakStructuralStable
-  };
-  const postCommitSpacingStable=breaklessAuditBypassApplied
-    ? noBreakStructuralStable
-    :(
-      normalizedGapPreserved
-      &&Math.max(0,Number(finalSpacingAudit?.emptyBlockCount||0)||0)===Math.max(0,Number(spacingAuditInput?.emptyBlockCount||0)||0)
-      &&Math.max(0,Number(finalSpacingAudit?.emptyRunCount||0)||0)===Math.max(0,Number(spacingAuditInput?.emptyRunCount||0)||0)
-      &&lineHeightPreserved
-      &&visualTransitionStable
-      &&renderedSpacingStable
-      &&breakRegionStableForDecision
-    );
-  editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_AUDIT_RESULT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    stable:postCommitSpacingStable,
-    finalStableDecisionReason,
-    normalizedGapPreserved,
-    lineHeightPreserved,
-    visualTransitionStable,
-    renderedSpacingStable,
-    breakRegionStable:breakRegionStableForDecision,
-    breakRegionRawStable:breakRegionAudit?.stable===true,
-    breaklessAuditBypassApplied,
-    noBreakFinalDecisionReason,
-    alignmentMismatchClass,
-    breakRegionAuditClass,
-    diffDecisionSource,
-    finalStableDecisionInputs,
-    breakRegionAudit,
-    diffSummary:postCommitSpacingDiff,
-    renderedSpacingDiff:realRenderedSpacingDiff,
-    coverageBefore:spacingCoverageBeforeResolved,
-    coverageAfter:spacingCoverageAfterResolved,
-    beforeCommit:spacingAuditInput,
-    afterCommit:finalSpacingAudit
-  },"render");
-  if(breaklessAuditBypassApplied){
-    editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_NO_BREAK_BYPASS_APPLIED",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      stable:postCommitSpacingStable,
-      noBreakFinalDecisionReason,
-      breaklessAuditBypassApplied,
-      finalStableDecisionInputs
-    },"render");
-  }
-  if(legacyPostCommitSpacingStable&&!postCommitSpacingStable){
-    editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_FALSE_POSITIVE_CONFIRMED",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      legacyStable:legacyPostCommitSpacingStable,
-      auditedStable:postCommitSpacingStable,
-      finalStableDecisionReason,
-      diffDecisionSource,
-      diffSummary:postCommitSpacingDiff,
-      coverageBefore:spacingCoverageBeforeResolved,
-      coverageAfter:spacingCoverageAfterResolved,
-      beforeCommit:spacingAuditInput,
-      afterCommit:finalSpacingAudit
-    },"render");
-  }
-  if(!postCommitSpacingStable){
-    const dominantPropertyExpanded=editorTextosPaginaExpandirPropriedadeDominante(dominantRenderedPropertyDiff);
-    editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_REGRESSION_REASON",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      dominantBreakRegionDiff,
-      dominantBreakRegionDiffExpanded:dominantBreakRegionDiff,
-      transitionSampleIndices:resolvedBeforeTransitionIndices,
-      noBreakFinalDecisionReason,
-      finalStableDecisionReason,
-      breaklessAuditBypassApplied,
-      staleDominantDiffDetected,
-      alignmentMismatchClass,
-      breakRegionAuditClass,
-      diffDecisionSource,
-      finalStableDecisionInputs,
-      finalStableDecisionInputsExpanded:finalStableDecisionInputs,
-      ...dominantPropertyExpanded,
-      comparedSamplePairsExpanded:Array.isArray(realRenderedSpacingDiff?.comparedSamplePairsExpanded)?realRenderedSpacingDiff.comparedSamplePairsExpanded:[],
-      transitionAlignment,
-      breakRegionAudit,
-      renderedSpacingDiff:realRenderedSpacingDiff,
-      diffSummary:postCommitSpacingDiff
-    },"render");
-    if(breaklessAuditBypassApplied){
-      editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_BREAKLESS_BYPASS",{
-        origem:String(options?.origem||"manual"),
-        reason,
-        noBreakFinalDecisionReason,
-        breaklessAuditBypassApplied,
-        finalStableDecisionInputs
-      },"render");
-    }else if(staleDominantDiffDetected){
-      editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_STALE_ASSERTION_IGNORED",{
-        origem:String(options?.origem||"manual"),
-        reason,
-        finalStableDecisionReason,
-        diffDecisionSource,
-        staleDominantDiffDetected,
-        dominantBreakRegionDiff,
-        finalStableDecisionInputs
-      },"render");
-    }else if(breakRegionHasCoherentRenderedDiff){
-      editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_DIFF_REAL",{
-        origem:String(options?.origem||"manual"),
-        reason,
-        finalStableDecisionReason,
-        diffDecisionSource,
-        diffSummary:postCommitSpacingDiff,
-        renderedSpacingDiff:realRenderedSpacingDiff,
-        beforeCommit:spacingAuditInput,
-        afterCommit:finalSpacingAudit
-      },"render");
-    }else{
-      editorTextosDebugLog("EDITOR PAGE VISUAL_SPACING_ALIGNMENT_MISMATCH",{
-        origem:String(options?.origem||"manual"),
-        reason,
-        finalStableDecisionReason,
-        finalStableDecisionInputs,
-        noBreakFinalDecisionReason,
-        breaklessAuditBypassApplied,
-        alignmentMismatchClass,
-        breakRegionAuditClass,
-        transitionAlignment,
-        breakRegionAudit
-      },"render");
-    }
-  }
-  editorTextosDebugLog("EDITOR PAGE POST_COMMIT_SPACING_STABLE",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    stable:postCommitSpacingStable,
-    beforeCommit:spacingAuditInput,
-    afterCommit:finalSpacingAudit
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE POST_COMMIT_LINEHEIGHT_CHECK",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    beforeCommit:Array.isArray(spacingAuditInput?.lineHeights)?spacingAuditInput.lineHeights:[],
-    afterCommit:Array.isArray(finalSpacingAudit?.lineHeights)?finalSpacingAudit.lineHeights:[],
-    preserved:lineHeightPreserved
-  },"render");
-  editorTextosDebugLog(postCommitSpacingStable?"EDITOR PAGE LINE_SPACING_PRESERVED":"EDITOR PAGE LINE_SPACING_DIFF",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    beforeCommit:spacingAuditInput,
-    afterCommit:finalSpacingAudit
-  },"render");
-  editorTextosDebugLog("EDITOR PAGE FINAL_SPACING_AUDIT",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    spacing:finalSpacingAudit,
-    emptyBlockNormalization,
-    safeMode:!!emptyBlockNormalization?.safeMode
-  },"render");
-  if(directionDecision!=="up"){
-    editorTextosDebugLog("EDITOR PAGE DOWN_CYCLE_FINAL_AUDIT",{
-      origem:String(options?.origem||"manual"),
-      reason,
-      distributionChangedPlanned,
-      distributionChangedDom,
-      breakCount,
-      totalPages:Math.max(1,breakCount+1),
-      movedNextAudit:moveAudit?.stats||null,
-      spacingStable:postCommitSpacingStable
-    },"render");
-  }
-  editorTextosDebugLog(domChanged?"EDITOR PAGE DOM CHANGED":"EDITOR PAGE DOM UNCHANGED",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    breakCount
-  },"render");
-  const afterCursor=editorTextosParagrafoCapturarCursorReal(null,null,{log:false})||null;
-  editorTextosDebugLog("EDITOR PAGE CURSOR STABILITY CHECK",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    before:{
-      blockId:String(beforeCursor?.block?.dataset?.etBlockId||""),
-      textOffset:beforeCursor?.pos?.textOffset??null,
-      lineIndex:beforeCursor?.pos?.lineIndex??null
-    },
-    after:{
-      blockId:String(afterCursor?.block?.dataset?.etBlockId||""),
-      textOffset:afterCursor?.pos?.textOffset??null,
-      lineIndex:afterCursor?.pos?.lineIndex??null
-    }
-  },"cursor");
-  const changed=domChanged||distributionChanged||movedPrevCount>0;
-  editorTextosDebugLog("EDITOR PAGE REPAGINATION REASON",{
-    origem:String(options?.origem||"manual"),
-    reason,
-    directionDecision,
-    changed
-  },"render");
-  editorTextosPaginaCompactarBlocosVaziosVisuaisAposQuebras(page,{
-    origem:String(options?.origem||"manual"),
-    reason
-  });
-  if(mutation&&Date.now()-Number(mutation.at||0)>250){
-    editorTextosCfg.pageLayoutLastMutation=null;
-  }
-  return changed;
-}
-function editorTextosAgendarAtualizarLayoutPaginado(delayMs=0,options={}){
-  if(!editorTextosCfg)return;
-  if(editorTextosCfg.pageLayoutTimer){
-    try{clearTimeout(editorTextosCfg.pageLayoutTimer)}catch{}
-  }
-  editorTextosCfg.pageLayoutTimer=setTimeout(()=>{
-    editorTextosCfg.pageLayoutTimer=null;
-    editorTextosAtualizarLayoutPaginado({origem:"agendado",...options});
-  },Math.max(0,Number(delayMs||0)||0));
 }
 function editorTextosSincronizarModalPagina(){
   if(!editorTextosCfg)return;
@@ -26294,10 +20152,6 @@ function editorTextosSairAtual(){
 }
 function editorTextosNovoDocumento(){
   if(!editorTextosCfg)return;
-  editorTextosDebugLog("EDITOR LOAD NOVO DOCUMENTO",{
-    innerHTMLAntes:editorTextosDebugPreview(editorTextosCfg.page?.innerHTML||"",500),
-    textContentAntes:editorTextosDebugPreview(editorTextosCfg.page?.textContent||"",300)
-  },"render");
   editorTextosCfg.modeloAtualId=null;
   editorTextosCfg.modeloAtualArquivo=null;
   editorTextosCfg.modeloAtualSistema=false;
@@ -27933,197 +21787,47 @@ function editorTextosRenderListaAbertura(){
   }).join("");
 }
 function editorTextosMesclagemNormalizarCategorias(campos,categoriasRaw){
-  const normKey=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
-  const friendlyField=value=>{
-    const raw=String(value||"").trim();
-    if(!raw)return "";
-    const spaced=raw
-      .replace(/([a-z0-9])([A-Z])/g,"$1 $2")
-      .replace(/([A-Za-z])(\d)/g,"$1 $2")
-      .replace(/(\d)([A-Za-z])/g,"$1 $2")
-      .replace(/_/g," ")
-      .trim();
-    return spaced.charAt(0).toUpperCase()+spaced.slice(1);
-  };
-  const categoryCanonical=(name=>{
-    const raw=String(name||"").trim();
-    const key=normKey(raw);
-    const map={
-      atestado:"Atestado",
-      data:"Data",
-      clinica:"Clínica",
-      cirurgiao:"Cirurgião",
-      paciente:"Paciente",
-      contato:"Contato",
-      receita:"Receita",
-      recibo:"Recibo",
-      etiqueta:"Etiqueta"
-    };
-    return map[key]||raw||"Outros";
-  });
-  const tokenInner=(token=>{
-    const raw=String(token||"").trim();
-    if(raw.startsWith("<<")&&raw.endsWith(">>"))return raw.slice(2,-2).trim();
-    return raw;
-  });
-  const tokenInnerRaw=token=>tokenInner(token);
-  const tokenKey=token=>normKey(tokenInner(token));
-  const buildToken=(categoria,campo)=>`<<${String(categoria||"").trim()}.${String(campo||"").trim()}>>`;
-  const canonicalAliasTarget={
-    "data.mesextenso":"data.mesext"
-  };
-  const conceptKeyFromToken=token=>{
-    const key=tokenKey(token);
-    return canonicalAliasTarget[key]||key;
-  };
-  const preferredTokenByConcept={
-    "data.mesext":"data.mesext"
-  };
-  const friendlyDescriptionByConcept={
-    "data.anohoje":"Ano atual",
-    "data.datahoje":"Data atual",
-    "data.diahoje":"Dia atual",
-    "data.diasemana":"Dia da semana",
-    "data.meshoje":"Mês atual",
-    "data.mesext":"Mês por extenso"
-  };
-  const friendlyDescription=(categoria,campo,descricao,token)=>{
-    const concept=conceptKeyFromToken(token||buildToken(categoria,campo));
-    if(friendlyDescriptionByConcept[concept])return friendlyDescriptionByConcept[concept];
-    const rawDesc=String(descricao||"").trim();
-    const rawCampo=String(campo||"").trim();
-    if(rawDesc&&normKey(rawDesc)!==normKey(rawCampo))return rawDesc;
-    return friendlyField(rawCampo)||rawDesc||rawCampo;
-  };
-  const rawRows=[];
-  const categoryOrder=[];
-  const categoryOrderSet=new Set();
-  const pushRow=(categoria,campo,descricao,token)=>{
-    const cat=categoryCanonical(categoria);
-    if(!categoryOrderSet.has(cat)){
-      categoryOrderSet.add(cat);
-      categoryOrder.push(cat);
-    }
-    rawRows.push({
-      categoria:cat,
-      campo:String(campo||"").trim(),
-      descricao:String(descricao||"").trim(),
-      token:String(token||"").trim()
-    });
-  };
   if(Array.isArray(categoriasRaw)&&categoriasRaw.length){
-    categoriasRaw.forEach(item=>{
-      const nome=String(item?.nome||"").trim();
-      const camposCat=Array.isArray(item?.campos)?item.campos:[];
-      camposCat.forEach(row=>{
-        const campo=String(row?.campo||row?.label||"").trim();
-        const token=String(row?.token||"").trim();
-        if(!token)return;
-        pushRow(nome,campo,String(row?.descricao||""),token);
-      });
-    });
-  }else{
-    (Array.isArray(campos)?campos:[]).forEach(item=>{
-      const categoria=String(item?.categoria||"").trim()||"Outros";
-      const campo=String(item?.campo||item?.label||"").trim();
-      const token=String(item?.token||"").trim();
-      if(!token)return;
-      pushRow(categoria,campo,String(item?.descricao||""),token);
-    });
+    return categoriasRaw
+      .map(item=>{
+        const nome=String(item?.nome||"").trim();
+        const camposCat=Array.isArray(item?.campos)?item.campos:[];
+        return {
+          nome,
+          campos:camposCat.map(row=>({
+            campo:String(row?.campo||row?.label||"").trim(),
+            descricao:String(row?.descricao||"").trim(),
+            token:String(row?.token||"").trim()
+          })).filter(row=>row.token)
+        };
+      })
+      .filter(item=>item.nome&&item.campos.length);
   }
-  const groups=new Map();
-  rawRows.forEach(row=>{
-    const concept=conceptKeyFromToken(row.token||buildToken(row.categoria,row.campo));
-    const arr=groups.get(concept)||[];
-    arr.push(row);
-    groups.set(concept,arr);
-  });
-  const dedupRows=[];
-  const hiddenAliases=[];
-  groups.forEach((rows,concept)=>{
-    const preferred=preferredTokenByConcept[concept]||"";
-    const chosen=[...rows].sort((a,b)=>{
-      const aKey=tokenKey(a.token||buildToken(a.categoria,a.campo));
-      const bKey=tokenKey(b.token||buildToken(b.categoria,b.campo));
-      if(preferred){
-        if(aKey===preferred&&bKey!==preferred)return -1;
-        if(bKey===preferred&&aKey!==preferred)return 1;
-      }
-      return String(a.campo||"").length-String(b.campo||"").length;
-    })[0];
-    const aliases=rows
-      .filter(item=>item!==chosen)
-      .map(item=>tokenInnerRaw(item.token))
-      .filter(Boolean);
-    if(aliases.length){
-      hiddenAliases.push({
-        conceito:concept,
-        principal:tokenInnerRaw(chosen.token),
-        aliases
-      });
-    }
-    const descricaoFinal=friendlyDescription(chosen.categoria,chosen.campo,chosen.descricao,chosen.token);
-    dedupRows.push({
-      categoria:chosen.categoria,
-      campo:chosen.campo,
-      campoDisplay:friendlyField(chosen.campo)||chosen.campo,
-      descricao:descricaoFinal,
-      descricaoDisplay:descricaoFinal,
-      token:chosen.token,
-      tokenInner:tokenInnerRaw(chosen.token),
-      aliases
-    });
-  });
   const grouped=new Map();
-  dedupRows.forEach(row=>{
-    const arr=grouped.get(row.categoria)||[];
-    arr.push(row);
-    grouped.set(row.categoria,arr);
+  (Array.isArray(campos)?campos:[]).forEach(item=>{
+    const categoria=String(item?.categoria||"").trim()||"Outros";
+    const arr=grouped.get(categoria)||[];
+    arr.push({
+      campo:String(item?.campo||item?.label||"").trim(),
+      descricao:String(item?.descricao||"").trim(),
+      token:String(item?.token||"").trim()
+    });
+    grouped.set(categoria,arr);
   });
-  const categorias=categoryOrder
-    .filter(nome=>grouped.has(nome))
-    .map(nome=>({
-      nome,
-      campos:(grouped.get(nome)||[]).sort((a,b)=>String(a.campo||"").localeCompare(String(b.campo||""),"pt-BR"))
-    }))
-    .filter(item=>item.campos.length);
-  editorTextosDebugLog("MERGE FIELDS DEDUP RESULT",{
-    totalBruto:rawRows.length,
-    totalExibido:dedupRows.length,
-    ocultados:Math.max(0,rawRows.length-dedupRows.length),
-    aliasesOcultos:hiddenAliases
-  },"tab");
-  editorTextosDebugLog("MERGE FIELDS DISPLAY LABEL RESULT",{
-    total:dedupRows.length,
-    exemplos:dedupRows.slice(0,40).map(item=>({
-      categoria:item.categoria,
-      campo:item.campo,
-      campoDisplay:item.campoDisplay,
-      descricaoDisplay:item.descricaoDisplay,
-      token:item.tokenInner,
-      aliases:item.aliases
-    }))
-  },"tab");
-  return categorias;
+  return [...grouped.entries()].map(([nome,camposCat])=>({
+    nome,
+    campos:camposCat.filter(row=>row.token)
+  })).filter(item=>item.campos.length);
 }
 function editorTextosRenderModalMesclagem(){
   if(!editorTextosCfg?.mergeCategory||!editorTextosCfg?.mergeTbody)return;
   const categorias=Array.isArray(editorTextosCfg.mergeCategorias)?editorTextosCfg.mergeCategorias:[];
-  const resumoCategorias=editorTextosMergeFieldsResumoCategorias(categorias);
   editorTextosCfg.mergeCategory.innerHTML=categorias.map(cat=>`<option value="${esc(cat.nome)}">${esc(cat.nome)}</option>`).join("");
   if(!categorias.length){
     editorTextosCfg.mergeTbody.innerHTML='<tr class="empty"><td colspan="2">Nenhum campo disponivel.</td></tr>';
     editorTextosCfg.mergeCamposAtuais=[];
     editorTextosCfg.mergeCampoSelecionado=null;
     if(editorTextosCfg.mergeOk)editorTextosCfg.mergeOk.disabled=true;
-    editorTextosDebugLog("MERGE FIELDS FILTER APPLIED",{
-      filtro:"categoria",
-      categoriaAtual:"",
-      totalAntes:0,
-      totalExibido:0,
-      totalGrupos:0,
-      motivo:"sem_categorias"
-    },"tab");
     return;
   }
   let categoriaAtual=String(editorTextosCfg.mergeCategoriaAtual||editorTextosCfg.mergeCategoriaPadrao||categorias[0].nome||"").trim();
@@ -28133,14 +21837,6 @@ function editorTextosRenderModalMesclagem(){
   const categoria=categorias.find(cat=>cat.nome===categoriaAtual)||categorias[0];
   const campos=Array.isArray(categoria?.campos)?categoria.campos:[];
   editorTextosCfg.mergeCamposAtuais=campos;
-  editorTextosDebugLog("MERGE FIELDS FILTER APPLIED",{
-    filtro:"categoria",
-    categoriaAtual,
-    totalAntes:resumoCategorias.totalCampos,
-    totalExibido:campos.length,
-    totalGrupos:resumoCategorias.totalGrupos,
-    grupos:resumoCategorias.grupos.map(item=>({nome:item.nome,total:item.total}))
-  },"tab");
   if(!campos.length){
     editorTextosCfg.mergeTbody.innerHTML='<tr class="empty"><td colspan="2">Nenhum campo nesta categoria.</td></tr>';
     editorTextosCfg.mergeCampoSelecionado=null;
@@ -28150,19 +21846,9 @@ function editorTextosRenderModalMesclagem(){
   if(!campos.some(row=>row.token===editorTextosCfg.mergeCampoSelecionado)){
     editorTextosCfg.mergeCampoSelecionado=String(campos[0]?.token||"").trim()||null;
   }
-  editorTextosDebugLog("MERGE FIELDS MODAL FINAL LIST",{
-    categoriaAtual,
-    total:campos.length,
-    campos:campos.map(row=>({
-      campo:row?.campoDisplay||row?.campo||"",
-      descricao:row?.descricaoDisplay||row?.descricao||"",
-      token:row?.tokenInner||row?.token||"",
-      aliases:Array.isArray(row?.aliases)?row.aliases:[]
-    }))
-  },"tab");
   editorTextosCfg.mergeTbody.innerHTML=campos.map((row,idx)=>{
     const selected=(String(row?.token||"")===String(editorTextosCfg.mergeCampoSelecionado||""));
-    return `<tr data-idx="${idx}" class="${selected?"selected":""}"><td><div class="editor-textos-merge-field-main">${esc(String(row?.campoDisplay||row?.campo||""))}</div><div class="editor-textos-merge-field-token">${esc(String(row?.tokenInner||row?.token||""))}</div></td><td>${esc(String(row?.descricaoDisplay||row?.descricao||""))}</td></tr>`;
+    return `<tr data-idx="${idx}" class="${selected?"selected":""}"><td>${esc(String(row?.campo||""))}</td><td>${esc(String(row?.descricao||""))}</td></tr>`;
   }).join("");
   if(editorTextosCfg.mergeOk)editorTextosCfg.mergeOk.disabled=!editorTextosCfg.mergeCampoSelecionado;
 }
@@ -28172,14 +21858,6 @@ function editorTextosAbrirModalMesclagem(){
   editorTextosCfg.mergeCategoriaAtual=String(editorTextosCfg.mergeCategoriaPadrao||editorTextosCfg.mergeCategoriaAtual||"").trim();
   editorTextosCfg.mergeCampoSelecionado=null;
   editorTextosRenderModalMesclagem();
-  editorTextosDebugLog("MERGE FIELDS MODAL RENDER",{
-    categoriaPadrao:String(editorTextosCfg.mergeCategoriaPadrao||""),
-    categoriaAtual:String(editorTextosCfg.mergeCategoriaAtual||""),
-    campoSelecionado:String(editorTextosCfg.mergeCampoSelecionado||""),
-    totalCamposBrutos:Array.isArray(editorTextosCfg.campos)?editorTextosCfg.campos.length:0,
-    totalCamposExibidos:Array.isArray(editorTextosCfg.mergeCamposAtuais)?editorTextosCfg.mergeCamposAtuais.length:0,
-    resumo:editorTextosMergeFieldsResumoCategorias(editorTextosCfg.mergeCategorias)
-  },"tab");
   editorTextosCfg.mergeBackdrop.classList.remove("hidden");
   if(editorTextosCfg.mergeCategory)editorTextosCfg.mergeCategory.focus();
 }
@@ -28211,92 +21889,38 @@ function editorTextosConfirmarInserirMesclagem(){
     window.alert("Selecione um campo.");
     return;
   }
-  const selecaoAntes=editorTextosMergeFieldSelecaoResumo();
-  let restaurado=false;
-  let selecaoAtualValida=editorTextosMergeFieldRangeAtualValido();
-  const focoDentroEditor=!!(document.activeElement&&editorTextosCfg.page.contains(document.activeElement));
-  if(!selecaoAtualValida||!focoDentroEditor){
-    restaurado=editorTextosMergeFieldSnapshotRestaurar();
-  }
-  let sel=window.getSelection?.();
-  let range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-  const blockAntes=editorTextosResolverBlocoDeNode(sel?.focusNode||sel?.anchorNode||range?.commonAncestorContainer||null);
-  editorTextosDebugLog("EDITOR MERGE FIELD INSERT REQUEST",{
-    campoSelecionado:token,
-    selecaoAntes,
-    selecaoAtual:editorTextosMergeFieldSelecaoResumo(range),
-    snapshot:editorTextosMergeFieldSnapshotResumo(),
-    restaurado,
-    blockId:String(blockAntes?.dataset?.etBlockId||""),
-    htmlAntes:blockAntes instanceof HTMLElement?editorTextosParagrafoResumoHTML(blockAntes.innerHTML,900):""
-  },"render");
+  editorTextosRestaurarRangeAtual();
   let inserted=false;
-  let fallback=false;
   try{
     editorTextosCfg.page.focus();
-    sel=window.getSelection?.();
-    range=sel&&sel.rangeCount?sel.getRangeAt(0):null;
-    if(range&&editorTextosRangeDentroEditor(range)){
+    inserted=document.execCommand("insertText",false,token);
+  }catch{
+    inserted=false;
+  }
+  if(!inserted){
+    const sel=window.getSelection?.();
+    if(sel&&sel.rangeCount){
+      const range=sel.getRangeAt(0);
       range.deleteContents();
       const textNode=document.createTextNode(token);
       range.insertNode(textNode);
-      const nextRange=document.createRange();
-      nextRange.setStartAfter(textNode);
-      nextRange.collapse(true);
+      range.setStartAfter(textNode);
+      range.setEndAfter(textNode);
       sel.removeAllRanges();
-      sel.addRange(nextRange);
+      sel.addRange(range);
       inserted=true;
     }
-  }catch(err){
-    editorTextosDebugLog("EDITOR MERGE FIELD INSERT FALLBACK",{motivo:"erro_insercao_range",erro:String(err?.message||err||""),campoSelecionado:token},"render");
   }
   if(!inserted){
-    fallback=true;
-    editorTextosDebugLog("EDITOR MERGE FIELD INSERT FALLBACK",{
-      motivo:"sem_range_valido",
-      campoSelecionado:token,
-      snapshot:editorTextosMergeFieldSnapshotResumo(),
-      selecaoAtual:editorTextosMergeFieldSelecaoResumo()
-    },"render");
     editorTextosCfg.page.insertAdjacentText("beforeend",token);
   }
-  const selDepois=window.getSelection?.();
-  const blockDepois=editorTextosResolverBlocoDeNode(selDepois?.focusNode||selDepois?.anchorNode||null)||blockAntes;
-  let posDepois=null;
-  try{if(blockDepois instanceof HTMLElement)posDepois=editorTextosParagrafoObterPosicaoLogicaAtual(blockDepois,null)}catch{}
   editorTextosCfg.alterado=true;
   editorTextosCfg.status.textContent="Campo de mesclagem inserido.";
-  editorTextosSalvarRangeAtual();
-  editorTextosMergeFieldSnapshotSalvar("apos_inserir_campo");
-  try{editorTextosSincronizarEstruturaParagrafoAtual()}catch{}
-  try{editorTextosDocumentoModelAgendarAtualizacao(50)}catch{}
-  editorTextosDebugLog("EDITOR MERGE FIELD INSERT RESULT",{
-    campoSelecionado:token,
-    inserted,
-    fallback,
-    restaurado,
-    blockIdFinal:String(blockDepois?.dataset?.etBlockId||""),
-    offsetFinal:posDepois?.textOffset??null,
-    htmlDepois:blockDepois instanceof HTMLElement?editorTextosParagrafoResumoHTML(blockDepois.innerHTML,900):""
-  },"render");
   editorTextosFecharModalMesclagem();
-}async function editorTextosCarregarCampos(){
+}
+async function editorTextosCarregarCampos(){
   if(!editorTextosCfg)return;
   const {res,data}=await requestJson("GET","/editor-textos/campos",undefined,true);
-  editorTextosDebugLog("MERGE FIELDS SOURCE RAW",{
-    endpoint:"GET /editor-textos/campos",
-    ok:!!res?.ok,
-    status:res?.status,
-    totalCamposBrutos:Array.isArray(data?.campos)?data.campos.length:0,
-    totalCategoriasBrutas:Array.isArray(data?.categorias)?data.categorias.length:0,
-    categoriaPadrao:String(data?.categoria_padrao||""),
-    categorias:Array.isArray(data?.categorias)
-      ?data.categorias.map(cat=>({nome:String(cat?.nome||""),total:Array.isArray(cat?.campos)?cat.campos.length:0}))
-      :[],
-    campos:Array.isArray(data?.campos)
-      ?data.campos.map(item=>String(item?.token||item?.label||"")).filter(Boolean)
-      :[]
-  },"tab");
   if(!res.ok){
     if(editorTextosCfg.merge)editorTextosCfg.merge.innerHTML='<option value="">&lt;&lt;nome&gt;&gt; Insere campo de mesclagem</option>';
     editorTextosCfg.campos=[];
@@ -28309,11 +21933,6 @@ function editorTextosConfirmarInserirMesclagem(){
   }
   const campos=Array.isArray(data?.campos)?data.campos:[];
   const categorias=editorTextosMesclagemNormalizarCategorias(campos,Array.isArray(data?.categorias)?data.categorias:[]);
-  editorTextosDebugLog("MERGE FIELDS GROUPED RESULT",{
-    totalCamposBrutos:campos.length,
-    resumo:editorTextosMergeFieldsResumoCategorias(categorias),
-    origemCategorias:Array.isArray(data?.categorias)&&data.categorias.length?"backend_categorias":"frontend_fallback_flat"
-  },"tab");
   const categoriaPadraoRaw=String(data?.categoria_padrao||"").trim();
   const nomesCategorias=new Set(categorias.map(item=>String(item.nome||"")));
   const categoriaPadrao=(categoriaPadraoRaw&&nomesCategorias.has(categoriaPadraoRaw))
@@ -28335,15 +21954,7 @@ function editorTextosConfirmarInserirMesclagem(){
 async function editorTextosAbrirModelo(modeloId){
   const id=Number(modeloId||0)||0;
   if(!id)return;
-  const url=`/editor-textos/modelos/${id}`;
-  const {res,data}=await requestJson("GET",url,undefined,true);
-  editorTextosDebugLog("EDITOR LOAD API RESPONSE",{
-    url,
-    status:res?.status,
-    ok:!!res?.ok,
-    objectKeys:data&&typeof data==="object"?Object.keys(data):[],
-    camposConteudo:editorTextosPayloadCamposConteudo(data)
-  },"render");
+  const {res,data}=await requestJson("GET",`/editor-textos/modelos/${id}`,undefined,true);
   if(!res.ok){
     window.alert(data?.detail||"Falha ao abrir modelo.");
     return;
@@ -28357,20 +21968,6 @@ async function editorTextosAbrirModelo(modeloId){
   editorTextosCfg.paginaConfig=editorTextosNormalizarPaginaConfig(
     (data&&typeof data.pagina_config==="object")?data.pagina_config:EDITOR_TEXTOS_PAGE_DEFAULT
   );
-  const formatoPreferido=String(data?.conteudo_formato||editorTextosFormatoPorExt(editorTextosCfg.extensaoAtual)).trim().toLowerCase();
-  const conteudoEscolhidoInfo=editorTextosResolverConteudoPayload(data,formatoPreferido);
-  const campoUsado=conteudoEscolhidoInfo.formato==="html"
-    ?(conteudoEscolhidoInfo.htmlOrigem||conteudoEscolhidoInfo.textoOrigem||"")
-    :(conteudoEscolhidoInfo.textoOrigem||conteudoEscolhidoInfo.htmlOrigem||"");
-  const conteudoEscolhido=conteudoEscolhidoInfo.formato==="html"
-    ?String(conteudoEscolhidoInfo.html||conteudoEscolhidoInfo.texto||"")
-    :String(conteudoEscolhidoInfo.texto||conteudoEscolhidoInfo.html||"");
-  editorTextosDebugLog("EDITOR CONTEUDO ESCOLHIDO PARA APLICAR",{
-    campoUsado,
-    formato:conteudoEscolhidoInfo.formato,
-    tamanho:conteudoEscolhido.length,
-    preview:conteudoEscolhido.slice(0,300)
-  },"render");
   editorTextosAplicarConteudo(data);
   editorTextosCfg.alterado=false;
   editorTextosCfg.status.textContent=`Modelo aberto: ${editorTextosCfg.nome.value||""}`;
@@ -28381,91 +21978,6 @@ async function editorTextosAbrirModelo(modeloId){
 function editorTextosFormatoPorExt(ext){
   const raw=String(ext||"").trim().toLowerCase();
   return (raw===".rtf"||raw===".mod")?"html":"text";
-}
-function editorTextosConteudoPareceHTML(value){
-  const raw=String(value??"").trim();
-  if(!raw)return false;
-  return /<\/?(p|div|br|span|strong|b|em|i|u|table|ul|ol|li|h[1-6]|blockquote|pre|img|a)(\s|>|\/)/i.test(raw);
-}
-function editorTextosLoadSnapshotDOM(){
-  const page=editorTextosCfg?.page;
-  if(!(page instanceof HTMLElement))return{};
-  return{
-    editorInnerHTML:editorTextosDebugPreview(page.innerHTML,900),
-    editorTextContent:editorTextosDebugPreview(page.textContent,500),
-    paragraphCount:page.querySelectorAll?.("p")?.length||0,
-    blockCount:page.querySelectorAll?.(EDITOR_TEXTOS_BLOCK_SELECTOR)?.length||0
-  };
-}
-function editorTextosLoadSnapshotModel(model){
-  const blocks=Array.isArray(model?.blocks)?model.blocks:[];
-  return{
-    blocksCount:blocks.length,
-    textos:blocks.map(block=>editorTextosDebugPreview(editorTextosDocumentoModelTextoBloco(block),220)),
-    htmlPreservado:editorTextosDebugPreview(editorTextosCfg?.page?.innerHTML||"",900),
-    tabOperationsCount:blocks.reduce((sum,block)=>sum+(Array.isArray(block?.tabOperations)?block.tabOperations.length:0),0)
-  };
-}
-function editorTextosPayloadValorPorCaminho(payload,path){
-  try{
-    return String(path||"").split(".").reduce((acc,key)=>acc==null?undefined:acc[key],payload);
-  }catch{}
-  return undefined;
-}
-function editorTextosPayloadCamposConteudo(payload){
-  const paths=[
-    "conteudo_html",
-    "conteudo",
-    "html",
-    "texto",
-    "corpo",
-    "modelo.conteudo_html",
-    "modelo.conteudo",
-    "modelo.html",
-    "modelo.texto",
-    "modelo.corpo"
-  ];
-  return paths.reduce((acc,path)=>{
-    const value=editorTextosPayloadValorPorCaminho(payload,path);
-    if(value==null)return acc;
-    const text=String(value);
-    acc[path]={
-      length:text.length,
-      preview:editorTextosDebugPreview(text,280)
-    };
-    return acc;
-  },{});
-}
-function editorTextosResolverConteudoPayload(payload,formatoPreferido="text"){
-  const htmlPaths=["conteudo_html","html","modelo.conteudo_html","modelo.html"];
-  const textPaths=["conteudo","texto","corpo","modelo.conteudo","modelo.texto","modelo.corpo"];
-  let html="";
-  let htmlOrigem="";
-  let texto="";
-  let textoOrigem="";
-  for(const path of htmlPaths){
-    const value=editorTextosPayloadValorPorCaminho(payload,path);
-    if(value!=null&&String(value).trim()){
-      html=String(value);
-      htmlOrigem=path;
-      break;
-    }
-  }
-  for(const path of textPaths){
-    const value=editorTextosPayloadValorPorCaminho(payload,path);
-    if(value!=null&&String(value).length){
-      texto=String(value);
-      textoOrigem=path;
-      break;
-    }
-  }
-  if(!html&&editorTextosConteudoPareceHTML(texto)){
-    html=texto;
-    htmlOrigem=textoOrigem||"conteudo";
-  }
-  const formatoRaw=String(formatoPreferido||"").trim().toLowerCase();
-  const formato=(html.trim()||formatoRaw==="html")?"html":"text";
-  return{formato,html,texto,htmlOrigem,textoOrigem};
 }
 function editorTextosNormalizarHTML(html){
   const root=document.createElement("div");
@@ -28483,7 +21995,7 @@ function editorTextosNormalizarHTML(html){
   const hasMeaningfulContent=el=>{
     if(!(el instanceof HTMLElement))return false;
     if(el.querySelector("img,br,table,ul,ol"))return true;
-    return !!editorTextosTextoRemoverAnchorsCaret(String(el.textContent||"")).replace(/\u00a0/g," ").trim();
+    return !!String(el.textContent||"").replace(/\u00a0/g," ").trim();
   };
   const cloneShell=el=>{
     const shell=document.createElement(el.tagName.toLowerCase());
@@ -28536,7 +22048,7 @@ function editorTextosNormalizarHTML(html){
         return;
       }
       if((preserveLegacyTabPad&&name==="data-editor-tab")||(preserveLegacyTabBreak&&name==="data-editor-tab-break"))return;
-      if((preserveSemanticTabPad&&["data-et-tab-pad","data-et-tab-inline","data-et-tab-width","data-et-tab-op","data-et-tab-key","data-et-tab-offset-logico"].includes(name))||(preserveSemanticTabBreak&&["data-et-tab-break","data-et-tab-op","data-et-tab-key","data-et-tab-offset-logico"].includes(name)))return;
+      if((preserveSemanticTabPad&&name==="data-et-tab-pad")||(preserveSemanticTabBreak&&name==="data-et-tab-break"))return;
       if((preserveLegacyTabPad||preserveSemanticTabPad)&&name==="contenteditable")return;
       if(name.startsWith("data-editor-img"))return;
       if(el.tagName.toLowerCase()==="img"&&["src","alt","title","width","height"].includes(name))return;
@@ -28562,10 +22074,19 @@ function editorTextosNormalizarHTML(html){
       const style=String(node.getAttribute("style")||"").trim();
       const semanticTabPad=String(node.getAttribute("data-et-tab-pad")||"").trim()==="1"||node.classList.contains("editor-textos-sem-tab-pad");
       const legacyTabPad=String(node.getAttribute("data-editor-tab")||"").trim()==="1"||node.classList.contains("editor-textos-tab-marker");
-      if(semanticTabPad||legacyTabPad){
-        const width=Number.parseFloat(String(node.getAttribute("data-et-tab-width")||node.style.width||""));
-        const unidades=Number.isFinite(width)?Math.max(1,Math.round(width/32)):1;
-        node.replaceWith(document.createTextNode(EDITOR_TEXTOS_TAB_RICH_SAFE_TEXT.repeat(unidades)));
+      if(semanticTabPad){
+        if(style){
+          node.setAttribute("style",style);
+          node.setAttribute("contenteditable","false");
+          if(!String(node.textContent||"").trim())node.innerHTML="&nbsp;";
+          return;
+        }
+        node.remove();
+        return;
+      }
+      if(legacyTabPad){
+        node.setAttribute("contenteditable","false");
+        if(!String(node.textContent||"").trim())node.innerHTML="&nbsp;";
         return;
       }
       const hasData=[...(node.attributes||[])].some(attr=>String(attr?.name||"").toLowerCase().startsWith("data-editor-img"));
@@ -28650,7 +22171,6 @@ function editorTextosNormalizarHTML(html){
 function editorTextosAplicarConteudo(data){
   if(!editorTextosCfg?.page)return;
   editorTextosImagemLimparSelecao();
-  editorTextosCfg.pageLayoutDirty=true;
   editorTextosCfg.paragraphModels=new Map();
   editorTextosCfg.paragraphSeq=0;
   editorTextosCfg.paragraphTabOpSeq=0;
@@ -28658,119 +22178,47 @@ function editorTextosAplicarConteudo(data){
   editorTextosDocumentoModelReset();
   editorTextosDocumentoModelAtivar();
   const formatoRaw=String(data?.conteudo_formato||editorTextosFormatoPorExt(editorTextosCfg.extensaoAtual)).trim().toLowerCase();
-  const conteudoResolvido=editorTextosResolverConteudoPayload(data,formatoRaw);
-  const formato=conteudoResolvido.formato;
+  const formato=formatoRaw==="html"?"html":"text";
   editorTextosCfg.formatoAtual=formato;
-  const conteudoHtmlRaw=String(conteudoResolvido.html??"");
-  const conteudoTextoRaw=String(conteudoResolvido.texto??"");
-  const conteudoEntrada=formato==="html"
-    ?String(conteudoHtmlRaw||conteudoTextoRaw||"")
-    :String(conteudoTextoRaw||conteudoHtmlRaw||"");
-  editorTextosDebugLog("EDITOR APLICAR CONTEUDO ENTRADA",{
-    campoUsado:formato==="html"
-      ?(conteudoResolvido.htmlOrigem||conteudoResolvido.textoOrigem||"")
-      :(conteudoResolvido.textoOrigem||conteudoResolvido.htmlOrigem||""),
-    formato,
-    tamanho:String(conteudoEntrada||"").length,
-    preview:String(conteudoEntrada||"").slice(0,300)
-  },"render");
-  editorTextosDebugLog("EDITOR LOAD CONTEUDO RECEBIDO",{
-    origem:String(data?.id??data?.nome_arquivo??""),
-    id:data?.id??null,
-    nome:String(data?.nome??data?.nome_arquivo??""),
-    tipo:formato,
-    formatoDeclarado:formatoRaw,
-    objectKeys:data&&typeof data==="object"?Object.keys(data):[],
-    camposConteudo:editorTextosPayloadCamposConteudo(data),
-    conteudoHtmlLength:conteudoHtmlRaw.length,
-    conteudoLength:conteudoTextoRaw.length,
-    htmlLength:conteudoHtmlRaw.length,
-    textoLength:conteudoTextoRaw.length,
-    htmlOrigem:conteudoResolvido.htmlOrigem,
-    textoOrigem:conteudoResolvido.textoOrigem,
-    tamanho:Math.max(conteudoHtmlRaw.length,conteudoTextoRaw.length),
-    preview:editorTextosDebugPreview(conteudoHtmlRaw||conteudoTextoRaw,700),
-    previewConteudoHtml:editorTextosDebugPreview(conteudoHtmlRaw,500),
-    previewConteudo:editorTextosDebugPreview(conteudoTextoRaw,500),
-    contemHTML:!!(conteudoHtmlRaw.trim()||editorTextosConteudoPareceHTML(conteudoTextoRaw)),
-    contemTexto:!!editorTextosTextoRemoverAnchorsCaret(conteudoTextoRaw).replace(/\u00a0/g," ").trim()
-  },"render");
   if(formato==="html"){
-    const htmlFonte=conteudoHtmlRaw.trim()
-      ?conteudoHtmlRaw
-      :(editorTextosConteudoPareceHTML(conteudoTextoRaw)
-        ?conteudoTextoRaw
-        :esc(conteudoTextoRaw).replace(/\n/g,"<br>"));
-    const html=editorTextosNormalizarHTML(editorTextosExpandirTokensImagemHtml(htmlFonte));
+    const html=editorTextosNormalizarHTML(editorTextosExpandirTokensImagemHtml(String(data?.conteudo_html||"")));
     if(html){
       editorTextosCfg.page.innerHTML=html;
     }else{
-      const texto=conteudoTextoRaw;
+      const texto=String(data?.conteudo||"");
       editorTextosCfg.page.innerHTML=editorTextosNormalizarHTML(editorTextosExpandirTokensImagemHtml(esc(texto).replace(/\n/g,"<br>")));
     }
-    editorTextosDebugLog("EDITOR APLICAR CONTEUDO SAIDA DOM",{
-      etapa:"apos_set_html",
-      innerHTML:String(editorTextosCfg.page.innerHTML||"").slice(0,500),
-      textContent:String(editorTextosCfg.page.textContent||"").slice(0,300)
-    },"render");
-    editorTextosDebugLog("EDITOR LOAD DOM APOS APLICAR",editorTextosLoadSnapshotDOM(),"render");
     editorTextosGarantirBlocosEstruturais();
-    editorTextosTabSeguroConverterMarcadoresLegados(editorTextosCfg.page,"aplicar_conteudo_html");
     editorTextosNormalizarTabelasNoDocumento();
     editorTextosAplicarConfiguracaoPagina();
     editorTextosReconstruirModelosParagrafoDoDocumento({reset:false});
-    const model=editorTextosDocumentoModelAtualizar();
-    editorTextosDebugLog("EDITOR LOAD MODEL APOS EXTRAIR",editorTextosLoadSnapshotModel(model),"render");
+    editorTextosDocumentoModelAtualizar();
     editorTextosDocumentoModelRenderizarSandbox();
     editorTextosDocumentoModelCompararDOM();
-    editorTextosDebugLog("EDITOR APLICAR CONTEUDO SAIDA DOM",{
-      etapa:"apos_rebuild_html",
-      innerHTML:String(editorTextosCfg.page.innerHTML||"").slice(0,500),
-      textContent:String(editorTextosCfg.page.textContent||"").slice(0,300)
-    },"render");
-    editorTextosDebugLog("EDITOR LOAD REBUILD RESULTADO",editorTextosLoadSnapshotDOM(),"render");
     return;
   }
-  const texto=conteudoTextoRaw;
+  const texto=String(data?.conteudo||"");
   if(texto.includes("[[IMGDATA:")){
     editorTextosCfg.page.innerHTML=editorTextosExpandirTokensImagemHtml(esc(texto).replace(/\n/g,"<br>"));
     editorTextosCfg.formatoAtual="html";
   }else{
     editorTextosCfg.page.innerText=texto;
   }
-  editorTextosDebugLog("EDITOR APLICAR CONTEUDO SAIDA DOM",{
-    etapa:"apos_set_text",
-    innerHTML:String(editorTextosCfg.page.innerHTML||"").slice(0,500),
-    textContent:String(editorTextosCfg.page.textContent||"").slice(0,300)
-  },"render");
-  editorTextosDebugLog("EDITOR LOAD DOM APOS APLICAR",editorTextosLoadSnapshotDOM(),"render");
   editorTextosGarantirBlocosEstruturais();
-  editorTextosTabSeguroConverterMarcadoresLegados(editorTextosCfg.page,"aplicar_conteudo_texto");
   editorTextosAplicarConfiguracaoPagina();
   editorTextosReconstruirModelosParagrafoDoDocumento({reset:false});
-  const model=editorTextosDocumentoModelAtualizar();
-  editorTextosDebugLog("EDITOR LOAD MODEL APOS EXTRAIR",editorTextosLoadSnapshotModel(model),"render");
+  editorTextosDocumentoModelAtualizar();
   editorTextosDocumentoModelRenderizarSandbox();
   editorTextosDocumentoModelCompararDOM();
-  editorTextosDebugLog("EDITOR APLICAR CONTEUDO SAIDA DOM",{
-    etapa:"apos_rebuild_text",
-    innerHTML:String(editorTextosCfg.page.innerHTML||"").slice(0,500),
-    textContent:String(editorTextosCfg.page.textContent||"").slice(0,300)
-  },"render");
-  editorTextosDebugLog("EDITOR LOAD REBUILD RESULTADO",editorTextosLoadSnapshotDOM(),"render");
 }
 function editorTextosTextoAtual(){
   if(!editorTextosCfg?.page)return"";
-  const clone=editorTextosCfg.page.cloneNode(true);
-  if(clone instanceof HTMLElement)editorTextosPaginaRemoverQuebrasVisuais(clone);
-  return String((clone instanceof HTMLElement?clone.innerText:editorTextosCfg.page.innerText)||"").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  return String(editorTextosCfg.page.innerText||"").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
 }
 function editorTextosClonarPaginaParaPersistencia(pageEl){
   if(!(pageEl instanceof HTMLElement))return null;
   const clone=pageEl.cloneNode(true);
   if(!(clone instanceof HTMLElement))return null;
-  editorTextosPaginaRemoverQuebrasVisuais(clone);
-  editorTextosTabSeguroConverterMarcadoresLegados(clone,"persistencia");
   editorTextosLimparAtributosEstruturaisNoClone(clone);
   return clone;
 }
@@ -28786,57 +22234,18 @@ function editorTextosLimparAtributosEstruturaisNoClone(root){
   limparEl(root);
   root.querySelectorAll("*").forEach(el=>{if(el instanceof HTMLElement)limparEl(el)});
 }
-function editorTextosConteudoPossuiFormatacaoRica(pageEl){
-  if(!(pageEl instanceof HTMLElement))return false;
-  if(pageEl.querySelector("img.editor-textos-inline-image,table,ul,ol,li,a[href],strong,b,em,i,u,sub,sup"))return true;
-  const styled=pageEl.querySelectorAll("[style]");
-  for(const el of styled){
-    if(!(el instanceof HTMLElement))continue;
-    const style=el.style;
-    if(
-      String(style.color||"").trim()
-      ||String(style.fontFamily||"").trim()
-      ||String(style.fontSize||"").trim()
-      ||String(style.fontWeight||"").trim()
-      ||String(style.fontStyle||"").trim()
-      ||String(style.textDecoration||style.textDecorationLine||"").trim()
-      ||String(style.textAlign||"").trim()
-    ){
-      return true;
-    }
-  }
-  return false;
-}
 function editorTextosConteudoParaSalvar(){
   const hasImages=!!editorTextosCfg?.page?.querySelector?.("img.editor-textos-inline-image");
-  const hasRichFormatting=editorTextosConteudoPossuiFormatacaoRica(editorTextosCfg?.page);
-  const formato=(hasImages||hasRichFormatting)?"html":editorTextosFormatoPorExt(editorTextosCfg?.extensaoAtual||".txt");
+  const formato=hasImages?"html":editorTextosFormatoPorExt(editorTextosCfg?.extensaoAtual||".txt");
   editorTextosCfg.formatoAtual=formato;
   if(formato==="html"){
     const clone=editorTextosClonarPaginaParaPersistencia(editorTextosCfg?.page);
     const htmlPersistencia=String(clone?.innerHTML||editorTextosCfg?.page?.innerHTML||"");
-    editorTextosDebugLog("EDITOR FONT PERSIST CHECK",{
-      formato,
-      hasImages,
-      hasRichFormatting,
-      contemFontFamily:/font-family\s*:/i.test(htmlPersistencia),
-      contemFontSize:/font-size\s*:/i.test(htmlPersistencia),
-      contemColor:/color\s*:/i.test(htmlPersistencia),
-      htmlPersistencia:editorTextosDebugPreview(htmlPersistencia,900)
-    },"render");
     return {
       conteudo:editorTextosSerializarHtmlComImagens(htmlPersistencia),
       conteudo_formato:"html"
     };
   }
-  editorTextosDebugLog("EDITOR FONT PERSIST CHECK",{
-    formato,
-    hasImages,
-    hasRichFormatting,
-    contemFontFamily:false,
-    contemFontSize:false,
-    motivo:"sem_formatacao_rica_detectada"
-  },"render");
   return {
     conteudo:editorTextosTextoAtual(),
     conteudo_formato:"text"
@@ -28885,116 +22294,13 @@ function editorTextosBuscarModeloClinicaPorArquivoTipo(nomeArquivo,tipoModelo){
   }
   return null;
 }
-function editorTextosSaveAsTipoExtLabel(ext){
-  const raw=String(ext||"").trim().toLowerCase();
-  if(raw===".mod")return ".MOD";
-  if(raw===".rtf")return ".RTF";
-  if(raw===".txt")return ".TXT";
-  if(raw===".pdf")return "PDF";
-  return ".MOD";
-}
-function editorTextosSaveAsNormalizarNomeBase(nome){
-  return String(nome||"").trim().replace(/\.(mod|rtf|txt|pdf)$/i,"").trim();
-}
-function editorTextosSaveAsAtualizarPreview(){
-  if(!editorTextosCfg?.saveAsPreview)return;
-  const nomeBase=editorTextosSaveAsNormalizarNomeBase(editorTextosCfg.saveAsNome?.value||"");
-  const tipo=String(editorTextosCfg.saveAsTipo?.value||".mod").trim().toLowerCase();
-  const ext=tipo===".pdf"?".pdf":(tipo===".rtf"?".rtf":(tipo===".txt"?".txt":".mod"));
-  editorTextosCfg.saveAsPreview.textContent=nomeBase?`${nomeBase}${ext}`:"-";
-}
-function editorTextosSaveAsLimparErro(){
-  if(editorTextosCfg?.saveAsError)editorTextosCfg.saveAsError.textContent="";
-}
-function editorTextosSaveAsDefinirErro(msg){
-  if(editorTextosCfg?.saveAsError)editorTextosCfg.saveAsError.textContent=String(msg||"");
-}
-function editorTextosFecharModalSalvarComo(){
-  if(!editorTextosCfg?.saveAsBackdrop)return;
-  editorTextosCfg.saveAsBackdrop.classList.add("hidden");
-  if(editorTextosCfg.saveAsResolve){
-    const done=editorTextosCfg.saveAsResolve;
-    editorTextosCfg.saveAsResolve=null;
-    done(null);
-  }
-}
-function editorTextosConfirmarModalSalvarComo(){
-  if(!editorTextosCfg?.saveAsResolve)return;
-  const nomeBase=editorTextosSaveAsNormalizarNomeBase(editorTextosCfg.saveAsNome?.value||"");
-  const tipo=String(editorTextosCfg.saveAsTipo?.value||".mod").trim().toLowerCase();
-  if(!nomeBase){
-    editorTextosSaveAsDefinirErro("Informe o nome do arquivo/modelo.");
-    return;
-  }
-  editorTextosDebugLog("EDITOR SAVE AS CONFIRM",{
-    nome:nomeBase,
-    tipo,
-    nomeFinal:`${nomeBase}${tipo===".pdf"?".pdf":tipo}`
-  },"render");
-  const done=editorTextosCfg.saveAsResolve;
-  editorTextosCfg.saveAsResolve=null;
-  editorTextosCfg.saveAsBackdrop.classList.add("hidden");
-  done({nome:nomeBase,tipo});
-}
-function editorTextosAbrirModalSalvarComo({nomeInicial="",tipoInicial=""}={}){
-  if(!editorTextosCfg?.saveAsBackdrop)return Promise.resolve(null);
-  if(editorTextosCfg.saveAsResolve){
-    const doneAnterior=editorTextosCfg.saveAsResolve;
-    editorTextosCfg.saveAsResolve=null;
-    doneAnterior(null);
-  }
-  const extAtual=String(tipoInicial||editorTextosCfg.extensaoAtual||".mod").trim().toLowerCase();
-  const tipoPadrao=extAtual===".rtf"||extAtual===".txt"||extAtual===".pdf"||extAtual===".mod"?extAtual:".mod";
-  const nomePadrao=editorTextosSaveAsNormalizarNomeBase(nomeInicial||editorTextosCfg.nome?.value||"")||"Novo modelo";
-  editorTextosCfg.saveAsNome.value=nomePadrao;
-  editorTextosCfg.saveAsTipo.value=tipoPadrao;
-  editorTextosSaveAsLimparErro();
-  editorTextosSaveAsAtualizarPreview();
-  editorTextosCfg.saveAsBackdrop.classList.remove("hidden");
-  setTimeout(()=>{
-    try{
-      editorTextosCfg.saveAsNome.focus();
-      editorTextosCfg.saveAsNome.select();
-    }catch{}
-  },0);
-  editorTextosDebugLog("EDITOR SAVE AS OPEN",{
-    nomeInicial:nomePadrao,
-    tipoInicial:editorTextosSaveAsTipoExtLabel(tipoPadrao)
-  },"render");
-  return new Promise(resolve=>{
-    editorTextosCfg.saveAsResolve=resolve;
-  });
-}
-async function editorTextosSalvarAtual(forceNew=false,forcedName="",forcedExt=""){
+async function editorTextosSalvarAtual(forceNew=false,forcedName=""){
   if(!editorTextosCfg)return;
   let nome=String(forcedName||editorTextosCfg.nome?.value||"").trim();
-  let extEscolhida=String(forcedExt||editorTextosCfg.extensaoAtual||".txt").trim().toLowerCase();
-  if(extEscolhida!==".mod"&&extEscolhida!==".rtf"&&extEscolhida!==".txt"&&extEscolhida!==".pdf"){
-    extEscolhida=".mod";
-  }
   if(!nome){
-    const escolha=await editorTextosAbrirModalSalvarComo({
-      nomeInicial:editorTextosCfg.modeloAtualId?"":"Novo modelo",
-      tipoInicial:extEscolhida
-    });
-    if(!escolha){
-      editorTextosDebugLog("EDITOR SAVE AS CANCEL",{origem:"salvar_sem_nome"},"render");
-      return;
-    }
-    nome=String(escolha.nome||"").trim();
-    extEscolhida=String(escolha.tipo||extEscolhida).trim().toLowerCase();
-    if(extEscolhida===".pdf"){
-      editorTextosDebugLog("EDITOR SAVE AS PAYLOAD",{
-        nome,
-        tipo:".pdf",
-        modo:"exportacao_pdf"
-      },"render");
-      const exportado=await editorTextosExportarPdfAtual({documentName:nome});
-      if(exportado){
-        editorTextosCfg.status.textContent="PDF gerado com sucesso.";
-      }
-      return;
-    }
+    const nomePrompt=window.prompt("Nome do modelo:",editorTextosCfg.modeloAtualId?"":"Novo modelo");
+    if(nomePrompt===null)return;
+    nome=String(nomePrompt||"").trim();
   }
   if(!nome){
     window.alert("Informe o nome do modelo.");
@@ -29006,15 +22312,9 @@ async function editorTextosSalvarAtual(forceNew=false,forcedName="",forcedExt=""
     conteudo:conteudo.conteudo,
     conteudo_formato:conteudo.conteudo_formato,
     tipo_modelo:String(editorTextosCfg.tipoAtual||"outros"),
-    extensao:extEscolhida,
+    extensao:String(editorTextosCfg.extensaoAtual||".txt"),
     pagina_config:editorTextosNormalizarPaginaConfig(editorTextosCfg.paginaConfig||EDITOR_TEXTOS_PAGE_DEFAULT)
   };
-  editorTextosDebugLog("EDITOR SAVE AS PAYLOAD",{
-    nome,
-    tipo:extEscolhida,
-    forceNew:!!forceNew,
-    modeloAtualId:Number(editorTextosCfg.modeloAtualId||0)||0
-  },"render");
   let method="POST";
   let path="/editor-textos/modelos";
   const tipoAtual=String(editorTextosCfg.tipoAtual||"outros");
@@ -29095,37 +22395,20 @@ async function editorTextosSalvarAtual(forceNew=false,forcedName="",forcedExt=""
 }
 async function editorTextosSalvarComoAtual(){
   if(!editorTextosCfg)return;
-  const sugestao=editorTextosSaveAsNormalizarNomeBase(String(editorTextosCfg.nome?.value||"").trim())||"Novo modelo";
-  const escolha=await editorTextosAbrirModalSalvarComo({
-    nomeInicial:sugestao,
-    tipoInicial:String(editorTextosCfg.extensaoAtual||".mod")
-  });
-  if(!escolha){
-    editorTextosDebugLog("EDITOR SAVE AS CANCEL",{origem:"salvar_como"},"render");
+  const sugestao=String(editorTextosCfg.nome?.value||"").trim()||"Novo modelo";
+  const novoNome=window.prompt("Salvar como - nome do modelo:",sugestao);
+  if(novoNome===null)return;
+  const nomeLimpo=String(novoNome||"").trim();
+  if(!nomeLimpo){
+    window.alert("Informe um nome valido.");
     return;
   }
-  const nomeLimpo=String(escolha.nome||"").trim();
-  const tipoEscolhido=String(escolha.tipo||".mod").trim().toLowerCase();
   const nomeAtual=String(editorTextosCfg.nome?.value||"").trim();
-  const extAtual=String(editorTextosCfg.extensaoAtual||".mod").trim().toLowerCase();
-  if(
-    tipoEscolhido!==".pdf"
-    &&editorTextosNormalizarNomeComparacao(nomeLimpo)===editorTextosNormalizarNomeComparacao(nomeAtual)
-    &&tipoEscolhido===extAtual
-  ){
+  if(editorTextosNormalizarNomeComparacao(nomeLimpo)===editorTextosNormalizarNomeComparacao(nomeAtual)){
     window.alert("No 'Salvar como', informe um nome diferente do arquivo atual.");
     return;
   }
-  if(tipoEscolhido===".pdf"){
-    editorTextosDebugLog("EDITOR SAVE AS PAYLOAD",{
-      nome:nomeLimpo,
-      tipo:".pdf",
-      modo:"exportacao_pdf_salvar_como"
-    },"render");
-    await editorTextosExportarPdfAtual({documentName:nomeLimpo});
-    return;
-  }
-  await editorTextosSalvarAtual(true,nomeLimpo,tipoEscolhido);
+  await editorTextosSalvarAtual(true,nomeLimpo);
 }
 async function editorTextosAbrir(){
   editorTextosEnsureUI();
@@ -29780,7 +23063,7 @@ procPreencherEspecialidadesEditor=function(){const especialidades=Array.isArray(
 procCarregarFiltros=async function(){const tabAtual=String(proc.cboTabela?.value||"1");const espAtual=String(proc.cboEspecialidade?.value||"");const{res,data}=await requestJson("GET","/procedimentos/filtros",undefined,true);if(!res.ok){procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};if(proc.cboTabela){proc.cboTabela.innerHTML='<option value="1">Tabela Exemplo</option>';proc.cboTabela.value="1"}if(proc.cboEspecialidade){proc.cboEspecialidade.innerHTML='<option value="">Todas</option>';proc.cboEspecialidade.value=""}procPreencherEspecialidadesEditor();procAplicarRegrasTabelaSelecionada();return}const tabelas=Array.isArray(data?.tabelas)?data.tabelas:[];const especialidades=Array.isArray(data?.especialidades)?data.especialidades:[];const tipos_tiss=Array.isArray(data?.tipos_tiss)?data.tipos_tiss:[];const indices=Array.isArray(data?.indices)?data.indices:[];procFiltros={tabelas,especialidades,tipos_tiss,indices};if(proc.cboTabela){const base=tabelas.length?tabelas:[{id:"1",nome:"Tabela Exemplo"}];proc.cboTabela.innerHTML=base.map(x=>`<option value="${esc(String(x.id??""))}">${esc(String(x.nome??""))}</option>`).join("");procSetSelectValue(proc.cboTabela,tabAtual||"1")}if(proc.cboEspecialidade){proc.cboEspecialidade.innerHTML=['<option value="">Todas</option>',...especialidades.map(x=>`<option value="${esc(String(x.codigo??""))}">${esc(String(x.nome??""))}</option>`)].join("");procSetSelectValue(proc.cboEspecialidade,espAtual)}procPreencherEspecialidadesEditor();procAplicarRegrasTabelaSelecionada()};
 procAplicarDadosEditor=function(data={},resetLinks=false){procCorrigirRotulosEditor();proc.txtCodigo.value=String(data?.codigo??"");proc.txtNome.value=String(data?.nome??"");proc.txtTempo.value=String(data?.tempo??0);proc.txtPreco.value=procFmtBr(data?.preco??0);proc.txtLab.value=procFmtBr(data?.custo_lab??0);if(proc.txtGarantia)proc.txtGarantia.value=String(data?.garantia_meses??0);if(proc.txtRepasse)proc.txtRepasse.value=procFmtBr(data?.valor_repasse??0);if(proc.chkInativar)proc.chkInativar.checked=Boolean(data?.inativo);if(proc.chkPreferidos)proc.chkPreferidos.checked=Boolean(data?.preferido);if(proc.txtObs)proc.txtObs.value=String(data?.observacoes??"");if(proc.lblInclusao)proc.lblInclusao.textContent=String(data?.data_inclusao??"");if(proc.lblAlteracao)proc.lblAlteracao.textContent=String(data?.data_alteracao??"");procPreencherEspecialidadesEditor();const genericoAtual=data?.procedimento_generico_id==null?"":String(data.procedimento_generico_id);procGarantirOpcaoSelect(proc.cboGenerico,genericoAtual,genericoAtual?`Registro atual (${genericoAtual})`:"");procSetSelectValue(proc.cboGenerico,genericoAtual);const especialidadeAtual=String(data?.especialidade??"").trim();procGarantirOpcaoSelect(proc.cboEditorEspecialidade,especialidadeAtual,procEspecialidadeNomeV2(especialidadeAtual));procSetSelectValue(proc.cboEditorEspecialidade,especialidadeAtual);const simboloAtual=String(data?.simbolo_grafico??"").trim();procGarantirOpcaoSelect(proc.cboSimbolo,simboloAtual,procSimboloDescricao(simboloAtual));procSetSelectValue(proc.cboSimbolo,simboloAtual);procAtualizarPreviewSimbolo(simboloAtual);const cobrancaAtual=procNormalizarFormaCobrancaV2(data?.forma_cobranca);procGarantirOpcaoSelect(proc.cboCobranca,cobrancaAtual,PROC_FORMAS_COBRANCA_V2.find(item=>item.codigo===cobrancaAtual)?.descricao||cobrancaAtual);procSetSelectValue(proc.cboCobranca,cobrancaAtual);if(Object.prototype.hasOwnProperty.call(data,"materiais_vinculados"))procRenderLinks(data.materiais_vinculados||procEditorLinksVazio);else if(resetLinks)procRenderLinks(procEditorLinksVazio);procAtualizarFinanceiro()};
 abrirProcedimentos=async function(){hideAllPanels();ensurePanelChrome(proc.panel);proc.panel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");await procCarregarFiltros();await procCarregarLista();footerMsg.textContent="Modulo Configura tabela de pre\u00e7os aberto."};
-procAbrirEditor=async function(id=null){const tabSel=procTabelaSelecionadaAtual();if(tabSel?.inativo){window.alert("Tabela inativa. Reative a tabela antes de alterar procedimentos.");return}hideAllPanels();ensurePanelChrome(proc.novoPanel);proc.novoPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");procedimentoAtualId=id;procMaterialSelecionadoId=null;await Promise.all([procCarregarCenario(),procCarregarCombosEditor()]);if(id){const{res,data}=await requestJson("GET",`/procedimentos/${id}`,undefined,true);if(!res.ok){window.alert(data.detail||"Procedimento não encontrado.");return}procAplicarDadosEditor(data);if(!Object.prototype.hasOwnProperty.call(data||{},"materiais_vinculados"))await procRecarregarLinks()}else{const tabela=encodeURIComponent(String(proc.cboTabela?.value||"1"));const{res,data}=await requestJson("GET",`/procedimentos/proximo-codigo?tabela_id=${tabela}`,undefined,true);procAplicarDadosEditor({codigo:res?String(data.codigo||1):"1",nome:"",tempo:0,preco:0,custo_lab:0,garantia_meses:0,valor_repasse:0,especialidade:"",procedimento_generico_id:null,simbolo_grafico:"",forma_cobranca:"",preferido:false,inativo:false,observacoes:"",data_inclusao:"",data_alteracao:""},true)}};
+procAbrirEditor=async function(id=null){const tabSel=procTabelaSelecionadaAtual();if(tabSel?.inativo){window.alert("Tabela inativa. Reative a tabela antes de alterar procedimentos.");return}hideAllPanels();ensurePanelChrome(proc.novoPanel);proc.novoPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");procedimentoAtualId=id;procMaterialSelecionadoId=null;if(!id){procedimentoLinks=[];if(proc.linksTbody)proc.linksTbody.innerHTML="";if(proc.totalMats)proc.totalMats.textContent="0";if(proc.totalCustoUnd)proc.totalCustoUnd.textContent=procFmtMoeda(0);if(proc.totalCusto){proc.totalCusto.textContent=procFmtMoeda(0);proc.totalCusto.dataset.valor="0"}}await Promise.all([procCarregarCenario(),procCarregarCombosEditor()]);if(id){const{res,data}=await requestJson("GET",`/procedimentos/${id}`,undefined,true);if(!res.ok){window.alert(data.detail||"Procedimento não encontrado.");return}procAplicarDadosEditor(data);if(!Object.prototype.hasOwnProperty.call(data||{},"materiais_vinculados"))await procRecarregarLinks()}else{const tabela=encodeURIComponent(String(proc.cboTabela?.value||"1"));const{res,data}=await requestJson("GET",`/procedimentos/proximo-codigo?tabela_id=${tabela}`,undefined,true);procAplicarDadosEditor({codigo:res?String(data.codigo||1):"1",nome:"",tempo:0,preco:0,custo_lab:0,garantia_meses:0,valor_repasse:0,especialidade:"",procedimento_generico_id:null,simbolo_grafico:"",forma_cobranca:"",preferido:false,inativo:false,observacoes:"",data_inclusao:"",data_alteracao:""},true)}};
 pgenAbrir=async function(){pgenEnsureUI();ensurePanelChrome(pgen.panel);await pgenCarregarEspecialidades();const especialidades=Array.isArray(procFiltros?.especialidades)?procFiltros.especialidades:[];pgen.cboEspecialidade.innerHTML=['<option value="">&lt;&lt;Todas&gt;&gt;</option>',...especialidades.map(item=>`<option value="${esc(String(item.codigo||""))}">${esc(String(item.nome||""))}</option>`)].join("");pgenCorrigirRotulos();hideAllPanels();pgen.panel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");await pgenCarregar();footerMsg.textContent="Módulo Procedimentos genéricos aberto."};
 if(proc.novoPanel)ensurePanelChrome(proc.novoPanel);
 if(proc.panel)ensurePanelChrome(proc.panel);
@@ -31519,18 +24802,9 @@ executarAcaoMenu=async function(action){
   return executarAcaoMenuBaseMedicamentos(action);
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+window.unidadeAbrir=unidadeAbrir;
+window.unidadeAbrirModal=unidadeAbrirModal;
+window.auxAbrir=auxAbrir;
+window.simbolosEspecialidadeNome=simbolosEspecialidadeNome;
+window.simbolosAbrir=simbolosAbrir;
 
