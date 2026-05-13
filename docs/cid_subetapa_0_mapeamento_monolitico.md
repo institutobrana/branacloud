@@ -1,106 +1,82 @@
-# CID - Subetapa 0 - Mapeamento monolitico
+# CID - Subetapa 0: mapeamento monolitico
 
-## Branch e estado inicial
+## 1. Branch atual
 
-- Branch atual: `modularizacao-segura-fase-1`
-- Working tree antes da analise: limpo
-- Ultimos commits relevantes:
-  - `46f49b9` - Cria plano de retomada da modularizacao segura
-  - `f3cab35` - Corrige duplo clique em convenios e planos no monolitico
-  - `1dc8b18` - Restaura frontend monolitico e corrige contratos globais pos-reversao
+- `modularizacao-segura-fase-1`
 
-## Arquivos analisados
+## 2. Status do working tree antes
+
+- `git status --short` antes: `?? docs/varredura_proximo_modulo_pos_plano_contas.md`
+- `git diff --stat` antes: sem alteracoes funcionais
+
+## 3. Observacao sobre arquivos pendentes
+
+- Havia apenas o arquivo documental pendente `docs/varredura_proximo_modulo_pos_plano_contas.md`.
+- O arquivo `docs/cid_subetapa_0_mapeamento_monolitico.md` ja existia no historico e foi atualizado com o estado atual do app.js, preservando a trilha documental.
+- Nenhum JS funcional estava pendente nesta auditoria.
+
+## 4. Ultimos commits relevantes
+
+- `39330d3 feat(frontend): encerra ciclo seguro dos helpers de plano de contas`
+- `b415b5c Encerra ciclo seguro de helpers de Unidades`
+- `ab102c8 Audita helpers modulares de Unidades`
+- `91b65e9 Usa helper modular de telefone em Unidades com fallback`
+- `45419a5 Usa helper modular de codigo em Unidades com fallback`
+- `795c664 Usa helper modular de status em Unidades com fallback`
+- `6b2ae0e Carrega modulo de Unidades de forma passiva`
+- `7ea7c65 Compara helpers de Unidades no modulo controlado`
+
+## 5. Arquivos analisados
 
 - `frontend/app.js`
 - `frontend/index.html`
+- `frontend/js/modules/unidades.js`
+- `frontend/js/modules/plano-contas.js`
 
-## Documentos consultados
+## 6. Documentos consultados
 
-Lidos com sucesso:
-
+- `docs/varredura_proximo_modulo_pos_plano_contas.md`
 - `docs/plano_retomada_modularizacao_segura_pos_reversao.md`
+- `docs/varredura_comparativa_primeiro_modulo_modularizacao.md`
+- `docs/unidades_subetapa_8_encerramento_ciclo_helpers.md`
+- `docs/plano_contas_subetapa_5_encerramento_ciclo_helpers.md`
 - `docs/03_mapa_codigo.md`
 - `docs/04_funcionalidades.md`
 - `docs/07_fluxos.md`
 - `docs/10_continuidade.md`
+- `docs/frontend_auditoria_appjs.md`
+- `docs/cid_subetapa_0_mapeamento_monolitico.md` ja existia no historico e foi revisado nesta auditoria
 
-Nao encontrados no estado atual:
+## 7. Confirmacao de que nenhum codigo funcional foi alterado
 
-- `docs/frontend_modularizacao_fase_3_cid.md`
-- `docs/frontend_auditoria_pos_fase_3_cid.md`
-- `docs/frontend_correcao_cid_duplo_clique_checkbox.md`
+- Nenhum arquivo funcional foi alterado nesta etapa.
+- Esta subetapa foi apenas de auditoria e mapeamento.
 
-## Mapa de funcoes CID no `app.js`
+## 8. Onde o modulo CID aparece no menu/shell
 
-### Funcoes identificadas
+- Menu:
+  - `frontend/index.html:2635` - botao `data-menu-action="tabelas-cid"` com label `Doenças (CID)...`
+- Shell/painel:
+  - `frontend/app.js:10873` - estilos do painel `cid-panel`
+  - `frontend/app.js:10875` - markup do painel `cid-panel` e do modal `cid-modal-backdrop`
+  - `frontend/app.js:11001` - fluxo de abertura `cidAbrir()`
 
-| Funcao | Categoria | Observacao |
+## 9. Funcoes encontradas e classificacao
+
+| Funcao | Classificacao | Observacao |
 |---|---|---|
-| `cidEnsureUI()` | helper com DOM | Cria estilos, HTML do painel e referencias do CID |
-| `cidFiltrar()` | helper com DOM | Filtra usando o campo de busca do proprio painel |
-| `cidRender()` | renderizacao/listagem | Renderiza a tabela em batches e atualiza selecao |
-| `cidSelecionado()` | estado global | Retorna o CID selecionado no cache |
-| `cidCarregar()` | fetch/API | Busca registros em `GET /cid` |
-| `cidPreencherModal(item)` | modal/formulario | Preenche o modal de CID com item existente |
-| `cidMontarPayload()` | modal/formulario | Monta payload para salvar CID |
-| `cidSalvarModal()` | fetch/API | Faz `POST /cid` ou `PUT /cid/{id}` |
-| `cidExcluirSelecionado()` | fetch/API | Faz `DELETE /cid/{id}` |
-| `cidAbrirModal(modo)` | modal/formulario | Abre modal de novo/editar |
-| `cidFecharModal()` | modal/formulario | Fecha modal |
-| `cidVincularEventos()` | evento/bind | Liga busca, clique, botoes e modal |
-| `cidAbrir()` | integracao com shell | Abre painel via menu e carrega lista |
+| `cidEnsureUI()` | abertura/painel + DOM | cria painel, modal e referencia elementos |
+| `cidRender()` | renderizacao | aplica filtro e pinta a tabela |
+| `cidSelecionado()` | selecao/lookup | retorna item selecionado em cache |
+| `cidCarregar()` | carregamento/API | faz `GET /cid` e atualiza cache |
+| `cidSalvarModal()` | modal/salvar/API | grava com `POST` ou `PUT` e recarrega |
+| `cidExcluirSelecionado()` | excluir/API | faz `DELETE /cid/{id}` e recarrega |
+| `cidAbrirModal(modo)` | modal | abre modal para novo/editar |
+| `cidFecharModal()` | modal | fecha o modal |
+| `cidVincularEventos()` | evento/bind | liga busca, tabela e botoes |
+| `cidAbrir()` | abertura/painel | fluxo de entrada pelo shell/menu |
 
-### Funcao de abertura do modulo
-
-- `cidAbrir()`
-- Resumo: prepara UI, liga eventos, esconde outros paineis, mostra o painel CID, carrega os dados e atualiza a mensagem de rodape.
-
-### Funcao de carregamento/listagem
-
-- `cidCarregar()`
-- Endpoint: `GET /cid`
-
-### Funcao de renderizacao/lista
-
-- `cidRender()`
-- Usa `requestAnimationFrame` e renderiza em lotes para a tabela.
-
-### Funcao de selecao de linha
-
-- `cidSelecionado()` para ler o item atual
-- A selecao visual e atualizada em `cidRender()`
-- O clique na tabela atualiza `cidSelId` em `cidVincularEventos()`
-
-### Funcoes de duplo clique
-
-- Nao ha handler separado de duplo clique no bloco CID atual
-- O modulo usa clique simples na tabela e botoes de editar para abrir o modal
-
-### Funcao de checkbox
-
-- `cidPreencherModal(item)` e `cidMontarPayload()` tratam o campo `preferido`
-- O checkbox aparece como `cid.modalPreferidos`
-
-### Funcoes de novo / editar
-
-- `cidAbrirModal("novo")`
-- `cidAbrirModal("editar")`
-
-### Funcao de salvar
-
-- `cidSalvarModal()`
-
-### Funcao de excluir
-
-- `cidExcluirSelecionado()`
-
-### Funcao de fechar modal
-
-- `cidFecharModal()`
-
-## Mapa de variaveis e estado CID
-
-### Estado local do modulo
+## 10. Variaveis/estado/cache
 
 - `cid`
 - `cidCache`
@@ -108,45 +84,17 @@ Nao encontrados no estado atual:
 - `cidBuscaTimer`
 - `cidRenderToken`
 
-### Classificacao
-
-| Variavel | Categoria | Observacao |
-|---|---|---|
-| `cid` | estado global / referencia DOM | Armazena ponteiros do painel e do modal |
-| `cidCache` | estado global | Cache dos itens carregados |
-| `cidSelId` | estado global | ID selecionado na tabela |
-| `cidBuscaTimer` | estado global | Timer do filtro de busca |
-| `cidRenderToken` | estado global | Protege o render em lotes contra corrida |
-
-## Mapa de eventos e binds CID
-
-### Eventos identificados
-
-| Evento | Onde | Categoria | Observacao |
-|---|---|---|---|
-| `input` | `cid.busca` | evento/bind | Debounce do filtro |
-| `click` | `cid.tbody` | evento/bind | Seleciona a linha clicada |
-| `click` | `cid.btnNovo` | evento/bind | Abre modal de novo CID |
-| `click` | `cid.btnEditar` | evento/bind | Abre modal de edicao |
-| `click` | `cid.btnExcluir` | evento/bind | Exclui CID selecionado |
-| `click` | `cid.btnFechar` | evento/bind | Fecha o painel CID |
-| `click` | `cid.modalCancelar` | evento/bind | Fecha o modal |
-| `click` | `cid.modalOk` | evento/bind | Salva o modal |
-| `click` no backdrop | `cid.modalBackdrop` | evento/bind | Fecha o modal ao clicar fora |
-| menu `data-menu-action="tabelas-cid"` | `frontend/index.html` + dispatcher | integracao com shell | Abre o modulo CID |
-
-## Mapa de seletores e IDs DOM CID
-
-### IDs / classes usados
+## 11. Elementos de DOM usados
 
 - `cid-panel`
-- `cid-search`
-- `cid-grid`
+- `cid-tbody`
+- `cid-busca`
 - `cid-total`
+- `cid-btn-novo`
+- `cid-btn-editar`
+- `cid-btn-excluir`
+- `cid-btn-fechar`
 - `cid-modal-backdrop`
-- `cid-modal`
-- `cid-modal-body`
-- `cid-modal-actions`
 - `cid-modal-title`
 - `cid-modal-codigo`
 - `cid-modal-doenca`
@@ -154,123 +102,120 @@ Nao encontrados no estado atual:
 - `cid-modal-preferidos`
 - `cid-modal-ok`
 - `cid-modal-cancelar`
-- `cid-tbody`
 
-### Observacao tecnica
+## 12. Eventos/binds
 
-- O CID usa um painel proprio com tabela, busca, modal e rodape.
-- A renderizacao depende de `cid.tbody`, `cid.total`, `cid.busca` e dos campos do modal.
+- `input` em `cid-busca` para limpar filtro e re-renderizar
+- `click` em linha da tabela para selecionar item
+- `click` em `cid-btn-novo`
+- `click` em `cid-btn-editar`
+- `click` em `cid-btn-excluir`
+- `click` em `cid-btn-fechar`
+- `click` em `cid-modal-ok`
+- `click` em `cid-modal-cancelar`
+- nao foi identificado duplo-clique nativo no CID
 
-## Mapa de endpoints CID
+## 13. Fluxo de abertura
 
-| Acao | Endpoint | Metodo | Categoria |
-|---|---|---|---|
-| carregar lista | `/cid` | `GET` | fetch/API |
-| salvar novo | `/cid` | `POST` | fetch/API |
-| salvar edicao | `/cid/{id}` | `PUT` | fetch/API |
-| excluir | `/cid/{id}` | `DELETE` | fetch/API |
+- O menu `Doenças (CID)...` chama `cidAbrir()` via dispatcher do app.
+- `cidAbrir()` chama `cidEnsureUI()`, depois `cidVincularEventos()`, abre o painel, limpa busca e faz `cidCarregar()`.
 
-## Contratos globais e `window.*`
+## 14. Fluxo de carregamento/listagem
 
-- Nao foi identificado contrato especifico `window.cid*` no trecho analisado
-- O modulo depende de contratos globais do shell:
-  - `hideAllPanels()`
-  - `ensurePanelChrome()`
-  - `ensureModalChrome()`
-  - `workspaceEmpty`
-  - `footerMsg`
-  - `requestJson()`
-  - `esc()`
-  - `window.requestAnimationFrame()`
-  - `window.setTimeout()`
-  - `window.alert()`
-  - `window.confirm()`
+- `cidCarregar()` faz `GET /cid`.
+- A resposta alimenta `cidCache`.
+- `cidRender()` desenha a tabela filtrando por `cid.busca.value`.
+- O token `cidRenderToken` protege contra re-render concorrente.
 
-## Dependencias compartilhadas
+## 15. Fluxo de selecao
 
-### Shell / menu
+- O clique em uma linha define `cidSelId`.
+- `cidSelecionado()` resolve o item atual em `cidCache`.
+- O fluxo de busca zera a selecao e chama `cidRender()`.
 
-- `executarAcaoMenu("tabelas-cid")`
-- `data-menu-action="tabelas-cid"` no HTML
-- `hideAllPanels()`
-- `ensurePanelChrome()`
-- `ensureModalChrome()`
+## 16. Fluxo de novo/alterar
 
-### Estado compartilhado
+- `cid.btnNovo` abre `cidAbrirModal("novo")`.
+- `cid.btnEditar` verifica se existe selecao e chama `cidAbrirModal("editar")`.
+- `cidAbrirModal()` preenche ou limpa os campos do modal.
 
-- `cid`
-- `cidCache`
-- `cidSelId`
-- `cidBuscaTimer`
-- `cidRenderToken`
+## 17. Fluxo de excluir
 
-### API compartilhada
+- `cidExcluirSelecionado()` usa o item selecionado.
+- Faz `DELETE /cid/{id}`.
+- Em sucesso, limpa selecao e chama `cidCarregar()`.
 
-- `requestJson()`
+## 18. Fluxo de modal
 
-## Classificacao por risco
+- Modal proprio do CID existe em `cid-modal-backdrop`.
+- `cidAbrirModal()` controla abertura e preenchimento.
+- `cidSalvarModal()` monta payload e grava via `requestJson`.
+- `cidFecharModal()` fecha o modal.
 
-| Item | Risco | Motivo |
-|---|---|---|
-| `cidFiltrar()` | medio | Depende do DOM do painel e do estado da busca |
-| `cidRender()` | medio | Faz render em lotes e controla selecao |
-| `cidSelecionado()` | baixo | Leitura de estado, mas ainda acoplada ao cache do modulo |
-| `cidCarregar()` | alto | Depende de API e autenticao |
-| `cidPreencherModal()` | medio | Manipula DOM do modal |
-| `cidMontarPayload()` | medio | Depende do modal e dos campos visiveis |
-| `cidSalvarModal()` | alto | Escreve na API |
-| `cidExcluirSelecionado()` | alto | Remove dados na API |
-| `cidAbrirModal()` | alto | Depende de estado, DOM e modal |
-| `cidFecharModal()` | medio | Opera no DOM do modal |
-| `cidVincularEventos()` | alto | Ligacao critica com a UI |
-| `cidAbrir()` | alto | Integra com o shell e carrega a tela |
+## 19. Endpoints/API usados
 
-## Candidatos seguros para Subetapa 1/2
+- `GET /cid`
+- `POST /cid`
+- `PUT /cid/{id}`
+- `DELETE /cid/{id}`
 
-### Candidatos iniciais reais
+## 20. Dependencias compartilhadas
 
-No trecho CID analisado, nao foram encontrados helpers verdadeiramente puros que sejam candidatos ideais para mover primeiro.
+- `requestJson`
+- `esc`
+- `hideAllPanels`
+- `workspaceEmpty`
+- `footerMsg`
+- `ensureModalChrome`
+- `ensurePanelChrome`
+- `closeWorkspacePanel`
+- `cadModalAbrir` nao e usado diretamente pelo CID
+- `bindStandardGridActivation` nao e usado pelo CID
+- nao foi identificado uso de `window.*` funcional para o CID
 
-### Observacao importante
+## 21. Possiveis helpers puros candidatos
 
-- As funcoes do CID estao todas ligadas a DOM, estado, eventos ou API.
-- O unico reaproveitamento inicial aceitavel deve vir de:
-  - pequenas constantes
-  - mapeamentos
-  - formatacoes simples, se forem separadas em utilitario puro no futuro
+- Nenhum helper puro seguro foi identificado para mover de imediato.
+- O conjunto parece orientado a DOM, estado e API desde o inicio.
 
-## Itens proibidos de mover agora
+## 22. Itens que NAO devem ser movidos nas proximas subetapas
 
+- `cidEnsureUI()`
 - `cidAbrir()`
-- `cidVincularEventos()`
-- `cidRender()`
 - `cidCarregar()`
+- `cidRender()`
+- `cidSelecionado()`
 - `cidAbrirModal()`
+- `cidFecharModal()`
 - `cidSalvarModal()`
 - `cidExcluirSelecionado()`
-- `cidPreencherModal()`
-- `cidFecharModal()`
-- qualquer coisa dependente de `cidSelId`, `cidCache`, `cidRenderToken` ou `cidBuscaTimer`
-- qualquer coisa que dependa de `requestJson()`
-- qualquer coisa que dependa do menu ou do shell
+- `cidVincularEventos()`
+- qualquer bind de botao, busca ou tabela
+- qualquer uso de `requestJson`
+- qualquer dependencia de modal/painel do shell
+- qualquer fluxo de abertura pelo menu
 
-## Recomendaçao tecnica para a proxima subetapa
+## 23. Riscos especificos do modulo CID
 
-- Fazer uma revisao de granularidade dentro do CID para descobrir se ha pequenas funcoes puras auxiliares que possam ser destacadas sem DOM.
-- Se nao houver helpers puros suficientes, seguir com uma modularizacao por consolidacao de wrapper:
-  - manter `cidAbrir()` no `app.js`
-  - mover apenas a construcao de HTML ou constantes realmente puras, se aparecerem
-- Evitar mover renderizacao ou binds antes de uma divisao de helpers puros.
+- Alta dependencia de DOM e estado local.
+- Fluxo pequeno, mas sem helper puro seguro para extração imediata.
+- Salvamento e exclusao dependem de contrato de backend e validação de regras que ainda nao foram segmentadas.
 
-## Checklist manual futuro para testar CID
+## 24. Recomendacao para Subetapa 1
 
-1. Abrir `Tabelas > Doenças (CID)...`
-2. Confirmar que o painel abre.
-3. Digitar na busca e verificar o filtro.
-4. Clicar em uma linha e verificar a selecao.
-5. Abrir o modal de novo CID.
-6. Abrir o modal de edicao com um item selecionado.
-7. Salvar um CID de teste em ambiente apropriado.
-8. Excluir um CID de teste em ambiente apropriado.
-9. Conferir o console do navegador em busca de erros.
+- Criar apenas uma estrutura modular passiva e controlada para CID, sem mover comportamento funcional.
+- Nao tentar wrapper, extração de helper ou controle de fluxo antes de uma nova fronteira ser documentada.
 
+## 25. Onde testar no navegador antes de avançar
+
+- Fazer `Ctrl+F5`.
+- Abrir `Doenças (CID)...`.
+- Confirmar abertura do painel.
+- Confirmar carregamento da lista.
+- Testar selecao de uma linha.
+- Testar busca/filtro.
+- Testar botao `Nova doença...`.
+- Testar botao `Altera...`.
+- Testar botao `Elimina`.
+- Fechar o painel.
+- Confirmar console sem `ReferenceError`, `TypeError` ou erro novo.

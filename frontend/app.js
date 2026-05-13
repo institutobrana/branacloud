@@ -10870,9 +10870,9 @@ function agendaSemanaEncerrarAbaStandalone(){
 function cidEnsureUI(){
   if(cid)return;
   const style=document.createElement("style");
-  style.textContent=".cid-panel{width:min(760px,100%);min-height:0;height:fit-content;align-self:start;padding:10px 10px 8px;background:#fff;border:1px solid #cfd8e3;box-sizing:border-box;font:12px Tahoma,sans-serif}.cid-toolbar{display:flex;gap:8px;align-items:center;margin:8px 0 6px;flex-wrap:wrap}.cid-divider{border-top:1px solid #d3dbe5;margin:8px 0 6px}.cid-search{display:flex;align-items:center;gap:8px;margin-bottom:6px}.cid-search label{white-space:nowrap}.cid-search input{flex:1;height:24px;border:1px solid #bfc9d6;padding:0 6px;box-sizing:border-box}.cid-grid{border:1px solid #cfd8e3;height:420px;overflow:auto;background:#fff}.cid-grid table{width:100%;border-collapse:collapse;table-layout:fixed}.cid-grid th,.cid-grid td{border-bottom:1px solid #edf1f6;padding:3px 6px;height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cid-grid th{background:#f2f6fb;font:700 12px Tahoma,sans-serif;text-align:left}.cid-grid tr.selected{background:#d9e8fb}.cid-total{margin-top:6px;color:#5b6b7e}.cid-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.24);display:grid;place-items:center;z-index:1300}.cid-modal{width:min(520px,96vw);background:#f2f2f2;border:1px solid #bfc9d6;border-radius:6px;padding:8px;box-sizing:border-box;font:12px Tahoma,sans-serif}.cid-modal-body{display:grid;grid-template-columns:90px 1fr;gap:8px 10px}.cid-modal-body label{display:block;margin-bottom:2px}.cid-modal-body input,.cid-modal-body textarea{width:100%;border:1px solid #bfc9d6;padding:4px 6px;box-sizing:border-box;background:#fff;font:12px Tahoma,sans-serif}.cid-modal-body input{height:24px}.cid-modal-body textarea{height:120px;resize:vertical}.cid-modal-full{grid-column:1/-1}.cid-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}";
+  style.textContent=".cid-panel{width:min(760px,100%);min-height:0;height:fit-content;align-self:start;padding:10px 10px 8px;background:#fff;border:1px solid #cfd8e3;box-sizing:border-box;font:12px Tahoma,sans-serif}.cid-toolbar{display:flex;gap:8px;align-items:center;margin:8px 0 6px;flex-wrap:wrap}.cid-divider{border-top:1px solid #d3dbe5;margin:8px 0 6px}.cid-search{display:flex;align-items:center;gap:8px;margin-bottom:6px}.cid-search label{white-space:nowrap}.cid-search input{flex:1;height:24px;border:1px solid #bfc9d6;padding:0 6px;box-sizing:border-box}.cid-grid{border:1px solid #cfd8e3;height:420px;overflow:auto;background:#fff}.cid-grid table{width:100%;border-collapse:collapse;table-layout:fixed}.cid-grid th,.cid-grid td{border-bottom:1px solid #edf1f6;padding:3px 6px;height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cid-grid th{background:#f2f6fb;font:700 12px Tahoma,sans-serif;text-align:left}.cid-grid tr.selected{background:#d9e8fb}.cid-total{margin-top:6px;color:#5b6b7e}.cid-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.24);display:grid;place-items:center;z-index:1300}.cid-modal{width:min(520px,96vw);background:#f2f2f2;border:1px solid #bfc9d6;border-radius:6px;padding:8px;box-sizing:border-box;font:12px Tahoma,sans-serif}.cid-modal-body{display:grid;grid-template-columns:90px 1fr;gap:8px 10px}.cid-modal-body label{display:block;margin-bottom:2px}.cid-modal-body input,.cid-modal-body textarea{width:100%;border:1px solid #bfc9d6;padding:4px 6px;box-sizing:border-box;background:#fff;font:12px Tahoma,sans-serif}.cid-modal-body input{height:24px}.cid-modal-body textarea{height:120px;resize:vertical}.cid-modal-full{grid-column:1/-1}.cid-modal-preferidos{display:flex;align-items:center;gap:0;margin:2px 0 0;line-height:1.2;font:12px Tahoma,sans-serif;color:#233549}.cid-modal-preferidos input{width:auto;height:auto;margin:0 8px 0 0;padding:0;flex:0 0 auto}.cid-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}";
   document.head.appendChild(style);
-  workspaceEmpty.insertAdjacentHTML("afterend",`<section id="cid-panel" class="cid-panel hidden"><div class="panel-title">Tabela de doenças (CID)</div><div class="cid-toolbar"><button id="cid-btn-novo" class="materiais-btn" type="button"><img src="/desktop-assets/novo.png" alt="">Nova doença...</button><button id="cid-btn-editar" class="materiais-btn" type="button"><img src="/desktop-assets/editar.png" alt="">Altera...</button><button id="cid-btn-excluir" class="materiais-btn" type="button"><img src="/desktop-assets/eliminar.png" alt="">Elimina</button><button id="cid-btn-fechar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Fecha</button></div><div class="cid-divider"></div><div class="cid-search"><label for="cid-busca">Pesquisar doença:</label><input id="cid-busca" type="text"></div><div class="cid-grid"><table><colgroup><col style="width:80px"><col></colgroup><thead><tr><th>Código</th><th>Doença</th></tr></thead><tbody id="cid-tbody"></tbody></table></div><div id="cid-total" class="cid-total">0 itens</div></section><div id="cid-modal-backdrop" class="cid-modal-backdrop hidden"><div class="cid-modal"><div class="modal-header"><div id="cid-modal-title" class="modal-title">Nova doença</div></div><div class="cid-modal-body"><div><label for="cid-modal-codigo">Código:</label><input id="cid-modal-codigo" type="text"></div><div><label for="cid-modal-doenca">Doença:</label><input id="cid-modal-doenca" type="text"></div><div class="cid-modal-full"><label for="cid-modal-observacoes">Observações:</label><textarea id="cid-modal-observacoes"></textarea></div><div class="cid-modal-full"><label><input id="cid-modal-preferidos" type="checkbox"> Incluir na lista de preferidos</label></div></div><div class="cid-modal-actions"><button id="cid-modal-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button><button id="cid-modal-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button></div></div></div>`);
+  workspaceEmpty.insertAdjacentHTML("afterend",`<section id="cid-panel" class="cid-panel hidden"><div class="panel-title">Tabela de doenças (CID)</div><div class="cid-toolbar"><button id="cid-btn-novo" class="materiais-btn" type="button"><img src="/desktop-assets/novo.png" alt="">Nova doença...</button><button id="cid-btn-editar" class="materiais-btn" type="button"><img src="/desktop-assets/editar.png" alt="">Altera...</button><button id="cid-btn-excluir" class="materiais-btn" type="button"><img src="/desktop-assets/eliminar.png" alt="">Elimina</button><button id="cid-btn-fechar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Fecha</button></div><div class="cid-divider"></div><div class="cid-search"><label for="cid-busca">Pesquisar doença:</label><input id="cid-busca" type="text"></div><div class="cid-grid"><table><colgroup><col style="width:80px"><col></colgroup><thead><tr><th>Código</th><th>Doença</th></tr></thead><tbody id="cid-tbody"></tbody></table></div><div id="cid-total" class="cid-total">0 itens</div></section><div id="cid-modal-backdrop" class="cid-modal-backdrop hidden"><div class="cid-modal"><div class="modal-header"><div id="cid-modal-title" class="modal-title">Nova doença</div></div><div class="cid-modal-body"><div><label for="cid-modal-codigo">Código:</label><input id="cid-modal-codigo" type="text"></div><div><label for="cid-modal-doenca">Doença:</label><input id="cid-modal-doenca" type="text"></div><div class="cid-modal-full"><label for="cid-modal-observacoes">Observações:</label><textarea id="cid-modal-observacoes"></textarea></div><div class="cid-modal-full"><label class="cid-modal-preferidos"><input id="cid-modal-preferidos" type="checkbox">Incluir na lista de preferidos</label></div></div><div class="cid-modal-actions"><button id="cid-modal-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button><button id="cid-modal-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button></div></div></div>`);
   cid={
     panel:document.getElementById("cid-panel"),
     busca:document.getElementById("cid-busca"),
@@ -10921,6 +10921,11 @@ function cidRender(){
 function cidSelecionado(){
   return cidCache.find(x=>x.id===cidSelId)||null;
 }
+function cidSelecionarLinha(id){
+  cidSelId=Number(id||0)||null;
+  if(!cid?.tbody)return;
+  cid.tbody.querySelectorAll("tr").forEach(tr=>tr.classList.toggle("selected",Number(tr.dataset.id||0)===cidSelId));
+}
 async function cidCarregar(){
   const{res,data}=await requestJson("GET","/cid",undefined,true);
   if(!res.ok){
@@ -10947,8 +10952,33 @@ function cidMontarPayload(){
   };
 }
 async function cidSalvarModal(){
-  const payload=cidMontarPayload();
-  if(!payload.codigo||!payload.descricao){window.alert("Informe código e doença.");return}
+  const codigo=String(cid.modalCodigo.value||"").trim();
+  const descricao=String(cid.modalDoenca.value||"").trim();
+  const observacoes=String(cid.modalObservacoes.value||"").trim();
+  const preferido=!!cid.modalPreferidos.checked;
+  const helpers=window.BranaCidModule&&window.BranaCidModule.helpers;
+  let validacaoCodigo=null;
+  let validacaoDescricao=null;
+  let payload=null;
+  if(helpers&&typeof helpers.validarCodigoCid==="function"&&typeof helpers.validarDescricaoCid==="function"&&typeof helpers.montarPayloadCid==="function"){
+    try{
+      validacaoCodigo=helpers.validarCodigoCid(codigo);
+      validacaoDescricao=helpers.validarDescricaoCid(descricao);
+      payload=helpers.montarPayloadCid(codigo,descricao,observacoes,preferido);
+    }catch(err){
+      validacaoCodigo=null;
+      validacaoDescricao=null;
+      payload=null;
+    }
+  }
+  if(!validacaoCodigo||typeof validacaoCodigo.ok!=="boolean"){
+    validacaoCodigo={ok:!!codigo,codigo,mensagem:"Informe código e doença."};
+  }
+  if(!validacaoDescricao||typeof validacaoDescricao.ok!=="boolean"){
+    validacaoDescricao={ok:!!descricao,descricao,mensagem:"Informe código e doença."};
+  }
+  if(!validacaoCodigo.ok||!validacaoDescricao.ok){window.alert(validacaoCodigo.mensagem||validacaoDescricao.mensagem||"Informe código e doença.");return}
+  if(!payload||typeof payload!=="object"){payload=cidMontarPayload();}
   const editId=Number(cid.modalBackdrop.dataset.editId||0);
   const method=editId?"PUT":"POST";
   const path=editId?`/cid/${editId}`:"/cid";
@@ -10984,12 +11014,11 @@ function cidVincularEventos(){
   if(!cid||cid.panel.dataset.bound==="1")return;
   cid.panel.dataset.bound="1";
   cid.busca.addEventListener("input",()=>{if(cidBuscaTimer)window.clearTimeout(cidBuscaTimer);cidBuscaTimer=window.setTimeout(()=>{cidSelId=null;cidRender()},120)});
-  cid.tbody.addEventListener("click",ev=>{
-    const tr=ev.target.closest("tr[data-id]");
-    if(!tr)return;
-    cidSelId=Number(tr.dataset.id||0);
-    cidRender();
-  });
+  bindStandardGridActivation(
+    cid.tbody,
+    tr=>cidSelecionarLinha(Number(tr.dataset.id||0)||null),
+    ()=>{const item=cidSelecionado();if(item)cidAbrirModal("editar")}
+  );
   cid.btnNovo.addEventListener("click",()=>cidAbrirModal("novo"));
   cid.btnEditar.addEventListener("click",()=>{if(!cidSelId){window.alert("Selecione uma doença.");return}cidAbrirModal("editar")});
   cid.btnExcluir.addEventListener("click",cidExcluirSelecionado);
