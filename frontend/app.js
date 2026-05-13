@@ -24707,6 +24707,30 @@ function medicamentosPayloadModal(){
 
 async function medicamentosSalvarModal(){
   if(!medicamentosCfg)return;
+  const medicamentosHelpers=window.BranaMedicamentosModule&&window.BranaMedicamentosModule.helpers;
+  const validarNomeMedicamento=medicamentosHelpers&&medicamentosHelpers.validarNomeMedicamento;
+  const nomeBruto=String(medicamentosCfg?.txtNome?.value||"");
+  let validacaoNome=null;
+  if(typeof validarNomeMedicamento==="function"){
+    try{
+      validacaoNome=validarNomeMedicamento(nomeBruto);
+    }catch(_err){
+      validacaoNome=null;
+    }
+    if(validacaoNome&&typeof validacaoNome==="object"){
+      if(validacaoNome.ok===false){
+        window.alert(validacaoNome.mensagem||"Informe o nome do medicamento.");
+        return;
+      }
+      if(validacaoNome.ok===true&&typeof validacaoNome.nome==="string"){
+        medicamentosCfg.txtNome.value=validacaoNome.nome;
+      }else{
+        validacaoNome=null;
+      }
+    }else{
+      validacaoNome=null;
+    }
+  }
   const payload=medicamentosPayloadModal();
   if(!payload.nome){
     window.alert("Informe o nome do medicamento.");

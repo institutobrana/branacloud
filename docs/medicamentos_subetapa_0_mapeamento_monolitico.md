@@ -3,12 +3,18 @@
 ## Branch e estado inicial
 
 - Branch atual: `modularizacao-segura-fase-1`
-- Working tree antes da analise: limpo
+- Working tree antes da analise: `?? docs/varredura_proximo_modulo_pos_cid.md`
 - Ultimos commits relevantes:
-  - `e5a04fc` - Mapeia CID para modularizacao segura
-  - `46f49b9` - Cria plano de retomada da modularizacao segura
-  - `f3cab35` - Corrige duplo clique em convenios e planos no monolitico
-  - `1dc8b18` - Restaura frontend monolitico e corrige contratos globais pos-reversao
+  - `8a1b799` - feat(frontend): encerra ciclo seguro dos helpers de cid
+  - `39330d3` - feat(frontend): encerra ciclo seguro dos helpers de plano de contas
+  - `b415b5c` - Encerra ciclo seguro de helpers de Unidades
+  - `ab102c8` - Audita helpers modulares de Unidades
+  - `91b65e9` - Usa helper modular de telefone em Unidades com fallback
+  - `45419a5` - Usa helper modular de codigo em Unidades com fallback
+  - `795c664` - Usa helper modular de status em Unidades com fallback
+  - `6b2ae0e` - Carrega modulo de Unidades de forma passiva
+  - `7ea7c65` - Compara helpers de Unidades no modulo controlado
+  - `eda2e54` - Cria estrutura modular de Unidades e estabiliza duplo clique
 
 ## Arquivos analisados
 
@@ -19,12 +25,24 @@
 
 Lidos com sucesso:
 
+- `docs/varredura_proximo_modulo_pos_cid.md`
 - `docs/plano_retomada_modularizacao_segura_pos_reversao.md`
+- `docs/varredura_comparativa_primeiro_modulo_modularizacao.md`
+- `docs/varredura_proximo_modulo_pos_plano_contas.md`
+- `docs/unidades_subetapa_8_encerramento_ciclo_helpers.md`
+- `docs/plano_contas_subetapa_5_encerramento_ciclo_helpers.md`
+- `docs/cid_subetapa_5_encerramento_ciclo_helpers.md`
 - `docs/cid_subetapa_0_mapeamento_monolitico.md`
 - `docs/03_mapa_codigo.md`
 - `docs/04_funcionalidades.md`
 - `docs/07_fluxos.md`
 - `docs/10_continuidade.md`
+
+Revalidacao do estado atual:
+
+- o mapeamento de Medicamentos continua sem alterar comportamento funcional;
+- o modulo permanece no `app.js` monolitico, sem extracao funcional nesta etapa;
+- o arquivo deste relatorio foi mantido como base e atualizado apenas no contexto documental do ciclo atual.
 
 Nao encontrados no estado atual:
 
@@ -343,4 +361,3 @@ Conclusao da comparacao:
 9. Testar salvar em ambiente apropriado.
 10. Testar excluir em ambiente apropriado.
 11. Conferir console sem `ReferenceError`.
-
