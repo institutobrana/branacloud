@@ -11265,6 +11265,10 @@ async function planoExcluirGrupo(){const g=planoGrupoSel();if(!g){window.alert("
 async function planoExcluirCategoria(){const c=planoCatSel();if(!c){window.alert("Selecione uma categoria.");return}const chk=await requestJson("GET",`/cadastros/categorias/${c.id}/em-uso`,undefined,true);if(!chk.res.ok){window.alert(chk.data.detail||"Falha ao validar categoria.");return}if(!chk.data.em_uso){if(!window.confirm("Deseja eliminar esta categoria?"))return;const del=await requestJson("DELETE",`/cadastros/categorias/${c.id}`,undefined,true);if(!del.res.ok){window.alert(del.data.detail||"Falha ao eliminar.");return}await planoCarregar();return}const outras=(gruposCache.flatMap(g=>g.categorias||[])).filter(x=>x.id!==c.id);if(!outras.length){window.alert("Não há categoria destino para migração.");return}const op=outras.sort((a,b)=>String(a.nome).localeCompare(String(b.nome))).map(x=>`<option value="${x.id}">${esc(x.nome)}</option>`).join("");cadModalAbrir(`<div class="f"><label>Categoria em uso: ${esc(c.nome)}</label></div><div class="f"><label>Migrar lançamentos para:</label><select id="cad-dest">${op}</select></div>`,async()=>{const destino=Number(document.getElementById("cad-dest").value||0);const{res,data}=await requestJson("POST",`/cadastros/categorias/${c.id}/migrar-e-excluir`,{categoria_destino_id:destino},true);if(!res.ok){window.alert(data.detail||"Falha na migração de lançamentos.");return false}await planoCarregar()})}
 let auxLayoutDesktopAplicado=false;
 function auxTipoEh(tipo,chave){
+  const mod=window.BranaAuxiliaresModule?.helpers?.auxTipoEh;
+  if(typeof mod==="function"){
+    try{return !!mod(tipo,chave)}catch{}
+  }
   const txt=String(tipo||"").toLowerCase();
   if(chave==="especialidade")return txt.includes("especialidade");
   if(chave==="situacao_agendamento")return txt.includes("agendamento");
@@ -11273,6 +11277,10 @@ function auxTipoEh(tipo,chave){
   return false;
 }
 function auxNormalizarHexCor(value){
+  const mod=window.BranaAuxiliaresModule?.helpers?.auxNormalizarHexCor;
+  if(typeof mod==="function"){
+    try{return mod(value)||""}catch{}
+  }
   const raw=String(value??"").trim();
   if(!raw)return"";
   const hex=raw.replace(/^0x/i,"").replace(/^#/,"");
