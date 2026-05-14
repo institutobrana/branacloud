@@ -668,7 +668,7 @@ async function materiaisExcluirTabela(){const listaId=materiaisListaIdAtual();if
 async function abrirMateriais(){showMateriaisPanel(true);await materiaisCarregarListas();footerMsg.textContent="Modulo Tabela de materiais aberto."}
 function materiaisSetModalTab(tab){const detalhes=tab==="detalhes";if(m.tabBtnPrincipal)m.tabBtnPrincipal.classList.toggle("active",!detalhes);if(m.tabBtnDetalhes)m.tabBtnDetalhes.classList.toggle("active",detalhes);if(m.tabPrincipal)m.tabPrincipal.classList.toggle("hidden",detalhes);if(m.tabDetalhes)m.tabDetalhes.classList.toggle("hidden",!detalhes)}
 const procParse=(v)=>{const s=String(v??"").replace("R$","").trim().replace(",",".");if(!s)return 0;const n=Number(s);if(!Number.isFinite(n))throw new Error("invalid");return n};
-const procFmtMoeda=(v)=>formatMoney(toFloat(v));
+const procFmtMoeda=(v)=>{if(Number.isFinite(v))return formatMoney(v);const n=Number(v);return formatMoney(Number.isFinite(n)?n:toFloat(v))};
 const procFmtBr=(v)=>{const n=Number(v||0);return Number.isFinite(n)?n.toFixed(2).replace(".",","):"0,00"};
 const procSetSelectValue=(el,val)=>{if(!el)return;const alvo=String(val??"");const ok=[...el.options].some(x=>x.value===alvo);el.value=ok?alvo:(el.options.length?el.options[0].value:"")};
 const procIndiceSiglaFromValor=(valor)=>{
@@ -3781,6 +3781,10 @@ function pgenSetTab(tab){
   if(tab==="vinculos")pgenRenderVinculos();
 }
 function pgenStatusDot(inativo){
+  try{
+    const mod=window.BranaProcedimentosGenericosModule;
+    if(mod&&typeof mod.statusDot==="function")return mod.statusDot(inativo);
+  }catch{}
   return `<span class="pgen-status-dot ${inativo?"off":"on"}"></span>`;
 }
 function pgenEnsureUI(){
