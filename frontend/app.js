@@ -1758,8 +1758,31 @@ const ETQ_PADRAO_ARQUIVO_MAP={
   7:"PimacoA4255.mod",
   8:"PimacoA4256.mod",
 };
-function etqNumero(valor,padrao){const num=Number(String(valor||"").replace(",","."));return Number.isFinite(num)?num:padrao}
-function etqFormatNumero(valor){const num=Number(valor);if(!Number.isFinite(num))return"";return num.toFixed(2).replace(".",",")}
+function etqNumero(valor,padrao){
+  try{
+    const mod=window.BranaEtiquetasModule;
+    if(mod&&typeof mod.normalizeNumber==="function"){
+      const num=mod.normalizeNumber(valor,padrao);
+      if(Number.isFinite(Number(num)))return num;
+    }
+  }catch{}
+  if(valor===""||valor===null||valor===undefined)return padrao;
+  const num=Number(String(valor).replace(",","."));
+  return Number.isFinite(num)?num:padrao
+}
+function etqFormatNumero(valor){
+  try{
+    const mod=window.BranaEtiquetasModule;
+    if(mod&&typeof mod.formatNumber==="function"){
+      const txt=mod.formatNumber(valor);
+      if(typeof txt==="string")return txt;
+    }
+  }catch{}
+  if(valor===undefined)return"";
+  const num=typeof valor==="string"?Number(valor.replace(",",".")):Number(valor);
+  if(!Number.isFinite(num))return"";
+  return num.toFixed(2).replace(".",",")
+}
 function etqSelecionarLinha(tr){if(!etqCfg||!tr)return;const id=Number(tr.dataset.id||0)||0;etqCfg.selectedId=id;etqCfg.tbody.querySelectorAll("tr").forEach(row=>row.classList.toggle("selected",Number(row.dataset.id||0)===id))}
 function etqSelecionado(){if(!etqCfg)return null;return (etqCfg.modelos||[]).find(item=>Number(item.id||0)===Number(etqCfg.selectedId||0))||null}
 function etqArquivosOrdenados(){
@@ -1873,6 +1896,13 @@ function etqAplicarPadraoSelecionado(){
 }
 function etqLayoutFromItem(item){
   if(!item)return null;
+  try{
+    const mod=window.BranaEtiquetasModule;
+    if(mod&&typeof mod.layoutFromItem==="function"){
+      const layout=mod.layoutFromItem(item);
+      if(layout!==undefined)return layout;
+    }
+  }catch{}
   const cols=Math.max(1,Math.min(20,parseInt(item.nro_colunas||"1",10)||1));
   const rows=Math.max(1,Math.min(40,parseInt(item.nro_linhas||"1",10)||1));
   const margemEsq=etqNumero(item.margem_esq,0);
