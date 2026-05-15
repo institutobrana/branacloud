@@ -24208,11 +24208,37 @@ function anamneseFecharModalQuestionario() {
 }
 
 async function anamneseSalvarQuestionario() {
-  const nome = (anamneseCfg.modalQNome.value || "").trim();
-  if (!nome) {
-    window.alert("Informe o nome do questionário.");
+  const nomeOriginal = anamneseCfg.modalQNome.value || "";
+  let nome = String(nomeOriginal ?? "").trim();
+  let validacaoNome = null;
+  try {
+    const helper = window.BranaAnamneseModule?.helpers?.anamneseValidarNomeQuestionario;
+    if (typeof helper === "function") {
+      const resultado = helper(nomeOriginal);
+      if (
+        resultado &&
+        typeof resultado.valido === "boolean" &&
+        typeof resultado.mensagem === "string" &&
+        typeof resultado.valor === "string"
+      ) {
+        validacaoNome = resultado;
+      }
+    }
+  } catch {
+    validacaoNome = null;
+  }
+  if (!validacaoNome) {
+    validacaoNome = {
+      valido: !!nome,
+      mensagem: nome ? "" : "Informe o nome do questionário.",
+      valor: nome,
+    };
+  }
+  if (!validacaoNome.valido) {
+    window.alert(validacaoNome.mensagem || "Informe o nome do questionário.");
     return;
   }
+  nome = validacaoNome.valor;
   const editId = Number(anamneseCfg.modalQBackdrop.dataset.editId || 0) || null;
   const payload = { nome, ativo: true };
   if (!editId && anamneseCfg.modalQCopiar?.checked) {
@@ -24248,10 +24274,10 @@ async function anamneseExcluirQuestionario() {
   await anamneseCarregarPerguntas();
 }
 
-function anamneseAbrirModalPergunta(modo) {
+function anamneseAbrirModalPergunta(modo, itemBase = null) {
   if (!anamneseCfg) return;
   const editar = modo === "editar";
-  const item = editar ? anamneseSelecionado() : null;
+  const item = editar ? (itemBase || anamneseSelecionado()) : null;
   anamneseCfg.modalPBackdrop.dataset.editId = editar && item ? String(item.id) : "";
   anamneseCfg.modalPTitle.textContent = editar ? "Altera pergunta de anamnese" : "Insere pergunta de anamnese";
   anamneseCfg.modalPNumero.value = item?.numero || "";
@@ -24280,11 +24306,37 @@ async function anamneseSalvarPergunta() {
   }
   const tipoPergunta = Number(anamneseCfg.modalPTipoPergunta.value || 1) || 1;
   const tipoResposta = Number(anamneseCfg.modalPTipoResposta.value || 1) || 1;
-  const texto = (anamneseCfg.modalPTexto.value || "").trim();
-  if (!texto) {
-    window.alert("Informe o texto da pergunta.");
+  const textoOriginal = anamneseCfg.modalPTexto.value || "";
+  let texto = String(textoOriginal ?? "").trim();
+  let validacaoTexto = null;
+  try {
+    const helper = window.BranaAnamneseModule?.helpers?.anamneseValidarTextoPergunta;
+    if (typeof helper === "function") {
+      const resultado = helper(textoOriginal);
+      if (
+        resultado &&
+        typeof resultado.valido === "boolean" &&
+        typeof resultado.mensagem === "string" &&
+        typeof resultado.valor === "string"
+      ) {
+        validacaoTexto = resultado;
+      }
+    }
+  } catch {
+    validacaoTexto = null;
+  }
+  if (!validacaoTexto) {
+    validacaoTexto = {
+      valido: !!texto,
+      mensagem: texto ? "" : "Informe o texto da pergunta.",
+      valor: texto,
+    };
+  }
+  if (!validacaoTexto.valido) {
+    window.alert(validacaoTexto.mensagem || "Informe o texto da pergunta.");
     return;
   }
+  texto = validacaoTexto.valor;
   const mensagemAlerta = (anamneseCfg.modalPMensagemAlerta.value || "").trim();
   const editId = Number(anamneseCfg.modalPBackdrop.dataset.editId || 0) || null;
   const payload = {
@@ -24340,15 +24392,19 @@ function anamneseVincularEventos() {
   anamneseCfg.tbody.addEventListener("click", (ev) => {
     const tr = ev.target.closest("tr[data-id]");
     if (!tr) return;
-    anamneseSelId = Number(tr.dataset.id || 0) || null;
+    const id = Number(tr.dataset.id || 0) || null;
+    const agora = Date.now();
+    const estadoClique = anamneseVincularEventos._ultimoCliquePergunta || { id: null, em: 0 };
+    const mesmoItem = estadoClique.id === id;
+    const rapido = agora - estadoClique.em <= 450;
+    anamneseVincularEventos._ultimoCliquePergunta = { id, em: agora };
+    anamneseSelId = id;
     anamneseRender();
-  });
-  anamneseCfg.tbody.addEventListener("dblclick", (ev) => {
-    const tr = ev.target.closest("tr[data-id]");
-    if (!tr) return;
-    anamneseSelId = Number(tr.dataset.id || 0) || null;
-    anamneseRender();
-    anamneseAbrirModalPergunta("editar");
+    if (!mesmoItem || !rapido) return;
+    const item = anamneseCache.find((x) => x.id === id) || null;
+    if (!item) return;
+    anamneseVincularEventos._ultimoCliquePergunta = { id: null, em: 0 };
+    anamneseAbrirModalPergunta("editar", item);
   });
   anamneseCfg.cboQuestionario.addEventListener("change", async (ev) => {
     anamneseQuestionarioSelId = Number(ev.target.value || 0) || null;
