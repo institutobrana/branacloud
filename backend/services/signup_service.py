@@ -139,26 +139,73 @@ ESPECIALIDADES_FALLBACK = [
     ("12", "Estética"),
     ("13", "Implantodontia"),
 ]
-ANAMNESE_QUESTIONARIO_PADRAO = "Principal"
-ANAMNESE_PERGUNTAS_PADRAO = [
-    "Esta bem de saude no momento?",
-    "Quando fez seu ultimo tratamento medico?",
-    "Esta atualmente em tratamento medico?",
-    "Apresenta alergia a medicamentos? Quais?",
-    "Possui alguma doenca grave? Qual?",
-    "Esta tomando algum medicamento? Qual?",
-    "Quando fez seu ultimo tratamento dentario?",
-    "Sente dificuldade em abrir a boca",
-    "Range os dentes a noite?",
-    "Aperta os dentes costumeiramente?",
-    "Alguma complicacao durante tratamento odontologico?",
-    "Tem sinusite?",
-    "Tem perdido peso nos ultimos meses?",
-    "Tem ganho peso nos ultimos meses?",
-    "Ja foi hospitalizado(a) alguma vez?",
-    "Foi submetido(a) a cirurgia?",
-    "Ja recebeu transfusao de sangue?",
-]
+ANAMNESE_SEED_PRINCIPAL = {
+    "nome": "Principal",
+    "ordem": 1,
+    "perguntas": [
+        "Esta bem de saude no momento?",
+        "Quando fez seu ultimo tratamento medico?",
+        "Esta atualmente em tratamento medico?",
+        "Apresenta alergia a medicamentos? Quais?",
+        "Possui alguma doenca grave? Qual?",
+        "Esta tomando algum medicamento? Qual?",
+        "Quando fez seu ultimo tratamento dentario?",
+        "Sente dificuldade em abrir a boca",
+        "Range os dentes a noite?",
+        "Aperta os dentes costumeiramente?",
+        "Alguma complicacao durante tratamento odontologico?",
+        "Tem sinusite?",
+        "Tem perdido peso nos ultimos meses?",
+        "Tem ganho peso nos ultimos meses?",
+        "Ja foi hospitalizado(a) alguma vez?",
+        "Foi submetido(a) a cirurgia?",
+        "Ja recebeu transfusao de sangue?",
+    ],
+}
+ANAMNESE_SEED_IMPLANTE = {
+    "nome": "Implante",
+    "ordem": 2,
+    "perguntas": [
+        "Realizado Rx Panorâmico ?",
+        "Realizado Rx Periapical ?",
+        "Realizado modelo de estudo ?",
+        "Realizado guia cirúrgico ?",
+        "Realizado Tomografia ?",
+        "Realizado Calcemia ?",
+        "Realizado Fosfatase ?",
+        "Realizado Glicemia ?",
+        "Tempo de sangramento:",
+        "Tempo de coagulação:",
+        "Pressão arterial:",
+        "Observações:",
+    ],
+}
+ANAMNESE_SEED_FICHA_COMPLEMENTAR = {
+    "nome": "Ficha complementar",
+    "ordem": 3,
+    "perguntas": [
+        "Cor:",
+        "Saúde:",
+        "Saúde bucal:",
+        "Higiene oral:",
+        "Alergias gerais:",
+        "Alergias a medicamentos:",
+        "Tipo sanguíneo:",
+        "Pressão arterial:",
+        "Tempo de coagulação:",
+        "Tempo de sangramento:",
+        "Doenças que já teve:",
+        "Problemas crônicos de saúde:",
+    ],
+}
+ANAMNESE_SEEDS_OBRIGATORIOS = (
+    ANAMNESE_SEED_PRINCIPAL,
+    ANAMNESE_SEED_IMPLANTE,
+    ANAMNESE_SEED_FICHA_COMPLEMENTAR,
+)
+
+ANAMNESE_QUESTIONARIO_PADRAO = ANAMNESE_SEED_PRINCIPAL["nome"]
+ANAMNESE_PERGUNTAS_PADRAO = tuple(ANAMNESE_SEED_PRINCIPAL["perguntas"])
 
 MODEL_STORAGE_DIR = Path(__file__).resolve().parents[2] / "storage" / "modelos" / "clinicas"
 MODELO_TIPOS_DIR = (
@@ -1956,8 +2003,10 @@ def garantir_convenios_planos_padrao_todas_clinicas(
     return resultado
 
 
-def garantir_anamnese_padrao_clinica(db, clinica_id):
-    nome_padrao = ANAMNESE_QUESTIONARIO_PADRAO
+def _garantir_questionario_anamnese_padrao_clinica(db, clinica_id, seed: dict) -> bool:
+    nome_padrao = str(seed.get("nome") or "").strip()
+    if not nome_padrao:
+        return False
     questionario = (
         db.query(AnamneseQuestionario)
         .filter(
@@ -1966,53 +2015,44 @@ def garantir_anamnese_padrao_clinica(db, clinica_id):
         )
         .first()
     )
-    if questionario is None:
-        ordem = (
-            db.query(func.max(AnamneseQuestionario.ordem))
-            .filter(AnamneseQuestionario.clinica_id == int(clinica_id))
-            .scalar()
-        )
-        questionario = AnamneseQuestionario(
-            clinica_id=int(clinica_id),
-            nome=nome_padrao,
-            ativo=True,
-            ordem=int(ordem or 0) + 1,
-        )
-        db.add(questionario)
-        db.flush()
+    if questionario is not None:
+        return False
 
-    existentes = {
-        int(row.numero): row
-        for row in db.query(AnamnesePergunta)
-        .filter(
-            AnamnesePergunta.clinica_id == int(clinica_id),
-            AnamnesePergunta.questionario_id == int(questionario.id),
-        )
-        .all()
-    }
-    numero = 1
-    for texto in ANAMNESE_PERGUNTAS_PADRAO:
+    ordem = (
+        db.query(func.max(AnamneseQuestionario.ordem))
+        .filter(AnamneseQuestionario.clinica_id == int(clinica_id))
+        .scalar()
+    )
+    questionario = AnamneseQuestionario(
+        clinica_id=int(clinica_id),
+        nome=nome_padrao,
+        ativo=True,
+        ordem=int(ordem or 0) + 1,
+    )
+    db.add(questionario)
+    db.flush()
+
+    for numero, texto in enumerate(seed.get("perguntas") or (), start=1):
         texto_limpo = str(texto or "").strip()
         if not texto_limpo:
-            numero += 1
             continue
-        atual = existentes.get(numero)
-        if atual is None:
-            db.add(
-                AnamnesePergunta(
-                    clinica_id=int(clinica_id),
-                    questionario_id=int(questionario.id),
-                    numero=numero,
-                    texto=texto_limpo,
-                    ativo=True,
-                )
+        db.add(
+            AnamnesePergunta(
+                clinica_id=int(clinica_id),
+                questionario_id=int(questionario.id),
+                numero=numero,
+                texto=texto_limpo,
+                tipo_pergunta=1,
+                tipo_resposta=1,
+                ativo=True,
             )
-        else:
-            if not str(atual.texto or "").strip():
-                atual.texto = texto_limpo
-            if not atual.ativo:
-                atual.ativo = True
-        numero += 1
+        )
+    return True
+
+
+def garantir_anamnese_padrao_clinica(db, clinica_id):
+    for seed in ANAMNESE_SEEDS_OBRIGATORIOS:
+        _garantir_questionario_anamnese_padrao_clinica(db, clinica_id, seed)
 
 
 def garantir_anamnese_padrao_todas_clinicas(db):

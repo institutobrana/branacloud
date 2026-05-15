@@ -1,0 +1,6 @@
+DRY_RUN_SEED_OBRIGATORIO_BACKFILL_OK
+clinicas_total=3
+questionarios_a_criar=0
+perguntas_a_criar=0
+principais_preservados=3
+seed_names=Principal, Implante, Ficha complementar
