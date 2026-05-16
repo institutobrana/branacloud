@@ -23510,7 +23510,11 @@ function simbolosSetModalCodigo(codigo){if(!simbolosCfg)return;simbolosCfg.modal
 function simbolosCodigoSelecionado(){return (simbolosCfg?.modalBackdrop?.dataset?.codigo||"").trim();}
 function simbolosSetModalRefId(id){if(!simbolosCfg?.modalBackdrop)return;const v=Number(id||0)||0;if(v>0)simbolosCfg.modalBackdrop.dataset.refId=String(v);else delete simbolosCfg.modalBackdrop.dataset.refId}
 function simbolosRefIdSelecionado(){return Number(simbolosCfg?.modalBackdrop?.dataset?.refId||0)||0}
-function simbolosNormalizarTexto(valor){return String(valor||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase()}
+function simbolosNormalizarTexto(valor){
+  const helper=window.BranaSimbolosGraficosModule&&window.BranaSimbolosGraficosModule.helpers&&window.BranaSimbolosGraficosModule.helpers.normalizarTextoSimbolo;
+  const base=typeof helper==="function"?helper(valor):valor;
+  return String(base||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
+}
 function simbolosEspecialidadePadrao(){
   if(!simbolosCfg?.modalEspecialidade)return"";
   const opcoes=[...simbolosCfg.modalEspecialidade.options];
@@ -23560,7 +23564,11 @@ function simbolosTipoMarcaPorTexto(texto){
   });
   return match?Number(match.value):null;
 }
-function simbolosEhSistema(item){return !!item&&(Number(item.legacy_id||0)>0||Number(item.tipo_simbolo||0)===1)}
+function simbolosEhSistema(item){
+  const helper=window.BranaSimbolosGraficosModule&&window.BranaSimbolosGraficosModule.helpers&&window.BranaSimbolosGraficosModule.helpers.ehSimboloSistema;
+  const base=typeof helper==="function"?helper(item):item;
+  return !!base&&(Number(base.legacy_id||0)>0||Number(base.tipo_simbolo||0)===1)
+}
 function simbolosAtualizarAcoesPainel(){
   if(!simbolosCfg)return;
   const item=simbolosSelecionado();
@@ -23628,6 +23636,8 @@ function simbolosAtualizarPreview(codigo){
   canvas.innerHTML="";
 }
 function simbolosImagemUrl(item){
+  const helper=window.BranaSimbolosGraficosModule&&window.BranaSimbolosGraficosModule.helpers&&window.BranaSimbolosGraficosModule.helpers.urlImagemSimbolo;
+  if(typeof helper==="function")return helper(item);
   const imagem=String(item?.imagem_url||"").trim();
   const codigo=String(item?.codigo||"").trim().toLowerCase();
   if(codigo==="sim_modelo.bmp")return "/desktop-assets/easy/sim_default.bmp";
