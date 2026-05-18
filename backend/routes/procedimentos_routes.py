@@ -2,6 +2,7 @@ import json
 import unicodedata
 from datetime import datetime
 from collections import defaultdict
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -1254,6 +1255,26 @@ def _parse_percentual_br(valor: str | int | float | None) -> float:
     return float(base)
 
 
+def _parse_percentual_br_decimal(valor: str | int | float | None) -> Decimal:
+    base = str(valor or "").strip()
+    if not base:
+        return Decimal("0")
+    base = base.replace(",", ".")
+    return Decimal(base)
+
+
+def _quantize_money(valor: Decimal) -> Decimal:
+    # Money rounding rule for B2A apply: explicit 2 decimal places.
+    return valor.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+
+class ReajusteTabelaAplicarPayload(BaseModel):
+    tabela_id: str
+    modo: str
+    percentual: str
+    confirmar: bool = False
+
+
 @router.get("/tabelas/reajuste-preview")
 def preview_reajuste_tabela(
     tabela_id: str = Query(...),
@@ -1334,6 +1355,130 @@ def preview_reajuste_tabela(
         "fator": fator,
         "total": total,
         "amostra": amostra,
+    }
+
+
+@router.post("/tabelas/reajuste-aplicar")
+def aplicar_reajuste_tabela(
+    payload: ReajusteTabelaAplicarPayload,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Apply only. Writes to DB (transactional).
+
+    Scope is intentionally strict:
+    - Only affects procedimentos in the selected tabela_id
+    - Only updates preco and valor_repasse
+    - Does not touch materials/vinculos/genericos/custos
+    """
+    clinica_id = int(current_user.clinica_id)
+    _garantir_tabelas_clinica(db, clinica_id)
+
+    tabela_resolvida = _resolver_tabela_id(payload.tabela_id, default=0)
+    if tabela_resolvida <= 0:
+        raise HTTPException(status_code=400, detail="Selecione uma tabela valida.")
+    tabela = _load_tabela_or_404(db, clinica_id, tabela_resolvida)
+    _validar_tabela_ativa(tabela)
+
+    modo_norm = str(payload.modo or "").strip().lower()
+    if modo_norm not in {"aumentar", "diminuir"}:
+        raise HTTPException(status_code=400, detail="Modo invalido. Use aumentar ou diminuir.")
+
+    if payload.confirmar is not True:
+        raise HTTPException(status_code=400, detail="Confirmacao obrigatoria.")
+
+    try:
+        pct = _parse_percentual_br_decimal(payload.percentual)
+    except (TypeError, ValueError, InvalidOperation):
+        raise HTTPException(status_code=400, detail="Percentual invalido.")
+
+    if pct <= 0:
+        raise HTTPException(status_code=400, detail="Percentual invalido.")
+    if pct > Decimal("1000"):
+        raise HTTPException(status_code=400, detail="Percentual muito alto.")
+
+    fator = (Decimal("1") + (pct / Decimal("100"))) if modo_norm == "aumentar" else (Decimal("1") - (pct / Decimal("100")))
+    if fator < 0:
+        raise HTTPException(status_code=400, detail="Percentual invalido.")
+
+    base_query = db.query(Procedimento).filter(
+        Procedimento.clinica_id == clinica_id,
+        Procedimento.tabela_id == int(tabela.id),
+    )
+
+    total = int(base_query.with_entities(func.count(Procedimento.id)).scalar() or 0)
+    if total <= 0:
+        raise HTTPException(status_code=400, detail="Tabela sem procedimentos para reajustar.")
+
+    # If there are negative values in DB, abort to avoid producing negative results or masking bad data.
+    negativos = int(
+        db.query(func.count(Procedimento.id))
+        .filter(
+            Procedimento.clinica_id == clinica_id,
+            Procedimento.tabela_id == int(tabela.id),
+            or_(Procedimento.preco < 0, Procedimento.valor_repasse < 0),
+        )
+        .scalar()
+        or 0
+    )
+    if negativos > 0:
+        raise HTTPException(status_code=400, detail="Existem valores negativos na tabela. Operacao bloqueada.")
+
+    # Sample first, then apply; sample size fixed to keep response bounded.
+    sample_rows = (
+        base_query.order_by(Procedimento.codigo.asc(), Procedimento.nome.asc())
+        .limit(10)
+        .all()
+    )
+    amostra: list[dict] = []
+    for proc in sample_rows:
+        preco_before = None if proc.preco is None else float(proc.preco or 0)
+        repasse_before = None if proc.valor_repasse is None else float(proc.valor_repasse or 0)
+        preco_after = None
+        repasse_after = None
+        if preco_before is not None:
+            preco_after = float(_quantize_money(Decimal(str(preco_before)) * fator))
+        if repasse_before is not None:
+            repasse_after = float(_quantize_money(Decimal(str(repasse_before)) * fator))
+        amostra.append(
+            {
+                "id": int(proc.id),
+                "codigo": int(proc.codigo or 0),
+                "nome": str(proc.nome or ""),
+                "preco_before": preco_before,
+                "preco_after": preco_after,
+                "valor_repasse_before": repasse_before,
+                "valor_repasse_after": repasse_after,
+            }
+        )
+
+    # Apply in a transaction; update only preco and valor_repasse, preserving NULLs.
+    try:
+        rows = base_query.all()
+        for proc in rows:
+            if proc.preco is not None:
+                proc.preco = float(_quantize_money(Decimal(str(float(proc.preco or 0))) * fator))
+            if proc.valor_repasse is not None:
+                proc.valor_repasse = float(_quantize_money(Decimal(str(float(proc.valor_repasse or 0))) * fator))
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+
+    return {
+        "tabela": {
+            "id": int(tabela.id),
+            "codigo": int(tabela.codigo or 0),
+            "nome": str(tabela.nome or ""),
+            "fonte_pagadora": _normalizar_fonte_pagadora(tabela.fonte_pagadora),
+        },
+        "modo": modo_norm,
+        "percentual": float(pct),
+        "fator": float(fator),
+        "total_atualizado": total,
+        "amostra": amostra,
+        "mensagem": "Reajuste aplicado com sucesso.",
     }
 
 
