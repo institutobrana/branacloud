@@ -31,6 +31,11 @@ from services.indices_service import (
     listar_indices,
     resolver_numero_indice,
 )
+from services.vinculos_materiais import (
+    compor_materiais_vinculados_procedimento as compor_materiais_vinculados_procedimento_service,
+    listar_materiais_herdados_generico as listar_materiais_herdados_generico_service,
+    listar_materiais_proprios_procedimento as listar_materiais_proprios_procedimento_service,
+)
 
 router = APIRouter(
     prefix="/procedimentos",
@@ -521,7 +526,7 @@ def _listar_fases_vinculadas(db: Session, procedimento_id: int) -> list[dict]:
 
 def _procedimento_com_vinculos(db: Session, proc: Procedimento) -> dict:
     data = _procedimento_to_dict(db, proc)
-    data["materiais_vinculados"] = _listar_materiais_vinculados(db, int(proc.id))
+    data["materiais_vinculados"] = compor_materiais_vinculados_procedimento_service(db, proc)
     data["fases_vinculadas"] = _listar_fases_vinculadas(db, int(proc.id))
     return data
 
@@ -704,43 +709,15 @@ def _proc_codigo_em_uso(
 
 
 def _listar_materiais_vinculados(db: Session, procedimento_id: int):
-    vinculos = (
-        db.query(ProcedimentoMaterial)
-        .filter(ProcedimentoMaterial.procedimento_id == procedimento_id)
-        .order_by(ProcedimentoMaterial.id.asc())
-        .all()
-    )
+    return listar_materiais_proprios_procedimento_service(db, int(procedimento_id))
 
-    itens = []
-    total_materiais = 0
-    total_custo_und = 0.0
-    total_custo = 0.0
-    for v in vinculos:
-        mat = v.material
-        custo_total = float(mat.custo or 0) * float(v.quantidade or 0)
-        itens.append(
-            {
-                "vinculo_id": v.id,
-                "material_id": mat.id,
-                "codigo": mat.codigo,
-                "nome": mat.nome,
-                "relacao": float(mat.relacao or 0),
-                "preco": float(mat.preco or 0),
-                "custo_und": float(mat.custo or 0),
-                "quantidade": float(v.quantidade or 0),
-                "custo_total": float(custo_total or 0),
-            }
-        )
-        total_materiais += 1
-        total_custo_und += float(mat.custo or 0)
-        total_custo += float(custo_total or 0)
 
-    return {
-        "itens": itens,
-        "total_materiais": total_materiais,
-        "total_custo_und": total_custo_und,
-        "total_custo": total_custo,
-    }
+def _listar_materiais_vinculados_generico(db: Session, clinica_id: int, procedimento_generico_id: int):
+    return listar_materiais_herdados_generico_service(db, int(clinica_id), int(procedimento_generico_id))
+
+
+def _compor_materiais_vinculados_procedimento(db: Session, proc: Procedimento) -> dict:
+    return compor_materiais_vinculados_procedimento_service(db, proc)
 
 
 def _calcular_financeiro_dashboard(proc: Procedimento, cenario: Cenario | None, custo_material: float) -> dict:
@@ -1473,7 +1450,10 @@ def detalhar_procedimento(
     db: Session = Depends(get_db),
 ):
     proc = _load_proc_or_404(db, current_user.clinica_id, procedimento_id)
-    return _procedimento_com_vinculos(db, proc)
+    data = _procedimento_to_dict(db, proc)
+    data["materiais_vinculados"] = _compor_materiais_vinculados_procedimento(db, proc)
+    data["fases_vinculadas"] = _listar_fases_vinculadas(db, int(proc.id))
+    return data
 
 
 @router.post("")
@@ -1655,7 +1635,10 @@ def vincular_material(
     db: Session = Depends(get_db),
 ):
     proc = _load_proc_or_404(db, current_user.clinica_id, procedimento_id)
-    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(proc.tabela_id or 1))
+    tabela_codigo = _codigo_tabela_do_procedimento(db, proc)
+    if not tabela_codigo:
+        raise HTTPException(status_code=404, detail="Tabela de procedimentos nao encontrada.")
+    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(tabela_codigo))
     _validar_tabela_ativa(tabela)
     mat = _load_material_or_404(db, current_user.clinica_id, payload.material_id)
     qtd = float(payload.quantidade or 0)
@@ -1682,7 +1665,10 @@ def atualizar_vinculo_por_codigo(
     db: Session = Depends(get_db),
 ):
     proc = _load_proc_or_404(db, current_user.clinica_id, procedimento_id)
-    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(proc.tabela_id or 1))
+    tabela_codigo = _codigo_tabela_do_procedimento(db, proc)
+    if not tabela_codigo:
+        raise HTTPException(status_code=404, detail="Tabela de procedimentos nao encontrada.")
+    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(tabela_codigo))
     _validar_tabela_ativa(tabela)
     qtd = float(payload.quantidade or 0)
     if qtd <= 0:
@@ -1728,7 +1714,10 @@ def desvincular_por_codigo(
     db: Session = Depends(get_db),
 ):
     proc = _load_proc_or_404(db, current_user.clinica_id, procedimento_id)
-    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(proc.tabela_id or 1))
+    tabela_codigo = _codigo_tabela_do_procedimento(db, proc)
+    if not tabela_codigo:
+        raise HTTPException(status_code=404, detail="Tabela de procedimentos nao encontrada.")
+    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(tabela_codigo))
     _validar_tabela_ativa(tabela)
     mats_ids = [
         x[0]

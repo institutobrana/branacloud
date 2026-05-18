@@ -471,27 +471,99 @@ def _sync_procedimento_generico_materiais(
     clinica_id: int,
     materiais_payload: list[ProcedimentoGenericoMaterialPayload],
 ) -> None:
-    (
+    existentes = (
         db.query(ProcedimentoGenericoMaterial)
         .filter(
             ProcedimentoGenericoMaterial.procedimento_generico_id == item.id,
             ProcedimentoGenericoMaterial.clinica_id == int(clinica_id),
         )
-        .delete(synchronize_session=False)
+        .all()
     )
+    existentes_por_material = {
+        int(row.material_id or 0): row
+        for row in existentes
+        if int(row.material_id or 0) > 0
+    }
+    payload_por_material: dict[int, float] = {}
     for mat in materiais_payload or []:
-        qtd = float(mat.quantidade or 0)
-        if qtd <= 0:
+        material_id = int(mat.material_id or 0)
+        quantidade = float(mat.quantidade or 0)
+        if material_id <= 0 or quantidade <= 0:
             continue
-        material = _material_clinica_or_404(db, int(clinica_id), int(mat.material_id))
+        payload_por_material[material_id] = quantidade
+
+    for row in existentes:
+        if int(row.material_id or 0) not in payload_por_material:
+            db.delete(row)
+
+    for material_id, quantidade in payload_por_material.items():
+        row = existentes_por_material.get(material_id)
+        if row is not None:
+            row.quantidade = quantidade
+            continue
+        material = _material_clinica_or_404(db, int(clinica_id), int(material_id))
         db.add(
             ProcedimentoGenericoMaterial(
                 procedimento_generico_id=item.id,
                 material_id=int(material.id),
-                quantidade=qtd,
+                quantidade=quantidade,
                 clinica_id=int(clinica_id),
             )
         )
+
+
+def _snapshot_fases_procedimento_generico(fases_rows: list[ProcedimentoGenericoFase]) -> list[tuple[str, str, int, int]]:
+    return [
+        (
+            str(f.codigo or "").strip(),
+            str(f.descricao or "").strip(),
+            int(f.sequencia or 0),
+            int(f.tempo or 0),
+        )
+        for f in sorted(fases_rows or [], key=lambda x: (int(x.sequencia or 0), int(x.id or 0)))
+        if str(f.descricao or "").strip()
+    ]
+
+
+def _snapshot_fases_payload(fases_payload: list[ProcedimentoGenericoFasePayload]) -> list[tuple[str, str, int, int]]:
+    snapshot: list[tuple[str, str, int, int]] = []
+    for idx, fase in enumerate(fases_payload or [], start=1):
+        descricao = str(fase.descricao or "").strip()
+        if not descricao:
+            continue
+        snapshot.append(
+            (
+                str(fase.codigo or "").strip(),
+                descricao,
+                max(1, int(fase.sequencia or idx)),
+                max(0, int(fase.tempo or 0)),
+            )
+        )
+    return snapshot
+
+
+def _snapshot_materiais_procedimento_generico(mats_rows: list[ProcedimentoGenericoMaterial]) -> list[tuple[int, float]]:
+    return sorted(
+        [
+            (int(vinc.material_id or 0), float(vinc.quantidade or 0))
+            for vinc in mats_rows or []
+            if int(vinc.material_id or 0) > 0
+        ],
+        key=lambda x: x[0],
+    )
+
+
+def _snapshot_materiais_payload(
+    materiais_payload: list[ProcedimentoGenericoMaterialPayload],
+) -> list[tuple[int, float]]:
+    payload_por_material: dict[int, float] = {}
+    for mat in materiais_payload or []:
+        material_id = int(mat.material_id or 0)
+        quantidade = float(mat.quantidade or 0)
+        if material_id <= 0 or quantidade <= 0:
+            continue
+        payload_por_material[material_id] = quantidade
+    return sorted(payload_por_material.items(), key=lambda x: x[0])
 
 
 def _propagar_campos_generico_para_procedimentos(
@@ -2281,6 +2353,12 @@ def editar_procedimento_generico(
     if existe:
         raise HTTPException(status_code=400, detail="Já existe outro procedimento genérico com este código.")
 
+    fases_atual = _snapshot_fases_procedimento_generico(list(item.fases or []))
+    fases_novas = _snapshot_fases_payload(payload.fases)
+    materiais_atual = _snapshot_materiais_procedimento_generico(list(item.materiais_vinculados or []))
+    materiais_novos = _snapshot_materiais_payload(payload.materiais)
+    tempo_anterior = int(item.tempo or 0)
+    custo_lab_anterior = float(item.custo_lab or 0)
     item.codigo = codigo
     item.descricao = descricao
     item.especialidade = (payload.especialidade or "").strip() or None
@@ -2294,9 +2372,12 @@ def editar_procedimento_generico(
     item.data_alteracao = datetime.now().strftime("%d/%m/%Y %H:%M")
     if not (item.data_inclusao or "").strip():
         item.data_inclusao = item.data_alteracao
-    _sync_procedimento_generico_fases(db, item, clinica_id, payload.fases)
-    _sync_procedimento_generico_materiais(db, item, clinica_id, payload.materiais)
-    _propagar_campos_generico_para_procedimentos(db, clinica_id, int(item.id), item.tempo, item.custo_lab)
+    if fases_novas != fases_atual:
+        _sync_procedimento_generico_fases(db, item, clinica_id, payload.fases)
+    if materiais_novos != materiais_atual:
+        _sync_procedimento_generico_materiais(db, item, clinica_id, payload.materiais)
+    if tempo_anterior != int(item.tempo or 0) or custo_lab_anterior != float(item.custo_lab or 0):
+        _propagar_campos_generico_para_procedimentos(db, clinica_id, int(item.id), item.tempo, item.custo_lab)
     db.commit()
     db.refresh(item)
     return _procedimento_generico_to_dict(item, clinica_id=clinica_id, detalhado=True)
