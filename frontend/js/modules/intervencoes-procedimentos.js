@@ -20,7 +20,30 @@
     contracts
   });
 
+  // Helpers puros (sem rede/DOM). Mantidos aqui para extracoes minimas e seguras do app.js.
+  function procParse(v) {
+    const s = String(v ?? "")
+      .replace("R$", "")
+      .trim()
+      .replace(",", ".");
+    if (!s) return 0;
+    const n = Number(s);
+    if (!Number.isFinite(n)) throw new Error("invalid");
+    return n;
+  }
+
+  function procFmtBr(v) {
+    const n = Number(v || 0);
+    return Number.isFinite(n) ? n.toFixed(2).replace(".", ",") : "0,00";
+  }
+
+  const helpers = Object.freeze({
+    procParse,
+    procFmtBr
+  });
+
   window.BranaIntervencoesProcedimentosModule = Object.freeze({
-    manifest
+    manifest,
+    helpers
   });
 })();
