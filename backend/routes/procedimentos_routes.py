@@ -1245,6 +1245,98 @@ def proximo_codigo(
     return {"codigo": esperado}
 
 
+def _parse_percentual_br(valor: str | int | float | None) -> float:
+    base = str(valor or "").strip()
+    if not base:
+        return 0.0
+    # Accept PT-BR commas (e.g. "1,00") without altering UI texts.
+    base = base.replace(",", ".")
+    return float(base)
+
+
+@router.get("/tabelas/reajuste-preview")
+def preview_reajuste_tabela(
+    tabela_id: str = Query(...),
+    modo: str = Query(default="aumentar"),
+    percentual: str = Query(default="0"),
+    limit: int = Query(default=20),
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Preview only. No writes.
+    Computes before/after values for preco and valor_repasse for the selected table.
+    """
+    clinica_id = int(current_user.clinica_id)
+    _garantir_tabelas_clinica(db, clinica_id)
+
+    tabela_resolvida = _resolver_tabela_id(tabela_id, default=0)
+    if tabela_resolvida <= 0:
+        raise HTTPException(status_code=400, detail="Selecione uma tabela valida.")
+    tabela = _load_tabela_or_404(db, clinica_id, tabela_resolvida)
+    _validar_tabela_ativa(tabela)
+
+    modo_norm = str(modo or "").strip().lower()
+    if modo_norm not in {"aumentar", "diminuir"}:
+        raise HTTPException(status_code=400, detail="Modo invalido. Use aumentar ou diminuir.")
+
+    try:
+        pct = _parse_percentual_br(percentual)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="Percentual invalido.")
+    if pct < 0:
+        raise HTTPException(status_code=400, detail="Percentual invalido.")
+    if pct > 1000:
+        raise HTTPException(status_code=400, detail="Percentual muito alto.")
+
+    fator = 1.0 + (pct / 100.0) if modo_norm == "aumentar" else 1.0 - (pct / 100.0)
+    if fator < 0:
+        raise HTTPException(status_code=400, detail="Percentual invalido.")
+
+    base_query = db.query(Procedimento).filter(
+        Procedimento.clinica_id == clinica_id,
+        Procedimento.tabela_id == int(tabela.id),
+    )
+
+    total = int(base_query.with_entities(func.count(Procedimento.id)).scalar() or 0)
+    take = max(1, min(int(limit or 20), 50))
+    rows = (
+        base_query.order_by(Procedimento.codigo.asc(), Procedimento.nome.asc())
+        .limit(take)
+        .all()
+    )
+
+    amostra: list[dict] = []
+    for proc in rows:
+        preco_before = float(proc.preco or 0)
+        repasse_before = float(proc.valor_repasse or 0)
+        amostra.append(
+            {
+                "id": int(proc.id),
+                "codigo": int(proc.codigo or 0),
+                "nome": str(proc.nome or ""),
+                "preco_before": preco_before,
+                "preco_after": preco_before * fator,
+                "valor_repasse_before": repasse_before,
+                "valor_repasse_after": repasse_before * fator,
+            }
+        )
+
+    return {
+        "tabela": {
+            "id": int(tabela.id),
+            "codigo": int(tabela.codigo or 0),
+            "nome": str(tabela.nome or ""),
+            "fonte_pagadora": _normalizar_fonte_pagadora(tabela.fonte_pagadora),
+        },
+        "modo": modo_norm,
+        "percentual": pct,
+        "fator": fator,
+        "total": total,
+        "amostra": amostra,
+    }
+
+
 @router.get("/dashboard")
 def dashboard_lucratividade(
     current_user: Usuario = Depends(get_current_user),
