@@ -24430,10 +24430,9 @@ function anamneseFecharModalQuestionario() {
   anamneseCfg.modalQBackdrop.classList.add("hidden");
 }
 
-async function anamneseSalvarQuestionario() {
-  const nomeOriginal = anamneseCfg.modalQNome.value || "";
-  let nome = String(nomeOriginal || "").trim();
-  let validacaoNome = null;
+function anamneseValidarNomeQuestionarioSeguro(nomeOriginal, nomeNormalizado) {
+  const nome = typeof nomeNormalizado === "string" ? nomeNormalizado : String(nomeOriginal || "").trim();
+  let validacao = null;
   try {
     const helper = window.BranaAnamneseModule?.helpers?.anamneseValidarNomeQuestionario;
     if (typeof helper === "function") {
@@ -24444,19 +24443,26 @@ async function anamneseSalvarQuestionario() {
         typeof resultado.mensagem === "string" &&
         typeof resultado.valor === "string"
       ) {
-        validacaoNome = resultado;
+        validacao = resultado;
       }
     }
   } catch {
-    validacaoNome = null;
+    validacao = null;
   }
-  if (!validacaoNome) {
-    validacaoNome = {
+  if (!validacao) {
+    validacao = {
       valido: !!nome,
       mensagem: nome ? "" : "Informe o nome do questionário.",
       valor: nome,
     };
   }
+  return validacao;
+}
+
+async function anamneseSalvarQuestionario() {
+  const nomeOriginal = anamneseCfg.modalQNome.value || "";
+  let nome = String(nomeOriginal || "").trim();
+  const validacaoNome = anamneseValidarNomeQuestionarioSeguro(nomeOriginal, nome);
   if (!validacaoNome.valido) {
     window.alert(validacaoNome.mensagem || "Informe o nome do questionário.");
     return;
@@ -24516,6 +24522,35 @@ function anamneseFecharModalPergunta() {
   anamneseCfg.modalPBackdrop.classList.add("hidden");
 }
 
+function anamneseValidarTextoPerguntaSeguro(textoOriginal, textoNormalizado) {
+  const texto = typeof textoNormalizado === "string" ? textoNormalizado : String(textoOriginal || "").trim();
+  let validacao = null;
+  try {
+    const helper = window.BranaAnamneseModule?.helpers?.anamneseValidarTextoPergunta;
+    if (typeof helper === "function") {
+      const resultado = helper(textoOriginal);
+      if (
+        resultado &&
+        typeof resultado.valido === "boolean" &&
+        typeof resultado.mensagem === "string" &&
+        typeof resultado.valor === "string"
+      ) {
+        validacao = resultado;
+      }
+    }
+  } catch {
+    validacao = null;
+  }
+  if (!validacao) {
+    validacao = {
+      valido: !!texto,
+      mensagem: texto ? "" : "Informe o texto da pergunta.",
+      valor: texto,
+    };
+  }
+  return validacao;
+}
+
 async function anamneseSalvarPergunta() {
   if (!anamneseQuestionarioSelId) {
     window.alert("Selecione um questionário.");
@@ -24531,30 +24566,7 @@ async function anamneseSalvarPergunta() {
   const tipoResposta = Number(anamneseCfg.modalPTipoResposta.value || 1) || 1;
   const textoOriginal = anamneseCfg.modalPTexto.value || "";
   let texto = String(textoOriginal || "").trim();
-  let validacaoTexto = null;
-  try {
-    const helper = window.BranaAnamneseModule?.helpers?.anamneseValidarTextoPergunta;
-    if (typeof helper === "function") {
-      const resultado = helper(textoOriginal);
-      if (
-        resultado &&
-        typeof resultado.valido === "boolean" &&
-        typeof resultado.mensagem === "string" &&
-        typeof resultado.valor === "string"
-      ) {
-        validacaoTexto = resultado;
-      }
-    }
-  } catch {
-    validacaoTexto = null;
-  }
-  if (!validacaoTexto) {
-    validacaoTexto = {
-      valido: !!texto,
-      mensagem: texto ? "" : "Informe o texto da pergunta.",
-      valor: texto,
-    };
-  }
+  const validacaoTexto = anamneseValidarTextoPerguntaSeguro(textoOriginal, texto);
   if (!validacaoTexto.valido) {
     window.alert(validacaoTexto.mensagem || "Informe o texto da pergunta.");
     return;
