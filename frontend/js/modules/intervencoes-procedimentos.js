@@ -50,11 +50,37 @@
     return descricao || codigo || "";
   }
 
+  function procIndiceSiglaFromValor(valor, listaIndice) {
+    const raw = String(valor ?? "").trim();
+    if (!raw) return "R$";
+    const base = raw.toUpperCase();
+    const lista = Array.isArray(listaIndice) && listaIndice.length
+      ? listaIndice
+      : [
+          { sigla: "R$", numero: "255" },
+          { sigla: "UHO", numero: "2" },
+          { sigla: "UPO", numero: "3" },
+          { sigla: "USO", numero: "1" }
+        ];
+    for (const item of lista) {
+      const siglaUpper = String(item?.sigla ?? "").trim().toUpperCase();
+      const numero = String(item?.numero ?? "").trim();
+      if (siglaUpper && base === siglaUpper) return siglaUpper;
+      if (numero && base === numero.toUpperCase()) return siglaUpper || base;
+    }
+    if (base === "255" || base === "R$") return "R$";
+    if (base === "2" || base === "UHO") return "UHO";
+    if (base === "3" || base === "UPO") return "UPO";
+    if (base === "1" || base === "USO") return "USO";
+    return base;
+  }
+
   const helpers = Object.freeze({
     procParse,
     procFmtBr,
     procFmtAuxLabel,
-    procFmtSimboloLabel
+    procFmtSimboloLabel,
+    procIndiceSiglaFromValor
   });
 
   window.BranaIntervencoesProcedimentosModule = Object.freeze({

@@ -673,24 +673,7 @@ const procParse=(v)=>{const helper=window.BranaIntervencoesProcedimentosModule&&
 const procFmtMoeda=(v)=>{if(Number.isFinite(v))return formatMoney(v);const n=Number(v);return formatMoney(Number.isFinite(n)?n:toFloat(v))};
 const procFmtBr=(v)=>{const helper=window.BranaIntervencoesProcedimentosModule&&window.BranaIntervencoesProcedimentosModule.helpers&&window.BranaIntervencoesProcedimentosModule.helpers.procFmtBr; if(typeof helper==="function")return helper(v); const n=Number(v||0);return Number.isFinite(n)?n.toFixed(2).replace(".",","):"0,00"};
 const procSetSelectValue=(el,val)=>{if(!el)return;const alvo=String(val??"");const ok=[...el.options].some(x=>x.value===alvo);el.value=ok?alvo:(el.options.length?el.options[0].value:"")};
-const procIndiceSiglaFromValor=(valor)=>{
-  const raw=String(valor??"").trim();
-  if(!raw)return"R$";
-  const base=raw.toUpperCase();
-  const lista=(Array.isArray(procFiltros?.indices)&&procFiltros.indices.length)?procFiltros.indices:(Array.isArray(indicesCache)&&indicesCache.length)?indicesCache:MATERIAIS_INDICES_FALLBACK;
-  for(const item of lista){
-    const sigla=String(item?.sigla??"").trim();
-    const siglaUpper=sigla.toUpperCase();
-    const numero=String(item?.numero??item?.id??"").trim();
-    if(siglaUpper&&base===siglaUpper)return siglaUpper;
-    if(numero&&base===numero.toUpperCase())return siglaUpper||base;
-  }
-  if(base==="255"||base==="R$")return"R$";
-  if(base==="2"||base==="UHO")return"UHO";
-  if(base==="3"||base==="UPO")return"UPO";
-  if(base==="1"||base==="USO")return"USO";
-  return base;
-};
+const procIndiceSiglaFromValor=(valor)=>{const helper=window.BranaIntervencoesProcedimentosModule&&window.BranaIntervencoesProcedimentosModule.helpers&&window.BranaIntervencoesProcedimentosModule.helpers.procIndiceSiglaFromValor; const lista=(Array.isArray(procFiltros?.indices)&&procFiltros.indices.length)?procFiltros.indices:(Array.isArray(indicesCache)&&indicesCache.length)?indicesCache:MATERIAIS_INDICES_FALLBACK; if(typeof helper==="function")return helper(valor,lista); const raw=String(valor??"").trim(); if(!raw)return"R$"; const base=raw.toUpperCase(); for(const item of lista){const sigla=String(item?.sigla??"").trim();const siglaUpper=sigla.toUpperCase();const numero=String(item?.numero??item?.id??"").trim();if(siglaUpper&&base===siglaUpper)return siglaUpper;if(numero&&base===numero.toUpperCase())return siglaUpper||base} if(base==="255"||base==="R$")return"R$"; if(base==="2"||base==="UHO")return"UHO"; if(base==="3"||base==="UPO")return"UPO"; if(base==="1"||base==="USO")return"USO"; return base};
 const procEditorLinksVazio={itens:[],total_materiais:0,total_custo_und:0,total_custo:0};
 let procEditorSnapshotProcedimentoId=0;
 const procFmtAuxLabel=(item)=>{const helper=window.BranaIntervencoesProcedimentosModule&&window.BranaIntervencoesProcedimentosModule.helpers&&window.BranaIntervencoesProcedimentosModule.helpers.procFmtAuxLabel; if(typeof helper==="function")return helper(item); const codigo=String(item?.codigo??"").trim();const descricao=String(item?.descricao??item?.nome??"").trim();if(codigo&&descricao)return`${codigo} - ${descricao}`;return descricao||codigo||""};
