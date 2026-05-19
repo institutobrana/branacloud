@@ -693,7 +693,7 @@ const procIndiceSiglaFromValor=(valor)=>{
 };
 const procEditorLinksVazio={itens:[],total_materiais:0,total_custo_und:0,total_custo:0};
 let procEditorSnapshotProcedimentoId=0;
-const procFmtAuxLabel=(item)=>{const codigo=String(item?.codigo??"").trim();const descricao=String(item?.descricao??item?.nome??"").trim();if(codigo&&descricao)return`${codigo} - ${descricao}`;return descricao||codigo||""};
+const procFmtAuxLabel=(item)=>{const helper=window.BranaIntervencoesProcedimentosModule&&window.BranaIntervencoesProcedimentosModule.helpers&&window.BranaIntervencoesProcedimentosModule.helpers.procFmtAuxLabel; if(typeof helper==="function")return helper(item); const codigo=String(item?.codigo??"").trim();const descricao=String(item?.descricao??item?.nome??"").trim();if(codigo&&descricao)return`${codigo} - ${descricao}`;return descricao||codigo||""};
 const procFmtSimboloLabel=(item)=>{const descricao=String(item?.descricao??item?.nome??"").trim();const codigo=String(item?.codigo??"").trim();return descricao||codigo||""};
 async function procCarregarFormasCobrancaAux(){
   const {res,data}=await requestJson("GET",`/cadastros/auxiliares?tipo=${encodeURIComponent("Tipos de cobrança")}`,undefined,true);

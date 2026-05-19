@@ -37,9 +37,17 @@
     return Number.isFinite(n) ? n.toFixed(2).replace(".", ",") : "0,00";
   }
 
+  function procFmtAuxLabel(item) {
+    const codigo = String(item?.codigo ?? "").trim();
+    const descricao = String(item?.descricao ?? item?.nome ?? "").trim();
+    if (codigo && descricao) return `${codigo} - ${descricao}`;
+    return descricao || codigo || "";
+  }
+
   const helpers = Object.freeze({
     procParse,
-    procFmtBr
+    procFmtBr,
+    procFmtAuxLabel
   });
 
   window.BranaIntervencoesProcedimentosModule = Object.freeze({
