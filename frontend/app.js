@@ -23249,7 +23249,15 @@ async function executarAcaoMenu(action){
   }
 }
 function prestSelecionado(){return prestadoresCache.find(item=>Number(item.id||0)===Number(prestadorSelId))||null}
-function prestStatusHtml(ativo){return ativo?'<span style="color:#2fbf2f;font-size:14px;line-height:1;">â—</span>':'<span style="color:#d32f2f;font-size:14px;line-height:1;">â—</span>'}
+function prestStatusHtml(ativo){
+  try{
+    const mod=window.BranaPrestadoresModule;
+    if(mod&&typeof mod.prestStatusHtml==="function"){
+      return mod.prestStatusHtml(ativo);
+    }
+  }catch{}
+  return ativo?'<span style="color:#2fbf2f;font-size:14px;line-height:1;">â—</span>':'<span style="color:#d32f2f;font-size:14px;line-height:1;">â—</span>'
+}
 function prestFmtCodigo(valor,idx=0){
   const fallback=()=>{const n=Number(valor||0);if(Number.isFinite(n)&&n>0)return String(n).padStart(3,"0");return String(idx+1).padStart(3,"0")};
   try{
