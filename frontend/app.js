@@ -2461,7 +2461,13 @@ function prefOdontoNorm(text){
   if(mod&&typeof mod.prefOdontoNorm==="function")return mod.prefOdontoNorm(text);
   return String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 }
-function prefOdontoFindByLabel(text){const key=prefOdontoNorm(text);for(let i=0;i<PREF_ODONTO_PALETTE.length;i+=1){if(prefOdontoNorm(PREF_ODONTO_PALETTE[i].label)===key)return PREF_ODONTO_PALETTE[i]}return null}
+function prefOdontoFindByLabel(text){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefOdontoFindByLabel==="function")return mod.prefOdontoFindByLabel(text);
+  const key=prefOdontoNorm(text);
+  for(let i=0;i<PREF_ODONTO_PALETTE.length;i+=1){if(prefOdontoNorm(PREF_ODONTO_PALETTE[i].label)===key)return PREF_ODONTO_PALETTE[i]}
+  return null;
+}
 function prefOdontoEnsurePalette(select){
   if(!(select instanceof HTMLSelectElement))return;
   const currentValue=String(select.value||"").trim().toLowerCase();

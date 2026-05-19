@@ -29,10 +29,19 @@
     };
   }
 
+  function prefOdontoFindByLabel(text) {
+    const key = prefOdontoNorm(text);
+    for (let i = 0; i < PREF_ODONTO_PALETTE.length; i += 1) {
+      if (prefOdontoNorm(PREF_ODONTO_PALETTE[i].label) === key) return PREF_ODONTO_PALETTE[i];
+    }
+    return null;
+  }
+
   const moduleApi = Object.freeze({
     getMetadata,
     prefOdontoNorm,
-    prefValoresPadraoModelos
+    prefValoresPadraoModelos,
+    prefOdontoFindByLabel
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;
