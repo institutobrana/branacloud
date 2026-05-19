@@ -44,10 +44,17 @@
     return descricao || codigo || "";
   }
 
+  function procFmtSimboloLabel(item) {
+    const descricao = String(item?.descricao ?? item?.nome ?? "").trim();
+    const codigo = String(item?.codigo ?? "").trim();
+    return descricao || codigo || "";
+  }
+
   const helpers = Object.freeze({
     procParse,
     procFmtBr,
-    procFmtAuxLabel
+    procFmtAuxLabel,
+    procFmtSimboloLabel
   });
 
   window.BranaIntervencoesProcedimentosModule = Object.freeze({
