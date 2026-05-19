@@ -2452,7 +2452,11 @@ const PREF_ODONTO_PALETTE=[
   {value:"#ffffff",label:"Branco"},
 ];
 const PREF_ODONTO_PALETTE_BY_VALUE=(()=>{const map={};PREF_ODONTO_PALETTE.forEach(item=>{map[String(item.value).toLowerCase()]=item});return map})();
-function prefOdontoNorm(text){return String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()}
+function prefOdontoNorm(text){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefOdontoNorm==="function")return mod.prefOdontoNorm(text);
+  return String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+}
 function prefOdontoFindByLabel(text){const key=prefOdontoNorm(text);for(let i=0;i<PREF_ODONTO_PALETTE.length;i+=1){if(prefOdontoNorm(PREF_ODONTO_PALETTE[i].label)===key)return PREF_ODONTO_PALETTE[i]}return null}
 function prefOdontoEnsurePalette(select){
   if(!(select instanceof HTMLSelectElement))return;

@@ -13,8 +13,13 @@
     };
   }
 
+  function prefOdontoNorm(text) {
+    return String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  }
+
   const moduleApi = Object.freeze({
-    getMetadata
+    getMetadata,
+    prefOdontoNorm
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;
