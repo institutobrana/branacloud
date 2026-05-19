@@ -2244,7 +2244,11 @@ function prefResolverContexto(user=null,origin="menu"){if(user){return{scope:"us
 function prefContextoAtual(){return prefCfg?.context||prefContextoPadrao()}
 function prefTituloAtual(){const ctx=prefContextoAtual();const apelido=String(ctx.userApelido||ctx.userNome||"").trim();return apelido?`Configura prefer\u00eancias do usu\u00e1rio (${apelido})`:"Configura prefer\u00eancias do usu\u00e1rio"}
 function prefValoresPadrao(){return{pesquisa_padrao_odontograma:"geral",tabela_padrao_id:"",convenio_padrao_id:0,mensagem_padrao_orcamentos:"",historico_padrao_conta_corrente:"Honorarios odontologicos",exibir_quadro_avisos:true,busca_automatica_pacientes_agendados:true,alarme_habilitado:false,alarme_minutos_antecedencia:1}}
-function prefValoresPadraoModelos(){return{modelo_impresso_atestados_id:null,modelo_impresso_receitas_id:null,modelo_impresso_recibos_id:null,modelo_padrao_etiquetas_id:null,modelo_texto_email_agenda_id:null,modelo_padrao_orcamentos_id:null,modelo_texto_whatsapp_agenda_id:null}}
+function prefValoresPadraoModelos(){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefValoresPadraoModelos==="function")return mod.prefValoresPadraoModelos();
+  return{modelo_impresso_atestados_id:null,modelo_impresso_receitas_id:null,modelo_impresso_recibos_id:null,modelo_padrao_etiquetas_id:null,modelo_texto_email_agenda_id:null,modelo_padrao_orcamentos_id:null,modelo_texto_whatsapp_agenda_id:null}
+}
 const PREF_AMB_SECOES_PADRAO=[{id:"enunciados",label:"Enunciados"},{id:"campos_edicao",label:"Campos de edi\u00e7\u00e3o"},{id:"botoes_funcao",label:"Bot\u00f5es de fun\u00e7\u00e3o"},{id:"outros_botoes",label:"Outros bot\u00f5es"},{id:"itens_lista",label:"Itens de lista"}];
 function prefAmbEstiloPadrao(){return{fonte_nome:"Tahoma",fonte_tamanho:12,fonte_estilo:"normal",cor_texto:"#000000",riscado:false,sublinhado:false,script:"Ocidental"}}
 function prefValoresPadraoAmbiente(){const secoes={};PREF_AMB_SECOES_PADRAO.forEach(item=>{secoes[item.id]=prefAmbEstiloPadrao()});return{secao_ativa:"enunciados",secoes}}

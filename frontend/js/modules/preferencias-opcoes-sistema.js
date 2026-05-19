@@ -17,9 +17,22 @@
     return String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   }
 
+  function prefValoresPadraoModelos() {
+    return {
+      modelo_impresso_atestados_id: null,
+      modelo_impresso_receitas_id: null,
+      modelo_impresso_recibos_id: null,
+      modelo_padrao_etiquetas_id: null,
+      modelo_texto_email_agenda_id: null,
+      modelo_padrao_orcamentos_id: null,
+      modelo_texto_whatsapp_agenda_id: null
+    };
+  }
+
   const moduleApi = Object.freeze({
     getMetadata,
-    prefOdontoNorm
+    prefOdontoNorm,
+    prefValoresPadraoModelos
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;
