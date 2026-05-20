@@ -1,0 +1,42 @@
+(function(){
+  const module={};
+
+  function usersOptions(items,valueField,labelField,selectedValue,placeholder){
+    const opts=[];
+    if(placeholder!==undefined)opts.push(`<option value="">${esc(placeholder)}</option>`);
+    (Array.isArray(items)?items:[]).forEach(item=>{
+      const value=String(item?.[valueField]??"");
+      const label=String(item?.[labelField]??"").trim()||value;
+      const selected=String(selectedValue??"")===value?' selected':"";
+      opts.push(`<option value="${esc(value)}"${selected}>${esc(label)}</option>`)
+    });
+    return opts.join("")
+  }
+
+  function usersPopularModalCombos(user=null){
+    if(usersModalTipo)usersModalTipo.innerHTML=usersOptions(usersTiposCache,"descricao","descricao",user?.tipo_usuario||"","");
+    if(usersModalPrestador)usersModalPrestador.innerHTML=usersOptions(usersPrestadoresLookup,"row_id","nome",user?.prestador_row_id||"","<< Nenhum >>");
+    if(usersModalUnidade)usersModalUnidade.innerHTML=usersOptions(usersUnidadesLookup,"row_id","nome",user?.unidade_row_id||"","<< Nenhuma >>")
+  }
+
+  function usersPreencherModal(user=null){
+    usersModalNome.value=String(user?.nome||"");
+    if(usersModalApelido)usersModalApelido.value=String(user?.apelido||"");
+    if(usersModalEmail)usersModalEmail.value=String(user?.email||"");
+    if(usersModalAtivo)usersModalAtivo.checked=user?user.ativo===false:false;
+    if(usersModalAdmin)usersModalAdmin.checked=!!user?.is_admin;
+    if(usersModalForcarSenha)usersModalForcarSenha.checked=!!user?.forcar_troca_senha;
+    if(usersModalSenhaAtual)usersModalSenhaAtual.value="";
+    usersModalSenha.value="";
+    usersModalConfirma.value="";
+    if(usersModalShowSenha)usersModalShowSenha.checked=false;
+    usersSyncSenhaAtualVisibility();
+    usersToggleSenhaVisibilidade();
+    usersPopularModalCombos(user)
+  }
+
+  module.usersOptions=usersOptions;
+  module.usersPopularModalCombos=usersPopularModalCombos;
+  module.usersPreencherModal=usersPreencherModal;
+  window.BranaUsersAdminModalVisualModule=module;
+})();
