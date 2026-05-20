@@ -1239,30 +1239,28 @@ def seed_procedimentos(db: Session, clinica_id: int) -> int:
         codigo = int(row.get("codigo") or 0)
         if codigo <= 0:
             continue
-        generico_codigo = str(row.get("procedimento_generico_codigo") or "").strip()
-        generico_id = genericos.get(generico_codigo) if generico_codigo else None
-
         item = existentes.get(codigo)
+        total += 1
         payload = {
             "nome": row.get("nome") or "",
-            "tempo": int(row.get("tempo") or 0),
-            "preco": float(row.get("preco") or 0),
-            "custo": float(row.get("custo") or 0),
-            "custo_lab": float(row.get("custo_lab") or 0),
-            "lucro_hora": float(row.get("lucro_hora") or 0),
-            "especialidade": row.get("especialidade"),
-            "procedimento_generico_id": int(generico_id) if generico_id else None,
-            "simbolo_grafico": row.get("simbolo_grafico"),
-            "simbolo_grafico_legacy_id": row.get("simbolo_grafico_legacy_id"),
-            "mostrar_simbolo": bool(row.get("mostrar_simbolo") or False),
-            "garantia_meses": int(row.get("garantia_meses") or 0),
-            "forma_cobranca": row.get("forma_cobranca"),
-            "valor_repasse": float(row.get("valor_repasse") or 0),
-            "preferido": bool(row.get("preferido") or False),
-            "inativo": bool(row.get("inativo") or False),
-            "observacoes": row.get("observacoes"),
-            "data_inclusao": row.get("data_inclusao"),
-            "data_alteracao": row.get("data_alteracao"),
+            "tempo": 0,
+            "preco": 0,
+            "custo": 0,
+            "custo_lab": 0,
+            "lucro_hora": 0,
+            "especialidade": None,
+            "procedimento_generico_id": None,
+            "simbolo_grafico": None,
+            "simbolo_grafico_legacy_id": None,
+            "mostrar_simbolo": False,
+            "garantia_meses": 0,
+            "forma_cobranca": None,
+            "valor_repasse": 0,
+            "preferido": False,
+            "inativo": False,
+            "observacoes": None,
+            "data_inclusao": None,
+            "data_alteracao": None,
         }
         if item is None:
             item = Procedimento(
@@ -1273,9 +1271,7 @@ def seed_procedimentos(db: Session, clinica_id: int) -> int:
             )
             db.add(item)
         else:
-            for key, value in payload.items():
-                setattr(item, key, value)
-        total += 1
+            continue
 
     db.flush()
     return total

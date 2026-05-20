@@ -7114,18 +7114,19 @@ def seed_procedimentos_genericos(db: Session, clinica_id: int) -> int:
             continue
         payload = {
             "descricao": row.get("descricao") or "",
-            "especialidade": row.get("especialidade"),
-            "tempo": int(row.get("tempo") or 0),
-            "custo_lab": float(row.get("custo_lab") or 0),
-            "peso": float(row.get("peso") or 0),
-            "simbolo_grafico": row.get("simbolo_grafico"),
-            "mostrar_simbolo": bool(row.get("mostrar_simbolo") or False),
-            "inativo": bool(row.get("inativo") or False),
-            "observacoes": row.get("observacoes"),
-            "data_inclusao": row.get("data_inclusao"),
-            "data_alteracao": row.get("data_alteracao"),
+            "especialidade": None,
+            "tempo": 0,
+            "custo_lab": 0,
+            "peso": 0,
+            "simbolo_grafico": None,
+            "mostrar_simbolo": False,
+            "inativo": False,
+            "observacoes": None,
+            "data_inclusao": None,
+            "data_alteracao": None,
         }
         item = existentes.get(codigo)
+        total += 1
         if item is None:
             item = ProcedimentoGenerico(
                 clinica_id=int(clinica_id),
@@ -7135,8 +7136,6 @@ def seed_procedimentos_genericos(db: Session, clinica_id: int) -> int:
             db.add(item)
             existentes[codigo] = item
         else:
-            for key, value in payload.items():
-                setattr(item, key, value)
-        total += 1
+            continue
     db.flush()
     return total
