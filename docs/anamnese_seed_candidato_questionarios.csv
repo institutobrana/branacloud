@@ -1,0 +1,4 @@
+﻿fonte,tabela_origem,id_origem,nome,clinica_id_origem,ordem,ativo,created_at,updated_at,observacoes
+clinica_1_pos_importacao,anamnese_questionarios,2,Principal,1,1,true,2026-03-17 21:09:36.226119-03:00,2026-03-17 21:09:36.226119-03:00,Fonte operacional da clínica 1; Principal é a versão atual validada com 17 perguntas. A alternativa EDS70 com 35 perguntas permanece em análise.
+clinica_1_pos_importacao,anamnese_questionarios,8,Implante,1,2,true,2026-05-15 07:36:49.229910-03:00,2026-05-15 07:36:49.229910-03:00,Fonte operacional validada da clínica 1.
+clinica_1_pos_importacao,anamnese_questionarios,9,Ficha complementar,1,3,true,2026-05-15 07:36:49.229910-03:00,2026-05-15 07:36:49.229910-03:00,Fonte operacional validada da clínica 1.
