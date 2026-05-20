@@ -1150,7 +1150,24 @@ def _carregar_seed_financeiro(db):
 
 def _upsert_materiais_na_lista(db, lista_id, materiais_seed):
     existentes = {m.codigo: m for m in db.query(Material).filter(Material.lista_id == lista_id).all()}
+
+    def _sanitizar_material_seed(item):
+        return {
+            "codigo": str(item.get("codigo") or "").strip(),
+            "nome": str(item.get("nome") or "").strip(),
+            "preco": 0,
+            "relacao": 0,
+            "custo": 0,
+            "unidade_compra": "",
+            "unidade_consumo": "",
+            "validade_dias": 0,
+            "preferido": False,
+            "classificacao": "",
+            "lista_id": lista_id,
+        }
+
     for item in materiais_seed:
+        item = _sanitizar_material_seed(item)
         codigo = item["codigo"]
         if codigo in existentes:
             mat = existentes[codigo]
@@ -1158,11 +1175,11 @@ def _upsert_materiais_na_lista(db, lista_id, materiais_seed):
             mat.preco = float(item["preco"] or 0)
             mat.relacao = float(item["relacao"] or 0)
             mat.custo = float(item["custo"] or 0)
-            mat.unidade_compra = str(item.get("unidade_compra", "") or "").strip()
-            mat.unidade_consumo = str(item.get("unidade_consumo", "") or "").strip()
-            mat.validade_dias = int(item.get("validade_dias", 0) or 0)
-            mat.preferido = bool(item.get("preferido", False))
-            mat.classificacao = str(item.get("classificacao", "") or "").strip()
+            mat.unidade_compra = item["unidade_compra"]
+            mat.unidade_consumo = item["unidade_consumo"]
+            mat.validade_dias = int(item["validade_dias"] or 0)
+            mat.preferido = bool(item["preferido"])
+            mat.classificacao = item["classificacao"]
         else:
             db.add(
                 Material(
@@ -1171,11 +1188,11 @@ def _upsert_materiais_na_lista(db, lista_id, materiais_seed):
                     preco=float(item["preco"] or 0),
                     relacao=float(item["relacao"] or 0),
                     custo=float(item["custo"] or 0),
-                    unidade_compra=str(item.get("unidade_compra", "") or "").strip(),
-                    unidade_consumo=str(item.get("unidade_consumo", "") or "").strip(),
-                    validade_dias=int(item.get("validade_dias", 0) or 0),
-                    preferido=bool(item.get("preferido", False)),
-                    classificacao=str(item.get("classificacao", "") or "").strip(),
+                    unidade_compra=item["unidade_compra"],
+                    unidade_consumo=item["unidade_consumo"],
+                    validade_dias=int(item["validade_dias"] or 0),
+                    preferido=bool(item["preferido"]),
+                    classificacao=item["classificacao"],
                     lista_id=lista_id,
                 )
             )
@@ -1311,13 +1328,13 @@ def _upsert_procedimentos_particular_na_clinica(db, clinica_id, seed, reset_prec
     }
     for item in seed["procedimentos"]:
         codigo = int(item["codigo"])
-        preco_seed = 0.0 if reset_preco else float(item["preco"] or 0)
+        preco_seed = 0.0
         simbolo_seed = str(item.get("simbolo_grafico") or "").strip()
         simbolo_legacy_seed = int(item.get("simbolo_grafico_legacy_id") or 0) or None
         mostrar_seed = bool(item.get("mostrar_simbolo"))
         forma_cobranca = str(item.get("forma_cobranca") or "").strip()
-        garantia_meses = int(item.get("garantia_meses") or 0)
-        valor_repasse = float(item.get("valor_repasse") or 0)
+        garantia_meses = 0
+        valor_repasse = 0.0
         preferido = bool(item.get("preferido"))
         inativo = bool(item.get("inativo"))
         data_inclusao = str(item.get("data_inclusao") or "").strip()
@@ -1331,62 +1348,32 @@ def _upsert_procedimentos_particular_na_clinica(db, clinica_id, seed, reset_prec
                 or genericos.get(generico_codigo.zfill(5))
             )
         if codigo in existentes:
-            proc = existentes[codigo]
-            proc.nome = item["nome"]
-            proc.tempo = int(item["tempo"] or 0)
-            proc.preco = preco_seed
-            proc.custo = float(item["custo"] or 0)
-            proc.custo_lab = float(item["custo_lab"] or 0)
-            proc.lucro_hora = float(item["lucro_hora"] or 0)
-            proc.especialidade = str(item.get("especialidade") or "").strip() or None
-            if generico_id and proc.procedimento_generico_id is None:
-                proc.procedimento_generico_id = int(generico_id)
-            if simbolo_seed and not str(proc.simbolo_grafico or "").strip():
-                proc.simbolo_grafico = simbolo_seed
-            if simbolo_legacy_seed and not int(getattr(proc, "simbolo_grafico_legacy_id", 0) or 0):
-                proc.simbolo_grafico_legacy_id = simbolo_legacy_seed
-            if mostrar_seed and not bool(proc.mostrar_simbolo):
-                proc.mostrar_simbolo = True
-            if forma_cobranca and not str(proc.forma_cobranca or "").strip():
-                proc.forma_cobranca = forma_cobranca
-            if int(getattr(proc, "garantia_meses", 0) or 0) <= 0 and garantia_meses > 0:
-                proc.garantia_meses = garantia_meses
-            if float(getattr(proc, "valor_repasse", 0) or 0) <= 0 and valor_repasse > 0:
-                proc.valor_repasse = valor_repasse
-            if preferido and not bool(getattr(proc, "preferido", False)):
-                proc.preferido = True
-            if inativo and not bool(getattr(proc, "inativo", False)):
-                proc.inativo = True
-            if data_inclusao and not str(getattr(proc, "data_inclusao", "") or "").strip():
-                proc.data_inclusao = data_inclusao
-            if data_alteracao and not str(getattr(proc, "data_alteracao", "") or "").strip():
-                proc.data_alteracao = data_alteracao
-        else:
-            db.add(
-                Procedimento(
-                    codigo=codigo,
-                    nome=item["nome"],
-                    tempo=int(item["tempo"] or 0),
-                    preco=preco_seed,
-                    custo=float(item["custo"] or 0),
-                    custo_lab=float(item["custo_lab"] or 0),
-                    lucro_hora=float(item["lucro_hora"] or 0),
-                    especialidade=str(item.get("especialidade") or "").strip() or None,
-                    procedimento_generico_id=int(generico_id) if generico_id else None,
-                    simbolo_grafico=simbolo_seed or None,
-                    simbolo_grafico_legacy_id=simbolo_legacy_seed,
-                    mostrar_simbolo=bool(simbolo_seed) or mostrar_seed,
-                    forma_cobranca=forma_cobranca or None,
-                    garantia_meses=garantia_meses,
-                    valor_repasse=valor_repasse,
-                    preferido=preferido,
-                    inativo=inativo,
-                    data_inclusao=data_inclusao or None,
-                    data_alteracao=data_alteracao or None,
-                    tabela_id=tabela_particular_id,
-                    clinica_id=clinica_id,
-                )
+            continue
+        db.add(
+            Procedimento(
+                codigo=codigo,
+                nome=item["nome"],
+                tempo=0,
+                preco=preco_seed,
+                custo=0.0,
+                custo_lab=0.0,
+                lucro_hora=0.0,
+                especialidade=str(item.get("especialidade") or "").strip() or None,
+                procedimento_generico_id=int(generico_id) if generico_id else None,
+                simbolo_grafico=simbolo_seed or None,
+                simbolo_grafico_legacy_id=simbolo_legacy_seed,
+                mostrar_simbolo=bool(simbolo_seed) or mostrar_seed,
+                forma_cobranca=forma_cobranca or None,
+                garantia_meses=garantia_meses,
+                valor_repasse=valor_repasse,
+                preferido=preferido,
+                inativo=inativo,
+                data_inclusao=data_inclusao or None,
+                data_alteracao=data_alteracao or None,
+                tabela_id=tabela_particular_id,
+                clinica_id=clinica_id,
             )
+        )
     db.flush()
 
 
