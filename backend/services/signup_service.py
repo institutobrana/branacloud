@@ -19,6 +19,7 @@ from models.usuario import Usuario
 from seeds.procedimentos_genericos import seed_procedimentos_genericos
 from seeds.procedimentos_padrao import seed_procedimentos
 from seeds.simbolos_graficos import seed_simbolos_graficos
+from seeds.access_profiles_bootstrap import ensure_default_access_profiles_for_clinic
 from security.permissions import dump_permissions_json, sanitize_permissions
 from security.system_accounts import (
     SYSTEM_PRESTADOR_CODIGO,
@@ -29,7 +30,6 @@ from security.system_accounts import (
     SYSTEM_USER_TIPO,
     build_system_user_email,
 )
-from services.access_profiles_service import ensure_access_profiles
 from services.procedimentos_legado_service import resolver_codigo_generico_particular_snapshot
 from services.etiquetas_service import garantir_modelos_etiqueta_clinica, garantir_padroes_etiqueta
 from services.indices_service import garantir_indices_padrao_clinica
@@ -2184,6 +2184,10 @@ def _garantir_usuario_sistemico_clinica(db, clinica_id: int, prestador: Prestado
     return usuario
 
 
+def _aplicar_bootstrap_access_profiles_clinica(db, clinica_id: int) -> dict[str, object]:
+    return ensure_default_access_profiles_for_clinic(db, clinica_id)
+
+
 def criar_conta_saas(db, nome, email, senha):
     clinica = Clinica(
         nome=nome,
@@ -2199,7 +2203,7 @@ def criar_conta_saas(db, nome, email, senha):
     garantir_modelos_etiqueta_clinica(db, clinica.id)
     prestador_sistemico = _garantir_prestador_sistemico_clinica(db, clinica.id)
     _garantir_usuario_sistemico_clinica(db, clinica.id, prestador_sistemico)
-    ensure_access_profiles(db, clinica.id)
+    _aplicar_bootstrap_access_profiles_clinica(db, clinica.id)
 
     db.add(
         Usuario(
