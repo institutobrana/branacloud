@@ -1209,12 +1209,12 @@ def seed_procedimentos(db: Session, clinica_id: int) -> int:
         codigo=1,
         nome="Tabela Exemplo",
     )
-    # Garante tabela PARTICULAR padrao (mesmo vazia).
+    # Garante tabela Brana padrao (mesmo vazia).
     _garantir_tabela_por_nome_ou_codigo(
         db,
         int(clinica_id),
         codigo=4,
-        nome="PARTICULAR",
+        nome="Brana",
     )
 
     genericos = {
@@ -1270,6 +1270,7 @@ def seed_procedimentos(db: Session, clinica_id: int) -> int:
                 **payload,
             )
             db.add(item)
+            existentes[codigo] = item
         else:
             continue
 

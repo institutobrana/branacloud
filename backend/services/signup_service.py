@@ -17,6 +17,7 @@ from models.procedimento_generico import ProcedimentoGenerico
 from models.procedimento_tabela import ProcedimentoTabela
 from models.usuario import Usuario
 from seeds.procedimentos_genericos import seed_procedimentos_genericos
+from seeds.procedimentos_brana import get_procedimentos_brana_padrao
 from seeds.procedimentos_padrao import seed_procedimentos
 from seeds.simbolos_graficos import seed_simbolos_graficos
 from seeds.access_profiles_bootstrap import ensure_default_access_profiles_for_clinic
@@ -43,7 +44,7 @@ DEFAULT_LIST_NAMES = (DEFAULT_LIST_NAME, DEFAULT_LIST_NAME_FALLBACK, DEFAULT_LIS
 LEGACY_DEFAULT_LIST_NAME = "Tabela modelo"
 HOSTED_DEFAULT_LIST_NAMES = (DEFAULT_LIST_NAME, DEFAULT_LIST_NAME_FALLBACK, DEFAULT_LIST_NAME_LEGACY, LEGACY_DEFAULT_LIST_NAME)
 PRIVATE_TABLE_CODE = 4
-PRIVATE_TABLE_NAME = "PARTICULAR"
+PRIVATE_TABLE_NAME = "Brana"
 ESPECIALIDADE_RAW_PATH = Path(__file__).resolve().parents[3] / "Dados" / "Dist" / "_ESPECIALIDADE.raw"
 RAW_DIST_DIR = Path(__file__).resolve().parents[3] / "Dados" / "Dist"
 HOSTED_SEED_DIR = Path(__file__).resolve().parents[1] / "backups" / "brana_saas_full_20260313_234848" / "data"
@@ -1133,12 +1134,94 @@ def _carregar_seed_procedimentos(db):
     return _carregar_seed_procedimentos_clinica(db)
 
 
+def _carregar_seed_procedimentos_particular_clinica(db):
+    row = (
+        db.query(
+            ProcedimentoTabela.clinica_id.label("clinica_id"),
+            ProcedimentoTabela.id.label("tabela_id"),
+            func.count(Procedimento.id).label("qtd"),
+        )
+        .join(Procedimento, Procedimento.tabela_id == ProcedimentoTabela.id)
+        .filter(ProcedimentoTabela.codigo == PRIVATE_TABLE_CODE)
+        .group_by(ProcedimentoTabela.clinica_id, ProcedimentoTabela.id)
+        .order_by(func.count(Procedimento.id).desc(), ProcedimentoTabela.clinica_id.asc(), ProcedimentoTabela.id.asc())
+        .first()
+    )
+    if not row or int(row.qtd or 0) <= 0:
+        return {"procedimentos": [], "links": []}
+
+    clinica_id = int(row.clinica_id)
+    tabela_id = int(row.tabela_id)
+    genericos_por_id = {
+        int(g.id): str(g.codigo or "").strip()
+        for g in db.query(ProcedimentoGenerico)
+        .filter(ProcedimentoGenerico.clinica_id == clinica_id)
+        .all()
+        if int(g.id or 0) > 0 and str(g.codigo or "").strip()
+    }
+    procs = (
+        db.query(Procedimento)
+        .filter(
+            Procedimento.clinica_id == clinica_id,
+            Procedimento.tabela_id == tabela_id,
+        )
+        .order_by(Procedimento.codigo.asc(), Procedimento.id.asc())
+        .all()
+    )
+    procedimentos = [
+        {
+            "codigo": int(p.codigo or 0),
+            "nome": str(p.nome or "").strip(),
+            "tempo": int(p.tempo or 0),
+            "preco": float(p.preco or 0),
+            "custo": float(p.custo or 0),
+            "custo_lab": float(p.custo_lab or 0),
+            "lucro_hora": float(p.lucro_hora or 0),
+            "especialidade": str(p.especialidade or "").strip(),
+            "simbolo_grafico": str(p.simbolo_grafico or "").strip(),
+            "simbolo_grafico_legacy_id": int(p.simbolo_grafico_legacy_id or 0) or None,
+            "mostrar_simbolo": bool(p.mostrar_simbolo),
+            "forma_cobranca": str(p.forma_cobranca or "").strip(),
+            "garantia_meses": int(p.garantia_meses or 0),
+            "valor_repasse": float(p.valor_repasse or 0),
+            "preferido": bool(p.preferido),
+            "inativo": bool(p.inativo),
+            "data_inclusao": p.data_inclusao or "",
+            "data_alteracao": p.data_alteracao or "",
+            "generico_codigo": genericos_por_id.get(int(p.procedimento_generico_id or 0), ""),
+        }
+        for p in procs
+        if int(p.codigo or 0) > 0 and str(p.nome or "").strip()
+    ]
+    links_raw = (
+        db.query(Procedimento.codigo, Material.codigo, ProcedimentoMaterial.quantidade)
+        .join(Procedimento, Procedimento.id == ProcedimentoMaterial.procedimento_id)
+        .join(Material, Material.id == ProcedimentoMaterial.material_id)
+        .join(ListaMaterial, ListaMaterial.id == Material.lista_id)
+        .filter(
+            Procedimento.clinica_id == clinica_id,
+            Procedimento.tabela_id == tabela_id,
+            ListaMaterial.clinica_id == clinica_id,
+        )
+        .order_by(ProcedimentoMaterial.id.asc())
+        .all()
+    )
+    links = [
+        {
+            "procedimento_codigo": int(x[0] or 0),
+            "material_codigo": str(x[1] or "").strip(),
+            "quantidade": float(x[2] or 0),
+        }
+        for x in links_raw
+        if int(x[0] or 0) > 0 and str(x[1] or "").strip() and float(x[2] or 0) > 0
+    ]
+    return {"procedimentos": procedimentos, "links": links}
+
+
 def _carregar_seed_procedimentos_particular(db):
-    seeds = _carregar_seed_procedimentos_hosted_por_tabela()
-    seed_particular = seeds["particular"]
-    if seed_particular["procedimentos"]:
-        return seed_particular
-    return {"procedimentos": [], "links": []}
+    # Seed canonico da Brana: 336 itens sanitizados, sem dependencia runtime
+    # da clinica auditada 1/tabela 18.
+    return {"procedimentos": get_procedimentos_brana_padrao(), "links": []}
 
 
 def _carregar_seed_financeiro(db):
@@ -1198,8 +1281,32 @@ def _upsert_materiais_na_lista(db, lista_id, materiais_seed):
             )
 
 
+def _resolver_tabela_exemplo_id(db, clinica_id):
+    tabela_id = (
+        db.query(ProcedimentoTabela.id)
+        .filter(
+            ProcedimentoTabela.clinica_id == clinica_id,
+            ProcedimentoTabela.codigo == 1,
+        )
+        .scalar()
+    )
+    if tabela_id:
+        return int(tabela_id)
+    tabela_id = (
+        db.query(ProcedimentoTabela.id)
+        .filter(
+            ProcedimentoTabela.clinica_id == clinica_id,
+            func.lower(ProcedimentoTabela.nome) == "tabela exemplo",
+        )
+        .scalar()
+    )
+    return int(tabela_id) if tabela_id else None
+
+
 def _upsert_procedimentos_na_clinica(db, clinica_id, seed, reset_preco: bool = False):
-    tabela_exemplo_id = 1
+    tabela_exemplo_id = _resolver_tabela_exemplo_id(db, clinica_id)
+    if not tabela_exemplo_id:
+        return
     existentes = {
         int(p.codigo): p
         for p in db.query(Procedimento)
@@ -1237,6 +1344,7 @@ def _upsert_procedimentos_na_clinica(db, clinica_id, seed, reset_preco: bool = F
             )
             db.add(proc)
             db.flush()
+            existentes[codigo] = proc
         codigo_para_id[codigo] = int(proc.id)
 
     db.flush()
@@ -1349,31 +1457,31 @@ def _upsert_procedimentos_particular_na_clinica(db, clinica_id, seed, reset_prec
             )
         if codigo in existentes:
             continue
-        db.add(
-            Procedimento(
-                codigo=codigo,
-                nome=item["nome"],
-                tempo=0,
-                preco=preco_seed,
-                custo=0.0,
-                custo_lab=0.0,
-                lucro_hora=0.0,
-                especialidade=str(item.get("especialidade") or "").strip() or None,
-                procedimento_generico_id=int(generico_id) if generico_id else None,
-                simbolo_grafico=simbolo_seed or None,
-                simbolo_grafico_legacy_id=simbolo_legacy_seed,
-                mostrar_simbolo=bool(simbolo_seed) or mostrar_seed,
-                forma_cobranca=forma_cobranca or None,
-                garantia_meses=garantia_meses,
-                valor_repasse=valor_repasse,
-                preferido=preferido,
-                inativo=inativo,
-                data_inclusao=data_inclusao or None,
-                data_alteracao=data_alteracao or None,
-                tabela_id=tabela_particular_id,
-                clinica_id=clinica_id,
-            )
+        proc = Procedimento(
+            codigo=codigo,
+            nome=item["nome"],
+            tempo=0,
+            preco=preco_seed,
+            custo=0.0,
+            custo_lab=0.0,
+            lucro_hora=0.0,
+            especialidade=str(item.get("especialidade") or "").strip() or None,
+            procedimento_generico_id=int(generico_id) if generico_id else None,
+            simbolo_grafico=simbolo_seed or None,
+            simbolo_grafico_legacy_id=simbolo_legacy_seed,
+            mostrar_simbolo=bool(simbolo_seed) or mostrar_seed,
+            forma_cobranca=forma_cobranca or None,
+            garantia_meses=garantia_meses,
+            valor_repasse=valor_repasse,
+            preferido=preferido,
+            inativo=inativo,
+            data_inclusao=data_inclusao or None,
+            data_alteracao=data_alteracao or None,
+            tabela_id=tabela_particular_id,
+            clinica_id=clinica_id,
         )
+        db.add(proc)
+        existentes[codigo] = proc
     db.flush()
 
 
@@ -1602,10 +1710,6 @@ def garantir_lista_padrao_clinica(db, clinica_id):
 
 
 def garantir_procedimentos_padrao_clinica(db, clinica_id, reset_preco: bool = False):
-    seed = _carregar_seed_procedimentos(db)
-    if not seed["procedimentos"]:
-        return
-    _upsert_procedimentos_na_clinica(db, clinica_id, seed, reset_preco=reset_preco)
     seed_particular = _carregar_seed_procedimentos_particular(db)
     if seed_particular["procedimentos"]:
         _upsert_procedimentos_particular_na_clinica(db, clinica_id, seed_particular, reset_preco=reset_preco)
@@ -2229,6 +2333,7 @@ def criar_conta_saas(db, nome, email, senha):
     seed_simbolos_graficos(db, clinica.id)
     seed_procedimentos_genericos(db, clinica.id)
     seed_procedimentos(db, clinica.id)
+    garantir_procedimentos_padrao_clinica(db, clinica.id)
     garantir_financeiro_padrao_clinica(db, clinica.id)
     garantir_indices_padrao_clinica(db, clinica.id)
     garantir_especialidades_padrao_clinica(db, clinica.id)
