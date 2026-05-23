@@ -1,53 +1,30 @@
-﻿# Brana Cloude - produto web
+﻿# Brana Cloud Web
 
-Esta pasta contem o produto web atual do Brana Cloude.
+This file is the quick entry point for the web UI and the frontend/backend flow.
 
-## Estrutura
+## What it covers
+- `frontend/index.html`
+- `frontend/app.js`
+- backend routes served by `backend/main.py`
+- login, protected modules, and the expected 403 behavior before internal password grant
 
-```text
-saas/
-  backend/        # API FastAPI
-  frontend/       # frontend estatico
-  assets/         # imagens e icones servidos em /desktop-assets
-  local_bridge/   # ponte local para assinatura/arquivos locais
-  storage/        # modelos/documentos; pode conter dados de clinica
-```
+## Current behavior to keep in mind
+- The web UI talks to the FastAPI backend.
+- Some admin/protected modules may return 403 on the first request until the internal password flow is completed.
+- After the protected grant, the same flow should return data normally.
 
-## Runtime local
+## Official links
+- `docs/contrato_funcional_usuarios_novas_contas.md`
+- `docs/indice_oficial_contratos_regras_vigentes.md`
+- `docs/11_roadmap_desenvolvimento.md`
 
-O frontend nao usa build Vite/React. O backend FastAPI serve:
+## Care points
+- Avoid large frontend changes without a small substep.
+- Respect the safe modularization track.
+- Do not mix mojibake cleanup with functional refactors.
+- Keep historical documentation separate from current contracts.
 
-- `GET /app` -> `frontend/index.html`
-- `GET /frontend/*` -> arquivos estaticos do frontend
-- `GET /desktop-assets/*` -> arquivos de `saas/assets`
-
-## Requisitos
-
-- Python 3.10+
-- PostgreSQL acessivel via `DATABASE_URL`
-- `JWT_SECRET_KEY` configurado no ambiente
-
-## Execucao local
-
-```powershell
-cd "D:\BRANA ARQUIVOS\BRANA CLOUD"
-python -m venv venv_saas
-.\venv_saas\Scripts\pip.exe install -r backend\requirements.txt
-cd backend
-$env:DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB_NAME"
-$env:JWT_SECRET_KEY="valor_local_longo_e_aleatorio_com_32_ou_mais_caracteres"
-..\venv_saas\Scripts\python.exe -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-Acessar:
-
-- App: `http://127.0.0.1:8000/app`
-- Docs: `http://127.0.0.1:8000/docs`
-
-## Variaveis obrigatorias
-
-- `DATABASE_URL`
-- `JWT_SECRET_KEY`
-
-Use `saas/.env.example` ou a raiz `.env.example` como modelo, sem copiar valores reais para arquivos versionados.
-
+## What this README does not cover
+- Historical documentation
+- Anamnese / SQLServer / restoration tracks
+- The full contract set, which lives in `docs/`

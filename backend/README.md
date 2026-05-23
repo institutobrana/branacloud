@@ -1,47 +1,38 @@
-# 🦷 Brana Gestão
+﻿# Backend
 
-Sistema SaaS completo para gestão odontológica, com foco em controle financeiro, gestão clínica e multi-tenant (múltiplas clínicas).
+This folder contains the FastAPI backend for Brana Cloud.
 
----
+## Sensitive areas
+- authentication and JWT
+- internal password / protected modules
+- signup
+- seeds for new accounts
+- canonical Brana seed
+- safe clinic deletion
+- multi-tenant filtering by `clinica_id`
 
-## 🚀 Visão Geral
+## Current rules
+- Brana uses the versioned canonical seed.
+- Signup does not depend at runtime on clinic 1 / table 18.
+- Brana starts with code, name, and required technical fields only.
+- Brana does not receive materials, phases, compositions, or `procedimento_generico_id` at birth.
+- Old accounts may keep PARTICULAR.
 
-O **Brana Gestão** é um backend desenvolvido em Python com FastAPI, projetado para atender clínicas odontológicas com:
+## Safe scripts
+- Deletion runners must follow the safe deletion contract.
+- Never run `--execute` without backup, dry-run, and explicit authorization.
 
-- Controle financeiro completo
-- Gestão de pacientes e tratamentos
-- Estrutura multi-clínicas (SaaS)
-- Sistema de permissões e autenticação
-- Integrações e migração de dados legados
+## Official references
+- `docs/contrato_seeds_novas_contas_minimos_nome_codigo.md`
+- `docs/contrato_funcional_usuarios_novas_contas.md`
+- `docs/contrato_exclusao_segura_contas_clinicas.md`
+- `docs/regras_blindagem_correcoes_textuais_mojibake.md`
 
----
+## Basic checks already used in this repo
+- `python -m py_compile ...`
+- `python -m compileall backend`
 
-## 🛠️ Tecnologias
-
-- Python
-- FastAPI
-- PostgreSQL
-- JWT Authentication
-- Arquitetura modular (routes, services, models)
-
----
-
-## 📁 Estrutura do Projeto
-
-```text
-backend/
-│
-├── main.py                # Ponto de entrada da aplicação
-├── database.py            # Configuração do banco de dados
-├── saas_app.py            # Inicialização do app SaaS
-│
-├── models/                # Modelos de dados (ORM)
-├── routes/                # Rotas da API
-├── services/              # Regras de negócio
-├── schemas/               # Validações (Pydantic)
-├── security/              # Autenticação, JWT e permissões
-│
-├── scripts/               # Scripts de migração e manutenção
-├── backups/               # Backups do sistema (NÃO versionar)
-│
-└── .env                   # Variáveis de ambiente (NÃO versionar)
+## Notes
+- This README does not duplicate the contracts.
+- Use the docs for the detailed rules.
+- Keep backend changes aligned with the current documentation state.

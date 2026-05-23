@@ -1,80 +1,70 @@
-# Brana Cloude
+﻿# Brana Cloud
 
-Brana Cloude e um sistema web de gestao odontologica para clinicas. O backend e FastAPI, o frontend e estatico e o banco de dados e PostgreSQL via `DATABASE_URL`.
+Brana Cloud is a web system for dental clinic management with a FastAPI backend and a static frontend.
 
-O nome oficial do projeto e Brana Cloude. Termos como SaaS podem aparecer em codigo antigo, comentarios ou nomes historicos, mas nao devem ser usados como nome oficial.
+## Current state
+- Login, internal password, and access profiles are validated.
+- Signup with Brana is validated.
+- Brana uses the canonical seed with 336 procedures.
+- Table example stays separate from Brana.
+- PARTICULAR remains for old accounts only.
+- Safe deletions for test clinics 8, 9, 10, and 15 are documented.
+- The documentation audit was completed after the signup validation.
 
-## Como rodar em 3 passos
+## Start here
+1. `docs/00_master_guide.md`
+2. `docs/indice_oficial_contratos_regras_vigentes.md`
+3. `docs/11_roadmap_desenvolvimento.md`
 
-1. Entrar na pasta e preparar Python:
+## Official documents
+- `docs/contrato_funcional_usuarios_novas_contas.md`
+- `docs/contrato_seeds_novas_contas_minimos_nome_codigo.md`
+- `docs/contrato_funcional_regras_materiais_genericos_intervencoes.md`
+- `docs/contrato_exclusao_segura_contas_clinicas.md`
+- `docs/regras_blindagem_correcoes_textuais_mojibake.md`
 
-```powershell
-cd "D:\BRANA ARQUIVOS\BRANA CLOUD"
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
-```
+## Validation and recent closure
+- `docs/validacao_manual_final_signup_brana_pos_correcoes.md`
+- `docs/auditoria_documentacao_geral_brana_cloud_pos_signup_brana.md`
 
-2. Criar e editar o ambiente local:
+## Quick links
+- Setup: `docs/08_setup_execucao.md`
+- Continuity: `docs/10_continuidade.md`
+- Roadmap: `docs/11_roadmap_desenvolvimento.md`
 
-```powershell
-Copy-Item .env.example backend\.env
-notepad backend\.env
-```
+## Notes
+- Do not mix mojibake work with functional fixes.
+- Do not change seeds without a contract.
+- Do not use destructive git commands without explicit authorization.
+- Keep commits separated by track.
+- Historical material such as anamnese, SQLServer, and restoration stays in its own track.
 
-Configure no minimo:
-
+## Basic layout
 ```text
-DATABASE_URL=postgresql://USUARIO:SENHA@HOST:5432/BANCO
-JWT_SECRET_KEY=uma_chave_longa_aleatoria_com_32_ou_mais_caracteres
+backend/              FastAPI API, models, routes, services, and scripts
+frontend/             static web UI served by the backend
+assets/               images and UI assets
+local_bridge/         local bridge for desktop integrations
+storage/modelos/base/ base document models
+docs/                 current official documentation
 ```
 
-3. Subir o backend:
+## Entry points
+- Backend app: `backend/main.py`
+- Database: `backend/database.py`
+- Frontend: `frontend/index.html` and `frontend/app.js`
+- Local environment: `backend/.env`
 
-```powershell
-cd "D:\BRANA ARQUIVOS\BRANA CLOUD\backend"
-..\.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
-```
+`backend/main.py` loads `backend/.env` automatically.
 
-Acesse `http://127.0.0.1:8000/app`.
-
-## Links rapidos
-
-- Guia principal: `docs/00_master_guide.md`
-- Setup detalhado: `docs/08_setup_execucao.md`
-- Mapa do codigo: `docs/03_mapa_codigo.md`
-- Seguranca: `docs/06_seguranca.md`
-- Continuidade: `docs/10_continuidade.md`
-
-## Estrutura
-
-```text
-backend/              API FastAPI, modelos, rotas, servicos e scripts
-frontend/             interface web estatica servida pelo backend
-assets/               imagens e assets usados pela interface
-local_bridge/         ponte local para integracoes com aplicativos locais
-storage/modelos/base/ modelos documentais base
-docs/                 documentacao oficial atual
-```
-
-## Entrypoint
-
-- Aplicacao backend: `backend/main.py`
-- Banco: `backend/database.py`
-- Frontend: `frontend/index.html` e `frontend/app.js`
-- Ambiente local: `backend/.env`
-
-`backend/main.py` carrega automaticamente `backend/.env`. Nao e necessario usar `set DATABASE_URL=...` ou `set JWT_SECRET_KEY=...` quando o arquivo esta configurado corretamente.
-
-## Seguranca basica
-
-Nunca versionar:
-
+## Security basics
+Never version:
 - `backend/.env`
-- `.env` ou `.env.*`
-- `.venv/` ou `venv/`
-- bancos, dumps, backups ou logs
+- `.env` or `.env.*`
+- virtual environments
+- databases, dumps, backups, or logs
 - `Dados/`
 - `storage/modelos/clinicas/`
-- documentos, PDFs, planilhas ou imagens com dados reais
+- documents, PDFs, spreadsheets, or images with real data
 
-Toda rota operacional deve autenticar usuario, validar permissao e filtrar dados por `current_user.clinica_id`.
+Every operational route must authenticate the user, validate permissions, and filter data by `current_user.clinica_id`.
