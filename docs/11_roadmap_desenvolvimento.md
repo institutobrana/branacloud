@@ -27,6 +27,33 @@ Este documento registra o estado atual dos modulos do Brana Cloude com base no c
 
 Observacao: pela ausencia de migrations formais e testes automatizados amplos, a maioria dos modulos deve ser tratada como `EM DESENVOLVIMENTO`, mesmo quando ja possui backend e frontend operantes.
 
+## Estado validado recente
+
+- Login, senha interna e perfis: validado manualmente.
+- Signup com Brana: validado manualmente.
+- Brana nasce com seed canonico proprio de 336 procedimentos.
+- Tabela exemplo permanece separada.
+- PARTICULAR fica restrito a contas antigas.
+- Exclusoes seguras das clinicas de teste 8, 9, 10 e 15 foram documentadas e executadas.
+- Auditoria documental geral concluida.
+
+## Proximas prioridades sugeridas
+
+- Atualizar `README.md`, `README_WEB.md` e `backend/README.md` em trilha separada.
+- Consolidar a documentacao por modulo sem misturar contratos vigentes com historico.
+- Decidir o destino dos untracked antigos fora da trilha principal.
+- Tratar mojibake/UTF-8 em trilha propria, sem misturar com correcoes funcionais.
+- Retomar modularizacao/refatoracao somente depois da documentacao base estar consolidada.
+- Revisar anamnese/SQLServer/restauracao em trilha separada.
+
+## Regras de conducao
+
+- Nao misturar correcao funcional com mojibake.
+- Nao misturar documentacao historica com contratos vigentes.
+- Nao mexer em seeds sem respeitar os contratos.
+- Comandos Git destrutivos continuam proibidos sem autorizacao explicita.
+- Commits devem continuar separados por trilha.
+
 ---
 
 ## Modulo: Autenticacao
@@ -51,6 +78,7 @@ Observacoes:
 * `POST /login` usa `OAuth2PasswordRequestForm`, portanto recebe `application/x-www-form-urlencoded`.
 * O frontend salva o token em `localStorage` como `brana_token`.
 * Nao existe fallback seguro para JWT; se `JWT_SECRET_KEY` faltar, o sistema deve falhar.
+* Estado funcional validado manualmente: login com senha de login, senha interna separada e perfis ajustados.
 
 ---
 
@@ -75,6 +103,7 @@ Observacoes:
 * Rotas usam `require_module_access("usuarios")`.
 * O controle de usuarios pode exigir senha administrativa quando habilitado nas opcoes da clinica.
 * Mudancas neste modulo podem bloquear acesso ao sistema inteiro.
+* Estado funcional validado manualmente no ciclo recente de login, senha interna e perfis.
 
 ---
 
@@ -188,17 +217,18 @@ Fases:
 [Ã¢Å“â€] Fase 3 - Procedimentos genericos existem em `cadastros_routes.py`.
 [Ã¢Å“â€] Fase 4 - Dashboard e relatorio de tabela existem no backend/frontend.
 [Ã¢Å“â€] Fase 5 - Vinculo de materiais a procedimentos existe.
-[ ] Fase 6 - Criar testes para tabela PARTICULAR, materiais vinculados e filtros por clinica.
+[ ] Fase 6 - Criar testes complementares para materiais vinculados, filtros por clinica e modularizacao posterior.
 
 Proximo passo:
 
-* Testar tabela PARTICULAR e vinculos de materiais antes de qualquer refatoracao.
+* Concentrar a proxima evolucao em modularizacao/refatoracao e testes complementares de materiais/vinculos; o seed canonico Brana e o signup ja foram validados.
 
 Observacoes:
 
 * Modulo usa permissao `procedimentos`.
 * Tem relacao com materiais, prestadores, tratamentos e agenda.
 * `procedimentos_routes.py` e grande e deve ser refatorado com cuidado.
+* Nova conta nasce com Brana de 336 procedimentos, Tabela exemplo separada e PARTICULAR restrito a contas antigas.
 
 ---
 
