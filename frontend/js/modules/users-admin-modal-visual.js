@@ -35,8 +35,23 @@
     usersPopularModalCombos(user)
   }
 
+  function usersSyncSenhaAtualVisibility(){
+    if(!usersModalSenhaAtualWrap)return;
+    const editar=usersModalMode==="editar";
+    usersModalSenhaAtualWrap.style.display=editar?"":"none";
+    if(!editar&&usersModalSenhaAtual)usersModalSenhaAtual.value=""
+  }
+
+  function usersToggleSenhaVisibilidade(){
+    const mostrar=!!usersModalShowSenha?.checked;
+    const tipo=mostrar?"text":"password";
+    [usersModalSenhaAtual,usersModalSenha,usersModalConfirma].forEach(el=>{if(el)el.type=tipo})
+  }
+
   module.usersOptions=usersOptions;
   module.usersPopularModalCombos=usersPopularModalCombos;
   module.usersPreencherModal=usersPreencherModal;
+  module.usersSyncSenhaAtualVisibility=usersSyncSenhaAtualVisibility;
+  module.usersToggleSenhaVisibilidade=usersToggleSenhaVisibilidade;
   window.BranaUsersAdminModalVisualModule=module;
 })();

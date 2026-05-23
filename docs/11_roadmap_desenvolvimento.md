@@ -598,6 +598,7 @@ Observacoes:
 * `frontend/app.js` tem mais de 23 mil linhas.
 * Mudancas devem ser pequenas e testadas manualmente no navegador.
 * Frontend nao e barreira de seguranca.
+* Subetapa 1 de Usuarios/Admin concluida: helpers visuais de senha foram extraidos para `frontend/js/modules/users-admin-modal-visual.js`, mantendo o comportamento funcional e os fluxos sensiveis fora do recorte.
 
 ---
 
