@@ -16,6 +16,7 @@ class Usuario(Base):
     tipo_usuario = Column(String(80), nullable=True)
     email = Column(String, unique=True, index=True, nullable=False)
     senha_hash = Column(String, nullable=False)
+    senha_interna_hash = Column(String, nullable=True)
     ativo = Column(Boolean, default=True, nullable=False)
     online = Column(Boolean, default=False, nullable=False)
     forcar_troca_senha = Column(Boolean, default=False, nullable=False)

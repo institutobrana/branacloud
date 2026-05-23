@@ -42,8 +42,18 @@ def resolve_admin_user(db: Session, clinica_id: int) -> Usuario | None:
     return admins[0]
 
 
+def _resolve_admin_password_hash(admin: Usuario) -> str | None:
+    senha_interna_hash = str(getattr(admin, "senha_interna_hash", "") or "").strip()
+    if senha_interna_hash:
+        return senha_interna_hash
+    return getattr(admin, "senha_hash", None)
+
+
 def verify_admin_password(db: Session, clinica_id: int, senha: str) -> bool:
     admin = resolve_admin_user(db, clinica_id)
     if not admin:
         return False
-    return verify_password((senha or "").strip(), admin.senha_hash)
+    password_hash = _resolve_admin_password_hash(admin)
+    if not password_hash:
+        return False
+    return verify_password((senha or "").strip(), password_hash)

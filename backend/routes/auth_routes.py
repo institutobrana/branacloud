@@ -676,7 +676,7 @@ def setup_complete(
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario nao encontrado.")
 
-    usuario.senha_hash = hash_password(senha)
+    usuario.senha_interna_hash = hash_password(senha)
     usuario.forcar_troca_senha = False
     usuario.setup_completed = True
     usuario.online = True
