@@ -48,10 +48,23 @@
     [usersModalSenhaAtual,usersModalSenha,usersModalConfirma].forEach(el=>{if(el)el.type=tipo})
   }
 
+  function usersAtualizarAcoesToolbar(){
+    const u=usersAtualSelecionado();
+    const canManage=usersCanManageSelected(u);
+    const semSelecao=!u;
+    const disabled=semSelecao||!canManage;
+    [usersBtnEditar,usersBtnExcluir,usersBtnPreferencias,usersBtnPermissoes].forEach(btn=>{if(!btn)return;btn.disabled=disabled});
+    if(usersBtnEditar)usersBtnEditar.title=disabled?(!u?"Selecione um usuário.":"Conta base 'Clínica' é protegida."):"";
+    if(usersBtnExcluir)usersBtnExcluir.title=disabled?(!u?"Selecione um usuário.":"Conta base 'Clínica' é protegida."):"";
+    if(usersBtnPreferencias)usersBtnPreferencias.title=disabled?(!u?"Selecione um usuário.":"Conta base 'Clínica' é protegida."):"";
+    if(usersBtnPermissoes)usersBtnPermissoes.title=disabled?(!u?"Selecione um usuário.":"Conta base 'Clínica' é protegida."):""
+  }
+
   module.usersOptions=usersOptions;
   module.usersPopularModalCombos=usersPopularModalCombos;
   module.usersPreencherModal=usersPreencherModal;
   module.usersSyncSenhaAtualVisibility=usersSyncSenhaAtualVisibility;
   module.usersToggleSenhaVisibilidade=usersToggleSenhaVisibilidade;
+  module.usersAtualizarAcoesToolbar=usersAtualizarAcoesToolbar;
   window.BranaUsersAdminModalVisualModule=module;
 })();
