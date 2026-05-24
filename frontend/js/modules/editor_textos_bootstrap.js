@@ -342,6 +342,13 @@
               </div>
             </div>
             <div class="editor-textos-assist-line">
+              <label for="editor-textos-assist-medicamento">Medicamento:</label>
+              <div class="editor-textos-assist-inline">
+                <select id="editor-textos-assist-medicamento"></select>
+                <button id="editor-textos-assist-medicamento-btn" class="materiais-btn" type="button" title="Menu de medicamentos"><img src="/desktop-assets/restaurar.png" alt=""></button>
+              </div>
+            </div>
+            <div class="editor-textos-assist-line">
               <label for="editor-textos-assist-paciente">Paciente:</label>
               <div class="editor-textos-assist-inline">
                 <input id="editor-textos-assist-paciente" type="text" readonly>
