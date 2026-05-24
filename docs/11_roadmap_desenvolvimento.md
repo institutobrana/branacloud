@@ -693,5 +693,12 @@ Observacoes:
 - Fluxo de salvar documento existente permanece inalterado para `Salvar`.
 - Fase 7 continua bloqueada.
 
+## Atualizacao Preferencias e Opcoes do Sistema - Subetapa 8
+
+- Subetapa 8 concluida documentalmente: plano minimo por linha/trecho.
+- Candidato mantido: leitura isolada de preferencias de usuario sem escrita.
+- Nenhuma autorizacao de codigo concedida ainda.
+- A frente continua em refinamento documental antes de qualquer patch.
+
 
 
