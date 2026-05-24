@@ -370,14 +370,13 @@
               </div>
               <div class="editor-textos-assist-line">
                 <label for="editor-textos-assist-uso">Uso:</label>
-                <input id="editor-textos-assist-uso" type="text">
+                <select id="editor-textos-assist-uso"></select>
               </div>
             </div>
             <div class="editor-textos-assist-line">
               <label for="editor-textos-assist-obs">Observações:</label>
               <textarea id="editor-textos-assist-obs"></textarea>
             </div>
-            <div id="editor-textos-assist-status" class="editor-textos-assist-status"></div>
           </div>
           <div class="editor-textos-assist-actions">
             <button id="editor-textos-assist-incluir" class="materiais-btn" type="button">Incluir</button>
