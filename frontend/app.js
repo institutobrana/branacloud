@@ -11612,7 +11612,7 @@ function auxCorApresentacaoMontarCombo(select){
     combo.innerHTML=[
       '<button type="button" class="aux-cor-btn">',
       '<span class="aux-cor-label"></span>',
-      '<span class="aux-cor-arrow">ââ€“Â¼</span>',
+      '<span class="aux-cor-arrow">&#9662;</span>',
       "</button>",
       '<div class="aux-cor-list aux-cor-hidden"></div>',
     ].join("");
@@ -16872,6 +16872,16 @@ function editorTextosEnsureUI(){
     if(editorTextosCfg.colorSwatch)editorTextosCfg.colorSwatch.style.backgroundColor=color;
     editorTextosAtualizarVisualComboCor();
   });
+  const editorTextosColorCombo=editorTextosCfg.color?.parentElement?.querySelector(".aux-cor-combo");
+  if(editorTextosColorCombo instanceof HTMLElement&&!editorTextosColorCombo.dataset.editorTextosRangeHooked){
+    const editorTextosColorComboPrepararRange=ev=>{
+      if(!(ev.target instanceof Element)||!ev.target.closest(".aux-cor-combo"))return;
+      editorTextosPrepararRangeToolbar();
+    };
+    editorTextosColorCombo.addEventListener("pointerdown",editorTextosColorComboPrepararRange);
+    editorTextosColorCombo.addEventListener("mousedown",editorTextosColorComboPrepararRange);
+    editorTextosColorCombo.dataset.editorTextosRangeHooked="1";
+  }
   editorTextosCfg.btnInserirCampo.addEventListener("click",editorTextosAbrirModalMesclagem);
   editorTextosCfg.btnNovo.addEventListener("click",()=>{if(editorTextosConfirmarDescartar())editorTextosAbrirModalNovo()});
   editorTextosCfg.openTbody.addEventListener("click",ev=>{
