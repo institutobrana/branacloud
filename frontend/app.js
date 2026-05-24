@@ -13337,6 +13337,7 @@ function editorTextosAplicarCorSelecaoFallback(valor){
   if(range.collapsed){
     const span=document.createElement("span");
     span.style.color=cor;
+    span.style.textDecorationColor=cor;
     span.appendChild(document.createTextNode("\u200B"));
     range.insertNode(span);
     const textNode=span.firstChild;
@@ -13352,6 +13353,7 @@ function editorTextosAplicarCorSelecaoFallback(valor){
   const frag=range.extractContents();
   const span=document.createElement("span");
   span.style.color=cor;
+  span.style.textDecorationColor=cor;
   span.appendChild(frag);
   range.insertNode(span);
   const nextRange=document.createRange();
@@ -16637,6 +16639,16 @@ function editorTextosEnsureUI(){
       ?editorTextosCfg.savedRange.cloneRange()
       :null;
   };
+  const editorTextosSelecaoTemSublinhado=()=>{
+    try{
+      if(editorTextosQueryCommandState("underline"))return true;
+      const foco=editorTextosObterElementoSelecao()||editorTextosCfg.page;
+      const estilo=foco?window.getComputedStyle(foco):null;
+      return !!estilo&&String(estilo.textDecorationLine||estilo.textDecoration||"").toLowerCase().includes("underline");
+    }catch{
+      return false;
+    }
+  };
   const runCmd=(cmd,val=null)=>{
     try{
       const toolbarRange=cmd==="foreColor"&&editorTextosCfg.pendingToolbarRange instanceof Range
@@ -16658,7 +16670,9 @@ function editorTextosEnsureUI(){
       if(cmd==="foreColor"){
         try{document.execCommand("styleWithCSS",false,true)}catch{}
       }
-      const ok=!!document.execCommand(cmd,false,val);
+      const ok=cmd==="foreColor"&&editorTextosSelecaoTemSublinhado()
+        ?editorTextosAplicarCorSelecaoFallback(String(val||""))
+        :!!document.execCommand(cmd,false,val);
       if(!ok&&cmd==="foreColor"){
         editorTextosAplicarCorSelecaoFallback(String(val||""));
       }
