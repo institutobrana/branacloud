@@ -13329,6 +13329,20 @@ function editorTextosAplicarCorSelecaoFallback(valor){
   if(!editorTextosCfg?.page)return false;
   const cor=editorTextosCorParaHex(valor);
   if(!cor)return false;
+  const aplicarCorDecoracao=(node)=>{
+    if(!(node instanceof Element))return;
+    const stack=[node];
+    while(stack.length){
+      const el=stack.pop();
+      if(!(el instanceof HTMLElement))continue;
+      el.style.textDecorationColor=cor;
+      const kids=el.children;
+      for(let i=0;i<kids.length;i+=1){
+        const child=kids[i];
+        if(child instanceof Element)stack.push(child);
+      }
+    }
+  };
   const sel=window.getSelection?.();
   if(!sel||!sel.rangeCount)return false;
   const range=sel.getRangeAt(0);
@@ -13355,6 +13369,7 @@ function editorTextosAplicarCorSelecaoFallback(valor){
   span.style.color=cor;
   span.style.textDecorationColor=cor;
   span.appendChild(frag);
+  aplicarCorDecoracao(span);
   range.insertNode(span);
   const nextRange=document.createRange();
   nextRange.selectNodeContents(span);
