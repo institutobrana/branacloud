@@ -13,6 +13,489 @@
     selectEl.innerHTML=options.join("");
   }
 
+  function ensureShell(doc,ctx={}){
+    if(doc.getElementById("editor-textos-panel"))return;
+    const anchor=
+      (typeof workspaceEmpty!=="undefined"&&workspaceEmpty&&typeof workspaceEmpty.insertAdjacentHTML==="function")
+        ? workspaceEmpty
+        : doc.getElementById("workspace-empty");
+    if(!anchor||typeof anchor.insertAdjacentHTML!=="function")return;
+    const imageAccept=String(ctx.editorTextosImagemAccept||".bmp,.jpg,.jpeg,.png,.gif,.webp,image/bmp,image/jpeg,image/png,image/gif,image/webp");
+    anchor.insertAdjacentHTML("afterend",`
+      <section id="editor-textos-panel" class="editor-textos-panel hidden">
+        <div class="panel-title">Editor de textos</div>
+        <div class="editor-textos-menubar">
+          <button id="editor-textos-menu-arquivo" type="button">Arquivo</button>
+          <button id="editor-textos-menu-editar" type="button">Editar</button>
+          <button id="editor-textos-menu-formatar" type="button">Formatar</button>
+          <div id="editor-textos-menupop" class="editor-textos-menupop hidden"></div>
+        </div>
+        <div class="editor-textos-toolbar editor-textos-toolbar-main">
+          <button id="editor-textos-btn-abrir" class="materiais-btn" type="button"><img src="/desktop-assets/pasta.png" alt="">Abre</button>
+          <button id="editor-textos-btn-novo" class="materiais-btn" type="button"><img src="/desktop-assets/novo.png" alt="">Novo</button>
+          <button id="editor-textos-btn-salvar" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Salva</button>
+          <button id="editor-textos-btn-salvar-como" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Salvar como</button>
+          <button id="editor-textos-btn-imprimir" class="materiais-btn icon-btn" type="button" title="Imprimir"><img src="/desktop-assets/imprimir.png" alt=""></button>
+          <div class="sep"></div>
+          <button id="editor-textos-btn-negrito" class="materiais-btn icon-btn" type="button" title="Negrito"><b>B</b></button>
+          <button id="editor-textos-btn-italico" class="materiais-btn icon-btn" type="button" title="Itálico"><i>I</i></button>
+          <button id="editor-textos-btn-sublinhado" class="materiais-btn icon-btn" type="button" title="Sublinhado"><u>U</u></button>
+          <button id="editor-textos-btn-recortar" class="materiais-btn icon-btn" type="button" title="Recortar">✂</button>
+          <button id="editor-textos-btn-copiar" class="materiais-btn icon-btn" type="button" title="Copiar">⧉</button>
+          <button id="editor-textos-btn-colar" class="materiais-btn icon-btn" type="button" title="Colar">📋</button>
+          <div class="sep"></div>
+          <button id="editor-textos-btn-esq" class="materiais-btn icon-btn" type="button" title="Alinhar à esquerda">≡</button>
+          <button id="editor-textos-btn-centro" class="materiais-btn icon-btn" type="button" title="Centralizar">≣</button>
+          <button id="editor-textos-btn-dir" class="materiais-btn icon-btn" type="button" title="Alinhar à direita">≢</button>
+          <button id="editor-textos-btn-justificar" class="materiais-btn icon-btn" type="button" title="Justificar">☰</button>
+          <button id="editor-textos-btn-lista" class="materiais-btn icon-btn" type="button" title="Lista">•</button>
+          <button id="editor-textos-btn-imagem" class="materiais-btn icon-btn" type="button" title="Imagem">▧</button>
+          <button id="editor-textos-btn-tabela" class="materiais-btn icon-btn" type="button" title="Insere tabela">▦</button>
+          <button id="editor-textos-btn-pagina" class="materiais-btn" type="button"><img src="/desktop-assets/impressora.png" alt="">Página</button>
+        </div>
+        <div class="editor-textos-toolbar editor-textos-toolbar-fields">
+          <label>Fonte:</label>
+          <select id="editor-textos-font" class="font"></select>
+          <select id="editor-textos-size" class="size"></select>
+          <label>Cor:</label>
+          <span id="editor-textos-color-swatch" class="color-swatch"></span>
+          <span class="color-holder">
+            <select id="editor-textos-color" class="color" title="Cor do texto"></select>
+          </span>
+          <div class="sep"></div>
+          <input id="editor-textos-nome" class="nome" type="text" placeholder="Nome do modelo">
+          <button id="editor-textos-btn-inserir-campo" class="materiais-btn editor-textos-merge-trigger" type="button">&lt;&lt;nome&gt;&gt; Insere campo de mesclagem</button>
+          <button id="editor-textos-btn-gerar-pdf" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Gerar PDF</button>
+          <button id="editor-textos-btn-fechar" class="materiais-btn hidden" type="button"><img src="/desktop-assets/cancela.png" alt="">Fecha</button>
+        </div>
+        <div class="editor-textos-ruler">
+          <div class="editor-textos-ruler-corner"></div>
+          <div id="editor-textos-ruler-scale" class="editor-textos-ruler-scale"></div>
+          <div class="editor-textos-ruler-line"></div>
+        </div>
+        <div class="editor-textos-work">
+          <div id="editor-textos-page" class="editor-textos-page" contenteditable="true"></div>
+        </div>
+        <input id="editor-textos-image-file" type="file" accept="${imageAccept}" class="hidden">
+        <div id="editor-textos-status" class="editor-textos-status">Pronto.</div>
+      </section>
+
+      <div id="editor-textos-open-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-open-modal">
+          <div class="modal-header"><div class="modal-title">Abrir modelo</div></div>
+          <div class="editor-textos-open-head">
+            <label for="editor-textos-open-q">Nome:</label>
+            <input id="editor-textos-open-q" type="text" placeholder="Pesquisar por nome">
+            <label for="editor-textos-open-tipo">Tipo:</label>
+            <select id="editor-textos-open-tipo"></select>
+            <button id="editor-textos-open-refresh" class="materiais-btn" type="button"><img src="/desktop-assets/restaurar.png" alt="">Atualiza</button>
+          </div>
+          <div class="editor-textos-open-grid">
+            <table>
+              <thead><tr><th>Nome</th><th>Tipo</th><th>Origem</th></tr></thead>
+              <tbody id="editor-textos-open-tbody"></tbody>
+            </table>
+          </div>
+          <div class="editor-textos-open-actions">
+            <button id="editor-textos-open-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-open-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+          <div id="editor-textos-open-context" class="editor-textos-open-context hidden" role="menu" aria-label="Ações do modelo">
+            <button id="editor-textos-open-menu-abrir" type="button">Abrir</button>
+            <button id="editor-textos-open-menu-renomear" type="button">Renomear</button>
+            <div class="sep"></div>
+            <button id="editor-textos-open-menu-excluir" type="button">Excluir</button>
+            <button id="editor-textos-open-menu-propriedades" type="button">Propriedades</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-open-delete-backdrop" class="cad-modal-backdrop hidden" tabindex="-1">
+        <div class="editor-textos-open-delete-modal">
+          <div class="modal-header"><div class="modal-title">Excluir Arquivo</div></div>
+          <div class="editor-textos-open-delete-box">
+            <div class="editor-textos-open-delete-main">
+              <div class="editor-textos-open-delete-icon">X</div>
+              <div>
+                <div class="editor-textos-open-delete-message">Tem certeza de que deseja excluir este arquivo permanentemente?</div>
+                <div class="editor-textos-open-delete-details">
+                  <div class="row"><strong>Nome:</strong><span id="editor-textos-open-delete-nome">-</span></div>
+                  <div class="row"><strong>Tipo:</strong><span id="editor-textos-open-delete-tipo">-</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="editor-textos-open-delete-actions">
+            <button id="editor-textos-open-delete-sim" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Sim</button>
+            <button id="editor-textos-open-delete-nao" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Não</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-pdfprompt-backdrop" class="cad-modal-backdrop hidden" tabindex="-1">
+        <div class="editor-textos-pdfprompt-modal">
+          <div class="modal-header"><div class="modal-title">Editor de textos</div><button id="editor-textos-pdfprompt-close" class="modal-close-x" type="button" aria-label="Fechar">X</button></div>
+          <div class="editor-textos-pdfprompt-body">
+            <div class="editor-textos-pdfprompt-icon">?</div>
+            <div id="editor-textos-pdfprompt-message" class="editor-textos-pdfprompt-message">O arquivo foi gerado com sucesso. Deseja abrir agora ?</div>
+          </div>
+          <div class="editor-textos-pdfprompt-sep"></div>
+          <div class="editor-textos-pdfprompt-actions">
+            <button id="editor-textos-pdfprompt-sim" class="editor-textos-pdfprompt-btn" type="button">Sim</button>
+            <button id="editor-textos-pdfprompt-nao" class="editor-textos-pdfprompt-btn" type="button">Não</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-new-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-new-modal">
+          <div class="modal-header"><div class="modal-title">Novo texto</div></div>
+          <div class="editor-textos-new-group">
+            <label class="editor-textos-new-option"><input id="editor-textos-new-mode-open" type="radio" name="editor-textos-new-mode" value="abrir">Abrir um texto já existente...</label>
+            <label class="editor-textos-new-option"><input id="editor-textos-new-mode-type" type="radio" name="editor-textos-new-mode" value="tipo" checked>Criar um novo texto do tipo:</label>
+            <select id="editor-textos-new-type" class="editor-textos-new-list" size="5"></select>
+          </div>
+          <div class="editor-textos-new-actions">
+            <button id="editor-textos-new-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-new-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-merge-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-merge-modal">
+          <div class="modal-header"><div class="modal-title">Insere campo de mesclagem</div></div>
+          <div class="editor-textos-merge-group">
+            <label for="editor-textos-merge-category">Categoria dos campos:</label>
+            <select id="editor-textos-merge-category" class="editor-textos-merge-category"></select>
+            <div class="editor-textos-merge-grid">
+              <table>
+                <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
+                <tbody id="editor-textos-merge-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="editor-textos-merge-actions">
+            <button id="editor-textos-merge-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-merge-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-table-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-table-modal">
+          <div class="modal-header"><div class="modal-title">Insere tabela</div></div>
+          <div class="editor-textos-table-group">
+            <div class="editor-textos-table-row">
+              <label for="editor-textos-table-cols"><span>Nº de colunas</span><span class="dot"></span></label>
+              <input id="editor-textos-table-cols" type="number" min="1" max="999" step="1" value="1">
+            </div>
+            <div class="editor-textos-table-row">
+              <label for="editor-textos-table-rows"><span>Nº de linhas</span><span class="dot"></span></label>
+              <input id="editor-textos-table-rows" type="number" min="1" max="999" step="1" value="1">
+            </div>
+            <label class="editor-textos-table-check"><input id="editor-textos-table-border" type="checkbox" checked>Borda visível</label>
+          </div>
+          <div class="editor-textos-table-actions">
+            <button id="editor-textos-table-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-table-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-pagina-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-pagina-modal">
+          <div class="modal-header"><div class="modal-title">Configura página</div></div>
+          <div class="editor-textos-pagina-group">
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-tipo"><span>Tipo do papel</span><span class="dot"></span></label>
+              <select id="editor-textos-pagina-tipo">
+                <option value="A4">A4</option>
+                <option value="Carta">Carta</option>
+                <option value="Receituário">Receituário</option>
+                <option value="Definido pelo usuário">Definido pelo usuário</option>
+              </select>
+              <span></span>
+            </div>
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-orientacao"><span>Orientação</span><span class="dot"></span></label>
+              <select id="editor-textos-pagina-orientacao">
+                <option value="Retrato">Retrato</option>
+                <option value="Paisagem">Paisagem</option>
+              </select>
+              <span></span>
+            </div>
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-altura"><span>Altura</span><span class="dot"></span></label>
+              <input id="editor-textos-pagina-altura" class="readonly" type="text" inputmode="decimal">
+              <span class="unit">mm</span>
+            </div>
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-largura"><span>Largura</span><span class="dot"></span></label>
+              <input id="editor-textos-pagina-largura" class="readonly" type="text" inputmode="decimal">
+              <span class="unit">mm</span>
+            </div>
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-margem-superior"><span>Margem superior</span><span class="dot"></span></label>
+              <input id="editor-textos-pagina-margem-superior" type="text" inputmode="decimal">
+              <span class="unit">mm</span>
+            </div>
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-margem-esquerda"><span>Margem esquerda</span><span class="dot"></span></label>
+              <input id="editor-textos-pagina-margem-esquerda" type="text" inputmode="decimal">
+              <span class="unit">mm</span>
+            </div>
+            <div class="editor-textos-pagina-row">
+              <label for="editor-textos-pagina-margem-direita"><span>Margem direita</span><span class="dot"></span></label>
+              <input id="editor-textos-pagina-margem-direita" type="text" inputmode="decimal">
+              <span class="unit">mm</span>
+            </div>
+          </div>
+          <div class="editor-textos-pagina-actions">
+            <button id="editor-textos-pagina-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-pagina-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-image-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-image-modal">
+          <div class="modal-header"><div class="modal-title">Inserir imagem</div></div>
+          <div class="editor-textos-image-group">
+            <div class="editor-textos-image-row">
+              <div>
+                <label for="editor-textos-image-name">Arquivo:</label>
+                <input id="editor-textos-image-name" type="text" readonly value="Nenhum arquivo selecionado">
+              </div>
+              <button id="editor-textos-image-escolher" class="materiais-btn" type="button"><img src="/desktop-assets/pasta.png" alt="">Escolher...</button>
+            </div>
+            <div id="editor-textos-image-preview" class="editor-textos-image-preview-wrap">
+              <div class="editor-textos-image-empty">Nenhuma imagem selecionada.</div>
+            </div>
+            <label class="editor-textos-image-fit"><input id="editor-textos-image-fit" type="checkbox" checked>Ajustar à largura da página</label>
+            <div id="editor-textos-image-hint" class="editor-textos-image-hint">Formatos: BMP, JPG, PNG, GIF e WEBP.</div>
+          </div>
+          <div class="editor-textos-image-actions">
+            <button id="editor-textos-image-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-image-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-sign-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-sign-modal">
+          <div class="modal-header"><div class="modal-title">Assinar PDF</div></div>
+          <div class="editor-textos-sign-group">
+            <div class="editor-textos-sign-row">
+              <label style="display:flex;align-items:center;gap:6px"><input id="editor-textos-sign-use-current" type="checkbox" checked>Usar documento atual do editor</label>
+            </div>
+            <div class="editor-textos-sign-row">
+              <label for="editor-textos-sign-pdf">Arquivo PDF:</label>
+              <input id="editor-textos-sign-pdf" type="file" accept=".pdf,application/pdf">
+            </div>
+            <div class="editor-textos-sign-row">
+              <label for="editor-textos-sign-pfx">Certificado digital A1 (PFX/P12):</label>
+              <input id="editor-textos-sign-pfx" type="file" accept=".pfx,.p12,application/x-pkcs12">
+            </div>
+            <div class="editor-textos-sign-row">
+              <label for="editor-textos-sign-password">Senha do certificado:</label>
+              <input id="editor-textos-sign-password" type="password" autocomplete="off">
+            </div>
+            <div class="editor-textos-sign-row">
+              <label for="editor-textos-sign-field">Nome do campo de assinatura:</label>
+              <input id="editor-textos-sign-field" type="text" value="Signature1">
+            </div>
+            <div class="editor-textos-sign-help">Você pode assinar um PDF já existente ou usar o documento atual do editor para gerar e assinar o PDF no mesmo fluxo.</div>
+            <div class="editor-textos-sign-row">
+              <label style="display:flex;align-items:center;gap:6px"><input id="editor-textos-sign-use-windows" type="checkbox" checked>Usar certificado instalado no Windows (ponte local)</label>
+            </div>
+            <div class="editor-textos-sign-bridge">
+              <div class="editor-textos-sign-bridge-head">
+                <div class="editor-textos-sign-bridge-title">Certificados instalados no Windows</div>
+                <button id="editor-textos-sign-bridge-refresh" class="materiais-btn" type="button"><img src="/desktop-assets/restaurar.png" alt="">Atualizar</button>
+              </div>
+              <div id="editor-textos-sign-bridge-status" class="editor-textos-sign-bridge-status">Ponte local ainda não verificada.</div>
+              <div id="editor-textos-sign-bridge-list" class="editor-textos-sign-bridge-list">
+                <div class="editor-textos-sign-bridge-item"><small>Nenhum certificado carregado.</small></div>
+              </div>
+            </div>
+          </div>
+          <div class="editor-textos-sign-actions">
+            <button id="editor-textos-sign-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Assinar</button>
+            <button id="editor-textos-sign-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-assist-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-assist-modal">
+          <div class="modal-header"><div class="modal-title">Assistente de receitas</div></div>
+          <div class="editor-textos-assist-grid">
+            <div class="editor-textos-assist-top">
+              <div>
+                <label for="editor-textos-assist-cirurgiao">Cirurgião:</label>
+                <select id="editor-textos-assist-cirurgiao"></select>
+              </div>
+              <div>
+                <label for="editor-textos-assist-modelo">Modelo de receituário:</label>
+                <select id="editor-textos-assist-modelo"></select>
+              </div>
+            </div>
+            <div class="editor-textos-assist-line">
+              <label for="editor-textos-assist-paciente">Paciente:</label>
+              <div class="editor-textos-assist-inline">
+                <input id="editor-textos-assist-paciente" type="text" readonly>
+                <button id="editor-textos-assist-paciente-btn" class="materiais-btn" type="button" title="Selecionar paciente"><img src="/desktop-assets/pasta.png" alt=""></button>
+              </div>
+            </div>
+            <div class="editor-textos-assist-presc">
+              <label>Prescrição:</label>
+              <div class="editor-textos-assist-radio">
+                <label><input id="editor-textos-assist-radio-adulto" type="radio" name="editor-textos-assist-radio" checked>Adulto</label>
+                <label><input id="editor-textos-assist-radio-crianca" type="radio" name="editor-textos-assist-radio">Criança</label>
+              </div>
+              <textarea id="editor-textos-assist-prescricao"></textarea>
+            </div>
+            <div class="editor-textos-assist-bottom">
+              <div class="editor-textos-assist-line">
+                <label for="editor-textos-assist-quantidade">Quantidade:</label>
+                <input id="editor-textos-assist-quantidade" type="text">
+              </div>
+              <div class="editor-textos-assist-line">
+                <label for="editor-textos-assist-uso">Uso:</label>
+                <input id="editor-textos-assist-uso" type="text">
+              </div>
+            </div>
+            <div class="editor-textos-assist-line">
+              <label for="editor-textos-assist-obs">Observações:</label>
+              <textarea id="editor-textos-assist-obs"></textarea>
+            </div>
+            <div id="editor-textos-assist-status" class="editor-textos-assist-status"></div>
+          </div>
+          <div class="editor-textos-assist-actions">
+            <button id="editor-textos-assist-incluir" class="materiais-btn" type="button">Incluir</button>
+            <button id="editor-textos-assist-finalizar" class="materiais-btn" type="button">Finalizar</button>
+            <button id="editor-textos-assist-assinar" class="materiais-btn" type="button">Assinar PDF</button>
+            <button id="editor-textos-assist-cancelar" class="materiais-btn" type="button">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-assist-medmenu-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-assist-medmenu-modal">
+          <div class="modal-header"><div class="modal-title">Menu de medicamentos</div></div>
+          <div class="editor-textos-assist-medmenu-grid">
+            <div class="editor-textos-assist-medmenu-top">
+              <div>
+                <label for="editor-textos-assist-medmenu-filtro">Filtro:</label>
+                <select id="editor-textos-assist-medmenu-filtro"></select>
+              </div>
+              <div>
+                <label for="editor-textos-assist-medmenu-q">Pesquisar nome:</label>
+                <input id="editor-textos-assist-medmenu-q" type="text">
+              </div>
+            </div>
+            <div id="editor-textos-assist-medmenu-alpha" class="editor-textos-assist-medmenu-alpha"></div>
+            <div class="editor-textos-assist-medmenu-table">
+              <table>
+                <thead><tr><th>Nome</th><th>Apresentação</th></tr></thead>
+                <tbody id="editor-textos-assist-medmenu-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="editor-textos-assist-medmenu-actions">
+            <button id="editor-textos-assist-medmenu-ok" class="materiais-btn" type="button">Ok</button>
+            <button id="editor-textos-assist-medmenu-cancelar" class="materiais-btn" type="button">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-atestado-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-atestado-modal">
+          <div class="modal-header"><div class="modal-title">Assistente de atestado</div></div>
+          <div class="editor-textos-atestado-grid">
+            <div class="editor-textos-atestado-top">
+              <div>
+                <label for="editor-textos-atestado-cirurgiao">Cirurgião:</label>
+                <select id="editor-textos-atestado-cirurgiao"></select>
+              </div>
+              <div>
+                <label for="editor-textos-atestado-modelo">Modelo de atestado:</label>
+                <select id="editor-textos-atestado-modelo"></select>
+              </div>
+            </div>
+            <div class="editor-textos-atestado-line">
+              <label for="editor-textos-atestado-paciente">Paciente:</label>
+              <div class="editor-textos-atestado-inline">
+                <input id="editor-textos-atestado-paciente" class="editor-textos-atestado-paciente" type="text" readonly>
+                <button id="editor-textos-atestado-paciente-btn" class="materiais-btn" type="button" title="Selecionar paciente"><img src="/desktop-assets/pasta.png" alt=""></button>
+              </div>
+            </div>
+            <div class="editor-textos-atestado-periodo">
+              <label>Período de afastamento:</label>
+              <div class="editor-textos-atestado-periodo-grid">
+                <input id="editor-textos-atestado-data-inicial" type="text" inputmode="numeric">
+                <span>[ a</span>
+                <input id="editor-textos-atestado-data-final" type="text" inputmode="numeric">
+                <span>]</span>
+                <span>das</span>
+                <input id="editor-textos-atestado-hora-inicial" type="text" inputmode="numeric">
+                <span>às</span>
+                <input id="editor-textos-atestado-hora-final" type="text" inputmode="numeric">
+              </div>
+            </div>
+            <div class="editor-textos-atestado-line">
+              <label for="editor-textos-atestado-motivo">Motivo:</label>
+              <select id="editor-textos-atestado-motivo"></select>
+            </div>
+            <div class="editor-textos-atestado-cid editor-textos-atestado-line">
+              <label for="editor-textos-atestado-cid">CID (Código Internacional de Doenças):</label>
+              <div class="editor-textos-atestado-inline">
+                <input id="editor-textos-atestado-cid" type="text" readonly>
+                <button id="editor-textos-atestado-cid-btn" class="materiais-btn" type="button" title="Menu de doenças"><img src="/desktop-assets/restaurar.png" alt=""></button>
+              </div>
+            </div>
+            <div class="editor-textos-atestado-line">
+              <label for="editor-textos-atestado-obs">Observações:</label>
+              <textarea id="editor-textos-atestado-obs" spellcheck="false"></textarea>
+            </div>
+          </div>
+          <div class="editor-textos-atestado-actions">
+            <button id="editor-textos-atestado-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+            <button id="editor-textos-atestado-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editor-textos-atestado-cidmenu-backdrop" class="cad-modal-backdrop hidden">
+        <div class="editor-textos-atestado-cidmenu-modal">
+          <div class="modal-header"><div class="modal-title">Menu de doenças</div></div>
+          <div class="editor-textos-atestado-cidmenu-grid">
+            <div class="editor-textos-atestado-cidmenu-top">
+              <label for="editor-textos-atestado-cidmenu-q">Pesquisar nome:</label>
+              <input id="editor-textos-atestado-cidmenu-q" type="text">
+            </div>
+            <div class="editor-textos-atestado-cidmenu-table">
+              <table>
+                <colgroup><col style="width:100px"><col></colgroup>
+                <thead><tr><th>Código</th><th>Nome</th></tr></thead>
+                <tbody id="editor-textos-atestado-cidmenu-tbody"></tbody>
+              </table>
+            </div>
+            <div id="editor-textos-atestado-cidmenu-alpha" class="editor-textos-atestado-cidmenu-alpha"></div>
+          </div>
+          <div class="editor-textos-atestado-cidmenu-foot">
+            <label><input id="editor-textos-atestado-cidmenu-preferidos" type="checkbox">Apenas preferidos</label>
+            <div class="editor-textos-atestado-cidmenu-actions">
+              <button id="editor-textos-atestado-cidmenu-ok" class="materiais-btn" type="button"><img src="/desktop-assets/gravar.png" alt="">Ok</button>
+              <button id="editor-textos-atestado-cidmenu-cancelar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Cancela</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
   function ensureStyle(doc){
     if(doc.getElementById("editor-textos-bootstrap-style"))return;
     const style=doc.createElement("style");
@@ -342,6 +825,7 @@
 
   function ensureUI(ctx={}){
     const doc=ctx.document||document;
+    ensureShell(doc,ctx);
     ensureStyle(doc);
     const shell={
       panel:doc.getElementById("editor-textos-panel"),
