@@ -16533,6 +16533,7 @@ function editorTextosEnsureUI(){
     alterado:false,
     rulerResizeBound:false,
     savedRange:null,
+    pendingToolbarRange:null,
     lastLogicalPositionByBlock:{},
     rulerUnits:36,
     rulerState:{leftMarginUnit:1,rightMarginUnit:35,tabStops:[6]},
@@ -16630,9 +16631,29 @@ function editorTextosEnsureUI(){
     }
   }
   void editorTextosAtualizarComboFonte();
+  const editorTextosPrepararRangeToolbar=()=>{
+    editorTextosSalvarRangeAtual();
+    editorTextosCfg.pendingToolbarRange=editorTextosCfg.savedRange instanceof Range
+      ?editorTextosCfg.savedRange.cloneRange()
+      :null;
+  };
   const runCmd=(cmd,val=null)=>{
     try{
-      editorTextosRestaurarRangeAtual();
+      const toolbarRange=cmd==="foreColor"&&editorTextosCfg.pendingToolbarRange instanceof Range
+        ?editorTextosCfg.pendingToolbarRange
+        :null;
+      if(toolbarRange){
+        const sel=window.getSelection?.();
+        if(sel){
+          editorTextosCfg.page.focus();
+          sel.removeAllRanges();
+          sel.addRange(toolbarRange);
+        }else{
+          editorTextosRestaurarRangeAtual();
+        }
+      }else{
+        editorTextosRestaurarRangeAtual();
+      }
       editorTextosCfg.page.focus();
       if(cmd==="foreColor"){
         try{document.execCommand("styleWithCSS",false,true)}catch{}
@@ -16643,6 +16664,7 @@ function editorTextosEnsureUI(){
       }
       editorTextosSalvarRangeAtual();
     }catch{}
+    if(cmd==="foreColor")editorTextosCfg.pendingToolbarRange=null;
     editorTextosAgendarSincronizarToolbar();
   };
   const markDirty=()=>{if(editorTextosCfg.alterado)return;editorTextosCfg.alterado=true;editorTextosCfg.status.textContent="Alteracoes pendentes...";};
@@ -16841,6 +16863,8 @@ function editorTextosEnsureUI(){
     if(!editorTextosCfg?.size)return;
     runCmd("fontSize",EDITOR_TEXTOS_SIZE_UI_TO_CMD[String(editorTextosCfg.size.value||"11")]||"2");
   });
+  editorTextosCfg.color.addEventListener("pointerdown",editorTextosPrepararRangeToolbar);
+  editorTextosCfg.color.addEventListener("mousedown",editorTextosPrepararRangeToolbar);
   editorTextosCfg.color.addEventListener("change",()=>{
     if(!editorTextosCfg?.color)return;
     const color=editorTextosCfg.color.value||"#000000";
