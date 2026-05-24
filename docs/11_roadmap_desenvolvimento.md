@@ -700,5 +700,13 @@ Observacoes:
 - Nenhuma autorizacao de codigo concedida ainda.
 - A frente continua em refinamento documental antes de qualquer patch.
 
+## Atualizacao Preferencias e Opcoes do Sistema - Subetapa 9
+
+- Subetapa 9 documental concluida: consolidacao e pausa tecnica da frente.
+- Frente pausada/consolidada neste momento.
+- Nenhum codigo foi alterado.
+- Proxima frente recomendada: Cadastros Gerais.
+- Proxima subetapa recomendada: Cadastros Gerais - Subetapa 1 - Contrato funcional e classificacao multiarea.
+
 
 
