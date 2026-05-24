@@ -1,0 +1,2 @@
+function protNomeArquivoBase(titulo){const base=String(titulo||"relatorio_protetico").trim()||"relatorio_protetico";const limpo=base.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]+/g,"_").replace(/_+/g,"_").replace(/^_+|_+$/g,"").toLowerCase();return limpo||"relatorio_protetico"}
+if(typeof window!=="undefined")window.protNomeArquivoBase=protNomeArquivoBase;

@@ -6792,7 +6792,7 @@ function protEditarSelecionado(){const item=protServicoSelecionado();if(!item){w
 function protFecharRelatorio(){if(prot?.relBackdrop)prot.relBackdrop.classList.add("hidden")}
 function protFecharRelatorioArquivo(){if(prot?.relArquivoBackdrop)prot.relArquivoBackdrop.classList.add("hidden");if(prot){prot.relArquivoHandle=null;prot.relArquivoContext=null}}
 function protAtualizarEmailRelatorioUI(){if(!prot)return;const ativo=!!prot.relArquivoEmailCheck?.checked;if(prot.relArquivoEmail)prot.relArquivoEmail.disabled=!ativo;if(prot.relArquivoAssunto)prot.relArquivoAssunto.disabled=!ativo;if(prot.relArquivoCorpo)prot.relArquivoCorpo.disabled=!ativo;if(prot.relArquivoEmailRow){prot.relArquivoEmailRow.classList.toggle("prot-relatorio-email-disabled",!ativo)}}
-function protNomeArquivoBase(titulo){const base=String(titulo||"relatorio_protetico").trim()||"relatorio_protetico";const limpo=base.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]+/g,"_").replace(/_+/g,"_").replace(/^_+|_+$/g,"").toLowerCase();return limpo||"relatorio_protetico"}
+
 function protRelatorioRows(){return protServicosCache.map(item=>[String(item.nome||""),String(item.indice||"R$"),formatMoney(item.preco||0),String(item.prazo||0)])}
 function protCsvEsc(v){const s=String(v??"");return /[;"\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
 function protRelatorioCsv(rows){const header=["Serviço","Índice","Preço","Prazo"];const linhas=[header.map(protCsvEsc).join(";")];rows.forEach(row=>{linhas.push(row.map(protCsvEsc).join(";"))});return "\ufeff"+linhas.join("\r\n")}
