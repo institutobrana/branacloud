@@ -1125,5 +1125,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoRangeSemana` no impacto visual nos filtros de periodo da agenda legado.
 
+## Atualizacao Agenda Principal - Subetapa 20
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 20 foi executada como validacao e revisao de impacto dos filtros de periodo.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaLegadoRangeSemana` permanece como a sexta extracao minima.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do setimo helper puro de menor risco.
+
 
 
