@@ -1787,6 +1787,18 @@ Observacoes:
 - O teste manual do usuario e obrigatorio antes de qualquer proxima etapa documental.
 - A proxima subetapa e apenas teste manual pelo usuario antes de qualquer nova validacao documental.
 
+## Plano de Contas - Validacao pos-teste de montarPayloadGrupo
+
+- `Plano de Contas` continua tratado como modulo comum/core administrativo/transversal.
+- A implementacao minima de `montarPayloadGrupo(nome, tipo)` foi validada pelo usuario em `Cadastros > Plano de contas`.
+- O teste manual passou.
+- A implementacao minima fica consolidada.
+- O payload final, o salvamento e o comportamento visual foram preservados.
+- As categorias continuaram funcionando normalmente.
+- Nenhuma nova alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima decisao deve ser documental e conservadora antes de qualquer novo recorte em Plano de Contas.
+
 
 
 
