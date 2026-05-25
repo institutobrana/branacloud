@@ -1219,5 +1219,17 @@ Observacoes:
 - O usuario informou que ja conseguiu testar modo URL/standalone.
 - O proximo passo recomendado e o planejamento documental do nono helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 27
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 27 foi executada apenas como planejamento documental do nono helper puro.
+- O nono candidato recomendado para futura implementacao foi `agendaSemanaBuildStandaloneUrl`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O usuario validou a abertura URL/standalone e `agenda_modo=dia`, `agenda_modo=clinica` e sem `agenda_modo` sem identificar erros.
+- O proximo passo recomendado e a implementacao minima de `agendaSemanaBuildStandaloneUrl` em `frontend/js/modules/agenda-principal-semana-utils.js`, com validacao manual da abertura standalone da agenda semana.
+
 
 
