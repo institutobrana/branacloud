@@ -1479,6 +1479,18 @@ Observacoes:
 - O teste manual da frente de ambiente deve ser indicado antes de prosseguir.
 - A proxima subetapa recomendada e a validacao pos-teste do helper `prefAmbienteEstiloDeDialogo`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 15
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 15 foi concluida como validacao documental pos-teste da Subetapa 14.
+- O teste manual da Subetapa 14 passou.
+- `prefAmbienteEstiloDeDialogo` foi validado no fluxo real de preferencias.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado nesta validacao.
+- A proxima subetapa recomendada e a reavaliacao documental da fila restante apos o dialogo de estilo.
+
 
 
 
