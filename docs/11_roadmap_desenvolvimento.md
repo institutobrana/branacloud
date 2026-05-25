@@ -946,5 +946,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do segundo helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 6
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 6 foi executada apenas como planejamento documental do segundo helper puro.
+- O segundo candidato recomendado para futura implementacao foi `agendaLegadoFmtHora`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima de `agendaLegadoFmtHora` com validacao manual do impacto visual.
+
 
 
