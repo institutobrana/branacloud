@@ -1163,5 +1163,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a validacao manual da abertura standalone da agenda semana.
 
+## Atualizacao Agenda Principal - Subetapa 23
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 23 foi executada apenas como validacao documental da abertura standalone da agenda semana.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaSemanaIsStandaloneRequest` permanece como a setima extracao minima.
+- `frontend/js/modules/agenda-principal-semana-utils.js` e `frontend/js/modules/agenda-principal-legado-utils.js` nao foram alterados nesta etapa.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do oitavo helper puro de menor risco.
+
 
 
