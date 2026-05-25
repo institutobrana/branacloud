@@ -11005,15 +11005,6 @@ async function agendaSemanaAbrir(){
   });
   footerMsg.textContent="Agenda da semana aberta.";
 }
-function agendaSemanaIsStandaloneRequest(){
-  try{
-    const params=new URLSearchParams(window.location.search||"");
-    const raw=String(params.get("agenda_semana")||"").trim().toLowerCase();
-    return raw==="1"||raw==="true"||raw==="yes";
-  }catch{
-    return false;
-  }
-}
 function agendaSemanaStandaloneModeFromQuery(){
   try{
     const params=new URLSearchParams(window.location.search||"");

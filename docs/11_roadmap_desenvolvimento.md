@@ -1148,5 +1148,20 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima de `agendaSemanaIsStandaloneRequest` em um modulo futuro proprio da agenda semana, com validacao manual da abertura standalone.
 
+## Atualizacao Agenda Principal - Subetapa 22
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 22 foi executada como implementacao minima do setimo helper puro.
+- O helper extraido foi `agendaSemanaIsStandaloneRequest`.
+- Foi criado o modulo proprio `frontend/js/modules/agenda-principal-semana-utils.js`.
+- Os arquivos de codigo alterados foram `frontend/app.js`, `frontend/index.html` e `frontend/js/modules/agenda-principal-semana-utils.js`.
+- `frontend/index.html` foi alterado apenas para carregar o novo modulo antes de `frontend/app.js`.
+- `agenda-principal-legado-utils.js` nao foi usado como destino desta extracao.
+- Nenhum helper de agenda legado foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a validacao manual da abertura standalone da agenda semana.
+
 
 
