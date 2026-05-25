@@ -1309,6 +1309,20 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima do helper puro mais seguro, com validacao manual do fluxo de ambiente.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 4
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 4 foi concluida com implementacao minima do helper puro `prefAmbEstiloPadrao`.
+- Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_4_implementacao_pref_amb_estilo_padrao.md`.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- `frontend/app.js` preservou fallback local equivalente para o helper de estilo padrao.
+- `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefAmbEstiloPadrao` em `window.BranaPreferenciasOpcoesSistemaModule`.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual da aba `Ambiente` foi indicado antes de prosseguir.
+- A proxima subetapa recomendada e a implementacao minima do helper puro `prefValoresPadraoDados`.
+
 
 
 

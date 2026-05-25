@@ -29,6 +29,18 @@
     };
   }
 
+  function prefAmbEstiloPadrao() {
+    return {
+      fonte_nome: "Tahoma",
+      fonte_tamanho: 12,
+      fonte_estilo: "normal",
+      cor_texto: "#000000",
+      riscado: false,
+      sublinhado: false,
+      script: "Ocidental"
+    };
+  }
+
   function prefOdontoFindByLabel(text) {
     const key = prefOdontoNorm(text);
     for (let i = 0; i < PREF_ODONTO_PALETTE.length; i += 1) {
@@ -41,6 +53,7 @@
     getMetadata,
     prefOdontoNorm,
     prefValoresPadraoModelos,
+    prefAmbEstiloPadrao,
     prefOdontoFindByLabel
   });
 

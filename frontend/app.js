@@ -2250,7 +2250,7 @@ function prefValoresPadraoModelos(){
   return{modelo_impresso_atestados_id:null,modelo_impresso_receitas_id:null,modelo_impresso_recibos_id:null,modelo_padrao_etiquetas_id:null,modelo_texto_email_agenda_id:null,modelo_padrao_orcamentos_id:null,modelo_texto_whatsapp_agenda_id:null}
 }
 const PREF_AMB_SECOES_PADRAO=[{id:"enunciados",label:"Enunciados"},{id:"campos_edicao",label:"Campos de edi\u00e7\u00e3o"},{id:"botoes_funcao",label:"Bot\u00f5es de fun\u00e7\u00e3o"},{id:"outros_botoes",label:"Outros bot\u00f5es"},{id:"itens_lista",label:"Itens de lista"}];
-function prefAmbEstiloPadrao(){return{fonte_nome:"Tahoma",fonte_tamanho:12,fonte_estilo:"normal",cor_texto:"#000000",riscado:false,sublinhado:false,script:"Ocidental"}}
+function prefAmbEstiloPadrao(){const mod=window.BranaPreferenciasOpcoesSistemaModule;if(mod&&typeof mod.prefAmbEstiloPadrao==="function")return mod.prefAmbEstiloPadrao();return{fonte_nome:"Tahoma",fonte_tamanho:12,fonte_estilo:"normal",cor_texto:"#000000",riscado:false,sublinhado:false,script:"Ocidental"}}
 function prefValoresPadraoAmbiente(){const secoes={};PREF_AMB_SECOES_PADRAO.forEach(item=>{secoes[item.id]=prefAmbEstiloPadrao()});return{secao_ativa:"enunciados",secoes}}
 function prefValoresPadraoDados(){
   return{
