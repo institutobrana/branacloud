@@ -1084,5 +1084,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoRangeHoje` no impacto visual nos filtros de periodo da agenda legado.
 
+## Atualizacao Agenda Principal - Subetapa 17
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 17 foi executada como validacao e revisao de impacto dos filtros de periodo.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaLegadoRangeHoje` permanece como a quinta extracao minima.
+- O volume do diff da Subetapa 16 foi conferido e separado entre documentacao/roadmap e a extracao autorizada.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do sexto helper puro de menor risco.
+
 
 
