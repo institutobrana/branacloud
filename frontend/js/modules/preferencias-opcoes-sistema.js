@@ -46,6 +46,27 @@
     };
   }
 
+  function prefValoresPadraoOdontograma() {
+    return {
+      especialidade_mais_utilizada: "clinica",
+      filtro_mais_utilizado: "todas_tratamento",
+      exibir_alerta_anamnese: true,
+      exibir_icones_alerta: true,
+      exibir_imagens_easycapture: true,
+      exibir_coluna_cirurgiao_historico: false,
+      exibir_historico_ordem_decrescente: true,
+      exibir_dados_paciente: true,
+      exibir_dados_tratamento: true,
+      exibir_observacoes: true,
+      exibir_documentos: true,
+      exibir_agenda_dia: true,
+      cor_a_realizar: "#ff0000",
+      cor_realizado: "#0000ff",
+      cor_condicao_observada: "#008000",
+      cor_anomalia: "#000000"
+    };
+  }
+
   function prefAmbEstiloPadrao() {
     return {
       fonte_nome: "Tahoma",
@@ -71,6 +92,7 @@
     prefOdontoNorm,
     prefValoresPadraoModelos,
     prefValoresPadraoDados,
+    prefValoresPadraoOdontograma,
     prefAmbEstiloPadrao,
     prefOdontoFindByLabel
   });
