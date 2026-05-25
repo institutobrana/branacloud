@@ -1452,6 +1452,19 @@ Observacoes:
 - Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado nesta validacao.
 - A proxima subetapa recomendada e a reavaliacao documental da fila restante apos o dialogo de fonte.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 13
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 13 foi concluida como etapa exclusivamente documental.
+- Os helpers anteriores permanecem validados: `prefAmbEstiloPadrao`, `prefValoresPadraoDados`, `prefValoresPadraoOdontograma`, `prefAmbienteTextoExemplo` e `prefAmbienteDialogoValor`.
+- A fila restante do ambiente foi reavaliada por leitura.
+- O candidato recomendado para a proxima implementacao foi `prefAmbienteEstiloDeDialogo`.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissoes, `frontend/index.html` ou configuracao foi alterado nesta etapa.
+- A proxima subetapa recomendada e a implementacao minima do helper `prefAmbienteEstiloDeDialogo`.
+
 
 
 
