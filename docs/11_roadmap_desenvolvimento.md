@@ -1045,5 +1045,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoFmtData` no impacto visual na tabela da agenda legado.
 
+## Atualizacao Agenda Principal - Subetapa 14
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 14 foi executada como validacao e revisao de impacto visual na tabela/lista.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaLegadoFmtData` permanece como a quarta extracao minima.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do quinto helper puro de menor risco.
+
 
 
