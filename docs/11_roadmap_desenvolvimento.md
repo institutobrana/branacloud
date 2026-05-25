@@ -1505,6 +1505,19 @@ Observacoes:
 - Nenhum backend, banco, schema, migrations, seeds, endpoints, permissoes, `frontend/index.html` ou configuracao foi alterado nesta etapa.
 - A proxima subetapa recomendada e o fechamento documental da frente e a consolidacao da pausa.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 17
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 17 foi concluida como fechamento documental da frente.
+- A frente `Preferencias / Configuracoes comuns` foi consolidada como pausada nesta rodada.
+- Os helpers extraidos e validados continuam: `prefAmbEstiloPadrao`, `prefValoresPadraoDados`, `prefValoresPadraoOdontograma`, `prefAmbienteTextoExemplo`, `prefAmbienteDialogoValor` e `prefAmbienteEstiloDeDialogo`.
+- Nenhum codigo foi alterado nesta subetapa.
+- O modulo permanece passivo e parcial.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A recomendacao registrada e de nova etapa documental comparativa entre modulos core/comum, sem codigo, para escolher a proxima frente de menor risco.
+
 
 
 
