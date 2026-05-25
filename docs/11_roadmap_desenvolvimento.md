@@ -1766,6 +1766,15 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Plano de Contas - Contrato documental do proximo helper ou transformacao segura`.
 
+## Plano de Contas - Contrato documental do proximo helper ou transformacao segura
+
+- `Plano de Contas` foi tratado como modulo comum/core administrativo/transversal.
+- O contrato documental do proximo helper/transformacao segura foi definido.
+- O candidato mais promissor ficou sendo `montarPayloadGrupo(nome, tipo)`, com `montarPayloadCategoria(nome, grupo_id, tipo, tributavel)` como secundario imediato.
+- Nenhum codigo foi alterado nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a avaliacao documental da implementacao minima de `montarPayloadGrupo`.
+
 
 
 
