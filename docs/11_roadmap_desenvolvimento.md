@@ -828,5 +828,15 @@ Observacoes:
 - Proximo teste manual obrigatorio antes de prosseguir.
 - Proxima subetapa recomendada somente apos validacao manual.
 
+## Atualizacao Agenda de Contatos - Subetapa 10
+
+- Validacao manual da Subetapa 9 registrada como bem-sucedida.
+- Subetapa 10 criada documentalmente.
+- Plano do terceiro recorte funcional minimo registrado.
+- O modulo continua tratado como `core / comum`.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 11 - Implementacao minima da geracao pura de opcoes de filtro de tipos`.
+
 
 
