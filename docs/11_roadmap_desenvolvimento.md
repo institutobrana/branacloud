@@ -820,5 +820,13 @@ Observacoes:
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 9 - Implementacao minima da logica pura de filtragem`.
 
+## Atualizacao Agenda de Contatos - Subetapa 9
+
+- Subetapa 9 implementada com extracao minima da logica pura de filtragem.
+- O modulo continua tratado como `core / comum`.
+- Nenhum backend, banco, endpoint ou permissao foi alterado.
+- Proximo teste manual obrigatorio antes de prosseguir.
+- Proxima subetapa recomendada somente apos validacao manual.
+
 
 

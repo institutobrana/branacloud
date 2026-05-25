@@ -7291,11 +7291,19 @@ function agendaContatosEnsureUI(){
 }
 
 function agendaContatosFiltrar(){
+  const modulo=window.BranaAgendaContatosListagemModule;
+  const helper=modulo&&modulo.helpers&&typeof modulo.helpers.filtrarAgendaContatos==="function"?modulo.helpers.filtrarAgendaContatos:null;
+  const lista=Array.isArray(agendaContatosCache)?agendaContatosCache:[];
   const filtro=String(agendaContatos?.filtro?.value||"").trim().toLowerCase();
   const termo=String(agendaContatos?.busca?.value||"").trim().toLowerCase();
-  return agendaContatosCache.filter(item=>{
-    if(filtro&&String(item.tipo||"").toLowerCase()!==filtro)return false;
-    if(termo&&!String(item.nome||"").toLowerCase().includes(termo))return false;
+  if(helper){
+    try{
+      return helper(lista,filtro,termo);
+    }catch{}
+  }
+  return lista.filter(item=>{
+    if(filtro&&String(item?.tipo||"").toLowerCase()!==filtro)return false;
+    if(termo&&!String(item?.nome||"").toLowerCase().includes(termo))return false;
     return true;
   });
 }
