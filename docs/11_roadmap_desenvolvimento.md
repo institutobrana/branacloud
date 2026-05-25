@@ -1491,6 +1491,20 @@ Observacoes:
 - Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado nesta validacao.
 - A proxima subetapa recomendada e a reavaliacao documental da fila restante apos o dialogo de estilo.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 16
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 16 foi concluida como etapa exclusivamente documental.
+- Os helpers anteriores permanecem validados: `prefAmbEstiloPadrao`, `prefValoresPadraoDados`, `prefValoresPadraoOdontograma`, `prefAmbienteTextoExemplo`, `prefAmbienteDialogoValor` e `prefAmbienteEstiloDeDialogo`.
+- A fila restante apos o dialogo de estilo foi reavaliada por leitura.
+- Nao foi identificado candidato pequeno e seguro suficiente para nova implementacao minima imediata.
+- A recomendacao de continuidade registrada foi de pausa documental da frente, sem nova extracao nesta rodada.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissoes, `frontend/index.html` ou configuracao foi alterado nesta etapa.
+- A proxima subetapa recomendada e o fechamento documental da frente e a consolidacao da pausa.
+
 
 
 
