@@ -1819,6 +1819,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e consolidar documentalmente a permanencia do fluxo atual, sem implementacao.
 
+## Plano de Contas - Consolidacao documental de manter montarPayloadCategoria como esta
+
+- `Plano de Contas` continua tratado como modulo comum/core administrativo/transversal.
+- `montarPayloadCategoria` foi consolidado sem alteracao.
+- O uso atual via `ns.helpers` sera mantido.
+- `montarPayloadGrupo` segue implementado, testado e consolidado.
+- `Plano de Contas` fica pausado/consolidado por ora.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e voltar para nova selecao documental de blocos leves.
+
 
 
 
