@@ -1057,5 +1057,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do quinto helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 15
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 15 foi executada apenas como planejamento documental do quinto helper puro.
+- O quinto candidato recomendado para futura implementacao foi `agendaLegadoRangeHoje`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima de `agendaLegadoRangeHoje` com validacao manual do impacto visual nos filtros de periodo da agenda legado.
+
 
 
