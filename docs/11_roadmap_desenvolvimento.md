@@ -785,5 +785,14 @@ Observacoes:
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 6 - Implementacao minima do helper visual puro`.
 
+## Atualizacao Agenda de Contatos - Subetapa 6
+
+- Subetapa 6 de `Agenda de contatos` concluida com implementacao minima.
+- Helper visual puro `agendaContatosTelefonesTexto` extraido para modulo proprio.
+- Wrapper compatível preservado em `frontend/app.js`.
+- `Agenda de contatos` continua tratada como `core / comum`.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 7 - Validacao documental da separacao do helper visual e do wrapper no app.js`.
+
 
 

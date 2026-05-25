@@ -7303,6 +7303,19 @@ function agendaContatosSelecionado(){
   return agendaContatosCache.find(item=>item.id===agendaContatosSelId)||null;
 }
 function agendaContatosTelefonesTexto(item){
+  const modulo=window.BranaAgendaContatosTelefonesModule;
+  const helper=modulo&&modulo.helpers&&typeof modulo.helpers.telefonesTexto==="function"?modulo.helpers.telefonesTexto:null;
+  if(helper){
+    try{
+      return helper(item);
+    }catch{}
+  }
+  const helperDireto=modulo&&typeof modulo.agendaContatosTelefonesTexto==="function"?modulo.agendaContatosTelefonesTexto:null;
+  if(helperDireto){
+    try{
+      return helperDireto(item);
+    }catch{}
+  }
   if(!item)return"";
   const telefones=[
     [item.tel1_tipo,item.tel1],
