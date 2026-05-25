@@ -982,5 +982,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do terceiro helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 9
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 9 foi executada apenas como planejamento documental do terceiro helper puro.
+- O terceiro candidato recomendado para futura implementacao foi `agendaLegadoFmtDataInput`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima de `agendaLegadoFmtDataInput` com validacao manual do impacto visual no modal da agenda legado.
+
 
 
