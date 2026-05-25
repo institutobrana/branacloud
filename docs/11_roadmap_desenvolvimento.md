@@ -1375,6 +1375,18 @@ Observacoes:
 - O teste manual da aba `Odontograma` foi indicado antes de prosseguir.
 - A proxima subetapa recomendada e a validacao pos-teste do helper `prefValoresPadraoOdontograma`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 7
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 7 foi concluida como validacao documental pos-teste da Subetapa 6.
+- O teste manual informado pelo usuario passou sem regressao observada.
+- `prefValoresPadraoOdontograma` foi validado no fluxo real de preferencias.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta validacao.
+- A proxima subetapa recomendada foi registrada para a fila seguinte apos o odontograma.
+
 
 
 
