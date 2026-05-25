@@ -1681,6 +1681,17 @@ Observacoes:
 - A recomendacao registrada e pausar/consolidar novamente a frente e fazer nova selecao documental entre modulos/blocos antes de qualquer novo recorte.
 - A proxima subetapa recomendada e `Fase 2 - Nova selecao documental entre modulos/blocos antes de qualquer novo recorte em Prestadores`.
 
+## Nova selecao documental apos Prestadores
+
+- A nova selecao documental foi realizada apos a consolidacao de `Prestadores`.
+- Nenhum codigo foi alterado nesta etapa.
+- `Prestadores` permanece consolidado apos a validacao de `prestFiltrarLista`.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Preferencias / Configuracoes comuns` e `Prestadores`.
+- Os candidatos comparados incluem `Prestadores/prestRender`, `Prestadores/prestSelecionarLinha`, `Prestadores/prestAcoesPlaceholder`, `Preferencias / Configuracoes comuns` remanescente, `Convênios e Planos`, `Relatorios`, `Etiquetas`, `Medicamentos`, `Plano de Contas`, `Materiais`, `Procedimentos genericos` e `Agenda principal` remanescente.
+- A recomendacao escolhida foi seguir com um novo contrato documental em `Preferencias / Configuracoes comuns`.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Contrato funcional e fronteiras para o proximo recorte medio controlado`.
+
 
 
 
