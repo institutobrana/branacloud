@@ -2297,6 +2297,8 @@ function prefAmbienteDialogoValor(style){
   return{family:String(ref.fonte_nome||"Tahoma"),size:Number(ref.fonte_tamanho||12)||12,styleId:typeof window.easyFontNormalizeStyleId==="function"?window.easyFontNormalizeStyleId(ref.fonte_estilo):String(ref.fonte_estilo||"normal"),color:String(ref.cor_texto||"#000000"),strike:!!ref.riscado,underline:!!ref.sublinhado,script:String(ref.script||"Ocidental")};
 }
 function prefAmbienteEstiloDeDialogo(base,valor){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteEstiloDeDialogo==="function")return mod.prefAmbienteEstiloDeDialogo(base,valor);
   const ref=prefAmbEstiloPadrao();
   return{...ref,...(base||{}),fonte_nome:String(valor?.family||ref.fonte_nome||"Tahoma"),fonte_tamanho:Number(valor?.size||ref.fonte_tamanho||12)||12,fonte_estilo:typeof window.easyFontNormalizeStyleId==="function"?window.easyFontNormalizeStyleId(valor?.styleId):String(valor?.styleId||ref.fonte_estilo||"normal"),cor_texto:String(valor?.color||ref.cor_texto||"#000000").toLowerCase(),riscado:!!valor?.strike,sublinhado:!!valor?.underline,script:String(valor?.script||ref.script||"Ocidental")};
 }

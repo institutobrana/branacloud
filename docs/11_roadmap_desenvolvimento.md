@@ -1465,6 +1465,20 @@ Observacoes:
 - Nenhum backend, banco, schema, migrations, seeds, endpoints, permissoes, `frontend/index.html` ou configuracao foi alterado nesta etapa.
 - A proxima subetapa recomendada e a implementacao minima do helper `prefAmbienteEstiloDeDialogo`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 14
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 14 foi concluida com implementacao minima do helper `prefAmbienteEstiloDeDialogo`.
+- Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_14_implementacao_pref_ambiente_estilo_de_dialogo.md`.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- `frontend/app.js` preservou fallback local equivalente para o helper do estilo do dialogo.
+- `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefAmbienteEstiloDeDialogo` em `window.BranaPreferenciasOpcoesSistemaModule`.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual da frente de ambiente deve ser indicado antes de prosseguir.
+- A proxima subetapa recomendada e a validacao pos-teste do helper `prefAmbienteEstiloDeDialogo`.
+
 
 
 

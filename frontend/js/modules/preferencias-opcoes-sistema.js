@@ -94,6 +94,23 @@
     };
   }
 
+  function prefAmbienteEstiloDeDialogo(base, valor) {
+    const ref = prefAmbEstiloPadrao();
+    return {
+      ...ref,
+      ...(base || {}),
+      fonte_nome: String(valor?.family || ref.fonte_nome || "Tahoma"),
+      fonte_tamanho: Number(valor?.size || ref.fonte_tamanho || 12) || 12,
+      fonte_estilo: typeof window.easyFontNormalizeStyleId === "function"
+        ? window.easyFontNormalizeStyleId(valor?.styleId)
+        : String(valor?.styleId || ref.fonte_estilo || "normal"),
+      cor_texto: String(valor?.color || ref.cor_texto || "#000000").toLowerCase(),
+      riscado: !!valor?.strike,
+      sublinhado: !!valor?.underline,
+      script: String(valor?.script || ref.script || "Ocidental")
+    };
+  }
+
   function prefAmbienteTextoExemplo(secao) {
     const mapa = {
       enunciados: "Enunciado",
@@ -121,6 +138,7 @@
     prefValoresPadraoOdontograma,
     prefAmbEstiloPadrao,
     prefAmbienteDialogoValor,
+    prefAmbienteEstiloDeDialogo,
     prefAmbienteTextoExemplo,
     prefOdontoFindByLabel
   });
