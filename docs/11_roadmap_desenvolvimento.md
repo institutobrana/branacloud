@@ -1249,5 +1249,17 @@ Observacoes:
 - O usuario ja testou URL/standalone e os modos `agenda_modo=dia`, `agenda_modo=clinica` e sem `agenda_modo` sem identificar erros.
 - O proximo passo recomendado e a validacao manual da extracao de `agendaSemanaBuildStandaloneUrl` e da abertura standalone da agenda semana.
 
+## Atualizacao Agenda Principal - Subetapa 29
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 29 foi executada apenas como validacao documental da URL standalone da agenda semana.
+- O helper `agendaSemanaBuildStandaloneUrl` permanece como a nona extracao minima.
+- Nenhum codigo foi alterado.
+- Nao houve alteracao de frontend, backend, banco, schema, migrations, seeds, endpoints ou permissões.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O usuario ja havia testado URL/standalone e `agenda_modo` sem identificar erros.
+- O proximo passo recomendado e a validacao manual da extracao de `agendaSemanaBuildStandaloneUrl` e da abertura standalone da agenda semana.
+
 
 
