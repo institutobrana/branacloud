@@ -866,5 +866,14 @@ Observacoes:
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 14 - Implementacao minima da montagem pura da linha da lista`.
 
+## Atualizacao Agenda de Contatos - Subetapa 14
+
+- Subetapa 14 implementada com extracao minima da montagem pura da linha da lista.
+- O modulo continua tratado como `core / comum`.
+- Nenhum backend, banco, endpoint ou permissao foi alterado.
+- `frontend/index.html` nao foi alterado.
+- Proximo teste manual obrigatorio antes de prosseguir.
+- Proxima subetapa recomendada somente apos validacao manual.
+
 
 

@@ -29,6 +29,12 @@
     return tipos.map(item => `<option value="${escHtml(item?.descricao || "")}">${escHtml(item?.descricao || "")}</option>`).join("");
   }
 
+  function montarLinhaAgendaContatos(item, selectedId, telefonesTexto) {
+    const id = String(item?.id ?? "");
+    const selecionado = String(selectedId ?? "") === id ? "selected" : "";
+    return `<tr data-id="${escHtml(id)}" class="${selecionado}"><td>${escHtml(item?.nome || "")}</td><td>${escHtml(item?.tipo || "")}</td><td>${escHtml(telefonesTexto || "")}</td></tr>`;
+  }
+
   const api = Object.freeze({
     meta: Object.freeze({
       nome: "Agenda de contatos - Listagem",
@@ -40,9 +46,11 @@
     }),
     filtrarAgendaContatos,
     montarOpcoesFiltroTipos,
+    montarLinhaAgendaContatos,
     helpers: Object.freeze({
       filtrarAgendaContatos,
-      montarOpcoesFiltroTipos
+      montarOpcoesFiltroTipos,
+      montarLinhaAgendaContatos
     })
   });
 

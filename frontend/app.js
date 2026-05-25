@@ -7438,7 +7438,19 @@ async function agendaContatosCarregar(){
 function agendaContatosRender(){
   if(!agendaContatos)return;
   const itens=agendaContatosFiltrar();
-  agendaContatos.tbody.innerHTML=itens.map(item=>`<tr data-id="${item.id}" class="${item.id===agendaContatosSelId?"selected":""}"><td>${esc(item.nome||"")}</td><td>${esc(item.tipo||"")}</td><td>${esc(agendaContatosTelefonesTexto(item))}</td></tr>`).join("")||'<tr><td colspan="3"></td></tr>';
+  const modulo=window.BranaAgendaContatosListagemModule;
+  const helper=modulo&&modulo.helpers&&typeof modulo.helpers.montarLinhaAgendaContatos==="function"?modulo.helpers.montarLinhaAgendaContatos:null;
+  agendaContatos.tbody.innerHTML=itens.map(item=>{
+    const telefones=agendaContatosTelefonesTexto(item);
+    if(helper){
+      try{
+        return helper(item,agendaContatosSelId,telefones);
+      }catch(_err){
+        return `<tr data-id="${item.id}" class="${item.id===agendaContatosSelId?"selected":""}"><td>${esc(item.nome||"")}</td><td>${esc(item.tipo||"")}</td><td>${esc(telefones)}</td></tr>`;
+      }
+    }
+    return `<tr data-id="${item.id}" class="${item.id===agendaContatosSelId?"selected":""}"><td>${esc(item.nome||"")}</td><td>${esc(item.tipo||"")}</td><td>${esc(telefones)}</td></tr>`;
+  }).join("")||'<tr><td colspan="3"></td></tr>';
   agendaContatos.total.textContent=`${itens.length} contatos`;
 }
 
