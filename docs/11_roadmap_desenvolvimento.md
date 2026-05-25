@@ -1007,5 +1007,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoFmtDataInput` no impacto visual do modal da agenda legado.
 
+## Atualizacao Agenda Principal - Subetapa 11
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 11 foi executada como validacao e revisao de impacto visual no modal.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaLegadoFmtDataInput` permanece como a terceira extracao minima.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migration, seed, endpoint ou permissao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do quarto helper puro de menor risco.
+
 
 
