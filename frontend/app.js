@@ -7077,7 +7077,7 @@ function agendaContatosBuildPhoneRow(selectId,inputId,options){
   return agendaContatosNode("div",{cls:"agenda-phone-row"},[
     agendaContatosSelect(selectId,options),
     agendaContatosNode("input",{id:inputId,attrs:{type:"text"}}),
-    agendaContatosNode("div",{cls:"agenda-phone-ico",text:"â˜Ž"})
+    agendaContatosNode("div",{cls:"agenda-phone-ico",text:"☎"})
   ]);
 }
 function agendaContatosGarantirAbaDetalhes(){

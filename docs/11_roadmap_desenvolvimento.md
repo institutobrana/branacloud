@@ -794,5 +794,12 @@ Observacoes:
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 7 - Validacao documental da separacao do helper visual e do wrapper no app.js`.
 
+## Atualizacao Agenda de Contatos - Subetapa 6b
+
+- Correcao da regressao visual do icone de telefone em `Agenda de contatos` registrada.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- Nenhuma nova modularizacao foi criada.
+- Teste manual obrigatorio antes de prosseguir.
+
 
 
