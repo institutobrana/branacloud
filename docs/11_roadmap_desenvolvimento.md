@@ -1574,6 +1574,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a reavaliacao documental do bloco restante apos a extracao minima de `prestSelecionado`.
 
+## Prestadores - Subetapa 2B
+
+- A frente `Prestadores` teve a Subetapa 2B concluida como validacao documental pos-teste do helper `prestSelecionado`.
+- O teste manual informado pelo usuario passou.
+- O helper `prestSelecionado` foi validado sem alteracao de codigo nesta rodada.
+- `Prestadores` segue como `core / comum` administrativo/transversal.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- `Preferencias / Configuracoes comuns` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada permanece a Reavaliacao documental do bloco restante apos a extracao minima de `prestSelecionado`.
+
 
 
 
