@@ -1387,6 +1387,19 @@ Observacoes:
 - Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta validacao.
 - A proxima subetapa recomendada foi registrada para a fila seguinte apos o odontograma.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 8
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 8 foi concluida como etapa exclusivamente documental.
+- Os tres helpers anteriores permanecem validados: `prefAmbEstiloPadrao`, `prefValoresPadraoDados` e `prefValoresPadraoOdontograma`.
+- A fila restante de helpers seguros foi reavaliada por leitura.
+- O candidato recomendado para proxima implementacao foi `prefAmbienteTextoExemplo`.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta etapa.
+- A proxima subetapa recomendada e a implementacao minima do helper puro `prefAmbienteTextoExemplo`.
+
 
 
 
