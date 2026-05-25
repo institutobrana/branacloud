@@ -708,5 +708,16 @@ Observacoes:
 - Proxima frente recomendada: Cadastros Gerais.
 - Proxima subetapa recomendada: Cadastros Gerais - Subetapa 1 - Contrato funcional e classificacao multiarea.
 
+## Atualizacao Cadastros Gerais - Subetapa 1
+
+- Subetapa 1 iniciada documentalmente para a frente `Cadastros Gerais`.
+- Frente aberta sem alteracao de codigo.
+- Classificacao multiarea registrada: `mista`.
+- Contrato funcional inicial documentado.
+- Nao houve alteracao em `frontend/app.js`, `frontend/index.html`, `frontend/js/modules`, backend, banco, schema, migrations, seeds ou endpoints.
+- Nenhum controle multiarea foi implementado.
+- Proxima subetapa recomendada: `Cadastros Gerais - Subetapa 2 - Mapa documental de fronteiras por dominio e dependencias de permissao`.
+- A frente `Preferencias e Opcoes do Sistema` permanece pausada/consolidada.
+
 
 
