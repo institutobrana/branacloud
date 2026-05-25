@@ -1440,6 +1440,18 @@ Observacoes:
 - O teste manual da frente de ambiente deve ser indicado antes de prosseguir.
 - A proxima subetapa recomendada e a validacao pos-teste do helper `prefAmbienteDialogoValor`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 12
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 12 foi concluida como validacao documental pos-teste da Subetapa 11.
+- O teste manual da Subetapa 11 passou.
+- `prefAmbienteDialogoValor` foi validado no fluxo real de preferencias.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado nesta validacao.
+- A proxima subetapa recomendada e a reavaliacao documental da fila restante apos o dialogo de fonte.
+
 
 
 
