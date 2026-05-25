@@ -719,5 +719,15 @@ Observacoes:
 - Proxima subetapa recomendada: `Cadastros Gerais - Subetapa 2 - Mapa documental de fronteiras por dominio e dependencias de permissao`.
 - A frente `Preferencias e Opcoes do Sistema` permanece pausada/consolidada.
 
+## Atualizacao Cadastros Gerais - Subetapa 2
+
+- Subetapa 2 criada documentalmente para a frente `Cadastros Gerais`.
+- Mapa de fronteiras por dominio e dependencias de permissao concluido.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- A classificacao multiárea herdada permanece `mista`.
+- Proxima subetapa recomendada: continuidade documental em `Auxiliares / Tabelas auxiliares`.
+- O primeiro recorte funcional segue proibido nesta etapa.
+
 
 
