@@ -1613,6 +1613,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima recomendacao e a fase documental de transicao para recortes de risco medio controlado.
 
+## Transicao para recortes de risco medio controlado
+
+- A Fase 2 entra em transicao documental para recortes de risco medio controlado.
+- Nenhum codigo foi alterado nesta etapa.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Preferencias / Configuracoes comuns` e `Prestadores`.
+- Os criterios de aceitacao de risco medio foram definidos documentalmente.
+- A matriz de decisao inicial foi registrada para comparar candidatos futuros.
+- A proxima etapa recomendada e a selecao documental do primeiro recorte de risco medio controlado.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
