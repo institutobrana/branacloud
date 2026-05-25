@@ -1137,5 +1137,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do setimo helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 21
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 21 foi executada apenas como planejamento documental do setimo helper puro.
+- O setimo candidato recomendado para futura implementacao foi `agendaSemanaIsStandaloneRequest`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima de `agendaSemanaIsStandaloneRequest` em um modulo futuro proprio da agenda semana, com validacao manual da abertura standalone.
+
 
 
