@@ -847,5 +847,15 @@ Observacoes:
 - Proximo teste manual obrigatorio antes de prosseguir.
 - Proxima subetapa recomendada somente apos validacao manual.
 
+## Atualizacao Agenda de Contatos - Subetapa 12
+
+- Validacao manual da Subetapa 11 registrada como bem-sucedida.
+- Subetapa 12 criada documentalmente.
+- Plano de fronteiras da renderizacao da lista registrado.
+- O modulo continua tratado como `core / comum`.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 13 - Plano documental da montagem da linha da lista`.
+
 
 
