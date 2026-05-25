@@ -766,5 +766,15 @@ Observacoes:
 - O menor recorte futuro possivel foi registrado como hipotese documental.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 4 - Mapa documental do carregamento de apoio visual e fronteiras de UI`.
 
+## Atualizacao Agenda de Contatos - Subetapa 4
+
+- Subetapa 4 de `Agenda de contatos` criada documentalmente.
+- Mapa de apoio visual/UI concluido.
+- O modulo continua tratado como `core / comum`.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- O primeiro recorte funcional minimo foi mantido apenas como plano documental.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 5 - Plano documental do primeiro recorte funcional minimo com helper visual puro`.
+
 
 
