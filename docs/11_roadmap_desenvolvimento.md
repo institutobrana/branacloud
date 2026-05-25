@@ -1176,5 +1176,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do oitavo helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 24
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 24 foi executada apenas como planejamento documental do oitavo helper puro.
+- O oitavo candidato recomendado para futura implementacao foi `agendaSemanaStandaloneModeFromQuery`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual direto de querystring standalone da Subetapa 23 ficou limitado porque o usuario nao sabia a rota exata.
+- A proxima subetapa recomendada e a implementacao minima de `agendaSemanaStandaloneModeFromQuery` em `frontend/js/modules/agenda-principal-semana-utils.js`, com validacao manual da agenda semana standalone.
+
 
 
