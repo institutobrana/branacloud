@@ -37,6 +37,12 @@
     return d.toLocaleDateString("pt-BR");
   }
 
+  function agendaLegadoRangeHoje() {
+    const hoje = new Date();
+    const iso = hoje.toISOString().slice(0, 10);
+    return { inicio: iso, fim: iso };
+  }
+
   const api = Object.freeze({
     meta: Object.freeze({
       nome: "Agenda principal - Legado utils",
@@ -50,11 +56,13 @@
     agendaLegadoFmtHora,
     agendaLegadoFmtDataInput,
     agendaLegadoFmtData,
+    agendaLegadoRangeHoje,
     helpers: Object.freeze({
       agendaLegadoNumOrNull,
       agendaLegadoFmtHora,
       agendaLegadoFmtDataInput,
-      agendaLegadoFmtData
+      agendaLegadoFmtData,
+      agendaLegadoRangeHoje
     })
   });
 
@@ -63,4 +71,5 @@
   window.agendaLegadoFmtHora = agendaLegadoFmtHora;
   window.agendaLegadoFmtDataInput = agendaLegadoFmtDataInput;
   window.agendaLegadoFmtData = agendaLegadoFmtData;
+  window.agendaLegadoRangeHoje = agendaLegadoRangeHoje;
 })();

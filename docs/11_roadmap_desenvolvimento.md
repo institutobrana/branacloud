@@ -1068,5 +1068,21 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima de `agendaLegadoRangeHoje` com validacao manual do impacto visual nos filtros de periodo da agenda legado.
 
+## Atualizacao Agenda Principal - Subetapa 16
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 16 foi executada como implementacao minima planejada do quinto helper puro.
+- O helper extraido foi `agendaLegadoRangeHoje`.
+- Os arquivos de codigo alterados foram `frontend/app.js` e `frontend/js/modules/agenda-principal-legado-utils.js`.
+- `frontend/index.html` nao foi alterado nesta etapa.
+- `agendaLegadoNumOrNull` nao foi alterado.
+- `agendaLegadoFmtHora` nao foi alterado.
+- `agendaLegadoFmtDataInput` nao foi alterado.
+- `agendaLegadoFmtData` nao foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoRangeHoje` no impacto visual nos filtros de periodo da agenda legado.
+
 
 
