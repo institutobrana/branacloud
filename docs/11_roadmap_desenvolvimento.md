@@ -1799,6 +1799,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima decisao deve ser documental e conservadora antes de qualquer novo recorte em Plano de Contas.
 
+## Plano de Contas - Contrato documental de montarPayloadCategoria
+
+- `Plano de Contas` continua tratado como modulo comum/core administrativo/transversal.
+- O contrato documental de `montarPayloadCategoria(nome, grupo_id, tipo, tributavel)` foi criado.
+- O helper existe de forma passiva em `frontend/js/modules/plano-contas.js`, mas a recomendacao conservadora foi pedir mais auditoria antes de implementar.
+- A superficie de categoria e maior que a de grupo e depende de `grupo_id` e `tributavel`.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e uma nova auditoria documental de `montarPayloadCategoria` antes de qualquer implementacao.
+
 
 
 
