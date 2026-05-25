@@ -1724,6 +1724,18 @@ Observacoes:
 - O teste manual indicado antes de prosseguir deve ocorrer na aba `Ambiente`.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Validacao pos-teste de prefAmbienteSecoesAtuais`.
 
+## Preferencias / Configuracoes comuns - Validacao pos-teste de prefAmbienteSecoesAtuais
+
+- `Preferencias / Configuracoes comuns` continua como frente core / comum.
+- A validacao pos-teste de `prefAmbienteSecoesAtuais` foi concluida como recorte de risco medio controlado.
+- O teste manual passou e nao houve regressao no fluxo da aba `Ambiente`.
+- `frontend/app.js` e o modulo passivo continuam com contrato explicito `baseSecoes/atuais` e fallback local equivalente.
+- `Prestadores` permanece consolidado apos `prestFiltrarLista`.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Consolidacao documental apos validacao de prefAmbienteSecoesAtuais`.
+
 
 
 
