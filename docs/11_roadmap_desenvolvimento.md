@@ -1518,6 +1518,19 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A recomendacao registrada e de nova etapa documental comparativa entre modulos core/comum, sem codigo, para escolher a proxima frente de menor risco.
 
+## Reavaliacao Comparativa - Pos Pausa de Preferencias / Configuracoes Comuns
+
+- A reavaliacao comparativa foi concluida sem alteracao de codigo.
+- `Preferencias / Configuracoes comuns` permanece pausada/consolidada nesta rodada.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Foram comparados `Ficha pessoal`, `Conta corrente`, `Relatorios`, `Indices financeiros`, `Cadastros auxiliares`, `Convênios e Planos`, `Plano de Contas`, `Medicamentos`, `Materiais`, `Procedimentos genericos`, `Tabela de servicos de protese / Tabela de proteticos`, `Etiquetas`, `Simbolos graficos` e outras frentes core/comum registradas no roadmap.
+- A comparacao por risco concluiu que os blocos maiores e mais sensiveis permanecem acima do patamar ideal para uma nova extração minima controlada.
+- A frente recomendada como proxima e `Prestadores`, por ser o menor candidato parcial ainda plausivelmente retomavel.
+- A proxima subetapa recomendada e `Prestadores - Subetapa 0 de retomada documental / mapeamento tecnico complementar`.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado nesta etapa.
+
 
 
 
