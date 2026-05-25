@@ -541,6 +541,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Subetapa 2 - Mapeamento tecnico detalhado por leitura`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 2
+
+- A Subetapa 2 foi concluida como etapa exclusivamente documental.
+- O mapeamento tecnico detalhado foi realizado por leitura.
+- Nenhum codigo foi alterado.
+- `Preferencias / Configuracoes comuns` continua como `core / comum`.
+- A `Agenda principal` permanece pausada temporariamente.
+- A `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o isolamento documental dos candidatos mais seguros.
+
 ---
 
 ## Modulo: Licenca, Planos e Pagamentos
