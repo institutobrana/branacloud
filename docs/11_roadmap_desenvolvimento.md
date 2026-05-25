@@ -1633,6 +1633,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Prestadores - Contrato detalhado de prestFiltrarLista como recorte medio controlado`.
 
+## Prestadores - Contrato detalhado de prestFiltrarLista
+
+- O contrato detalhado de `prestFiltrarLista` como recorte medio controlado foi definido documentalmente.
+- Nenhum codigo foi alterado nesta etapa.
+- O contrato observado ainda parte de leitura local de `prestCfg` e `prestadoresCache` em `frontend/app.js`.
+- O contrato futuro recomendado separa filtragem pura de leitura de DOM e de renderizacao.
+- `Prestadores` continua classificado como `core / comum` administrativo/transversal.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Preferencias / Configuracoes comuns` e `Prestadores`.
+- A decisao registrada e que `Prestadores / prestFiltrarLista` segue como candidato para implementacao futura, apenas depois deste contrato.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Prestadores - Implementacao minima de prestFiltrarLista com contrato explicito lista/filtros`.
+
 
 
 
