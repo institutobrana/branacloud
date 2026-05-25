@@ -1830,6 +1830,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e voltar para nova selecao documental de blocos leves.
 
+## Fase 2 - Nova selecao documental de blocos leves apos consolidacao do Plano de Contas
+
+- `Plano de Contas` permaneceu consolidado/pausado por ora.
+- Foi realizada nova selecao documental de blocos leves.
+- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Etiquetas`, `Convênios e Planos`, `Relatorios` e `CID`.
+- A classificacao multiarea resumida mostrou `Cadastros auxiliares` e `Etiquetas` como comuns/core administrativos/transversais, `Medicamentos` e `CID` como especificos de area profissional e `Convênios e Planos`/`Relatorios` como mistos ou de risco maior.
+- A recomendacao escolhida foi criar primeiro um contrato documental para `CID`.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `CID - Contrato documental do proximo helper leve ou transformacao segura`.
+
 
 
 
