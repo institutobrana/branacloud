@@ -7353,9 +7353,22 @@ function agendaContatosEnsureOption(selectEl,value,label){
 }
 function agendaContatosAtualizarFiltroTipos(){
   if(!agendaContatos)return;
-  const opts=agendaContatosTiposCache.length
-    ? agendaContatosTiposCache.map(item=>`<option value="${esc(item.descricao||"")}">${esc(item.descricao||"")}</option>`).join("")
-    : '<option value="Cirurgião">Cirurgião</option><option value="Protético">Protético</option><option value="Fornecedor">Fornecedor</option><option value="Outros">Outros</option>';
+  const modulo=window.BranaAgendaContatosListagemModule;
+  const helper=modulo&&modulo.helpers&&typeof modulo.helpers.montarOpcoesFiltroTipos==="function"?modulo.helpers.montarOpcoesFiltroTipos:null;
+  const listaTipos=Array.isArray(agendaContatosTiposCache)?agendaContatosTiposCache:[];
+  let opts;
+  if(helper){
+    try{
+      opts=helper(listaTipos);
+    }catch(_err){
+      opts="";
+    }
+  }
+  if(typeof opts!=="string"||!opts){
+    opts=listaTipos.length
+      ? listaTipos.map(item=>`<option value="${esc(item.descricao||"")}">${esc(item.descricao||"")}</option>`).join("")
+      : '<option value="Cirurgião">Cirurgião</option><option value="Protético">Protético</option><option value="Fornecedor">Fornecedor</option><option value="Outros">Outros</option>';
+  }
   agendaContatos.filtro.innerHTML=`<option value=""><<Todos>></option>${opts}`;
   agendaContatos.tipo.innerHTML=opts;
 }

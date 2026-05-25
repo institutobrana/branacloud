@@ -838,5 +838,14 @@ Observacoes:
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 11 - Implementacao minima da geracao pura de opcoes de filtro de tipos`.
 
+## Atualizacao Agenda de Contatos - Subetapa 11
+
+- Subetapa 11 implementada com extracao minima da geracao pura de opcoes de filtro de tipos.
+- O modulo continua tratado como `core / comum`.
+- Nenhum backend, banco, endpoint ou permissao foi alterado.
+- `frontend/index.html` nao precisou ser alterado.
+- Proximo teste manual obrigatorio antes de prosseguir.
+- Proxima subetapa recomendada somente apos validacao manual.
+
 
 

@@ -1,6 +1,15 @@
 (function () {
   "use strict";
 
+  function escHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function filtrarAgendaContatos(lista, filtroTipo, termoBusca) {
     const itens = Array.isArray(lista) ? lista : [];
     const filtro = String(filtroTipo ?? "").trim().toLowerCase();
@@ -12,18 +21,28 @@
     });
   }
 
+  const OPCOES_FILTRO_TIPOS_PADRAO = '<option value="Cirurgião">Cirurgião</option><option value="Protético">Protético</option><option value="Fornecedor">Fornecedor</option><option value="Outros">Outros</option>';
+
+  function montarOpcoesFiltroTipos(listaTipos) {
+    const tipos = Array.isArray(listaTipos) ? listaTipos : [];
+    if (!tipos.length) return OPCOES_FILTRO_TIPOS_PADRAO;
+    return tipos.map(item => `<option value="${escHtml(item?.descricao || "")}">${escHtml(item?.descricao || "")}</option>`).join("");
+  }
+
   const api = Object.freeze({
     meta: Object.freeze({
       nome: "Agenda de contatos - Listagem",
       modulo: "agenda-contatos-listagem",
-      versaoSubetapa: "subetapa-9_logica_pura_filtragem",
+      versaoSubetapa: "subetapa-11_opcoes_filtro_tipos",
       status: "ativo-passivo",
       ativo: false,
       controlaFluxo: false
     }),
     filtrarAgendaContatos,
+    montarOpcoesFiltroTipos,
     helpers: Object.freeze({
-      filtrarAgendaContatos
+      filtrarAgendaContatos,
+      montarOpcoesFiltroTipos
     })
   });
 
