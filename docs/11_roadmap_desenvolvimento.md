@@ -801,5 +801,15 @@ Observacoes:
 - Nenhuma nova modularizacao foi criada.
 - Teste manual obrigatorio antes de prosseguir.
 
+## Atualizacao Agenda de Contatos - Subetapa 7
+
+- Validacao manual da correcao 6B registrada como bem-sucedida.
+- Subetapa 7 criada documentalmente.
+- Plano do segundo recorte funcional minimo registrado.
+- `Agenda de contatos` continua tratada como `core / comum`.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 8 - Plano documental da separacao da logica pura de filtragem e da coleta de contexto da UI`.
+
 
 
