@@ -29,6 +29,23 @@
     };
   }
 
+  function prefValoresPadraoDados() {
+    return {
+      nome: "",
+      apelido: "",
+      email: "",
+      endereco: "",
+      bairro: "",
+      cidade: "",
+      cep: "",
+      uf: "",
+      pais: "Brasil",
+      telefones: "",
+      cro: "",
+      cpf: ""
+    };
+  }
+
   function prefAmbEstiloPadrao() {
     return {
       fonte_nome: "Tahoma",
@@ -53,6 +70,7 @@
     getMetadata,
     prefOdontoNorm,
     prefValoresPadraoModelos,
+    prefValoresPadraoDados,
     prefAmbEstiloPadrao,
     prefOdontoFindByLabel
   });

@@ -2252,22 +2252,7 @@ function prefValoresPadraoModelos(){
 const PREF_AMB_SECOES_PADRAO=[{id:"enunciados",label:"Enunciados"},{id:"campos_edicao",label:"Campos de edi\u00e7\u00e3o"},{id:"botoes_funcao",label:"Bot\u00f5es de fun\u00e7\u00e3o"},{id:"outros_botoes",label:"Outros bot\u00f5es"},{id:"itens_lista",label:"Itens de lista"}];
 function prefAmbEstiloPadrao(){const mod=window.BranaPreferenciasOpcoesSistemaModule;if(mod&&typeof mod.prefAmbEstiloPadrao==="function")return mod.prefAmbEstiloPadrao();return{fonte_nome:"Tahoma",fonte_tamanho:12,fonte_estilo:"normal",cor_texto:"#000000",riscado:false,sublinhado:false,script:"Ocidental"}}
 function prefValoresPadraoAmbiente(){const secoes={};PREF_AMB_SECOES_PADRAO.forEach(item=>{secoes[item.id]=prefAmbEstiloPadrao()});return{secao_ativa:"enunciados",secoes}}
-function prefValoresPadraoDados(){
-  return{
-    nome:"",
-    apelido:"",
-    email:"",
-    endereco:"",
-    bairro:"",
-    cidade:"",
-    cep:"",
-    uf:"",
-    pais:"Brasil",
-    telefones:"",
-    cro:"",
-    cpf:"",
-  }
-}
+function prefValoresPadraoDados(){const mod=window.BranaPreferenciasOpcoesSistemaModule;if(mod&&typeof mod.prefValoresPadraoDados==="function")return mod.prefValoresPadraoDados();return{nome:"",apelido:"",email:"",endereco:"",bairro:"",cidade:"",cep:"",uf:"",pais:"Brasil",telefones:"",cro:"",cpf:""}}
 function prefValoresPadraoOdontograma(){return{especialidade_mais_utilizada:"clinica",filtro_mais_utilizado:"todas_tratamento",exibir_alerta_anamnese:true,exibir_icones_alerta:true,exibir_imagens_easycapture:true,exibir_coluna_cirurgiao_historico:false,exibir_historico_ordem_decrescente:true,exibir_dados_paciente:true,exibir_dados_tratamento:true,exibir_observacoes:true,exibir_documentos:true,exibir_agenda_dia:true,cor_a_realizar:"#ff0000",cor_realizado:"#0000ff",cor_condicao_observada:"#008000",cor_anomalia:"#000000"}}
 function prefAtualizarTitulo(){if(!prefCfg)return;const tituloEl=prefCfg.backdrop?.querySelector(".modal-title,.modal-standard-title");if(tituloEl)tituloEl.textContent=prefTituloAtual()}
 function prefSelecionarAba(tabId){if(!prefCfg)return;prefCfg.tabAtual=tabId;prefCfg.tabs.forEach(btn=>btn.classList.toggle("active",btn.dataset.tab===tabId));prefCfg.panes.forEach(pane=>pane.classList.toggle("hidden",pane.dataset.pane!==tabId));if(tabId==="geral")footerMsg.textContent="Preferencias gerais carregadas.";else if(tabId==="modelos")footerMsg.textContent="Preferencias de modelos carregadas.";else if(tabId==="ambiente")footerMsg.textContent="Preferencias de ambiente carregadas.";else if(tabId==="dados")footerMsg.textContent="Dados do usuario carregados.";else if(tabId==="odontograma")footerMsg.textContent="Preferencias do odontograma carregadas e prontas para futura integracao.";else footerMsg.textContent="Preferencias carregadas."}
