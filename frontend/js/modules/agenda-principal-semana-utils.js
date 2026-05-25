@@ -21,24 +21,39 @@
     return "semana";
   }
 
+  function agendaSemanaBuildStandaloneUrl(modo = "semana") {
+    const url = new URL(window.location.href);
+    url.searchParams.set("agenda_semana", "1");
+    url.searchParams.set(
+      "agenda_modo",
+      String(modo || "semana").trim().toLowerCase() === "dia"
+        ? "dia"
+        : (String(modo || "semana").trim().toLowerCase() === "clinica" ? "clinica" : "semana")
+    );
+    return url.toString();
+  }
+
   const api = Object.freeze({
     meta: Object.freeze({
       nome: "Agenda principal - Semana utils",
       modulo: "agenda-principal-semana-utils",
-      versaoSubetapa: "subetapa-25_helper_standalone_mode",
+      versaoSubetapa: "subetapa-28_helper_standalone_url",
       status: "ativo-passivo",
       ativo: false,
       controlaFluxo: false
     }),
     agendaSemanaIsStandaloneRequest,
     agendaSemanaStandaloneModeFromQuery,
+    agendaSemanaBuildStandaloneUrl,
     helpers: Object.freeze({
       agendaSemanaIsStandaloneRequest,
-      agendaSemanaStandaloneModeFromQuery
+      agendaSemanaStandaloneModeFromQuery,
+      agendaSemanaBuildStandaloneUrl
     })
   });
 
   window.BranaAgendaPrincipalSemanaUtils = api;
   window.agendaSemanaIsStandaloneRequest = agendaSemanaIsStandaloneRequest;
   window.agendaSemanaStandaloneModeFromQuery = agendaSemanaStandaloneModeFromQuery;
+  window.agendaSemanaBuildStandaloneUrl = agendaSemanaBuildStandaloneUrl;
 })();

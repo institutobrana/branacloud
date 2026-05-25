@@ -1231,5 +1231,23 @@ Observacoes:
 - O usuario validou a abertura URL/standalone e `agenda_modo=dia`, `agenda_modo=clinica` e sem `agenda_modo` sem identificar erros.
 - O proximo passo recomendado e a implementacao minima de `agendaSemanaBuildStandaloneUrl` em `frontend/js/modules/agenda-principal-semana-utils.js`, com validacao manual da abertura standalone da agenda semana.
 
+## Atualizacao Agenda Principal - Subetapa 28
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 28 foi executada como a nona extracao minima de helper puro.
+- O helper extraido foi `agendaSemanaBuildStandaloneUrl`.
+- A extracao foi feita em `frontend/js/modules/agenda-principal-semana-utils.js`.
+- `frontend/index.html` nao foi alterado.
+- `agendaSemanaIsStandaloneRequest` nao foi alterado.
+- `agendaSemanaStandaloneModeFromQuery` nao foi alterado.
+- `agenda-principal-legado-utils.js` nao foi alterado.
+- Nenhum helper de agenda legado foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A auditoria pos-Subetapa 27 confirmou commit documental limpo.
+- O usuario ja testou URL/standalone e os modos `agenda_modo=dia`, `agenda_modo=clinica` e sem `agenda_modo` sem identificar erros.
+- O proximo passo recomendado e a validacao manual da extracao de `agendaSemanaBuildStandaloneUrl` e da abertura standalone da agenda semana.
+
 
 

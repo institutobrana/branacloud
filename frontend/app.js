@@ -11005,12 +11005,6 @@ async function agendaSemanaAbrir(){
   });
   footerMsg.textContent="Agenda da semana aberta.";
 }
-function agendaSemanaBuildStandaloneUrl(modo="semana"){
-  const url=new URL(window.location.href);
-  url.searchParams.set("agenda_semana","1");
-  url.searchParams.set("agenda_modo",String(modo||"semana").trim().toLowerCase()==="dia"?"dia":(String(modo||"semana").trim().toLowerCase()==="clinica"?"clinica":"semana"));
-  return url.toString();
-}
 async function agendaSemanaAbrirEmAbaUnica(modo="semana"){
   const targetUrl=agendaSemanaBuildStandaloneUrl(modo);
   const agendaWin=window.open(targetUrl,AGENDA_STANDALONE_WINDOW_NAME);
@@ -24333,4 +24327,3 @@ window.unidadeAbrirModal=unidadeAbrirModal;
 window.auxAbrir=auxAbrir;
 window.simbolosEspecialidadeNome=simbolosEspecialidadeNome;
 window.simbolosAbrir=simbolosAbrir;
-
