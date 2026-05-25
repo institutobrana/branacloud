@@ -1736,6 +1736,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Consolidacao documental apos validacao de prefAmbienteSecoesAtuais`.
 
+## Preferencias / Configuracoes comuns - Consolidacao documental apos validacao de prefAmbienteSecoesAtuais
+
+- `Preferencias / Configuracoes comuns` segue como frente core / comum.
+- `prefAmbienteSecoesAtuais` foi validado como recorte de risco medio controlado.
+- Nenhum codigo foi alterado nesta subetapa.
+- O modulo `frontend/js/modules/preferencias-opcoes-sistema.js` permanece passivo, com fallback/duplicidade controlada em `frontend/app.js`.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos` e `Prestadores`.
+- A recomendacao escolhida e pausar/consolidar novamente a frente e fazer nova selecao documental entre modulos/blocos antes de qualquer novo recorte.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Fase 2 - Nova selecao documental entre modulos/blocos apos validacao do recorte medio de Preferencias`.
+
 
 
 
