@@ -887,5 +887,16 @@ Observacoes:
 - Proxima frente recomendada: `Agenda principal`.
 - Proxima subetapa recomendada: `Agenda principal - Subetapa 1 - Contrato funcional e fronteiras documentais`.
 
+## Atualizacao Agenda Principal - Subetapa 1
+
+- Inicio documental da frente `Agenda principal` registrado.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Subetapa 1 criada documentalmente.
+- A frente continua tratada como `core / comum`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em `frontend/app.js`, `frontend/index.html`, `frontend/js/modules`, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- Nenhum controle multiarea foi implementado.
+- Proxima subetapa recomendada: `Agenda principal - Subetapa 2 - Mapa documental dos fluxos de abertura, modos dia/semana, proximo agendado, avisos e fronteiras com agenda legado`.
+
 
 
