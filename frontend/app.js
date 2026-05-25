@@ -7679,10 +7679,6 @@ function agendaLegadoFmtStamp(valor){
   const mi=String(d.getMinutes()).padStart(2,"0");
   return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
 }
-function agendaLegadoNumOrNull(value){
-  const n=Number(value);
-  return Number.isFinite(n)?Math.trunc(n):null;
-}
 function agendaLegadoSetPacienteVinculo(nroPac,nome){
   if(!agendaLegado)return;
   const id=Number(nroPac||0)||0;

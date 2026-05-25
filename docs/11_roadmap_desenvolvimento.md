@@ -923,5 +923,16 @@ Observacoes:
 - Nenhum patch foi autorizado.
 - Proxima subetapa recomendada: `Agenda principal - Subetapa 4 - Implementacao minima do helper puro agendaLegadoNumOrNull e validacao manual do fluxo de agenda legado`.
 
+## Atualizacao Agenda Principal - Subetapa 4
+
+- Primeira extracao minima de helper puro concluida.
+- O helper extraido foi `agendaLegadoNumOrNull`.
+- `Agenda principal` continua tratada como `core / comum`.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Os arquivos de codigo alterados foram `frontend/app.js`, `frontend/index.html` e `frontend/js/modules/agenda-principal-legado-utils.js`.
+- Nenhum backend, banco, schema, migration, seed, endpoint ou permissao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- Proxima subetapa recomendada: `Agenda principal - Subetapa 5 - Validacao manual da extracao do helper agendaLegadoNumOrNull e revisao do primeiro impacto funcional`.
+
 
 
