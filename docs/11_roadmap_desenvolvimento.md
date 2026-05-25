@@ -1261,5 +1261,17 @@ Observacoes:
 - O usuario ja havia testado URL/standalone e `agenda_modo` sem identificar erros.
 - O proximo passo recomendado e a validacao manual da extracao de `agendaSemanaBuildStandaloneUrl` e da abertura standalone da agenda semana.
 
+## Reavaliacao Documental - Pos Agenda Principal
+
+- A reavaliacao foi feita apos a Subetapa 29 da `Agenda principal`.
+- Nenhum codigo foi alterado.
+- A `Agenda principal` ja tem nove helpers extraidos e validados.
+- Os helpers restantes da `Agenda principal` foram considerados mais sensiveis.
+- As frentes comparadas foram `Ficha pessoal`, `Conta corrente`, `Relatorios`, `Indices financeiros`, `Preferencias / Configuracoes comuns` e outros cadastros auxiliares ja modularizados.
+- A frente recomendada como proxima e `Preferencias / Configuracoes comuns`.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+
+
 
 
