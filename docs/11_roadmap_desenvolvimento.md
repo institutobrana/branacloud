@@ -875,5 +875,17 @@ Observacoes:
 - Proximo teste manual obrigatorio antes de prosseguir.
 - Proxima subetapa recomendada somente apos validacao manual.
 
+## Atualizacao Agenda de Contatos - Subetapa 15
+
+- Validacao manual da Subetapa 14 registrada como bem-sucedida.
+- Subetapa 15 criada documentalmente.
+- Consolidacao dos recortes de `Agenda de contatos` registrada.
+- A frente foi considerada pausada/consolidada.
+- O modulo continua tratado como `core / comum`.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhum backend, banco, endpoint ou permissao foi alterado.
+- Proxima frente recomendada: `Agenda principal`.
+- Proxima subetapa recomendada: `Agenda principal - Subetapa 1 - Contrato funcional e fronteiras documentais`.
+
 
 
