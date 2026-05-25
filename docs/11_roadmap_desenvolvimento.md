@@ -934,5 +934,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - Proxima subetapa recomendada: `Agenda principal - Subetapa 5 - Validacao manual da extracao do helper agendaLegadoNumOrNull e revisao do primeiro impacto funcional`.
 
+## Atualizacao Agenda Principal - Subetapa 5
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 5 foi executada como validacao e revisao de impacto da extracao anterior.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaLegadoNumOrNull` permanece como a primeira extracao minima da frente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migration, seed, endpoint ou permissao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do segundo helper puro de menor risco.
+
 
 
