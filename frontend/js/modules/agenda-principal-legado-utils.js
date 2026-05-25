@@ -30,11 +30,18 @@
     return `${dd}/${mm}/${aa}`;
   }
 
+  function agendaLegadoFmtData(valor) {
+    if (!valor) return "";
+    const d = new Date(String(valor));
+    if (Number.isNaN(d.getTime())) return String(valor);
+    return d.toLocaleDateString("pt-BR");
+  }
+
   const api = Object.freeze({
     meta: Object.freeze({
       nome: "Agenda principal - Legado utils",
       modulo: "agenda-principal-legado-utils",
-      versaoSubetapa: "subetapa-10_helper_data_input",
+      versaoSubetapa: "subetapa-13_helper_data",
       status: "ativo-passivo",
       ativo: false,
       controlaFluxo: false
@@ -42,10 +49,12 @@
     agendaLegadoNumOrNull,
     agendaLegadoFmtHora,
     agendaLegadoFmtDataInput,
+    agendaLegadoFmtData,
     helpers: Object.freeze({
       agendaLegadoNumOrNull,
       agendaLegadoFmtHora,
-      agendaLegadoFmtDataInput
+      agendaLegadoFmtDataInput,
+      agendaLegadoFmtData
     })
   });
 
@@ -53,4 +62,5 @@
   window.agendaLegadoNumOrNull = agendaLegadoNumOrNull;
   window.agendaLegadoFmtHora = agendaLegadoFmtHora;
   window.agendaLegadoFmtDataInput = agendaLegadoFmtDataInput;
+  window.agendaLegadoFmtData = agendaLegadoFmtData;
 })();

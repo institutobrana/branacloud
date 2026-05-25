@@ -8388,12 +8388,6 @@ function agendaLegadoParseDataInput(valor){
   if(Number.isNaN(d.getTime()))return"";
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 }
-function agendaLegadoFmtData(valor){
-  if(!valor)return"";
-  const d=new Date(String(valor));
-  if(Number.isNaN(d.getTime()))return String(valor);
-  return d.toLocaleDateString("pt-BR");
-}
 function agendaLegadoSyncMotivoOptions(valorAtual){
   if(!agendaLegado?.modalMotivo)return;
   const campo=agendaLegado.modalMotivo;
