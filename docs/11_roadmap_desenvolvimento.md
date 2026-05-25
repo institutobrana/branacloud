@@ -1702,6 +1702,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Contrato detalhado de prefAmbienteSecoesAtuais como recorte medio controlado`.
 
+## Preferencias / Configuracoes comuns - Contrato detalhado de prefAmbienteSecoesAtuais
+
+- `Preferencias / Configuracoes comuns` continua como frente core / comum.
+- Nenhum codigo foi alterado nesta etapa.
+- O helper `prefAmbienteSecoesAtuais` foi confirmado como recorte medio controlado com contrato explicito de `baseSecoes` e `atuais`.
+- O modulo `frontend/js/modules/preferencias-opcoes-sistema.js` permanece passivo, com fallback/duplicidade controlada em `frontend/app.js`.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos` e `Prestadores`.
+- A recomendacao escolhida foi seguir com a implementacao futura minima de `prefAmbienteSecoesAtuais` com parametros explicitos.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Implementacao minima de prefAmbienteSecoesAtuais com contrato explicito baseSecoes/atuais`.
+
 
 
 
