@@ -1692,6 +1692,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Contrato funcional e fronteiras para o proximo recorte medio controlado`.
 
+## Preferencias / Configuracoes comuns - Contrato do proximo recorte medio
+
+- `Preferencias / Configuracoes comuns` foi retomada documentalmente para avaliar o proximo recorte medio controlado.
+- Nenhum codigo foi alterado nesta etapa.
+- O modulo `frontend/js/modules/preferencias-opcoes-sistema.js` permanece passivo, parcial e com helpers validados.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Prestadores` e `Preferencias / Configuracoes comuns`.
+- A recomendacao escolhida foi detalhar `prefAmbienteSecoesAtuais` como proximo recorte medio controlado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Contrato detalhado de prefAmbienteSecoesAtuais como recorte medio controlado`.
+
 
 
 
