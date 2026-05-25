@@ -910,5 +910,18 @@ Observacoes:
 - Nenhum patch foi autorizado.
 - Proxima subetapa recomendada: `Agenda principal - Subetapa 3 - Plano documental do primeiro helper puro candidato, com avaliacao de risco e fronteira de extracao`.
 
+## Atualizacao Agenda Principal - Subetapa 3
+
+- Subetapa 3 criada documentalmente para `Agenda principal`.
+- Os candidatos a helper puro foram reavaliados.
+- O primeiro helper recomendado para futura implementacao foi `agendaLegadoNumOrNull`.
+- `Agenda principal` continua tratada como `core / comum`.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- Nenhum helper foi implementado.
+- Nenhum patch foi autorizado.
+- Proxima subetapa recomendada: `Agenda principal - Subetapa 4 - Implementacao minima do helper puro agendaLegadoNumOrNull e validacao manual do fluxo de agenda legado`.
+
 
 
