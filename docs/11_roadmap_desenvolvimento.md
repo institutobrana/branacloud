@@ -1841,6 +1841,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `CID - Contrato documental do proximo helper leve ou transformacao segura`.
 
+## CID - Contrato documental do proximo helper leve ou transformacao segura
+
+- `CID` foi tratado como modulo especifico de area profissional.
+- O estado atual de `CID` continua concentrado em `frontend/app.js` e no modulo passivo `frontend/js/modules/cid.js`.
+- O candidato documental mais seguro identificado foi `compararTextoCid(texto, termo)`.
+- A recomendacao ficou em manter a abordagem conservadora: contrato antes de qualquer implementacao futura.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e seguir com contrato documental antes de qualquer delegacao adicional em `CID`.
+
 
 
 
