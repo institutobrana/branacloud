@@ -11410,9 +11410,10 @@ async function planoAbrir(){planoEnsureUI();hideAllPanels();ensurePanelChrome(pl
 function planoGrupoSel(){return gruposCache.find(x=>x.id===grupoSelId)||null}
 function planoCatSel(){return planoGrupoSel()?.categorias?.find(x=>x.id===catSelId)||null}
 function planoDialogGrupo(ed=null){
-  const helpersPlano=window.BranaPlanoContasModule?.helpers||null;
+  const planoApi=window.BranaPlanoContasModule||null;
+  const helpersPlano=planoApi?.helpers||null;
   const validarNomeGrupo=typeof helpersPlano?.validarNomeGrupo==="function"?helpersPlano.validarNomeGrupo:null;
-  const montarPayloadGrupo=typeof helpersPlano?.montarPayloadGrupo==="function"?helpersPlano.montarPayloadGrupo:null;
+  const montarPayloadGrupo=typeof planoApi?.montarPayloadGrupo==="function"?planoApi.montarPayloadGrupo:typeof helpersPlano?.montarPayloadGrupo==="function"?helpersPlano.montarPayloadGrupo:null;
   cadModalAbrir(`<div class="f"><label>Nome</label><input id="cad-nome" value="${esc(ed?.nome||"")}"></div><div class="f"><label>Tipo</label><select id="cad-tipo"><option ${ed?.tipo==="Profissional"?"selected":""}>Profissional</option><option ${ed?.tipo==="Pessoal"?"selected":""}>Pessoal</option></select></div>`,async()=>{
     const rawNome=document.getElementById("cad-nome").value;
     const tipo=document.getElementById("cad-tipo").value;

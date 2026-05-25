@@ -1775,6 +1775,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a avaliacao documental da implementacao minima de `montarPayloadGrupo`.
 
+## Plano de Contas - Implementacao minima de montarPayloadGrupo
+
+- `Plano de Contas` continua tratado como modulo comum/core administrativo/transversal.
+- A implementacao minima de `montarPayloadGrupo(nome, tipo)` foi realizada de forma passiva e conservadora.
+- O modulo `frontend/js/modules/plano-contas.js` passou a expor o helper diretamente, mantendo fallback/compatibilidade com `frontend/app.js`.
+- `frontend/app.js` passou a delegar o payload de grupo ao helper do modulo, com fallback local equivalente.
+- O payload final, o salvamento, `requestJson` e os endpoints nao foram alterados.
+- DOM, renderizacao, modal, scaffold e selecao visual nao foram alterados.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual do usuario e obrigatorio antes de qualquer proxima etapa documental.
+- A proxima subetapa e apenas teste manual pelo usuario antes de qualquer nova validacao documental.
+
 
 
 

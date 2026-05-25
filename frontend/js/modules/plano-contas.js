@@ -46,6 +46,10 @@
     };
   }
 
+  if (typeof ns.montarPayloadGrupo !== "function") {
+    ns.montarPayloadGrupo = ns.helpers.montarPayloadGrupo;
+  }
+
   if (typeof ns.helpers.montarPayloadCategoria !== "function") {
     ns.helpers.montarPayloadCategoria = function (nome, grupo_id, tipo, tributavel) {
       return {
