@@ -1205,5 +1205,19 @@ Observacoes:
 - O usuario informou que testou posteriormente o modo URL/standalone e a agenda abriu corretamente.
 - A proxima subetapa recomendada e a validacao manual da extracao de `agendaSemanaStandaloneModeFromQuery` e do modo standalone da agenda semana.
 
+## Atualizacao Agenda Principal - Subetapa 26
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 26 foi executada apenas como validacao documental do modo standalone da agenda semana.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaSemanaStandaloneModeFromQuery` permanece como a oitava extracao minima.
+- `frontend/js/modules/agenda-principal-semana-utils.js` e `frontend/js/modules/agenda-principal-legado-utils.js` nao foram alterados nesta etapa.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- O usuario informou que ja conseguiu testar modo URL/standalone.
+- O proximo passo recomendado e o planejamento documental do nono helper puro de menor risco.
+
 
 
