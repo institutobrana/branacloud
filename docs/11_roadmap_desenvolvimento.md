@@ -1097,5 +1097,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do sexto helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 18
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 18 foi executada apenas como planejamento documental do sexto helper puro.
+- O sexto candidato recomendado para futura implementacao foi `agendaLegadoRangeSemana`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima de `agendaLegadoRangeSemana` com validacao manual do impacto visual nos filtros de periodo da agenda legado.
+
 
 
