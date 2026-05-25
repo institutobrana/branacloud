@@ -8894,13 +8894,6 @@ async function agendaLegadoExcluir(){
   agendaLegadoSelId=null;
   await agendaLegadoCarregar();
 }
-function agendaLegadoRangeSemana(){
-  const hoje=new Date();
-  const inicio=new Date(hoje);
-  const fim=new Date(hoje);
-  fim.setDate(fim.getDate()+6);
-  return {inicio:inicio.toISOString().slice(0,10),fim:fim.toISOString().slice(0,10)};
-}
 async function agendaLegadoCarregar(){
   const inicio=String(agendaLegado.inputInicio.value||"").trim();
   const fim=String(agendaLegado.inputFim.value||"").trim();
