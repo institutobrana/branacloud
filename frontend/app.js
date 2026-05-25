@@ -2291,6 +2291,8 @@ function prefAmbienteTextoExemplo(secao){
   return mapa[String(secao||"")]||"AaBbYyZz";
 }
 function prefAmbienteDialogoValor(style){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteDialogoValor==="function")return mod.prefAmbienteDialogoValor(style);
   const ref=style||{};
   return{family:String(ref.fonte_nome||"Tahoma"),size:Number(ref.fonte_tamanho||12)||12,styleId:typeof window.easyFontNormalizeStyleId==="function"?window.easyFontNormalizeStyleId(ref.fonte_estilo):String(ref.fonte_estilo||"normal"),color:String(ref.cor_texto||"#000000"),strike:!!ref.riscado,underline:!!ref.sublinhado,script:String(ref.script||"Ocidental")};
 }

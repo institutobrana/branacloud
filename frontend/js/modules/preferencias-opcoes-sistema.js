@@ -79,6 +79,21 @@
     };
   }
 
+  function prefAmbienteDialogoValor(style) {
+    const ref = style || {};
+    return {
+      family: String(ref.fonte_nome || "Tahoma"),
+      size: Number(ref.fonte_tamanho || 12) || 12,
+      styleId: typeof window.easyFontNormalizeStyleId === "function"
+        ? window.easyFontNormalizeStyleId(ref.fonte_estilo)
+        : String(ref.fonte_estilo || "normal"),
+      color: String(ref.cor_texto || "#000000"),
+      strike: !!ref.riscado,
+      underline: !!ref.sublinhado,
+      script: String(ref.script || "Ocidental")
+    };
+  }
+
   function prefAmbienteTextoExemplo(secao) {
     const mapa = {
       enunciados: "Enunciado",
@@ -105,6 +120,7 @@
     prefValoresPadraoDados,
     prefValoresPadraoOdontograma,
     prefAmbEstiloPadrao,
+    prefAmbienteDialogoValor,
     prefAmbienteTextoExemplo,
     prefOdontoFindByLabel
   });
