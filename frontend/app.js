@@ -2271,6 +2271,11 @@ function prefRenderCombosDados(){
 function prefAmbienteSecoesAtuais(){
   const base=prefValoresPadraoAmbiente().secoes;
   const atual=prefCfg?.ambienteValues?.secoes||{};
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteSecoesAtuais==="function"){
+    const saida=mod.prefAmbienteSecoesAtuais(base,atual);
+    if(saida)return saida;
+  }
   const saida={};
   Object.keys(base).forEach(chave=>{saida[chave]={...base[chave],...(atual[chave]||{})}});
   return saida;

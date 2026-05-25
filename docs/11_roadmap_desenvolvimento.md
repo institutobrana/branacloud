@@ -1713,6 +1713,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Implementacao minima de prefAmbienteSecoesAtuais com contrato explicito baseSecoes/atuais`.
 
+## Preferencias / Configuracoes comuns - Implementacao minima de prefAmbienteSecoesAtuais
+
+- `Preferencias / Configuracoes comuns` continua como frente core / comum.
+- A implementacao minima de `prefAmbienteSecoesAtuais(baseSecoes, atuais)` foi concluida como recorte medio controlado.
+- O helper foi exposto no modulo passivo `frontend/js/modules/preferencias-opcoes-sistema.js`.
+- `frontend/app.js` continua lendo a base e o estado atual, e preserva fallback local equivalente.
+- Nenhum backend, banco, permissao ou payload foi alterado nesta subetapa.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual indicado antes de prosseguir deve ocorrer na aba `Ambiente`.
+- A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Validacao pos-teste de prefAmbienteSecoesAtuais`.
+
 
 
 

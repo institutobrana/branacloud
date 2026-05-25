@@ -115,11 +115,24 @@
     const mapa = {
       enunciados: "Enunciado",
       campos_edicao: "Campo",
-      botoes_funcao: "Botão de função",
-      outros_botoes: 'Botão "Radio"',
+      botoes_funcao: "BotÃ£o de funÃ§Ã£o",
+      outros_botoes: 'BotÃ£o "Radio"',
       itens_lista: "Item 1"
     };
     return mapa[String(secao || "")] || "AaBbYyZz";
+  }
+
+  function prefAmbienteSecoesAtuais(baseSecoes, atuais) {
+    const origem = baseSecoes || {};
+    const estadoAtual = atuais || {};
+    const saida = {};
+    Object.keys(origem).forEach((chave) => {
+      saida[chave] = {
+        ...(origem[chave] || {}),
+        ...(estadoAtual[chave] || {})
+      };
+    });
+    return saida;
   }
 
   function prefOdontoFindByLabel(text) {
@@ -140,6 +153,7 @@
     prefAmbienteDialogoValor,
     prefAmbienteEstiloDeDialogo,
     prefAmbienteTextoExemplo,
+    prefAmbienteSecoesAtuais,
     prefOdontoFindByLabel
   });
 
