@@ -1623,6 +1623,16 @@ Observacoes:
 - A proxima etapa recomendada e a selecao documental do primeiro recorte de risco medio controlado.
 - A blindagem textual/mojibake foi respeitada.
 
+## Selecao do primeiro recorte medio controlado
+
+- A selecao documental do primeiro recorte de risco medio controlado foi concluida.
+- Nenhum codigo foi alterado nesta etapa.
+- Os candidatos comparados foram `Prestadores/prestFiltrarLista`, `Prestadores/prestRender`, `Prestadores/prestSelecionarLinha`, `Prestadores/prestAcoesPlaceholder`, blocos de `Cadastros auxiliares`, `Convênios e Planos`, `Relatorios`, `Agenda principal`, `Preferencias / Configuracoes comuns` e outros candidatos core/comum registrados no roadmap.
+- A recomendacao escolhida foi `Prestadores / prestFiltrarLista` como primeiro recorte medio controlado, mas apenas com contrato documental anterior a qualquer implementacao futura.
+- As frentes pausadas/consolidadas permanecem mantidas.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Prestadores - Contrato detalhado de prestFiltrarLista como recorte medio controlado`.
+
 
 
 
