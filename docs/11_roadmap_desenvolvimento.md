@@ -1188,5 +1188,22 @@ Observacoes:
 - O teste manual direto de querystring standalone da Subetapa 23 ficou limitado porque o usuario nao sabia a rota exata.
 - A proxima subetapa recomendada e a implementacao minima de `agendaSemanaStandaloneModeFromQuery` em `frontend/js/modules/agenda-principal-semana-utils.js`, com validacao manual da agenda semana standalone.
 
+## Atualizacao Agenda Principal - Subetapa 25
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 25 foi executada como implementacao minima do oitavo helper puro.
+- O helper extraido foi `agendaSemanaStandaloneModeFromQuery`.
+- A extracao foi feita no modulo `frontend/js/modules/agenda-principal-semana-utils.js`.
+- `frontend/index.html` nao precisou ser alterado.
+- `agendaSemanaIsStandaloneRequest` nao foi alterado.
+- `agendaSemanaBuildStandaloneUrl` nao foi alterado.
+- `agenda-principal-legado-utils.js` nao foi alterado.
+- Nenhum helper de agenda legado foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O usuario informou que testou posteriormente o modo URL/standalone e a agenda abriu corretamente.
+- A proxima subetapa recomendada e a validacao manual da extracao de `agendaSemanaStandaloneModeFromQuery` e do modo standalone da agenda semana.
+
 
 
