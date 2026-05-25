@@ -529,6 +529,18 @@ Observacoes:
 * Modulo usa permissao `configuracao`.
 * Opcoes podem alterar comportamento de controle de usuarios.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 1
+
+- A frente `Preferencias / Configuracoes comuns` foi iniciada documentalmente.
+- A classificacao registrada e `core / comum`.
+- A escolha veio da reavaliacao pos-`Agenda principal`.
+- A `Agenda principal` fica temporariamente pausada apos as extraicoes ja validadas.
+- A `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum codigo foi alterado.
+- Nenhum arquivo de frontend, backend, banco, endpoints, seeds ou permissoes foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Subetapa 2 - Mapeamento tecnico detalhado por leitura`.
+
 ---
 
 ## Modulo: Licenca, Planos e Pagamentos
