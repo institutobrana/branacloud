@@ -8376,21 +8376,6 @@ function agendaLegadoEnriquecerModal(){
   if(agendaLegado.tabRepete)agendaLegado.tabRepete.addEventListener("click",()=>agendaLegadoSetModalTab("repete"));
   agendaLegadoSetModalTab("dados");
 }
-function agendaLegadoFmtDataInput(valor){
-  if(!valor)return"";
-  const txt=String(valor).trim();
-  if(/^\d{2}\/\d{2}\/\d{4}$/.test(txt))return txt;
-  if(/^\d{4}-\d{2}-\d{2}$/.test(txt)){
-    const [a,m,d]=txt.split("-");
-    return `${d}/${m}/${a}`;
-  }
-  const d=new Date(txt);
-  if(Number.isNaN(d.getTime()))return txt;
-  const dd=String(d.getDate()).padStart(2,"0");
-  const mm=String(d.getMonth()+1).padStart(2,"0");
-  const aa=String(d.getFullYear());
-  return `${dd}/${mm}/${aa}`;
-}
 function agendaLegadoParseDataInput(valor){
   const txt=String(valor||"").trim();
   if(!txt)return"";

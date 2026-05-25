@@ -14,24 +14,43 @@
     return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
   }
 
+  function agendaLegadoFmtDataInput(valor) {
+    if (!valor) return "";
+    const txt = String(valor).trim();
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(txt)) return txt;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(txt)) {
+      const [a, m, d] = txt.split("-");
+      return `${d}/${m}/${a}`;
+    }
+    const d = new Date(txt);
+    if (Number.isNaN(d.getTime())) return txt;
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const aa = String(d.getFullYear());
+    return `${dd}/${mm}/${aa}`;
+  }
+
   const api = Object.freeze({
     meta: Object.freeze({
       nome: "Agenda principal - Legado utils",
       modulo: "agenda-principal-legado-utils",
-      versaoSubetapa: "subetapa-7_helper_hora",
+      versaoSubetapa: "subetapa-10_helper_data_input",
       status: "ativo-passivo",
       ativo: false,
       controlaFluxo: false
     }),
     agendaLegadoNumOrNull,
     agendaLegadoFmtHora,
+    agendaLegadoFmtDataInput,
     helpers: Object.freeze({
       agendaLegadoNumOrNull,
-      agendaLegadoFmtHora
+      agendaLegadoFmtHora,
+      agendaLegadoFmtDataInput
     })
   });
 
   window.BranaAgendaPrincipalLegadoUtils = api;
   window.agendaLegadoNumOrNull = agendaLegadoNumOrNull;
   window.agendaLegadoFmtHora = agendaLegadoFmtHora;
+  window.agendaLegadoFmtDataInput = agendaLegadoFmtDataInput;
 })();
