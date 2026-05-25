@@ -1019,5 +1019,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e o planejamento documental do quarto helper puro de menor risco.
 
+## Atualizacao Agenda Principal - Subetapa 12
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 12 foi executada apenas como planejamento documental do quarto helper puro.
+- O quarto candidato recomendado para futura implementacao foi `agendaLegadoFmtData`.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima de `agendaLegadoFmtData` com validacao manual do impacto visual na tabela da agenda legado.
+
 
 
