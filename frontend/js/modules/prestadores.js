@@ -17,6 +17,21 @@
     return cache.find((item) => Number(item?.id || 0) === alvo) || null;
   }
 
+  function prestFiltrarLista(lista, filtros) {
+    if (!Array.isArray(lista) || lista.length === 0) return [];
+    const esp = String(filtros?.especialidade || "").trim();
+    const nome = String(filtros?.nome || "").trim().toLowerCase();
+    return lista.filter((item) => {
+      const okEsp =
+        !esp ||
+        esp === "__todas__" ||
+        String(item?.especialidade || "").trim() === esp;
+      const alvo = `${String(item?.nome || "")} ${String(item?.fone1 || "")} ${String(item?.fone2 || "")}`.toLowerCase();
+      const okNome = !nome || alvo.includes(nome);
+      return okEsp && okNome;
+    });
+  }
+
   function prestStatusHtml(ativo) {
     return ativo
       ? '<span style="color:#2fbf2f;font-size:14px;line-height:1;">â—</span>'
@@ -44,6 +59,7 @@
       subetapa: meta.subetapa,
       prestFmtCodigo,
       prestSelecionado,
+      prestFiltrarLista,
       prestStatusHtml,
     };
   }
@@ -65,6 +81,7 @@
     getStatus,
     prestFmtCodigo,
     prestSelecionado,
+    prestFiltrarLista,
     prestStatusHtml,
   });
 

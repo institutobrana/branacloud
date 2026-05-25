@@ -1645,6 +1645,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Prestadores - Implementacao minima de prestFiltrarLista com contrato explicito lista/filtros`.
 
+## Prestadores - Implementacao minima de prestFiltrarLista
+
+- A implementacao minima de `prestFiltrarLista` foi concluida como primeiro recorte de risco medio controlado.
+- O contrato explicito `lista/filtros` foi aplicado em `frontend/js/modules/prestadores.js`.
+- `frontend/app.js` passou a montar os filtros localmente e a chamar o helper do modulo com fallback equivalente.
+- Nenhum backend, banco, schema, migration, seed, endpoint ou permissao foi alterado nesta etapa.
+- `Prestadores` continua classificado como `core / comum` administrativo/transversal.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Preferencias / Configuracoes comuns` e `Prestadores`.
+- A blindagem textual/mojibake foi respeitada.
+- A validacao manual segue indicada antes de qualquer novo passo.
+- A proxima subetapa recomendada e a validacao documental pos-teste da implementacao de `prestFiltrarLista`.
+
 
 
 
