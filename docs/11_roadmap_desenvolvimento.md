@@ -1531,6 +1531,22 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissoes foi alterado nesta etapa.
 
+## Prestadores - Subetapa 0
+
+- A frente `Prestadores` foi retomada documentalmente como aproximadamente `core / comum` administrativa/transversal.
+- A Subetapa 0 foi executada apenas como retomada documental e mapeamento tecnico complementar.
+- Nenhum codigo foi alterado.
+- O modulo `frontend/js/modules/prestadores.js` existe e permanece passivo.
+- `window.BranaPrestadoresModule` continua exposto.
+- `prestFmtCodigo` e `prestStatusHtml` permanecem como helpers extraidos e validados.
+- `frontend/index.html` carrega o modulo de Prestadores antes de `frontend/app.js`.
+- `frontend/app.js` continua concentrando o fluxo funcional, com wrapper/fallback local para os helpers ja delegados.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- `Preferencias / Configuracoes comuns` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A próxima subetapa recomendada e a Subetapa 1 documental de fronteiras/contratos do helper `prestSelecionado` ou a confirmacao de pausa da frente, caso nao haja novo helper seguro.
+
 
 
 
