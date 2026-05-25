@@ -970,5 +970,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoFmtHora` no impacto visual da agenda legado.
 
+## Atualizacao Agenda Principal - Subetapa 8
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 8 foi executada como validacao e revisao de impacto visual da extracao anterior.
+- Nenhuma nova extracao foi realizada.
+- Nenhuma alteracao funcional nova foi aplicada.
+- O helper `agendaLegadoFmtHora` permanece como a segunda extracao minima.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum backend, banco, schema, migration, seed, endpoint ou permissao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e o planejamento documental do terceiro helper puro de menor risco.
+
 
 
