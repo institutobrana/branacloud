@@ -8376,13 +8376,6 @@ function agendaLegadoEnriquecerModal(){
   if(agendaLegado.tabRepete)agendaLegado.tabRepete.addEventListener("click",()=>agendaLegadoSetModalTab("repete"));
   agendaLegadoSetModalTab("dados");
 }
-function agendaLegadoFmtHora(ms){
-  const total=Math.max(0,parseInt(ms||0,10));
-  const hh=Math.floor(total/3600000);
-  const mm=Math.floor((total%3600000)/60000);
-  if(!hh&&!mm)return"";
-  return `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;
-}
 function agendaLegadoFmtDataInput(valor){
   if(!valor)return"";
   const txt=String(valor).trim();

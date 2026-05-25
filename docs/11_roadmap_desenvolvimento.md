@@ -957,5 +957,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima de `agendaLegadoFmtHora` com validacao manual do impacto visual.
 
+## Atualizacao Agenda Principal - Subetapa 7
+
+- `Agenda principal` continua tratada como `core / comum`.
+- A Subetapa 7 concluiu a segunda extracao minima de helper puro.
+- O helper extraido foi `agendaLegadoFmtHora`.
+- Os arquivos de codigo alterados foram `frontend/app.js` e `frontend/js/modules/agenda-principal-legado-utils.js`.
+- `frontend/index.html` nao foi alterado nesta etapa.
+- `agendaLegadoNumOrNull` nao foi alterado.
+- Nenhum backend, banco, schema, migration, seed, endpoint ou permissao foi alterado.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a validacao manual da extracao de `agendaLegadoFmtHora` no impacto visual da agenda legado.
+
 
 
