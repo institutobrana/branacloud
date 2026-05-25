@@ -729,5 +729,15 @@ Observacoes:
 - Proxima subetapa recomendada: continuidade documental em `Auxiliares / Tabelas auxiliares`.
 - O primeiro recorte funcional segue proibido nesta etapa.
 
+## Atualizacao Reavaliacao Modulos Frontend Sem Modularizacao
+
+- Reavaliacao documental dos modulos frontend sem modularizacao real concluida.
+- A decisao do usuario de tratar todos os modulos como `core / comum` foi registrada.
+- `Cadastros Gerais / Auxiliares` nao foi continuado nesta etapa.
+- Nenhum codigo foi alterado.
+- Nenhum backend, banco, endpoint ou permissao foi alterado.
+- Modulo recomendado para a proxima etapa documental: `Agenda de contatos`.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 1 - Contrato funcional e fronteiras documentais`.
+
 
 
