@@ -1809,6 +1809,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e uma nova auditoria documental de `montarPayloadCategoria` antes de qualquer implementacao.
 
+## Plano de Contas - Auditoria documental de montarPayloadCategoria
+
+- `Plano de Contas` continua tratado como modulo comum/core administrativo/transversal.
+- A auditoria documental concluiu que `montarPayloadCategoria` deve permanecer como esta, sem implementacao nova.
+- O helper segue passivo em `ns.helpers` e o `app.js` ja delega parcialmente com fallback equivalente.
+- A mudanca proposta teria ganho real pequeno e risco desnecessario para um fluxo ja funcional.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e consolidar documentalmente a permanencia do fluxo atual, sem implementacao.
+
 
 
 
