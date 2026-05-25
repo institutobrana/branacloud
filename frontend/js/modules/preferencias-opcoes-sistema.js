@@ -79,6 +79,17 @@
     };
   }
 
+  function prefAmbienteTextoExemplo(secao) {
+    const mapa = {
+      enunciados: "Enunciado",
+      campos_edicao: "Campo",
+      botoes_funcao: "Botão de função",
+      outros_botoes: 'Botão "Radio"',
+      itens_lista: "Item 1"
+    };
+    return mapa[String(secao || "")] || "AaBbYyZz";
+  }
+
   function prefOdontoFindByLabel(text) {
     const key = prefOdontoNorm(text);
     for (let i = 0; i < PREF_ODONTO_PALETTE.length; i += 1) {
@@ -94,6 +105,7 @@
     prefValoresPadraoDados,
     prefValoresPadraoOdontograma,
     prefAmbEstiloPadrao,
+    prefAmbienteTextoExemplo,
     prefOdontoFindByLabel
   });
 

@@ -1400,6 +1400,20 @@ Observacoes:
 - Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta etapa.
 - A proxima subetapa recomendada e a implementacao minima do helper puro `prefAmbienteTextoExemplo`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 9
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 9 foi concluida com implementacao minima do helper puro `prefAmbienteTextoExemplo`.
+- Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_9_implementacao_pref_ambiente_texto_exemplo.md`.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- `frontend/app.js` preservou fallback local equivalente para o helper de texto exemplo.
+- `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefAmbienteTextoExemplo` em `window.BranaPreferenciasOpcoesSistemaModule`.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual da frente de ambiente foi indicado antes de prosseguir.
+- A proxima subetapa recomendada e a validacao pos-teste do helper `prefAmbienteTextoExemplo`.
+
 
 
 

@@ -2285,6 +2285,8 @@ function prefAmbienteEstiloAtual(){
   return secoes[prefAmbienteSecaoAtiva()]||prefAmbEstiloPadrao();
 }
 function prefAmbienteTextoExemplo(secao){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteTextoExemplo==="function")return mod.prefAmbienteTextoExemplo(secao);
   const mapa={enunciados:"Enunciado",campos_edicao:"Campo",botoes_funcao:"Bot\u00e3o de fun\u00e7\u00e3o",outros_botoes:'Bot\u00e3o "Radio"',itens_lista:"Item 1"};
   return mapa[String(secao||"")]||"AaBbYyZz";
 }
