@@ -1747,6 +1747,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Fase 2 - Nova selecao documental entre modulos/blocos apos validacao do recorte medio de Preferencias`.
 
+## Fase 2 - Nova selecao documental entre modulos/blocos apos validacao do recorte medio de Preferencias
+
+- `Preferencias / Configuracoes comuns` permanece consolidada apos `prefAmbienteSecoesAtuais`.
+- `Prestadores` permanece consolidado apos `prestFiltrarLista`.
+- Nenhum codigo foi alterado nesta etapa.
+- As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Preferencias / Configuracoes comuns` e `Prestadores`.
+- A recomendacao escolhida foi fazer nova comparacao documental restrita entre `Cadastros auxiliares`, `Medicamentos` e `Plano de Contas` antes de qualquer novo recorte.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Fase 2 - Comparacao documental restrita entre Cadastros auxiliares, Medicamentos e Plano de Contas`.
+
 
 
 
