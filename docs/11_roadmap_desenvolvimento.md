@@ -1545,7 +1545,20 @@ Observacoes:
 - `Agenda de contatos` permanece pausada/consolidada.
 - `Preferencias / Configuracoes comuns` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- A próxima subetapa recomendada e a Subetapa 1 documental de fronteiras/contratos do helper `prestSelecionado` ou a confirmacao de pausa da frente, caso nao haja novo helper seguro.
+
+## Prestadores - Subetapa 1
+
+- A frente `Prestadores` teve a Subetapa 1 concluida como etapa documental de fronteiras e contrato do helper `prestSelecionado`.
+- O helper `prestSelecionado` foi analisado sem alteracao de codigo.
+- O helper continua dependente de `prestadoresCache` e `prestadorSelId`, com recomendacao de contrato explicito caso venha a ser extraido futuramente.
+- Nenhuma alteracao de codigo foi feita nesta subetapa.
+- O modulo `frontend/js/modules/prestadores.js` continua passivo e com namespace global `window.BranaPrestadoresModule`.
+- `frontend/app.js` segue concentrando o fluxo funcional e o wrapper local dos helpers ja delegados.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- `Preferencias / Configuracoes comuns` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a Subetapa 2 documental ou funcional de `prestSelecionado` com contrato explicito de cache e selecao, caso a frente siga com uma extracao minima segura.
 
 
 
