@@ -776,5 +776,14 @@ Observacoes:
 - O primeiro recorte funcional minimo foi mantido apenas como plano documental.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 5 - Plano documental do primeiro recorte funcional minimo com helper visual puro`.
 
+## Atualizacao Agenda de Contatos - Subetapa 5
+
+- Subetapa 5 de `Agenda de contatos` criada documentalmente.
+- Plano do primeiro recorte funcional minimo com helper visual puro registrado.
+- O modulo continua tratado como `core / comum`.
+- Nenhuma alteracao de codigo foi feita.
+- Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
+- Proxima subetapa recomendada: `Agenda de contatos - Subetapa 6 - Implementacao minima do helper visual puro`.
+
 
 
