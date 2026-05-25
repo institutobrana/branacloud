@@ -1414,6 +1414,18 @@ Observacoes:
 - O teste manual da frente de ambiente foi indicado antes de prosseguir.
 - A proxima subetapa recomendada e a validacao pos-teste do helper `prefAmbienteTextoExemplo`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 10
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 10 foi concluida como validacao documental pos-teste da Subetapa 9.
+- O teste manual da Subetapa 9 nao encontrou erros.
+- `prefAmbienteTextoExemplo` foi validado no fluxo real de preferencias.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado nesta validacao.
+- A proxima subetapa recomendada e a implementacao minima do helper puro `prefAmbienteDialogoValor`.
+
 
 
 
