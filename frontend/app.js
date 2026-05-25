@@ -22332,7 +22332,15 @@ async function executarAcaoMenu(action){
     await abrirSobreModal();
   }
 }
-function prestSelecionado(){return prestadoresCache.find(item=>Number(item.id||0)===Number(prestadorSelId))||null}
+function prestSelecionado(){
+  try{
+    const mod=window.BranaPrestadoresModule;
+    if(mod&&typeof mod.prestSelecionado==="function"){
+      return mod.prestSelecionado(prestadoresCache,prestadorSelId);
+    }
+  }catch{}
+  return prestadoresCache.find(item=>Number(item.id||0)===Number(prestadorSelId))||null
+}
 function prestStatusHtml(ativo){
   try{
     const mod=window.BranaPrestadoresModule;

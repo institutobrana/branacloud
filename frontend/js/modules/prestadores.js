@@ -11,6 +11,12 @@
     return texto;
   }
 
+  function prestSelecionado(cache, selId) {
+    if (!Array.isArray(cache) || cache.length === 0) return null;
+    const alvo = Number(selId || 0);
+    return cache.find((item) => Number(item?.id || 0) === alvo) || null;
+  }
+
   function prestStatusHtml(ativo) {
     return ativo
       ? '<span style="color:#2fbf2f;font-size:14px;line-height:1;">â—</span>'
@@ -37,6 +43,7 @@
       controlaFluxo: meta.controlaFluxo,
       subetapa: meta.subetapa,
       prestFmtCodigo,
+      prestSelecionado,
       prestStatusHtml,
     };
   }
@@ -57,6 +64,7 @@
     getInfo,
     getStatus,
     prestFmtCodigo,
+    prestSelecionado,
     prestStatusHtml,
   });
 

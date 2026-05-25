@@ -1560,6 +1560,20 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a Subetapa 2 documental ou funcional de `prestSelecionado` com contrato explicito de cache e selecao, caso a frente siga com uma extracao minima segura.
 
+## Prestadores - Subetapa 2
+
+- A frente `Prestadores` teve a Subetapa 2 concluida com implementacao minima do helper `prestSelecionado`.
+- O helper agora possui contrato explicito `cache/selId`.
+- `frontend/js/modules/prestadores.js` passou a exportar `prestSelecionado(cache, selId)` no namespace passivo `window.BranaPrestadoresModule`.
+- `frontend/app.js` passou a consultar primeiro o helper do modulo passivo e manteve fallback local equivalente.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- `Prestadores` segue classificado como `core / comum` administrativo/transversal.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- `Preferencias / Configuracoes comuns` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a reavaliacao documental do bloco restante apos a extracao minima de `prestSelecionado`.
+
 
 
 
