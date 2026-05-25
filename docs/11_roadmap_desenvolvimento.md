@@ -1295,6 +1295,20 @@ Observacoes:
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 3
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 3 foi executada apenas como isolamento documental dos candidatos mais seguros.
+- Nenhum codigo foi alterado.
+- Os candidatos de menor risco foram reavaliados por leitura: `prefAmbEstiloPadrao`, `prefValoresPadraoDados`, `prefValoresPadraoOdontograma`, `prefAmbienteTextoExemplo`, `prefAmbienteDialogoValor` e `prefAmbienteEstiloDeDialogo`.
+- O primeiro candidato recomendado para futura implementacao foi `prefAmbEstiloPadrao`.
+- A ordem conservadora de extracao futura foi documentada antes de qualquer alteracao funcional.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum arquivo de frontend, backend, banco, schema, migrations, seeds, endpoints, permissões, `package.json` ou configuracao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima do helper puro mais seguro, com validacao manual do fluxo de ambiente.
+
 
 
 
