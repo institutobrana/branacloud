@@ -898,5 +898,17 @@ Observacoes:
 - Nenhum controle multiarea foi implementado.
 - Proxima subetapa recomendada: `Agenda principal - Subetapa 2 - Mapa documental dos fluxos de abertura, modos dia/semana, proximo agendado, avisos e fronteiras com agenda legado`.
 
+## Atualizacao Agenda Principal - Subetapa 2
+
+- Subetapa 2 criada documentalmente para `Agenda principal`.
+- O mapa de abertura, modos dia/semana, proximo agendado, avisos e fronteira com agenda legado foi registrado.
+- `Agenda principal` continua tratada como `core / comum`.
+- `Agenda de contatos` permanece pausada/consolidada.
+- Nenhum codigo foi alterado.
+- Nenhuma alteracao foi feita em frontend, backend, banco, schema, migrations, seeds, endpoints ou permissoes.
+- Nenhum helper foi escolhido.
+- Nenhum patch foi autorizado.
+- Proxima subetapa recomendada: `Agenda principal - Subetapa 3 - Plano documental do primeiro helper puro candidato, com avaliacao de risco e fronteira de extracao`.
+
 
 
