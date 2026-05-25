@@ -1349,6 +1349,18 @@ Observacoes:
 - O teste manual da aba `Dados` foi indicado antes de prosseguir.
 - A proxima subetapa recomendada e a implementacao minima do helper puro `prefValoresPadraoOdontograma`.
 
+## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 5B
+
+- `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
+- A Subetapa 5B foi concluida como validacao documental pos-teste da Subetapa 5.
+- O teste manual informado pelo usuario passou sem regressao observada.
+- `prefValoresPadraoDados` foi validado no fluxo real de preferencias.
+- `Agenda principal` permanece pausada temporariamente.
+- `Agenda de contatos` permanece pausada/consolidada.
+- A blindagem textual/mojibake foi respeitada.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta validacao.
+- A proxima subetapa recomendada e a implementacao minima do helper puro `prefValoresPadraoOdontograma`.
+
 
 
 
