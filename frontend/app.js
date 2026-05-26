@@ -2264,14 +2264,26 @@ function prefValoresPadraoOdontograma(){const mod=window.BranaPreferenciasOpcoes
 function prefAtualizarTitulo(){if(!prefCfg)return;const tituloEl=prefCfg.backdrop?.querySelector(".modal-title,.modal-standard-title");if(tituloEl)tituloEl.textContent=prefTituloAtual()}
 function prefSelecionarAba(tabId){if(!prefCfg)return;prefCfg.tabAtual=tabId;prefCfg.tabs.forEach(btn=>btn.classList.toggle("active",btn.dataset.tab===tabId));prefCfg.panes.forEach(pane=>pane.classList.toggle("hidden",pane.dataset.pane!==tabId));if(tabId==="geral")footerMsg.textContent="Preferencias gerais carregadas.";else if(tabId==="modelos")footerMsg.textContent="Preferencias de modelos carregadas.";else if(tabId==="ambiente")footerMsg.textContent="Preferencias de ambiente carregadas.";else if(tabId==="dados")footerMsg.textContent="Dados do usuario carregados.";else if(tabId==="odontograma")footerMsg.textContent="Preferencias do odontograma carregadas e prontas para futura integracao.";else footerMsg.textContent="Preferencias carregadas."}
 function prefRenderCombos(){if(!prefCfg)return;const opts=prefCfg.geralOptions||{};const pesquisas=Array.isArray(opts.pesquisa_padrao_odontograma)?opts.pesquisa_padrao_odontograma:[];const tabelas=Array.isArray(opts.tabelas_intervencoes)?opts.tabelas_intervencoes:[];const convenios=Array.isArray(opts.convenios)?opts.convenios:[];
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefRenderSelectOptions==="function"){
+    mod.prefRenderSelectOptions(prefCfg.cboPesquisa,pesquisas,{valueFrom:item=>item.id,labelFrom:item=>item.label});
+    mod.prefRenderSelectOptions(prefCfg.cboTabela,tabelas,{placeholder:"<< Nenhuma >>",valueFrom:item=>item.id,labelFrom:item=>item.nome||""});
+    mod.prefRenderSelectOptions(prefCfg.cboConvenio,convenios,{valueFrom:item=>item.id,labelFrom:item=>item.nome||""});
+    return;
+  }
   prefCfg.cboPesquisa.innerHTML=pesquisas.map(item=>`<option value="${esc(item.id)}">${esc(item.label)}</option>`).join("");
   prefCfg.cboTabela.innerHTML=['<option value="">&lt;&lt; Nenhuma &gt;&gt;</option>',...tabelas.map(item=>`<option value="${item.id}">${esc(item.nome||"")}</option>`)].join("");
   prefCfg.cboConvenio.innerHTML=convenios.map(item=>`<option value="${item.id}">${esc(item.nome||"")}</option>`).join("");
 }
-function prefRenderCombosModelos(){if(!prefCfg)return;const opts=prefCfg.modelosOptions||{};const renderOptions=(items)=>{const list=Array.isArray(items)?items:[];return list.map(item=>`<option value="${esc(item?.id==null?"":item.id)}">${esc(item.nome||"")}</option>`).join("")};prefCfg.cboModeloAtestado.innerHTML=renderOptions(opts.modelo_impresso_atestados);prefCfg.cboModeloReceita.innerHTML=renderOptions(opts.modelo_impresso_receitas);prefCfg.cboModeloRecibo.innerHTML=renderOptions(opts.modelo_impresso_recibos);prefCfg.cboModeloEtiqueta.innerHTML=renderOptions(opts.modelo_padrao_etiquetas);prefCfg.cboModeloEmail.innerHTML=renderOptions(opts.modelo_texto_email_agenda);prefCfg.cboModeloOrcamento.innerHTML=renderOptions(opts.modelo_padrao_orcamentos);prefCfg.cboModeloWhatsapp.innerHTML=renderOptions(opts.modelo_texto_whatsapp_agenda)}
+function prefRenderCombosModelos(){if(!prefCfg)return;const opts=prefCfg.modelosOptions||{};const mod=window.BranaPreferenciasOpcoesSistemaModule;if(mod&&typeof mod.prefRenderSelectOptions==="function"){const render=(select,items)=>mod.prefRenderSelectOptions(select,items,{valueFrom:item=>item?.id==null?"":item.id,labelFrom:item=>item.nome||""});render(prefCfg.cboModeloAtestado,opts.modelo_impresso_atestados);render(prefCfg.cboModeloReceita,opts.modelo_impresso_receitas);render(prefCfg.cboModeloRecibo,opts.modelo_impresso_recibos);render(prefCfg.cboModeloEtiqueta,opts.modelo_padrao_etiquetas);render(prefCfg.cboModeloEmail,opts.modelo_texto_email_agenda);render(prefCfg.cboModeloOrcamento,opts.modelo_padrao_orcamentos);render(prefCfg.cboModeloWhatsapp,opts.modelo_texto_whatsapp_agenda);return}const renderOptions=(items)=>{const list=Array.isArray(items)?items:[];return list.map(item=>`<option value="${esc(item?.id==null?"":item.id)}">${esc(item.nome||"")}</option>`).join("")};prefCfg.cboModeloAtestado.innerHTML=renderOptions(opts.modelo_impresso_atestados);prefCfg.cboModeloReceita.innerHTML=renderOptions(opts.modelo_impresso_receitas);prefCfg.cboModeloRecibo.innerHTML=renderOptions(opts.modelo_impresso_recibos);prefCfg.cboModeloEtiqueta.innerHTML=renderOptions(opts.modelo_padrao_etiquetas);prefCfg.cboModeloEmail.innerHTML=renderOptions(opts.modelo_texto_email_agenda);prefCfg.cboModeloOrcamento.innerHTML=renderOptions(opts.modelo_padrao_orcamentos);prefCfg.cboModeloWhatsapp.innerHTML=renderOptions(opts.modelo_texto_whatsapp_agenda)}
 function prefRenderCombosDados(){
   if(!prefCfg?.txtDadosUf) return;
   const uf=String(prefCfg.txtDadosUf.value||"").trim();
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefRenderUfOptions==="function"){
+    mod.prefRenderUfOptions(prefCfg.txtDadosUf,FICHA_UFS_PADRAO,uf);
+    return;
+  }
   prefCfg.txtDadosUf.innerHTML=`<option value=""></option>`+FICHA_UFS_PADRAO.map(item=>`<option value="${item}">${item}</option>`).join("");
   if(uf&&FICHA_UFS_PADRAO.includes(uf))prefCfg.txtDadosUf.value=uf;
 }

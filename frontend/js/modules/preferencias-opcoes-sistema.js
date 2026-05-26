@@ -169,6 +169,45 @@
     return true;
   }
 
+  function prefEscHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function prefRenderSelectOptions(select, items, config) {
+    if (!select) return false;
+    const opts = config || {};
+    const list = Array.isArray(items) ? items : [];
+    const valueFrom = typeof opts.valueFrom === "function" ? opts.valueFrom : (item) => item?.id ?? "";
+    const labelFrom = typeof opts.labelFrom === "function" ? opts.labelFrom : (item) => item?.label ?? item?.nome ?? "";
+    const placeholder = opts.placeholder == null ? null : String(opts.placeholder);
+
+    select.innerHTML = [
+      placeholder == null ? "" : `<option value="">${prefEscHtml(placeholder)}</option>`,
+      ...list.map((item) => {
+        const value = prefEscHtml(valueFrom(item));
+        const label = prefEscHtml(labelFrom(item));
+        return `<option value="${value}">${label}</option>`;
+      })
+    ].join("");
+
+    return true;
+  }
+
+  function prefRenderUfOptions(select, ufs, currentValue) {
+    if (!select) return false;
+    const list = Array.isArray(ufs) ? ufs : [];
+    const actual = String(currentValue ?? "").trim();
+
+    select.innerHTML = `<option value=""></option>` + list.map((item) => `<option value="${prefEscHtml(item)}">${prefEscHtml(item)}</option>`).join("");
+    if (actual && list.includes(actual)) select.value = actual;
+    return true;
+  }
+
   function prefAmbienteAplicarEstiloElemento(elemento, style) {
     if (!elemento || !style) return false;
     const normalize = typeof window.easyFontNormalizeStyleId === "function"
@@ -320,6 +359,9 @@
     prefAmbienteSecoesAtuais,
     prefAmbienteNormalizeStyleId,
     prefAmbienteEnsureOverrides,
+    prefEscHtml,
+    prefRenderSelectOptions,
+    prefRenderUfOptions,
     prefAmbienteAplicarEstiloElemento,
     prefAmbienteRenderLista,
     prefAmbienteAplicarPreview,

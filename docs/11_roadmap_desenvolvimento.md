@@ -2149,6 +2149,19 @@ Observacoes:
 - Nenhum codigo foi alterado nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Implementacao minima dos combos Geral, Modelos e Dados
+
+- A implementacao minima do segundo recorte medio controlado da Fase 2B foi realizada em `Preferencias remanescentes`.
+- O recorte aplicado foi a delegacao da renderizacao visual/local dos combos das abas `Geral`, `Modelos` e `Dados do usuario`.
+- O modulo comum/core continua sendo `Preferencias / Configuracoes remanescentes`.
+- `prefSincronizarUI()` continua como orquestrador do fluxo visual da modal.
+- `prefCarregarDados()`, `prefSalvar*()`, `requestJson`, payload efetivo, backend, banco, endpoints e permissoes ficaram fora do escopo.
+- `sysOpt*` e `Odontograma` tambem permaneceram fora do escopo.
+- O preview de `Ambiente` permaneceu compativel com o comportamento ja validado anteriormente.
+- O teste manual permanece pendente antes de qualquer nova subetapa.
+- Nenhum codigo fora do recorte visual/local foi pretendido nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
