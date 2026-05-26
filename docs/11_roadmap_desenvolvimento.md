@@ -2252,6 +2252,19 @@ Observacoes:
 - Os limites ainda vigentes foram mantidos.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Nova matriz comparativa apos pausa de Prestadores
+
+- A nova matriz comparativa documental foi aberta apos a consolidacao parcial de `Prestadores`.
+- A consolidacao de `Preferencias` e de `Prestadores` foi mantida como contexto valido para a escolha da proxima frente.
+- Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e exclusao; menor contato com permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
+- A frente recomendada ficou em `Convenios e Planos`, tratada como frente comum/core transversal e com contrato profundo obrigatorio antes de qualquer implementacao.
+- `Preferencias` continuou pausada e `Prestadores` continuou pausado para evitar avancar automaticamente para `sysOpt*`, `Odontograma`, modal, salvar, excluir, agenda, credenciamento, comissoes, permissao ou backend.
+- Os demais candidatos foram relegados a segundo plano por risco funcional, sensibilidade financeira, acoplamento amplo ou menor clareza de teste.
+- A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
+- Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
+- Nenhuma implementacao foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
