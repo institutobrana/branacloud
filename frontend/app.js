@@ -96,6 +96,8 @@ const formatNumFixed=(v,dec=4)=>{const n=Number(v||0);if(!Number.isFinite(n))ret
 const formatMoney=(v)=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const formatScenarioNum=(v)=>{const n=Number(v||0);if(!Number.isFinite(n))return"0";if(Number.isInteger(n))return n.toLocaleString("pt-BR");return n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})};const formatScenarioMes=(v)=>{if(v==null)return"";const n=Number(v);if(!Number.isFinite(n))return"";let s=String(n).replace(".",",");if(s.endsWith(",0"))s=s.slice(0,-2);return s};
 const MATERIAIS_INDICES_FALLBACK=[{id:255,sigla:"R$",nome:"Reais"},{id:2,sigla:"UHO",nome:"Unid. Honorario"},{id:3,sigla:"UPO",nome:"Unid. Procedimento Odontologico"},{id:1,sigla:"USO",nome:"Unid. Servico"}];
+let usersPanelOverlay=null;
+let usersPanelPlaceholder=null;
 let editorTextosCfg=null;
 let editorTextosFontesCache=null;
 let editorTextosFontesPromise=null;

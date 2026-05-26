@@ -2275,6 +2275,14 @@ Observacoes:
 - A correcao desta auditoria nao tocou `requestJson`, payload, salvamento, exclusao, backend, permissoes, relatorios ou fluxos financeiros sensiveis.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Correcao minima da regressao central usersPanelOverlay
+
+- A variavel global `usersPanelOverlay` foi restaurada no bloco de estado inicial de `frontend/app.js`, mantendo a correcao no menor escopo possivel.
+- A falha central afetava `hideAllPanels()` e podia impedir a abertura de varios paineis.
+- A validacao da `Conta corrente` continua dependente de novo teste manual apos essa correcao.
+- `requestJson`, payload, salvamento, exclusao, backend, permissoes e fluxos financeiros sensiveis permaneceram fora do escopo.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Nova matriz comparativa apos pausa de Ficha pessoal
 
 - A nova matriz comparativa documental foi aberta apos o contrato profundo de `Ficha pessoal` concluir que nao existe recorte medio suficientemente seguro agora.
