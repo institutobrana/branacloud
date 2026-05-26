@@ -1906,6 +1906,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Etiquetas - Contrato documental do proximo helper leve ou transformacao segura`.
 
+## Etiquetas - Contrato documental do proximo helper leve ou transformacao segura
+
+- `Etiquetas` foi tratado como modulo comum/core administrativo/transversal.
+- A auditoria operacional dos dois commits anteriores de CID foi aceita sem necessidade de correcao.
+- O helper mais seguro identificado foi `etqArquivosOrdenados(lista)`.
+- A recomendacao para futura implementacao minima e manter um helper passivo com fallback equivalente.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima futura de `etqArquivosOrdenados(lista)` com teste manual em `Etiquetas / Configuracao de modelos de etiqueta`.
+
 
 
 
