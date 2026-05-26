@@ -2798,3 +2798,15 @@ Observacoes:
 - A correção permanece bloqueada ate existir um mapa confiavel por tabela EasyDental ou uma revisao contratual que feche a relacao entre os nomes do Brana e a origem de cada seed.
 - Nenhuma conta existente foi alterada e nenhum arquivo de codigo foi modificado nesta revisao documental.
 - A proxima etapa recomendada e obter o mapa verificavel antes de qualquer nova implementacao de seed por tabela.
+
+## Subetapa 8N da frente EasyDental virgem
+
+- Subetapa executada: mapa verificavel `TAB_PRC` / `TAB_PRC_ITEM` do EasyDental virgem com acesso restaurado ao caminho `\\\\Sonyvaio\\c\\EDS70`.
+- O arquivo `TAB_PRC.raw` confirmou os 9 nomes contratuais da tabela de procedimentos/precos do EasyDental virgem: `Particular`, `Sindicato`, `Bradesco`, `Banco do Brasil`, `Caixa Econ. Federal`, `Banespa`, `Telebrás`, `Petrobrás` e `CNCC`.
+- As divergencias em relacao ao contrato do Brana sao apenas ortograficas / de acentuacao em `Caixa Econ Federal`, `Petrobras` e `Telebras`.
+- O arquivo `TAB_PRC_ITEM.raw` permaneceu acessivel, mas a contagem por tabela nao ficou fechada com seguranca nesta sessao.
+- Fontes secundarias continuam divergentes e nao servem como substitutas da fonte virgem: o SQL vivo acessivel nesta maquina mostrou apenas 4 tabelas ativas e o backup legado local mostra grupos de tabela do legado Brana / conta antiga.
+- Nao houve implementacao.
+- Nenhuma conta foi criada ou alterada.
+- A correção continua bloqueada ate a complementacao do mapa por tabela EasyDental.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8O - complementacao da fonte/mapeamento TAB_PRC antes da correcao`.
