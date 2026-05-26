@@ -2810,3 +2810,15 @@ Observacoes:
 - Nenhuma conta foi criada ou alterada.
 - A correção continua bloqueada ate a complementacao do mapa por tabela EasyDental.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8O - complementacao da fonte/mapeamento TAB_PRC antes da correcao`.
+
+## Subetapa 8O da frente EasyDental virgem
+
+- Subetapa executada: complementacao do mapa verificavel de `TAB_PRC_ITEM` na fonte virgem `\\\\Sonyvaio\\c\\EDS70`.
+- O arquivo `TAB_PRC_ITEM.raw` foi lido em modo somente leitura e revelou um mapa por tabela agora fechavel por `NROTAB` e `NROPROCTAB`.
+- O conjunto nominal de `TAB_PRC` continuou confirmado e as nove tabelas herdadas do EasyDental ficaram assim mapeadas: `Particular`, `Sindicato`, `Bradesco`, `Banco do Brasil`, `Caixa Econ. Federal`, `Banespa`, `Telebrás`, `Petrobrás` e `CNCC`.
+- As contagens verificadas em `TAB_PRC_ITEM` ficaram fechadas por tabela: `Particular 112`, `Sindicato 238`, `Bradesco 94`, `Banco do Brasil 188`, `Caixa Econ. Federal 88`, `Banespa 32`, `Telebrás 101`, `Petrobrás 174` e `CNCC 236`.
+- Foi possivel extrair amostras seguras de itens por tabela sem expor dados sensiveis nem valores comerciais reais.
+- Nao houve implementacao.
+- Nenhuma conta foi criada ou alterada.
+- O mapa passou a ser suficiente para a proxima correcao isolada do seed por tabela.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8P - correcao isolada dos seeds por tabela EasyDental`.
