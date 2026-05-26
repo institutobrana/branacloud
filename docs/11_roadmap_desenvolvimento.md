@@ -2187,6 +2187,23 @@ Observacoes:
 - Nenhuma implementacao direta foi escolhida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Nova matriz comparativa apos pausa de Preferencias
+
+- A nova matriz comparativa documental foi aberta apos a consolidacao parcial de `Preferencias`.
+- A auditoria leve inicial foi registrada sem alteracao de arquivos:
+  - branch atual `modularizacao-segura-fase-1`;
+  - `git status --short` ainda com untracked antigos em `docs/`;
+  - `HEAD` atual em `68334a57c850460a829b1e3f0abe68da9e1ea6a5`;
+  - commits recentes relevantes incluindo `68334a5` e `e4c51a4`, com hashes completos confirmados.
+- Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
+- A frente recomendada ficou em `Prestadores remanescentes`, tratada como frente especifica de area profissional e com contrato profundo obrigatorio antes de qualquer implementacao.
+- `Preferencias` ficou pausada por enquanto, apesar do sucesso dos dois recortes, para evitar avancar automaticamente para `sysOpt*`, `Odontograma`, `requestJson`, payload ou salvamento.
+- Os demais candidatos foram relegados a segundo plano por risco funcional, sensibilidade financeira, acoplamento amplo ou menor clareza de teste.
+- A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
+- Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
+- Nenhuma implementacao foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
