@@ -181,6 +181,33 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhuma conta foi criada ou alterada.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8B - fechamento final do contrato de usuarios/prestadores e matriz de seeds para novas contas, sem implementacao`.
 
+## Subetapa 8B da frente EasyDental virgem
+
+- Subetapa executada: fechamento final do contrato de usuarios, prestadores e seeds, sem implementacao.
+- Decisao final documental: `Clínica` permanece como papel estrutural literal (`USUARIO 255` / `PRESTADOR 255` / `UNIDADE 1`); `Mestre` permanece como admin-like inferido (`USUARIO 1` / `PRESTADOR 1`).
+- Contrato final de seeds: CID, tabela generica, procedimentos canonicos, procedimentos genericos, tabela Brana, especialidades, fases/status, simbolos, anamnese, lookups auxiliares e configuracoes minimas devem nascer para novas contas.
+- Ficam fora do nascimento: logs, historicos, transacionais, movimentos e `TMP_*`.
+- Regra final: novas contas nascem prontas, setup nao cria estrutura minima, contas existentes preservam PARTICULAR.
+- O contrato ficou suficiente para baseline/teste da criacao de conta atual, sem alterar codigo.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Nenhuma conta foi criada ou alterada.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8C - baseline documental e teste manual da criacao de conta atual, sem alteracao de codigo`.
+
+## Subetapa 8C da frente EasyDental virgem
+
+- Subetapa executada: baseline documental da conta existente ID 16 / `institutobrana@gmail.com`, sem criar nova conta.
+- Conferencia Git da 8B: o hash `9f97e5096040630d24e2a14f60c5be83bb429ac0` pertence a 8A; 8B nao tinha commit proprio no historico conferido.
+- Comparacao contrato x conta real: a conta 16 confirma usuario admin inicial, usuario sistemico 255, prestador sistemico 255, tabela Brana, CID, tabela generica, procedimentos canonicos, materiais, simbolos e anamnese.
+- Principais conformidades: conta ativa em trial, setup ja marcado como concluido para os usuarios principais, tabela Brana presente, lookup seeds presentes e catalogos odontologicos amplos.
+- Principais lacunas: nao ha unidade inicial, nao ha `usuario_perfil_acesso`, `relatorio_config` nao nasceu, e o nome legado `Tabela Exemplo` continua convivendo com a tabela Brana.
+- Riscos: a conta nasce pronta, mas ainda com pontos de contrato tecnico pendentes em unidade e matriz formal de acesso.
+- Nao houve implementacao.
+- A conta ID 16 nao foi alterada.
+- Nao houve alteracao no EasyDental.
+- Nenhuma conta foi criada ou alterada.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8D - contrato tecnico da unidade inicial e matriz de perfis/permissoes para novas contas, sem implementacao`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
