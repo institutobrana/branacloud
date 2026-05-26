@@ -334,3 +334,13 @@
 - A tela de setup nao foi alterada.
 - Dados sensiveis nao foram expostos.
 - A blindagem textual/mojibake foi respeitada.
+
+## 21. Correcao posterior - usuario criado manualmente
+- O USUARIO 38 foi observado no baseline, mas o usuario informou posteriormente que ele foi criado manualmente apos a criacao da conta e depois removido.
+- Portanto, o USUARIO 38 nao deve ser considerado parte do nascimento padrao da conta 16.
+- A leitura correta do baseline do nascimento padrao passa a considerar apenas o USUARIO 36 como usuario estrutural/system, o USUARIO 37 como admin inicial e o PRESTADOR 22 como prestador sistemico/reservado vinculado ao usuario estrutural.
+- A existencia da tabela Brana, dos perfis reservados e dos seeds odontologicos permanece valida.
+- A ausencia de unidade formal continua sendo lacuna valida.
+- A ausencia de `usuario_perfil_acesso` formal continua sendo lacuna valida.
+- A coexistencia de metadata legada "Tabela Exemplo" com Brana continua sendo lacuna valida.
+- Esta correcao e somente documental e nao altera a conta 16.

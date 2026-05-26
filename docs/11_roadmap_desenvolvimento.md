@@ -2645,3 +2645,13 @@ Observacoes:
 
 
 
+## Ajuste documental posterior da trilha 8B/8C
+
+- A Subetapa 8B foi regularizada em commit proprio: `9444c9e1d4d9f7f0c90b14d56d7d2eb5f1e2e0fd`.
+- O documento da 8B foi finalmente incluido em commit proprio, separado do baseline da 8C.
+- A interpretacao do baseline da 8C foi corrigida: o `USUARIO 38` nao faz parte do nascimento padrao da conta 16, pois foi criado manualmente apos a criacao da conta e depois removido.
+- O baseline valido para nascimento padrao da conta 16 passa a considerar `USUARIO 36` como usuario estrutural/system, `USUARIO 37` como admin inicial e `PRESTADOR 22` como prestador sistemico/reservado.
+- Permanecem validos: tabela Brana, perfis reservados, seeds odontologicos, ausencia de unidade formal e ausencia de `usuario_perfil_acesso` formal.
+- A coexistencia de metadata legada "Tabela Exemplo" com Brana continua sendo lacuna valida.
+- Nao houve implementacao, nem alteracao da conta 16, nem criacao de novas contas.
+- A proxima subetapa recomendada permanece documental e deve partir da confirmacao dessa baseline corrigida.
