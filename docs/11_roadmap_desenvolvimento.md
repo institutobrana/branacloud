@@ -2283,6 +2283,17 @@ Observacoes:
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Conta corrente - Contrato profundo do primeiro recorte medio controlado
+
+- O contrato profundo de `Conta corrente` foi criado como etapa exclusivamente documental da Fase 2B.
+- A frente foi tratada como `comum/core transversal`, com cautela reforcada por envolver financeiro, recebimentos, pagamentos, fluxo de caixa e relatorios.
+- O mapa documental registrou funcoes de `app.js`, o modulo adjacente `frontend/js/modules/plano-contas.js`, DOM, eventos, `requestJson`, payload, salvamento, exclusao, backend, endpoints e permissoes apenas por leitura.
+- As areas proibidas permaneceram intocadas: backend, banco, endpoints, permissoes, `requestJson`, payload efetivo, salvamento, exclusao, validacoes criticas, alteracao de valores/datas/status/forma de pagamento, relatorios financeiros, vinculos transversais e correcoes textuais/mojibake.
+- Foi recomendado como recorte medio controlado futuro a renderizacao visual/local da tabela de lancamentos e dos totais/resumo mensal, sem tocar persistencia.
+- O teste manual previsto foi registrado para uma futura implementacao minima, sem executar nada nesta etapa.
+- Nenhuma implementacao direta foi escolhida.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Ficha pessoal` foi criado como etapa exclusivamente documental da Fase 2B.
