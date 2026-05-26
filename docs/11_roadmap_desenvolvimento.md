@@ -114,6 +114,23 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Impacto futuro previsto: novas contas no Brana Cloud provavelmente precisarao nascer com unidade inicial, config global e seeds auxiliares protegidos, para evitar tela quebrada, menu vazio ou identidade de instalacao incompleta.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 5 - analise somente leitura de Intervenções/Procedimentos, seeds odontológicos e tabelas clínicas estruturais`.
 
+## Subetapa 5 da frente EasyDental virgem
+
+- Subetapa executada: analise somente leitura de Intervencoes / Procedimentos, seeds odontologicos e tabelas clinicas estruturais.
+- Tabelas clinicas / odontologicas analisadas: `INTERVENCAO`, `DENTE`, `ARCADA`, `HISTORICO`, `CCPACIENTE`, `CCCIRURGIAO`, `CID_ITEM`, `PREST_ESP`, `PRESTADOR`, `PLANO`, `CONVENIO`, `FACE`, `ANAMNESE_RESP`, `ANAMNESE_PERG`, `ANAMNESE_QUEST`, `CUSTOMPAGE`, `CUSTOMCONTROL`, `TRATAMENTO`, `TRATAMENTO_COMISSAO`, `TAB_PRC`, `TAB_PRC_ITEM`, `TAB_GEN_ITEM`, `TAB_GEN_ITEM_FASE`, `TAB_GEN_ITEM_MAT`, `TAB_MAT`, `TAB_MAT_ITEM`, `TAB_PRT_ITEM`, `TAB_REPASSE`, `_ESPECIALIDADE`, `_FASE_PROCEDIMENTO`, `_STATUS_INTERV`, `_SIMBOLO_ODONTO`, `_SIMBOLO_ANOMALIA`, `_TISS_REGIAO_PROCEDIMENTO`, `_TISS_TIPO_TABELA`.
+- Principais achados sobre `INTERVENCAO`: tabela central do fluxo clinico / odontologico, com FK para `TRATAMENTO`, `TAB_PRC_ITEM`, `PRESTADOR`, `_STATUS_INTERV`, `_INDICE` e `USUARIO`, alem de indices proprios e volume elevado.
+- Principais achados sobre `DENTE`: estrutura de odontograma por paciente / intervencao, com PK composta, indices por dente e FK para `INTERVENCAO`.
+- Principais achados sobre `ARCADA`: estrutura de arcada odontologica com matriz 3D e FK para `TRATAMENTO`.
+- Principais achados sobre `HISTORICO`: historico clinico / operacional volumoso e sensivel, com FKs para `INTERVENCAO`, `PESSOAL`, `PRESTADOR` e `USUARIO`.
+- Principais achados sobre `CID_ITEM`: seed auxiliar de CID com codigo e nome, populado e indexado.
+- Principais achados sobre tabelas de procedimentos / tabelas de preco: `TAB_PRC`, `TAB_PRC_ITEM`, `TAB_GEN_ITEM`, `TAB_GEN_ITEM_FASE`, `TAB_GEN_ITEM_MAT`, `TAB_MAT`, `TAB_MAT_ITEM`, `TAB_PRT_ITEM` e `TAB_REPASSE` formam a malha de catalogo, preco, material e repasse; varios exemplos apontam para seeds odontologicos estruturais.
+- Principais achados sobre simbolos / odontograma / face / regiao: `_SIMBOLO_ODONTO`, `_SIMBOLO_ANOMALIA`, `FACE` e `_TISS_REGIAO_PROCEDIMENTO` reforcam a existencia de seeds estruturais de odontograma e marcacoes clinicas.
+- Registros proprios / estruturais provaveis: intervencoes base, dentes / arcadas / faces, CID / item clinico, simbolos odontologicos, especialidades, tabelas de preco, materiais, repasse, anamnese e formularios clinicos.
+- Impacto futuro previsto: novas contas no Brana Cloud podem precisar nascer com seeds odontologicos mais completos, com separacao clara entre estrutura obrigatoria e precificacao / configuracao comercial.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 6 - comparacao documental inicial com seeds atuais do Brana Cloud, sem implementacao`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
