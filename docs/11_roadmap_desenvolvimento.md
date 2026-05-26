@@ -1928,6 +1928,19 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - O teste manual do usuario deve ocorrer antes de qualquer nova validacao documental.
 
+## Etiquetas - Validacao pos-teste de etqArquivosOrdenados(lista)
+
+- A validacao pos-teste de `etqArquivosOrdenados(lista)` foi concluida.
+- O teste manual passou em `Etiquetas / Configuracao de modelos de etiqueta`.
+- A implementacao minima ficou consolidada.
+- `Etiquetas` continua como modulo comum/core administrativo/transversal.
+- Nenhuma nova alteracao de codigo foi feita nesta etapa.
+- DOM/renderizacao/modal/preview/eventos foram preservados.
+- `requestJson`/payload/salvamento/endpoints foram preservados.
+- backend/banco/permissoes foram preservados.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima decisao documental recomendada e consolidar/pausar Etiquetas por ora antes de qualquer novo recorte.
+
 
 
 
