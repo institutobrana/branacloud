@@ -2319,6 +2319,17 @@ Observacoes:
 - O proximo passo ainda nao foi escolhido nesta etapa e depende de nova escolha controlada.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Convenios e Planos - Consolidacao parcial apos primeiro recorte validado
+
+- A consolidacao parcial do primeiro recorte medio validado em `Convênios e Planos` foi registrada como etapa exclusivamente documental.
+- O recorte consolidado permaneceu sendo a lista principal e os contadores, com separacao clara entre `app.js` e modulo passivo.
+- O teste manual passou apos a correção pontual do mojibake na area de telefones.
+- A correção pontual foi mantida separada da refatoração da lista e dos contadores.
+- O estado atual da frente foi documentado sem ampliar escopo para calendario, modais, salvar, excluir, `requestJson`, payload, backend ou permissões.
+- Os limites da Fase 2B permanecem vigentes e a proxima subetapa recomendada é nova matriz comparativa documental.
+- Nenhuma nova implementacao foi escolhida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
