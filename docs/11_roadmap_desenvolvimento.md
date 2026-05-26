@@ -155,6 +155,19 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve alteracao no EasyDental.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8 - plano incremental de implementacao futura para nascimento de nova conta Brana, sem alterar codigo`.
 
+## Subetapa 8 da frente EasyDental virgem
+
+- Subetapa executada: atualizacao do contrato de novas contas Brana, sem implementacao.
+- Premissa atualizada: novas contas devem nascer prontas e abertas, com estrutura minima automatica; a tela de setup passa a ser candidata a dispensa, substituicao ou reducao futura, sem alteracao nesta etapa.
+- Principios consolidados: novas contas seguem contrato novo; contas existentes preservam contrato legado; PARTICULAR fica em contas antigas; Brana e a tabela privada padrao de novas contas; seeds estruturais devem nascer automaticamente; dados comerciais/precos exigem cuidado; registros proprios devem ser protegidos.
+- Registros candidatos a protecao: usuario admin inicial, prestador sistemico/reservado, unidade inicial, tabela Brana, perfis base, matriz de permissoes, procedimentos estruturais, CID, tabela generica, especialidades, simbolos, anamnese base, configuracoes globais e equivalentes a Mestre/Clinica.
+- Fluxo esperado de nascimento: clinica/tenant, usuario admin, prestador sistemico, unidade, perfis/permissoes, tabela Brana, seeds odontologicos, sistema pronto para uso e setup nao obrigatorio para estrutura minima.
+- A necessidade de mapear Mestre/Clinica antes do teste foi registrada como lacuna prioritaria.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Nenhuma conta foi criada ou alterada.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8A - validacao documental dos registros Mestre e Clinica e fechamento do contrato de nova conta, sem implementacao`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
