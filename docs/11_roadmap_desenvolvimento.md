@@ -1998,6 +1998,20 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - O teste manual do usuario permanece obrigatorio antes da proxima etapa documental.
 
+## Cadastros auxiliares - Validacao e consolidacao pos-teste de auxNormalizarHexCor(value)
+
+- A validacao pos-teste de `auxNormalizarHexCor(value)` foi registrada e consolidada.
+- O teste manual passou.
+- Nenhuma alteracao de codigo foi necessaria nesta etapa anterior porque o helper e a delegacao ja existiam.
+- O modulo real validado e `frontend/js/modules/auxiliares.js`.
+- `Cadastros auxiliares` continua como modulo comum/core administrativo/transversal.
+- `auxNormalizarHexCor(value)` fica consolidado.
+- DOM/renderizacao/modal/preview/selecao/eventos nao foram alterados.
+- `requestJson`/payload/salvamento/endpoints nao foram alterados.
+- backend/banco/permissoes nao foram alterados.
+- A blindagem textual/mojibake foi respeitada.
+- Qualquer proximo recorte em Cadastros auxiliares precisa de nova decisao documental.
+
 
 
 
