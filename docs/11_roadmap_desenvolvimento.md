@@ -2125,6 +2125,30 @@ Observacoes:
 - Nenhum codigo foi alterado nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Segundo contrato profundo controlado
+
+- O segundo contrato profundo de `Preferencias remanescentes` foi criado em `docs/fase_2b_preferencias_segundo_contrato_profundo.md`.
+- Nenhuma implementacao foi feita.
+- A frente continua sendo `Preferencias remanescentes`, tratada como `comum/core`.
+- Os recortes avaliados foram documentados comparativamente:
+  - delegacao da renderizacao dos combos das abas `Geral`, `Modelos` e `Dados`;
+  - extracao de `prefSelecionarAba` e `prefAtualizarTitulo`;
+  - extracao apenas dos defaults/normalizacao visual de `prefValoresPadrao*`.
+- O recorte recomendado para futura implementacao minima continua sendo a delegacao da renderizacao dos combos das abas `Geral`, `Modelos` e `Dados`.
+- Os limites da Fase 2B permanecem os mesmos:
+  - sem backend;
+  - sem banco;
+  - sem endpoints;
+  - sem permissões;
+  - sem requestJson como area de alteracao;
+  - sem payload efetivo;
+  - sem salvamento;
+  - sem `sysOpt*`;
+  - sem Odontograma.
+- O teste manual previsto e visual/local e nao inclui salvar.
+- Nenhum codigo foi alterado nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
