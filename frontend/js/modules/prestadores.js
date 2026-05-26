@@ -38,6 +38,31 @@
       : '<span style="color:#d32f2f;font-size:14px;line-height:1;">â—</span>';
   }
 
+  function escHtml(valor) {
+    return String(valor ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function prestRenderLista(lista, selId) {
+    const itens = Array.isArray(lista) ? lista : [];
+    const html =
+      itens
+        .map((item, idx) => {
+          const selecionado = Number(item?.id || 0) === Number(selId || 0) ? "selected" : "";
+          return `<tr data-id="${escHtml(item?.id ?? "")}" class="${selecionado}"><td>${escHtml(prestFmtCodigo(item?.codigo, idx))}</td><td>${escHtml(item?.nome || "")}</td><td>${escHtml(item?.fone1 || "")}</td><td>${escHtml(item?.fone2 || "")}</td><td>${prestStatusHtml(item?.ativo !== false)}</td></tr>`;
+        })
+        .join("") || '<tr><td colspan="5">Nenhum prestador encontrado.</td></tr>';
+
+    return {
+      html,
+      totalText: `${itens.length} prestadores`,
+    };
+  }
+
   const meta = Object.freeze({
     name: MODULE_NAME,
     version: MODULE_VERSION,
@@ -61,6 +86,7 @@
       prestSelecionado,
       prestFiltrarLista,
       prestStatusHtml,
+      prestRenderLista,
     };
   }
 
@@ -83,6 +109,7 @@
     prestSelecionado,
     prestFiltrarLista,
     prestStatusHtml,
+    prestRenderLista,
   });
 
   window.BranaPrestadoresModule = module;

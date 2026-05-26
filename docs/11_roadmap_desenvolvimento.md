@@ -2216,6 +2216,18 @@ Observacoes:
 - Nenhuma implementacao direta foi escolhida.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Prestadores remanescentes - Implementacao minima da lista principal e contador
+
+- A implementacao minima do primeiro recorte medio controlado de `Prestadores remanescentes` foi realizada.
+- O recorte aplicado foi a delegacao da renderizacao visual/local da lista principal e do contador para o modulo passivo existente.
+- A classificacao da frente continua sendo `Prestadores remanescentes` como frente especifica de area profissional, nao modulo comum/core.
+- `frontend/app.js` manteve a orquestracao de `prestCarregar()`, filtros, selecao, abertura/fechamento, botoes de acao e fluxos adjacentes.
+- `requestJson`, payload efetivo, backend, banco, endpoints, permissoes, salvamento e exclusao ficaram fora do escopo.
+- Agenda, financeiro, usuarios/perfis, credenciamento e comissoes tambem permaneceram fora do recorte funcional.
+- O teste manual permanece pendente antes de qualquer nova subetapa.
+- Nenhum codigo fora da delegacao visual/local foi pretendido nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
