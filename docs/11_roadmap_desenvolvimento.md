@@ -50,6 +50,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 - Caminho externo usado: `\\Sonyvaio\c\EDS70`
 - Objetivo: inventario tecnico inicial do EasyDental virgem para orientar futuras decisoes sobre usuarios, prestadores, permissoes, seeds e configuracao inicial.
+- A base analisada deve ser tratada como referencia da forma virgem do sistema; a volumetria populada pode representar seeds estruturais do proprio EasyDental e nao deve ser lida automaticamente como sinal de uso previo.
 - Subetapa 0 registrada como somente documental.
 - Nao houve implementacao, alteracao de banco, alteracao de codigo ou importacao nesta etapa.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 1 - inventario somente leitura de tabelas e contagem de registros`.
@@ -74,7 +75,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Subetapa executada: validacao da identidade da base e analise estrutural de usuarios, prestadores e vinculos.
 - Divergencia registrada: o DSN da fonte externa aponta `SERVER=SONYVAIO\EDS70`, `DATABASE=eds70`, mas a leitura foi feita na instancia local `INSPIRON-15\SQLEXPRESS`, banco `EDS70`.
 - Validacao documental: `sys.database_files` mostrou caminhos fisicos locais em `D:\SQLData\EDS70_2022\`, nao o caminho UNC externo.
-- Conclusao cautelosa: a base lida parece ser uma copia/anexo local derivado da instalacao externa, mas a correspondencia direta com a share externa nao foi confirmada.
+- Conclusao cautelosa: a correspondencia fisica direta com a share externa nao foi confirmada; o volume populado nao deve ser usado isoladamente como prova de base usada, pois pode refletir seeds estruturais do proprio EasyDental.
 - Tabelas analisadas: `_TIPO_USUARIO`, `LOGON`, `USUARIO`, `CCCIRURGIAO`, `PESSOAL`, `PREST_ESP`, `PRESTADOR`, `TMP_PARTICIPACAO`, `USUARIO_FUNCAO`, `USUARIO_MODULO`, `USUARIO_PERFIL`.
 - Principais achados sobre usuarios/login: `USUARIO` e a tabela clara de login; `LOGON` e vazia e parece ser sessao/log; `_TIPO_USUARIO` e seed auxiliar de tipos.
 - Principais achados sobre prestadores/profissionais: `PRESTADOR` e a tabela clara de prestador; `PREST_ESP` e a junção formal com especialidades; `PESSOAL` e amplo cadastro de pessoas com FK para prestador; `CCCIRURGIAO` e operacional com `ID_PRESTADOR` por nomenclatura.
@@ -82,6 +83,21 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve implementacao.
 - Nao houve alteracao no EasyDental.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 3 - analise estrutural somente leitura de permissoes, perfis, modulos e funcoes`.
+
+## Subetapa 3 da frente EasyDental virgem
+
+- Subetapa executada: analise estrutural somente leitura de permissoes, perfis, modulos e funcoes.
+- Tabelas analisadas: `SIS_FUNCAO`, `SIS_MODULO`, `SIS_PERFIL`, `USUARIO_FUNCAO`, `USUARIO_MODULO`, `USUARIO_PERFIL`, `USUARIO`, `_TIPO_USUARIO`, `PRESTADOR`, `UNIDADE`.
+- Contagens registradas: `SIS_FUNCAO` 127, `SIS_MODULO` 52, `SIS_PERFIL` 10, `USUARIO_FUNCAO` 740, `USUARIO_MODULO` 312, `USUARIO_PERFIL` 184, `USUARIO` 7, `_TIPO_USUARIO` 10, `PRESTADOR` 5, `UNIDADE` 1.
+- `SIS_PERFIL` nao apresenta um perfil nomeado explicitamente como administrador; os nomes sao funcionais, como `Pacientes`, `Intervenções`, `Agenda de horários`, `Controle de estoque` e relatórios.
+- `SIS_MODULO` possui 52 modulos e o campo `PERMITE_SENHA`; a maior parte dos modulos consultados exige senha, com excecao inicial de `Odontograma`.
+- `SIS_FUNCAO` possui 127 funcoes, todas ligadas formalmente a `SIS_MODULO`; os nomes observados sao operacionais, como inserir, alterar e eliminar, com `PERMITE_SENHA` em boa parte delas.
+- `USUARIO_MODULO`, `USUARIO_FUNCAO` e `USUARIO_PERFIL` formam a matriz de acesso; o usuario `1` aparece com cobertura muito ampla, o que sugere um usuario inicial/admin de fato comportamental, embora nao exista perfil chamado `Administrador`.
+- `USUARIO_PERFIL` inclui a ligacao com `PRESTADOR`, mostrando que o perfil pode variar por prestador; `USUARIO` ancora o tipo de usuario e a unidade.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Impacto futuro previsto: novas contas no Brana Cloud provavelmente precisarao nascer com perfis, modulos e funcoes seedadas de forma segura, preservando um usuario inicial de alto privilegio e os registros estruturais que sustentam o acesso.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 4 - analise somente leitura de clinica, unidade, configuracao inicial e registros proprios do sistema`.
 
 ## Regras de conducao
 
