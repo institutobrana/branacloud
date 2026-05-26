@@ -2298,6 +2298,15 @@ Observacoes:
 - Nao houve validacao final nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Convenios e Planos - Correcao pontual do mojibake no icone de telefones
+
+- A correção pontual foi aplicada somente no literal do ícone/símbolo de telefone da função `convPlanConvenioPhoneRowV2()` em `frontend/app.js`.
+- O mojibake identificado `â˜Ž` foi substituido por `&#9742;`, mantendo a intencao visual sem depender de encoding ambíguo.
+- A correção foi separada de qualquer refatoração ou ajuste de listas/contadores.
+- `requestJson`, payload, salvamento, exclusão, backend, permissões e fluxos transversais permaneceram fora do escopo.
+- A validação pós-teste do commit `81379b6` continua dependendo de novo teste manual após esta correção.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
