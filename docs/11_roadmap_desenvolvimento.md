@@ -2696,3 +2696,15 @@ Observacoes:
 - Nao houve implementacao.
 - Nenhuma nova conta foi criada ou alterada.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8G - fechamento do contrato mestre revisado`.
+
+## Subetapa 8G da frente EasyDental virgem
+
+- Subetapa executada: fechamento do contrato mestre revisado de novas contas.
+- A versao final revisada consolida o que ja existe no Brana e nao deve duplicar, o que deve ser melhorado, o que falta e deve entrar como equivalente futuro, o que deve existir como estrutura vazia e o que deve nascer populado como seed.
+- A revisao final reforca que seeds sao apenas de catalogos, lookups e configuracoes estruturais; dados de pacientes, agenda, financeiro, historico, logs, temporarios e respostas preenchidas ficam fora do nascimento.
+- A revisao final preserva `Principal / 0001`, `Mestre` `1`, `Clínica` `255`, a tabela Brana, os equivalentes de CID, procedimentos, anamnese, TISS tipo tabela e a matriz formal de acesso quando confirmada.
+- A revisao final fecha o fluxo de nascimento de nova conta sem depender de setup para a estrutura minima.
+- A regra de modularizacao futura permanece: cada implementacao posterior deve nascer pequena, isolada e com contrato proprio, com primeira implementacao mais segura sendo a unidade `Principal / 0001`.
+- Nao houve implementacao.
+- Nenhuma nova conta foi criada ou alterada.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8H - implementacao isolada da unidade Principal 0001 apenas para novas contas`.
