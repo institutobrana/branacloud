@@ -2037,6 +2037,15 @@ Observacoes:
 - Nenhuma alteracao de codigo foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Medicamentos - Contrato documental do proximo helper leve ou transformacao segura
+
+- `Medicamentos` foi escolhido para contrato documental.
+- `Medicamentos` e um modulo especifico de area profissional.
+- O candidato recomendado foi `compararTextoMedicamento(texto, termo)`.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa deve ser definida por contrato documental antes de qualquer implementacao futura.
+
 
 
 
