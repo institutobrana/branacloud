@@ -2669,3 +2669,17 @@ Observacoes:
 - A conta ID 16 nao foi alterada.
 - Nenhuma nova conta foi criada.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8E - baseline documental e teste manual da unidade inicial e matriz formal de perfis/permissoes na conta atual, sem alteracao de codigo`.
+
+## Subetapa 8E da frente EasyDental virgem
+
+- Subetapa executada: contrato mestre das tabelas e registros que nascerao em novas contas.
+- A unidade inicial `Principal` / `0001` foi consolidada como regra contratual.
+- `Mestre` ID `1` segue como referencia documental do admin inicial e `Clínica` ID `255` segue como referencia documental do prestador/usuario sistemico.
+- O contrato mestre classifica o que nasce, o que nao nasce, o que ja existe no Brana e sera mantido, o que sera melhorado, o que e pendente e o que e protegido.
+- O contrato mestre reforca que nao se deve duplicar o que ja existe no Brana e que futuras implementacoes devem respeitar modularizacao segura.
+- A regra de modularizacao futura continua sendo: frontend novo deve preferir modulo pequeno e dedicado, backend deve preferir helper/service isolado e banco/schema deve ter contrato proprio antes de qualquer alteracao.
+- O baseline da conta 16 continua valido com a ressalva de que nao ha unidade formal e nao ha matriz formal de acesso.
+- Nao houve implementacao.
+- A conta ID 16 nao foi alterada.
+- Nenhuma nova conta foi criada.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8F - baseline documental comparativa da conta atual contra o contrato mestre de novas contas, sem alteracao de codigo`.
