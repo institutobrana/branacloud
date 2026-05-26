@@ -1941,6 +1941,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima decisao documental recomendada e consolidar/pausar Etiquetas por ora antes de qualquer novo recorte.
 
+## Etiquetas - Consolidacao documental pos-validacao de etqArquivosOrdenados(lista)
+
+- `etqArquivosOrdenados(lista)` foi consolidado em Etiquetas.
+- O teste manual passou.
+- `Etiquetas` continua como modulo comum/core administrativo/transversal.
+- O ganho foi arquitetural/de delegacao segura.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A auditoria confirmou que o problema anterior foi apenas erro de relatorio, sem alteracao indevida de codigo.
+- A blindagem textual/mojibake foi respeitada.
+- `Etiquetas` fica pausado/consolidado por ora.
+- A proxima subetapa recomendada e nova decisao documental antes de qualquer novo recorte.
+
 
 
 
