@@ -2012,6 +2012,20 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - Qualquer proximo recorte em Cadastros auxiliares precisa de nova decisao documental.
 
+## Cadastros auxiliares - Consolidacao pos-validacao de auxNormalizarHexCor(value)
+
+- `auxNormalizarHexCor(value)` foi consolidado em Cadastros auxiliares.
+- O teste manual passou.
+- `Cadastros auxiliares` continua como modulo comum/core administrativo/transversal.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- O modulo real permanece `frontend/js/modules/auxiliares.js`.
+- O namespace real permanece `window.BranaAuxiliaresModule`.
+- DOM/renderizacao/modal/preview/selecao/eventos nao foram alterados.
+- `requestJson`/payload/salvamento/endpoints nao foram alterados.
+- backend/banco/permissoes nao foram alterados.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa deve ser definida por nova decisao documental antes de qualquer implementacao futura.
+
 
 
 
