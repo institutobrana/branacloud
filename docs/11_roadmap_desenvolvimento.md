@@ -2289,6 +2289,15 @@ Observacoes:
 - Nenhum codigo fora da delegacao visual/local foi pretendido nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Convenios e Planos - Auditoria de regressao visual/textual em Telefones
+
+- O teste funcional geral do commit `81379b6d2c9901ab0e77ab4bf6bf1f4e7da0bc8e` passou, mas foi observada uma regressao visual/textual na area de `Telefones` da modal de `Convênios e Planos`.
+- O texto exibido em vermelho aparece como mojibake semelhante a `â˜...` no lugar de um simbolo/icone de telefone.
+- A validacao pos-teste do commit `81379b6` continua bloqueada ate a analise conclusiva e eventual correcao futura.
+- Foi aberta auditoria documental antes de qualquer correção.
+- Nao houve validacao final nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
