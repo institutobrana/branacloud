@@ -36,12 +36,47 @@
     return normalizeText(valor);
   }
 
+  function escHtml(valor) {
+    return String(valor ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function montarLinhasConvenios(lista, selectedId, statusFormatter) {
+    const itens = Array.isArray(lista) ? lista : [];
+    const statusFn = typeof statusFormatter === "function"
+      ? statusFormatter
+      : (inativo) => (inativo ? "Inativo" : "Ativo");
+    return {
+      html: itens.map((item) => `<tr data-id="${item.id}" class="${Number(item.id) === Number(selectedId) ? "selected" : ""}"><td>${escHtml(item.nome || "")}</td><td>${escHtml(item.codigo || "")}</td><td>${escHtml(item.telefone || "")}</td><td>${escHtml(item.telefone2 || "")}</td><td style="text-align:center">${escHtml(statusFn(item.inativo))}</td></tr>`).join(""),
+      total: `${itens.length} convênios`,
+    };
+  }
+
+  function montarLinhasPlanos(lista, convenioSelecionadoId, selectedPlanoId, statusFormatter) {
+    const itensFonte = Array.isArray(lista) ? lista : [];
+    const itens = itensFonte.filter((item) => !convenioSelecionadoId || Number(item.convenio_id || 0) === Number(convenioSelecionadoId));
+    const statusFn = typeof statusFormatter === "function"
+      ? statusFormatter
+      : (inativo) => (inativo ? "Inativo" : "Ativo");
+    return {
+      html: itens.map((item) => `<tr data-id="${item.id}" class="${Number(item.id) === Number(selectedPlanoId) ? "selected" : ""}"><td>${escHtml(item.nome || "")}</td><td>${escHtml(item.cobertura || "")}</td><td style="text-align:center">${escHtml(statusFn(item.inativo))}</td></tr>`).join(""),
+      total: `${itens.length} planos`,
+    };
+  }
+
   const helpers = Object.freeze({
     normalizarNomeConvenio,
     validarNomeConvenio,
     normalizarNomePlano,
     validarNomePlano,
     normalizarCodigoRegistro,
+    escHtml,
+    montarLinhasConvenios,
+    montarLinhasPlanos,
   });
 
   const meta = Object.freeze({

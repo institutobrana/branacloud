@@ -2277,6 +2277,18 @@ Observacoes:
 - Nenhuma implementacao direta foi escolhida.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Convenios e Planos - Implementacao minima da lista principal e contadores
+
+- A implementacao minima do primeiro recorte medio controlado da Fase 2B foi realizada em `Convenios e Planos`.
+- O recorte aplicado foi a delegacao da renderizacao visual/local da lista principal e dos contadores para o modulo passivo existente.
+- A classificacao da frente continua sendo comum/core transversal.
+- `frontend/app.js` manteve a orquestracao de carregamento, selecao, abertura/fechamento, botoes, modais, calendario de faturamento, salvar, excluir, payload e `requestJson`.
+- `requestJson`, payload efetivo, backend, banco, endpoints, permissoes, salvamento e exclusao ficaram fora do escopo.
+- Calendario, modais, pacientes, agenda, financeiro, recebimentos, procedimentos e prestadores tambem permaneceram fora do recorte funcional.
+- O teste manual permanece pendente antes de qualquer nova subetapa.
+- Nenhum codigo fora da delegacao visual/local foi pretendido nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
