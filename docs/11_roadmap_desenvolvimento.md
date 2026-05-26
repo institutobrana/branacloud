@@ -168,6 +168,19 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhuma conta foi criada ou alterada.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8A - validacao documental dos registros Mestre e Clinica e fechamento do contrato de nova conta, sem implementacao`.
 
+## Subetapa 8A da frente EasyDental virgem
+
+- Subetapa executada: decisao de tabelas, usuarios e prestadores para novas contas Brana, ainda sem implementacao.
+- Foco documental: fechamento do papel de `Mestre` e `Clínica`, sem forcar conclusao literal onde a busca textual nao confirmou o termo `Mestre`.
+- Resultado preliminar: `Clínica` foi localizada de forma literal em `USUARIO 255` / `PRESTADOR 255` / `UNIDADE 1`; `Mestre` permanece como papel admin-like inferido, com `USUARIO 1` como melhor equivalente funcional.
+- Matriz completa EasyDental x Brana: classifica tabelas em manter Brana atual, regular no contrato, incluir no contrato de novas contas, melhorar equivalente existente, nao incluir ou deixar pendente.
+- Regra reforcada: nao duplicar conceitos que ja existem no Brana; quando o EasyDental for melhor, registrar como melhoria do equivalente existente em vez de criar novo conceito.
+- Regra reforcada: logs, historicos, transacionais e temporarios nao devem nascer como seed de novas contas.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Nenhuma conta foi criada ou alterada.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8B - fechamento final do contrato de usuarios/prestadores e matriz de seeds para novas contas, sem implementacao`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
