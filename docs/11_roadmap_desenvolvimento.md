@@ -2101,6 +2101,18 @@ Observacoes:
 - Nenhuma alteracao de comportamento funcional foi pretendida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Validacao pos-teste do preview visual da aba Ambiente
+
+- A validacao pos-teste do commit `593a5b63669ad00d80609c2210e83bcc7dd88b89` foi registrada.
+- O teste manual informado pelo usuario foi aprovado.
+- O primeiro recorte medio controlado da Fase 2B foi validado com sucesso.
+- A divisao de responsabilidades continua a mesma: preview visual da aba `Ambiente` parcial fora de `app.js`, enquanto abertura, carregamento, salvamento, roteamento, fechamento e `sysOpt*` permanecem no fluxo principal.
+- Backend, banco, endpoints, permissoes, `requestJson`, payload e salvamento seguem fora do escopo desta etapa.
+- Os limites da Fase 2B continuam vigentes.
+- O proximo passo ainda nao foi escolhido nesta etapa e depende de novo contrato/recorte controlado.
+- Nenhum arquivo de codigo foi alterado nesta validacao pos-teste.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
