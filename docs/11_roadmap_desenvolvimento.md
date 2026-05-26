@@ -46,6 +46,14 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Retomar modularizacao/refatoracao somente depois da documentacao base estar consolidada.
 - Revisar anamnese/SQLServer/restauracao em trilha separada.
 
+## Frente aberta: auditoria comparativa EasyDental virgem x Brana Cloud
+
+- Caminho externo usado: `\\Sonyvaio\c\EDS70`
+- Objetivo: inventario tecnico inicial do EasyDental virgem para orientar futuras decisoes sobre usuarios, prestadores, permissoes, seeds e configuracao inicial.
+- Subetapa 0 registrada como somente documental.
+- Nao houve implementacao, alteracao de banco, alteracao de codigo ou importacao nesta etapa.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 1 - inventario somente leitura de tabelas e contagem de registros`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
