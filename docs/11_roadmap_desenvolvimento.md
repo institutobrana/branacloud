@@ -2046,6 +2046,15 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa deve ser definida por contrato documental antes de qualquer implementacao futura.
 
+## Medicamentos - Conferencia do contrato de compararTextoMedicamento antes de implementacao
+
+- A conferencia do contrato de `compararTextoMedicamento(texto, termo)` foi realizada.
+- `Medicamentos` segue como modulo especifico de area profissional.
+- O contrato precisa de complemento documental antes de qualquer implementacao.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e um complemento documental com consumidor local claramente definido antes de implementar.
+
 
 
 
