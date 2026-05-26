@@ -2228,6 +2228,18 @@ Observacoes:
 - Nenhum codigo fora da delegacao visual/local foi pretendido nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Prestadores remanescentes - Validacao pos-teste da lista principal e contador
+
+- A validacao pos-teste do commit `24b6e0540a7a55fc709224d3331bfc1090795197` foi registrada.
+- O teste manual informado pelo usuario foi aprovado.
+- O primeiro recorte medio controlado de `Prestadores remanescentes` foi validado com sucesso.
+- A divisao de responsabilidades continua a mesma: renderizacao visual/local da lista e do contador fora de `app.js`, enquanto `prestCarregar()`, filtros, selecao, abertura/fechamento, botoes de acao e fluxos adjacentes permanecem no fluxo principal.
+- Backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, agenda, financeiro, usuarios/perfis, credenciamento e comissoes seguem fora do escopo.
+- Os limites da Fase 2B continuam vigentes.
+- O proximo passo ainda nao foi escolhido nesta etapa e depende de nova escolha controlada.
+- Nenhum arquivo de codigo foi alterado nesta validacao pos-teste.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
