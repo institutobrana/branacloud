@@ -143,6 +143,18 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve alteracao no EasyDental.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 7 - contrato documental para regra futura de nascimento de nova conta Brana, sem implementacao`.
 
+## Subetapa 7 da frente EasyDental virgem
+
+- Subetapa executada: contrato documental futuro para nascimento de nova conta Brana, sem implementacao.
+- Principios consolidados: novas contas podem receber novas regras; contas existentes nao devem ser migradas automaticamente; dados estruturais devem ser separados de dados configuraveis; registros proprios do sistema devem ser protegidos contra exclusao; seeds com preco exigem cuidado.
+- Principais regras propostas: tabela Brana apenas para novas contas; PARTICULAR mantida em contas legadas; unidade inicial e usuario admin precisam de contrato claro; prestador sistemico precisa de protecao; permissao precisa de separacao entre global, perfil e usuario.
+- Separacao entre novas contas e contas existentes: toda nova regra deve valer primeiro para novas contas, sem correcao automatica de legado.
+- Registros candidatos a protecao contra exclusao: usuario admin inicial, prestador sistemico/reservado, unidade inicial unica, perfis base, matriz de acesso, tabela privada padrao, seeds odontologicos, simbolos, especialidades e configuracoes globais.
+- Decisoes futuras pendentes: unidade inicial obrigatoria ou nao, protecao da unidade, vinculacao do admin, visibilidade do prestador sistemico, politica final da tabela Brana x PARTICULAR, politica de preco, seeds de materiais/repasses e protecao de registros globais.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8 - plano incremental de implementacao futura para nascimento de nova conta Brana, sem alterar codigo`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
