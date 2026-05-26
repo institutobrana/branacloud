@@ -2708,3 +2708,16 @@ Observacoes:
 - Nao houve implementacao.
 - Nenhuma nova conta foi criada ou alterada.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8H - implementacao isolada da unidade Principal 0001 apenas para novas contas`.
+
+## Subetapa 8H da frente EasyDental virgem
+
+- Subetapa executada: contrato das tabelas de procedimentos/precos para novas contas.
+- A lista nominal correta de TAB_PRC do EasyDental virgem foi corrigida para `Banco do Brasil`, `Banespa`, `Bradesco`, `Caixa Econ Federal`, `CNCC`, `Particular`, `Petrobras`, `Sindicato` e `Telebras`.
+- Novas contas Brana passam a nascer com essas 9 tabelas herdadas do EasyDental virgem mais a tabela `Brana`, totalizando 10 tabelas de procedimentos/precos no nascimento.
+- `Tabela Exemplo` nao nasce mais em novas contas; ela pode permanecer em contas antigas sem migracao automatica.
+- `Particular` retorna como tabela herdada de novas contas, mas `Brana` continua sendo a tabela privada/padrao do SaaS.
+- A decisao sobre precos, custos e repasses fica sanitizada para novas contas, sem trazer valores comerciais indevidos do EasyDental.
+- A regra de modularizacao futura permanece: qualquer implementacao posterior deve ser pequena, isolada e preferencialmente concentrada em helper idempotente, sem misturar unidade, permissoes, TISS e setup na mesma entrega.
+- Nao houve implementacao.
+- Nenhuma nova conta foi criada ou alterada.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8I - contrato tecnico de implementacao das 10 tabelas de procedimentos/precos, sem codigo`.
