@@ -1872,6 +1872,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - O teste manual do usuario passa a ser obrigatorio antes da proxima etapa documental.
 
+## CID - Validacao pos-teste de compararTextoCid no filtro local
+
+- A validacao pos-teste de `compararTextoCid` no filtro local de CID foi concluida.
+- O teste manual passou em `Tabelas > Doencas (CID)`.
+- A implementacao minima ficou consolidada.
+- `CID` continua classificado como modulo especifico de area profissional.
+- Nenhuma nova alteracao de codigo foi feita nesta etapa.
+- `frontend/js/modules/cid.js` nao foi alterado porque o helper ja existia.
+- O ganho foi principalmente arquitetural/de delegacao segura, e nao necessariamente de reducao visivel de linhas.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e uma nova decisao documental antes de qualquer novo recorte em `CID`.
+
 
 
 
