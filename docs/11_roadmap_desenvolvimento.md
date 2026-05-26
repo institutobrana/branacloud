@@ -2655,3 +2655,17 @@ Observacoes:
 - A coexistencia de metadata legada "Tabela Exemplo" com Brana continua sendo lacuna valida.
 - Nao houve implementacao, nem alteracao da conta 16, nem criacao de novas contas.
 - A proxima subetapa recomendada permanece documental e deve partir da confirmacao dessa baseline corrigida.
+
+## Subetapa 8D da frente EasyDental virgem
+
+- Subetapa executada: contrato tecnico da unidade inicial e da matriz de perfis/permissoes para novas contas.
+- A unidade de referencia do EasyDental foi consolidada no contrato como `Principal` com codigo `0001`.
+- O prestador `Mestre` foi mantido como referencia documental para o admin inicial de codigo `1`.
+- O prestador `Clínica` foi mantido como referencia documental para o prestador sistemico/reservado de codigo `255`.
+- O contrato reforca que a nova conta Brana deve nascer com unidade inicial formal, sem depender do setup para completar estrutura minima.
+- O contrato reforca que `permissoes_json` sozinho nao basta e que deve existir matriz formal equivalente a `usuario_perfil_acesso` ou modelo confiavel equivalente.
+- O baseline da conta 16 segue valido com a ressalva de que nao ha unidade formal e nao ha matriz formal de acesso.
+- Nao houve implementacao.
+- A conta ID 16 nao foi alterada.
+- Nenhuma nova conta foi criada.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8E - baseline documental e teste manual da unidade inicial e matriz formal de perfis/permissoes na conta atual, sem alteracao de codigo`.
