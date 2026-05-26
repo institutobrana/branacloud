@@ -2322,12 +2322,31 @@ function prefAbrirDialogoFonteAmbiente(){
 }
 function prefRenderListaAmbiente(){
   if(!prefCfg)return;
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
   const secoes=Array.isArray(prefCfg.ambienteOptions?.secoes)?prefCfg.ambienteOptions.secoes:PREF_AMB_SECOES_PADRAO;
   const ativa=prefAmbienteSecaoAtiva();
+  if(mod&&typeof mod.prefAmbienteRenderList==="function"){
+    mod.prefAmbienteRenderList({
+      container:prefCfg.listaAmbiente,
+      secoes,
+      ativa,
+      esc,
+      onSelect:(secao)=>{
+        prefCfg.ambienteValues={...prefCfg.ambienteValues,secao_ativa:String(secao||"enunciados")};
+        prefSincronizarUI();
+      }
+    });
+    return;
+  }
   prefCfg.listaAmbiente.innerHTML=secoes.map(item=>`<button type="button" class="pref-amb-list-item ${item.id===ativa?"active":""}" data-secao="${esc(item.id)}">${esc(item.label)}</button>`).join("");
   prefCfg.listaAmbiente.querySelectorAll("[data-secao]").forEach(btn=>btn.addEventListener("click",()=>{prefCfg.ambienteValues={...prefCfg.ambienteValues,secao_ativa:String(btn.dataset.secao||"enunciados")};prefSincronizarUI()}));
 }
 function prefAplicarEstiloAmbiente(el,style){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteAplicarEstiloElemento==="function"){
+    mod.prefAmbienteAplicarEstiloElemento(el,style);
+    return;
+  }
   if(!el||!style)return;
   const estilo=typeof window.easyFontNormalizeStyleId==="function"?window.easyFontNormalizeStyleId(style.fonte_estilo):String(style.fonte_estilo||"normal");
   el.style.fontFamily=String(style.fonte_nome||"Tahoma");
@@ -2339,7 +2358,26 @@ function prefAplicarEstiloAmbiente(el,style){
 }
 function prefAplicarPreviewAmbiente(){
   if(!prefCfg)return;
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
   const secoes=prefAmbienteSecoesAtuais();
+  if(mod&&typeof mod.prefAmbienteAplicarPreview==="function"){
+    mod.prefAmbienteAplicarPreview({
+      refs:{
+        ambEnunciado:prefCfg.ambEnunciado,
+        ambCampoLabel:prefCfg.ambCampoLabel,
+        ambCampoInput:prefCfg.ambCampoInput,
+        ambBotaoFuncao:prefCfg.ambBotaoFuncao,
+        ambLista1:prefCfg.ambLista1,
+        ambLista2:prefCfg.ambLista2,
+        ambLista3:prefCfg.ambLista3,
+        ambLista4:prefCfg.ambLista4,
+        ambRadioLabel:prefCfg.ambRadioLabel,
+        ambCheckLabel:prefCfg.ambCheckLabel
+      },
+      secoes
+    });
+    return;
+  }
   prefAplicarEstiloAmbiente(prefCfg.ambEnunciado,secoes.enunciados);
   prefAplicarEstiloAmbiente(prefCfg.ambCampoLabel,secoes.enunciados);
   prefAplicarEstiloAmbiente(prefCfg.ambCampoInput,secoes.campos_edicao);
@@ -2357,6 +2395,11 @@ function prefAplicarPreviewAmbiente(){
   if(prefCfg.ambLista4)prefCfg.ambLista4.classList.remove("active");
 }
 function prefEnsureAmbienteOverrides(){
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteEnsureOverrides==="function"){
+    mod.prefAmbienteEnsureOverrides(document);
+    return;
+  }
   if(document.getElementById("pref-amb-override-style"))return;
   const style=document.createElement("style");
   style.id="pref-amb-override-style";
@@ -2380,6 +2423,29 @@ function prefEnsureAmbienteOverrides(){
 }
 function prefRebuildAmbientePreview(){
   if(!prefCfg?.backdrop||prefCfg._ambPreviewBuilt)return;
+  const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefAmbienteMontarPreview==="function"){
+    const refs=mod.prefAmbienteMontarPreview({backdrop:prefCfg.backdrop});
+    if(refs){
+      prefCfg.ambEnunciado=refs.ambEnunciado;
+      prefCfg.ambCampoLabel=refs.ambCampoLabel;
+      prefCfg.ambCampoInput=refs.ambCampoInput;
+      prefCfg.ambBotaoFuncao=refs.ambBotaoFuncao;
+      prefCfg.ambLista1=refs.ambLista1;
+      prefCfg.ambLista2=refs.ambLista2;
+      prefCfg.ambLista3=refs.ambLista3;
+      prefCfg.ambLista4=refs.ambLista4;
+      prefCfg.ambRadioLabel=refs.ambRadioLabel;
+      prefCfg.ambCheckLabel=refs.ambCheckLabel;
+      const labels=prefCfg.backdrop.querySelectorAll(".pref-amb-choice label");
+      labels.forEach(label=>{
+        const input=label.querySelector("input");
+        if(input)input.disabled=false;
+      });
+      prefCfg._ambPreviewBuilt=true;
+      return;
+    }
+  }
   const exemplo=prefCfg.backdrop.querySelector(".pref-amb-example");
   if(!exemplo)return;
   exemplo.innerHTML=`

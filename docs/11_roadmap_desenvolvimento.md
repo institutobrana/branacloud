@@ -2089,6 +2089,18 @@ Observacoes:
 - Nenhum arquivo de codigo foi alterado nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Implementacao minima do preview visual da aba Ambiente
+
+- A primeira implementacao minima do recorte medio controlado de `Preferencias remanescentes` foi realizada.
+- O foco foi o preview visual da aba `Ambiente` dentro de Preferencias.
+- O modulo comum/core continua sendo `Preferencias / Configuracoes remanescentes`.
+- A montagem e atualizacao visual do preview passaram a ser delegadas ao modulo passivo existente `frontend/js/modules/preferencias-opcoes-sistema.js`.
+- `frontend/app.js` permaneceu responsavel pela abertura, carregamento, salvamento e roteamento.
+- Backend, banco, endpoints, permissoes, payload efetivo e `requestJson` ficaram fora do escopo.
+- O teste manual obrigatorio continua pendente antes de qualquer nova subetapa.
+- Nenhuma alteracao de comportamento funcional foi pretendida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 

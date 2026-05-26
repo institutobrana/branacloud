@@ -135,6 +135,170 @@
     return saida;
   }
 
+  function prefAmbienteNormalizeStyleId(value) {
+    const normalized = String(value || "normal").toLowerCase().trim();
+    if (normalized === "bold") return "negrito";
+    if (normalized === "italic") return "italico";
+    if (normalized === "bold-italic") return "negrito-italico";
+    return normalized || "normal";
+  }
+
+  function prefAmbienteEnsureOverrides(targetDocument) {
+    const doc = targetDocument || document;
+    if (!doc || doc.getElementById("pref-amb-override-style")) return false;
+
+    const style = doc.createElement("style");
+    style.id = "pref-amb-override-style";
+    style.textContent = [
+      "#config-preferencias-backdrop .pref-amb-layout{grid-template-columns:124px max-content}",
+      "#config-preferencias-backdrop .pref-amb-list{width:122px}",
+      "#config-preferencias-backdrop .pref-amb-example{width:262px}",
+      "#config-preferencias-backdrop .pref-amb-example-grid{grid-template-columns:120px 128px}",
+      "#config-preferencias-backdrop .pref-amb-example-right{padding-top:2px}",
+      "#config-preferencias-backdrop .pref-amb-listbox{width:128px}",
+      "#config-preferencias-backdrop .pref-amb-btn{width:114px;white-space:nowrap}",
+      "#config-preferencias-backdrop .pref-amb-row{gap:0;flex-wrap:nowrap}",
+      "#config-preferencias-backdrop .pref-amb-campo-label{display:none}",
+      "#config-preferencias-backdrop .pref-amb-field-input{width:74px}",
+      "#config-preferencias-backdrop .pref-amb-listbox div{cursor:pointer}",
+      "#config-preferencias-backdrop .pref-amb-choice{gap:2px}",
+      "#config-preferencias-backdrop .pref-amb-choice input{pointer-events:auto}",
+      "#config-preferencias-backdrop .pref-amb-list-item{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"
+    ].join("");
+    doc.head.appendChild(style);
+    return true;
+  }
+
+  function prefAmbienteAplicarEstiloElemento(elemento, style) {
+    if (!elemento || !style) return false;
+    const normalize = typeof window.easyFontNormalizeStyleId === "function"
+      ? window.easyFontNormalizeStyleId
+      : prefAmbienteNormalizeStyleId;
+    const estilo = normalize(style.fonte_estilo);
+
+    elemento.style.fontFamily = String(style.fonte_nome || "Tahoma");
+    elemento.style.fontSize = `${Number(style.fonte_tamanho || 12)}px`;
+    elemento.style.color = String(style.cor_texto || "#000000");
+    elemento.style.fontWeight = estilo === "negrito" || estilo === "negrito-italico" ? "700" : "400";
+    elemento.style.fontStyle = estilo === "italico" || estilo === "negrito-italico" ? "italic" : "normal";
+    elemento.style.textDecoration = `${style.sublinhado ? "underline " : ""}${style.riscado ? "line-through" : ""}`.trim() || "none";
+    return true;
+  }
+
+  function prefAmbienteRenderLista({ container, secoes, ativa, esc, onSelect } = {}) {
+    if (!container) return false;
+    const formatEsc = typeof esc === "function" ? esc : (value) => String(value ?? "");
+    const lista = Array.isArray(secoes) ? secoes : [];
+    const secaoAtiva = String(ativa || "enunciados").trim();
+
+    container.innerHTML = lista.map((item) => (
+      `<button type="button" class="pref-amb-list-item ${item.id === secaoAtiva ? "active" : ""}" data-secao="${formatEsc(item.id)}">${formatEsc(item.label)}</button>`
+    )).join("");
+
+    container.querySelectorAll("[data-secao]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (typeof onSelect === "function") onSelect(String(btn.dataset.secao || "enunciados"));
+      });
+    });
+
+    return true;
+  }
+
+  function prefAmbienteAplicarPreview({ refs, secoes } = {}) {
+    if (!refs || !secoes) return false;
+    prefAmbienteAplicarEstiloElemento(refs.ambEnunciado, secoes.enunciados);
+    prefAmbienteAplicarEstiloElemento(refs.ambCampoLabel, secoes.enunciados);
+    prefAmbienteAplicarEstiloElemento(refs.ambCampoInput, secoes.campos_edicao);
+    prefAmbienteAplicarEstiloElemento(refs.ambBotaoFuncao, secoes.botoes_funcao);
+    prefAmbienteAplicarEstiloElemento(refs.ambRadioLabel, secoes.outros_botoes);
+    prefAmbienteAplicarEstiloElemento(refs.ambCheckLabel, secoes.outros_botoes);
+
+    [refs.ambLista1, refs.ambLista2, refs.ambLista3, refs.ambLista4].forEach((el) => {
+      prefAmbienteAplicarEstiloElemento(el, secoes.itens_lista);
+    });
+
+    if (refs.ambLista1) {
+      refs.ambLista1.classList.add("active");
+      refs.ambLista1.style.background = "#0a67c6";
+      refs.ambLista1.style.color = "#ffffff";
+    }
+    if (refs.ambLista2) refs.ambLista2.classList.remove("active");
+    if (refs.ambLista3) refs.ambLista3.classList.remove("active");
+    if (refs.ambLista4) refs.ambLista4.classList.remove("active");
+    return true;
+  }
+
+  function prefAmbienteColetarRefs(root) {
+    if (!root) return null;
+    const labels = root.querySelectorAll(".pref-amb-choice label");
+    return {
+      ambEnunciado: root.querySelector("#pref-amb-enunciado"),
+      ambCampoLabel: root.querySelector("#pref-amb-campo-label"),
+      ambCampoInput: root.querySelector("#pref-amb-campo-input"),
+      ambBotaoFuncao: root.querySelector("#pref-amb-botao-funcao"),
+      ambLista1: root.querySelector("#pref-amb-lista-1"),
+      ambLista2: root.querySelector("#pref-amb-lista-2"),
+      ambLista3: root.querySelector("#pref-amb-lista-3"),
+      ambLista4: root.querySelector("#pref-amb-lista-4"),
+      ambRadioLabel: labels[0]?.querySelector("span") || null,
+      ambCheckLabel: labels[1]?.querySelector("span") || null
+    };
+  }
+
+  function prefAmbienteMontarPreview({ backdrop, onToggleItem } = {}) {
+    const root = backdrop?.querySelector?.(".pref-amb-example");
+    if (!root) return null;
+
+    if (root.dataset.prefAmbPreviewBuilt === "1") {
+      return prefAmbienteColetarRefs(root);
+    }
+
+    root.innerHTML = `
+    <div class="pref-amb-example-grid">
+      <div class="pref-amb-example-left">
+        <div id="pref-amb-enunciado">Enunciado:</div>
+        <div class="pref-amb-row">
+          <div id="pref-amb-campo-label" class="pref-amb-campo-label">Campo</div>
+          <input id="pref-amb-campo-input" class="pref-amb-field-input" type="text" value="Campo" readonly>
+        </div>
+        <button id="pref-amb-botao-funcao" class="pref-amb-btn" type="button">BotÃƒÂ£o de funÃƒÂ§ÃƒÂ£o</button>
+        <div class="pref-amb-choice">
+          <label><input type="radio" name="pref-amb-radio"><span>BotÃƒÂ£o "Radio"</span></label>
+          <label><input type="checkbox"><span>Caixa de checagem</span></label>
+        </div>
+      </div>
+      <div class="pref-amb-example-right">
+        <div class="pref-amb-listbox">
+          <div id="pref-amb-lista-1" class="active">Item 1</div>
+          <div id="pref-amb-lista-2">Item 2</div>
+          <div id="pref-amb-lista-3">Item 3</div>
+          <div id="pref-amb-lista-4">...</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+    const refs = prefAmbienteColetarRefs(root);
+    const itens = [refs?.ambLista1, refs?.ambLista2, refs?.ambLista3, refs?.ambLista4].filter(Boolean);
+
+    itens.forEach((item) => {
+      item.addEventListener("click", () => {
+        itens.forEach((el) => {
+          el.classList.remove("active");
+          el.style.background = "";
+          el.style.color = "";
+        });
+        item.classList.add("active");
+        item.style.background = "#0a67c6";
+        item.style.color = "#ffffff";
+        if (typeof onToggleItem === "function") onToggleItem(item);
+      });
+    });
+
+    root.dataset.prefAmbPreviewBuilt = "1";
+    return refs;
+  }
+
   function prefOdontoFindByLabel(text) {
     const key = prefOdontoNorm(text);
     for (let i = 0; i < PREF_ODONTO_PALETTE.length; i += 1) {
@@ -154,6 +318,12 @@
     prefAmbienteEstiloDeDialogo,
     prefAmbienteTextoExemplo,
     prefAmbienteSecoesAtuais,
+    prefAmbienteNormalizeStyleId,
+    prefAmbienteEnsureOverrides,
+    prefAmbienteAplicarEstiloElemento,
+    prefAmbienteRenderLista,
+    prefAmbienteAplicarPreview,
+    prefAmbienteMontarPreview,
     prefOdontoFindByLabel
   });
 
