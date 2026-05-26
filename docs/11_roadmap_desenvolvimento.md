@@ -129,7 +129,19 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Impacto futuro previsto: novas contas no Brana Cloud podem precisar nascer com seeds odontologicos mais completos, com separacao clara entre estrutura obrigatoria e precificacao / configuracao comercial.
 - Nao houve implementacao.
 - Nao houve alteracao no EasyDental.
-- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 6 - comparacao documental inicial com seeds atuais do Brana Cloud, sem implementacao`.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 6 - comparacao inicial com seeds atuais do Brana Cloud, sem implementacao`.
+
+## Subetapa 6 da frente EasyDental virgem
+
+- Subetapa executada: comparacao documental inicial com seeds atuais do Brana Cloud, sem implementacao.
+- Fontes Brana verificadas: `docs/11_roadmap_desenvolvimento.md`, `docs/05_banco_dados.md`, `docs/04_funcionalidades.md`, `docs/03_mapa_codigo.md`, `docs/validacao_manual_final_signup_brana_pos_correcoes.md`, `backend/README.md`, `backend/services/signup_service.py`, `backend/routes/auth_routes.py`, `backend/routes/user_admin_routes.py`, `backend/routes/superadmin_routes.py`, `backend/routes/procedimentos_routes.py`, `backend/services/runtime_bootstrap_service.py`, `backend/seeds/access_profiles_default.py`, `backend/seeds/access_profiles_bootstrap.py`, `backend/security/permissions.py`, `backend/security/system_accounts.py`, `backend/services/indices_service.py`, `backend/services/simbolos_service.py`, `backend/seeds/procedimentos_padrao.py`, `backend/seeds/procedimentos_brana.py`, `backend/seeds/procedimentos_genericos.py`, `backend/services/procedimentos_legado_service.py`, `backend/scripts/aplicar_compatibilidade_schema.py`, `backend/models/clinica.py`, `backend/models/usuario.py`, `backend/models/prestador_odonto.py`, `backend/models/access_profile.py`, `backend/models/procedimento_tabela.py`, `backend/models/procedimento.py`, `backend/models/unidade_atendimento.py`, `backend/routes/unidades_atendimento_routes.py`, `backend/routes/preferences_routes.py`, `backend/routes/system_options_routes.py`.
+- Principais equivalencias EasyDental x Brana: usuario admin inicial, prestador sistemico, 10 perfis base, seeds de procedimentos, simbolos, anamnese, materiais e relatorios/etiquetas.
+- Principais lacunas: ausencia de um `SISTEMA` persistido equivalente, ausencia de um seed unico e comprovado de `UNIDADE` inicial, e modelagem de permissao mais hibrida no Brana do que no legado.
+- Riscos atuais: ambiguidade entre `PARTICULAR` e `Brana`, protecao incompleta de registros estruturais, dupla trilha de permissao e possibilidade de novas contas nascerem com unidade/configuracao insuficiente.
+- Decisoes futuras pendentes: regra final da tabela privada de procedimentos, unidade inicial, protecoes estruturais, prestador excluivel ou nao, e contrato de seed global x por clinica.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 7 - contrato documental para regra futura de nascimento de nova conta Brana, sem implementacao`.
 
 ## Regras de conducao
 
