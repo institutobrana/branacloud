@@ -2174,6 +2174,19 @@ Observacoes:
 - Nenhum arquivo de codigo foi alterado nesta validacao pos-teste.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Consolidacao parcial apos dois recortes validados
+
+- A consolidacao parcial do estado de Preferencias remanescentes foi registrada apos dois recortes medios controlados validados com sucesso.
+- O primeiro recorte validado foi o preview visual da aba `Ambiente`, com implementacao minima em `593a5b63669ad00d80609c2210e83bcc7dd88b89` e validacao pos-teste em `5bf60619e29124a9e229b1454407100ac28ce0b1`.
+- O segundo recorte validado foi a renderizacao dos combos das abas `Geral`, `Modelos` e `Dados`, com implementacao minima em `05e54e6761b3867b6b594106c3f2459961e7095c` e validacao pos-teste em `4d7d0e609897c9bb22a16498181f2b592160afd8`.
+- O estado atual do modulo ficou parcialmente consolidado: parte do visual/local ja saiu de `app.js`, mas abertura da modal, carregamento, salvamento, roteamento, `prefSincronizarUI()`, `prefAbrirDialogoFonteAmbiente()`, `sysOpt*` e `Odontograma` permanecem no fluxo principal.
+- As areas ainda sensiveis permanecem sob cautela: `prefEnsureUI()` amplo, `prefCarregarDados()`, `prefSalvar*()`, `requestJson`, payload efetivo, backend, banco, endpoints, permissoes, financeiro, seguranca e debug.
+- Ainda existe ganho seguro em Preferencias, mas agora a expansao deve ser mais conservadora e sempre precedida de novo contrato ou de uma nova matriz comparativa.
+- As areas proibidas continuam as mesmas: backend, banco, endpoints, permissoes, `requestJson`, payload efetivo, salvamento, `sysOpt*`, `Odontograma`, financeiro, seguranca, debug, correcoes textuais, acentos, labels/placeholders/mensagens e mojibake.
+- A recomendacao registrada e pausar Preferencias por enquanto e abrir uma nova matriz comparativa da Fase 2B antes de qualquer terceiro contrato em Preferencias.
+- Nenhuma implementacao direta foi escolhida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
