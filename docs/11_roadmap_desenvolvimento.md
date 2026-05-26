@@ -1884,6 +1884,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e uma nova decisao documental antes de qualquer novo recorte em `CID`.
 
+## CID - Consolidacao documental pos-validacao de compararTextoCid
+
+- `compararTextoCid` foi consolidado no filtro local de CID.
+- O teste manual passou em `Tabelas > Doencas (CID)`.
+- `CID` continua como modulo especifico de area profissional.
+- O ganho foi arquitetural/de delegacao segura.
+- Nenhuma nova alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- `CID` fica pausado/consolidado por ora.
+- A proxima subetapa recomendada e nova decisao documental antes de qualquer novo recorte.
+
 
 
 
