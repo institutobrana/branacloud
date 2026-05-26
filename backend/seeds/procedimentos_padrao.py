@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from models.procedimento import Procedimento
 from models.procedimento_tabela import ProcedimentoTabela
 from models.procedimento_generico import ProcedimentoGenerico
+from seeds.procedimentos_easy_tabelas import get_procedimentos_easy_por_tabela
 from seeds.procedimentos_brana import get_procedimentos_brana_padrao
 
 
@@ -1245,14 +1246,20 @@ def _sanitizar_procedimento_para_nova_conta(row: dict) -> dict:
 
 
 def _garantir_tabelas_procedimentos_iniciais(db: Session, clinica_id: int) -> int:
-    procedimentos_seed = get_procedimentos_brana_padrao()
+    procedimentos_brana = get_procedimentos_brana_padrao()
+    procedimentos_easy_por_tabela = get_procedimentos_easy_por_tabela()
     total = 0
     for tabela in TABELAS_PROCEDIMENTOS_INICIAIS:
+        nome_tabela = str(tabela["nome"])
+        if _nome_norm(nome_tabela) == _nome_norm(PRIVATE_TABLE_NAME):
+            procedimentos_seed = procedimentos_brana
+        else:
+            procedimentos_seed = procedimentos_easy_por_tabela.get(nome_tabela, [])
         tabela_id = _garantir_tabela_por_nome_ou_codigo(
             db,
             int(clinica_id),
             codigo=int(tabela["codigo"]),
-            nome=str(tabela["nome"]),
+            nome=nome_tabela,
             nro_indice=int(tabela["nro_indice"]),
             fonte_pagadora=str(tabela["fonte_pagadora"]),
         )

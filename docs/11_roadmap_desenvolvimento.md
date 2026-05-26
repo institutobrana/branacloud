@@ -2822,3 +2822,16 @@ Observacoes:
 - Nenhuma conta foi criada ou alterada.
 - O mapa passou a ser suficiente para a proxima correcao isolada do seed por tabela.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8P - correcao isolada dos seeds por tabela EasyDental`.
+
+## Subetapa 8P da frente EasyDental virgem
+
+- Subetapa executada: correcao isolada dos seeds por tabela EasyDental.
+- A falha da 8J foi corrigida para que `Brana` permaneça com seed proprio e as 9 tabelas herdadas recebam seus itens EasyDental respectivos.
+- O mapa 8O foi aplicado: `Particular 112`, `Sindicato 238`, `Bradesco 94`, `Banco do Brasil 188`, `Caixa Econ. Federal 88`, `Banespa 32`, `Telebrás 101`, `Petrobrás 174` e `CNCC 236`.
+- Os arquivos alterados foram `backend/seeds/procedimentos_padrao.py` e o novo `backend/seeds/procedimentos_easy_tabelas.py`.
+- Os checks sintaticos foram executados com sucesso para os arquivos Python alterados.
+- O teste manual continua sendo criar nova conta e verificar que as 9 tabelas herdadas nao herdam mais os 336 itens da Brana, mantendo `Tabela Exemplo` fora do nascimento e `Brana` como padrao/privada.
+- O erro textual da tela de setup permanece fora do escopo e segue como pendencia separada.
+- Nenhuma conta existente foi alterada.
+- Nenhuma conta foi criada automaticamente.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8Q - validacao manual da nova conta apos correcao dos seeds`.
