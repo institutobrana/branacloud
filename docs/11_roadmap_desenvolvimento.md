@@ -2265,6 +2265,16 @@ Observacoes:
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Auditoria central de abertura de paineis apos Conta corrente
+
+- O teste pos-correcao da `Conta corrente` revelou uma falha central de abertura de paineis: varios modulos nao abrem porque `hideAllPanels()` acaba quebrando em `usersDetachOverlay()`.
+- O console reportado foi `ReferenceError: usersPanelOverlay is not defined` em `app.js?v=20260513-medicamentos-sub1`.
+- A auditoria documental foi aberta antes de qualquer correcao.
+- O commit `beee5d72cc3ebf82dd8bbcef35a3f4ca5f748647` segue nao validado.
+- A validacao de `Conta corrente` continua bloqueada ate o fluxo central voltar a abrir de forma estavel.
+- A correcao desta auditoria nao tocou `requestJson`, payload, salvamento, exclusao, backend, permissoes, relatorios ou fluxos financeiros sensiveis.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Nova matriz comparativa apos pausa de Ficha pessoal
 
 - A nova matriz comparativa documental foi aberta apos o contrato profundo de `Ficha pessoal` concluir que nao existe recorte medio suficientemente seguro agora.
