@@ -2066,6 +2066,29 @@ Observacoes:
 - Nenhuma alteracao de codigo foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Contrato profundo do primeiro recorte medio controlado
+
+- O contrato profundo de `Preferencias remanescentes` foi criado em `docs/fase_2b_preferencias_remanescentes_contrato_profundo.md`.
+- A etapa segue exclusivamente documental.
+- Nenhuma implementacao foi feita.
+- O mapeamento confirmou o eixo common/core de `Preferencias / Configuracoes remanescentes`.
+- O modulo passivo existente `frontend/js/modules/preferencias-opcoes-sistema.js` foi reconhecido como apoio de helpers puros.
+- O fluxo principal continua concentrado em `frontend/app.js`.
+- O recorte medio recomendado para futura implementacao foi definido como a extracao da montagem e atualizacao do preview visual da aba Ambiente de Preferencias.
+- O teste manual futuro foi definido para o caminho `Configuracao > Preferencias`, com validacao da aba Ambiente, do preview e da restauracao visual.
+- As pendencias e limites continuam explicitamente fora de escopo:
+  - backend;
+  - banco;
+  - endpoints;
+  - permissoes;
+  - payload efetivo;
+  - salvamento;
+  - correcao textual;
+  - mojibake;
+  - `frontend/index.html`.
+- Nenhum arquivo de codigo foi alterado nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
