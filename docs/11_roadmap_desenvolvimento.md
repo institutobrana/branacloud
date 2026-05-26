@@ -2026,6 +2026,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa deve ser definida por nova decisao documental antes de qualquer implementacao futura.
 
+## Fase 2 - Nova selecao documental de proximo bloco leve apos consolidacao de Cadastros auxiliares
+
+- `Cadastros auxiliares` foi consolidado/pausado por ora.
+- Foi realizada nova selecao documental de blocos leves.
+- Os candidatos avaliados foram `Medicamentos` e `Convenios e Planos`.
+- A classificacao multiarea resumida apontou `Medicamentos` como especifico de area profissional e `Convenios e Planos` como misto/depende de contexto.
+- A recomendacao escolhida foi `Medicamentos` como proxima frente documental.
+- A proxima subetapa recomendada e `Medicamentos - Contrato documental do proximo helper leve ou transformacao segura`.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
