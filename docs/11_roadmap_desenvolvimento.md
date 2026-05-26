@@ -54,6 +54,21 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve implementacao, alteracao de banco, alteracao de codigo ou importacao nesta etapa.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 1 - inventario somente leitura de tabelas e contagem de registros`.
 
+## Subetapa 1 da frente EasyDental virgem
+
+- Subetapa executada: inventario somente leitura de tabelas e contagens.
+- Conexao somente leitura realizada em ambiente local de apoio `.\SQLEXPRESS` com a base `EDS70` ja disponivel para consulta.
+- Metodo: consultas `SELECT` apenas sobre `sys.tables`, `sys.schemas` e `sys.dm_db_partition_stats`, sem execucao de scripts de escrita, sem attach/detach, sem backup/restore e sem importacao de dados.
+- Total de schemas encontrados: `1` (`dbo`).
+- Total de tabelas encontradas: `130`.
+- Total de tabelas vazias: `10`.
+- Total de tabelas populadas: `120`.
+- Grupos preliminares identificados: usuarios/login, prestadores/profissionais, vinculos usuario/prestador, permissoes/perfis, clinica/empresa/configuracao inicial, procedimentos, materiais, convenios, agenda, financeiro, tabelas auxiliares/seeds e sistema/interno.
+- Achado importante: varias tabelas estruturais pequenas ja nascem populadas, enquanto outras tabelas operacionais pesadas concentram o volume historico do sistema.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 2 - analise estrutural somente leitura das tabelas candidatas de usuarios, prestadores e vinculos`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
@@ -2486,6 +2501,7 @@ Observacoes:
 - Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
+
 
 
 
