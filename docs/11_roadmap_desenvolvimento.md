@@ -2204,6 +2204,18 @@ Observacoes:
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Prestadores remanescentes - Contrato profundo do primeiro recorte medio controlado
+
+- O contrato profundo de `Prestadores remanescentes` foi criado como etapa exclusivamente documental da Fase 2B.
+- A frente foi classificada como especifica de area profissional, nao como modulo comum/core.
+- O contexto ficou amarrado a nova matriz comparativa apos a pausa de `Preferencias`, que recomendou `Prestadores remanescentes` como proxima frente apenas para contrato profundo.
+- O mapa documental registrou funcoes de `app.js`, modulos existentes, DOM, eventos, `requestJson`, payload, salvamento, exclusao, backend, endpoints e permissoes apenas por leitura.
+- As areas proibidas permaneceram intocadas: backend, banco, endpoints, permissoes, `requestJson`, payload efetivo, salvamento, exclusao, validacoes criticas, integracoes com agenda/financeiro/usuarios, correcoes textuais e mojibake.
+- Foram avaliados candidatos pequenos de recorte medio controlado dentro de `Prestadores`, com recomendacao futura para uma composicao visual/local ainda sem tocar persistencia.
+- O teste manual previsto foi registrado para uma futura implementacao minima, sem executar nada nesta etapa.
+- Nenhuma implementacao direta foi escolhida.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
