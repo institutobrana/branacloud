@@ -69,6 +69,20 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve alteracao no EasyDental.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 2 - analise estrutural somente leitura das tabelas candidatas de usuarios, prestadores e vinculos`.
 
+## Subetapa 2 da frente EasyDental virgem
+
+- Subetapa executada: validacao da identidade da base e analise estrutural de usuarios, prestadores e vinculos.
+- Divergencia registrada: o DSN da fonte externa aponta `SERVER=SONYVAIO\EDS70`, `DATABASE=eds70`, mas a leitura foi feita na instancia local `INSPIRON-15\SQLEXPRESS`, banco `EDS70`.
+- Validacao documental: `sys.database_files` mostrou caminhos fisicos locais em `D:\SQLData\EDS70_2022\`, nao o caminho UNC externo.
+- Conclusao cautelosa: a base lida parece ser uma copia/anexo local derivado da instalacao externa, mas a correspondencia direta com a share externa nao foi confirmada.
+- Tabelas analisadas: `_TIPO_USUARIO`, `LOGON`, `USUARIO`, `CCCIRURGIAO`, `PESSOAL`, `PREST_ESP`, `PRESTADOR`, `TMP_PARTICIPACAO`, `USUARIO_FUNCAO`, `USUARIO_MODULO`, `USUARIO_PERFIL`.
+- Principais achados sobre usuarios/login: `USUARIO` e a tabela clara de login; `LOGON` e vazia e parece ser sessao/log; `_TIPO_USUARIO` e seed auxiliar de tipos.
+- Principais achados sobre prestadores/profissionais: `PRESTADOR` e a tabela clara de prestador; `PREST_ESP` e a junção formal com especialidades; `PESSOAL` e amplo cadastro de pessoas com FK para prestador; `CCCIRURGIAO` e operacional com `ID_PRESTADOR` por nomenclatura.
+- Principais achados sobre vinculos: `USUARIO_FUNCAO`, `USUARIO_MODULO` e `USUARIO_PERFIL` possuem FKs formais e representam os vinculos de acesso/perfil; `TMP_PARTICIPACAO` e auxiliar/temporaria sem FKs observadas.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 3 - analise estrutural somente leitura de permissoes, perfis, modulos e funcoes`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
