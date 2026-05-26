@@ -2318,6 +2318,16 @@ Observacoes:
 - Os limites da Fase 2B continuam vigentes.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Conta corrente - Correcao minima da abertura da tela
+
+- A correção mínima da abertura da tela `Financeiro > Conta corrente` foi aplicada.
+- A delegação para o módulo passivo foi temporariamente desativada em `app.js`, e `ccRenderTabela()` voltou a ser síncrona e autônoma.
+- O módulo `frontend/js/modules/conta-corrente.js` foi preservado para futura integração mais segura, sem uso no bootstrap desta rodada.
+- A correção não tocou `requestJson`, payload, salvamento, exclusão, backend, permissões, relatórios ou fluxos financeiros sensíveis.
+- A validação do commit `beee5d7` continua dependendo de novo teste manual após esta correção.
+- Nenhuma nova validação final foi registrada nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Ficha pessoal` foi criado como etapa exclusivamente documental da Fase 2B.

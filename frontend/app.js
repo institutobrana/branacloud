@@ -96,7 +96,6 @@ const formatNumFixed=(v,dec=4)=>{const n=Number(v||0);if(!Number.isFinite(n))ret
 const formatMoney=(v)=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const formatScenarioNum=(v)=>{const n=Number(v||0);if(!Number.isFinite(n))return"0";if(Number.isInteger(n))return n.toLocaleString("pt-BR");return n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})};const formatScenarioMes=(v)=>{if(v==null)return"";const n=Number(v);if(!Number.isFinite(n))return"";let s=String(n).replace(".",",");if(s.endsWith(",0"))s=s.slice(0,-2);return s};
 const MATERIAIS_INDICES_FALLBACK=[{id:255,sigla:"R$",nome:"Reais"},{id:2,sigla:"UHO",nome:"Unid. Honorario"},{id:3,sigla:"UPO",nome:"Unid. Procedimento Odontologico"},{id:1,sigla:"USO",nome:"Unid. Servico"}];
-const contaCorrenteModulePromise=import("/frontend/js/modules/conta-corrente.js").catch(()=>null);
 let editorTextosCfg=null;
 let editorTextosFontesCache=null;
 let editorTextosFontesPromise=null;
@@ -6762,14 +6761,7 @@ async function ccTrocarTipoModal(tipo){
   await ccCarregarCombosModal();
 }
 function ccSelecionado(){return ccLancCache.find(x=>x.id===ccSelecionadoId)||null}
-function ccRenderTabela(data){
-  ccLancCache=data?.itens||[];
-  const module=window.BranaContaCorrenteModule;
-  if(module&&typeof module.contaCorrenteRenderTabela==="function"){
-    module.contaCorrenteRenderTabela({tbody:cc.tbody,totEnt:cc.totEnt,totSai:cc.totSai,totSaldo:cc.totSaldo},data,{formatData:ccDateISOToBR,formatMoeda:ccFmt,escHtml:esc});
-    return;
-  }
-  cc.tbody.innerHTML=ccLancCache.map(x=>`<tr data-id="${x.id}" class="${x.tipo==="debito"?"debito":""}"><td>${ccDateISOToBR(x.data_lancamento)}</td><td>${esc(x.categoria_nome||"")}</td><td>${esc(x.historico||"")}</td><td>${x.tipo==="debito"?ccFmt(x.valor):""}</td><td>${x.tipo==="credito"?ccFmt(x.valor):""}</td></tr>`).join("");cc.totEnt.textContent=ccFmt(data?.total_entrada||0);cc.totSai.textContent=ccFmt(data?.total_saida||0);cc.totSaldo.textContent=ccFmt(data?.saldo||0);cc.totSaldo.style.color=Number(data?.saldo||0)<0?"red":"black"}
+function ccRenderTabela(data){ccLancCache=data?.itens||[];cc.tbody.innerHTML=ccLancCache.map(x=>`<tr data-id="${x.id}" class="${x.tipo==="debito"?"debito":""}"><td>${ccDateISOToBR(x.data_lancamento)}</td><td>${esc(x.categoria_nome||"")}</td><td>${esc(x.historico||"")}</td><td>${x.tipo==="debito"?ccFmt(x.valor):""}</td><td>${x.tipo==="credito"?ccFmt(x.valor):""}</td></tr>`).join("");cc.totEnt.textContent=ccFmt(data?.total_entrada||0);cc.totSai.textContent=ccFmt(data?.total_saida||0);cc.totSaldo.textContent=ccFmt(data?.saldo||0);cc.totSaldo.style.color=Number(data?.saldo||0)<0?"red":"black"}
 async function ccCarregar(){const mes=Number(cc.mes.value||0),ano=Number(cc.ano.value||0),conta=encodeURIComponent(cc.conta.value),filtro=encodeURIComponent(cc.filtro.value);const{res,data}=await requestJson("GET",`/financeiro/lancamentos?mes=${mes}&ano=${ano}&conta=${conta}&filtro=${filtro}`,undefined,true);if(!res.ok){footerMsg.textContent=data.detail||"Falha ao carregar lançamentos.";return}ccSelecionadoId=null;ccRenderTabela(data)}
 async function ccAbrir(){ccEnsureUI();hideAllPanels();ensurePanelChrome(cc.panel);cc.panel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");await ccCarregar();footerMsg.textContent="Módulo Conta Corrente aberto."}
 async function ccCarregarCombosModal(){
