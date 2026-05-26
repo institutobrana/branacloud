@@ -2055,6 +2055,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e um complemento documental com consumidor local claramente definido antes de implementar.
 
+## Fase 2B - Organizacao da transicao para recortes medios controlados
+
+- O encerramento pratico da busca por helpers leves foi registrado.
+- A Fase 2B foi aberta e organizada para recortes medios controlados.
+- A diferenca entre Fase 2B e a futura Fase 3 foi registrada: Fase 2B fica no frontend sem backend/banco/payload/salvamento; Fase 3 e para mudancas estruturais maiores.
+- O protocolo obrigatorio de recortes medios controlados foi definido.
+- A primeira frente recomendada foi `Preferencias remanescentes`.
+- A proxima subetapa recomendada e `Preferencias remanescentes - Contrato profundo de recorte medio controlado`.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
