@@ -2302,6 +2302,7 @@ def criar_conta_saas(db, nome, email, senha):
     )
     db.add(clinica)
     db.flush()
+    clinica.nome_tabela_procedimentos = PRIVATE_TABLE_NAME
     _garantir_diretorios_modelos_clinica(clinica.id)
     garantir_padroes_etiqueta(db)
     garantir_modelos_etiqueta_clinica(db, clinica.id)
@@ -2333,7 +2334,6 @@ def criar_conta_saas(db, nome, email, senha):
     seed_simbolos_graficos(db, clinica.id)
     seed_procedimentos_genericos(db, clinica.id)
     seed_procedimentos(db, clinica.id)
-    garantir_procedimentos_padrao_clinica(db, clinica.id)
     garantir_financeiro_padrao_clinica(db, clinica.id)
     garantir_indices_padrao_clinica(db, clinica.id)
     garantir_especialidades_padrao_clinica(db, clinica.id)

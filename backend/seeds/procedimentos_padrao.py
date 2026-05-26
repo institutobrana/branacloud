@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from models.procedimento import Procedimento
 from models.procedimento_tabela import ProcedimentoTabela
 from models.procedimento_generico import ProcedimentoGenerico
+from seeds.procedimentos_brana import get_procedimentos_brana_padrao
 
 
 PROCEDIMENTOS_PADRAO = [{'codigo': 1,
@@ -1144,11 +1145,28 @@ def _contar_procedimentos_tabela(db: Session, clinica_id: int, tabela_id: int) -
     )
 
 
+TABELAS_PROCEDIMENTOS_INICIAIS = (
+    {"codigo": 4, "nome": "Brana", "fonte_pagadora": "particular", "nro_indice": 255},
+    {"codigo": 1, "nome": "Banco do Brasil", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 2, "nome": "Banespa", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 3, "nome": "Bradesco", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 5, "nome": "Caixa Econ Federal", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 6, "nome": "CNCC", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 7, "nome": "Particular", "fonte_pagadora": "particular", "nro_indice": 255},
+    {"codigo": 8, "nome": "Petrobras", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 9, "nome": "Sindicato", "fonte_pagadora": "convenio", "nro_indice": 3},
+    {"codigo": 10, "nome": "Telebras", "fonte_pagadora": "convenio", "nro_indice": 3},
+)
+
+
 def _garantir_tabela_por_nome_ou_codigo(
     db: Session,
     clinica_id: int,
     codigo: int,
     nome: str,
+    *,
+    nro_indice: int = 255,
+    fonte_pagadora: str = "particular",
 ) -> int:
     tabelas = (
         db.query(ProcedimentoTabela)
@@ -1174,6 +1192,12 @@ def _garantir_tabela_por_nome_ou_codigo(
         if _nome_norm(escolhido.nome) != nome_target:
             escolhido.nome = nome
             changed = True
+        if int(escolhido.nro_indice or 0) != int(nro_indice or 0):
+            escolhido.nro_indice = int(nro_indice or 0)
+            changed = True
+        if _nome_norm(escolhido.fonte_pagadora) != _nome_norm(fonte_pagadora):
+            escolhido.fonte_pagadora = fonte_pagadora
+            changed = True
         if changed:
             db.add(escolhido)
             db.flush()
@@ -1185,14 +1209,90 @@ def _garantir_tabela_por_nome_ou_codigo(
         clinica_id=int(clinica_id),
         codigo=int(codigo),
         nome=nome,
-        nro_indice=255,
-        fonte_pagadora="particular",
+        nro_indice=int(nro_indice or 0),
+        fonte_pagadora=fonte_pagadora,
         inativo=False,
         tipo_tiss_id=1,
     )
     db.add(tabela)
     db.flush()
     return int(tabela.id)
+
+
+def _sanitizar_procedimento_para_nova_conta(row: dict) -> dict:
+    return {
+        "codigo": int(row.get("codigo") or 0),
+        "nome": str(row.get("nome") or "").strip(),
+        "tempo": 0,
+        "preco": 0.0,
+        "custo": 0.0,
+        "custo_lab": 0.0,
+        "lucro_hora": 0.0,
+        "especialidade": None,
+        "procedimento_generico_id": None,
+        "simbolo_grafico": None,
+        "simbolo_grafico_legacy_id": None,
+        "mostrar_simbolo": False,
+        "garantia_meses": 0,
+        "forma_cobranca": None,
+        "valor_repasse": 0.0,
+        "preferido": False,
+        "inativo": False,
+        "observacoes": None,
+        "data_inclusao": None,
+        "data_alteracao": None,
+    }
+
+
+def _garantir_tabelas_procedimentos_iniciais(db: Session, clinica_id: int) -> int:
+    procedimentos_seed = get_procedimentos_brana_padrao()
+    total = 0
+    for tabela in TABELAS_PROCEDIMENTOS_INICIAIS:
+        tabela_id = _garantir_tabela_por_nome_ou_codigo(
+            db,
+            int(clinica_id),
+            codigo=int(tabela["codigo"]),
+            nome=str(tabela["nome"]),
+            nro_indice=int(tabela["nro_indice"]),
+            fonte_pagadora=str(tabela["fonte_pagadora"]),
+        )
+        existentes = {
+            int(item.codigo): item
+            for item in db.query(Procedimento)
+            .filter(
+                Procedimento.clinica_id == int(clinica_id),
+                Procedimento.tabela_id == int(tabela_id),
+            )
+            .all()
+        }
+        for row in procedimentos_seed:
+            payload = _sanitizar_procedimento_para_nova_conta(row)
+            codigo = int(payload["codigo"])
+            if codigo <= 0:
+                continue
+            proc = existentes.get(codigo)
+            if proc is None:
+                proc = Procedimento(
+                    clinica_id=int(clinica_id),
+                    tabela_id=int(tabela_id),
+                    codigo=codigo,
+                    **{k: v for k, v in payload.items() if k != "codigo"},
+                )
+                db.add(proc)
+                existentes[codigo] = proc
+                total += 1
+            else:
+                changed = False
+                for field, value in payload.items():
+                    if field == "codigo":
+                        continue
+                    if getattr(proc, field) != value:
+                        setattr(proc, field, value)
+                        changed = True
+                if changed:
+                    db.add(proc)
+    db.flush()
+    return total
 
 
 def seed_procedimentos(db: Session, clinica_id: int) -> int:
@@ -1202,77 +1302,4 @@ def seed_procedimentos(db: Session, clinica_id: int) -> int:
         print(f"USANDO EXISTENTE seed_procedimentos (clinica_id={int(clinica_id)})")
         return 0
     db.info[guard_key] = True
-
-    tabela_id = _garantir_tabela_por_nome_ou_codigo(
-        db,
-        int(clinica_id),
-        codigo=1,
-        nome="Tabela Exemplo",
-    )
-    # Garante tabela Brana padrao (mesmo vazia).
-    _garantir_tabela_por_nome_ou_codigo(
-        db,
-        int(clinica_id),
-        codigo=4,
-        nome="Brana",
-    )
-
-    genericos = {
-        str(item.codigo or "").strip(): int(item.id)
-        for item in db.query(ProcedimentoGenerico)
-        .filter(ProcedimentoGenerico.clinica_id == int(clinica_id))
-        .all()
-        if str(item.codigo or "").strip()
-    }
-    existentes = {
-        int(item.codigo): item
-        for item in db.query(Procedimento)
-        .filter(
-            Procedimento.clinica_id == int(clinica_id),
-            Procedimento.tabela_id == int(tabela_id),
-        )
-        .all()
-    }
-
-    total = 0
-    for row in PROCEDIMENTOS_PADRAO:
-        codigo = int(row.get("codigo") or 0)
-        if codigo <= 0:
-            continue
-        item = existentes.get(codigo)
-        total += 1
-        payload = {
-            "nome": row.get("nome") or "",
-            "tempo": 0,
-            "preco": 0,
-            "custo": 0,
-            "custo_lab": 0,
-            "lucro_hora": 0,
-            "especialidade": None,
-            "procedimento_generico_id": None,
-            "simbolo_grafico": None,
-            "simbolo_grafico_legacy_id": None,
-            "mostrar_simbolo": False,
-            "garantia_meses": 0,
-            "forma_cobranca": None,
-            "valor_repasse": 0,
-            "preferido": False,
-            "inativo": False,
-            "observacoes": None,
-            "data_inclusao": None,
-            "data_alteracao": None,
-        }
-        if item is None:
-            item = Procedimento(
-                clinica_id=int(clinica_id),
-                tabela_id=int(tabela_id),
-                codigo=int(codigo),
-                **payload,
-            )
-            db.add(item)
-            existentes[codigo] = item
-        else:
-            continue
-
-    db.flush()
-    return total
+    return _garantir_tabelas_procedimentos_iniciais(db, int(clinica_id))

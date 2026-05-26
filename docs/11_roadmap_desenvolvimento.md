@@ -2736,3 +2736,17 @@ Observacoes:
 - Nao houve implementacao.
 - Nenhuma nova conta foi criada ou alterada.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8J - implementacao isolada das 10 tabelas de procedimentos/precos apenas para novas contas`.
+
+## Subetapa 8J da frente EasyDental virgem
+
+- Subetapa executada: implementacao isolada das 10 tabelas de procedimentos/precos apenas para novas contas.
+- O helper idempotente foi aplicado no fluxo de signup em `backend/services/signup_service.py`, apos `seed_procedimentos_genericos(db, clinica.id)`, para garantir as 10 tabelas sem afetar contas existentes.
+- `Brana` passa a nascer como tabela privada/padrao; `Tabela Exemplo` nao nasce mais em novas contas.
+- `Particular` nasce como tabela herdada, mas nao como padrao.
+- Os procedimentos canonicos sao replicados nas 10 tabelas com valores sanitizados.
+- A ordem de exibicao das tabelas foi ajustada para mostrar Brana primeiro e respeitar a sequencia contratual.
+- Os checks sintaticos foram executados com sucesso em `backend/services/signup_service.py`, `backend/seeds/procedimentos_padrao.py` e `backend/routes/procedimentos_routes.py`.
+- O teste manual deve ser feito criando uma nova conta e verificando as 10 tabelas, a ausencia de `Tabela Exemplo`, a presenca de `Brana` como padrao/privada e a preservacao da conta 16.
+- Nenhuma conta existente foi alterada.
+- Nenhuma conta foi criada automaticamente.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8K - validacao manual da nova conta apos implementacao das 10 tabelas`.

@@ -7,7 +7,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
-from sqlalchemy import func, or_
+from sqlalchemy import case, func, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -43,6 +43,19 @@ router = APIRouter(
     tags=["procedimentos"],
     dependencies=[Depends(require_module_access("procedimentos"))],
 )
+
+ORDEM_TABELAS_PROCEDIMENTOS = {
+    4: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    5: 4,
+    6: 5,
+    7: 6,
+    8: 7,
+    9: 8,
+    10: 9,
+}
 PRIVATE_TABLE_CODE = 4
 PRIVATE_TABLE_NAME = "PARTICULAR"
 
@@ -787,7 +800,10 @@ def _garantir_tabelas_clinica(db: Session, clinica_id: int):
     tabelas = (
         db.query(ProcedimentoTabela)
         .filter(ProcedimentoTabela.clinica_id == clinica_id)
-        .order_by(ProcedimentoTabela.codigo.asc())
+        .order_by(
+            case(ORDEM_TABELAS_PROCEDIMENTOS, value=ProcedimentoTabela.codigo, else_=100),
+            ProcedimentoTabela.codigo.asc(),
+        )
         .all()
     )
     por_codigo = {int(t.codigo): t for t in tabelas if int(t.codigo or 0) > 0}
