@@ -1985,6 +1985,19 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima futura de `auxNormalizarHexCor(value)` com teste manual obrigatorio.
 
+## Cadastros auxiliares - Implementacao minima de auxNormalizarHexCor(value)
+
+- A implementacao minima de `auxNormalizarHexCor(value)` foi registrada como ja presente e consolidada no modulo real `frontend/js/modules/auxiliares.js`.
+- `Cadastros auxiliares` continua como modulo comum/core administrativo/transversal.
+- Os arquivos alterados foram `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_cadastros_auxiliares_implementacao_aux_normalizar_hex_cor.md`.
+- O nome real do modulo usado foi `frontend/js/modules/auxiliares.js` com namespace `window.BranaAuxiliaresModule`.
+- O helper ficou passivo.
+- DOM/renderizacao/modal/preview/selecao/eventos nao foram alterados.
+- `requestJson`/payload/salvamento/endpoints nao foram alterados.
+- backend/banco/permissoes nao foram alterados.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual do usuario permanece obrigatorio antes da proxima etapa documental.
+
 
 
 
