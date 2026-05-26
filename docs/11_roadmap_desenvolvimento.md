@@ -1953,6 +1953,17 @@ Observacoes:
 - `Etiquetas` fica pausado/consolidado por ora.
 - A proxima subetapa recomendada e nova decisao documental antes de qualquer novo recorte.
 
+## Fase 2 - Nova selecao documental de proximo bloco leve apos consolidacao de Etiquetas
+
+- `Etiquetas` permaneceu consolidado/pausado por ora.
+- Foi realizada nova selecao documental de proximo bloco leve.
+- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Convênios e Planos` e um eventual outro bloco leve identificado no roadmap.
+- A classificacao multiarea resumida apontou `Cadastros auxiliares` como comum/core administrativo/transversal, `Medicamentos` como especifico de area profissional e `Convênios e Planos` como misto/depende de contexto.
+- A recomendacao escolhida foi `Cadastros auxiliares` como proxima frente documental.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e `Cadastros auxiliares - Contrato documental do proximo helper leve ou transformacao segura`.
+
 
 
 
