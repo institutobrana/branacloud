@@ -2162,6 +2162,18 @@ Observacoes:
 - Nenhum codigo fora do recorte visual/local foi pretendido nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Preferencias remanescentes - Validacao pos-teste dos combos Geral, Modelos e Dados
+
+- A validacao pos-teste do commit `05e54e6761b3867b6b594106c3f2459961e7095c` foi registrada.
+- O teste manual informado pelo usuario foi aprovado.
+- O segundo recorte medio controlado da Fase 2B foi validado com sucesso.
+- A divisao de responsabilidades continua a mesma: renderizacao visual/local dos combos fora de `app.js`, enquanto abertura, carregamento, salvamento, roteamento, fechamento, `prefSincronizarUI()`, preview de `Ambiente`, `sysOpt*` e `Odontograma` permanecem no fluxo principal.
+- Backend, banco, endpoints, permissoes, `requestJson`, payload e salvamento seguem fora do escopo desta etapa.
+- Os limites da Fase 2B continuam vigentes.
+- O proximo passo ainda nao foi escolhido nesta etapa e depende de nova escolha controlada.
+- Nenhum arquivo de codigo foi alterado nesta validacao pos-teste.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
