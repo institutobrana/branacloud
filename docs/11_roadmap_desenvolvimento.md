@@ -2775,3 +2775,16 @@ Observacoes:
 - Nao houve implementacao.
 - Nenhuma conta foi criada ou alterada.
 - A proxima subetapa recomendada ficou em validacao manual da nova conta 8J/8K antes de mexer no setup interno.
+
+## Subetapa 8M da frente EasyDental virgem
+
+- Subetapa executada: exclusao segura da conta ID 16 / `institutobrana@gmail.com` para liberar o e-mail e permitir validacao limpa das Subetapas 8J e 8K.
+- Documentos revisados: contrato central de exclusao segura, trilhas seguras das clinicas 8, 9, 10 e 15, baseline documental da conta 16 e o inventario de contratos/regras.
+- Procedimento encontrado: runner generico seguro `backend/scripts/remover_conta_teste.py`, com plan/preview por leitura e confirmacao explicita antes da execucao real.
+- Dry-run executado com sucesso: plano apontou somente a conta 16, os usuarios 36/37 e as dependencias vinculadas, sem alterar nada.
+- Execucao real concluida com sucesso: a conta 16 foi removida e o e-mail `institutobrana@gmail.com` foi liberado.
+- Nenhuma outra conta foi afetada: apos a exclusao restaram apenas as clinicas `1` e `4`.
+- As entregas 8J e 8K permaneceram preservadas, sem qualquer alteracao de codigo.
+- Nao houve alteracao em EasyDental, frontend, banco schema, migrations, seeds ou endpoints durante esta etapa.
+- Nao houve criacao de nova conta automaticamente.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8M - validacao manual da nova conta limpa apos exclusao segura da conta 16`.
