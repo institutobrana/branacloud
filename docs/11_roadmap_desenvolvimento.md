@@ -2240,6 +2240,18 @@ Observacoes:
 - Nenhum arquivo de codigo foi alterado nesta validacao pos-teste.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Prestadores remanescentes - Consolidacao parcial apos primeiro recorte validado
+
+- A consolidacao parcial do primeiro recorte medio validado em `Prestadores remanescentes` foi registrada.
+- O recorte consolidado foi a lista principal e o contador de Prestadores.
+- A classificacao da frente continua sendo especifica de area profissional, nao modulo comum/core.
+- O estado atual mostrou que parte do visual/local ja saiu de `app.js`, mas os fluxos restantes se aproximam de areas mais sensiveis como modal, salvar, excluir, agenda, credenciamento, comissoes, permissoes e backend.
+- A recomendacao registrada foi pausar `Prestadores` por enquanto e voltar para uma nova matriz comparativa documental da Fase 2B.
+- O teste manual passou e continua sendo o marco de validade deste primeiro recorte.
+- Nenhuma implementacao direta foi escolhida nesta etapa.
+- Os limites ainda vigentes foram mantidos.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
