@@ -2750,3 +2750,15 @@ Observacoes:
 - Nenhuma conta existente foi alterada.
 - Nenhuma conta foi criada automaticamente.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8K - validacao manual da nova conta apos implementacao das 10 tabelas`.
+
+## Subetapa 8K da frente EasyDental virgem
+
+- Subetapa executada: implementacao isolada da unidade Principal / 0001 apenas para novas contas.
+- O helper `_garantir_unidade_principal_clinica(db, clinica_id)` foi criado em `backend/services/signup_service.py` para garantir a unidade sem duplicar registros e sem afetar contas existentes.
+- A unidade nasce com nome `Principal` e codigo `0001`, ativa, com campos opcionais mantidos vazios.
+- A implementacao nao mexeu em Mestre, Clinica, usuarios, prestadores, permissoes, TISS, setup ou nas tabelas de procedimentos/precos da 8J.
+- Os checks sintaticos foram executados com sucesso em `backend/services/signup_service.py`.
+- O teste manual deve ser feito criando uma nova conta e verificando a unidade Principal / 0001, sem duplicidade, sem afetar a conta 16 e sem alterar contas antigas.
+- Nenhuma conta existente foi alterada.
+- Nenhuma conta foi criada automaticamente.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8L - validacao manual da nova conta apos unidade + 10 tabelas`.

@@ -15,6 +15,7 @@ from models.prestador_odonto import PrestadorOdonto
 from models.procedimento import Procedimento, ProcedimentoMaterial
 from models.procedimento_generico import ProcedimentoGenerico
 from models.procedimento_tabela import ProcedimentoTabela
+from models.unidade_atendimento import UnidadeAtendimento
 from models.usuario import Usuario
 from seeds.procedimentos_genericos import seed_procedimentos_genericos
 from seeds.procedimentos_brana import get_procedimentos_brana_padrao
@@ -2292,6 +2293,33 @@ def _aplicar_bootstrap_access_profiles_clinica(db, clinica_id: int) -> dict[str,
     return ensure_default_access_profiles_for_clinic(db, clinica_id)
 
 
+def _garantir_unidade_principal_clinica(db, clinica_id: int) -> UnidadeAtendimento:
+    existentes = (
+        db.query(UnidadeAtendimento)
+        .filter(UnidadeAtendimento.clinica_id == int(clinica_id))
+        .order_by(UnidadeAtendimento.id.asc())
+        .all()
+    )
+    for item in existentes:
+        codigo_norm = _norm_texto(item.codigo)
+        nome_norm = _norm_texto(item.nome)
+        if int(item.source_id or 0) == 1 or codigo_norm == "0001" or nome_norm == "principal":
+            return item
+
+    item = UnidadeAtendimento(
+        clinica_id=int(clinica_id),
+        source_id=1,
+        codigo="0001",
+        nome="Principal",
+        qtd_sala=0,
+        inativo=False,
+        data_inclusao=datetime.now().strftime("%d/%m/%Y"),
+    )
+    db.add(item)
+    db.flush()
+    return item
+
+
 def criar_conta_saas(db, nome, email, senha):
     clinica = Clinica(
         nome=nome,
@@ -2304,6 +2332,7 @@ def criar_conta_saas(db, nome, email, senha):
     db.flush()
     clinica.nome_tabela_procedimentos = PRIVATE_TABLE_NAME
     _garantir_diretorios_modelos_clinica(clinica.id)
+    _garantir_unidade_principal_clinica(db, clinica.id)
     garantir_padroes_etiqueta(db)
     garantir_modelos_etiqueta_clinica(db, clinica.id)
     prestador_sistemico = _garantir_prestador_sistemico_clinica(db, clinica.id)
