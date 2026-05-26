@@ -2265,6 +2265,24 @@ Observacoes:
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Nova matriz comparativa apos pausa de Ficha pessoal
+
+- A nova matriz comparativa documental foi aberta apos o contrato profundo de `Ficha pessoal` concluir que nao existe recorte medio suficientemente seguro agora.
+- A consolidacao de `Preferencias`, `Prestadores` e `Convênios e Planos` foi mantida como contexto, assim como a pausa sem implementacao de `Medicamentos` e `Ficha pessoal`.
+- A auditoria leve do commit `09544fc6f89c5c1a3aed5b5c2098b2c4c414a3e7` foi registrada:
+  - `git status --short` mostrou apenas untracked antigos em `docs/`, sem alteracao de codigo;
+  - `git log --oneline -5` confirmou `09544fc` no historico recente;
+  - `git show --name-only --stat --oneline 09544fc6f89c5c1a3aed5b5c2098b2c4c414a3e7` mostrou apenas `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2b_ficha_pessoal_contrato_profundo.md`;
+  - a aparente indicacao visual de “4 arquivos editados” foi tratada como duplicidade de interface/summary, nao como alteracao real adicional.
+- Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e exclusao; menor contato com permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
+- A frente recomendada ficou em `Conta corrente`, tratada como `comum/core transversal` e com contrato profundo obrigatorio antes de qualquer implementacao.
+- `Preferências`, `Prestadores`, `Convênios e Planos`, `Medicamentos` e `Ficha pessoal` continuaram pausados, evitando reentrada em `sysOpt*`, `Odontograma`, modal, salvar, excluir, agenda, credenciamento, comissoes, calendario, `requestJson`, payload, pacientes, financeiro, recebimentos, procedimentos, permissões ou backend.
+- `Indices financeiros`, `Materiais`, `Agenda principal remanescente`, `Procedimentos genericos` e `Relatorios` ficaram em segundo plano por sensibilidade, tamanho do bloco, risco funcional ou acoplamento estrutural.
+- A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
+- Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
+- Nenhuma implementacao foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Ficha pessoal` foi criado como etapa exclusivamente documental da Fase 2B.
