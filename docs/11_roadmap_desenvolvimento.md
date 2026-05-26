@@ -2265,6 +2265,18 @@ Observacoes:
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Convenios e Planos - Contrato profundo do primeiro recorte medio controlado
+
+- O contrato profundo de `Convênios e Planos` foi criado como etapa exclusivamente documental da Fase 2B.
+- A frente foi classificada como comum/core transversal.
+- O contexto ficou amarrado a nova matriz comparativa pos-Prestadores, que recomendou `Convênios e Planos` como proxima frente apenas para contrato profundo.
+- O mapa documental registrou funcoes de `app.js`, modulos existentes, DOM, eventos, `requestJson`, payload, salvamento, exclusao, backend, endpoints e permissoes apenas por leitura.
+- As areas proibidas permaneceram intocadas: backend, banco, endpoints, permissoes, `requestJson`, payload efetivo, salvamento, exclusao, validacoes criticas, vinculos com pacientes, agenda, financeiro, recebimentos, procedimentos e prestadores, alem de correcoes textuais e mojibake.
+- Foram avaliados candidatos pequenos de recorte medio controlado dentro de `Convênios e Planos`, com recomendacao futura para a renderizacao visual/local da lista principal e dos contadores.
+- O teste manual previsto foi registrado para uma futura implementacao minima, sem executar nada nesta etapa.
+- Nenhuma implementacao direta foi escolhida.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
