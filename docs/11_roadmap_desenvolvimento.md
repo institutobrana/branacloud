@@ -2113,6 +2113,18 @@ Observacoes:
 - Nenhum arquivo de codigo foi alterado nesta validacao pos-teste.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Escolha controlada do proximo recorte medio
+
+- A escolha controlada do proximo recorte medio da Fase 2B foi aberta apos a validacao bem-sucedida do preview visual da aba `Ambiente`.
+- Os criterios adotados foram: menor contato com backend, payload, salvamento e permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; possibilidade de recorte medio pequeno.
+- A frente recomendada foi `Preferencias remanescentes`, tratada como `comum/core`.
+- `Prestadores remanescentes` ficou em segundo plano por ja possuir trilha propria consolidada e por trazer mais conexoes com agenda, convenios e usuarios.
+- `Medicamentos`, `Convenios e Planos`, `Ficha pessoal`, `Conta corrente`, `Indices financeiros`, `Agenda principal remanescente`, `Relatorios`, `Materiais` e `Procedimentos genericos` ficaram em segundo plano por risco funcional, dependencia de backend/payload/salvamento ou maior sensibilidade operacional.
+- A proxima subetapa recomendada e somente um novo contrato profundo dentro de `Preferencias remanescentes`.
+- Os limites da Fase 2B continuam vigentes: nada de backend, banco, endpoints, permissoes, payload efetivo, salvamento, `sysOpt*` ou `Odontograma` sem novo contrato especifico.
+- Nenhum codigo foi alterado nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
