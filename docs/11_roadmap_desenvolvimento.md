@@ -2721,3 +2721,18 @@ Observacoes:
 - Nao houve implementacao.
 - Nenhuma nova conta foi criada ou alterada.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8I - contrato tecnico de implementacao das 10 tabelas de procedimentos/precos, sem codigo`.
+
+## Subetapa 8I da frente EasyDental virgem
+
+- Subetapa executada: contrato tecnico de implementacao das 10 tabelas de procedimentos/precos.
+- A implementacao futura deve ocorrer no fluxo de signup em `backend/services/signup_service.py`, por helper idempotente e isolado.
+- A decisao tecnica recomendada e replicar os procedimentos nas 10 tabelas com valores sanitizados, mantendo Brana como tabela privada/padrao.
+- Os precos devem nascer sanitizados, preferencialmente com zero ou nulo conforme o modelo permitir, sem trazer valores comerciais indevidos.
+- As 10 tabelas devem aparecer ao usuario final, com Brana em primeiro/padrao e Tabela Exemplo ausente nas novas contas.
+- O metadata inicial da clinica deve apontar Brana como padrao/privada, sem herdar Tabela Exemplo nas novas contas.
+- O helper idempotente recomendado compara por `clinica_id` + nome normalizado e nao altera contas antigas.
+- Os seeds provaveis foram mapeados e os testes futuros obrigatorios foram registrados.
+- A regra de modularizacao futura permanece: qualquer implementacao posterior deve continuar pequena, isolada e sem misturar unidade, permissoes, TISS ou setup na mesma entrega.
+- Nao houve implementacao.
+- Nenhuma nova conta foi criada ou alterada.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8J - implementacao isolada das 10 tabelas de procedimentos/precos apenas para novas contas`.
