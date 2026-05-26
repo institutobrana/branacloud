@@ -1851,6 +1851,15 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e seguir com contrato documental antes de qualquer delegacao adicional em `CID`.
 
+## CID - Contrato funcional especifico de compararTextoCid antes de implementacao
+
+- Foi criado contrato funcional especifico de `compararTextoCid(texto, termo)`.
+- `CID` continua classificado como modulo especifico de area profissional.
+- A decisao conservadora foi aprovar o helper para futura implementacao minima, mantendo fallback equivalente.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima subetapa recomendada e a implementacao minima futura de uso de `compararTextoCid` no filtro local de `CID`.
+
 
 
 
