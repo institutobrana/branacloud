@@ -2265,6 +2265,17 @@ Observacoes:
 - Nenhuma implementacao foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
+
+- O contrato profundo de `Ficha pessoal` foi criado como etapa exclusivamente documental da Fase 2B.
+- A frente foi tratada como `comum/core transversal`, com cautela reforcada por envolver cadastro de paciente, dados pessoais, contatos, convenio/plano, anamnese, historico, documentos, agenda e financeiro.
+- O mapa documental registrou funcoes de `app.js`, modulos proximos, DOM, eventos, `requestJson`, payload, salvamento, exclusao, backend, endpoints e permissoes apenas por leitura.
+- Os candidatos de recorte medio analisados nao liberaram uma superficie segura para implementacao agora.
+- A recomendacao registrada foi pausar `Ficha pessoal` por enquanto e abrir nova matriz comparativa ou escolher outra frente antes de qualquer nova tentativa.
+- Os limites da Fase 2B permanecem vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, dados reais de paciente, anamnese, historico, documentos, atendimento, agenda ou financeiro.
+- Nenhuma implementacao foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Medicamentos - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Medicamentos` foi criado como etapa exclusivamente documental da Fase 2B.
