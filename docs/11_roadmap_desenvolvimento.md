@@ -2762,3 +2762,16 @@ Observacoes:
 - Nenhuma conta existente foi alterada.
 - Nenhuma conta foi criada automaticamente.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8L - validacao manual da nova conta apos unidade + 10 tabelas`.
+
+## Subetapa 8L da frente EasyDental virgem
+
+- Subetapa executada: auditoria da senha interna, setup e Opcoes do Sistema.
+- A auditoria separou explicitamente login SaaS de senha interna do sistema.
+- `setup_completed` continua sendo o gate atual do Brana para liberar a aplicacao apos o primeiro acesso.
+- `clinicas.opcoes_sistema_json` guarda as flags de seguranca, incluindo `ativar_controle_usuarios` e `ativar_auditoria`.
+- No Brana atual, `config-alterar-senha` abre a troca de senha do usuario logado, nao um fluxo interno separado equivalente ao EasyDental.
+- A regra observada no EasyDental foi registrada: controle de usuarios/senhas e auditoria nascem desmarcados e o menu de alteracao de senha aparece depois de ativar o controle interno.
+- O share `\\\\Sonyvaio\\c\\EDS70` nao estava acessivel neste ambiente, entao a trilha do EasyDental foi tratada como documental e baseada em docs historicos e na regra observada pelo usuario.
+- Nao houve implementacao.
+- Nenhuma conta foi criada ou alterada.
+- A proxima subetapa recomendada ficou em validacao manual da nova conta 8J/8K antes de mexer no setup interno.
