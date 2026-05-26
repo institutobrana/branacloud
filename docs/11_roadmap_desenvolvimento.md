@@ -2307,6 +2307,17 @@ Observacoes:
 - Nenhum codigo fora da delegacao visual/local foi pretendido nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Conta corrente - Auditoria da tela que nao abre
+
+- O teste manual informou que a tela de `Conta corrente` nao abriu.
+- O commit `beee5d72cc3ebf82dd8bbcef35a3f4ca5f748647` permanece sem validacao pos-teste.
+- Foi aberta auditoria documental antes de qualquer correcao.
+- O diff registrou o preloader assincrono `contaCorrenteModulePromise` em `app.js` e a nova delegacao de `ccRenderTabela()` para o modulo passivo.
+- `node --check frontend/app.js` passou e `node --check frontend/js/modules/conta-corrente.js` passou, entao a suspeita recai sobre o bootstrap/runtime do navegador e nao sobre sintaxe local.
+- Nenhuma validacao final foi registrada nesta etapa.
+- Os limites da Fase 2B continuam vigentes.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Ficha pessoal` foi criado como etapa exclusivamente documental da Fase 2B.
