@@ -2283,6 +2283,14 @@ Observacoes:
 - `requestJson`, payload, salvamento, exclusao, backend, permissoes e fluxos financeiros sensiveis permaneceram fora do escopo.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Auditoria de retorno ao ultimo ponto funcional antes da Conta corrente
+
+- A auditoria confirmou `eb437dfad95f004f43a06d1db071438203ede90a` como o ultimo ponto funcional antes da tentativa de modularizacao de `Conta corrente`.
+- Os commits posteriores incluem `beee5d7`, `ad2627d`, `abdf2fa`, `0e911ca` e `d85bed1`, com alteracoes em codigo, modulo novo, auditorias, correcoes e roadmap.
+- A estrategia recomendada para a proxima etapa e um novo commit controlado restaurando apenas os arquivos de codigo ao estado de `eb437df`, preservando toda a documentacao.
+- Nenhum rollback foi executado ainda.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Nova matriz comparativa apos pausa de Ficha pessoal
 
 - A nova matriz comparativa documental foi aberta apos o contrato profundo de `Ficha pessoal` concluir que nao existe recorte medio suficientemente seguro agora.
