@@ -99,6 +99,21 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Impacto futuro previsto: novas contas no Brana Cloud provavelmente precisarao nascer com perfis, modulos e funcoes seedadas de forma segura, preservando um usuario inicial de alto privilegio e os registros estruturais que sustentam o acesso.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 4 - analise somente leitura de clinica, unidade, configuracao inicial e registros proprios do sistema`.
 
+## Subetapa 4 da frente EasyDental virgem
+
+- Subetapa executada: analise somente leitura de clinica, unidade, configuracao inicial e registros proprios do sistema.
+- Tabelas analisadas: `UNIDADE`, `SISTEMA`, `CONFIG_REPORT`, `CUSTOMCONTROL`, `CUSTOMPAGE`, `AVISO`, `_BANCO`, `_CIDADE`, `_ESTADO_CIVIL`, `_TIPO_LOGRADOURO`, `_TIPO_CONTATO`, `_TIPO_APRESENTACAO`, `_TIPO_INDICA`, `USUARIO`, `PRESTADOR`, `USUARIO_PERFIL`, `USUARIO_MODULO`, `USUARIO_FUNCAO`.
+- `UNIDADE` apareceu com um registro unico e campos completos de cadastro/agenda/contato; isso sugere unidade inicial estrutural da instalacao.
+- `SISTEMA` apareceu com um registro unico e campos de identidade da base, versao, release, preferencias e licenca/instalacao; isso sugere registro interno estrutural.
+- `CONFIG_REPORT`, `CUSTOMCONTROL` e `CUSTOMPAGE` aparecem populadas e com ligacoes formais de configuracao por usuario e de layout entre formulario/pagina/controle; parecem seeds de interface e relatorio.
+- As tabelas auxiliares `_BANCO`, `_CIDADE`, `_ESTADO_CIVIL`, `_TIPO_LOGRADOURO`, `_TIPO_CONTATO`, `_TIPO_APRESENTACAO` e `_TIPO_INDICA` aparecem populadas como lookup seeds estruturais.
+- `_ESTADO` nao foi encontrada no banco e nao entrou na analise.
+- `UNIDADE` liga-se formalmente a `USUARIO` pelos campos de auditoria; `USUARIO.ID_UNIDADE` aponta para a unidade ativa do usuario.
+- Nao houve implementacao.
+- Nao houve alteracao no EasyDental.
+- Impacto futuro previsto: novas contas no Brana Cloud provavelmente precisarao nascer com unidade inicial, config global e seeds auxiliares protegidos, para evitar tela quebrada, menu vazio ou identidade de instalacao incompleta.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 5 - analise somente leitura de Intervenções/Procedimentos, seeds odontológicos e tabelas clínicas estruturais`.
+
 ## Regras de conducao
 
 - Nao misturar correcao funcional com mojibake.
