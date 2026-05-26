@@ -2307,6 +2307,18 @@ Observacoes:
 - A validação pós-teste do commit `81379b6` continua dependendo de novo teste manual após esta correção.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Convenios e Planos - Validacao pos-teste da lista principal e contadores
+
+- A validacao pos-teste do commit `81379b6d2c9901ab0e77ab4bf6bf1f4e7da0bc8e` foi registrada.
+- A auditoria documental `c7040a41b996935c01b3efdb7d90ce0d4e157299` confirmou que o mojibake da area de telefones era preexistente.
+- A correção pontual `0c64ed30f06ab929a14515ce2b207ff27a0b9d94` foi validada depois do teste.
+- O primeiro recorte medio controlado de `Convênios e Planos` foi validado com sucesso em teste manual.
+- A separacao entre implementacao, auditoria e correção ficou preservada.
+- `requestJson`, payload, salvamento, exclusão, backend, permissões e fluxos transversais permaneceram fora do escopo.
+- Os limites da Fase 2B continuam vigentes.
+- O proximo passo ainda nao foi escolhido nesta etapa e depende de nova escolha controlada.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
