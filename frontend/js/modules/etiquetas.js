@@ -170,6 +170,25 @@
     return num.toFixed(2).replace(".", ",");
   }
 
+  function etqArquivosOrdenados(lista) {
+    const itens = Array.isArray(lista) ? lista : [];
+    const mapa = new Map();
+    itens.forEach(item => {
+      const key = String(item?.nome_arquivo || item?.nome || "").trim().toLowerCase();
+      if (!key) return;
+      const atual = mapa.get(key);
+      if (!atual) {
+        mapa.set(key, item);
+        return;
+      }
+      const atualClinica = atual?.clinica_id != null;
+      const novoClinica = item?.clinica_id != null;
+      if (!atualClinica && novoClinica) mapa.set(key, item);
+    });
+    return Array.from(mapa.values()).sort((a, b) =>
+      String(a.nome_arquivo || a.nome || "").localeCompare(String(b.nome_arquivo || b.nome || ""), "pt-BR"));
+  }
+
   function layoutFromItem(item) {
     if (!item) return null;
     const cols = Math.max(1, Math.min(20, parseInt(item.nro_colunas || "1", 10) || 1));
@@ -207,6 +226,7 @@
 
   if (typeof ns.normalizeNumber !== "function") ns.normalizeNumber = normalizeNumber;
   if (typeof ns.formatNumber !== "function") ns.formatNumber = formatNumber;
+  if (typeof ns.etqArquivosOrdenados !== "function") ns.etqArquivosOrdenados = etqArquivosOrdenados;
   if (typeof ns.layoutFromItem !== "function") ns.layoutFromItem = layoutFromItem;
 
   if (typeof ns.getInfo !== "function") ns.getInfo = getInfo;

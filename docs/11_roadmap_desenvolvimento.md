@@ -1916,6 +1916,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima futura de `etqArquivosOrdenados(lista)` com teste manual em `Etiquetas / Configuracao de modelos de etiqueta`.
 
+## Etiquetas - Implementacao minima de etqArquivosOrdenados(lista)
+
+- `etqArquivosOrdenados(lista)` foi implementado de forma minima.
+- `Etiquetas` continua como modulo comum/core administrativo/transversal.
+- Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/etiquetas.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_etiquetas_implementacao_etq_arquivos_ordenados.md`.
+- O helper ficou passivo e puro, com fallback equivalente mantido em `frontend/app.js`.
+- DOM/renderizacao/modal/preview/selecao/eventos nao foram alterados.
+- `requestJson`/payload/salvamento/endpoints nao foram alterados.
+- backend/banco/permissoes nao foram alterados.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual do usuario deve ocorrer antes de qualquer nova validacao documental.
+
 
 
 

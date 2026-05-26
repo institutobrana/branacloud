@@ -1906,6 +1906,13 @@ function etqSelecionarLinha(tr){if(!etqCfg||!tr)return;const id=Number(tr.datase
 function etqSelecionado(){if(!etqCfg)return null;return (etqCfg.modelos||[]).find(item=>Number(item.id||0)===Number(etqCfg.selectedId||0))||null}
 function etqArquivosOrdenados(){
   const itens=Array.isArray(etqCfg?.arquivos)?etqCfg.arquivos:[];
+  try{
+    const mod=window.BranaEtiquetasModule;
+    if(mod&&typeof mod.etqArquivosOrdenados==="function"){
+      const ordenados=mod.etqArquivosOrdenados(itens);
+      if(ordenados!==undefined)return ordenados;
+    }
+  }catch{}
   const mapa=new Map();
   itens.forEach(item=>{
     const key=String(item?.nome_arquivo||item?.nome||"").trim().toLowerCase();
