@@ -1860,6 +1860,18 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima futura de uso de `compararTextoCid` no filtro local de `CID`.
 
+## CID - Implementacao minima de uso de compararTextoCid no filtro local
+
+- A implementacao minima de uso de `compararTextoCid(texto, termo)` no filtro local de `CID` foi realizada.
+- `CID` continua classificado como modulo especifico de area profissional.
+- Os arquivos alterados foram `frontend/app.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_cid_implementacao_comparar_texto_cid.md`.
+- O helper permanece passivo em `frontend/js/modules/cid.js`.
+- DOM/renderizacao/modal/selecao/eventos nao foram alterados.
+- `requestJson`/payload/salvamento/endpoints nao foram alterados.
+- backend/banco/permissoes nao foram alterados.
+- A blindagem textual/mojibake foi respeitada.
+- O teste manual do usuario passa a ser obrigatorio antes da proxima etapa documental.
+
 
 
 

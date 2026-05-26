@@ -11085,9 +11085,10 @@ function cidEnsureUI(){
   ensureModalChrome(cid.modalBackdrop.querySelector(".cid-modal"));
 }
 function cidFiltrar(){
-  const q=(cid?.busca?.value||"").trim().toLowerCase();
+  const q=(cid?.busca?.value||"").trim();
   if(!q)return cidCache||[];
-  return (cidCache||[]).filter(x=>String(x.codigo||"").toLowerCase().includes(q)||String(x.descricao||"").toLowerCase().includes(q));
+  const compararTextoCid=window.BranaCidModule&&window.BranaCidModule.helpers&&typeof window.BranaCidModule.helpers.compararTextoCid==="function"?window.BranaCidModule.helpers.compararTextoCid:(texto,termo)=>String(texto||"").trim().toLowerCase().includes(String(termo||"").trim().toLowerCase());
+  return (cidCache||[]).filter(x=>compararTextoCid(x.codigo,q)||compararTextoCid(x.descricao,q));
 }
 function cidRender(){
   if(!cid)return;
