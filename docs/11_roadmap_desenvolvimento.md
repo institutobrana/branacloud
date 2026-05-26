@@ -2291,6 +2291,16 @@ Observacoes:
 - Nenhum rollback foi executado ainda.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Rollback controlado de codigo ao ponto funcional anterior
+
+- O rollback controlado de codigo foi executado para retornar ao ponto funcional `eb437dfad95f004f43a06d1db071438203ede90a`.
+- `frontend/app.js` foi restaurado ao estado de `eb437df`.
+- `frontend/js/modules/conta-corrente.js` foi removido, porque nao existia no ponto funcional restaurado.
+- O historico foi preservado e nenhum `git reset` foi usado.
+- A documentacao posterior das tentativas e auditorias foi preservada.
+- O teste manual apos o rollback continua obrigatorio antes de retomar qualquer subetapa da Fase 2B.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Nova matriz comparativa apos pausa de Ficha pessoal
 
 - A nova matriz comparativa documental foi aberta apos o contrato profundo de `Ficha pessoal` concluir que nao existe recorte medio suficientemente seguro agora.
