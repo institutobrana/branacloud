@@ -2294,6 +2294,19 @@ Observacoes:
 - Nenhuma implementacao direta foi escolhida.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Conta corrente - Implementacao minima da tabela de lancamentos e totais
+
+- A implementacao minima do primeiro recorte medio controlado da Fase 2B foi realizada em `Conta corrente`.
+- O recorte aplicado foi a delegacao da renderizacao visual/local da tabela de lancamentos e dos totais/resumo mensal para o modulo passivo `frontend/js/modules/conta-corrente.js`.
+- A classificacao da frente continua sendo `comum/core transversal`.
+- `frontend/app.js` manteve a orquestracao de carregamento, filtros, selecao, abertura/fechamento, modal, salvar, excluir, imprimir, relatorios, fluxo de caixa, payload e `requestJson`.
+- `requestJson`, payload efetivo, backend, banco, endpoints, permissoes, salvamento e exclusao ficaram fora do escopo.
+- Relatorios, fluxo de caixa, recebimentos, pagamentos, pacientes, agenda, convenios, prestadores e procedimentos tambem permaneceram fora do recorte funcional.
+- Valores financeiros, datas, status e formas de pagamento nao foram alterados.
+- O teste manual permanece pendente antes de qualquer nova subetapa.
+- Nenhum codigo fora da delegacao visual/local foi pretendido nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Ficha pessoal` foi criado como etapa exclusivamente documental da Fase 2B.
