@@ -2277,6 +2277,20 @@ Observacoes:
 - Nenhuma implementacao direta foi escolhida.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Nova matriz comparativa apos pausa de Medicamentos
+
+- A nova matriz comparativa documental foi aberta apos o contrato profundo de `Medicamentos` concluir que nao existe recorte medio suficientemente seguro para implementacao agora.
+- A consolidacao de `Preferências`, `Prestadores`, `Convênios e Planos` e `Medicamentos` foi mantida como contexto valido para a escolha da proxima frente.
+- Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e exclusao; menor contato com permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
+- A frente recomendada ficou em `Ficha pessoal`, tratada como `comum/core transversal` e com contrato profundo obrigatorio antes de qualquer implementacao.
+- `Preferências`, `Prestadores` e `Convênios e Planos` continuaram pausados por ja terem recortes validados e consolidados.
+- `Medicamentos` continuou pausado porque o contrato profundo concluiu que nao ha recorte medio suficientemente seguro agora, devido ao acoplamento com Assistente de receitas, editor, documento gerado, receituario, `requestJson`, payload, salvamento, exclusao, endpoints, pacientes e atendimentos.
+- Os demais candidatos foram relegados a segundo plano por risco funcional, sensibilidade financeira, acoplamento amplo ou menor clareza de teste.
+- A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
+- Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
+- Nenhuma implementacao foi feita nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Convenios e Planos - Contrato profundo do primeiro recorte medio controlado
 
 - O contrato profundo de `Convênios e Planos` foi criado como etapa exclusivamente documental da Fase 2B.
