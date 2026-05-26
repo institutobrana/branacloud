@@ -2788,3 +2788,13 @@ Observacoes:
 - Nao houve alteracao em EasyDental, frontend, banco schema, migrations, seeds ou endpoints durante esta etapa.
 - Nao houve criacao de nova conta automaticamente.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8M - validacao manual da nova conta limpa apos exclusao segura da conta 16`.
+
+## Adendo 8M - correcao documental das tabelas de procedimentos por tabela EasyDental
+
+- O teste manual apos 8J/8K confirmou que a unidade Principal / 0001 nasceu corretamente, mas as tabelas de procedimentos/precos herdadas ainda estavam recebendo o seed Brana repetido.
+- A investigacao de leitura confirmou que o EasyDental vivo acessivel nesta sessao expunha apenas 4 tabelas `TAB_PRC` populadas: `EASY - Particular` (112), `Caixa Econ. Federal` (88), `PARTICULAR` (336) e `UNIMED-ODONTO` (162).
+- O backup legado local revisado em `D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_full_20260413_130945\\data\\procedimento.csv` mostrou 9 grupos de tabela com contagens distintas, mas ainda sem um mapa verificavel fechado para os 9 nomes contratuais do Brana.
+- Por seguranca, nao foi feita correção incompleta nem inventado mapa de seeds por tabela.
+- A correção permanece bloqueada ate existir um mapa confiavel por tabela EasyDental ou uma revisao contratual que feche a relacao entre os nomes do Brana e a origem de cada seed.
+- Nenhuma conta existente foi alterada e nenhum arquivo de codigo foi modificado nesta revisao documental.
+- A proxima etapa recomendada e obter o mapa verificavel antes de qualquer nova implementacao de seed por tabela.
