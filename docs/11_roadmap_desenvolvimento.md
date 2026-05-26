@@ -2683,3 +2683,16 @@ Observacoes:
 - A conta ID 16 nao foi alterada.
 - Nenhuma nova conta foi criada.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8F - baseline documental comparativa da conta atual contra o contrato mestre de novas contas, sem alteracao de codigo`.
+
+## Subetapa 8F da frente EasyDental virgem
+
+- Subetapa executada: correcao do contrato de tabelas estruturais para novas contas.
+- O contrato mestre foi corrigido para nao duplicar o que ja existe no Brana e para separar claramente tabela estrutural, equivalente existente, equivalente futuro e dado de uso.
+- A revisao reforca que `CID` continua sendo exemplo de equivalente ja existente no Brana, a ser mantido ou melhorado, sem duplicacao.
+- A revisao separa TISS, Intervencoes/Procedimentos, odontograma, anamnese, materiais, repasses e lookups auxiliares entre estrutura, seed e dado transacional.
+- A revisao explicita que tabelas de uso como historico, agenda, lancamentos, respostas e registros transacionais nao devem nascer como seed.
+- A revisao registra quais tabelas ja existem no Brana, quais devem ser mantidas ou melhoradas e quais ainda precisam de equivalente futuro.
+- A regra de modularizacao futura permanece: qualquer implementacao posterior deve nascer pequena, isolada e com contrato proprio, sem agrupar correcao de frontend, backend e banco numa unica entrega.
+- Nao houve implementacao.
+- Nenhuma nova conta foi criada ou alterada.
+- A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8G - fechamento do contrato mestre revisado`.
