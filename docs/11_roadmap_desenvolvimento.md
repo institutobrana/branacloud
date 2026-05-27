@@ -37,6 +37,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Exclusoes seguras das clinicas de teste 8, 9, 10 e 15 foram documentadas e executadas.
 - Auditoria documental geral concluida.
 - Validacao manual da nova conta apos 8P, 8K, 8R e 8S registrada na Subetapa 8T.
+- A Subetapa 8T-B complementou a 8T com comparacao direta no EasyDental virgem, confirmando o contrato revisado de usuario ADM, prestador ADM/Mestre funcional e setup apenas para o ADM inicial.
 
 ## Proximas prioridades sugeridas
 
@@ -230,6 +231,35 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhum banco/schema/migration/seed/endpoints foi alterado.
 - Nenhuma conta foi criada ou excluida.
 - EasyDental nao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8T-B da frente EasyDental virgem
+
+- Subetapa executada: comparacao direta EasyDental virgem sobre usuario, prestador, unidade e setup, sem implementacao.
+- Motivo da complementacao: a 8T fechou o contrato documental e a validacao manual, mas nao fez nova leitura direta no EasyDental virgem nesta frente.
+- Fonte consultada nesta sessao: o share UNC principal `\\Sonyvaio\c\EDS70` nao estava acessivel; a leitura foi complementada por mirror local somente leitura e pelos documentos historicos da trilha.
+- Achados diretos no EasyDental:
+  - `USUARIO.raw`, `PRESTADOR.raw` e os contratos historicos confirmam a presenca funcional de `Mestre`.
+  - `PRESTADOR.raw` e `USUARIO.raw` confirmam `Clínica` como referencia estrutural do legado.
+  - `_TIPO_USUARIO` contem o tipo `Dentista (CD)`.
+  - `UNIDADE.raw` traz `0001` / `Principal`.
+  - `SISTEMA.raw` traz `ControleUsuarios=0` e `Auditoria=0`.
+  - `LOGON` e a estrutura de apoio de sessao/registro, sem servir como setup de usuario novo.
+- Regra revisada para usuario ADM:
+  - o usuario ADM deve nascer como `Dentista (CD)`;
+  - deve vincular ao prestador ADM/Mestre funcional;
+  - deve vincular a `Principal / 0001`;
+  - vale somente para novas contas.
+- Regra revisada para setup:
+  - o setup permanece para o ADM inicial da nova conta;
+  - o setup nao deve aparecer para usuarios criados posteriormente;
+  - o setup nao deve virar etapa de todo usuario novo.
+- Proxima subetapa recomendada: `8U` para o ajuste isolado do usuario ADM, seguido de `8V` para o comportamento do setup em usuarios posteriores.
+- Nao houve implementacao.
+- Nenhum codigo foi alterado.
+- Nenhum banco foi alterado.
+- Nenhum arquivo EasyDental foi alterado.
+- Nenhuma conta foi criada ou excluida.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Regras de conducao
