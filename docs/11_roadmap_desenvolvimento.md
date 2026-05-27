@@ -38,6 +38,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Auditoria documental geral concluida.
 - Validacao manual da nova conta apos 8P, 8K, 8R e 8S registrada na Subetapa 8T.
 - A Subetapa 8T-B complementou a 8T com comparacao direta no EasyDental virgem, confirmando o contrato revisado de usuario ADM, prestador ADM/Mestre funcional e setup apenas para o ADM inicial.
+- A Subetapa 8T-C confirmou diretamente no UNC principal `\\Sonyvaio\c\EDS70` os achados da 8T-B, reforcando o contrato de usuario ADM, prestador, unidade e setup antes da 8U.
 
 ## Proximas prioridades sugeridas
 
@@ -260,6 +261,33 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhum banco foi alterado.
 - Nenhum arquivo EasyDental foi alterado.
 - Nenhuma conta foi criada ou excluida.
+- A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8T-C da frente EasyDental virgem
+
+- Subetapa executada: confirmação complementar no UNC principal sobre usuário, prestador, unidade e setup, sem implementação.
+- Motivo da confirmação: a 8T-B usou mirror local porque o UNC principal não estava acessível naquela sessão; nesta sessão o UNC voltou a responder.
+- Resultado do acesso ao UNC principal: acessível.
+- Achados confirmados:
+  - `Mestre` em `USUARIO.raw` e `PRESTADOR.raw`.
+  - `Clínica` em `PRESTADOR.raw` e na referência estrutural da base.
+  - `Dentista (CD)` em `_TIPO_USUARIO.raw`.
+  - `Principal / 0001` em `UNIDADE.raw`.
+  - `USUARIO.ID_UNIDADE` e `USUARIO.ID_PRESTADOR` no layout de `eds70.sql`.
+  - `ControleUsuarios=0` e `Auditoria=0` em `SISTEMA.raw`.
+  - ausência de setup genérico obrigatório para todo usuário novo nos arquivos consultados.
+- Regra confirmada:
+  - o usuário ADM inicial das novas contas deve nascer como `Dentista (CD)`;
+  - deve apontar para o prestador ADM/Mestre funcional;
+  - deve apontar para `Principal / 0001`;
+  - setup continua apenas para o ADM inicial;
+  - setup não deve aparecer para usuários criados depois.
+- Próxima subetapa liberada: `8U`, mantendo `8V` separada e posterior.
+- Não houve implementação.
+- Nenhum código foi alterado.
+- Nenhum banco foi alterado.
+- Nenhum arquivo EasyDental foi alterado.
+- Nenhuma conta foi criada ou excluída.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Regras de conducao
