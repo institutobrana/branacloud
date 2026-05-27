@@ -2835,3 +2835,16 @@ Observacoes:
 - Nenhuma conta existente foi alterada.
 - Nenhuma conta foi criada automaticamente.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8Q - validacao manual da nova conta apos correcao dos seeds`.
+
+## Subetapa 8Q da frente EasyDental virgem
+
+- Subetapa executada: exclusao segura da conta de teste para liberar `institutobrana@gmail.com` e validar a trilha 8J/8K/8P.
+- O e-mail alvo foi confirmado no banco como `institutobrana@gmail.com`, mas o ID informado pelo usuario como `17` nao bateu com a leitura; a conta correta confirmada por leitura foi a clínica `ID 8`.
+- O procedimento aprovado encontrado foi o contrato central de exclusao segura com backup/export, dry-run e runner controlado.
+- O dry-run foi executado com sucesso antes da exclusao real.
+- A exclusao real foi executada uma unica vez com `--execute` e concluiu com sucesso, removendo a clinica `ID 8` e liberando o e-mail.
+- A validacao pos-exclusao confirmou que nenhuma outra conta foi afetada.
+- Os arquivos alterados foram o novo documento de exclusao segura e este roadmap.
+- A próxima validacao manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` para conferir 8J/8K/8P.
+- Nenhum código foi alterado.
+- Nenhuma conta adicional foi criada ou alterada fora da exclusao segura documentada.
