@@ -2880,3 +2880,12 @@ Observacoes:
 - A consulta segura não encontrou conta parcial para `institutobrana@gmail.com` na etapa anterior, e a nova implementação não altera contas existentes.
 - A próxima validação manual recomendada passa a ser abrir nova conta limpa e confirmar que o módulo Prestadores exibe `Clínica` e o prestador ADM com o nome do cadastro.
 - Nenhuma conta foi criada automaticamente por esta correção.
+
+## Exclusao segura bloqueada apos 8R
+
+- O e-mail alvo `institutobrana@gmail.com` foi confirmado no banco como clínica `ID 11`, nao `25`.
+- Foram revisados o contrato central de exclusao segura, as trilhas historicas e os documentos de exclusao anteriores.
+- O runner seguro existente no repositório está travado para `clinica_id = 8`, então nao havia ferramenta aprovada para executar a exclusao da clínica 11 sem alterar código.
+- Nao houve backup/export, dry-run ou exclusao real nesta etapa, porque a operacao ficou bloqueada por ausencia de runner seguro específico para `ID 11`.
+- Nenhuma outra conta foi alterada, e 8P/8K/8R foram preservadas.
+- A próxima etapa recomendada passa a ser aprovar ou criar um runner seguro específico para a clínica 11 antes de tentar qualquer exclusao.
