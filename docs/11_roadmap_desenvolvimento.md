@@ -2889,3 +2889,16 @@ Observacoes:
 - Nao houve backup/export, dry-run ou exclusao real nesta etapa, porque a operacao ficou bloqueada por ausencia de runner seguro específico para `ID 11`.
 - Nenhuma outra conta foi alterada, e 8P/8K/8R foram preservadas.
 - A próxima etapa recomendada passa a ser aprovar ou criar um runner seguro específico para a clínica 11 antes de tentar qualquer exclusao.
+
+## Subetapa 8S da frente EasyDental virgem
+
+- Execução da Subetapa 8S: foi criado um runner seguro específico para a clínica 11, reaproveitando a trilha de exclusão segura já validada.
+- O e-mail alvo `institutobrana@gmail.com` foi confirmado na clínica 11, e a hipótese `25` foi descartada como alvo.
+- O backup/export somente leitura foi executado com sucesso e gerou o conjunto de arquivos de pré-exclusão da clínica 11.
+- O dry-run foi executado com sucesso e confirmou alvo único, usuários vinculados, prestador, assinatura, `email_codes` e dependências.
+- A exclusão real foi executada uma única vez com `--execute` e concluiu com sucesso.
+- A clínica 11 foi removida e o e-mail foi liberado para nova conta limpa.
+- Nenhuma outra conta foi afetada, e 8P/8K/8R foram preservadas.
+- Os arquivos alterados foram o novo runner seguro da clínica 11, o backup/export da clínica 11, o novo documento da subetapa e este roadmap.
+- A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
+- Nenhuma conta foi criada automaticamente.
