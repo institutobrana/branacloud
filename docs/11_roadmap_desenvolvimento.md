@@ -2858,3 +2858,13 @@ Observacoes:
 - Não houve alteração funcional em `setup`, senha interna, `Opções do Sistema`, frontend, seeds de procedimentos, unidade ou contas existentes.
 - O login deve ser validado manualmente após reiniciar o backend e, se estiver normal, a próxima conta limpa pode ser criada com `institutobrana@gmail.com`.
 - A próxima subetapa recomendada passa a ser a validação manual da nova conta após 8J/8K/8P.
+
+## Correção urgente do signup - `PRIVATE_TABLE_NAME` ausente
+
+- O `/signup/confirm` falhou com `NameError: name 'PRIVATE_TABLE_NAME' is not defined` em `backend/seeds/procedimentos_padrao.py`.
+- A causa foi uma referência à tabela privada `Brana` sem constante definida no escopo do seed.
+- A correção aplicada foi mínima: a constante local `PRIVATE_TABLE_NAME = "Brana"` foi definida no próprio arquivo do seed.
+- A consulta segura ao banco para `institutobrana@gmail.com` não encontrou conta parcial em `clinicas` nem em `usuarios`.
+- Os seeds da 8P foram preservados.
+- Nenhuma conta foi criada automaticamente.
+- O teste manual recomendado passa a ser tentar novamente criar uma conta limpa com `institutobrana@gmail.com` e validar 8J/8K/8P.

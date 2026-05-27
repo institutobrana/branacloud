@@ -8,6 +8,8 @@ from models.procedimento_generico import ProcedimentoGenerico
 from seeds.procedimentos_easy_tabelas import get_procedimentos_easy_por_tabela
 from seeds.procedimentos_brana import get_procedimentos_brana_padrao
 
+PRIVATE_TABLE_NAME = "Brana"
+
 
 PROCEDIMENTOS_PADRAO = [{'codigo': 1,
   'nome': 'ABERTURA IMPLANTE',
