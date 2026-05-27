@@ -2868,3 +2868,15 @@ Observacoes:
 - Os seeds da 8P foram preservados.
 - Nenhuma conta foi criada automaticamente.
 - O teste manual recomendado passa a ser tentar novamente criar uma conta limpa com `institutobrana@gmail.com` e validar 8J/8K/8P.
+
+## Subetapa 8R da frente EasyDental virgem
+
+- Execução da Subetapa 8R: o signup passou a criar, além do prestador sistêmico `Clínica`, um prestador ADM/Mestre funcional nas novas contas.
+- A regra contratual adicionada foi: nome do prestador ADM vem do cadastro da conta, o tipo é `Cirurgião dentista` e o seed usa `source_id=1` com `codigo=002`.
+- O helper de signup foi ajustado de forma idempotente para reaproveitar o prestador ADM quando a conta nova já tiver sido parcialmente construída.
+- O prestador `Clínica` sistêmico foi preservado.
+- O usuário admin inicial foi vinculado ao prestador ADM funcional.
+- Não houve alteração em unidade Principal / 0001, 8P, setup, senha interna, permissões ou frontend.
+- A consulta segura não encontrou conta parcial para `institutobrana@gmail.com` na etapa anterior, e a nova implementação não altera contas existentes.
+- A próxima validação manual recomendada passa a ser abrir nova conta limpa e confirmar que o módulo Prestadores exibe `Clínica` e o prestador ADM com o nome do cadastro.
+- Nenhuma conta foi criada automaticamente por esta correção.

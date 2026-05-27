@@ -46,6 +46,9 @@ LEGACY_DEFAULT_LIST_NAME = "Tabela modelo"
 HOSTED_DEFAULT_LIST_NAMES = (DEFAULT_LIST_NAME, DEFAULT_LIST_NAME_FALLBACK, DEFAULT_LIST_NAME_LEGACY, LEGACY_DEFAULT_LIST_NAME)
 PRIVATE_TABLE_CODE = 4
 PRIVATE_TABLE_NAME = "Brana"
+PRESTADOR_ADMIN_SOURCE_ID = 1
+PRESTADOR_ADMIN_CODIGO = "002"
+PRESTADOR_ADMIN_TIPO = "Cirurgião dentista"
 ESPECIALIDADE_RAW_PATH = Path(__file__).resolve().parents[3] / "Dados" / "Dist" / "_ESPECIALIDADE.raw"
 RAW_DIST_DIR = Path(__file__).resolve().parents[3] / "Dados" / "Dist"
 HOSTED_SEED_DIR = Path(__file__).resolve().parents[1] / "backups" / "brana_saas_full_20260313_234848" / "data"
@@ -2210,6 +2213,74 @@ def _garantir_prestador_sistemico_clinica(db, clinica_id: int) -> PrestadorOdont
     return prestador
 
 
+def _garantir_prestador_adm_funcional_clinica(
+    db,
+    clinica_id: int,
+    nome_conta: str,
+    usuario_admin: Usuario | None = None,
+) -> PrestadorOdonto:
+    nome_base = str(nome_conta or "").strip() or SYSTEM_USER_NOME
+    prestador = (
+        db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.clinica_id == int(clinica_id),
+            PrestadorOdonto.source_id == int(PRESTADOR_ADMIN_SOURCE_ID),
+        )
+        .order_by(PrestadorOdonto.id.asc())
+        .first()
+    )
+    if not prestador:
+        prestador = PrestadorOdonto(
+            clinica_id=int(clinica_id),
+            source_id=int(PRESTADOR_ADMIN_SOURCE_ID),
+            codigo=PRESTADOR_ADMIN_CODIGO,
+            nome=nome_base,
+            apelido=nome_base,
+            tipo_prestador=PRESTADOR_ADMIN_TIPO,
+            inativo=False,
+            executa_procedimento=True,
+            id_interno=str(PRESTADOR_ADMIN_SOURCE_ID),
+            is_system_prestador=False,
+            usuario_id=int(usuario_admin.id) if usuario_admin else None,
+        )
+        db.add(prestador)
+        db.flush()
+        return prestador
+
+    changed = False
+    if str(prestador.codigo or "").strip() != PRESTADOR_ADMIN_CODIGO:
+        prestador.codigo = PRESTADOR_ADMIN_CODIGO
+        changed = True
+    if str(prestador.nome or "").strip() != nome_base:
+        prestador.nome = nome_base
+        changed = True
+    if str(prestador.apelido or "").strip() != nome_base:
+        prestador.apelido = nome_base
+        changed = True
+    if str(prestador.tipo_prestador or "").strip() != PRESTADOR_ADMIN_TIPO:
+        prestador.tipo_prestador = PRESTADOR_ADMIN_TIPO
+        changed = True
+    if bool(prestador.is_system_prestador):
+        prestador.is_system_prestador = False
+        changed = True
+    if bool(prestador.inativo):
+        prestador.inativo = False
+        changed = True
+    if not bool(prestador.executa_procedimento):
+        prestador.executa_procedimento = True
+        changed = True
+    if str(prestador.id_interno or "").strip() != str(PRESTADOR_ADMIN_SOURCE_ID):
+        prestador.id_interno = str(PRESTADOR_ADMIN_SOURCE_ID)
+        changed = True
+    if usuario_admin and int(prestador.usuario_id or 0) != int(usuario_admin.id):
+        prestador.usuario_id = int(usuario_admin.id)
+        changed = True
+    if changed:
+        db.add(prestador)
+        db.flush()
+    return prestador
+
+
 def _garantir_usuario_sistemico_clinica(db, clinica_id: int, prestador: PrestadorOdonto | None) -> Usuario:
     usuario = (
         db.query(Usuario)
@@ -2339,8 +2410,9 @@ def criar_conta_saas(db, nome, email, senha):
     _garantir_usuario_sistemico_clinica(db, clinica.id, prestador_sistemico)
     _aplicar_bootstrap_access_profiles_clinica(db, clinica.id)
 
-    db.add(
-        Usuario(
+    prestador_adm = _garantir_prestador_adm_funcional_clinica(db, clinica.id, nome)
+
+    usuario_admin = Usuario(
             codigo=1,
             nome=nome,
             apelido=(str(nome or "").strip().split(" ", 1)[0][:60] if str(nome or "").strip() else None),
@@ -2352,11 +2424,17 @@ def criar_conta_saas(db, nome, email, senha):
             online=False,
             setup_completed=False,
             is_system_user=False,
+            prestador_id=int(prestador_adm.id) if prestador_adm else None,
             permissoes_json=dump_permissions_json(
                 sanitize_permissions({}, tipo_usuario="Clínica", is_admin=True)
             ),
         )
-    )
+    db.add(usuario_admin)
+    db.flush()
+    if prestador_adm and int(prestador_adm.usuario_id or 0) != int(usuario_admin.id):
+        prestador_adm.usuario_id = int(usuario_admin.id)
+        db.add(prestador_adm)
+        db.flush()
 
     garantir_lista_padrao_clinica(db, clinica.id)
     # Seed oficial estatico (extraido da conta modelo) para novas contas.
