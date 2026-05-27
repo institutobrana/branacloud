@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
-from database import Base, SessionLocal, engine
+from database import Base, SessionLocal, engine, ensure_user_auth_schema
 from models.access_profile import AccessProfile  # noqa: F401
 from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento  # noqa: F401
 from models.anamnese import AnamnesePergunta, AnamneseQuestionario  # noqa: F401
@@ -157,6 +157,7 @@ def _garantir_colunas_criticas_usuarios() -> None:
     reintroduzir bootstrap pesado de schema no startup HTTP.
     """
     try:
+        ensure_user_auth_schema()
         with engine.begin() as conn:
             conn.execute(
                 text(

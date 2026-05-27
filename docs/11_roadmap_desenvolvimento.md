@@ -2848,3 +2848,13 @@ Observacoes:
 - A próxima validacao manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` para conferir 8J/8K/8P.
 - Nenhum código foi alterado.
 - Nenhuma conta adicional foi criada ou alterada fora da exclusao segura documentada.
+
+## Correção urgente de schema/login - `usuarios.senha_interna_hash`
+
+- Foi diagnosticado erro de login `500` em `POST /login` causado por `psycopg2.errors.UndefinedColumn` na coluna `usuarios.senha_interna_hash`.
+- O model de `Usuario` já esperava a coluna e o banco real estava sem ela.
+- A correção aplicada foi idempotente: o startup HTTP passou a garantir `senha_interna_hash` e o script manual de compatibilidade também foi alinhado.
+- As demais colunas conferidas em `usuarios` permaneceram presentes.
+- Não houve alteração funcional em `setup`, senha interna, `Opções do Sistema`, frontend, seeds de procedimentos, unidade ou contas existentes.
+- O login deve ser validado manualmente após reiniciar o backend e, se estiver normal, a próxima conta limpa pode ser criada com `institutobrana@gmail.com`.
+- A próxima subetapa recomendada passa a ser a validação manual da nova conta após 8J/8K/8P.
