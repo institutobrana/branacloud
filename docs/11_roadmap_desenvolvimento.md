@@ -36,6 +36,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - PARTICULAR fica restrito a contas antigas.
 - Exclusoes seguras das clinicas de teste 8, 9, 10 e 15 foram documentadas e executadas.
 - Auditoria documental geral concluida.
+- Validacao manual da nova conta apos 8P, 8K, 8R e 8S registrada na Subetapa 8T.
 
 ## Proximas prioridades sugeridas
 
@@ -207,6 +208,29 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve alteracao no EasyDental.
 - Nenhuma conta foi criada ou alterada.
 - Proxima subetapa recomendada: `EasyDental virgem - Subetapa 8D - contrato tecnico da unidade inicial e matriz de perfis/permissoes para novas contas, sem implementacao`.
+
+## Subetapa 8T da frente EasyDental virgem
+
+- Subetapa executada: validacao manual e contrato complementar do usuario ADM/setup, sem implementacao.
+- A nova conta testada passou nos pontos principais ja fechados pelas Subetapas 8P, 8K, 8R e 8S:
+  - tabelas de procedimentos corretas;
+  - unidade Principal / 0001 correta;
+  - prestador Clínica correto;
+  - prestador ADM/Mestre funcional correto;
+  - prestador ADM com tipo Cirurgião dentista.
+- Nova pendencia funcional registrada: o modulo Usuários ainda precisa nascer com Tipo de usuário = Dentista (CD), prestador associado = prestador ADM/Mestre funcional e unidade de atendimento = Principal / 0001.
+- Decisao atualizada sobre setup: manter a tela de setup para o primeiro acesso do ADM inicial da nova conta e impedir que ela apareca para usuarios criados depois dentro da mesma conta.
+- Contrato complementar fechado para a proxima implementacao isolada:
+  - 8U: ajustar o nascimento do usuario ADM;
+  - 8V: ajustar o comportamento do setup para usuarios posteriores.
+- A 8T ficou somente documental e investigativa.
+- Nenhum codigo foi alterado.
+- Nenhum backend foi alterado.
+- Nenhum frontend foi alterado.
+- Nenhum banco/schema/migration/seed/endpoints foi alterado.
+- Nenhuma conta foi criada ou excluida.
+- EasyDental nao foi alterado.
+- A blindagem textual/mojibake foi respeitada.
 
 ## Regras de conducao
 
