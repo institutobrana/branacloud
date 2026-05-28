@@ -3280,6 +3280,17 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_pref_render_combos.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Contrato profundo de prefRenderCombosModelos em Preferencias / Configuracoes
+
+- O contrato profundo foi aberto para `prefRenderCombosModelos`.
+- O modulo continua classificado como `comum/core`.
+- Nenhuma implementacao foi feita nesta etapa.
+- Nenhum codigo foi alterado nesta etapa.
+- A decisao do contrato foi registrada como `Opcao C`.
+- A proxima subetapa recomendada e a implementacao minima futura do recorte visual dos combos de modelos.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_profundo_pref_render_combos_modelos.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
