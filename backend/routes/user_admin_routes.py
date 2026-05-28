@@ -6,15 +6,19 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_db
+from models.controle_protetico import ControleProtetico
 from models.clinica import Clinica
 from models.access_profile import AccessProfile
 from models.prestador_odonto import PrestadorOdonto
+from models.relatorio_config import RelatorioConfig
 from models.usuario_perfil_acesso import UsuarioPerfilAcesso
 from models.unidade_atendimento import UnidadeAtendimento
 from models.usuario import Usuario
+from models.tratamento import Tratamento
 from security.dependencies import (
     get_current_user,
     require_admin_password_if_user_control_enabled,
@@ -181,6 +185,58 @@ def _infer_account_type(clinica: Clinica) -> str:
 def _build_archived_clinic_email(clinica_id: int) -> str:
     stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
     return f"deleted+{clinica_id}+{stamp}@brana.local"
+
+
+def _count_other_admins(db: Session, clinica_id: int, user_id: int) -> int:
+    return int(
+        db.query(func.count(Usuario.id))
+        .filter(
+            Usuario.clinica_id == clinica_id,
+            Usuario.is_admin == True,  # noqa: E712
+            Usuario.id != user_id,
+        )
+        .scalar()
+        or 0
+    )
+
+
+def _detach_user_delete_links(db: Session, usuario: Usuario):
+    prestadores = (
+        db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.clinica_id == usuario.clinica_id,
+            PrestadorOdonto.usuario_id == usuario.id,
+        )
+        .all()
+    )
+    for prestador in prestadores:
+        prestador.usuario_id = None
+
+    db.query(UsuarioPerfilAcesso).filter(
+        UsuarioPerfilAcesso.clinica_id == usuario.clinica_id,
+        UsuarioPerfilAcesso.usuario_id == usuario.id,
+    ).delete(synchronize_session=False)
+
+    db.query(RelatorioConfig).filter(
+        RelatorioConfig.clinica_id == usuario.clinica_id,
+        RelatorioConfig.usuario_id == usuario.id,
+    ).delete(synchronize_session=False)
+
+    db.query(ControleProtetico).filter(
+        ControleProtetico.clinica_id == usuario.clinica_id,
+        ControleProtetico.cirurgiao_id == usuario.id,
+    ).update({ControleProtetico.cirurgiao_id: None}, synchronize_session=False)
+
+    for column in (
+        Tratamento.cirurgiao_responsavel_id,
+        Tratamento.cirurgiao_contratado_id,
+        Tratamento.cirurgiao_solicitante_id,
+        Tratamento.cirurgiao_executante_id,
+    ):
+        db.query(Tratamento).filter(
+            Tratamento.clinica_id == usuario.clinica_id,
+            column == usuario.id,
+        ).update({column: None}, synchronize_session=False)
 
 
 def _next_codigo_for_clinic(db: Session, clinica_id: int) -> int:
@@ -838,18 +894,27 @@ def admin_delete_user(
         raise HTTPException(status_code=400, detail="Voce nao pode excluir seu proprio usuario.")
 
     clinica_id = usuario.clinica_id
-    db.delete(usuario)
-    db.flush()
+    if bool(usuario.is_admin) and _count_other_admins(db, clinica_id, usuario.id) <= 0:
+        raise HTTPException(status_code=400, detail="Nao e possivel excluir o ultimo administrador da clinica.")
 
-    has_other_users = db.query(Usuario.id).filter(Usuario.clinica_id == clinica_id).first()
-    if not has_other_users:
-        clinica = db.query(Clinica).filter(Clinica.id == clinica_id).first()
-        if clinica:
-            clinica.email = _build_archived_clinic_email(clinica.id)
-            clinica.ativo = False
+    try:
+        _detach_user_delete_links(db, usuario)
+        db.flush()
+        db.delete(usuario)
+        db.flush()
 
-    db.commit()
-    return {"detail": "Usuario excluido com sucesso."}
+        has_other_users = db.query(Usuario.id).filter(Usuario.clinica_id == clinica_id).first()
+        if not has_other_users:
+            clinica = db.query(Clinica).filter(Clinica.id == clinica_id).first()
+            if clinica:
+                clinica.email = _build_archived_clinic_email(clinica.id)
+                clinica.ativo = False
+
+        db.commit()
+        return {"detail": "Usuario excluido com sucesso."}
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Nao foi possivel excluir o usuario por dependencias existentes.") from exc
 
 
 @router.patch("/{user_id}/account-type")

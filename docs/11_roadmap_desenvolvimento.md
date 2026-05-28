@@ -3135,6 +3135,19 @@ Observacoes:
 - A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
 - Nenhuma conta foi criada automaticamente.
 
+## Correção segura da exclusao de usuario no modulo Usuarios
+
+- Foi auditado o fluxo do botao Excluir em `frontend/app.js`, que chama `DELETE /admin/users/{id}` e mostrava o alerta generico `Falha ao excluir usuario.`.
+- O diagnostico confirmou que a rota `backend/routes/user_admin_routes.py` fazia `db.delete(usuario)` direto e quebrava quando o usuario ainda estava referenciado por `prestador_odonto.usuario_id`.
+- A falha nao era geral para qualquer usuario: usuarios sem dependencia puderam ser excluidos em transacao descartavel, enquanto o usuario `37` da clinica 15 falhava por FK, e o usuario `36` nao falhava.
+- A regra de seguranca foi reforcada para bloquear o ultimo admin, preservar a conta base `Clínica`/system user e manter o bloqueio do proprio usuario logado.
+- A correcao aplicada limpa dependencias conhecidas antes do delete: `prestador_odonto.usuario_id`, `usuario_perfil_acesso`, `relatorio_config`, `controle_protetico` e os campos de `tratamento` que apontam para o usuario.
+- O frontend nao precisou ser alterado, porque agora a rota deve responder sem 500 nos casos comuns e, se houver dependencias inesperadas, retorna erro controlado.
+- Nenhuma conta foi criada ou excluida nesta etapa alem da validacao segura de leitura.
+- Os checks incluem py_compile e validacoes seguras em transacao descartavel no banco.
+- A validacao manual recomendada e testar exclusao de usuario comum, bloqueio da conta base, bloqueio do proprio usuario e bloqueio do ultimo admin.
+- A proxima subetapa recomendada e retomar a validacao da 8W-B apos confirmar a exclusao segura.
+
 
 
 
