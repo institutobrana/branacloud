@@ -41,6 +41,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A Subetapa 8T-C confirmou diretamente no UNC principal `\\Sonyvaio\c\EDS70` os achados da 8T-B, reforcando o contrato de usuario ADM, prestador, unidade e setup antes da 8U.
 - A Subetapa 8U ajustou o nascimento do usuario ADM inicial para `Dentista (CD)`, com vinculo ao prestador ADM/Mestre funcional e a unidade Principal / 0001.
 - A Subetapa 8U-B executou a exclusao segura da clinica 12 para liberar `institutobrana@gmail.com`, com backup/export, dry-run e remocao confirmada apos validacao por banco.
+- A Subetapa 8V-A auditou o setup para usuarios criados posteriormente e confirmou que o gatilho atual esta no `setup_completed` do proprio usuario.
 
 ## Proximas prioridades sugeridas
 
@@ -328,6 +329,20 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Setup para o ADM inicial: confirmado como ainda presente, sem alteracao nesta etapa.
 - Correcoes acumuladas confirmadas: `PRIVATE_TABLE_NAME`, `senha_interna_hash` e `_apply_user_links`.
 - Proxima subetapa recomendada: `8V` para impedir setup em usuarios criados posteriormente.
+- Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
+- Nenhuma conta foi criada ou excluida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8V-A da frente EasyDental virgem
+
+- Subetapa executada: auditoria tecnica e contrato para setup de usuarios criados posteriormente, sem implementacao.
+- Fluxo atual identificado: o frontend abre setup quando `/me` retorna `setup_completed === false`; o backend bloqueia as rotas fora de `/me`, `/logout` e `/auth/setup/complete` quando `setup_completed` esta falso.
+- O setup grava `senha_interna_hash`, `setup_completed`, `forcar_troca_senha` e `online` no proprio usuario.
+- Usuarios criados depois nascem com `setup_completed` ausente e caem no setup por default `False`.
+- Causa provavel: o setup esta sendo tratado como atributo de usuario, e nao como bootstrap exclusivo do ADM inicial.
+- Contrato tecnico proposto: setup so para o ADM inicial da conta; usuarios criados depois devem nascer com `setup_completed = True`.
+- Opcao recomendada para 8V-B: inicializar `setup_completed = True` na criacao de usuarios posteriores, sem mexer no login SaaS, nas opcoes do sistema ou no setup existente.
+- Proxima subetapa recomendada: `8V-B`.
 - Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
 - Nenhuma conta foi criada ou excluida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
