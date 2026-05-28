@@ -3167,6 +3167,16 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_validacao_manual_exclusao_usuario_comum_aprovada.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2B - Retomada da validacao 8W-B de usuarios novos
+
+- A exclusao de usuario comum foi validada e a trilha voltou a apontar para a 8W-B.
+- Foi criado um checklist de validacao manual para usuarios novos.
+- Nenhuma implementacao foi feita nesta etapa.
+- Nenhuma nova modularizacao foi iniciada.
+- O documento criado foi `docs/fase_2b_retomada_validacao_8w_b_usuarios_novos.md`.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima acao depende do teste manual da 8W-B.
+
 
 
 
