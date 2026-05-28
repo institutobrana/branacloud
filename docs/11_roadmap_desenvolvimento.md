@@ -3206,6 +3206,11 @@ Observacoes:
 - O módulo continua classificado como `comum/core`.
 - O recorte recomendado é a sincronização visual básica da modal, com título e alternância de abas.
 - Nenhuma implementação foi feita nesta etapa.
+- Implementação mínima do recorte contratado concluída com delegação visual ao módulo passivo.
+- Arquivos alterados: `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/fase_2b_preferencias_configuracoes_implementacao_sincronizacao_visual_modal.md`.
+- Sem alteração em carregamento, payload, salvamento, `sysOpt*`, backend, banco, permissões ou seeds.
+- Próxima etapa recomendada: validação manual pós-implementação.
+- A blindagem textual/mojibake foi respeitada.
 - Nenhum código foi alterado nesta etapa.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_recorte_remanescente.md`.
 - A blindagem textual/mojibake foi respeitada.

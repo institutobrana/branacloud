@@ -346,6 +346,16 @@
     return null;
   }
 
+  function prefAtualizarTituloModal({ tituloEl, titulo } = {}) {
+    if (tituloEl && typeof titulo === "string") tituloEl.textContent = titulo;
+  }
+
+  function prefSelecionarAbaModal({ tabs, panes, tabId } = {}) {
+    if (!Array.isArray(tabs) || !Array.isArray(panes)) return;
+    tabs.forEach(btn => btn.classList.toggle("active", btn?.dataset?.tab === tabId));
+    panes.forEach(pane => pane.classList.toggle("hidden", pane?.dataset?.pane !== tabId));
+  }
+
   const moduleApi = Object.freeze({
     getMetadata,
     prefOdontoNorm,
@@ -366,7 +376,9 @@
     prefAmbienteRenderLista,
     prefAmbienteAplicarPreview,
     prefAmbienteMontarPreview,
-    prefOdontoFindByLabel
+    prefOdontoFindByLabel,
+    prefAtualizarTituloModal,
+    prefSelecionarAbaModal
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;
