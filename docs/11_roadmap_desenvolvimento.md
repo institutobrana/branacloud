@@ -3157,6 +3157,16 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_auditoria_retomada_modularizacao_pos_correcao_exclusao_usuario.md`.
 - A proxima etapa conservadora continua sendo validar exclusao de usuario e retomar a 8W-B antes de considerar novo modulo.
 
+## Fase 2B - Validacao manual aprovada da exclusao de usuario comum
+
+- O usuario informou que testou a exclusao pelo sistema e que deu certo.
+- O cenario validado foi a exclusao de usuario comum na tela `Configuracao de usuarios do sistema`.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- Os bloqueios de seguranca da exclusao permanecem como conferencia complementar se ainda nao tiverem sido testados manualmente.
+- A proxima etapa recomendada passa a ser retomar a validacao da 8W-B.
+- O documento criado foi `docs/fase_2b_validacao_manual_exclusao_usuario_comum_aprovada.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
