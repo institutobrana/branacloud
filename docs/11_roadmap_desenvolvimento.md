@@ -3188,6 +3188,18 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_validacao_8w_b_usuarios_novos_aprovada.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Auditoria para escolha do proximo modulo pos-8W-B
+
+- Auditoria documental executada apos a validacao aprovada da 8W-B.
+- A exclusao de usuario comum e a 8W-B permanecem validadas.
+- Nenhuma implementacao foi feita nesta etapa.
+- Nenhuma nova modularizacao foi iniciada nesta etapa.
+- A matriz comparativa de frentes candidatas foi criada.
+- A decisao conservadora foi registrada como Opcao A.
+- O proximo recorte recomendado e o bloco remanescente de `Preferencias / Configuracoes`.
+- O documento criado foi `docs/fase_2b_auditoria_escolha_proximo_modulo_pos_8w_b.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
