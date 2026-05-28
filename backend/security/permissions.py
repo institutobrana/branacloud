@@ -394,60 +394,28 @@ def dump_permissions_json(value: dict | None) -> str | None:
     return json.dumps(value, ensure_ascii=False, sort_keys=True)
 
 
+DEFAULT_NON_ADMIN_PERMISSIONS = {
+    "usuarios": "protegido",
+    "prestadores": "habilitado",
+    "agenda": "habilitado",
+    "financeiro": "habilitado",
+    "materiais": "habilitado",
+    "procedimentos": "habilitado",
+    "anamnese": "habilitado",
+    "relatorios": "habilitado",
+    "configuracao": "protegido",
+}
+
+
 def default_permissions(tipo_usuario: str | None, is_admin: bool) -> dict:
-    tipo = normalize_tipo_usuario(tipo_usuario)
     if is_admin:
         return {item["codigo"]: "habilitado" for item in MODULE_PERMISSION_SCHEMA}
-    if tipo == TIPO_USUARIO_DENTISTA:
-        return {
-            "usuarios": "desabilitado",
-            "prestadores": "desabilitado",
-            "agenda": "habilitado",
-            "financeiro": "protegido",
-            "materiais": "habilitado",
-            "procedimentos": "habilitado",
-            "anamnese": "habilitado",
-            "relatorios": "protegido",
-            "configuracao": "desabilitado",
-        }
-    if tipo == TIPO_USUARIO_CLINICA:
-        return {
-            "usuarios": "protegido",
-            "prestadores": "protegido",
-            "agenda": "habilitado",
-            "financeiro": "protegido",
-            "materiais": "habilitado",
-            "procedimentos": "habilitado",
-            "anamnese": "habilitado",
-            "relatorios": "protegido",
-            "configuracao": "protegido",
-        }
-    if tipo in {"Gerente administrativo", "Funcionário(a) administrativo(a)"}:
-        return {
-            "usuarios": "desabilitado",
-            "prestadores": "protegido",
-            "agenda": "habilitado",
-            "financeiro": "protegido",
-            "materiais": "protegido",
-            "procedimentos": "protegido",
-            "anamnese": "protegido",
-            "relatorios": "protegido",
-            "configuracao": "protegido",
-        }
-    return {
-        "usuarios": "desabilitado",
-        "prestadores": "desabilitado",
-        "agenda": "habilitado",
-        "financeiro": "desabilitado",
-        "materiais": "desabilitado",
-        "procedimentos": "desabilitado",
-        "anamnese": "habilitado",
-        "relatorios": "desabilitado",
-        "configuracao": "desabilitado",
-    }
+    _ = normalize_tipo_usuario(tipo_usuario)
+    return dict(DEFAULT_NON_ADMIN_PERMISSIONS)
 
 
 def sanitize_permissions(
+
     value: dict | None,
     *,
     tipo_usuario: str | None = None,

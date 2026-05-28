@@ -361,6 +361,21 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
 - Nenhuma conta foi criada ou excluida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8W-B da frente EasyDental virgem
+
+- Subetapa executada: implementacao isolada do baseline de permissoes para usuarios criados posteriormente.
+- A regra aplicada liberou os modulos comuns por padrao para usuarios nao-admin, preservando `Usuarios` e `Configuracao/Opcoes do Sistema` como protegidos.
+- `default_permissions()` em `backend/security/permissions.py` passou a usar um baseline comum para os tipos nao-admin, sem alterar o checkbox `ativar_controle_usuarios`.
+- `is_admin=True` continua liberando todos os modulos.
+- As permissoes existentes de contas antigas nao foram alteradas, porque a mudanca atingiu apenas o baseline de novos usuarios.
+- `user_admin_routes.py` e `superadmin_routes.py` nao precisaram de alteracao, pois ja consomem o baseline do backend ou a derivacao em leitura sem criar nova regra paralela.
+- Os checks executados confirmaram `default_permissions()` para Dentista (CD), Clínica, Gerente administrativo, Funcionário(a) administrativo(a) e admin com os valores esperados.
+- O comportamento do checkbox `Ativar controle de usuarios e senhas` foi preservado; esta etapa nao mudou seu default nem a sua persistencia.
+- A validacao manual recomendada agora e criar um novo usuario nao-admin e conferir que os modulos comuns nascem livres, com `Usuarios` e `Opcoes do Sistema/Configuracao` protegidos.
+- A proxima subetapa recomendada passa a ser a validacao manual da 8W-B.
+- Confirmacao funcional: nenhuma conta foi criada automaticamente e nenhum acesso existente foi reescrito.
+- A blindagem textual/mojibake foi respeitada.
 ## Subetapa 8U-C da frente EasyDental virgem
 
 - Subetapa executada: validacao manual bem-sucedida da nova conta apos 8P/8K/8R/8U.
