@@ -23,6 +23,7 @@ from seeds.procedimentos_padrao import seed_procedimentos
 from seeds.simbolos_graficos import seed_simbolos_graficos
 from seeds.access_profiles_bootstrap import ensure_default_access_profiles_for_clinic
 from security.permissions import dump_permissions_json, sanitize_permissions
+from security.permissions import TIPO_USUARIO_DENTISTA
 from security.system_accounts import (
     SYSTEM_PRESTADOR_CODIGO,
     SYSTEM_PRESTADOR_SOURCE_ID,
@@ -2403,7 +2404,7 @@ def criar_conta_saas(db, nome, email, senha):
     db.flush()
     clinica.nome_tabela_procedimentos = PRIVATE_TABLE_NAME
     _garantir_diretorios_modelos_clinica(clinica.id)
-    _garantir_unidade_principal_clinica(db, clinica.id)
+    unidade_principal = _garantir_unidade_principal_clinica(db, clinica.id)
     garantir_padroes_etiqueta(db)
     garantir_modelos_etiqueta_clinica(db, clinica.id)
     prestador_sistemico = _garantir_prestador_sistemico_clinica(db, clinica.id)
@@ -2413,28 +2414,24 @@ def criar_conta_saas(db, nome, email, senha):
     prestador_adm = _garantir_prestador_adm_funcional_clinica(db, clinica.id, nome)
 
     usuario_admin = Usuario(
-            codigo=1,
-            nome=nome,
-            apelido=(str(nome or "").strip().split(" ", 1)[0][:60] if str(nome or "").strip() else None),
-            tipo_usuario="Clínica",
-            email=email,
-            senha_hash=hash_password(senha),
-            clinica_id=clinica.id,
-            is_admin=True,
-            online=False,
-            setup_completed=False,
-            is_system_user=False,
-            prestador_id=int(prestador_adm.id) if prestador_adm else None,
-            permissoes_json=dump_permissions_json(
-                sanitize_permissions({}, tipo_usuario="Clínica", is_admin=True)
-            ),
-        )
+        codigo=1,
+        nome=nome,
+        apelido=(str(nome or "").strip().split(" ", 1)[0][:60] if str(nome or "").strip() else None),
+        tipo_usuario=TIPO_USUARIO_DENTISTA,
+        email=email,
+        senha_hash=hash_password(senha),
+        clinica_id=clinica.id,
+        is_admin=True,
+        online=False,
+        setup_completed=False,
+        is_system_user=False,
+        permissoes_json=dump_permissions_json(
+            sanitize_permissions({}, tipo_usuario=TIPO_USUARIO_DENTISTA, is_admin=True)
+        ),
+    )
     db.add(usuario_admin)
     db.flush()
-    if prestador_adm and int(prestador_adm.usuario_id or 0) != int(usuario_admin.id):
-        prestador_adm.usuario_id = int(usuario_admin.id)
-        db.add(prestador_adm)
-        db.flush()
+    _apply_user_links(db, usuario_admin, prestador_adm, unidade_principal)
 
     garantir_lista_padrao_clinica(db, clinica.id)
     # Seed oficial estatico (extraido da conta modelo) para novas contas.

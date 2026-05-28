@@ -39,6 +39,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Validacao manual da nova conta apos 8P, 8K, 8R e 8S registrada na Subetapa 8T.
 - A Subetapa 8T-B complementou a 8T com comparacao direta no EasyDental virgem, confirmando o contrato revisado de usuario ADM, prestador ADM/Mestre funcional e setup apenas para o ADM inicial.
 - A Subetapa 8T-C confirmou diretamente no UNC principal `\\Sonyvaio\c\EDS70` os achados da 8T-B, reforcando o contrato de usuario ADM, prestador, unidade e setup antes da 8U.
+- A Subetapa 8U ajustou o nascimento do usuario ADM inicial para `Dentista (CD)`, com vinculo ao prestador ADM/Mestre funcional e a unidade Principal / 0001.
 
 ## Proximas prioridades sugeridas
 
@@ -288,6 +289,44 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhum banco foi alterado.
 - Nenhum arquivo EasyDental foi alterado.
 - Nenhuma conta foi criada ou excluída.
+- A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8U da frente EasyDental virgem
+
+- Subetapa executada: implementacao isolada do usuario ADM com `Dentista (CD)`, prestador ADM e unidade Principal / 0001, sem mexer em setup.
+- Regra implementada:
+  - o usuario ADM inicial das novas contas passa a nascer com `tipo_usuario = Dentista (CD)`;
+  - o usuario ADM inicial passa a vincular ao prestador ADM/Mestre funcional;
+  - o usuario ADM inicial passa a vincular a unidade Principal / 0001;
+  - a regra vale somente para novas contas.
+- Arquivos alterados:
+  - `backend/services/signup_service.py`
+  - `backend/security/permissions.py`
+  - `docs/auditoria_easydental_virgem_subetapa_8u_usuario_adm_dentista_prestador_unidade.md`
+- Funcoes alteradas:
+  - `criar_conta_saas`
+  - `normalize_tipo_usuario`
+- Checks executados:
+  - `python -m py_compile backend/services/signup_service.py backend/security/permissions.py`
+  - `python -c "import sys; sys.path.insert(0, r'D:\\BRANA ARQUIVOS\\BRANA CLOUD\\backend'); from services import signup_service; print('ok')"`
+- Resultado dos checks:
+  - compilacao Python concluida com sucesso;
+  - import seguro de `services.signup_service` concluido com sucesso;
+  - nenhuma conta foi criada automaticamente.
+- Onde testar manualmente:
+  - criar nova conta limpa;
+  - abrir o modulo Usuários e confirmar `Dentista (CD)`, prestador ADM e unidade `Principal / 0001`;
+  - abrir o modulo Prestadores e confirmar `Clínica` e o prestador ADM;
+  - verificar que `Tabela Exemplo` nao nasce;
+  - verificar que o setup continua aparecendo para o ADM inicial.
+- Confirmacao funcional:
+  - setup nao foi alterado;
+  - frontend nao foi alterado;
+  - tabelas de procedimentos e seeds da 8P foram preservadas;
+  - unidade Principal / 0001 nao foi alterada como regra de criacao;
+  - contas existentes nao foram alteradas.
+- Proxima subetapa recomendada: `8V` para impedir que o setup apareca para usuarios criados posteriormente.
+- Nenhuma conta foi criada ou excluida.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Regras de conducao

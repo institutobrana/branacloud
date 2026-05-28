@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 TIPO_USUARIO_CLINICA = "Clínica"
-TIPO_USUARIO_DENTISTA = "Cirurgião dentista"
+TIPO_USUARIO_DENTISTA = "Dentista (CD)"
 
 PERMISSION_LEVELS = ("desabilitado", "protegido", "habilitado")
 MODULE_PERMISSION_SCHEMA = [
@@ -362,6 +362,7 @@ def normalize_tipo_usuario(value: str | None) -> str:
     low = _normalize_ascii(txt)
     aliases = {
         "clinica": TIPO_USUARIO_CLINICA,
+        "dentista (cd)": TIPO_USUARIO_DENTISTA,
         "cirurgiao dentista": TIPO_USUARIO_DENTISTA,
         "dentista": TIPO_USUARIO_DENTISTA,
         "funcionario(a) administrativo(a)": "Funcionário(a) administrativo(a)",
