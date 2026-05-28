@@ -3270,6 +3270,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima etapa recomendada e uma decisao conservadora sobre novo recorte de `Preferencias` ou nova matriz comparativa.
 
+## Decisao conservadora pos validacao de prefRenderCombos em Preferencias / Configuracoes
+
+- A decisao conservadora foi registrada apos a validacao de `prefRenderCombos`.
+- Os recortes anteriores de `Preferencias` permanecem validados.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- Caminho escolhido: `Opcao C`.
+- A proxima subetapa recomendada e um contrato profundo para `prefRenderCombosModelos`.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_pref_render_combos.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
