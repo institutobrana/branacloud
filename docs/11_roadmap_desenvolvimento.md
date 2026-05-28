@@ -40,6 +40,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A Subetapa 8T-B complementou a 8T com comparacao direta no EasyDental virgem, confirmando o contrato revisado de usuario ADM, prestador ADM/Mestre funcional e setup apenas para o ADM inicial.
 - A Subetapa 8T-C confirmou diretamente no UNC principal `\\Sonyvaio\c\EDS70` os achados da 8T-B, reforcando o contrato de usuario ADM, prestador, unidade e setup antes da 8U.
 - A Subetapa 8U ajustou o nascimento do usuario ADM inicial para `Dentista (CD)`, com vinculo ao prestador ADM/Mestre funcional e a unidade Principal / 0001.
+- A Subetapa 8U-B executou a exclusao segura da clinica 12 para liberar `institutobrana@gmail.com`, com backup/export, dry-run e remocao confirmada apos validacao por banco.
 
 ## Proximas prioridades sugeridas
 
@@ -289,6 +290,25 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhum banco foi alterado.
 - Nenhum arquivo EasyDental foi alterado.
 - Nenhuma conta foi criada ou excluída.
+- A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8U-B da frente EasyDental virgem
+
+- Subetapa executada: exclusao segura da clinica 12 para liberar `institutobrana@gmail.com` apos a 8U.
+- Motivo da etapa: preparar um novo teste limpo da conta, confirmando por banco que o ID informado (`12`) batia com o e-mail alvo antes de qualquer exclusao.
+- Documentos revisados: contrato de exclusao segura, historicos das exclusoes anteriores e a auditoria da 8U.
+- Scripts revisados: runners e backups seguros anteriores, reaproveitados como padrao de protecao.
+- Scripts alterados/criados: `backend/scripts/delete_test_clinic_12_runner.py` e `backend/scripts/export_test_clinic_12_backup.py`.
+- Conta alvo confirmada: clinica 12, e-mail `institutobrana@gmail.com`.
+- Backup/export executado com sucesso antes da exclusao real.
+- Dry-run executado com alvo unico, usuarios 27/28/29, prestadores 17/18 e dependencias sem bloqueio.
+- Execucao real executada uma unica vez com confirmacao pos-commit da remocao da clinica 12 e liberacao do e-mail.
+- Resultado: conta removida com sucesso, sem impacto em outras contas.
+- Confirmacao final por banco: clinicas=0, usuarios=0, prestador_odonto=0, unidade_atendimento=0, email_codes=0 para institutobrana@gmail.com.
+- Proximo teste manual recomendado: criar nova conta com `institutobrana@gmail.com` e validar 8P, 8K, 8R e 8U em conjunto.
+- Proxima subetapa recomendada: `8U-C` para validacao manual da nova conta apos a exclusao segura.
+- Confirmacao funcional: frontend, backend funcional, tabelas de procedimentos, setup e EasyDental nao foram alterados por esta etapa.
+- Nenhuma conta foi criada automaticamente.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Subetapa 8U da frente EasyDental virgem
@@ -3023,3 +3043,8 @@ Observacoes:
 - Os arquivos alterados foram o novo runner seguro da clínica 11, o backup/export da clínica 11, o novo documento da subetapa e este roadmap.
 - A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
 - Nenhuma conta foi criada automaticamente.
+
+
+
+
+
