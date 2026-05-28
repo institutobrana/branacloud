@@ -348,6 +348,19 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
 - Nenhuma conta foi criada ou excluida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8W-A da frente EasyDental virgem
+
+- Subetapa executada: auditoria tecnica e documental das permissoes padrao de usuarios criados posteriormente.
+- O foco foi mapear como `permissoes_json` nasce hoje, qual o papel de `default_permissions`, como `tipo_usuario` e `is_admin` influenciam a matriz e como o frontend apenas consome a configuracao vinda do backend.
+- Foi registrado que `Usuarios` e `Opcoes do Sistema` ja sao tratadas como areas administrativas protegidas em camadas distintas: permissao de modulo e gate por senha interna quando o controle interno esta ativo.
+- O checkbox `Ativar controle de usuarios e senhas` foi identificado como flag em `clinica.opcoes_sistema_json.seguranca.ativar_controle_usuarios`, com default atual ligado no Brana, afetando a exigencia de senha/admin password, mas nao recriando sozinho a matriz de permissao.
+- O comparativo com o EasyDental virgem foi mantido: controle de usuarios/senhas e auditoria nascem desativados na fonte observada, enquanto o Brana atual ainda combina permissao de modulo com gate interno mais rigido.
+- O contrato tecnico preliminar registrado recomenda que usuarios posteriores nascam com acesso mais livre em geral, mas com `Usuarios` e `Opcoes do Sistema` protegidos por padrao, sem abrir acesso indevido.
+- A recomendacao para a proxima etapa passa a ser uma implementacao isolada de permissões padrao para usuarios novos, ou contrato complementar se ainda houver duvida.
+- Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
+- Nenhuma conta foi criada ou excluida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
 ## Subetapa 8U-C da frente EasyDental virgem
 
 - Subetapa executada: validacao manual bem-sucedida da nova conta apos 8P/8K/8R/8U.
