@@ -320,6 +320,18 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Checks executados: `python -m py_compile backend/services/signup_service.py backend/security/permissions.py` e import seguro de `services.signup_service`, ambos com sucesso.
 - Onde testar: tentar novamente criar conta limpa com `institutobrana@gmail.com` e validar 8P, 8K, 8R e 8U.
 - Proxima etapa: validar a criacao limpa apos a correcao e, se passar, seguir para a trilha de setup posterior da 8V.
+## Subetapa 8U-C da frente EasyDental virgem
+
+- Subetapa executada: validacao manual bem-sucedida da nova conta apos 8P/8K/8R/8U.
+- Validacao informada pelo usuario: testes ok, conta criada corretamente e 8U-C considerada ok.
+- Itens confirmados: `signup/confirm`, unidade `Principal / 0001`, tabelas da 8P, `Tabela Exemplo` ausente, `Brana` padrao/privada, prestador `Clínica`, prestador ADM/Mestre funcional, tipo `Cirurgiao dentista` no prestador ADM, usuario ADM como `Dentista (CD)`, vinculo ao prestador ADM e vinculo a unidade `Principal / 0001`.
+- Setup para o ADM inicial: confirmado como ainda presente, sem alteracao nesta etapa.
+- Correcoes acumuladas confirmadas: `PRIVATE_TABLE_NAME`, `senha_interna_hash` e `_apply_user_links`.
+- Proxima subetapa recomendada: `8V` para impedir setup em usuarios criados posteriormente.
+- Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
+- Nenhuma conta foi criada ou excluida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Subetapa 8U da frente EasyDental virgem
 
 - Subetapa executada: implementacao isolada do usuario ADM com `Dentista (CD)`, prestador ADM e unidade Principal / 0001, sem mexer em setup.
@@ -3052,6 +3064,7 @@ Observacoes:
 - Os arquivos alterados foram o novo runner seguro da clínica 11, o backup/export da clínica 11, o novo documento da subetapa e este roadmap.
 - A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
 - Nenhuma conta foi criada automaticamente.
+
 
 
 
