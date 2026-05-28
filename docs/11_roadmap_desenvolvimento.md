@@ -3216,6 +3216,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A próxima etapa recomendada, se o contrato continuar seguro, é a implementação mínima do recorte contratado.
 
+## Validação manual da sincronização visual de Preferencias / Configuracoes
+
+- A validação manual da sincronização visual da modal de `Preferências / Configurações` foi aprovada.
+- Commit validado: `7dae8e3226cd6f4510a0094968d29a2e853b9ddc`.
+- Os testes principais foram aprovados: abertura da tela, abertura da modal, alternância de abas, atualização do título, fechamento, reabertura, reabertura sem salvar, ausência de alteração indevida e checagem rápida em `Opções do Sistema` sem regressão visual.
+- Nenhuma alteração de código foi feita nesta etapa.
+- O recorte de sincronização visual da modal fica consolidado como validado.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_sincronizacao_visual_modal.md`.
+- A blindagem textual/mojibake foi respeitada.
+- A próxima etapa recomendada é uma decisão conservadora sobre novo recorte de `Preferências / Configurações` ou nova matriz comparativa.
+
 
 
 
