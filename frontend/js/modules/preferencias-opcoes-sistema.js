@@ -356,6 +356,14 @@
     panes.forEach(pane => pane.classList.toggle("hidden", pane?.dataset?.pane !== tabId));
   }
 
+  function prefRenderCombosGeraisModal({ cboPesquisa, cboTabela, cboConvenio, pesquisas, tabelas, convenios } = {}) {
+    if (!cboPesquisa || !cboTabela || !cboConvenio) return false;
+    prefRenderSelectOptions(cboPesquisa, pesquisas, { valueFrom: item => item.id, labelFrom: item => item.label });
+    prefRenderSelectOptions(cboTabela, tabelas, { placeholder: "<< Nenhuma >>", valueFrom: item => item.id, labelFrom: item => item.nome || "" });
+    prefRenderSelectOptions(cboConvenio, convenios, { valueFrom: item => item.id, labelFrom: item => item.nome || "" });
+    return true;
+  }
+
   const moduleApi = Object.freeze({
     getMetadata,
     prefOdontoNorm,
@@ -378,7 +386,8 @@
     prefAmbienteMontarPreview,
     prefOdontoFindByLabel,
     prefAtualizarTituloModal,
-    prefSelecionarAbaModal
+    prefSelecionarAbaModal,
+    prefRenderCombosGeraisModal
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;

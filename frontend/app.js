@@ -2265,6 +2265,10 @@ function prefAtualizarTitulo(){if(!prefCfg)return;const tituloEl=prefCfg.backdro
 function prefSelecionarAba(tabId){if(!prefCfg)return;prefCfg.tabAtual=tabId;const mod=window.BranaPreferenciasOpcoesSistemaModule;if(mod&&typeof mod.prefSelecionarAbaModal==="function"){mod.prefSelecionarAbaModal({tabs:prefCfg.tabs,panes:prefCfg.panes,tabId})}else{prefCfg.tabs.forEach(btn=>btn.classList.toggle("active",btn.dataset.tab===tabId));prefCfg.panes.forEach(pane=>pane.classList.toggle("hidden",pane.dataset.pane!==tabId))}if(tabId==="geral")footerMsg.textContent="Preferencias gerais carregadas.";else if(tabId==="modelos")footerMsg.textContent="Preferencias de modelos carregadas.";else if(tabId==="ambiente")footerMsg.textContent="Preferencias de ambiente carregadas.";else if(tabId==="dados")footerMsg.textContent="Dados do usuario carregados.";else if(tabId==="odontograma")footerMsg.textContent="Preferencias do odontograma carregadas e prontas para futura integracao.";else footerMsg.textContent="Preferencias carregadas."}
 function prefRenderCombos(){if(!prefCfg)return;const opts=prefCfg.geralOptions||{};const pesquisas=Array.isArray(opts.pesquisa_padrao_odontograma)?opts.pesquisa_padrao_odontograma:[];const tabelas=Array.isArray(opts.tabelas_intervencoes)?opts.tabelas_intervencoes:[];const convenios=Array.isArray(opts.convenios)?opts.convenios:[];
   const mod=window.BranaPreferenciasOpcoesSistemaModule;
+  if(mod&&typeof mod.prefRenderCombosGeraisModal==="function"){
+    mod.prefRenderCombosGeraisModal({cboPesquisa:prefCfg.cboPesquisa,cboTabela:prefCfg.cboTabela,cboConvenio:prefCfg.cboConvenio,pesquisas,tabelas,convenios});
+    return;
+  }
   if(mod&&typeof mod.prefRenderSelectOptions==="function"){
     mod.prefRenderSelectOptions(prefCfg.cboPesquisa,pesquisas,{valueFrom:item=>item.id,labelFrom:item=>item.label});
     mod.prefRenderSelectOptions(prefCfg.cboTabela,tabelas,{placeholder:"<< Nenhuma >>",valueFrom:item=>item.id,labelFrom:item=>item.nome||""});

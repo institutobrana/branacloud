@@ -3248,6 +3248,17 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_profundo_pref_render_combos.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Implementacao minima de prefRenderCombos em Preferencias / Configuracoes
+
+- A implementacao minima de `prefRenderCombos` foi concluida.
+- A renderizacao visual dos combos gerais foi delegada ao modulo existente.
+- `prefRenderCombos` permaneceu como orquestrador.
+- O fallback local foi preservado.
+- Nenhuma alteracao de carregamento, payload, salvamento, `sysOpt*`, backend, banco, permissões ou seeds foi feita.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_implementacao_pref_render_combos.md`.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima etapa recomendada e validacao manual.
+
 
 
 
