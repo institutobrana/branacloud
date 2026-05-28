@@ -3177,6 +3177,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima acao depende do teste manual da 8W-B.
 
+## Fase 2B - Validacao aprovada da 8W-B de usuarios novos
+
+- A validacao manual da 8W-B foi aprovada pelo usuario.
+- Os testes principais foram confirmados como aprovados.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- Nenhuma nova modularizacao foi iniciada nesta etapa.
+- A pendencia da 8W-B foi encerrada.
+- A proxima etapa recomendada passa a ser a auditoria para retomada da escolha do proximo modulo de modularizacao/refatoracao.
+- O documento criado foi `docs/fase_2b_validacao_8w_b_usuarios_novos_aprovada.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
