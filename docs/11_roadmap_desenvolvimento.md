@@ -333,6 +333,21 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Proxima subetapa recomendada: validacao manual da 8V-B.
 - Nenhuma conta foi criada automaticamente.
 - A blindagem textual/mojibake foi respeitada.
+
+## Subetapa 8V-C da frente EasyDental virgem
+
+- Subetapa executada: validacao manual da correcao da 8V-B para usuarios criados posteriormente.
+- Resultado informado pelo usuario: teste realizado ok.
+- Interpretacao funcional: um usuario criado posteriormente nao caiu mais na tela de setup.
+- O setup do ADM inicial permanece preservado, como esperado.
+- O frontend nao precisou ser alterado para a validacao.
+- O backend de criacao posterior seguiu funcionando com a regra de `setup_completed = True`.
+- Opcoes do Sistema nao foram alteradas.
+- Tabelas, unidade e prestadores nao foram alterados.
+- Pendencias mantidas fora desta validacao: fluxo Superadmin, Opcoes do Sistema > Seguranca, auditoria, controle interno de usuarios/senhas, menu Alterar senha e correcao textual da tela de setup.
+- Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
+- Nenhuma conta foi criada ou excluida nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
 ## Subetapa 8U-C da frente EasyDental virgem
 
 - Subetapa executada: validacao manual bem-sucedida da nova conta apos 8P/8K/8R/8U.
