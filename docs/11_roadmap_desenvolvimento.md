@@ -3200,6 +3200,17 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_auditoria_escolha_proximo_modulo_pos_8w_b.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Contrato de Preferencias / Configuracoes
+
+- Contrato documental aberto para o recorte remanescente de `Preferências / Configurações`.
+- O módulo continua classificado como `comum/core`.
+- O recorte recomendado é a sincronização visual básica da modal, com título e alternância de abas.
+- Nenhuma implementação foi feita nesta etapa.
+- Nenhum código foi alterado nesta etapa.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_recorte_remanescente.md`.
+- A blindagem textual/mojibake foi respeitada.
+- A próxima etapa recomendada, se o contrato continuar seguro, é a implementação mínima do recorte contratado.
+
 
 
 
