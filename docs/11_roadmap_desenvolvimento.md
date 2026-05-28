@@ -3259,6 +3259,17 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A proxima etapa recomendada e validacao manual.
 
+## Validacao manual de prefRenderCombos em Preferencias / Configuracoes
+
+- A validacao manual de `prefRenderCombos` foi aprovada.
+- Commit validado: `0795fe4a03806f95225128472db043eced335eaf`.
+- Os testes principais foram aprovados: abertura da tela, abertura da modal, conferencia e renderizacao dos combos gerais, alternancia de abas, fechamento e reabertura, reabertura sem salvar e checagem rapida em `Opcoes do Sistema` sem regressao visual.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- O recorte de `prefRenderCombos` fica consolidado como validado.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_pref_render_combos.md`.
+- A blindagem textual/mojibake foi respeitada.
+- A proxima etapa recomendada e uma decisao conservadora sobre novo recorte de `Preferencias` ou nova matriz comparativa.
+
 
 
 
