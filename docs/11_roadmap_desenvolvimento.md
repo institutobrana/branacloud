@@ -3148,6 +3148,15 @@ Observacoes:
 - A validacao manual recomendada e testar exclusao de usuario comum, bloqueio da conta base, bloqueio do proprio usuario e bloqueio do ultimo admin.
 - A proxima subetapa recomendada e retomar a validacao da 8W-B apos confirmar a exclusao segura.
 
+## Auditoria de retomada da modularizacao apos correcao de exclusao de usuario
+
+- Auditoria documental executada para confirmar o ponto atual antes de escolher novo recorte de modularizacao.
+- O ponto atual permanece dependente da validacao manual da exclusao de usuario no modulo Usuarios e, depois, da retomada da validacao da 8W-B.
+- Nao houve nova modularizacao implementada nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
+- O documento criado foi `docs/fase_2b_auditoria_retomada_modularizacao_pos_correcao_exclusao_usuario.md`.
+- A proxima etapa conservadora continua sendo validar exclusao de usuario e retomar a 8W-B antes de considerar novo modulo.
+
 
 
 
