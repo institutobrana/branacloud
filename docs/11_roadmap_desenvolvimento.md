@@ -3227,6 +3227,16 @@ Observacoes:
 - A blindagem textual/mojibake foi respeitada.
 - A próxima etapa recomendada é uma decisão conservadora sobre novo recorte de `Preferências / Configurações` ou nova matriz comparativa.
 
+## Decisao conservadora pos validacao visual de Preferencias / Configuracoes
+
+- A decisao conservadora foi registrada apos a validacao visual.
+- O recorte visual anterior permanece validado.
+- Nenhuma alteracao de codigo foi feita nesta etapa.
+- Caminho escolhido: `Opcao C`.
+- A proxima subetapa recomendada e um contrato profundo para um novo recorte visual/DOM em `Preferencias / Configuracoes`.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
