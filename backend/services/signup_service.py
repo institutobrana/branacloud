@@ -2361,6 +2361,27 @@ def _garantir_usuario_sistemico_clinica(db, clinica_id: int, prestador: Prestado
     return usuario
 
 
+def _apply_user_links(
+    db,
+    usuario: Usuario,
+    prestador: PrestadorOdonto | None,
+    unidade: UnidadeAtendimento | None,
+) -> None:
+    changed = False
+    if prestador and int(usuario.prestador_id or 0) != int(prestador.id):
+        usuario.prestador_id = int(prestador.id)
+        changed = True
+    if unidade and int(usuario.unidade_atendimento_id or 0) != int(unidade.id):
+        usuario.unidade_atendimento_id = int(unidade.id)
+        changed = True
+    if str(usuario.tipo_usuario or "").strip() != TIPO_USUARIO_DENTISTA:
+        usuario.tipo_usuario = TIPO_USUARIO_DENTISTA
+        changed = True
+    if changed:
+        db.add(usuario)
+        db.flush()
+
+
 def _aplicar_bootstrap_access_profiles_clinica(db, clinica_id: int) -> dict[str, object]:
     return ensure_default_access_profiles_for_clinic(db, clinica_id)
 

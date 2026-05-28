@@ -311,6 +311,15 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nenhuma conta foi criada automaticamente.
 - A blindagem textual/mojibake foi respeitada.
 
+## Correcao urgente apos 8U
+
+- Problema identificado: `NameError: name '_apply_user_links' is not defined` durante `/signup/confirm` na validacao da nova conta apos a 8U.
+- Causa: o fluxo de signup chamou `_apply_user_links(db, usuario_admin, prestador_adm, unidade_principal)` sem a funcao estar definida no escopo de `backend/services/signup_service.py`.
+- Correcao aplicada: helper local minimo `_apply_user_links` criado para amarrar usuario, prestador e unidade e preservar `tipo_usuario = Dentista (CD)`.
+- Conta parcial: nao houve conta parcial persistida para `institutobrana@gmail.com`; restou apenas um `email_codes` residual, sem clinica, usuario, prestador ou unidade associados.
+- Checks executados: `python -m py_compile backend/services/signup_service.py backend/security/permissions.py` e import seguro de `services.signup_service`, ambos com sucesso.
+- Onde testar: tentar novamente criar conta limpa com `institutobrana@gmail.com` e validar 8P, 8K, 8R e 8U.
+- Proxima etapa: validar a criacao limpa apos a correcao e, se passar, seguir para a trilha de setup posterior da 8V.
 ## Subetapa 8U da frente EasyDental virgem
 
 - Subetapa executada: implementacao isolada do usuario ADM com `Dentista (CD)`, prestador ADM e unidade Principal / 0001, sem mexer em setup.
@@ -3043,6 +3052,7 @@ Observacoes:
 - Os arquivos alterados foram o novo runner seguro da clínica 11, o backup/export da clínica 11, o novo documento da subetapa e este roadmap.
 - A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
 - Nenhuma conta foi criada automaticamente.
+
 
 
 
