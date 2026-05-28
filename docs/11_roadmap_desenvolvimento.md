@@ -42,6 +42,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A Subetapa 8U ajustou o nascimento do usuario ADM inicial para `Dentista (CD)`, com vinculo ao prestador ADM/Mestre funcional e a unidade Principal / 0001.
 - A Subetapa 8U-B executou a exclusao segura da clinica 12 para liberar `institutobrana@gmail.com`, com backup/export, dry-run e remocao confirmada apos validacao por banco.
 - A Subetapa 8V-A auditou o setup para usuarios criados posteriormente e confirmou que o gatilho atual esta no `setup_completed` do proprio usuario.
+- A Subetapa 8V-B implementou a menor correcao segura para que usuarios criados posteriormente nascam com `setup_completed = True`.
 
 ## Proximas prioridades sugeridas
 
@@ -321,6 +322,17 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Checks executados: `python -m py_compile backend/services/signup_service.py backend/security/permissions.py` e import seguro de `services.signup_service`, ambos com sucesso.
 - Onde testar: tentar novamente criar conta limpa com `institutobrana@gmail.com` e validar 8P, 8K, 8R e 8U.
 - Proxima etapa: validar a criacao limpa apos a correcao e, se passar, seguir para a trilha de setup posterior da 8V.
+## Subetapa 8V-B da frente EasyDental virgem
+
+- Subetapa executada: implementacao isolada do bloqueio de setup para usuarios criados posteriormente.
+- Regra implementada: usuarios criados depois pelo modulo Usuarios ou pelo superadmin passam a nascer com `setup_completed = True`.
+- Arquivos alterados: `backend/routes/user_admin_routes.py` e `backend/routes/superadmin_routes.py`.
+- Checks executados: `python -m py_compile backend/routes/user_admin_routes.py backend/routes/superadmin_routes.py` e import seguro dos modulos alterados, ambos com sucesso.
+- Onde testar manualmente: criar usuario novo na conta de teste, sair do ADM, entrar com o usuario criado e confirmar que o setup nao aparece.
+- Confirmacao funcional: frontend nao foi alterado, setup visual nao foi alterado, ADM inicial permanece com setup e contas existentes nao foram alteradas.
+- Proxima subetapa recomendada: validacao manual da 8V-B.
+- Nenhuma conta foi criada automaticamente.
+- A blindagem textual/mojibake foi respeitada.
 ## Subetapa 8U-C da frente EasyDental virgem
 
 - Subetapa executada: validacao manual bem-sucedida da nova conta apos 8P/8K/8R/8U.
@@ -3079,6 +3091,7 @@ Observacoes:
 - Os arquivos alterados foram o novo runner seguro da clínica 11, o backup/export da clínica 11, o novo documento da subetapa e este roadmap.
 - A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
 - Nenhuma conta foi criada automaticamente.
+
 
 
 

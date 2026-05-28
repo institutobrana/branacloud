@@ -520,6 +520,7 @@ def admin_create_user(
         ativo=True,
         online=False,
         forcar_troca_senha=bool(payload.forcar_troca_senha),
+        setup_completed=True,
         is_system_user=False,
         permissoes_json=dump_permissions_json(
             sanitize_permissions({}, tipo_usuario=payload.tipo_usuario, is_admin=bool(payload.is_admin))

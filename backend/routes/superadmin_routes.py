@@ -438,6 +438,7 @@ def superadmin_create_usuario(
         clinica_id=clinica.id,
         is_admin=bool(payload.is_admin),
         ativo=True,
+        setup_completed=True,
         is_system_user=False,
     )
     db.add(usuario)
