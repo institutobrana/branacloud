@@ -3534,3 +3534,15 @@ Observacoes:
 - A proxima etapa recomendada e um teste pos-reinicio do PC/Uvicorn para confirmar estabilidade.
 - O documento criado foi `docs/estabilizacao_postgresql17_cluster_oficial.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Validacao pos-reinicio do PostgreSQL 17
+
+- O usuario informou que reiniciou o sistema e todas as contas apareceram.
+- O PostgreSQL 17 permaneceu oficial e ativo em `5432` apos o reinicio.
+- O PostgreSQL 18 permaneceu parado e nao assumiu a porta oficial.
+- As contas `13`, `17` e `18` e os usuarios `30/31/44/45` foram confirmados por `SELECT`.
+- A conclusao final ficou em `ESTABILIDADE-A`.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/validacao_pos_reinicio_postgresql17_estavel.md`.
+- A proxima etapa recomendada e decidir, em etapa futura, se o PostgreSQL 18 deve permanecer parado/manual ou se havera desativacao/exclusao controlada antes de retomar a modularizacao.
+- A blindagem textual/mojibake foi respeitada.
