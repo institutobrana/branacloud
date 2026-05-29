@@ -3404,3 +3404,14 @@ Observacoes:
 - Proxima etapa recomendada: parar o uso operacional, oficializar o banco correto e preparar backup/analise de restauracao ou unificacao.
 - O documento criado foi `docs/auditoria_alternancia_banco_pos_reinicio_paulo_id13_sumico_id17_id18.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Auditoria da origem do estado do PostgreSQL 18 apos sumico de ID 17/18
+
+- A auditoria somente leitura aprofundou a origem do estado atual do `brana_saas` no PostgreSQL 18.
+- Foi confirmada a contradicao entre documentos anteriores e o banco atual: `ID 17/18` e `usuarios 44/45` foram documentados antes e nao aparecem agora.
+- Foram encontrados artefatos antigos de backup/restore e dumps com nomes ligados a `pg17` e `pg18`, mas sem prova direta de restore do estado atual.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- Classificacao registrada: `REST-B`, `REST-D`, `REST-E` e `USO-PAUSAR`.
+- A proxima etapa recomendada e manter o uso operacional pausado, definir o banco correto e planejar backup/recuperacao antes de qualquer nova acao.
+- O documento criado foi `docs/auditoria_origem_estado_banco_postgres18_sumico_id17_id18.md`.
+- A blindagem textual/mojibake foi respeitada.
