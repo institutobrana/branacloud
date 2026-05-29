@@ -3302,6 +3302,18 @@ Observacoes:
 - A proxima etapa recomendada e validacao manual.
 - A blindagem textual/mojibake foi respeitada.
 
+## Pausa temporaria da modularizacao por suspeita de regressao
+
+- A modularizacao foi pausada temporariamente por suspeita de regressao apos `prefRenderCombosModelos`.
+- O usuario relatou ausencia de uma conta relacionada a `Paulo Gustavo` e de um usuario de outra conta.
+- Uma auditoria somente leitura foi executada.
+- Checkpoint usado: `5e6dd08a3d5e2bdce6d5c04b8c292e0bcea9d271`.
+- Commit atual comparado: `bcf7e2c84274c130ce47cb63c3535eb1dc2cfb62`.
+- A classificacao final registrada foi `Opcao B`.
+- A proxima etapa recomendada e auditoria forense de exclusao/logs com identificadores mais precisos.
+- O documento criado foi `docs/auditoria_regressao_pos_pref_render_combos_modelos_conta_usuario_sumidos.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
