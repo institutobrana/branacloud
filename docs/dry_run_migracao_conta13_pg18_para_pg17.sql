@@ -1,0 +1,166 @@
+-- DRY-RUN / PREVIEW ONLY
+-- NAO EXECUTAR SEM AUTORIZACAO EXPLICITA DO USUARIO
+-- NAO FOI EXECUTADO NESTA ETAPA
+--
+-- Objetivo: registrar uma previa tecnica da migracao futura da conta
+-- Paulo Gustavo ID 13 do PostgreSQL 18 para o PostgreSQL 17 oficial.
+-- Este arquivo e apenas um plano; nao deve ser executado nesta etapa.
+
+-- ============================================================
+-- PRECHECKS NO CLUSTER 17 OFICIAL
+-- ============================================================
+-- SELECT count(*) AS clinica_13_livre FROM clinicas WHERE id = 13;
+-- SELECT count(*) AS email_clinica_livre FROM clinicas WHERE email = 'pagamentosccb@gmail.com';
+-- SELECT count(*) AS email_usuario_livre FROM usuarios WHERE email = 'pagamentosccb@gmail.com';
+-- SELECT count(*) AS usuarios_30_31_livres FROM usuarios WHERE id IN (30,31);
+-- SELECT count(*) AS prestadores_19_20_livres FROM prestador_odonto WHERE id IN (19,20);
+-- SELECT count(*) AS unidade_8_livre FROM unidade_atendimento WHERE id = 8;
+-- SELECT count(*) AS access_profiles_101_110_livres FROM access_profile WHERE id BETWEEN 101 AND 110;
+-- SELECT max(id) AS max_clinicas FROM clinicas;
+-- SELECT max(id) AS max_usuarios FROM usuarios;
+-- SELECT max(id) AS max_prestador_odonto FROM prestador_odonto;
+-- SELECT max(id) AS max_unidade_atendimento FROM unidade_atendimento;
+-- SELECT max(id) AS max_access_profile FROM access_profile;
+-- SELECT max(id) AS max_usuario_perfil_acesso FROM usuario_perfil_acesso;
+
+-- ============================================================
+-- ORDEM PRELIMINAR DE MIGRACAO
+-- ============================================================
+-- 1) clinicas
+-- 2) unidade_atendimento
+-- 3) usuarios (com prestador_id temporariamente nulo se necessario)
+-- 4) prestador_odonto (com usuario_id ajustado apos a insercao dos usuarios, se necessario)
+-- 5) atualizacao dos vinculos cruzados usuarios.prestador_id / prestador_odonto.usuario_id
+-- 6) access_profile
+-- 7) usuario_perfil_acesso
+-- 8) tabelas auxiliares com clinica_id = 13
+-- 9) tabelas dependentes de usuarios/prestadores/unidades/procedimentos
+-- 10) plataforma_assinaturas, se houver registro para a clinica 13
+-- 11) plataforma_auditoria, somente se aprovado em etapa futura
+-- 12) ajuste final de sequences com setval
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - CLINICA
+-- ============================================================
+-- INSERT INTO clinicas (
+--   id, nome, email, ativo, tipo_conta, criado_em, trial_ate, data_ativacao,
+--   opcoes_sistema_json, nome_tabela_procedimentos
+-- )
+-- SELECT
+--   id, nome, email, ativo, tipo_conta, criado_em, trial_ate, data_ativacao,
+--   opcoes_sistema_json, nome_tabela_procedimentos
+-- FROM source_18.clinicas
+-- WHERE id = 13;
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - UNIDADE
+-- ============================================================
+-- INSERT INTO unidade_atendimento (
+--   id, clinica_id, source_id, codigo, nome, criado_em, atualizado_em
+-- )
+-- SELECT
+--   id, clinica_id, source_id, codigo, nome, criado_em, atualizado_em
+-- FROM source_18.unidade_atendimento
+-- WHERE clinica_id = 13;
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - USUARIOS
+-- ============================================================
+-- INSERT INTO usuarios (
+--   id, codigo, nome, email, senha_hash, ativo, online, is_admin, clinica_id, apelido,
+--   tipo_usuario, forcar_troca_senha, prestador_id, unidade_atendimento_id,
+--   preferencias_usuario_json, preferencias_agenda_json, preferencias_impressora_json,
+--   preferencias_etiqueta_json, permissoes_json, is_system_user, setup_completed, senha_interna_hash
+-- )
+-- SELECT
+--   id, codigo, nome, email, senha_hash, ativo, online, is_admin, clinica_id, apelido,
+--   tipo_usuario, forcar_troca_senha, NULL, unidade_atendimento_id,
+--   preferencias_usuario_json, preferencias_agenda_json, preferencias_impressora_json,
+--   preferencias_etiqueta_json, permissoes_json, is_system_user, setup_completed, senha_interna_hash
+-- FROM source_18.usuarios
+-- WHERE clinica_id = 13;
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - PRESTADORES
+-- ============================================================
+-- INSERT INTO prestador_odonto (
+--   id, clinica_id, source_id, usuario_id, codigo, nome, apelido, tipo_prestador,
+--   inativo, executa_procedimento, criado_em, atualizado_em, is_system_prestador
+-- )
+-- SELECT
+--   id, clinica_id, source_id, usuario_id, codigo, nome, apelido, tipo_prestador,
+--   inativo, executa_procedimento, criado_em, atualizado_em, is_system_prestador
+-- FROM source_18.prestador_odonto
+-- WHERE clinica_id = 13;
+
+-- ============================================================
+-- AJUSTE DE VINCULOS CRUZADOS
+-- ============================================================
+-- UPDATE usuarios u
+-- SET prestador_id = p.id
+-- FROM prestador_odonto p
+-- WHERE u.id = p.usuario_id
+--   AND u.clinica_id = 13
+--   AND p.clinica_id = 13;
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - ACCESS PROFILE
+-- ============================================================
+-- INSERT INTO access_profile (
+--   id, clinica_id, source_id, nome, reservado, criado_em, atualizado_em
+-- )
+-- SELECT
+--   id, clinica_id, source_id, nome, reservado, criado_em, atualizado_em
+-- FROM source_18.access_profile
+-- WHERE clinica_id = 13;
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - USUARIO_PERFIL_ACESSO
+-- ============================================================
+-- INSERT INTO usuario_perfil_acesso (
+--   id, clinica_id, usuario_id, prestador_id, perfil_id
+-- )
+-- SELECT
+--   id, clinica_id, usuario_id, prestador_id, perfil_id
+-- FROM source_18.usuario_perfil_acesso
+-- WHERE clinica_id = 13;
+
+-- ============================================================
+-- PREVISAO DE MIGRACAO - TABELAS AUXILIARES POR clinica_id = 13
+-- ============================================================
+-- Exemplos de blocos por tabela, sempre filtrando clinica_id = 13:
+-- INSERT INTO tabela_auxiliar (...) SELECT ... FROM source_18.tabela_auxiliar WHERE clinica_id = 13;
+-- Repetir para:
+-- access_profile, agenda_legado_bloqueio, agenda_legado_evento, anamnese_perguntas,
+-- anamnese_questionarios, assinaturas, calendario_faturamento_odonto, categoria_financeira,
+-- cenario, contato, controle_protetico, convenio_odonto, doenca_cid, etiqueta_modelo,
+-- grupo_financeiro, indice_financeiro, item_auxiliar, lista_material, plano_odonto,
+-- plataforma_assinaturas, prestador, prestador_comissao, prestador_comissao_odonto,
+-- prestador_credenciamento, prestador_credenciamento_odonto, prestador_odonto,
+-- procedimento, procedimento_fase, procedimento_generico, procedimento_generico_fase,
+-- procedimento_generico_material, procedimento_material, procedimento_tabela, protetico,
+-- relatorio_config, restricao_terapeutica, servico_protetico, simbolo_grafico_catalogo,
+-- tratamento, unidade_atendimento, usuarios.
+
+-- ============================================================
+-- AJUSTE FINAL DE SEQUENCES
+-- ============================================================
+-- SELECT setval('clinicas_id_seq', (SELECT max(id) FROM clinicas));
+-- SELECT setval('usuarios_id_seq', (SELECT max(id) FROM usuarios));
+-- SELECT setval('prestador_odonto_id_seq', (SELECT max(id) FROM prestador_odonto));
+-- SELECT setval('unidade_atendimento_id_seq', (SELECT max(id) FROM unidade_atendimento));
+-- SELECT setval('access_profile_id_seq', (SELECT max(id) FROM access_profile));
+-- SELECT setval('usuario_perfil_acesso_id_seq', COALESCE((SELECT max(id) FROM usuario_perfil_acesso), 1));
+
+-- ============================================================
+-- VALIDACOES FUTURAS
+-- ============================================================
+-- SELECT * FROM clinicas WHERE id = 13;
+-- SELECT * FROM usuarios WHERE clinica_id = 13 ORDER BY id;
+-- SELECT * FROM prestador_odonto WHERE clinica_id = 13 ORDER BY id;
+-- SELECT * FROM unidade_atendimento WHERE clinica_id = 13 ORDER BY id;
+-- SELECT * FROM access_profile WHERE clinica_id = 13 ORDER BY id;
+-- SELECT * FROM usuario_perfil_acesso WHERE clinica_id = 13 ORDER BY id;
+-- SELECT count(*) FROM plataforma_auditoria WHERE actor_email = 'pagamentosccb@gmail.com';
+
+-- FIM DO DRY-RUN / PREVIEW ONLY

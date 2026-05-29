@@ -3490,3 +3490,13 @@ Observacoes:
 - O documento criado foi `docs/inventario_conta13_cluster18_pre_migracao.md`.
 - A proxima etapa recomendada e a Subetapa C: plano de migracao dry-run sem execucao.
 - A blindagem textual/mojibake foi respeitada.
+
+## Plano dry-run da migracao da conta 13
+
+- O plano dry-run da migracao da conta `Paulo Gustavo ID 13` foi preparado sem execucao.
+- A estrategia manteve `MIG-A`, com preservacao do `clinica_id = 13` no cluster 17 oficial.
+- Um arquivo SQL de pre-visualizacao foi criado apenas como referencia tecnica e nao foi executado.
+- Nenhum dado foi alterado, nenhuma migracao foi executada e nenhum restore foi feito.
+- O documento criado foi `docs/plano_dry_run_migracao_conta13_pg18_para_pg17.md`.
+- A proxima etapa depende de aprovacao explicita do usuario para a Subetapa D.
+- A blindagem textual/mojibake foi respeitada.
