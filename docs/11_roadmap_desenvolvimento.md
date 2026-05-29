@@ -3546,3 +3546,13 @@ Observacoes:
 - O documento criado foi `docs/validacao_pos_reinicio_postgresql17_estavel.md`.
 - A proxima etapa recomendada e decidir, em etapa futura, se o PostgreSQL 18 deve permanecer parado/manual ou se havera desativacao/exclusao controlada antes de retomar a modularizacao.
 - A blindagem textual/mojibake foi respeitada.
+
+## Auditoria de retomada pos-estabilizacao do PostgreSQL 17
+
+- A crise de banco foi encerrada operacionalmente e o PostgreSQL 17 permaneceu como ambiente oficial estavel.
+- O ultimo ponto seguro da modularizacao foi identificado como `prefRenderCombosModelos`, mas a validacao manual desse recorte ficou pendente antes da pausa.
+- A classificacao de retomada ficou em `RET-B`.
+- A proxima etapa recomendada e validar manualmente `prefRenderCombosModelos` antes de abrir novo recorte.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/auditoria_retomada_pos_estabilizacao_postgresql17.md`.
+- A blindagem textual/mojibake foi respeitada.
