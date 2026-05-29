@@ -3479,3 +3479,14 @@ Observacoes:
 - O documento criado foi `docs/backup_clusters_pg17_pg18_pre_migracao_conta13.md`.
 - A proxima etapa recomendada e a Subetapa B: inventario da conta `Paulo Gustavo ID 13` no cluster 18, sem migrar ainda.
 - A blindagem textual/mojibake foi respeitada.
+
+## Inventario da conta Paulo Gustavo ID 13 no cluster 18
+
+- O inventario somente leitura da conta `Paulo Gustavo ID 13` no PostgreSQL 18 foi concluido.
+- Foram mapeadas `49` tabelas com `clinica_id` e os registros principais da conta 13.
+- Nao foram encontrados conflitos diretos da conta 13 no PostgreSQL 17 oficial para os IDs principais verificados.
+- A estrategia preliminar ficou como `MIG-A` com cautela para dependencias futuras.
+- Nenhuma migracao, restore ou exclusao foi executada.
+- O documento criado foi `docs/inventario_conta13_cluster18_pre_migracao.md`.
+- A proxima etapa recomendada e a Subetapa C: plano de migracao dry-run sem execucao.
+- A blindagem textual/mojibake foi respeitada.
