@@ -3391,3 +3391,16 @@ Observacoes:
 
 
 
+## Auditoria de alternancia de banco apos reinicio com Paulo ID 13 e sumico das contas 17/18
+
+- Auditoria somente leitura concluida apos o reinicio do PC e da nova subida do Uvicorn.
+- O backend ativo segue apontando para `brana_saas` em `8000`.
+- A conta `Paulo Gustavo` `ID 13` voltou a aparecer no banco ativo.
+- As contas recentes `ID 17` e `ID 18` nao aparecem no banco ativo atual.
+- Os usuarios de teste `mileneflor17@gmail.com` e `mileneflor99@gmail.com` nao foram encontrados no banco ativo atual.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O banco alternativo `saas_local` existe, mas tambem nao explica o retorno de `Paulo Gustavo` nem contem `17/18`.
+- Classificacao registrada: `ALT-D` e `ALT-E`.
+- Proxima etapa recomendada: parar o uso operacional, oficializar o banco correto e preparar backup/analise de restauracao ou unificacao.
+- O documento criado foi `docs/auditoria_alternancia_banco_pos_reinicio_paulo_id13_sumico_id17_id18.md`.
+- A blindagem textual/mojibake foi respeitada.
