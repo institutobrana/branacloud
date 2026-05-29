@@ -3365,6 +3365,15 @@ Observacoes:
 - O documento criado foi `docs/auditoria_fluxos_persistencia_usuario_signup_opcoes.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Validacao da conta teste ID 18
+
+- A conta teste `ID 18` foi criada manualmente pelo usuario e validada por SELECT no banco atual `brana_saas`.
+- A conta nasceu com estrutura inicial esperada, incluindo usuario ADM, usuario sistemico, prestadores, unidade principal e perfis reservados.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado pelo Codex.
+- A proxima etapa recomendada e o teste controlado de usuario comum na conta `ID 18` e o teste controlado de `opcoes_sistema_json`.
+- O documento criado foi `docs/validacao_conta_teste_id18_persistencia_signup.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
