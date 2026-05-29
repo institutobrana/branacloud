@@ -3468,3 +3468,14 @@ Observacoes:
 - O documento criado foi `docs/decisao_cluster17_oficial_migrar_conta13_cluster18.md`.
 - As proximas subetapas registradas sao backup, inventario, dry-run, migracao, estabilizacao e possivel desativacao/exclusao futura do cluster 18.
 - A blindagem textual/mojibake foi respeitada.
+
+## Backup dos clusters PostgreSQL 17 e 18
+
+- O backup logico dos dois clusters foi executado antes da migracao da conta `ID 13`.
+- O PostgreSQL 17 oficial foi preservado e validado com dump custom e schema textual.
+- O PostgreSQL 18 foi acessado de forma temporaria apenas para gerar o backup da conta `Paulo Gustavo ID 13`.
+- Nenhum restore, migracao ou exclusao foi executado.
+- Os arquivos de backup foram gerados localmente e nao foram versionados.
+- O documento criado foi `docs/backup_clusters_pg17_pg18_pre_migracao_conta13.md`.
+- A proxima etapa recomendada e a Subetapa B: inventario da conta `Paulo Gustavo ID 13` no cluster 18, sem migrar ainda.
+- A blindagem textual/mojibake foi respeitada.
