@@ -3523,3 +3523,14 @@ Observacoes:
 - A proxima etapa recomendada e estabilizar o PostgreSQL 17 como cluster oficial e avaliar a desativacao controlada do PostgreSQL 18 em etapa futura, apos nova autorizacao.
 - O documento criado foi `docs/validacao_manual_pos_migracao_conta13_superadmin.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Estabilizacao do PostgreSQL 17 como cluster oficial
+
+- O PostgreSQL 17 permaneceu ativo como cluster oficial na porta `5432`.
+- O PostgreSQL 18 permaneceu parado e nao assumiu a porta oficial na validacao final.
+- A conta `ID 13` e as contas `ID 17/18` continuam presentes no cluster 17.
+- A tentativa de alterar o startup type do PostgreSQL 18 para impedir inicializacao automatica foi bloqueada por permissao do Windows nesta sessao.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- A proxima etapa recomendada e um teste pos-reinicio do PC/Uvicorn para confirmar estabilidade.
+- O documento criado foi `docs/estabilizacao_postgresql17_cluster_oficial.md`.
+- A blindagem textual/mojibake foi respeitada.
