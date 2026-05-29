@@ -3457,3 +3457,14 @@ Observacoes:
 - O documento criado foi `docs/auditoria_estado_pos_reinicio_id17_id18_reapareceram.md`.
 - A proxima etapa recomendada e nao reiniciar novamente até entender a troca de cluster/instancia.
 - A blindagem textual/mojibake foi respeitada.
+
+## Decisao de oficializar o PostgreSQL 17
+
+- O usuário definiu o PostgreSQL 17 como cluster oficial.
+- O banco `brana_saas` do PostgreSQL 17 passa a ser o banco oficial.
+- A conta `Paulo Gustavo ID 13` do PostgreSQL 18 fica preservada para migração futura.
+- O cluster 18 nao sera excluido nesta etapa e permanece preservado temporariamente.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/decisao_cluster17_oficial_migrar_conta13_cluster18.md`.
+- As proximas subetapas registradas sao backup, inventario, dry-run, migracao, estabilizacao e possivel desativacao/exclusao futura do cluster 18.
+- A blindagem textual/mojibake foi respeitada.
