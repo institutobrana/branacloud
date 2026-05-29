@@ -3500,3 +3500,17 @@ Observacoes:
 - O documento criado foi `docs/plano_dry_run_migracao_conta13_pg18_para_pg17.md`.
 - A proxima etapa depende de aprovacao explicita do usuario para a Subetapa D.
 - A blindagem textual/mojibake foi respeitada.
+
+## Migracao real da conta 13 concluida
+
+- A migracao real da conta `Paulo Gustavo ID 13` do PostgreSQL 18 para o PostgreSQL 17 foi executada com sucesso dentro de transacao.
+- A estrategia `MIG-A` foi mantida, preservando `clinica_id = 13` e os vinculos diretos da conta.
+- Foi identificada durante a execucao uma dependencia externa adicional, `material` com `lista_id = 30`, e ela tambem foi migrada.
+- As tabelas principais da conta foram migradas e validadas no PostgreSQL 17 oficial.
+- `ID 17/18` e `usuarios 44/45` permaneceram presentes no cluster 17.
+- Nenhum restore, exclusao de cluster ou alteracao de codigo ocorreu.
+- O PostgreSQL 18 temporario foi parado ao final da etapa.
+- O documento criado foi `docs/migracao_conta13_pg18_para_pg17_executada.md`.
+- O registro SQL local foi `docs/migracao_executada_conta13_pg18_para_pg17.sql`.
+- A proxima etapa recomendada agora e a validacao manual do sistema pelo usuario.
+- A blindagem textual/mojibake foi respeitada.
