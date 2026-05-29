@@ -3291,6 +3291,17 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_profundo_pref_render_combos_modelos.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Implementacao minima de prefRenderCombosModelos em Preferencias / Configuracoes
+
+- A implementacao minima de `prefRenderCombosModelos` foi concluida.
+- A renderizacao visual dos combos de modelos foi delegada ao modulo existente.
+- `prefRenderCombosModelos` permaneceu como orquestrador.
+- O fallback local foi preservado.
+- Nenhuma alteracao de carregamento, payload, salvamento, `sysOpt*`, backend, banco, permissoes ou seeds foi feita.
+- Arquivos alterados: `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/fase_2b_preferencias_configuracoes_implementacao_pref_render_combos_modelos.md` e `docs/11_roadmap_desenvolvimento.md`.
+- A proxima etapa recomendada e validacao manual.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 

@@ -364,6 +364,20 @@
     return true;
   }
 
+  function prefRenderCombosModelosModal({ cboModeloAtestado, cboModeloReceita, cboModeloRecibo, cboModeloEtiqueta, cboModeloEmail, cboModeloOrcamento, cboModeloWhatsapp, modelosOptions } = {}) {
+    if (!cboModeloAtestado || !cboModeloReceita || !cboModeloRecibo || !cboModeloEtiqueta || !cboModeloEmail || !cboModeloOrcamento || !cboModeloWhatsapp) return false;
+    const opts = modelosOptions || {};
+    const render = (select, items) => prefRenderSelectOptions(select, items, { valueFrom: item => item?.id == null ? "" : item.id, labelFrom: item => item.nome || "" });
+    render(cboModeloAtestado, opts.modelo_impresso_atestados);
+    render(cboModeloReceita, opts.modelo_impresso_receitas);
+    render(cboModeloRecibo, opts.modelo_impresso_recibos);
+    render(cboModeloEtiqueta, opts.modelo_padrao_etiquetas);
+    render(cboModeloEmail, opts.modelo_texto_email_agenda);
+    render(cboModeloOrcamento, opts.modelo_padrao_orcamentos);
+    render(cboModeloWhatsapp, opts.modelo_texto_whatsapp_agenda);
+    return true;
+  }
+
   const moduleApi = Object.freeze({
     getMetadata,
     prefOdontoNorm,
@@ -387,7 +401,8 @@
     prefOdontoFindByLabel,
     prefAtualizarTituloModal,
     prefSelecionarAbaModal,
-    prefRenderCombosGeraisModal
+    prefRenderCombosGeraisModal,
+    prefRenderCombosModelosModal
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;
