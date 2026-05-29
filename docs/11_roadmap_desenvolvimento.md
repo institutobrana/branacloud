@@ -3446,3 +3446,14 @@ Observacoes:
 - O documento criado foi `docs/teste_estabilidade_banco_pre_reinicio_estado_base.md`.
 - A proxima etapa recomendada e o usuario reiniciar manualmente o PC/Uvicorn e depois executar a auditoria pos-reinicio.
 - A blindagem textual/mojibake foi respeitada.
+
+## Auditoria pos-reinicio com reaparecimento de ID 17/18
+
+- A auditoria urgente capturou o estado vivo apos o reinicio, antes de qualquer novo reinicio.
+- `ID 17` e `ID 18` reapareceram visualmente e `ID 15` sumiu visualmente.
+- O backend continua apontando para `brana_saas`, mas agora em PostgreSQL 17 com `data_directory` em `C:/Program Files/PostgreSQL/17/data`.
+- O estado mudou em relacao ao estado-base, com `ID 13` ausente e `ID 17/18` presentes.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/auditoria_estado_pos_reinicio_id17_id18_reapareceram.md`.
+- A proxima etapa recomendada e nao reiniciar novamente até entender a troca de cluster/instancia.
+- A blindagem textual/mojibake foi respeitada.
