@@ -3374,6 +3374,16 @@ Observacoes:
 - O documento criado foi `docs/validacao_conta_teste_id18_persistencia_signup.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Validacao de persistencia de usuarios nas clinicas 17 e 18
+
+- A validacao controlada foi executada por SELECT para as clinicas `17` e `18`.
+- Os usuarios de teste `mileneflor99@gmail.com` e `mileneflor17@gmail.com` foram confirmados no `brana_saas`.
+- A classificacao final ficou em `PERSIST-USERS-A` e `PERSIST-OPCOES-OK-INFORMADO`.
+- Nenhum codigo foi alterado e nenhum dado foi alterado diretamente pelo Codex.
+- A proxima etapa recomendada e, se desejado, validar persistencia apos recarga/reinicio autorizado do Uvicorn.
+- O documento criado foi `docs/validacao_persistencia_usuarios_c17_c18.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
