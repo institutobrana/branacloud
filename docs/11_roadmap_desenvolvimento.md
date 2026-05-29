@@ -3436,3 +3436,13 @@ Observacoes:
 - O documento criado foi `docs/decisao_estado_oficial_banco_atual_sem_recuperar_id17_id18.md`.
 - A proxima etapa recomendada e abrir uma auditoria curta de retomada pos-decisao antes de continuar a modularizacao.
 - A blindagem textual/mojibake foi respeitada.
+
+## Teste de estabilidade antes do reinicio
+
+- O estado-base do banco oficial `brana_saas` foi registrado antes do reinicio do PC/Uvicorn.
+- `Paulo Gustavo ID 13` segue presente e `ID 17/18` continuam ausentes.
+- `max(clinicas.id)` permanece em `15` e `max(usuarios.id)` permanece em `36`.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/teste_estabilidade_banco_pre_reinicio_estado_base.md`.
+- A proxima etapa recomendada e o usuario reiniciar manualmente o PC/Uvicorn e depois executar a auditoria pos-reinicio.
+- A blindagem textual/mojibake foi respeitada.
