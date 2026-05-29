@@ -3514,3 +3514,12 @@ Observacoes:
 - O registro SQL local foi `docs/migracao_executada_conta13_pg18_para_pg17.sql`.
 - A proxima etapa recomendada agora e a validacao manual do sistema pelo usuario.
 - A blindagem textual/mojibake foi respeitada.
+
+## Validacao manual pos-migracao da conta 13
+
+- A validacao manual administrativa da conta `Paulo Gustavo ID 13` foi aprovada pelo painel de Super ADM.
+- O usuario informou que a conta apareceu no sistema, mas nao testou o login direto do usuario final por falta de senha.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- A proxima etapa recomendada e estabilizar o PostgreSQL 17 como cluster oficial e avaliar a desativacao controlada do PostgreSQL 18 em etapa futura, apos nova autorizacao.
+- O documento criado foi `docs/validacao_manual_pos_migracao_conta13_superadmin.md`.
+- A blindagem textual/mojibake foi respeitada.
