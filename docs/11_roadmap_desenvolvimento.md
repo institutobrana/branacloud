@@ -3327,6 +3327,20 @@ Observacoes:
 - A proxima etapa recomendada e validar o historico da exclusao ou pedir identificador da eventual segunda conta ausente.
 - A blindagem textual/mojibake foi respeitada.
 
+## Nova auditoria forense com alvo corrigido de Wilker e conta de 27/05/2026
+
+- A modularizacao segue pausada durante a auditoria forense.
+- O alvo correto passou a ser `Wilker@digitalprodutora.com.br`, vinculado ao ADM da clinica `ID 17`.
+- Tambem foi investigada a conta/clinica criada em `27/05/2026`.
+- A auditoria somente leitura foi executada.
+- A clinica `ID 17` encontrada no banco atual e `Tel / institutobrana@gmail.com`, sem relacao com o alvo correto.
+- Nao foi encontrada conta criada em `27/05/2026` no conjunto consultado.
+- A classificacao registrada foi `W-D`, `C17-A`, `D27-D` e `R-C`.
+- Nao foi possivel identificar autoria para os alvos corretos nesta trilha.
+- A proxima etapa recomendada e obter identificadores adicionais da conta ou do usuario ausente.
+- O documento criado foi `docs/auditoria_forense_wilker_digitalprodutora_clinica_17_conta_2026_05_27.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
