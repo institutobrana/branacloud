@@ -3415,3 +3415,14 @@ Observacoes:
 - A proxima etapa recomendada e manter o uso operacional pausado, definir o banco correto e planejar backup/recuperacao antes de qualquer nova acao.
 - O documento criado foi `docs/auditoria_origem_estado_banco_postgres18_sumico_id17_id18.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Auditoria de bancos PostgreSQL existentes e banco ativo do Brana Cloud
+
+- A auditoria somente leitura confirmou os bancos locais `brana_saas`, `saas_local` e `postgres`.
+- O backend/Uvicorn usa `brana_saas` na configuracao atual.
+- `brana_saas` e o banco oficial aparente agora, enquanto `saas_local` e um banco separado/antigo.
+- Nao ha evidencia de mais de uma instancia PostgreSQL ativa ao mesmo tempo.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- A proxima etapa recomendada e, se `brana_saas` for o oficial, documentar essa decisao e manter o estado atual.
+- O documento criado foi `docs/auditoria_bancos_postgresql_existentes.md`.
+- A blindagem textual/mojibake foi respeitada.
