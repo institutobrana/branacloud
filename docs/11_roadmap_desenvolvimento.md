@@ -3556,3 +3556,14 @@ Observacoes:
 - Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/auditoria_retomada_pos_estabilizacao_postgresql17.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Validacao manual de prefRenderCombosModelos
+
+- A validacao manual de `prefRenderCombosModelos` foi concluida pelo usuario e passou / esta ok.
+- O recorte visual/DOM de `Preferencias / Configuracoes` ficou consolidado como validado.
+- `prefRenderCombos` e `prefRenderCombosModelos` permanecem validados de forma conservadora.
+- Nenhum codigo foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- A crise de banco/cluster segue estabilizada com PostgreSQL 17 oficial.
+- A proxima etapa recomendada passa a ser uma decisao conservadora sobre novo recorte ou retorno a matriz comparativa antes de ampliar a modularizacao.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_pref_render_combos_modelos.md`.
+- A blindagem textual/mojibake foi respeitada.
