@@ -3341,6 +3341,19 @@ Observacoes:
 - O documento criado foi `docs/auditoria_forense_wilker_digitalprodutora_clinica_17_conta_2026_05_27.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Auditoria tecnica de banco apos reinicio do Unicorn
+
+- A auditoria tecnica foi executada em leitura para verificar possivel banco incorreto, restore ou perda de persistencia apos reinicio do Unicorn.
+- O banco configurado pela aplicacao continua sendo `brana_saas` via `backend/.env`.
+- Um banco alternativo `brana_saas_test` existe no mesmo servidor, mas nao contem os dados ausentes.
+- `Wilker@digitalprodutora.com.br`, a conta de `27/05/2026` e o banco alternativo nao trouxeram o alvo correto.
+- A configuracao `ativar_controle_usuarios` permaneceu persistida como `true` nas clinicas consultadas.
+- A classificacao final ficou em `BD-A` e `BD-G`.
+- Nao houve evidencia de troca/rollback.
+- O documento criado foi `docs/auditoria_banco_pos_reinicio_unicorn_dados_nao_persistidos.md`.
+- A proxima etapa recomendada e continuar a auditoria forense de exclusao/logs com identificadores mais precisos.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
