@@ -3354,6 +3354,17 @@ Observacoes:
 - A proxima etapa recomendada e continuar a auditoria forense de exclusao/logs com identificadores mais precisos.
 - A blindagem textual/mojibake foi respeitada.
 
+## Auditoria de fluxos de persistencia de usuario, signup e opcoes do sistema
+
+- A auditoria somente leitura dos fluxos de persistencia foi executada.
+- Foram mapeados os fluxos de criacao de usuario, signup/criacao de conta e salvamento de `clinicas.opcoes_sistema_json`.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- Os principais riscos identificados foram `P1` a `P7`, com destaque para possivel sobrescrita de `opcoes_sistema_json` por estado local antigo e ausencia de logs persistidos suficientes.
+- O plano de teste controlado futuro foi preparado, mas nao executado.
+- A proxima etapa recomendada e executar o teste controlado somente com autorizacao futura.
+- O documento criado foi `docs/auditoria_fluxos_persistencia_usuario_signup_opcoes.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
