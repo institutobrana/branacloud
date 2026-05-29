@@ -3426,3 +3426,13 @@ Observacoes:
 - A proxima etapa recomendada e, se `brana_saas` for o oficial, documentar essa decisao e manter o estado atual.
 - O documento criado foi `docs/auditoria_bancos_postgresql_existentes.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Decisao de manter o banco atual
+
+- O usuario decidiu manter `brana_saas` como banco oficial do projeto.
+- `saas_local` foi tratado como banco separado e antigo, nao oficial.
+- As contas `ID 17/18` e os usuarios `44/45` nao serao recuperados nesta etapa.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/decisao_estado_oficial_banco_atual_sem_recuperar_id17_id18.md`.
+- A proxima etapa recomendada e abrir uma auditoria curta de retomada pos-decisao antes de continuar a modularizacao.
+- A blindagem textual/mojibake foi respeitada.
