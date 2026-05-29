@@ -3314,6 +3314,19 @@ Observacoes:
 - O documento criado foi `docs/auditoria_regressao_pos_pref_render_combos_modelos_conta_usuario_sumidos.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Auditoria forense de conta ausente e usuario Wilker
+
+- A pausa da modularizacao continua valendo enquanto a auditoria forense nao encerra.
+- O usuario relatou ausencia de uma conta/clinica e do usuario `Wilker`.
+- Uma auditoria somente leitura foi executada.
+- A conta/clinica identificada foi `clinica_id = 3`, nome `Wilker`, com exclusao definitiva registrada.
+- A autoria foi identificada na tabela de auditoria.
+- A modularizacao recente em `Preferencias / Configuracoes` nao mostrou relacao causal.
+- A classificacao final registrada foi `Opcao C` para `Wilker`, `Opcao E` para a conta/clinica identificada e `Opcao H` para regressao ligada as modularizacoes recentes.
+- O documento criado foi `docs/auditoria_forense_exclusao_conta_usuario_wilker.md`.
+- A proxima etapa recomendada e validar o historico da exclusao ou pedir identificador da eventual segunda conta ausente.
+- A blindagem textual/mojibake foi respeitada.
+
 
 
 
