@@ -3898,6 +3898,11 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - O proximo passo recomendado e criar uma decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
 - O novo documento de decisao e `docs/fase_2c_editor_textos_decisao_pos_validacao_toolbar_visual.md`.
+- A rodada inicial do Editor de Textos foi consolidada com revisao documental curta.
+- Foram registrados os commits `8e16fd3`, `3d5b2c8`, `27e990d` e `eb70773`.
+- A decisao final desta revisao ficou em `F2C-EDITOR-REV-E`.
+- O novo documento de revisao e `docs/fase_2c_editor_textos_revisao_curta_rodada_inicial.md`.
+- A proxima etapa recomendada e abrir uma nova matriz operacional curta da Fase 2C.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
