@@ -3908,6 +3908,18 @@ Observacoes:
 - A proxima etapa recomendada e abrir contrato especifico para o painel lateral/listagem visual do Editor de Textos.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Contrato do painel lateral/listagem visual
+
+- O contrato especifico do painel lateral/listagem visual do Editor de Textos foi aberto como continuidade da matriz curta.
+- A origem da decisao foi `F2C-CURTA-A`.
+- A frente foi tratada como visual/listagem separavel, com o painel lateral, a listagem, o shell e os estados de selecao mapeados por leitura.
+- A separacao entre visual, selecao funcional e carga remota confirmou que a primeira fronteira segura e a renderizacao visual da listagem.
+- A decisao final registrada foi `F2C-PAINEL-A`.
+- O novo documento e `docs/fase_2c_editor_textos_contrato_painel_lateral_listagem_visual.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A proxima etapa recomendada e implementar apenas a renderizacao visual/listagem do painel lateral, sem abrir os fluxos remotos ou sensiveis.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
