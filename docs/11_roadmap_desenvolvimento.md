@@ -3611,3 +3611,13 @@ Observacoes:
 - A proxima etapa recomendada e uma decisao conservadora antes de qualquer novo recorte.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_pref_render_combos_dados.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Decisao pos-validacao de prefRenderCombosDados
+
+- A decisao conservadora apos a validacao de `prefRenderCombosDados` foi registrada como `DEC-C`.
+- `Preferencias / Configuracoes` permanece consolidada como frente estavel.
+- `prefRenderCombos`, `prefRenderCombosModelos` e `prefRenderCombosDados` continuam validados de forma conservadora.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A proxima etapa recomendada e voltar para a matriz comparativa do proximo modulo ou frente candidata antes de qualquer novo avanco em `Preferencias / Configuracoes`.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_pref_render_combos_dados.md`.
+- A blindagem textual/mojibake foi respeitada.
