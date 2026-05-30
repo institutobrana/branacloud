@@ -3706,3 +3706,14 @@ Observacoes:
 - A próxima etapa recomendada é manter esse contrato como base e não avançar automaticamente para requestJson, payload, salvamento ou calendário.
 - O documento criado foi `docs/fase_2b_convenios_planos_contrato_profundo_recorte_inicial.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Contrato específico de lista e seleção visual
+
+- O contrato específico de `Convênios e Planos` reduziu o recorte ao menor núcleo seguro.
+- O mapeamento técnico confirmou o bloco principal em `frontend/app.js` e o módulo passivo [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js).
+- Os sub-recortes foram comparados e a decisão específica foi `CONVPLAN-ESPEC-A`.
+- O recorte futuro permitido ficou restrito apenas à renderização visual das listas.
+- Seleção, shell, wiring, requestJson, payload, salvamento, exclusão e calendário/faturamento ficaram fora do recorte imediato.
+- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/fase_2b_convenios_planos_contrato_especifico_lista_selecao.md`.
+- A blindagem textual/mojibake foi respeitada.
