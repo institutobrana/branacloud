@@ -4000,6 +4000,19 @@ Observacoes:
 - O novo documento e `docs/fase_2c_matriz_operacional_curta_pos_revisao_estrategica.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Prestadores - Contrato da listagem, painel e filtros locais
+
+- `Prestadores` foi confirmado como modulo comum/core nesta rodada.
+- A origem da decisao foi `F2C-CURTA2-B`.
+- O mapa tecnico destacou `frontend/app.js` como fachada atual e `frontend/js/modules/prestadores.js` como namespace passivo ja existente.
+- O contrato documental uniu listagem/painel e filtros locais simples como fronteira segura para o proximo passo.
+- A avaliacao comparou `PREST-F2C-1` a `PREST-F2C-5` e descartou selecao funcional, carga remota, payload, salvamento e demais fluxos sensiveis.
+- A decisao final registrada foi `F2C-PREST-C`.
+- O novo documento e `docs/fase_2c_prestadores_contrato_listagem_painel_filtros_locais.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A proxima etapa recomendada e manter o contrato documentado pronto para eventual implementacao real do bloco visual/painel + filtros locais simples, com backup controlado antes de qualquer codigo.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
