@@ -3681,3 +3681,15 @@ Observacoes:
 - Nenhum codigo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_prestadores_decisao_pos_validacao_lista_selecao_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Matriz curta apos Prestadores lista e selecao visual
+
+- A matriz curta pos-`Prestadores` foi registrada em risco medio controlado.
+- `Prestadores` ficou consolidado como parcialmente validado e sem novo recorte automatico.
+- Os candidatos comparados incluíram `Prestadores`, `Cadastros auxiliares`, `Etiquetas`, `Convenios e Planos`, `Plano de contas`, `Medicamentos`, `Conta corrente`, `Preferencias / Configuracoes`, `Usuarios/Admin` e `Relatorios` / `Agenda principal`.
+- A decisao registrada foi `MATRIZ-POS-PREST-C`.
+- A proxima frente recomendada e `Convenios e Planos`.
+- O recorte inicial sugerido e um contrato profundo do bloco restante de lista/shell/selecao visual, sem tocar em `requestJson`, payload, salvamento, exclusao, agenda/faturamento/calendario, backend, banco ou permissões.
+- Nenhum codigo foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/fase_2b_matriz_curta_pos_prestadores_lista_selecao.md`.
+- A blindagem textual/mojibake foi respeitada.
