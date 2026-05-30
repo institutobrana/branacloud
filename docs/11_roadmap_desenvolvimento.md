@@ -3885,9 +3885,13 @@ Observacoes:
 - A decisao final registrada foi `F2C-EDITOR-DEC-B`.
 - A proxima etapa recomendada e abrir um contrato especifico para toolbar/acoes visuais antes de qualquer nova implementacao.
 - O contrato especifico de toolbar/acoes visuais foi aberto com a decisao `F2C-TOOLBAR-A`, focando apenas a atualizacao visual da toolbar como passo futuro controlado.
+- A implementacao da atualizacao visual da toolbar foi concluida com reducao real de `frontend/app.js` e concentracao do algoritmo visual em `frontend/js/modules/editor_textos_bootstrap.js`.
+- Foi criado backup controlado em `backups_modularizacao/fase_2c/editor_textos_toolbar_visual/` antes da alteracao.
+- Nenhum codigo funcional fora do recorte foi alterado: `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, PDF, assinatura, handlers de edicao e permissões permaneceram fora.
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - O documento criado foi `docs/fase_2c_editor_textos_decisao_pos_validacao_bootstrap_shell_visual.md`.
 - O novo documento de toolbar e `docs/fase_2c_editor_textos_contrato_toolbar_acoes_visuais.md`.
+- O novo documento de implementacao e `docs/fase_2c_editor_textos_implementacao_toolbar_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
