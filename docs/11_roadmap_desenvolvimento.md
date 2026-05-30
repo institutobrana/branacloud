@@ -3956,6 +3956,17 @@ Observacoes:
 - O novo documento e `docs/fase_2c_editor_textos_decisao_pos_validacao_painel_lateral_listagem_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Revisao curta das tres extracoes reais
+
+- A revisao documental curta consolidando as tres extracoes reais do Editor de Textos foi registrada.
+- Os commits principais consolidados foram `8e16fd3`, `3d5b2c8`, `27e990d`, `eb70773`, `a405449` e `3f7b77b`.
+- Os backups consolidados foram `backups_modularizacao/fase_2c/editor_textos_bootstrap_shell_visual/`, `backups_modularizacao/fase_2c/editor_textos_toolbar_visual/` e `backups_modularizacao/fase_2c/editor_textos_painel_lateral_listagem_visual/`.
+- A decisao final foi `F2C-EDITOR-REV3-E`.
+- A recomendacao registrada foi fazer revisao geral da Fase 2C antes de qualquer novo recorte.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_editor_textos_revisao_curta_tres_extracoes_reais.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
