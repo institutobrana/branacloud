@@ -3920,6 +3920,19 @@ Observacoes:
 - A proxima etapa recomendada e implementar apenas a renderizacao visual/listagem do painel lateral, sem abrir os fluxos remotos ou sensiveis.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Implementacao painel lateral / listagem visual
+
+- A renderizacao visual/listagem do painel lateral do Editor de Textos foi implementada como extracao real.
+- A origem da decisao foi `F2C-PAINEL-A`.
+- A logica de listagem foi concentrada no helper passivo `panelRenderListaAbertura` em `frontend/js/modules/editor_textos_bootstrap.js`.
+- `frontend/app.js` passou a atuar como fachada defensiva, preservando fallback local.
+- A reducao real de `frontend/app.js` foi confirmada.
+- O backup controlado foi criado em `backups_modularizacao/fase_2c/editor_textos_painel_lateral_listagem_visual/`.
+- Nao houve alteracao em `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, exclusao, PDF, assinatura, carga remota, selecao funcional ou permissões.
+- O novo documento e `docs/fase_2c_editor_textos_implementacao_painel_lateral_listagem_visual.md`.
+- A proxima etapa recomendada e teste manual pelo usuario antes de qualquer novo avanco.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.

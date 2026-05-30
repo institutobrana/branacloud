@@ -21052,10 +21052,44 @@ function editorTextosOpenContextoMostrarPropriedades(){
     `Origem: ${origem}`
   );
 }
+function editorTextosOpenNormalizarExtensao(item){
+  const extRaw=String(item?.extensao||"").trim().toLowerCase();
+  if(extRaw)return extRaw.startsWith(".")?extRaw:`.${extRaw}`;
+  const nomeArquivo=String(item?.nome_arquivo||"").trim().toLowerCase();
+  const idx=nomeArquivo.lastIndexOf(".");
+  return idx>=0?nomeArquivo.slice(idx):"";
+}
+function editorTextosOpenCorrespondeTipo(item,tipo){
+  const ext=editorTextosOpenNormalizarExtensao(item);
+  if(tipo==="rich")return ext===".rtf";
+  if(tipo==="text")return ext===".txt";
+  if(tipo==="model")return ext===".mod";
+  return true;
+}
 function editorTextosRenderListaAbertura(){
-  const painel=window.BranaEditorTextosPanelModule||window.BranaEditorTextosBootstrapModule?.panel;
-  if(painel?.renderListaAbertura?.(editorTextosCfg,{ocultarContexto:editorTextosOpenOcultarContexto}))return;
-  painel?.renderListaAberturaFallback?.(editorTextosCfg,{ocultarContexto:editorTextosOpenOcultarContexto});
+  if(!editorTextosCfg?.openTbody)return;
+  editorTextosOpenOcultarContexto();
+  const filtroTipo=String(editorTextosCfg.openTipo?.value||"rich").trim().toLowerCase();
+  const termo=String(editorTextosCfg.openQ?.value||"").trim().toLowerCase();
+  const itens=(Array.isArray(editorTextosCfg.itens)?editorTextosCfg.itens:[]).filter(item=>{
+    const matchTermo=!termo
+      ||String(item?.nome||"").toLowerCase().includes(termo)
+      ||String(item?.tipo_modelo||"").toLowerCase().includes(termo)
+      ||String(item?.nome_arquivo||"").toLowerCase().includes(termo);
+    if(!matchTermo)return false;
+    return editorTextosOpenCorrespondeTipo(item,filtroTipo);
+  });
+  const selectedId=Number(editorTextosCfg.openSelId||0)||0;
+  if(selectedId>0&&!itens.some(item=>Number(item?.id||0)===selectedId))editorTextosCfg.openSelId=null;
+  if(!itens.length){
+    editorTextosCfg.openTbody.innerHTML='<tr class="empty"><td colspan="3">Nenhum modelo encontrado.</td></tr>';
+    return;
+  }
+  editorTextosCfg.openTbody.innerHTML=itens.map(item=>{
+    const id=Number(item?.id||0);
+    const selected=id>0&&id===Number(editorTextosCfg.openSelId||0);
+    return `<tr data-id="${id}" class="${selected?"selected":""}"><td>${esc(String(item?.nome||""))}</td><td>${esc(String(item?.tipo_modelo||""))}</td><td>${item?.sistema?"Base":"Clinica"}</td></tr>`;
+  }).join("");
 }
 function editorTextosMesclagemNormalizarCategorias(campos,categoriasRaw){
   if(Array.isArray(categoriasRaw)&&categoriasRaw.length){

@@ -1154,50 +1154,6 @@
     return shell;
   }
 
-  function panelNormalizarExtensao(item){
-    const extRaw=String(item?.extensao||"").trim().toLowerCase();
-    if(extRaw)return extRaw.startsWith(".")?extRaw:`.${extRaw}`;
-    const nomeArquivo=String(item?.nome_arquivo||"").trim().toLowerCase();
-    const idx=nomeArquivo.lastIndexOf(".");
-    return idx>=0?nomeArquivo.slice(idx):"";
-  }
-
-  function panelCorrespondeTipo(item,tipo){
-    const ext=panelNormalizarExtensao(item);
-    if(tipo==="rich")return ext===".rtf";
-    if(tipo==="text")return ext===".txt";
-    if(tipo==="model")return ext===".mod";
-    return true;
-  }
-
-  function panelRenderListaAbertura(cfg,deps={}){
-    if(!cfg?.openTbody)return false;
-    const ocultarContexto=typeof deps.ocultarContexto==="function"?deps.ocultarContexto:null;
-    if(ocultarContexto)ocultarContexto();
-    const filtroTipo=String(cfg.openTipo?.value||"rich").trim().toLowerCase();
-    const termo=String(cfg.openQ?.value||"").trim().toLowerCase();
-    const itens=(Array.isArray(cfg.itens)?cfg.itens:[]).filter(item=>{
-      const matchTermo=!termo
-        ||String(item?.nome||"").toLowerCase().includes(termo)
-        ||String(item?.tipo_modelo||"").toLowerCase().includes(termo)
-        ||String(item?.nome_arquivo||"").toLowerCase().includes(termo);
-      if(!matchTermo)return false;
-      return panelCorrespondeTipo(item,filtroTipo);
-    });
-    const selectedId=Number(cfg.openSelId||0)||0;
-    if(selectedId>0&&!itens.some(item=>Number(item?.id||0)===selectedId))cfg.openSelId=null;
-    if(!itens.length){
-      cfg.openTbody.innerHTML='<tr class="empty"><td colspan="3">Nenhum modelo encontrado.</td></tr>';
-      return true;
-    }
-    cfg.openTbody.innerHTML=itens.map(item=>{
-      const id=Number(item?.id||0);
-      const selected=id>0&&id===Number(cfg.openSelId||0);
-      return `<tr data-id="${id}" class="${selected?"selected":""}"><td>${escHtml(String(item?.nome||""))}</td><td>${escHtml(String(item?.tipo_modelo||""))}</td><td>${item?.sistema?"Base":"Clinica"}</td></tr>`;
-    }).join("");
-    return true;
-  }
-
   function toolbarSetButtonAtivo(btn,ativo){
     if(!(btn instanceof HTMLElement))return false;
     const on=!!ativo;
@@ -1344,14 +1300,6 @@
     sincronizarToolbarFormato:toolbarSincronizarToolbarFormato
   });
 
-  const panelApi=Object.freeze({
-    normalizarExtensao:panelNormalizarExtensao,
-    correspondeTipo:panelCorrespondeTipo,
-    renderListaAbertura:panelRenderListaAbertura,
-    renderListaAberturaFallback:panelRenderListaAbertura
-  });
-
   window.BranaEditorTextosToolbarModule=toolbarApi;
-  window.BranaEditorTextosPanelModule=panelApi;
-  window.BranaEditorTextosBootstrapModule=Object.freeze({ensureUI,toolbar:toolbarApi,panel:panelApi});
+  window.BranaEditorTextosBootstrapModule=Object.freeze({ensureUI,toolbar:toolbarApi});
 })();
