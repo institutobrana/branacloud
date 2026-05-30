@@ -3836,3 +3836,15 @@ Observacoes:
 - A próxima decisao recomendada e manter a pausa ate nova autorizacao ou nova analise documental.
 - O documento criado foi `docs/fase_2b_revisao_documental_geral_pos_matriz_conv_plan.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
+
+- O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
+- A frente foi tratada como `comum/core transversal`.
+- O mapa de leitura registrou `frontend/app.js`, `frontend/js/modules/anamnese.js`, `backend/routes/cadastros_routes.py` e `backend/routes/anamnese_routes.py` por leitura apenas.
+- A superficie funcional foi considerada ampla e fortemente acoplada a shell, menu de pacientes, busca, foto, convenios/planos, unidades, anamnese, historico, agenda e financeiro.
+- A decisao registrada foi `FICHA-CONTRATO-D`.
+- A recomendacao final e manter a pausa da frente e retomar apenas com novo contrato extremamente pequeno ou nova matriz comparativa.
+- Nenhum codigo, banco, backend, HTML, migration, seed ou permissao foi alterado nesta etapa documental.
+- O documento criado foi `docs/fase_2b_ficha_pessoal_contrato_profundo_modulo_core.md`.
+- A blindagem textual/mojibake foi respeitada.
