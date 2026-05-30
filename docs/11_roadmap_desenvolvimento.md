@@ -3862,6 +3862,18 @@ Observacoes:
 - A próxima etapa recomendada e o teste manual do usuario antes de qualquer novo avanco.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Validacao bootstrap/shell visual
+
+- A validacao manual da primeira implementacao real da Fase 2C foi aprovada pelo usuario.
+- O modulo validado foi o `Editor de Textos`.
+- O fluxo validado foi o bootstrap/shell visual.
+- O commit validado foi `8e16fd3`.
+- O relato do usuario foi: `testes passaram, tudo ok, nao encontrei problemas`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A proxima etapa recomendada e criar uma decisao pos-validacao antes de novo recorte da Fase 2C.
+- O documento criado foi `docs/fase_2c_editor_textos_validacao_bootstrap_shell_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
