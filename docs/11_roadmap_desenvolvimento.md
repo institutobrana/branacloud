@@ -44,6 +44,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A Subetapa 8V-A auditou o setup para usuarios criados posteriormente e confirmou que o gatilho atual esta no `setup_completed` do proprio usuario.
 - A Subetapa 8V-B implementou a menor correcao segura para que usuarios criados posteriormente nascam com `setup_completed = True`.
 - Auditoria documental da regra usuario -> prestador Clinica concluida: o combo de usuarios carrega o prestador sistêmico, o frontend nao filtra esse item e o backend bloqueia o vínculo em `_load_prestador_from_same_clinic()`; o banco confirmou o par usuario/prestador sistemico nas clinicas 1, 4, 13, 17 e 18; classificacao preliminar `REGRA-B + REGRA-F`; proxima etapa recomendada: comparar com EasyDental virgem antes de qualquer correção.
+- Comparacao EasyDental virgem concluida com fonte local somente leitura (`PROJETO_PRECIFICACAO_LEGADO\\Dados`, `eds70.sql`, `Dist\\USUARIO.raw`, `Dist\\PRESTADOR.raw`, `Dist\\UNIDADE.raw`, `Dist\\SISTEMA.raw` e `D:\\UTIL\\EasyDental_7.6_BR\\Readme.doc`): o legado confirma `Clínica` como prestador sistemico protegido, mas também confirma o vinculo operacional usuario/prestador e o uso desse contexto para agenda/conta da clinica; classificacao `EASY-A + REGRA-A + REGRA-F`; proxima etapa recomendada: abrir contrato de correção pequena no backend para permitir o vínculo operacional sem mexer na protecao estrutural.
 
 ## Proximas prioridades sugeridas
 
