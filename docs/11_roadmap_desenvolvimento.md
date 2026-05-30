@@ -3944,6 +3944,18 @@ Observacoes:
 - O proximo passo recomendado e criar decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Decisao pos-validacao do painel lateral / listagem visual
+
+- A decisao pos-validacao do painel lateral/listagem visual do Editor de Textos foi registrada.
+- O commit da implementacao validada foi `a405449`.
+- O commit da validacao manual foi `3f7b77b`.
+- O relato do usuario foi `TESTES PASSARAM, TUDO OK`.
+- A decisao final foi `F2C-EDITOR-PAINEL-DEC-D`.
+- A recomendacao registrada foi fazer revisao documental curta consolidando as tres extracoes reais antes de qualquer novo recorte.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_editor_textos_decisao_pos_validacao_painel_lateral_listagem_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
