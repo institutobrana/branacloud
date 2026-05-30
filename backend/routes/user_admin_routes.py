@@ -379,6 +379,28 @@ def _load_prestador_from_same_clinic(db: Session, clinica_id: int, row_id: int |
     return prestador
 
 
+def _load_prestador_for_user_link_from_same_clinic(db: Session, clinica_id: int, row_id: int | None) -> PrestadorOdonto | None:
+    if row_id is None:
+        return None
+    try:
+        row_id_int = int(row_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Prestador invalido.")
+    if row_id_int <= 0:
+        return None
+    prestador = (
+        db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.id == row_id_int,
+            PrestadorOdonto.clinica_id == clinica_id,
+        )
+        .first()
+    )
+    if not prestador:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    return prestador
+
+
 def _load_unidade_from_same_clinic(db: Session, clinica_id: int, row_id: int | None) -> UnidadeAtendimento | None:
     if row_id is None:
         return None
@@ -553,7 +575,7 @@ def admin_create_user(
         raise HTTPException(status_code=400, detail="Código 255 é reservado para a conta base 'Clínica'.")
     _ensure_codigo_disponivel(db, current_user.clinica_id, codigo)
     _ensure_nome_disponivel(db, current_user.clinica_id, payload.nome)
-    prestador = _load_prestador_from_same_clinic(db, current_user.clinica_id, payload.prestador_row_id)
+    prestador = _load_prestador_for_user_link_from_same_clinic(db, current_user.clinica_id, payload.prestador_row_id)
     unidade = _load_unidade_from_same_clinic(db, current_user.clinica_id, payload.unidade_row_id)
 
     email = _resolve_email_for_new_user(
@@ -603,7 +625,7 @@ def admin_update_user(
     usuario = _load_user_from_same_clinic(db, current_user, user_id)
     _assert_not_system_user(usuario)
     _validate_nome_disponivel_for_update(db, current_user.clinica_id, user_id, payload.nome)
-    prestador = _load_prestador_from_same_clinic(db, current_user.clinica_id, payload.prestador_row_id)
+    prestador = _load_prestador_for_user_link_from_same_clinic(db, current_user.clinica_id, payload.prestador_row_id)
     unidade = _load_unidade_from_same_clinic(db, current_user.clinica_id, payload.unidade_row_id)
     tipo_usuario_normalizado = normalize_tipo_usuario(_clean_text(payload.tipo_usuario, 80))
     usuario.nome = payload.nome.strip()
