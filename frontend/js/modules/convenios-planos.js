@@ -68,6 +68,24 @@
     };
   }
 
+  function resolverShellVisualContainers() {
+    return Object.freeze({
+      panelId: "convenios-planos-panel",
+      tbConveniosId: "convplan-tb-convenios",
+      tbPlanosId: "convplan-tb-planos",
+      totalConveniosId: "convplan-total-convenios",
+      totalPlanosId: "convplan-total-planos",
+      btnNovoConvenioId: "convplan-btn-novo-convenio",
+      btnEditarConvenioId: "convplan-btn-editar-convenio",
+      btnExcluirConvenioId: "convplan-btn-excluir-convenio",
+      btnCalendarioId: "convplan-btn-calendario",
+      btnNovoPlanoId: "convplan-btn-novo-plano",
+      btnEditarPlanoId: "convplan-btn-editar-plano",
+      btnExcluirPlanoId: "convplan-btn-excluir-plano",
+      btnFecharId: "convplan-btn-fechar",
+    });
+  }
+
   const helpers = Object.freeze({
     normalizarNomeConvenio,
     validarNomeConvenio,
@@ -77,6 +95,7 @@
     escHtml,
     montarLinhasConvenios,
     montarLinhasPlanos,
+    resolverShellVisualContainers,
   });
 
   const meta = Object.freeze({

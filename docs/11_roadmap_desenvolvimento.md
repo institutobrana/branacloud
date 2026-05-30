@@ -3783,3 +3783,14 @@ Observacoes:
 - Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_shell_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Implementacao minima do shell visual de containers
+
+- A implementacao minima do helper visual/passivo de containers foi concluida para `Convênios e Planos`.
+- A origem da decisao foi `CONVPLAN-SHELL-A`.
+- O helper passivo `resolverShellVisualContainers` foi criado em [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js).
+- `frontend/app.js` passou a consultar o helper de forma defensiva e manteve fallback local equivalente.
+- Nenhum backend, banco, [`frontend/index.html`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\index.html), `requestJson`, payload, salvamento, exclusao, calendario/faturamento ou permissao foi alterado.
+- O proximo passo recomendado e validacao manual pelo usuario antes de qualquer novo avanço.
+- O documento criado foi `docs/fase_2b_convenios_planos_implementacao_shell_visual_containers.md`.
+- A blindagem textual/mojibake foi respeitada.
