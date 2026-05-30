@@ -3761,3 +3761,14 @@ Observacoes:
 - Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_decisao_pos_validacao_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Microcontrato de seleção visual
+
+- A seleção visual de `Convênios e Planos` foi avaliada após a renderização das listas.
+- `convPlanSelecionarConvenio` e `convPlanSelecionarPlano` foram mapeadas como acopladas ao estado funcional da frente.
+- A seleção visual ficou considerada acoplada demais para um recorte isolado seguro nesta etapa.
+- A decisão registrada foi `CONVPLAN-SEL-D`.
+- O próximo candidato recomendado é shell visual ou filtros locais, caso venha um novo contrato.
+- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_selecao_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
