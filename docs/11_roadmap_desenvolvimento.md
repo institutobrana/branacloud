@@ -3894,8 +3894,10 @@ Observacoes:
 - O novo documento de implementacao e `docs/fase_2c_editor_textos_implementacao_toolbar_visual.md`.
 - A validacao manual da toolbar visual foi aprovada com o relato do usuario `PASSOU SEM PROBLEMAS`.
 - O commit validado foi `27e990d`.
+- A decisao pos-validacao da toolbar visual foi registrada com a decisao final `F2C-EDITOR-TOOLBAR-DEC-E`.
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - O proximo passo recomendado e criar uma decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
+- O novo documento de decisao e `docs/fase_2c_editor_textos_decisao_pos_validacao_toolbar_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
