@@ -63,6 +63,19 @@
     };
   }
 
+  function prestSelecionarLinhaVisual(tbody, selId) {
+    const root = tbody && typeof tbody.querySelectorAll === "function" ? tbody : null;
+    if (!root) return false;
+    const alvo = Number(selId || 0);
+    let encontrou = false;
+    root.querySelectorAll("tr[data-id]").forEach((tr) => {
+      const selecionado = Number(tr?.dataset?.id || 0) === alvo;
+      tr.classList.toggle("selected", selecionado);
+      if (selecionado) encontrou = true;
+    });
+    return encontrou;
+  }
+
   const meta = Object.freeze({
     name: MODULE_NAME,
     version: MODULE_VERSION,
@@ -87,6 +100,7 @@
       prestFiltrarLista,
       prestStatusHtml,
       prestRenderLista,
+      prestSelecionarLinhaVisual,
     };
   }
 
@@ -110,6 +124,7 @@
     prestFiltrarLista,
     prestStatusHtml,
     prestRenderLista,
+    prestSelecionarLinhaVisual,
   });
 
   window.BranaPrestadoresModule = module;

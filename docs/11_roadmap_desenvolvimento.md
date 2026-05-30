@@ -3649,3 +3649,15 @@ Observacoes:
 - A proxima etapa recomendada e manter esse recorte como base para eventual implementacao minima futura, sem abrir os fluxos de negocio sensiveis.
 - O documento criado foi `docs/fase_2b_prestadores_contrato_profundo_recorte_remanescente.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Prestadores remanescentes - Implementacao minima da lista e selecao visual
+
+- A implementacao minima de `Prestadores` foi concluida para lista e selecao visual.
+- `frontend/app.js` permaneceu como orquestrador, com delegacao visual minima para o modulo passivo `frontend/js/modules/prestadores.js`.
+- O helper `prestRenderLista` foi mantido como alvo da renderizacao visual da lista e `prestSelecionarLinhaVisual` foi adicionado para a selecao visual.
+- O fallback local foi preservado.
+- Nao houve alteracao de `prestCarregar`, `requestJson`, payload, salvamento, `prestAcoesPlaceholder`, Agenda, Convenios, Comissoes, permissões, backend ou banco.
+- Os checks tecnicos foram executados com sucesso.
+- A proxima etapa recomendada e validacao manual pos-implementacao do recorte de lista e selecao visual.
+- O documento criado foi `docs/fase_2b_prestadores_implementacao_lista_selecao_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
