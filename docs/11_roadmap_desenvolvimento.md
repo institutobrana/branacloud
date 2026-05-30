@@ -3837,6 +3837,18 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_revisao_documental_geral_pos_matriz_conv_plan.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Matriz operacional de reducao de monolitos
+
+- A Fase 2C foi aberta como estrategia de reducao real de monolitos, com risco controlado medio / medio-alto.
+- A diferenca para a Fase 2B e que agora sao aceitos recortes maiores, desde que haja fronteira clara, backup, ponto de retorno e validacao manual posterior.
+- A matriz operacional foi registrada em `docs/fase_2c_matriz_operacional_reducao_monolitos.md`.
+- A decisao da matriz foi `F2C-MATRIZ-D`.
+- O primeiro fluxo recomendado e `Editor de Textos - separacao inicial de bootstrap/shell visual`, por ser o maior bloco concentrado e ja possuir bootstrap passivo em `frontend/js/modules/editor_textos_bootstrap.js`.
+- `Agenda principal`, `Ficha pessoal`, `Convênios e Planos` e `Prestadores` permanecem como candidatos futuros, mas nao sao a primeira escolha da Fase 2C.
+- Nenhum codigo, banco, backend, HTML, migration, seed ou permissao foi alterado nesta etapa documental.
+- A proxima etapa recomendada e criar um documento de implementacao do primeiro fluxo real da Fase 2C e, depois, sua validacao manual.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
