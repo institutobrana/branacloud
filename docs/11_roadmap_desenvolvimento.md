@@ -3577,3 +3577,15 @@ Observacoes:
 - A proxima etapa recomendada e abrir contrato profundo antes de qualquer novo recorte; se o proximo recorte parecer arriscado, reavaliar matriz comparativa antes de implementar qualquer coisa.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_pref_render_combos_modelos.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Contrato profundo apos prefRenderCombosModelos
+
+- O contrato profundo apos `prefRenderCombosModelos` foi aberto sem implementacao de codigo.
+- O bloco remanescente de `Preferencias / Configuracoes` foi mapeado.
+- Os candidatos avaliados foram registrados com risco, beneficio e decisao.
+- A decisao do contrato foi `CONTRATO-A`.
+- O recorte recomendado para futura implementacao e `prefRenderCombosDados`.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A proxima etapa recomendada e seguir o contrato pequeno recomendado, mantendo as fronteiras proibidas fora do escopo.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_profundo_pos_pref_render_combos_modelos.md`.
+- A blindagem textual/mojibake foi respeitada.
