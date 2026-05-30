@@ -3815,3 +3815,14 @@ Observacoes:
 - A próxima etapa recomendada é voltar para a matriz comparativa da Fase 2B antes de abrir qualquer novo recorte nesta frente.
 - O documento criado foi `docs/fase_2b_convenios_planos_decisao_pos_validacao_shell_visual_containers.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Matriz comparativa pos Convênios e Planos
+
+- A matriz comparativa da Fase 2B foi aberta apos a pausa de `Convênios e Planos`.
+- A decisao anterior consolidada foi `CONVPLAN-SHELL-DEC-C`.
+- As frentes candidatas foram reavaliadas com foco em risco relativo, clareza de fronteira e possibilidade de recorte seguro.
+- A decisao final registrada foi `MATRIZ-POS-CONV-C`.
+- A Fase 2B tecnica permanece pausada por ora para revisao documental geral antes de qualquer novo recorte.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O documento criado foi `docs/fase_2b_matriz_comparativa_pos_convenios_planos.md`.
+- A blindagem textual/mojibake foi respeitada.
