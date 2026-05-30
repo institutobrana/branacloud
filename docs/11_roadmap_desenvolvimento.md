@@ -3631,3 +3631,15 @@ Observacoes:
 - O recorte inicial sugerido e um contrato profundo muito pequeno, primeiro sobre a parte restante de lista/selecao/acoes, sem tocar em `requestJson`, payload, agenda, convenios, comissoes ou mutacao funcional.
 - O documento criado foi `docs/fase_2b_matriz_comparativa_pos_preferencias_configuracoes.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Prestadores remanescentes - Contrato profundo do recorte remanescente
+
+- O contrato profundo de `Prestadores remanescentes` foi criado como etapa exclusivamente documental.
+- O estado atual de `Prestadores` foi reavaliado com foco em `frontend/app.js` e no modulo passivo `frontend/js/modules/prestadores.js`.
+- A matriz de risco separou lista/render, selecao e shell visual das areas sensiveis de `requestJson`, payload, salvamento, agenda, convenios, comissoes, permissao, backend e banco.
+- A decisao registrada foi `PREST-CONTRATO-A`.
+- O recorte recomendado e o contrato minimo de lista e selecao visual.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A proxima etapa recomendada e manter esse recorte como base para eventual implementacao minima futura, sem abrir os fluxos de negocio sensiveis.
+- O documento criado foi `docs/fase_2b_prestadores_contrato_profundo_recorte_remanescente.md`.
+- A blindagem textual/mojibake foi respeitada.
