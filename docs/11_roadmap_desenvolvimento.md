@@ -3751,3 +3751,13 @@ Observacoes:
 - A próxima etapa recomendada é uma decisão conservadora antes de qualquer novo recorte.
 - O documento criado foi `docs/fase_2b_convenios_planos_validacao_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Decisão pós-validação da renderização de listas
+
+- `Convênios e Planos` permanece consolidado como frente parcialmente validada.
+- Os candidatos restantes foram reavaliados e separados entre apoio visual local, eventos/wiring e áreas sensíveis.
+- A decisão conservadora registrada foi `CONVPLAN-DEC-C`.
+- A próxima ação recomendada é exigir novo microcontrato antes de qualquer avanço adicional.
+- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/fase_2b_convenios_planos_decisao_pos_validacao_render_listas.md`.
+- A blindagem textual/mojibake foi respeitada.
