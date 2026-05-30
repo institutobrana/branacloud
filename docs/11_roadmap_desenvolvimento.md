@@ -3978,6 +3978,16 @@ Observacoes:
 - O novo documento e `docs/fase_2c_revisao_geral_pos_editor_textos_tres_extracoes.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Revisao estrategica pos-rodada do Editor de Textos
+
+- A revisao estrategica da Fase 2C foi registrada apos a consolidacao da rodada do Editor de Textos.
+- A consolidacao incluiu os resultados da Fase 2C ate aqui.
+- A decisao final foi `F2C-ESTRAT-D`.
+- A recomendacao registrada foi abrir nova matriz operacional curta da Fase 2C.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_revisao_estrategica_pos_editor_textos.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
