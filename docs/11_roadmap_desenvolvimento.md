@@ -3967,6 +3967,17 @@ Observacoes:
 - O novo documento e `docs/fase_2c_editor_textos_revisao_curta_tres_extracoes_reais.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Revisao geral apos tres extracoes reais do Editor de Textos
+
+- A revisao geral da Fase 2C foi registrada apos tres extracoes reais validadas do Editor de Textos.
+- A consolidacao incluiu os commits `7760283`, `8e16fd3`, `3d5b2c8`, `27e990d`, `eb70773`, `a405449`, `3f7b77b` e `72b0e5c`.
+- O estado da Fase 2C ficou consolidado como estrategia comprovada de reducao real de monolitos.
+- A decisao final foi `F2C-GERAL-E`.
+- A recomendacao registrada foi fazer nova revisao estrategica antes de abrir novo recorte.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_revisao_geral_pos_editor_textos_tres_extracoes.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
