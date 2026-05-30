@@ -3804,3 +3804,14 @@ Observacoes:
 - O próximo passo recomendado é criar uma decisão pós-validação antes de qualquer novo avanço.
 - O documento criado foi `docs/fase_2b_convenios_planos_validacao_shell_visual_containers.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Decisao pos-validacao do shell visual de containers
+
+- A decisão pós-validacao do shell visual/containers de `Convênios e Planos` foi registrada.
+- A validação manual foi aprovada pelo usuário.
+- O relato do usuário foi: `PASSOU ESTA OK`.
+- A decisão final registrada foi `CONVPLAN-SHELL-DEC-C`.
+- Nenhum código ou banco foi alterado nesta etapa documental.
+- A próxima etapa recomendada é voltar para a matriz comparativa da Fase 2B antes de abrir qualquer novo recorte nesta frente.
+- O documento criado foi `docs/fase_2b_convenios_planos_decisao_pos_validacao_shell_visual_containers.md`.
+- A blindagem textual/mojibake foi respeitada.
