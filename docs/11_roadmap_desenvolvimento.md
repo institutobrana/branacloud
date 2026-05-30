@@ -3717,3 +3717,15 @@ Observacoes:
 - Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_contrato_especifico_lista_selecao.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Microcontrato de renderização de listas
+
+- O microcontrato de `Convênios e Planos` fechou o recorte futuro mínimo para a renderização visual das listas.
+- O mapeamento técnico confirmou que `convPlanRenderConvenios` e `convPlanRenderPlanos` são simétricas e podem avançar juntas com helpers passivos equivalentes.
+- Os micro-recortes avaliados foram `MICRO 1`, `MICRO 2`, `MICRO 3` e `MICRO 4`.
+- A decisão registrada foi `CONVPLAN-MICRO-C`.
+- A fronteira futura permitida ficou restrita a `convPlanRenderConvenios`, `convPlanRenderPlanos`, `montarLinhasConvenios` e `montarLinhasPlanos`.
+- Seleção, shell, wiring, `requestJson`, payload, salvamento, exclusão, calendário/faturamento, backend, banco e permissões ficaram fora do recorte imediato.
+- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_render_listas.md`.
+- A blindagem textual/mojibake foi respeitada.
