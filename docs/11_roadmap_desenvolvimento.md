@@ -3849,6 +3849,19 @@ Observacoes:
 - A proxima etapa recomendada e criar um documento de implementacao do primeiro fluxo real da Fase 2C e, depois, sua validacao manual.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Implementacao bootstrap/shell visual
+
+- A primeira implementacao real da Fase 2C foi executada no `Editor de Textos`.
+- A origem da decisao foi `F2C-MATRIZ-D`.
+- O fluxo implementado foi a separacao inicial de bootstrap/shell visual.
+- `frontend/app.js` foi reduzido de forma real, deixando de concentrar o bloco grande de bootstrap inicial do editor.
+- `frontend/js/modules/editor_textos_bootstrap.js` passou a concentrar a inicializacao visual/base do editor.
+- Um backup controlado foi criado antes da alteracao em `backups_modularizacao/fase_2c/editor_textos_bootstrap_shell_visual/`.
+- Nenhum backend, banco, `frontend/index.html`, `requestJson`, payload, salvamento, PDF, assinatura ou permissao foi alterado nesta etapa.
+- O documento criado foi `docs/fase_2c_editor_textos_implementacao_bootstrap_shell_visual.md`.
+- A próxima etapa recomendada e o teste manual do usuario antes de qualquer novo avanco.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
