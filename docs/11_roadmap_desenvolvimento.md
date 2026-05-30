@@ -3621,3 +3621,13 @@ Observacoes:
 - A proxima etapa recomendada e voltar para a matriz comparativa do proximo modulo ou frente candidata antes de qualquer novo avanco em `Preferencias / Configuracoes`.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_pref_render_combos_dados.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Matriz comparativa pos-Preferencias / Configuracoes
+
+- A matriz comparativa apos a consolidacao de `Preferencias / Configuracoes` foi executada sem alterar codigo ou banco.
+- As frentes comparadas foram registradas com classificacao multiarea, risco, beneficio, facilidade de teste e recomendacao.
+- A decisao da matriz foi `MATRIZ-B`.
+- A proxima frente recomendada e `Prestadores remanescentes`.
+- O recorte inicial sugerido e um contrato profundo muito pequeno, primeiro sobre a parte restante de lista/selecao/acoes, sem tocar em `requestJson`, payload, agenda, convenios, comissoes ou mutacao funcional.
+- O documento criado foi `docs/fase_2b_matriz_comparativa_pos_preferencias_configuracoes.md`.
+- A blindagem textual/mojibake foi respeitada.
