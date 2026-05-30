@@ -3933,6 +3933,17 @@ Observacoes:
 - A proxima etapa recomendada e teste manual pelo usuario antes de qualquer novo avanco.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Validacao painel lateral / listagem visual
+
+- A validacao manual da implementacao do painel lateral/listagem visual do Editor de Textos foi aprovada pelo usuario.
+- A origem da decisao foi `F2C-PAINEL-A`.
+- O commit validado foi `a405449`.
+- O relato do usuario foi `TESTES PASSARAM, TUDO OK`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_editor_textos_validacao_painel_lateral_listagem_visual.md`.
+- O proximo passo recomendado e criar decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
