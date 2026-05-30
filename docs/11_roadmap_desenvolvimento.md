@@ -3693,3 +3693,16 @@ Observacoes:
 - Nenhum codigo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_matriz_curta_pos_prestadores_lista_selecao.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Contrato profundo do recorte inicial
+
+- O contrato profundo de `Convênios e Planos` foi aberto como etapa exclusivamente documental.
+- O bloco atual foi mapeado em `frontend/app.js`, com funções de lista, seleção, shell, carregamento, wiring e calendário/faturamento.
+- O módulo passivo [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js) foi identificado com helpers puros de normalização, validação e montagem de linhas.
+- A matriz de risco separou lista/render, seleção, filtros, shell e modais visuais das áreas sensíveis de payload, salvamento, exclusão, calendário/faturamento, permissões, backend e banco.
+- A decisão registrada foi `CONVPLAN-CONTRATO-B`.
+- O recorte recomendado é o contrato visual mínimo de lista e seleção, com contrato ainda mais específico antes de qualquer implementação.
+- Nenhum código foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A próxima etapa recomendada é manter esse contrato como base e não avançar automaticamente para requestJson, payload, salvamento ou calendário.
+- O documento criado foi `docs/fase_2b_convenios_planos_contrato_profundo_recorte_inicial.md`.
+- A blindagem textual/mojibake foi respeitada.
