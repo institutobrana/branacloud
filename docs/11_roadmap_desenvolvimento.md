@@ -3601,3 +3601,13 @@ Observacoes:
 - A proxima etapa recomendada e validacao manual pos-implementacao.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_implementacao_pref_render_combos_dados.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Validacao manual de prefRenderCombosDados
+
+- A validacao manual de `prefRenderCombosDados` foi aprovada.
+- O recorte visual/DOM do select de UF da aba `Dados` ficou consolidado como validado.
+- `Preferencias / Configuracoes` segue estavel.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A proxima etapa recomendada e uma decisao conservadora antes de qualquer novo recorte.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_pref_render_combos_dados.md`.
+- A blindagem textual/mojibake foi respeitada.
