@@ -3848,3 +3848,15 @@ Observacoes:
 - Nenhum codigo, banco, backend, HTML, migration, seed ou permissao foi alterado nesta etapa documental.
 - O documento criado foi `docs/fase_2b_ficha_pessoal_contrato_profundo_modulo_core.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Ficha pessoal - Microcontrato de namespace passivo
+
+- O microcontrato de namespace passivo de `Ficha pessoal` foi aberto como etapa documental extremamente pequena.
+- A frente continua classificada como `comum/core`.
+- A origem da avaliacao foi `FICHA-CONTRATO-D`.
+- O mapa comparou arquivos/passivos existentes, padrao de carregamento em `frontend/index.html` e a possibilidade de futuro namespace em arquivo proprio.
+- A decisao final registrada foi `FICHA-NS-A`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O documento criado foi `docs/fase_2b_ficha_pessoal_microcontrato_namespace_passivo.md`.
+- O proximo passo recomendado e somente futuro e condicional: se autorizado, avaliar criacao do arquivo passivo vazio sem consumo imediato pelo `app.js`.
+- A blindagem textual/mojibake foi respeitada.
