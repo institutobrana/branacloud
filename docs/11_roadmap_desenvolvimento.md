@@ -3874,6 +3874,20 @@ Observacoes:
 - O documento criado foi `docs/fase_2c_editor_textos_validacao_bootstrap_shell_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Editor de Textos - Decisao pos-validacao do bootstrap/shell visual
+
+- A decisao pos-validacao da primeira implementacao real da Fase 2C foi registrada.
+- O modulo continua sendo `Editor de Textos`.
+- O fluxo validado continua sendo `bootstrap/shell visual`.
+- O commit da implementacao validada e `8e16fd3`.
+- O commit da validacao manual e `3d5b2c8`.
+- O relato do usuario foi: `testes passaram, tudo ok, nao encontrei problemas`.
+- A decisao final registrada foi `F2C-EDITOR-DEC-B`.
+- A proxima etapa recomendada e abrir um contrato especifico para toolbar/acoes visuais antes de qualquer nova implementacao.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O documento criado foi `docs/fase_2c_editor_textos_decisao_pos_validacao_bootstrap_shell_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
