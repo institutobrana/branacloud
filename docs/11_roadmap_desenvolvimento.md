@@ -3729,3 +3729,14 @@ Observacoes:
 - Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Implementação mínima da renderização de listas
+
+- A renderização visual das listas de `Convênios e Planos` foi implementada com o menor diff seguro.
+- `convPlanRenderConvenios` e `convPlanRenderPlanos` permaneceram como orquestradores em `frontend/app.js`.
+- Os helpers passivos `montarLinhasConvenios` e `montarLinhasPlanos` foram reutilizados quando disponíveis, com fallback local preservado.
+- O código alterado ficou restrito a `frontend/app.js`; o módulo passivo `frontend/js/modules/convenios-planos.js` permaneceu sem alterações.
+- Nenhum fluxo de seleção, shell, eventos, `requestJson`, payload, salvamento, exclusão, calendário/faturamento, backend ou banco foi alterado.
+- Os checks técnicos foram executados com sucesso.
+- O documento criado foi `docs/fase_2b_convenios_planos_implementacao_render_listas.md`.
+- A blindagem textual/mojibake foi respeitada.
