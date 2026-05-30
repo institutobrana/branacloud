@@ -3902,7 +3902,10 @@ Observacoes:
 - Foram registrados os commits `8e16fd3`, `3d5b2c8`, `27e990d` e `eb70773`.
 - A decisao final desta revisao ficou em `F2C-EDITOR-REV-E`.
 - O novo documento de revisao e `docs/fase_2c_editor_textos_revisao_curta_rodada_inicial.md`.
-- A proxima etapa recomendada e abrir uma nova matriz operacional curta da Fase 2C.
+- A nova matriz operacional curta foi aberta com a decisao `F2C-CURTA-A`, recomendando continuar no Editor de Textos com contrato especifico para painel lateral/listagem visual.
+- O novo documento de matriz e `docs/fase_2c_matriz_operacional_curta_pos_editor_textos.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A proxima etapa recomendada e abrir contrato especifico para o painel lateral/listagem visual do Editor de Textos.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
