@@ -3567,3 +3567,13 @@ Observacoes:
 - A proxima etapa recomendada passa a ser uma decisao conservadora sobre novo recorte ou retorno a matriz comparativa antes de ampliar a modularizacao.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_pref_render_combos_modelos.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Decisao conservadora apos validacao de prefRenderCombosModelos
+
+- A decisao conservadora apos a validacao de `prefRenderCombosModelos` foi registrada como `DEC-C`.
+- `Preferencias / Configuracoes` permanece consolidada como frente estavel e candidata.
+- `prefRenderCombos` e `prefRenderCombosModelos` ficam validados de forma conservadora.
+- Nenhum codigo foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A proxima etapa recomendada e abrir contrato profundo antes de qualquer novo recorte; se o proximo recorte parecer arriscado, reavaliar matriz comparativa antes de implementar qualquer coisa.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_decisao_pos_validacao_pref_render_combos_modelos.md`.
+- A blindagem textual/mojibake foi respeitada.
