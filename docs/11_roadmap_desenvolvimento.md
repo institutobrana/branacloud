@@ -43,6 +43,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A Subetapa 8U-B executou a exclusao segura da clinica 12 para liberar `institutobrana@gmail.com`, com backup/export, dry-run e remocao confirmada apos validacao por banco.
 - A Subetapa 8V-A auditou o setup para usuarios criados posteriormente e confirmou que o gatilho atual esta no `setup_completed` do proprio usuario.
 - A Subetapa 8V-B implementou a menor correcao segura para que usuarios criados posteriormente nascam com `setup_completed = True`.
+- Auditoria documental da regra usuario -> prestador Clinica concluida: o combo de usuarios carrega o prestador sistêmico, o frontend nao filtra esse item e o backend bloqueia o vínculo em `_load_prestador_from_same_clinic()`; o banco confirmou o par usuario/prestador sistemico nas clinicas 1, 4, 13, 17 e 18; classificacao preliminar `REGRA-B + REGRA-F`; proxima etapa recomendada: comparar com EasyDental virgem antes de qualquer correção.
 
 ## Proximas prioridades sugeridas
 
