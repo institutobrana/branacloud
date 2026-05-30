@@ -3892,6 +3892,10 @@ Observacoes:
 - O documento criado foi `docs/fase_2c_editor_textos_decisao_pos_validacao_bootstrap_shell_visual.md`.
 - O novo documento de toolbar e `docs/fase_2c_editor_textos_contrato_toolbar_acoes_visuais.md`.
 - O novo documento de implementacao e `docs/fase_2c_editor_textos_implementacao_toolbar_visual.md`.
+- A validacao manual da toolbar visual foi aprovada com o relato do usuario `PASSOU SEM PROBLEMAS`.
+- O commit validado foi `27e990d`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O proximo passo recomendado e criar uma decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
