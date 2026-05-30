@@ -47,12 +47,13 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Comparacao EasyDental virgem concluida com fonte local somente leitura (`PROJETO_PRECIFICACAO_LEGADO\\Dados`, `eds70.sql`, `Dist\\USUARIO.raw`, `Dist\\PRESTADOR.raw`, `Dist\\UNIDADE.raw`, `Dist\\SISTEMA.raw` e `D:\\UTIL\\EasyDental_7.6_BR\\Readme.doc`): o legado confirma `Clínica` como prestador sistemico protegido, mas também confirma o vinculo operacional usuario/prestador e o uso desse contexto para agenda/conta da clinica; classificacao `EASY-A + REGRA-A + REGRA-F`; proxima etapa recomendada: abrir contrato de correção pequena no backend para permitir o vínculo operacional sem mexer na protecao estrutural.
 - Contrato tecnico da correcao de vinculo usuario -> prestador Clinica registrado em `docs/contrato_correcao_usuario_vinculo_prestador_clinica.md`; abordagem escolhida `USER-PREST-CONTRATO-B`; regra definida: manter a protecao estrutural do prestador Clinica e liberar apenas o vinculo operacional de usuario no backend, sem mexer em frontend, payload ou banco nesta etapa.
 - Correcao backend-only do vinculo usuario -> prestador Clinica aplicada em `backend/routes/user_admin_routes.py`, com helper operacional separado para `admin_create_user` e `admin_update_user` e preservacao do helper estrutural; proxima validacao recomendada: teste manual controlado do vinculo e consolidacao documental final.
+- Validacao manual do vinculo usuario -> prestador Clinica confirmada pelo usuario; correcao backend-only considerada validada e documentada em `docs/validacao_manual_usuario_vinculo_prestador_clinica.md`; protecao estrutural preservada; nenhuma alteracao de codigo ou banco nesta etapa.
 
 ## Proximas prioridades sugeridas
 
 - Atualizar `README.md`, `README_WEB.md` e `backend/README.md` em trilha separada.
 - Consolidar a documentacao por modulo sem misturar contratos vigentes com historico.
-- Validar manualmente o vinculo usuario -> prestador Clinica apos a correcao backend-only, mantendo a protecao estrutural do prestador.
+- Encerrar a trilha de correcao usuario -> prestador Clinica apos a validacao manual documentada e retomar a trilha planejada de Prestadores remanescentes/modularizacao.
 - Decidir o destino dos untracked antigos fora da trilha principal.
 - Tratar mojibake/UTF-8 em trilha propria, sem misturar com correcoes funcionais.
 - Retomar modularizacao/refatoracao somente depois da documentacao base estar consolidada.
