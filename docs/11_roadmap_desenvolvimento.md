@@ -3772,3 +3772,14 @@ Observacoes:
 - Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_selecao_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Fase 2B - Convênios e Planos - Microcontrato de shell visual
+
+- O shell visual de `Convênios e Planos` foi aberto como microcontrato documental.
+- `convPlanAbrir`, `convPlanEnsureUI` e `convPlanVincularEventos` foram mapeadas como parte do shell atual.
+- O shell puro ainda está parcialmente misturado com carregamento de dados e wiring.
+- A decisão registrada foi `CONVPLAN-SHELL-A`.
+- A futura implementação deve limitar-se a helper visual passivo para containers, sem alterar eventos nem carregamento.
+- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_shell_visual.md`.
+- A blindagem textual/mojibake foi respeitada.
