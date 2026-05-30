@@ -2284,8 +2284,8 @@ function prefRenderCombosDados(){
   if(!prefCfg?.txtDadosUf) return;
   const uf=String(prefCfg.txtDadosUf.value||"").trim();
   const mod=window.BranaPreferenciasOpcoesSistemaModule;
-  if(mod&&typeof mod.prefRenderUfOptions==="function"){
-    mod.prefRenderUfOptions(prefCfg.txtDadosUf,FICHA_UFS_PADRAO,uf);
+  if(mod&&typeof mod.prefRenderCombosDadosModal==="function"){
+    mod.prefRenderCombosDadosModal({cboDadosUf:prefCfg.txtDadosUf,ufs:FICHA_UFS_PADRAO,currentValue:uf});
     return;
   }
   prefCfg.txtDadosUf.innerHTML=`<option value=""></option>`+FICHA_UFS_PADRAO.map(item=>`<option value="${item}">${item}</option>`).join("");

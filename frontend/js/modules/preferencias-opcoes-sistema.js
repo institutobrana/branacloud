@@ -378,6 +378,11 @@
     return true;
   }
 
+  function prefRenderCombosDadosModal({ cboDadosUf, ufs, currentValue } = {}) {
+    if (!cboDadosUf) return false;
+    return prefRenderUfOptions(cboDadosUf, ufs, currentValue);
+  }
+
   const moduleApi = Object.freeze({
     getMetadata,
     prefOdontoNorm,
@@ -402,7 +407,8 @@
     prefAtualizarTituloModal,
     prefSelecionarAbaModal,
     prefRenderCombosGeraisModal,
-    prefRenderCombosModelosModal
+    prefRenderCombosModelosModal,
+    prefRenderCombosDadosModal
   });
 
   window.BranaPreferenciasOpcoesSistemaModule = moduleApi;

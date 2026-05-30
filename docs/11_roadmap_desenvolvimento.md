@@ -3589,3 +3589,15 @@ Observacoes:
 - A proxima etapa recomendada e seguir o contrato pequeno recomendado, mantendo as fronteiras proibidas fora do escopo.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_profundo_pos_pref_render_combos_modelos.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Implementacao minima de prefRenderCombosDados
+
+- A implementacao minima de `prefRenderCombosDados` foi concluida.
+- O helper passivo foi criado no modulo existente e a delegacao minima em `frontend/app.js` foi preservada.
+- O recorte ficou restrito ao select de UF da aba `Dados`.
+- O fallback local equivalente foi preservado.
+- Nenhum backend, banco, payload, salvamento ou `sysOpt*` foi alterado nesta etapa.
+- Os checks tecnicos foram executados com sucesso.
+- A proxima etapa recomendada e validacao manual pos-implementacao.
+- O documento criado foi `docs/fase_2b_preferencias_configuracoes_implementacao_pref_render_combos_dados.md`.
+- A blindagem textual/mojibake foi respeitada.
