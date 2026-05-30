@@ -3988,6 +3988,18 @@ Observacoes:
 - O novo documento e `docs/fase_2c_revisao_estrategica_pos_editor_textos.md`.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Matriz operacional curta apos revisao estrategica
+
+- A nova matriz operacional curta da Fase 2C foi aberta apos a revisao estrategica.
+- A origem da decisao foi `F2C-ESTRAT-D`.
+- A consolidacao da rodada do Editor de Textos foi mantida como contexto valido.
+- A decisao final foi `F2C-CURTA2-B`.
+- O modulo recomendado foi `Prestadores`.
+- O fluxo recomendado foi o bloco visual complementar da listagem/painel com filtros locais simples.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_matriz_operacional_curta_pos_revisao_estrategica.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
