@@ -4497,3 +4497,18 @@ Observacoes:
 - Nao houve alteracao de codigo nesta etapa.
 - O novo documento e `docs/ficha_pessoal_anamnese_adendo_reabertura_comunicacao_modulo_anamnese.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Contrato manual EasyDental para o fluxo de configuracao e clinica
+
+- Foi aberto o contrato especifico baseado nos pontos funcionais do manual EasyDental fornecidos pelo usuario.
+- O PDF do manual nao estava acessivel localmente nesta sessao, entao a analise foi montada a partir dos pontos funcionais informados e do acervo local do projeto.
+- O foco da leitura passou do refresh geral entre modulos para o contrato funcional entre configuracao e uso clinico da Anamnese.
+- O modulo de configuracao foi mapeado em `frontend/app.js` e `frontend/js/modules/anamnese.js`, com CRUD de questionarios e perguntas, copia entre questionarios e renumeracao.
+- A aba clinica foi mapeada em `frontend/js/modules/ficha-pessoal-aba-anamnese.js`, com questionarios, perguntas e respostas por paciente/questionario/pergunta.
+- O backend possui `AnamneseQuestionario`, `AnamnesePergunta` e `AnamneseResposta`, com `tipo_pergunta`, `tipo_resposta` e `mensagem_alerta` disponiveis no modelo de perguntas.
+- O Brana Cloud atual ainda nao comprovou uso clinico completo de `tipo_resposta`, `mensagem_alerta`, impressao em branco e equivalencia visual 1:1 com o legado EasyDental.
+- O seed `Principal` existe, mas a versao validada atual possui 17 perguntas; a variante de 35 perguntas continua em analise documental.
+- A decisao recomendada ficou em `FICHA-ANAM-MANUAL-B`, como proximo ajuste seguro para respeitar `tipo_resposta` na aba clinica antes de evolucoes maiores.
+- O novo documento e `docs/ficha_pessoal_anamnese_contrato_manual_easydental_fluxo_configuracao_clinica.md`.
+- Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
