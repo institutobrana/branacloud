@@ -4027,6 +4027,19 @@ Observacoes:
 - A proxima etapa recomendada e teste manual pelo usuario antes de qualquer novo avanco.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Prestadores - Validacao da listagem, painel e filtros locais
+
+- A validacao manual da implementacao de `Prestadores` na Fase 2C foi aprovada pelo usuario.
+- A classificacao confirmou `Prestadores` como modulo comum/core.
+- O fluxo validado foi `listagem/painel + filtros locais simples`.
+- A origem da decisao foi `F2C-PREST-C`.
+- O commit validado foi `1b438a2`.
+- O relato do usuario foi `todos testes passaram`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- O novo documento e `docs/fase_2c_prestadores_validacao_listagem_painel_filtros_locais.md`.
+- O proximo passo recomendado e criar decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
