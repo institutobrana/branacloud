@@ -4452,3 +4452,22 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_correcao_grava_integrado_remocao_controle_temporario.md`.
 - O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_grava_integrado_remocao_controle_temporario/`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Validacao do Grava integrado e remocao do controle temporario
+
+- Foi registrada a validacao manual da correcao da Anamnese integrada ao botao geral `Grava`.
+- O commit validado foi `f97e293`.
+- O usuario confirmou `TESTE PASSOU`.
+- O texto `Persistencia B2 ativa.` nao aparece mais na UI.
+- O botao `Salvar anamnese` nao aparece mais na UI.
+- O botao geral `Grava` salva a Anamnese.
+- A persistencia B2 continua funcionando como envelope textual.
+- O modal local continua funcionando com `Sim`, `Nao` e `Cancelar`.
+- `Sim` salva e prossegue.
+- `Nao` descarta e prossegue.
+- `Cancelar` mantem o usuario na Anamnese.
+- `Procura...`, `Novo`, `Fechar`, `Sair`, navegacao entre pacientes e troca de questionario permanecem funcionais.
+- Nao houve regressao global percebida.
+- Nenhum codigo foi alterado nesta validacao.
+- O novo documento e `docs/ficha_pessoal_anamnese_validacao_grava_integrado_remocao_controle_temporario.md`.
+- A blindagem textual/mojibake foi respeitada.
