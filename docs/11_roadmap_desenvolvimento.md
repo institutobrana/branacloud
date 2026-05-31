@@ -4529,3 +4529,17 @@ Observacoes:
 - Nenhum backend, banco, schema, migration ou endpoint novo foi criado.
 - O novo documento e `docs/ficha_pessoal_anamnese_implementacao_tipo_resposta_manual_b.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Anamnese - Auditoria de migracao EasyDental para a Clinica 1
+
+- Foi executada uma auditoria documental somente leitura para avaliar a seguranca de migracao dos dados preenchidos de Anamnese do EasyDental para a clinica 1 do Brana Cloud.
+- A fonte legada `\\Dell_servidor\\c\\EDS70` foi acessada em modo somente leitura.
+- A base atual do Brana Cloud foi consultada em modo somente leitura, com foco na clinica 1 e no usuario/paciente `gleissontel@gmail.com`.
+- O paciente localizado no Brana foi `Gleisson Tel`, com correspondencia documental aceitavel com os dados de origem.
+- Os questionarios atuais da clinica 1 sao `Principal`, `Implante`, `Ficha complementar`, `Anamnese de Saude` e `Anamnese pessoal`.
+- O total atual no Brana e de `5` questionarios, `112` perguntas e `15` respostas salvas.
+- O legado EDS70 apresenta o mesmo conjunto conceitual de questionarios, porem com volume historico muito maior de respostas brutas.
+- A estrutura atual do Brana esta pronta para receber dados, mas a migracao automatica completa do historico ainda nao e segura sem um dry-run fechado por paciente/questionario/pergunta.
+- A decisao recomendada ficou em `ANAM-MIG-C`.
+- O novo documento de auditoria e `docs/anamnese_easy_dell_servidor_auditoria_migracao_clinica_1.md`.
+- Nenhum codigo, backend, banco, schema, migration, endpoint, payload ou formato de salvamento foi alterado nesta etapa documental.
