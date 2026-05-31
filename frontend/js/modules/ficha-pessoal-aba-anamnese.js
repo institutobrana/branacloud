@@ -2,6 +2,8 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaAnamnese";
+  const ENVELOPE_VERSION = 2;
+  const STYLE_ID = "ficha-anamnese-visual-style";
 
   const state = {
     loadToken: 0,
@@ -11,14 +13,15 @@
     questionarios: [],
     perguntas: [],
     statusPerguntas: "idle",
+    saveStatus: "idle",
     dirty: false,
+    salvando: false,
     draftPerguntas: {},
+    savedPerguntas: {},
     confirmBackdrop: null,
     confirmPromise: null,
     confirmResolve: null,
   };
-
-  const STYLE_ID = "ficha-anamnese-visual-style";
 
   function ensureStyles() {
     if (document.getElementById(STYLE_ID)) return;
@@ -28,6 +31,7 @@
       .ficha-anamnese-wrap{display:flex;flex-direction:column;min-height:420px;box-sizing:border-box}
       .ficha-anamnese-shell{display:flex;flex-direction:column;gap:8px;min-height:0;flex:1;padding:8px;box-sizing:border-box}
       .ficha-anamnese-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+      .ficha-anamnese-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       .ficha-anamnese-meta{font:11px Tahoma,sans-serif;color:#4f5f72}
       .ficha-anamnese-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;border:1px solid #d6deea;background:#fff}
       .ficha-anamnese-state{padding:14px 12px;font:11px Tahoma,sans-serif;color:#5a697c;background:#fafcff}
@@ -59,10 +63,6 @@
     return ficha?.panel?.querySelector(".ficha-anamnese-wrap") || null;
   }
 
-  function anamneseStateEl() {
-    return ficha?.panel?.querySelector(".ficha-anamnese-state") || null;
-  }
-
   function respostaDraft(perguntaId) {
     return state.draftPerguntas[String(perguntaId)] || { resposta: "", complemento: "" };
   }
@@ -70,20 +70,55 @@
   function normalizarResposta(valor) {
     const base = String(valor || "").trim().toLowerCase();
     if (base === "sim" || base === "s") return "sim";
-    if (base === "nao" || base === "não" || base === "n") return "nao";
+    if (base === "nao" || base === "não" || base === "nÃ£o" || base === "n") return "nao";
     return "";
   }
 
-  function atualizarDirty() {
-    state.dirty = Object.values(state.draftPerguntas || {}).some((item) => {
-      if (!item) return false;
-      return !!(normalizarResposta(item.resposta) || String(item.complemento || "").trim());
+  function complementoTexto(valor) {
+    return String(valor ?? "");
+  }
+
+  function clonarMapaPerguntas(mapa) {
+    const out = {};
+    Object.entries(mapa || {}).forEach(([key, item]) => {
+      out[String(key)] = {
+        resposta: normalizarResposta(item?.resposta),
+        complemento: complementoTexto(item?.complemento),
+      };
     });
+    return out;
+  }
+
+  function respostaIgual(a, b) {
+    return normalizarResposta(a?.resposta) === normalizarResposta(b?.resposta) && complementoTexto(a?.complemento) === complementoTexto(b?.complemento);
+  }
+
+  function atualizarDirty() {
+    const chaves = new Set([...Object.keys(state.savedPerguntas || {}), ...Object.keys(state.draftPerguntas || {})]);
+    state.dirty = false;
+    for (const chave of chaves) {
+      if (!respostaIgual(state.draftPerguntas?.[chave], state.savedPerguntas?.[chave])) {
+        state.dirty = true;
+        break;
+      }
+    }
   }
 
   function limparAlteracoesLocais() {
     state.dirty = false;
     state.draftPerguntas = {};
+    state.savedPerguntas = {};
+  }
+
+  function sincronizarRascunhoComSalvo() {
+    state.draftPerguntas = clonarMapaPerguntas(state.savedPerguntas);
+    atualizarDirty();
+  }
+
+  function descartarAlteracoesLocais() {
+    sincronizarRascunhoComSalvo();
+    state.saveStatus = "idle";
+    renderPerguntas();
   }
 
   function atualizarRespostaLocal(perguntaId, patch) {
@@ -92,9 +127,76 @@
     const atual = state.draftPerguntas[id] || { resposta: "", complemento: "" };
     state.draftPerguntas[id] = {
       resposta: normalizarResposta(patch?.resposta !== undefined ? patch.resposta : atual.resposta),
-      complemento: String(patch?.complemento !== undefined ? patch.complemento : atual.complemento || ""),
+      complemento: complementoTexto(patch?.complemento !== undefined ? patch.complemento : atual.complemento || ""),
     };
     atualizarDirty();
+  }
+
+  function resumirStatusSalvamento() {
+    if (state.salvando) return "Salvando respostas...";
+    if (state.dirty) return "Alteracoes pendentes.";
+    if (state.saveStatus === "error") return "Falha ao salvar.";
+    if (state.saveStatus === "saved") return "Respostas salvas.";
+    return "Persistencia B2 ativa.";
+  }
+
+  function questionarioSelecionado() {
+    return state.questionarios.find((item) => item.id === state.questionarioSelId) || null;
+  }
+
+  function desserializarRespostaSalva(raw, item) {
+    const texto = String(raw ?? "").trim();
+    if (!texto) return { resposta: "", complemento: "" };
+    if (texto.startsWith("{") || texto.startsWith("[")) {
+      try {
+        const obj = JSON.parse(texto);
+        const resposta = normalizarResposta(obj.resposta ?? obj.valor ?? obj.opcao ?? "");
+        const complemento = complementoTexto(obj.complemento ?? obj.complemento_texto ?? obj.obs ?? "");
+        return { resposta, complemento };
+      } catch {}
+    }
+    const resposta = normalizarResposta(texto);
+    if (resposta) return { resposta, complemento: "" };
+    return { resposta: "", complemento: texto };
+  }
+
+  function serializarEnvelopeResposta(item, draft) {
+    const resposta = normalizarResposta(draft?.resposta || "");
+    const complemento = complementoTexto(draft?.complemento || "");
+    if (!resposta && !complemento.trim()) return "";
+    const questionario = questionarioSelecionado();
+    const envelope = {
+      versao: ENVELOPE_VERSION,
+      paciente_id: Number(fichaPacienteAtualId || 0) || null,
+      questionario_id: Number(state.questionarioSelId || questionario?.id || 0) || null,
+      questionario_nome: String(questionario?.nome || "").trim(),
+      pergunta_id: Number(item?.pergunta_id || item?.id || 0) || null,
+      pergunta_texto: String(item?.texto || "").trim(),
+      resposta: resposta || null,
+      complemento,
+    };
+    return JSON.stringify(envelope);
+  }
+
+  function aplicarRespostasCarregadas(itens) {
+    const saved = {};
+    const draft = {};
+    (Array.isArray(itens) ? itens : []).forEach((item) => {
+      const perguntaId = Number(item?.pergunta_id || item?.id || 0) || 0;
+      if (!perguntaId) return;
+      const parsed = desserializarRespostaSalva(item?.resposta, item);
+      saved[String(perguntaId)] = parsed;
+      draft[String(perguntaId)] = { ...parsed };
+    });
+    state.savedPerguntas = saved;
+    state.draftPerguntas = draft;
+    atualizarDirty();
+  }
+
+  function perguntaMudou(perguntaId) {
+    const chave = String(perguntaId || "").trim();
+    if (!chave) return false;
+    return !respostaIgual(state.draftPerguntas?.[chave], state.savedPerguntas?.[chave]);
   }
 
   function ensureConfirmUI() {
@@ -104,7 +206,7 @@
     backdrop.innerHTML = `
       <div class="ficha-anamnese-confirm-box" role="dialog" aria-modal="true" aria-labelledby="ficha-anamnese-confirm-title">
         <div id="ficha-anamnese-confirm-title" class="ficha-anamnese-confirm-head">Ficha pessoal - Anamnese</div>
-        <div class="ficha-anamnese-confirm-msg" data-ficha-anamnese-confirm-msg>Os dados foram alterados. Deseja gravá-los?</div>
+        <div class="ficha-anamnese-confirm-msg" data-ficha-anamnese-confirm-msg>Os dados foram alterados. Deseja grava-los?</div>
         <div class="ficha-anamnese-confirm-actions">
           <button type="button" class="materiais-btn" data-ficha-anamnese-confirm-action="sim">Sim</button>
           <button type="button" class="materiais-btn" data-ficha-anamnese-confirm-action="nao">Nao</button>
@@ -135,29 +237,14 @@
     if (!state.dirty) return "limpo";
     const backdrop = ensureConfirmUI();
     const msg = backdrop.querySelector("[data-ficha-anamnese-confirm-msg]");
-    if (msg) msg.textContent = "Os dados foram alterados. Deseja gravá-los?";
+    if (msg) msg.textContent = "Os dados foram alterados. Deseja grava-los?";
     backdrop.classList.remove("hidden");
     if (!state.confirmPromise) {
       state.confirmPromise = new Promise((resolve) => {
         state.confirmResolve = resolve;
       });
     }
-    const escolha = await state.confirmPromise;
-    if (escolha === "nao") {
-      limparAlteracoesLocais();
-      renderPerguntas();
-      return "nao";
-    }
-    if (escolha === "sim") {
-      window.alert("Salvamento da Anamnese ainda nao foi implementado nesta etapa.");
-      return "sim";
-    }
-    return "cancelar";
-  }
-
-  function beforeAbandonar(motivo = "") {
-    if (!fichaTabAtual || fichaTabAtual !== "anamnese") return true;
-    return solicitarConfirmacaoAlteracoes(motivo).then((escolha) => escolha === "limpo" || escolha === "nao");
+    return state.confirmPromise;
   }
 
   function temPacienteValido() {
@@ -175,10 +262,6 @@
     const nome = temPacienteValido() ? nomePacienteAtual() : "";
     ficha.anamnesePaciente.value = nome;
     ficha.anamnesePaciente.title = nome;
-  }
-
-  function questionarioSelecionado() {
-    return state.questionarios.find((item) => item.id === state.questionarioSelId) || null;
   }
 
   function renderQuestionarios() {
@@ -217,9 +300,10 @@
     const perguntas = Array.isArray(state.perguntas) ? state.perguntas : [];
     const questionario = questionarioSelecionado();
     const nomeQuestionario = questionario?.nome || "";
+    const salvarDesabilitado = !state.dirty || state.salvando || !temPacienteValido() || !state.questionarioSelId;
     const selecionadoId = Number(state.questionarioSelId || 0) || null;
     const cards = perguntas.map((item, idx) => {
-      const id = Number(item?.id || 0) || idx + 1;
+      const id = Number(item?.pergunta_id || item?.id || 0) || idx + 1;
       const numero = item?.numero ?? idx + 1;
       const texto = esc(String(item?.texto || "").trim() || "Pergunta sem texto");
       const nomeGrupo = `ficha-anamnese-q-${selecionadoId || "vazio"}-${id}`;
@@ -227,17 +311,17 @@
       const resposta = normalizarResposta(draft.resposta);
       const complemento = String(draft.complemento || "");
       return `
-        <article class="ficha-anamnese-card" data-pergunta-id="${id}" data-questionario-id="${selecionadoId || ""}">
+        <article class="ficha-anamnese-card ${perguntaMudou(id) ? "selected" : ""}" data-pergunta-id="${id}" data-questionario-id="${selecionadoId || ""}">
           <div class="ficha-anamnese-num">${esc(String(numero))})</div>
           <div class="ficha-anamnese-texto">${texto}</div>
           <div class="ficha-anamnese-controles">
             <div class="ficha-anamnese-opcoes" role="group" aria-label="Resposta visual da pergunta ${esc(String(numero))}">
-              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="sim" name="${nomeGrupo}" value="sim"${resposta==="sim"?" checked":""}> Sim</label>
-              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="nao" name="${nomeGrupo}" value="nao"${resposta==="nao"?" checked":""}> Nao</label>
+              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="sim" name="${nomeGrupo}" value="sim"${resposta === "sim" ? " checked" : ""}> Sim</label>
+              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="nao" name="${nomeGrupo}" value="nao"${resposta === "nao" ? " checked" : ""}> Nao</label>
             </div>
             <label style="display:block;min-width:0;width:100%">
               <span class="ficha-anamnese-meta">Complemento / observacao</span>
-              <textarea class="ficha-anamnese-complemento" data-pergunta-id="${id}" placeholder="Complemento visual sem salvamento...">${esc(complemento)}</textarea>
+              <textarea class="ficha-anamnese-complemento" data-pergunta-id="${id}" placeholder="Complemento / observacao...">${esc(complemento)}</textarea>
             </label>
           </div>
         </article>`;
@@ -245,13 +329,16 @@
     wrap.innerHTML = `
       <div class="ficha-anamnese-shell">
         <div class="ficha-anamnese-head">
-          <div class="ficha-anamnese-meta">${esc(nomeQuestionario || "Questionario")}</div>
-          <div class="ficha-anamnese-meta">Visual apenas, sem salvamento</div>
+          <div class="ficha-anamnese-meta">Questionario: ${esc(nomeQuestionario || "Questionario")}</div>
+          <div class="ficha-anamnese-actions">
+            <div class="ficha-anamnese-meta">${esc(resumirStatusSalvamento())}</div>
+            <button type="button" class="materiais-btn" data-anamnese-action="salvar" ${salvarDesabilitado ? "disabled" : ""}>Salvar anamnese</button>
+          </div>
         </div>
         <div class="ficha-anamnese-scroll ${state.statusPerguntas === "loading" ? "ficha-anamnese-loading" : ""}">
           ${textoEstado ? `<div class="ficha-anamnese-state">${esc(textoEstado)}</div>` : `<div class="ficha-anamnese-list">${cards}</div>`}
         </div>
-        <div class="ficha-anamnese-foot">Questionario visual carregado em memoria apenas para leitura local.</div>
+        <div class="ficha-anamnese-foot">${esc(resumirStatusSalvamento())}</div>
       </div>`;
     return true;
   }
@@ -275,12 +362,17 @@
     if (!temPacienteValido() || !state.questionarioSelId) {
       state.perguntas = [];
       state.statusPerguntas = "idle";
+      state.saveStatus = "idle";
+      limparAlteracoesLocais();
       renderPerguntas();
       return false;
     }
     state.statusPerguntas = "loading";
     renderPerguntas();
-    const { res, data } = await requestJson("GET", `/anamnese/questionarios/${state.questionarioSelId}/perguntas`, undefined, true);
+    const qs = new URLSearchParams();
+    qs.set("questionario_id", String(state.questionarioSelId));
+    const path = `/anamnese/pacientes/${Number(fichaPacienteAtualId || 0)}/respostas?${qs.toString()}`;
+    const { res, data } = await requestJson("GET", path, undefined, true);
     if (seq !== state.perguntasToken || (seqPai && seqPai !== state.loadToken)) return false;
     if (!res.ok) {
       state.perguntas = [];
@@ -288,23 +380,90 @@
       renderPerguntas();
       return false;
     }
-    state.perguntas = Array.isArray(data) ? data : [];
+    const questionarioIdResposta = Number(data?.questionario_id || state.questionarioSelId || 0) || state.questionarioSelId || null;
+    state.questionarioId = questionarioIdResposta;
+    state.questionarioSelId = questionarioIdResposta;
+    state.perguntas = Array.isArray(data?.itens) ? data.itens : [];
+    aplicarRespostasCarregadas(state.perguntas);
     state.statusPerguntas = "ready";
+    state.saveStatus = "idle";
+    renderQuestionarios();
     renderPerguntas();
     return true;
+  }
+
+  async function salvarAnamneseAtual(motivo = "") {
+    void motivo;
+    if (!temPacienteValido() || !state.questionarioSelId) return false;
+    const perguntas = Array.isArray(state.perguntas) ? state.perguntas : [];
+    const pendentes = perguntas.filter((item, idx) => {
+      const perguntaId = Number(item?.pergunta_id || item?.id || idx + 1 || 0) || 0;
+      return perguntaMudou(perguntaId);
+    });
+    if (!pendentes.length) {
+      state.saveStatus = "saved";
+      atualizarDirty();
+      renderPerguntas();
+      return true;
+    }
+    state.salvando = true;
+    state.saveStatus = "idle";
+    renderPerguntas();
+    const pacienteId = Number(fichaPacienteAtualId || 0) || 0;
+    try {
+      for (const item of pendentes) {
+        const perguntaId = Number(item?.pergunta_id || item?.id || 0) || 0;
+        if (!perguntaId) continue;
+        const draft = state.draftPerguntas[String(perguntaId)] || { resposta: "", complemento: "" };
+        const respostaTxt = serializarEnvelopeResposta(item, draft);
+        const { res, data } = await requestJson(
+          "PUT",
+          `/anamnese/pacientes/${pacienteId}/respostas`,
+          { pergunta_id: perguntaId, resposta: respostaTxt },
+          true,
+        );
+        if (!res.ok) {
+          throw new Error(data?.detail || "Falha ao salvar respostas da anamnese.");
+        }
+      }
+      state.savedPerguntas = clonarMapaPerguntas(state.draftPerguntas);
+      atualizarDirty();
+      state.saveStatus = "saved";
+      state.salvando = false;
+      renderPerguntas();
+      return true;
+    } catch (err) {
+      state.salvando = false;
+      state.saveStatus = "error";
+      atualizarDirty();
+      renderPerguntas();
+      window.alert(err?.message || "Falha ao salvar respostas da anamnese.");
+      return false;
+    }
+  }
+
+  async function decidirConfirmacao(escolha, motivo = "") {
+    void motivo;
+    if (escolha === "limpo") return true;
+    if (escolha === "nao") {
+      descartarAlteracoesLocais();
+      return true;
+    }
+    if (escolha === "sim") return salvarAnamneseAtual(motivo);
+    return false;
   }
 
   async function selecionarQuestionario(id) {
     const novo = Number(id || 0) || null;
     if (novo === state.questionarioSelId) return;
     const escolha = await solicitarConfirmacaoAlteracoes("troca de questionario");
-    if (escolha === "cancelar" || escolha === "sim") {
+    if (!(await decidirConfirmacao(escolha, "troca de questionario"))) {
       renderQuestionarios();
       return;
     }
     state.questionarioId = novo;
     state.questionarioSelId = novo;
-    limparAlteracoesLocais();
+    state.saveStatus = "idle";
     renderQuestionarios();
     await carregarPerguntas(state.loadToken);
   }
@@ -318,6 +477,7 @@
       state.questionarios = [];
       state.perguntas = [];
       state.statusPerguntas = "idle";
+      state.saveStatus = "idle";
       limparAlteracoesLocais();
       renderQuestionarios();
       renderPerguntas();
@@ -365,6 +525,14 @@
         if (!perguntaId) return;
         atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
       });
+      wrap.addEventListener("click", (ev) => {
+        const alvo = ev.target;
+        if (!(alvo instanceof HTMLElement)) return;
+        const btnSalvar = alvo.closest?.("[data-anamnese-action='salvar']");
+        if (!btnSalvar) return;
+        ev.preventDefault();
+        void salvarAnamneseAtual("botao");
+      });
     }
     if (ficha.anamneseQuestionario && ficha.anamneseQuestionario.dataset.bound !== "1") {
       ficha.anamneseQuestionario.dataset.bound = "1";
@@ -377,6 +545,8 @@
   function onPacienteAplicado() {
     atualizarCabecalho();
     limparAlteracoesLocais();
+    state.statusPerguntas = "idle";
+    state.saveStatus = "idle";
     if (fichaTabAtual === "anamnese") carregar();
   }
 
@@ -388,6 +558,7 @@
     state.questionarios = [];
     state.perguntas = [];
     state.statusPerguntas = "idle";
+    state.saveStatus = "idle";
     limparAlteracoesLocais();
     atualizarCabecalho();
     renderQuestionarios();
@@ -400,12 +571,15 @@
       return false;
     }
     if (fichaTabAtual === "anamnese" && tab !== "anamnese") {
-      return solicitarConfirmacaoAlteracoes(`troca de aba para ${String(tab || "")}`).then((escolha) => {
-        if (escolha === "cancelar" || escolha === "sim") return false;
-        return true;
-      });
+      return solicitarConfirmacaoAlteracoes(`troca de aba para ${String(tab || "")}`).then((escolha) => decidirConfirmacao(escolha, `troca de aba para ${String(tab || "")}`));
     }
     return true;
+  }
+
+  async function beforeAbandonar(motivo = "") {
+    if (!fichaTabAtual || fichaTabAtual !== "anamnese") return true;
+    const escolha = await solicitarConfirmacaoAlteracoes(motivo);
+    return decidirConfirmacao(escolha, motivo);
   }
 
   const module = {
@@ -413,7 +587,7 @@
       name: MODULE_NAME,
       kind: "facade-module",
       status: "active",
-      createdAt: "ficha-pessoal-anamnese-modularizacao-sem-mudar-comportamento",
+      createdAt: "ficha-pessoal-anamnese-persistencia-b2-envelope-textual",
     },
     state: {
       get loadToken() {
@@ -430,6 +604,7 @@
     carregarPerguntas,
     selecionarQuestionario,
     carregar,
+    salvarAnamneseAtual,
     bind,
     onPacienteAplicado,
     onLimparNovo,

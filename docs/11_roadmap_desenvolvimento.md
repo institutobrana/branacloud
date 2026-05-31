@@ -4393,6 +4393,19 @@ Observacoes:
 - Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anamnese - Implementacao da persistencia B2 por envelope textual
+
+- Foi implementada a persistencia real da aba `Anamnese` usando o contrato `FICHA-ANAM-PERSIST-B2`.
+- O frontend da aba passou a salvar e recarregar `Sim` / `Nao` + complemento por paciente/questionario/pergunta.
+- O endpoint atual foi reaproveitado sem criacao de endpoint novo.
+- O formato escolhido foi um envelope textual JSON stringificado armazenado no campo textual existente da resposta.
+- O modal de confirmacao da Anamnese passou a integrar o salvamento seguro: `Sim` salva e prossegue, `Nao` descarta e prossegue, `Cancelar` mantem o usuario na aba.
+- A confirmacao local continua funcionando.
+- Nenhum backend, banco, migration ou schema novo foi criado.
+- O novo documento e `docs/ficha_pessoal_anamnese_implementacao_persistencia_b2_envelope_textual.md`.
+- O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_persistencia_b2_envelope_textual/`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Ficha pessoal - Anamnese - Implementacao da confirmacao local sem salvamento
 
 - Foi registrada a implementacao da camada local de confirmacao de alteracoes da aba `Anamnese`.
