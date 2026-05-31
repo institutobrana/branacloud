@@ -4512,3 +4512,20 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_contrato_manual_easydental_fluxo_configuracao_clinica.md`.
 - Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Implementacao do respeito a tipo_resposta conforme manual EasyDental
+
+- Foi implementado o respeito a `tipo_resposta` na aba clinica da Anamnese.
+- Os valores reais confirmados para `tipo_resposta` foram `1`, `2` e `3`.
+- A semantica observada nos artefatos de descoberta foi `1 = Sim/Não`, `2 = Sim/Não/Texto` e `3 = Texto`.
+- Perguntas `Sim/Não` passaram a exibir apenas `Sim` e `Nao`, sem campo complementar editavel.
+- Perguntas `Sim/Não/Texto` passaram a exibir `Sim`, `Nao` e campo de texto.
+- Perguntas `Texto` passaram a exibir apenas campo de texto, sem `Sim`/`Nao` aplicavel.
+- O envelope B2 foi preservado e continua sendo JSON stringificado no campo textual da resposta.
+- Respostas antigas continuam sendo carregadas e compatibilizadas.
+- O botao geral `Grava` continua salvando a Anamnese.
+- O modal continua funcionando com `Sim`, `Nao` e `Cancelar`.
+- `tipo_pergunta` critica, `mensagem_alerta`, Preferencias/Odontograma, seed `Principal` e impressao de questionario em branco nao foram alterados nesta etapa.
+- Nenhum backend, banco, schema, migration ou endpoint novo foi criado.
+- O novo documento e `docs/ficha_pessoal_anamnese_implementacao_tipo_resposta_manual_b.md`.
+- A blindagem textual/mojibake foi respeitada.

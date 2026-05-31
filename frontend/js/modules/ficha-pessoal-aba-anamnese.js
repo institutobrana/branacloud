@@ -39,10 +39,14 @@
       .ficha-anamnese-card{border:1px solid #d5ddea;border-radius:4px;background:#fbfdff;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start}
       .ficha-anamnese-num{font:700 11px Tahoma,sans-serif;color:#35506b;min-width:28px}
       .ficha-anamnese-texto{font:11px Tahoma,sans-serif;color:#22303f;line-height:1.35;word-break:break-word}
-      .ficha-anamnese-controles{grid-column:1 / -1;display:grid;grid-template-columns:120px minmax(240px,1fr);gap:8px 10px;align-items:start}
+      .ficha-anamnese-controles{grid-column:1 / -1;display:grid;gap:8px 10px;align-items:start}
+      .ficha-anamnese-controles.tipo-1{grid-template-columns:minmax(120px,220px)}
+      .ficha-anamnese-controles.tipo-2{grid-template-columns:120px minmax(240px,1fr)}
+      .ficha-anamnese-controles.tipo-3{grid-template-columns:1fr}
       .ficha-anamnese-opcoes{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding-top:2px}
       .ficha-anamnese-opcao{display:flex;align-items:center;gap:5px;font:11px Tahoma,sans-serif;color:#243444;cursor:pointer;user-select:none;line-height:1.2}
       .ficha-anamnese-opcao input{margin:0}
+      .ficha-anamnese-complemento-wrap{display:block;min-width:0;width:100%}
       .ficha-anamnese-complemento{width:100%;min-height:50px;resize:vertical;border:1px solid #c2ccda;border-radius:3px;box-sizing:border-box;padding:4px 5px;font:11px Tahoma,sans-serif;background:#fff}
       .ficha-anamnese-foot{padding:6px 8px;border-top:1px solid #d6deea;background:#f8fafc;font:11px Tahoma,sans-serif;color:#627285}
       .ficha-anamnese-loading{opacity:.86}
@@ -78,18 +82,55 @@
     return String(valor ?? "");
   }
 
+  function textoLivre(valor) {
+    return String(valor ?? "");
+  }
+
+  function normalizarTipoResposta(valor) {
+    const bruto = String(valor ?? "").trim().toLowerCase();
+    if (!bruto) return 1;
+    if (/^\d+$/.test(bruto)) {
+      const n = Number(bruto);
+      if ([1, 2, 3].includes(n)) return n;
+    }
+    const base = bruto
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[\s\-_/]+/g, "");
+    if (base === "simnao" || base === "simnao?" || base === "simnao." || base === "simnao!") return 1;
+    if (base === "simnaotexto" || base === "simnaotextolivre" || base === "simnaoetexto") return 2;
+    if (base === "texto" || base === "textolivre" || base === "respostatexto") return 3;
+    if (base.includes("simnaotexto")) return 2;
+    if (base.includes("simnao")) return 1;
+    if (base.includes("texto")) return 3;
+    return 1;
+  }
+
+  function tipoRespostaPergunta(perguntaId) {
+    const id = Number(perguntaId || 0) || 0;
+    if (!id) return 1;
+    const item = (Array.isArray(state.perguntas) ? state.perguntas : []).find((p, idx) => Number(p?.pergunta_id || p?.id || idx + 1 || 0) === id);
+    return normalizarTipoResposta(item?.tipo_resposta ?? item?.tipoResposta ?? 1);
+  }
+
   function clonarMapaPerguntas(mapa) {
     const out = {};
     Object.entries(mapa || {}).forEach(([key, item]) => {
+      const tipo = normalizarTipoResposta(item?.tipo_resposta ?? item?.tipoResposta ?? 1);
       out[String(key)] = {
-        resposta: normalizarResposta(item?.resposta),
-        complemento: complementoTexto(item?.complemento),
+        resposta: tipo === 3 ? textoLivre(item?.resposta ?? item?.complemento ?? "") : normalizarResposta(item?.resposta),
+        complemento: tipo === 3 ? "" : complementoTexto(item?.complemento),
+        tipo_resposta: tipo,
       };
     });
     return out;
   }
 
-  function respostaIgual(a, b) {
+  function respostaIgual(a, b, tipoFallback = 1) {
+    const tipo = normalizarTipoResposta(a?.tipo_resposta ?? b?.tipo_resposta ?? tipoFallback);
+    if (tipo === 3) {
+      return textoLivre(a?.resposta) === textoLivre(b?.resposta);
+    }
     return normalizarResposta(a?.resposta) === normalizarResposta(b?.resposta) && complementoTexto(a?.complemento) === complementoTexto(b?.complemento);
   }
 
@@ -97,7 +138,8 @@
     const chaves = new Set([...Object.keys(state.savedPerguntas || {}), ...Object.keys(state.draftPerguntas || {})]);
     state.dirty = false;
     for (const chave of chaves) {
-      if (!respostaIgual(state.draftPerguntas?.[chave], state.savedPerguntas?.[chave])) {
+      const tipo = normalizarTipoResposta(state.draftPerguntas?.[chave]?.tipo_resposta ?? state.savedPerguntas?.[chave]?.tipo_resposta ?? tipoRespostaPergunta(chave));
+      if (!respostaIgual(state.draftPerguntas?.[chave], state.savedPerguntas?.[chave], tipo)) {
         state.dirty = true;
         break;
       }
@@ -124,10 +166,14 @@
   function atualizarRespostaLocal(perguntaId, patch) {
     const id = String(perguntaId || "").trim();
     if (!id) return;
-    const atual = state.draftPerguntas[id] || { resposta: "", complemento: "" };
+    const atual = state.draftPerguntas[id] || { resposta: "", complemento: "", tipo_resposta: tipoRespostaPergunta(id) };
+    const tipo = normalizarTipoResposta(atual.tipo_resposta ?? tipoRespostaPergunta(id));
+    const patchResposta = patch?.resposta !== undefined ? patch.resposta : undefined;
+    const patchComplemento = patch?.complemento !== undefined ? patch.complemento : undefined;
     state.draftPerguntas[id] = {
-      resposta: normalizarResposta(patch?.resposta !== undefined ? patch.resposta : atual.resposta),
-      complemento: complementoTexto(patch?.complemento !== undefined ? patch.complemento : atual.complemento || ""),
+      resposta: tipo === 3 ? textoLivre(patchResposta !== undefined ? patchResposta : atual.resposta) : normalizarResposta(patchResposta !== undefined ? patchResposta : atual.resposta),
+      complemento: tipo === 3 ? "" : complementoTexto(patchComplemento !== undefined ? patchComplemento : atual.complemento || ""),
+      tipo_resposta: tipo,
     };
     atualizarDirty();
   }
@@ -146,24 +192,39 @@
 
   function desserializarRespostaSalva(raw, item) {
     const texto = String(raw ?? "").trim();
-    if (!texto) return { resposta: "", complemento: "" };
+    const tipoItem = normalizarTipoResposta(item?.tipo_resposta ?? item?.tipoResposta ?? 1);
+    if (!texto) return { resposta: "", complemento: "", tipo_resposta: tipoItem };
     if (texto.startsWith("{") || texto.startsWith("[")) {
       try {
         const obj = JSON.parse(texto);
+        const tipoResposta = normalizarTipoResposta(obj.tipo_resposta ?? obj.tipoResposta ?? obj.tipo_resposta_origem ?? tipoItem);
+        if (tipoResposta === 3) {
+          const respostaTexto = textoLivre(obj.resposta ?? obj.valor ?? obj.opcao ?? obj.complemento ?? obj.complemento_texto ?? obj.obs ?? "");
+          return { resposta: respostaTexto, complemento: "", tipo_resposta: tipoResposta };
+        }
         const resposta = normalizarResposta(obj.resposta ?? obj.valor ?? obj.opcao ?? "");
         const complemento = complementoTexto(obj.complemento ?? obj.complemento_texto ?? obj.obs ?? "");
-        return { resposta, complemento };
+        return { resposta, complemento, tipo_resposta: tipoResposta };
       } catch {}
     }
+    if (tipoItem === 3) {
+      return { resposta: textoLivre(texto), complemento: "", tipo_resposta: tipoItem };
+    }
     const resposta = normalizarResposta(texto);
-    if (resposta) return { resposta, complemento: "" };
-    return { resposta: "", complemento: texto };
+    if (resposta) return { resposta, complemento: "", tipo_resposta: tipoItem };
+    return { resposta: "", complemento: texto, tipo_resposta: tipoItem };
   }
 
   function serializarEnvelopeResposta(item, draft) {
-    const resposta = normalizarResposta(draft?.resposta || "");
+    const tipoResposta = normalizarTipoResposta(item?.tipo_resposta ?? draft?.tipo_resposta ?? 1);
+    const respostaTexto = textoLivre(draft?.resposta || draft?.complemento || "");
     const complemento = complementoTexto(draft?.complemento || "");
-    if (!resposta && !complemento.trim()) return "";
+    if (tipoResposta === 3) {
+      if (!respostaTexto.trim()) return "";
+    } else {
+      const resposta = normalizarResposta(draft?.resposta || "");
+      if (!resposta && !complemento.trim()) return "";
+    }
     const questionario = questionarioSelecionado();
     const envelope = {
       versao: ENVELOPE_VERSION,
@@ -172,8 +233,9 @@
       questionario_nome: String(questionario?.nome || "").trim(),
       pergunta_id: Number(item?.pergunta_id || item?.id || 0) || null,
       pergunta_texto: String(item?.texto || "").trim(),
-      resposta: resposta || null,
-      complemento,
+      tipo_resposta: tipoResposta,
+      resposta: tipoResposta === 3 ? respostaTexto : (normalizarResposta(draft?.resposta || "") || null),
+      complemento: tipoResposta === 3 ? "" : complemento,
     };
     return JSON.stringify(envelope);
   }
@@ -185,7 +247,7 @@
       const perguntaId = Number(item?.pergunta_id || item?.id || 0) || 0;
       if (!perguntaId) return;
       const parsed = desserializarRespostaSalva(item?.resposta, item);
-      saved[String(perguntaId)] = parsed;
+      saved[String(perguntaId)] = { ...parsed };
       draft[String(perguntaId)] = { ...parsed };
     });
     state.savedPerguntas = saved;
@@ -305,23 +367,32 @@
       const id = Number(item?.pergunta_id || item?.id || 0) || idx + 1;
       const numero = item?.numero ?? idx + 1;
       const texto = esc(String(item?.texto || "").trim() || "Pergunta sem texto");
+      const tipoResposta = normalizarTipoResposta(item?.tipo_resposta ?? item?.tipoResposta ?? 1);
       const nomeGrupo = `ficha-anamnese-q-${selecionadoId || "vazio"}-${id}`;
       const draft = respostaDraft(id);
-      const resposta = normalizarResposta(draft.resposta);
-      const complemento = String(draft.complemento || "");
+      const resposta = tipoResposta === 3 ? "" : normalizarResposta(draft.resposta);
+      const textoLivreResposta = tipoResposta === 3 ? textoLivre(draft.resposta || draft.complemento || "") : "";
+      const complemento = tipoResposta === 3 ? "" : String(draft.complemento || "");
+      const labelComplemento = tipoResposta === 3 ? "Resposta textual" : "Complemento / observacao";
+      const placeholderComplemento = tipoResposta === 3 ? "Digite a resposta..." : "Complemento / observacao...";
+      const classeTipo = tipoResposta === 3 ? "tipo-3" : (tipoResposta === 2 ? "tipo-2" : "tipo-1");
       return `
         <article class="ficha-anamnese-card ${perguntaMudou(id) ? "selected" : ""}" data-pergunta-id="${id}" data-questionario-id="${selecionadoId || ""}">
           <div class="ficha-anamnese-num">${esc(String(numero))})</div>
           <div class="ficha-anamnese-texto">${texto}</div>
-          <div class="ficha-anamnese-controles">
-            <div class="ficha-anamnese-opcoes" role="group" aria-label="Resposta visual da pergunta ${esc(String(numero))}">
-              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="sim" name="${nomeGrupo}" value="sim"${resposta === "sim" ? " checked" : ""}> Sim</label>
-              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="nao" name="${nomeGrupo}" value="nao"${resposta === "nao" ? " checked" : ""}> Nao</label>
-            </div>
-            <label style="display:block;min-width:0;width:100%">
-              <span class="ficha-anamnese-meta">Complemento / observacao</span>
-              <textarea class="ficha-anamnese-complemento" data-pergunta-id="${id}" placeholder="Complemento / observacao...">${esc(complemento)}</textarea>
-            </label>
+          <div class="ficha-anamnese-controles ${classeTipo}">
+            ${tipoResposta === 3 ? "" : `
+              <div class="ficha-anamnese-opcoes" role="group" aria-label="Resposta visual da pergunta ${esc(String(numero))}">
+                <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="sim" name="${nomeGrupo}" value="sim"${resposta === "sim" ? " checked" : ""}> Sim</label>
+                <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="nao" name="${nomeGrupo}" value="nao"${resposta === "nao" ? " checked" : ""}> Nao</label>
+              </div>
+            `}
+            ${tipoResposta === 1 ? "" : `
+              <label class="ficha-anamnese-complemento-wrap">
+                <span class="ficha-anamnese-meta">${esc(labelComplemento)}</span>
+                <textarea class="ficha-anamnese-complemento" data-pergunta-id="${id}" data-tipo-resposta="${tipoResposta}" placeholder="${esc(placeholderComplemento)}">${esc(tipoResposta === 3 ? textoLivreResposta : complemento)}</textarea>
+              </label>
+            `}
           </div>
         </article>`;
     }).join("");
@@ -512,7 +583,12 @@
         if (alvo.matches?.("textarea.ficha-anamnese-complemento")) {
           const perguntaId = Number(alvo.getAttribute("data-pergunta-id") || 0) || 0;
           if (!perguntaId) return;
-          atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
+          const tipoResposta = normalizarTipoResposta(alvo.getAttribute("data-tipo-resposta") || tipoRespostaPergunta(perguntaId));
+          if (tipoResposta === 3) {
+            atualizarRespostaLocal(perguntaId, { resposta: alvo.value, complemento: "" });
+          } else {
+            atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
+          }
         }
       });
       wrap.addEventListener("input", (ev) => {
@@ -521,7 +597,12 @@
         if (!alvo.matches?.("textarea.ficha-anamnese-complemento")) return;
         const perguntaId = Number(alvo.getAttribute("data-pergunta-id") || 0) || 0;
         if (!perguntaId) return;
-        atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
+        const tipoResposta = normalizarTipoResposta(alvo.getAttribute("data-tipo-resposta") || tipoRespostaPergunta(perguntaId));
+        if (tipoResposta === 3) {
+          atualizarRespostaLocal(perguntaId, { resposta: alvo.value, complemento: "" });
+        } else {
+          atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
+        }
       });
     }
     if (ficha.anamneseQuestionario && ficha.anamneseQuestionario.dataset.bound !== "1") {
