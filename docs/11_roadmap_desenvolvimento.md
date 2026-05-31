@@ -4225,6 +4225,18 @@ Observacoes:
 - Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado.
 - O novo documento e `docs/ficha_pessoal_correcao_botao_procura_reentrante.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Validacao do botao Procura reentrante
+
+- Foi registrada a validacao manual da correcao do botao `Procura...` da `Ficha Pessoal`.
+- O commit validado foi `1b53fb4`.
+- O resultado informado pelo usuario foi `PASSOU`.
+- O fluxo testado confirmou: abrir `Ficha Pessoal`, clicar em `Procura...`, selecionar paciente, carregar a ficha, clicar novamente em `Procura...` sem fechar a ficha e abrir a pesquisa de novo.
+- A correcao foi considerada concluida.
+- Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta validacao.
+- O novo documento e `docs/ficha_pessoal_validacao_botao_procura_reentrante.md`.
+- A proxima recomendacao e retomar a aba `Anamnese` em uma nova subetapa pequena.
+- A blindagem textual/mojibake foi respeitada.
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
