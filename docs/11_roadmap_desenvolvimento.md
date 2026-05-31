@@ -4077,6 +4077,17 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Matriz operacional curta apos revisao geral de Prestadores
+
+- A nova matriz operacional curta da Fase 2C foi aberta apos a revisao geral de `Prestadores`.
+- A origem da decisao foi `F2C-GERAL2-E`.
+- A consolidacao das rodadas de `Editor de Textos` e `Prestadores` foi mantida como contexto valido.
+- A decisao final registrada foi `F2C-CURTA3-E`.
+- O fluxo recomendado foi manter a Fase 2C em manutencao/correcoes apenas neste momento.
+- O novo documento e `docs/fase_2c_matriz_operacional_curta_pos_prestadores.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
