@@ -4013,6 +4013,20 @@ Observacoes:
 - A proxima etapa recomendada e manter o contrato documentado pronto para eventual implementacao real do bloco visual/painel + filtros locais simples, com backup controlado antes de qualquer codigo.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Prestadores - Implementacao da listagem, painel e filtros locais
+
+- A implementacao real do bloco visual/painel + filtros locais simples de `Prestadores` foi concluida.
+- A classificacao confirmou `Prestadores` como modulo comum/core.
+- A origem da decisao foi `F2C-PREST-C`.
+- O fluxo implementado foi `listagem/painel + filtros locais simples`.
+- Os arquivos alterados foram `frontend/app.js` e `frontend/js/modules/prestadores.js`.
+- O backup controlado foi criado em `backups_modularizacao/fase_2c/prestadores_listagem_painel_filtros_locais/`.
+- A reducao real de `frontend/app.js` foi confirmada.
+- Nao houve alteracao de `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, exclusao, permissões, vinculo usuario/prestador ou protecao estrutural do prestador sistemico `Clínica`.
+- O novo documento e `docs/fase_2c_prestadores_implementacao_listagem_painel_filtros_locais.md`.
+- A proxima etapa recomendada e teste manual pelo usuario antes de qualquer novo avanco.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
