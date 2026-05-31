@@ -4486,3 +4486,14 @@ Observacoes:
 - A recomendacao registrada e considerar a aba `Anamnese` concluida nesta fase, salvo bugs encontrados em teste futuro.
 - O novo documento e `docs/ficha_pessoal_anamnese_consolidacao_pos_persistencia_b2_grava.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Adendo de reabertura da comunicacao com o modulo Anamnese
+
+- Foi registrado que a consolidacao anterior da Anamnese era parcial/prematura.
+- A aba `Anamnese` continua aberta para tratar a comunicacao entre o modulo/configuracao e o uso clinico na `Ficha Pessoal`.
+- Visual, confirmacao local, persistencia B2 e integracao ao `Grava` continuam validados.
+- O diagnostico documental identificou a tela de configuracao em `frontend/app.js`, o namespace passivo `frontend/js/modules/anamnese.js`, o modulo clinico em `frontend/js/modules/ficha-pessoal-aba-anamnese.js` e os endpoints da familia `/anamnese`.
+- A decisao recomendada ficou em `FICHA-ANAM-COMUNIC-B`.
+- Nao houve alteracao de codigo nesta etapa.
+- O novo documento e `docs/ficha_pessoal_anamnese_adendo_reabertura_comunicacao_modulo_anamnese.md`.
+- A blindagem textual/mojibake foi respeitada.
