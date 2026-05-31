@@ -4378,3 +4378,17 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_contrato_confirmacao_alteracoes.md`.
 - Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Implementacao da confirmacao local sem salvamento
+
+- Foi registrada a implementacao da camada local de confirmacao de alteracoes da aba `Anamnese`.
+- A mensagem contratada e `Os dados foram alterados. Deseja gravá-los?`.
+- A interface ganhou `Sim`, `Nao` e `Cancelar` em modal local isolado.
+- `Sim` apenas informa que o salvamento ainda nao foi implementado nesta etapa.
+- `Nao` descarta as alteracoes locais e segue com a acao pendente.
+- `Cancelar` mantem o usuario na aba `Anamnese`.
+- A confirmacao passa a cobrir saidas por troca de aba, `Procura...`, `Novo`, `Fechar`, `Sair`, navegacao de paciente e troca de questionario quando houver alteracoes locais.
+- A modularizacao continuou restrita ao frontend, sem backend, banco, payload ou `requestJson`.
+- O novo documento e `docs/ficha_pessoal_anamnese_implementacao_confirmacao_alteracoes_sem_salvamento.md`.
+- O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_confirmacao_alteracoes_sem_salvamento/`.
+- A blindagem textual/mojibake foi respeitada.

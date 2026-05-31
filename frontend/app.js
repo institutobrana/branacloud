@@ -5287,7 +5287,7 @@ function fichaEnsureUI(){
   ficha.btnX.addEventListener("click",fichaFechar);
   ficha.btnFechar.addEventListener("click",fichaFechar);
   ficha.btnGravar.addEventListener("click",fichaSalvarPaciente);
-  ficha.btnNovo.addEventListener("click",async()=>{ficha.titulo.textContent="Ficha pessoal -";await fichaCarregarCombos();await fichaLimparNovo();if(ficha.nome)ficha.nome.focus();});
+  ficha.btnNovo.addEventListener("click",()=>{void fichaAbrirNovo();});
   ficha.btnEliminar.addEventListener("click",fichaExcluirPaciente);
   ficha.btnImprimir.addEventListener("click",()=>window.print());
   if(ficha.convenio)ficha.convenio.addEventListener("change",()=>fichaAtualizarPlanosFiltro());
@@ -5982,6 +5982,7 @@ async function fichaCarregarPacientePorId(id,quiet=false){
   return data;
 }
 async function fichaAbrirPorCodigo(codigo,quiet=false){
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("abrir por codigo"))) return null;
   const raw=String(codigo||"").trim();
   if(!/^\d+$/.test(raw))return null;
   const cod=Number(raw);
@@ -6033,6 +6034,7 @@ async function fichaSalvarPaciente(){
   footerMsg.textContent=editando?"Paciente atualizado com sucesso.":"Paciente cadastrado com sucesso.";
 }
 async function fichaProcurarPaciente(){
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("procurar paciente"))) return;
   const prefill=String(ficha?.codigo?.value||"").trim();
   await fichaMenuPacAbrir(prefill&&prefill!=="Novo"?prefill:"");
 }
@@ -6138,7 +6140,7 @@ function fichaMenuPacEnsureUI(){
   fichaMenuPac.closeX.addEventListener("click",fechar);
   fichaMenuPac.btnCancelar.addEventListener("click",fechar);
   fichaMenuPac.btnOk.addEventListener("click",()=>fichaMenuPacConfirmar());
-  fichaMenuPac.btnNovo.addEventListener("click",async()=>{fichaMenuPacFechar();await fichaAbrirNovo();});
+  fichaMenuPac.btnNovo.addEventListener("click",()=>{void fichaAbrirNovo();});
   fichaMenuPac.txtQ.addEventListener("keydown",(ev)=>{if(ev.key==="Enter"){ev.preventDefault();fichaMenuPacPesquisar()} if(ev.key==="Escape"){ev.preventDefault();fichaMenuPacFechar();}});
   fichaMenuPac.txtQ.addEventListener("input",()=>{
     if(!fichaMenuPac)return;
@@ -6364,6 +6366,7 @@ async function fichaMenuPacConfirmar(){
     footerMsg.textContent="Paciente selecionado para o agendamento.";
     return;
   }
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("selecionar paciente"))) return;
   const ok=await fichaCarregarPacientePorId(id,false);
   if(!ok)return;
   fichaEnsureUI();
@@ -6389,6 +6392,7 @@ async function fichaMenuPacAbrir(prefill="",opts={}){
   await fichaMenuPacPesquisar();
   setTimeout(()=>{try{fichaMenuPac.txtQ.focus();fichaMenuPac.txtQ.select()}catch{}},10);
 }async function fichaNavegarPaciente(sentido,quiet=false){
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("navegar paciente"))) return null;
   const params=new URLSearchParams();
   params.set("sentido",String(sentido||"first"));
   if(fichaPacienteAtualId)params.set("atual_id",String(fichaPacienteAtualId));
@@ -6436,7 +6440,8 @@ function fichaSetTab(tab){
     ficha.statusBar.textContent=labels[tab]||"";
   }
 }
-async function fichaLimparNovo(){
+async function fichaLimparNovo(confirmar=true){
+  if(confirmar&&!(await fichaAnamneseAba.beforeAbandonar?.("novo paciente"))) return;
   if(!ficha)return;
   const hoje=(new Date()).toISOString().slice(0,10);
   const hojeBr=(new Date()).toLocaleDateString("pt-BR");
@@ -6497,7 +6502,8 @@ async function fichaLimparNovo(){
   if(ficha.anotacoes)ficha.anotacoes.value="";
   ficha.titulo.textContent="Ficha pessoal -";
 }
-function fichaFechar(){
+async function fichaFechar(){
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("fechar ficha"))) return;
   if(!ficha)return;
   if(fichaFotoMenu?.panel)fichaFotoMenu.panel.classList.add("hidden");
   if(fichaFotoCapture?.backdrop&&!fichaFotoCapture.backdrop.classList.contains("hidden"))fichaFotoFecharCaptura();
@@ -6506,18 +6512,20 @@ function fichaFechar(){
   workspaceEmpty.classList.remove("hidden");
 }
 async function fichaAbrirNovo(){
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("novo paciente"))) return;
   fichaEnsureUI();
   hideAllPanels();
   ficha.panel.classList.remove("hidden");
   workspaceEmpty.classList.add("hidden");
   ficha.titulo.textContent="Ficha pessoal -";
   await fichaCarregarCombos();
-  await fichaLimparNovo();
+  await fichaLimparNovo(false);
   fichaSetTab("dados");
   if(ficha.nome)ficha.nome.focus();
   footerMsg.textContent="Cadastro > Novo paciente (Ficha pessoal) aberto.";
 }
 async function fichaAbrirExistente(){
+  if(!(await fichaAnamneseAba.beforeAbandonar?.("abrir paciente existente"))) return;
   fichaEnsureUI();
   hideAllPanels();
   workspaceEmpty.classList.add("hidden");
@@ -22293,7 +22301,7 @@ sobreDlg.btnFechar.addEventListener("click",fecharSobreModal);sobreDlg.backdrop.
 licDlg.btnFechar.addEventListener("click",fecharLicencaModal);licDlg.backdrop.addEventListener("click",ev=>{if(ev.target===licDlg.backdrop)fecharLicencaModal()});licDlg.btnCopiar.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(licDlg.machine.value||"");licSetStatus("ID copiado.",false,true)}catch{licSetStatus("Não foi possível copiar o ID.",true,false)}});licDlg.btnMensal.addEventListener("click",()=>licIniciarCheckout("MENSAL"));licDlg.btnAnual.addEventListener("click",()=>licIniciarCheckout("ANUAL"));if(licDlg.btnAtualizar)licDlg.btnAtualizar.addEventListener("click",licSincronizarStatus);
 document.getElementById("btn-login").addEventListener("click",login);emailEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();login()}});senhaEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();login()}});document.getElementById("btn-open-signup").addEventListener("click",()=>showPanel(panelSignup));document.getElementById("btn-open-forgot").addEventListener("click",()=>showPanel(panelForgot));document.getElementById("btn-signup-code").addEventListener("click",signupRequestCode);document.getElementById("btn-signup-confirm").addEventListener("click",signupConfirm);document.getElementById("btn-forgot-code").addEventListener("click",forgotRequestCode);document.getElementById("btn-forgot-reset").addEventListener("click",forgotResetPassword);document.getElementById("btn-back-login-from-signup").addEventListener("click",()=>showPanel(panelLogin));document.getElementById("btn-back-login-from-forgot").addEventListener("click",()=>showPanel(panelLogin));if(document.getElementById("btn-setup-complete"))document.getElementById("btn-setup-complete").addEventListener("click",setupComplete);if(document.getElementById("btn-setup-logout"))document.getElementById("btn-setup-logout").addEventListener("click",setupLogout);if(setupSenhaEl)setupSenhaEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setupComplete()}});if(setupConfirmaEl)setupConfirmaEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setupComplete()}});
 document.getElementById("btn-google-login").addEventListener("click",()=>{window.location.href="/auth/google/login"});
-document.getElementById("btn-sair").addEventListener("click",async()=>{stopSessionHeartbeat();try{if(getToken())await requestJson("POST","/logout",{},true)}catch{}setToken("");mpReturnPaymentId="";sessaoAtual=null;menuApplyPermissions();usersCache=[];usersSelecionadoId=null;usersStopRefresh();usersPermSchema=null;usersPermEditId=null;materiaisCache=[];materialSelecionadoId=null;materialModalId=null;materiaisAuxTiposCache=[];materiaisAuxUndsCache=[];materiaisListasCache=[];materiaisIndicesCache=[];materiaisTabelaModalModo="nova";materiaisTabelaModalListaId=0;procedimentosCache=[];procedimentoSelecionadoId=null;procedimentoAtualId=null;procedimentoLinks=[];procEditorSnapshot=null;procMateriaisGenericoBaseId=0;procMateriaisGenericoVisualId=0;procMateriaisGenericoRenderSeq=0;procMaterialSelecionadoId=null;procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};pgenCache=[];pgenSelId=null;unidadesCache=[];unidadeSelId=null;fichaPacienteAtualId=null;fichaPacientesBuscaCache=[];fichaCodigoUltimoResolvido="";if(fichaMenuPac)fichaMenuPacFechar();fcxData=null;dashData=[];dashGrafico=[];dashTabela=[];dashSelecionadoId=null;gruposCache=[];grupoSelId=null;catSelId=null;auxItensCache=[];auxSelId=null;licInfoCache=null;saClinicasCache=[];saUsuariosCache=[];if(btnOpenUsers)btnOpenUsers.classList.add("hidden");if(menuSuperAdminAction)menuSuperAdminAction.classList.add("hidden");if(menuSuperAdminSep)menuSuperAdminSep.classList.add("hidden");userRole.textContent="Perfil: -";licUpdateBadge(null);hideAllPanels();materiaisFecharModal();materiaisTabelaFecharModal();procFecharVincular();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();if(prefCfg?.backdrop)prefCfg.backdrop.classList.add("hidden");if(sysOptCfg?.backdrop)sysOptCfg.backdrop.classList.add("hidden");fecharSobreModal();fecharLicencaModal();const cadMb=document.getElementById("cad-modal-backdrop");if(cadMb)cadMb.classList.add("hidden");loginWrap.classList.remove("hidden");shell.classList.add("hidden");showPanel(panelLogin);setLoginStatus("Sessao encerrada.",false)});
+document.getElementById("btn-sair").addEventListener("click",async()=>{if(!(await fichaAnamneseAba.beforeAbandonar?.("sair")))return;stopSessionHeartbeat();try{if(getToken())await requestJson("POST","/logout",{},true)}catch{}setToken("");mpReturnPaymentId="";sessaoAtual=null;menuApplyPermissions();usersCache=[];usersSelecionadoId=null;usersStopRefresh();usersPermSchema=null;usersPermEditId=null;materiaisCache=[];materialSelecionadoId=null;materialModalId=null;materiaisAuxTiposCache=[];materiaisAuxUndsCache=[];materiaisListasCache=[];materiaisIndicesCache=[];materiaisTabelaModalModo="nova";materiaisTabelaModalListaId=0;procedimentosCache=[];procedimentoSelecionadoId=null;procedimentoAtualId=null;procedimentoLinks=[];procEditorSnapshot=null;procMateriaisGenericoBaseId=0;procMateriaisGenericoVisualId=0;procMateriaisGenericoRenderSeq=0;procMaterialSelecionadoId=null;procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};pgenCache=[];pgenSelId=null;unidadesCache=[];unidadeSelId=null;fichaPacienteAtualId=null;fichaPacientesBuscaCache=[];fichaCodigoUltimoResolvido="";if(fichaMenuPac)fichaMenuPacFechar();fcxData=null;dashData=[];dashGrafico=[];dashTabela=[];dashSelecionadoId=null;gruposCache=[];grupoSelId=null;catSelId=null;auxItensCache=[];auxSelId=null;licInfoCache=null;saClinicasCache=[];saUsuariosCache=[];if(btnOpenUsers)btnOpenUsers.classList.add("hidden");if(menuSuperAdminAction)menuSuperAdminAction.classList.add("hidden");if(menuSuperAdminSep)menuSuperAdminSep.classList.add("hidden");userRole.textContent="Perfil: -";licUpdateBadge(null);hideAllPanels();materiaisFecharModal();materiaisTabelaFecharModal();procFecharVincular();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();if(prefCfg?.backdrop)prefCfg.backdrop.classList.add("hidden");if(sysOptCfg?.backdrop)sysOptCfg.backdrop.classList.add("hidden");fecharSobreModal();fecharLicencaModal();const cadMb=document.getElementById("cad-modal-backdrop");if(cadMb)cadMb.classList.add("hidden");loginWrap.classList.remove("hidden");shell.classList.add("hidden");showPanel(panelLogin);setLoginStatus("Sessao encerrada.",false)});
 document.getElementById("btn-sair").addEventListener("click",()=>{ccLancCache=[];ccSelecionadoId=null;ccEditId=null;if(cc)ccFecharModal()});
 document.getElementById("btn-open-cenario").addEventListener("click",abrirCenario);if(btnOpenUsers)btnOpenUsers.addEventListener("click",abrirPainelAdministradorToolbar);document.getElementById("btn-fechar-cenario").addEventListener("click",()=>showScenarioPanel(false));document.getElementById("btn-salvar-cenario").addEventListener("click",salvarCenario);document.getElementById("btn-calcular-fixos").addEventListener("click",calcularFixosAno);if(usersBtnNovo)usersBtnNovo.addEventListener("click",usersAbrirModalNovo);if(usersBtnEditar)usersBtnEditar.addEventListener("click",usersEditarSelecionado);if(usersBtnExcluir)usersBtnExcluir.addEventListener("click",usersExcluirSelecionado);if(usersBtnImpressos)usersBtnImpressos.addEventListener("click",usersAbrirImpressos);if(usersBtnPreferencias)usersBtnPreferencias.addEventListener("click",usersAbrirPreferencias);if(usersBtnPermissoes)usersBtnPermissoes.addEventListener("click",usersAbrirPermissoes);if(usersBtnFechar)usersBtnFechar.addEventListener("click",()=>showUsersPanel(false));if(usersModalOk)usersModalOk.addEventListener("click",usersSalvarNovo);if(usersModalCancelar)usersModalCancelar.addEventListener("click",usersFecharModal);if(usersModalShowSenha)usersModalShowSenha.addEventListener("change",usersToggleSenhaVisibilidade);if(usersPassOk)usersPassOk.addEventListener("click",usersSalvarSenha);if(usersPassCancelar)usersPassCancelar.addEventListener("click",usersFecharModalSenha);if(protectedPassOk)protectedPassOk.addEventListener("click",protectedPassSubmit);if(protectedPassCancelar)protectedPassCancelar.addEventListener("click",()=>protectedPassClose(null));if(protectedPassInput)protectedPassInput.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();protectedPassSubmit()}if(ev.key==="Escape"){ev.preventDefault();protectedPassClose(null)}});if(usersPermOk)usersPermOk.addEventListener("click",usersSalvarPermissoes);if(usersPermCancelar)usersPermCancelar.addEventListener("click",usersFecharPermissoes);if(usersPermFechar)usersPermFechar.addEventListener("click",usersFecharPermissoes);if(usersPermTabAcessoBtn)usersPermTabAcessoBtn.addEventListener("click",()=>usersPermSetTab("acesso"));if(usersPermTabPerfisBtn)usersPermTabPerfisBtn.addEventListener("click",()=>usersPermSetTab("perfis"));if(usersPermProfileSelect)usersPermProfileSelect.addEventListener("change",()=>{usersPermSelectedProfileCode=String(usersPermProfileSelect.value||"").trim();usersPermRenderPerfilPreview()});if(usersPermProfileApply)usersPermProfileApply.addEventListener("click",usersPermAplicarPerfilSelecionado);const usersPermActionButtons=Array.from(document.querySelectorAll(".users-perm-action"));usersPermActionButtons.forEach(btn=>{btn.addEventListener("click",()=>{const level=String(btn.getAttribute("data-level")||"").trim();if(level)usersPermApplyLevel(level,"module")})});if(usersModalBackdrop)usersModalBackdrop.addEventListener("click",ev=>{if(ev.target===usersModalBackdrop)usersFecharModal()});if(usersPassBackdrop)usersPassBackdrop.addEventListener("click",ev=>{if(ev.target===usersPassBackdrop)usersFecharModalSenha()});if(usersPermBackdrop)usersPermBackdrop.addEventListener("click",ev=>{if(ev.target===usersPermBackdrop)usersFecharPermissoes()});
 if(protectedPassBackdrop)protectedPassBackdrop.addEventListener("click",ev=>{if(ev.target===protectedPassBackdrop)protectedPassClose(null)});
@@ -22565,7 +22573,9 @@ const fichaAnamneseAba=window.BranaFichaPessoalAbaAnamnese||{
   bind(){if(!ficha?.anamneseQuestionario||ficha.anamneseQuestionario.dataset.bound==="1")return;ficha.anamneseQuestionario.dataset.bound="1";ficha.anamneseQuestionario.addEventListener("change",()=>{});},
   onPacienteAplicado(){this.atualizarCabecalho();if(fichaTabAtual==="anamnese")this.carregar();},
   async onLimparNovo(){this.atualizarCabecalho();this.renderQuestionarios();},
-  beforeSetTab(tab){if((tab==="anamnese"||tab==="historico")&&!this.temPacienteValido()){window.alert("Necessario gravar o paciente antes de abrir esta aba.");return false;}return true;}
+  async solicitarConfirmacaoAlteracoes(){return"limpo";},
+  async beforeAbandonar(){return true;},
+  async beforeSetTab(tab){if((tab==="anamnese"||tab==="historico")&&!this.temPacienteValido()){window.alert("Necessario gravar o paciente antes de abrir esta aba.");return false;}return true;}
 };
 function fichaAnamneseTemPacienteValido(){return fichaAnamneseAba.temPacienteValido();}
 function fichaAnamneseNomePacienteAtual(){return fichaAnamneseAba.nomePacienteAtual();}
@@ -22583,9 +22593,20 @@ const _fichaLimparNovoOrig=fichaLimparNovo;
 fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();};
 const _fichaSetTabOrig=fichaSetTab;
 fichaSetTab=function(tab){
-  if(!fichaAnamneseAba.beforeSetTab(tab)) return;
+  const permite=fichaAnamneseAba.beforeSetTab(tab);
+  if(permite&&typeof permite.then==="function"){
+    void (async()=>{
+      if(!(await permite)) return;
+      const tabAnterior=fichaTabAtual;
+      _fichaSetTabOrig(tab);
+      if(tab==="anamnese"&&tabAnterior!=="anamnese")fichaAnamneseAba.carregar();
+    })();
+    return;
+  }
+  if(!permite)return;
+  const tabAnterior=fichaTabAtual;
   _fichaSetTabOrig(tab);
-  if(tab==="anamnese")fichaAnamneseAba.carregar();
+  if(tab==="anamnese"&&tabAnterior!=="anamnese")fichaAnamneseAba.carregar();
 };
 
 // Overrides - Simbolos graficos CRUD

@@ -11,6 +11,11 @@
     questionarios: [],
     perguntas: [],
     statusPerguntas: "idle",
+    dirty: false,
+    draftPerguntas: {},
+    confirmBackdrop: null,
+    confirmPromise: null,
+    confirmResolve: null,
   };
 
   const STYLE_ID = "ficha-anamnese-visual-style";
@@ -39,12 +44,120 @@
       .ficha-anamnese-loading{opacity:.86}
       .ficha-anamnese-empty{padding:12px}
       .ficha-anamnese-card.selected{box-shadow:0 0 0 1px #8cc3ff inset;background:#f2f8ff}
+      .ficha-anamnese-confirm-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.32);display:grid;place-items:center;z-index:3100}
+      .ficha-anamnese-confirm-backdrop.hidden{display:none}
+      .ficha-anamnese-confirm-box{width:min(440px,92vw);background:#f5f7fb;border:1px solid #9fa9b7;box-shadow:0 10px 32px rgba(0,0,0,.18);font:12px Tahoma,sans-serif;color:#1f2a35;box-sizing:border-box}
+      .ficha-anamnese-confirm-head{padding:10px 12px;border-bottom:1px solid #c5cfdb;background:#edf2f8;font-weight:700}
+      .ficha-anamnese-confirm-msg{padding:14px 12px 10px;line-height:1.35}
+      .ficha-anamnese-confirm-actions{display:flex;gap:8px;justify-content:flex-end;padding:10px 12px 12px}
+      .ficha-anamnese-confirm-actions .materiais-btn{min-width:90px;justify-content:center}
     `;
     document.head.appendChild(style);
   }
 
   function anamneseWrapEl() {
     return ficha?.panel?.querySelector(".ficha-anamnese-wrap") || null;
+  }
+
+  function anamneseStateEl() {
+    return ficha?.panel?.querySelector(".ficha-anamnese-state") || null;
+  }
+
+  function respostaDraft(perguntaId) {
+    return state.draftPerguntas[String(perguntaId)] || { resposta: "", complemento: "" };
+  }
+
+  function normalizarResposta(valor) {
+    const base = String(valor || "").trim().toLowerCase();
+    if (base === "sim" || base === "s") return "sim";
+    if (base === "nao" || base === "não" || base === "n") return "nao";
+    return "";
+  }
+
+  function atualizarDirty() {
+    state.dirty = Object.values(state.draftPerguntas || {}).some((item) => {
+      if (!item) return false;
+      return !!(normalizarResposta(item.resposta) || String(item.complemento || "").trim());
+    });
+  }
+
+  function limparAlteracoesLocais() {
+    state.dirty = false;
+    state.draftPerguntas = {};
+  }
+
+  function atualizarRespostaLocal(perguntaId, patch) {
+    const id = String(perguntaId || "").trim();
+    if (!id) return;
+    const atual = state.draftPerguntas[id] || { resposta: "", complemento: "" };
+    state.draftPerguntas[id] = {
+      resposta: normalizarResposta(patch?.resposta !== undefined ? patch.resposta : atual.resposta),
+      complemento: String(patch?.complemento !== undefined ? patch.complemento : atual.complemento || ""),
+    };
+    atualizarDirty();
+  }
+
+  function ensureConfirmUI() {
+    if (state.confirmBackdrop) return state.confirmBackdrop;
+    const backdrop = document.createElement("div");
+    backdrop.className = "ficha-anamnese-confirm-backdrop hidden";
+    backdrop.innerHTML = `
+      <div class="ficha-anamnese-confirm-box" role="dialog" aria-modal="true" aria-labelledby="ficha-anamnese-confirm-title">
+        <div id="ficha-anamnese-confirm-title" class="ficha-anamnese-confirm-head">Ficha pessoal - Anamnese</div>
+        <div class="ficha-anamnese-confirm-msg" data-ficha-anamnese-confirm-msg>Os dados foram alterados. Deseja gravá-los?</div>
+        <div class="ficha-anamnese-confirm-actions">
+          <button type="button" class="materiais-btn" data-ficha-anamnese-confirm-action="sim">Sim</button>
+          <button type="button" class="materiais-btn" data-ficha-anamnese-confirm-action="nao">Nao</button>
+          <button type="button" class="materiais-btn" data-ficha-anamnese-confirm-action="cancelar">Cancelar</button>
+        </div>
+      </div>`;
+    const resolveConfirm = (value) => {
+      if (!state.confirmResolve) return;
+      const resolver = state.confirmResolve;
+      state.confirmResolve = null;
+      state.confirmPromise = null;
+      backdrop.classList.add("hidden");
+      resolver(value);
+    };
+    backdrop.addEventListener("click", (ev) => {
+      if (ev.target === backdrop) resolveConfirm("cancelar");
+    });
+    backdrop.querySelectorAll("[data-ficha-anamnese-confirm-action]").forEach((btn) => {
+      btn.addEventListener("click", () => resolveConfirm(btn.getAttribute("data-ficha-anamnese-confirm-action") || "cancelar"));
+    });
+    document.body.appendChild(backdrop);
+    state.confirmBackdrop = backdrop;
+    return backdrop;
+  }
+
+  async function solicitarConfirmacaoAlteracoes(motivo = "") {
+    void motivo;
+    if (!state.dirty) return "limpo";
+    const backdrop = ensureConfirmUI();
+    const msg = backdrop.querySelector("[data-ficha-anamnese-confirm-msg]");
+    if (msg) msg.textContent = "Os dados foram alterados. Deseja gravá-los?";
+    backdrop.classList.remove("hidden");
+    if (!state.confirmPromise) {
+      state.confirmPromise = new Promise((resolve) => {
+        state.confirmResolve = resolve;
+      });
+    }
+    const escolha = await state.confirmPromise;
+    if (escolha === "nao") {
+      limparAlteracoesLocais();
+      renderPerguntas();
+      return "nao";
+    }
+    if (escolha === "sim") {
+      window.alert("Salvamento da Anamnese ainda nao foi implementado nesta etapa.");
+      return "sim";
+    }
+    return "cancelar";
+  }
+
+  function beforeAbandonar(motivo = "") {
+    if (!fichaTabAtual || fichaTabAtual !== "anamnese") return true;
+    return solicitarConfirmacaoAlteracoes(motivo).then((escolha) => escolha === "limpo" || escolha === "nao");
   }
 
   function temPacienteValido() {
@@ -110,18 +223,21 @@
       const numero = item?.numero ?? idx + 1;
       const texto = esc(String(item?.texto || "").trim() || "Pergunta sem texto");
       const nomeGrupo = `ficha-anamnese-q-${selecionadoId || "vazio"}-${id}`;
+      const draft = respostaDraft(id);
+      const resposta = normalizarResposta(draft.resposta);
+      const complemento = String(draft.complemento || "");
       return `
-        <article class="ficha-anamnese-card" data-pergunta-id="${id}">
+        <article class="ficha-anamnese-card" data-pergunta-id="${id}" data-questionario-id="${selecionadoId || ""}">
           <div class="ficha-anamnese-num">${esc(String(numero))})</div>
           <div class="ficha-anamnese-texto">${texto}</div>
           <div class="ficha-anamnese-controles">
             <div class="ficha-anamnese-opcoes" role="group" aria-label="Resposta visual da pergunta ${esc(String(numero))}">
-              <label class="ficha-anamnese-opcao"><input type="radio" name="${nomeGrupo}" value="sim"> Sim</label>
-              <label class="ficha-anamnese-opcao"><input type="radio" name="${nomeGrupo}" value="nao"> Nao</label>
+              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="sim" name="${nomeGrupo}" value="sim"${resposta==="sim"?" checked":""}> Sim</label>
+              <label class="ficha-anamnese-opcao"><input type="radio" data-pergunta-id="${id}" data-resposta="nao" name="${nomeGrupo}" value="nao"${resposta==="nao"?" checked":""}> Nao</label>
             </div>
             <label style="display:block;min-width:0;width:100%">
               <span class="ficha-anamnese-meta">Complemento / observacao</span>
-              <textarea class="ficha-anamnese-complemento" placeholder="Complemento visual sem salvamento..."></textarea>
+              <textarea class="ficha-anamnese-complemento" data-pergunta-id="${id}" placeholder="Complemento visual sem salvamento...">${esc(complemento)}</textarea>
             </label>
           </div>
         </article>`;
@@ -181,8 +297,14 @@
   async function selecionarQuestionario(id) {
     const novo = Number(id || 0) || null;
     if (novo === state.questionarioSelId) return;
+    const escolha = await solicitarConfirmacaoAlteracoes("troca de questionario");
+    if (escolha === "cancelar" || escolha === "sim") {
+      renderQuestionarios();
+      return;
+    }
     state.questionarioId = novo;
     state.questionarioSelId = novo;
+    limparAlteracoesLocais();
     renderQuestionarios();
     await carregarPerguntas(state.loadToken);
   }
@@ -196,6 +318,7 @@
       state.questionarios = [];
       state.perguntas = [];
       state.statusPerguntas = "idle";
+      limparAlteracoesLocais();
       renderQuestionarios();
       renderPerguntas();
       return;
@@ -215,6 +338,34 @@
 
   function bind() {
     if (!ficha) return;
+    const wrap = anamneseWrapEl();
+    if (wrap && wrap.dataset.bound !== "1") {
+      wrap.dataset.bound = "1";
+      wrap.addEventListener("change", (ev) => {
+        const alvo = ev.target;
+        if (!(alvo instanceof HTMLElement)) return;
+        const radio = alvo.closest?.('input[type="radio"][data-pergunta-id]');
+        if (radio) {
+          const perguntaId = Number(radio.getAttribute("data-pergunta-id") || 0) || 0;
+          if (!perguntaId) return;
+          atualizarRespostaLocal(perguntaId, { resposta: radio.getAttribute("data-resposta") || radio.value || "" });
+          return;
+        }
+        if (alvo.matches?.("textarea.ficha-anamnese-complemento")) {
+          const perguntaId = Number(alvo.getAttribute("data-pergunta-id") || 0) || 0;
+          if (!perguntaId) return;
+          atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
+        }
+      });
+      wrap.addEventListener("input", (ev) => {
+        const alvo = ev.target;
+        if (!(alvo instanceof HTMLElement)) return;
+        if (!alvo.matches?.("textarea.ficha-anamnese-complemento")) return;
+        const perguntaId = Number(alvo.getAttribute("data-pergunta-id") || 0) || 0;
+        if (!perguntaId) return;
+        atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
+      });
+    }
     if (ficha.anamneseQuestionario && ficha.anamneseQuestionario.dataset.bound !== "1") {
       ficha.anamneseQuestionario.dataset.bound = "1";
       ficha.anamneseQuestionario.addEventListener("change", (ev) => {
@@ -225,6 +376,7 @@
 
   function onPacienteAplicado() {
     atualizarCabecalho();
+    limparAlteracoesLocais();
     if (fichaTabAtual === "anamnese") carregar();
   }
 
@@ -236,6 +388,7 @@
     state.questionarios = [];
     state.perguntas = [];
     state.statusPerguntas = "idle";
+    limparAlteracoesLocais();
     atualizarCabecalho();
     renderQuestionarios();
     renderPerguntas();
@@ -245,6 +398,12 @@
     if ((tab === "anamnese" || tab === "historico") && !temPacienteValido()) {
       window.alert("Necessario gravar o paciente antes de abrir esta aba.");
       return false;
+    }
+    if (fichaTabAtual === "anamnese" && tab !== "anamnese") {
+      return solicitarConfirmacaoAlteracoes(`troca de aba para ${String(tab || "")}`).then((escolha) => {
+        if (escolha === "cancelar" || escolha === "sim") return false;
+        return true;
+      });
     }
     return true;
   }
@@ -274,6 +433,8 @@
     bind,
     onPacienteAplicado,
     onLimparNovo,
+    solicitarConfirmacaoAlteracoes,
+    beforeAbandonar,
     beforeSetTab,
   };
 
