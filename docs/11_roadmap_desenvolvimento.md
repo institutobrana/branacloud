@@ -4212,6 +4212,19 @@ Observacoes:
 - O backup obrigatorio foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_limpeza_botao_quadros/`.
 - O novo documento e `docs/ficha_pessoal_anamnese_limpeza_botao_quadros.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Correcao do botao Procura reentrante
+
+- Foi registrada a correcao do botao `Procura...` da `Ficha Pessoal`.
+- O problema confirmado era o botao funcionar apenas uma vez apos a selecao de um paciente.
+- A causa encontrada foi o atalho de abrir por codigo numerico, que podia curto-circuitar o fluxo de busca quando o codigo ja era o mesmo do paciente atual.
+- A correccao fez o botao abrir sempre a pesquisa de pacientes, reutilizando o menu existente.
+- A logica de abertura por codigo ficou preservada apenas para os fluxos de teclado/blur.
+- A aba `Anamnese` nao foi alterada nesta rodada.
+- O arquivo alterado foi `frontend/app.js`.
+- Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado.
+- O novo documento e `docs/ficha_pessoal_correcao_botao_procura_reentrante.md`.
+- A blindagem textual/mojibake foi respeitada.
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.

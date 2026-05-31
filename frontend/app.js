@@ -6034,10 +6034,6 @@ async function fichaSalvarPaciente(){
 }
 async function fichaProcurarPaciente(){
   const prefill=String(ficha?.codigo?.value||"").trim();
-  if(/^\d+$/.test(prefill)){
-    const aberto=await fichaAbrirPorCodigo(prefill,true);
-    if(aberto)return;
-  }
   await fichaMenuPacAbrir(prefill&&prefill!=="Novo"?prefill:"");
 }
 function fichaMenuPacEnsureUI(){
