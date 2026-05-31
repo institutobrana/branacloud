@@ -4088,6 +4088,18 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anotacoes - Diagnostico comparativo EasyDental x Brana Cloud
+
+- O diagnostico comparativo da aba `Anotacoes` foi aberto como etapa exclusivamente documental.
+- A leitura do codigo atual confirmou `textarea` simples, toolbar visivel com acoes ainda em planejamento, salvamento de texto puro e persistencia em `Text`.
+- A leitura do legado localizada no workspace foi indireta e confirmou apenas o mapeamento do campo `ANOTAC` para `anotacoes`, sem UI direta do EasyDental para essa aba.
+- A conclusao registrada e que o Brana Cloud tem uma implementacao minima de anotacoes, mas ainda sem equivalencia funcional rica comprovada com o EasyDental.
+- O risco foi classificado como medio, com impacto medio/alto se houver futura aproximacao de comportamento rico ou mudanca de persistencia.
+- A recomendacao registrada e abrir contrato especifico antes de qualquer implementacao futura, incluindo formato visual, semantica de salvamento e compatibilidade com o campo existente.
+- O novo documento e `docs/ficha_pessoal_anotacoes_diagnostico_comparativo_easydental_brana.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
