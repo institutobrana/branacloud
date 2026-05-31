@@ -4054,6 +4054,18 @@ Observacoes:
 - A recomendacao registrada foi fazer revisao documental curta consolidando a rodada de Prestadores antes de qualquer novo recorte.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Prestadores - Revisao curta da rodada de listagem, painel e filtros locais
+
+- A revisao curta da rodada de `Prestadores` na Fase 2C foi registrada.
+- A classificacao confirmou `Prestadores` como modulo comum/core.
+- A implementacao real consolidada foi `listagem/painel + filtros locais simples`.
+- Os commits principais registrados foram `1b438a2`, `8777137` e `7c54c69`.
+- A decisao final registrada foi `F2C-PREST-REV-E`.
+- A recomendacao registrada foi fazer revisao geral da Fase 2C antes de novo recorte.
+- O novo documento e `docs/fase_2c_prestadores_revisao_curta_rodada_listagem_painel.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
