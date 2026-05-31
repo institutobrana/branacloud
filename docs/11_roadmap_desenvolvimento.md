@@ -4135,6 +4135,18 @@ Observacoes:
 - Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado na correção.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anotacoes - Validação da correção emergencial da regressão global
+
+- Foi registrada a validação manual da correção emergencial da regressão global causada pela tentativa de integração da toolbar de `Anotações`.
+- O sistema voltou a funcionar como estava antes.
+- O login funcionou.
+- Os menus voltaram a responder.
+- O botão `Sair` voltou a funcionar.
+- A navegação geral voltou ao comportamento anterior.
+- A toolbar de `Anotações` deve permanecer pausada/desativada por enquanto.
+- O novo documento é `docs/ficha_pessoal_anotacoes_validacao_correcao_regressao_global.md`.
+- Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta validação.
+- A blindagem textual/mojibake foi respeitada.
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
