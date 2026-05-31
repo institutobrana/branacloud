@@ -4351,3 +4351,17 @@ Observacoes:
 - Nenhum backend, banco, payload ou `requestJson` foi alterado nesta validacao.
 - O novo documento e `docs/ficha_pessoal_anamnese_validacao_ajuste_visual_sim_nao_vertical.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Auditoria da persistencia e contrato
+
+- Foi registrada a auditoria documental da persistencia da aba `Anamnese` da `Ficha Pessoal`.
+- As shares legadas `\\Sonyvaio\\c\\EDS70` e `\\Dell_servidor\\c\\EDS70` foram acessadas em modo somente leitura.
+- Os scripts SQL de descoberta das duas shares apresentaram a mesma estrutura de anamnese.
+- A estrutura legada mostrou `ANAMNESE_QUEST`, `ANAMNESE_PERG` e `ANAMNESE_RESP`, com `RESPOSTA` e `COMPLEM`.
+- O Brana Cloud foi confirmado com persistencia textual atual em `PUT /anamnese/pacientes/{id}/respostas`.
+- A leitura comparativa indica que o contrato minimo nao exige novo banco, mas a equivalencia completa com o legado ainda nao foi provada.
+- A decisao registrada foi `FICHA-ANAM-PERSIST-A`.
+- O contrato proposto de confirmacao `Os dados foram alterados...` foi documentado para uso futuro antes de sair da ficha.
+- O novo documento e `docs/ficha_pessoal_anamnese_auditoria_persistencia_contrato.md`.
+- Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
