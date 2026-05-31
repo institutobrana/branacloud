@@ -4392,3 +4392,21 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_implementacao_confirmacao_alteracoes_sem_salvamento.md`.
 - O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_confirmacao_alteracoes_sem_salvamento/`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Validacao da confirmacao local sem salvamento
+
+- Foi registrada a validacao manual da confirmacao local da aba `Anamnese`.
+- O commit validado foi `4e6bc554126ca40077940294a2984a7404353197`.
+- O usuario informou `teste passou`.
+- O modal de confirmacao apareceu quando havia alteracao local pendente.
+- `Cancelar` manteve o usuario na Anamnese.
+- `Nao` descartou alteracao local e prosseguiu.
+- `Sim` nao gravou e apenas avisou limitacao.
+- `Sim` / `Nao` e complemento marcaram estado alterado.
+- `Procura...`, `Novo`, `Fechar`, `Sair`, troca de aba, navegacao entre pacientes e troca de questionario ficaram protegidos.
+- Nao houve regressao global percebida.
+- Ainda nao existe salvamento real de `Sim` / `Nao` + complemento.
+- A persistencia real ficou como contrato futuro separado.
+- O novo documento e `docs/ficha_pessoal_anamnese_validacao_confirmacao_alteracoes_sem_salvamento.md`.
+- Nenhum codigo foi alterado nesta validacao.
+- A blindagem textual/mojibake foi respeitada.
