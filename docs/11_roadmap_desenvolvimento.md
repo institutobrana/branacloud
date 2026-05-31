@@ -4338,3 +4338,16 @@ Observacoes:
 - Nenhum backend, banco, payload ou `requestJson` foi alterado nesta validacao.
 - O novo documento e `docs/ficha_pessoal_anamnese_validacao_questionario_visual_sem_salvamento.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Validacao do ajuste visual Sim e Nao em coluna vertical
+
+- Foi registrada a validacao manual do ajuste visual pontual da aba `Anamnese`.
+- O commit validado foi `977235b`.
+- O documento de implementacao validado foi `docs/ficha_pessoal_anamnese_ajuste_visual_sim_nao_vertical.md`.
+- O usuario informou o resultado `PASSOU`.
+- O fluxo testado confirmou perguntas listadas, `Sim` e `Nao` em coluna vertical, caixa complementar aceitavel, troca de questionario, rolagem, ausencia de salvamento e estabilidade da `Ficha Pessoal`.
+- A etapa visual foi considerada concluida.
+- A proxima recomendacao e abrir contrato especifico antes de implementar salvamento.
+- Nenhum backend, banco, payload ou `requestJson` foi alterado nesta validacao.
+- O novo documento e `docs/ficha_pessoal_anamnese_validacao_ajuste_visual_sim_nao_vertical.md`.
+- A blindagem textual/mojibake foi respeitada.
