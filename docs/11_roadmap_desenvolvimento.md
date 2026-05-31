@@ -4297,3 +4297,17 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_validacao_modularizacao_sem_mudar_comportamento.md`.
 - Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta validacao.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Implementacao do questionario visual sem salvamento
+
+- Foi registrada a implementacao da parte visual inferior da aba `Anamnese`.
+- O modulo `frontend/js/modules/ficha-pessoal-aba-anamnese.js` passou a renderizar a lista de perguntas do questionario selecionado.
+- Cada pergunta ganhou resposta visual `Sim` / `Nao` e campo de complemento/observacao apenas visual.
+- A area inferior passou a ter rolagem vertical para questionarios longos.
+- O topo da aba continuou com nome do paciente e combo `Questionario`.
+- Nao houve alteracao de backend, banco, schema, migrations, seeds, endpoints, `requestJson`, payload ou formato de salvamento.
+- A fachada `frontend/app.js` nao precisou ser alterada nesta rodada.
+- `frontend/index.html` permaneceu inalterado.
+- O novo documento e `docs/ficha_pessoal_anamnese_implementacao_questionario_visual_sem_salvamento.md`.
+- O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_questionario_visual_sem_salvamento/`.
+- A blindagem textual/mojibake foi respeitada.
