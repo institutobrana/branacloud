@@ -4147,6 +4147,19 @@ Observacoes:
 - O novo documento é `docs/ficha_pessoal_anotacoes_validacao_correcao_regressao_global.md`.
 - Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta validação.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Diagnóstico comparativo EasyDental x Brana Cloud
+
+- Foi registrada a análise documental da aba `Anamnese` da `Ficha Pessoal`.
+- O diagnóstico comparou o comportamento atual do Brana Cloud com o comportamento esperado inspirado no EasyDental virgem/legado.
+- O Brana Cloud mostrou estrutura funcional para questionários, perguntas e respostas, com `requestJson`, tabela de perguntas e textarea de resposta/observação clínica.
+- O backend possui modelos e rotas dedicados para `anamnese_questionarios`, `anamnese_perguntas` e `anamnese_respostas`.
+- O legado disponível no workspace confirma questionários como `Principal`, `Implante`, `Ficha complementar`, `Anamnese de Saúde` e `Anamnese pessoal`.
+- Não foi localizada UI direta do EasyDental neste workspace.
+- O maior risco identificado está em salvamento, payload, acoplamento do frontend e possível regressão global.
+- O novo documento é `docs/ficha_pessoal_anamnese_diagnostico_comparativo_easydental_brana.md`.
+- Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
