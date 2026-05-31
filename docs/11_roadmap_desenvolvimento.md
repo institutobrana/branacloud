@@ -4040,6 +4040,20 @@ Observacoes:
 - O proximo passo recomendado e criar decisao pos-validacao antes de qualquer novo recorte da Fase 2C.
 - A blindagem textual/mojibake foi respeitada.
 
+## Fase 2C - Prestadores - Decisao pos-validacao da listagem, painel e filtros locais
+
+- A decisao pos-validacao da implementacao de `Prestadores` na Fase 2C foi registrada.
+- A classificacao confirmou `Prestadores` como modulo comum/core.
+- O fluxo consolidado foi `listagem/painel + filtros locais simples`.
+- A origem da decisao foi `F2C-PREST-C`.
+- Os commits de referencia foram `1b438a2` e `8777137`.
+- O relato do usuario foi `todos testes passaram`.
+- A decisao final registrada foi `F2C-PREST-DEC-D`.
+- O novo documento e `docs/fase_2c_prestadores_decisao_pos_validacao_listagem_painel_filtros_locais.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A recomendacao registrada foi fazer revisao documental curta consolidando a rodada de Prestadores antes de qualquer novo recorte.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
