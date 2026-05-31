@@ -4260,3 +4260,16 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_ficha_pessoal_microcontrato_namespace_passivo.md`.
 - O proximo passo recomendado e somente futuro e condicional: se autorizado, avaliar criacao do arquivo passivo vazio sem consumo imediato pelo `app.js`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Auditoria do fluxo de questionario e contrato
+
+- Foi registrada a auditoria documental do fluxo de questionario da aba `Anamnese` da `Ficha Pessoal`.
+- A validacao do botao `Procura...` reentrante ja estava concluida e serviu como contexto de navegacao segura.
+- O Brana Cloud mostrou combo visivel de questionario, backend normalizado e persistencia textual.
+- O legado EasyDental foi acessado em modo somente leitura pela share `\\Sonyvaio\\c\\EDS70`, mas a extração direta de UI completa excedeu o tempo; a comparacao visual 1:1 permaneceu parcial.
+- A leitura comparativa aponta que o Brana Cloud ainda nao comprova equivalencia completa de lista de perguntas, resposta Sim/Nao + complemento e alertas clinicos.
+- A decisao recomendada ficou em `FICHA-ANAM-FLUXO-A`.
+- Os caminhos futuros sugeridos incluem `frontend/js/modules/ficha-pessoal-aba-anamnese.js` e, se necessario, um backend com nomes como `backend/routes/ficha_pessoal_anamnese_routes.py`, `backend/models/ficha_pessoal_anamnese.py` e `backend/schemas/ficha_pessoal_anamnese.py`.
+- O novo documento e `docs/ficha_pessoal_anamnese_auditoria_fluxo_questionario_contrato.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
