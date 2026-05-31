@@ -4195,6 +4195,23 @@ Observacoes:
 - Backend, banco, payload e `requestJson` não devem ser alterados nesta fase.
 - O novo documento é `docs/ficha_pessoal_anamnese_contrato_combo_questionarios.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Limpeza inicial do botao e quadros antigos
+
+- Foi registrada a limpeza inicial da aba `Anamnese` da `Ficha Pessoal`.
+- O botao `Atualizar anamnese` foi removido da tela.
+- Os quadros antigos da parte inferior foram removidos:
+  - `Perguntas de anamnese`
+  - `Resposta / Observacao clinica`
+  - a mensagem antiga de alerta
+- A tela ficou apenas com a parte superior pronta: nome do paciente + combo `Questionario` + espaco inferior vazio para evolucao futura.
+- A logica do combo nao foi alterada nesta rodada.
+- `Procura` nao foi alterado nesta rodada.
+- O arquivo alterado foi `frontend/app.js`.
+- Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado.
+- O backup obrigatorio foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_limpeza_botao_quadros/`.
+- O novo documento e `docs/ficha_pessoal_anamnese_limpeza_botao_quadros.md`.
+- A blindagem textual/mojibake foi respeitada.
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
