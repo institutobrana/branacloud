@@ -30,9 +30,10 @@
       .ficha-anamnese-card{border:1px solid #d5ddea;border-radius:4px;background:#fbfdff;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start}
       .ficha-anamnese-num{font:700 11px Tahoma,sans-serif;color:#35506b;min-width:28px}
       .ficha-anamnese-texto{font:11px Tahoma,sans-serif;color:#22303f;line-height:1.35;word-break:break-word}
-      .ficha-anamnese-controles{grid-column:1 / -1;display:grid;grid-template-columns:auto auto 1fr;gap:8px 10px;align-items:start}
-      .ficha-anamnese-opcoes{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-top:2px}
-      .ficha-anamnese-opcao{display:inline-flex;align-items:center;gap:4px;font:11px Tahoma,sans-serif;color:#243444;cursor:pointer;user-select:none}
+      .ficha-anamnese-controles{grid-column:1 / -1;display:grid;grid-template-columns:120px minmax(240px,1fr);gap:8px 10px;align-items:start}
+      .ficha-anamnese-opcoes{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding-top:2px}
+      .ficha-anamnese-opcao{display:flex;align-items:center;gap:5px;font:11px Tahoma,sans-serif;color:#243444;cursor:pointer;user-select:none;line-height:1.2}
+      .ficha-anamnese-opcao input{margin:0}
       .ficha-anamnese-complemento{width:100%;min-height:50px;resize:vertical;border:1px solid #c2ccda;border-radius:3px;box-sizing:border-box;padding:4px 5px;font:11px Tahoma,sans-serif;background:#fff}
       .ficha-anamnese-foot{padding:6px 8px;border-top:1px solid #d6deea;background:#f8fafc;font:11px Tahoma,sans-serif;color:#627285}
       .ficha-anamnese-loading{opacity:.86}

@@ -4311,3 +4311,17 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_implementacao_questionario_visual_sem_salvamento.md`.
 - O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_questionario_visual_sem_salvamento/`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Ajuste visual Sim e Nao em coluna vertical
+
+- Foi registrado o ajuste visual pontual da lista de perguntas da aba `Anamnese`.
+- Os controles `Sim` e `Nao` passaram a ficar um abaixo do outro.
+- A caixa complementar foi reposicionada de forma compatível com o layout da pergunta.
+- A rolagem vertical da area inferior foi mantida.
+- O comportamento funcional permaneceu sem salvamento.
+- O arquivo alterado foi `frontend/js/modules/ficha-pessoal-aba-anamnese.js`.
+- `frontend/app.js` e `frontend/index.html` nao precisaram ser alterados.
+- Nao houve alteracao de backend, banco, schema, migrations, seeds, endpoints, `requestJson` ou payload.
+- O novo documento e `docs/ficha_pessoal_anamnese_ajuste_visual_sim_nao_vertical.md`.
+- O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_ajuste_visual_sim_nao_vertical/`.
+- A blindagem textual/mojibake foi respeitada.
