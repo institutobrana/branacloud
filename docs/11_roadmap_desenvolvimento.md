@@ -4100,6 +4100,19 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anotacoes - Contrato de correcao da toolbar e persistencia
+
+- O contrato de correcao da aba `Anotacoes` foi aberto como etapa exclusivamente documental.
+- A base documental usada foi `docs/ficha_pessoal_anotacoes_diagnostico_comparativo_easydental_brana.md`.
+- A recomendacao registrada para a primeira implementacao e `FICHA-ANOT-CONTR-A`.
+- A primeira implementacao deve priorizar texto puro, manter a persistencia atual e evitar backend, banco, payload e salvamento com novo formato.
+- O escopo permitido futuro inclui apenas modularizacao controlada, fachada fina em `frontend/app.js` e evolucao visual/local minima.
+- O escopo proibido futuro inclui backend, banco, migrations, seeds, endpoints, `.env`, `requestJson`, payload, salvamento, exclusao, permissoes, Anamnese, Historico, Editor de Textos, Agenda e Financeiro.
+- O backup obrigatorio antes de eventual implementacao foi definido em `backups_modularizacao/fase_2c/ficha_pessoal_anotacoes_correcao_toolbar/`.
+- O novo documento e `docs/ficha_pessoal_anotacoes_contrato_correcao_toolbar_persistencia.md`.
+- Nenhum codigo ou banco foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
