@@ -4172,6 +4172,19 @@ Observacoes:
 - O backup obrigatório foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_combo_questionarios/`.
 - O novo documento é `docs/ficha_pessoal_anamnese_implementacao_combo_questionarios.md`.
 - A blindagem textual/mojibake foi respeitada.
+## Ficha pessoal - Anamnese - Correcao da tela base e bloqueio por paciente valido
+
+- Foi registrada a corre??o conservadora da tela base da `Anamnese` da `Ficha Pessoal`.
+- O cabe?alho da aba passou a exibir o nome do paciente atual de forma clara.
+- A lista de perguntas recebeu rolagem pr?pria.
+- A abertura de `Anamnese`/`Hist?rico` passou a ser bloqueada sem paciente v?lido/salvo.
+- Uma guarda simples de concorr?ncia foi mantida para evitar sobrescrever a tela com resposta antiga.
+- A combo `Questionario` continuou usando a fonte existente da cl?nica.
+- Backend, banco, payload, `requestJson` e formato de salvamento n?o foram alterados.
+- O backup obrigat?rio foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_correcao_tela_base_questionarios/`.
+- O novo documento ? `docs/ficha_pessoal_anamnese_correcao_tela_base_questionarios.md`.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Ficha pessoal - Anamnese - Contrato do combo de questionários e carregamento controlado
 
 - Foi registrado o contrato seguro para a próxima etapa da aba `Anamnese` da `Ficha Pessoal`.

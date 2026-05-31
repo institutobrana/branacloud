@@ -4946,13 +4946,16 @@ function fichaEnsureUI(){
     .ficha-checks label{display:flex;gap:6px;align-items:center}
     .ficha-inline{display:grid;grid-template-columns:1fr 26px;gap:4px}
     .ficha-mini-btn{height:22px;border:1px solid #bfc9d6;background:#f1f6fc;cursor:pointer}
-    .ficha-anamnese-top{display:flex;align-items:center;gap:6px;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap}
-    .ficha-anamnese-top label{white-space:nowrap}
-    .ficha-anamnese-top select{min-width:240px;height:24px;border:1px solid #bfc9d6;box-sizing:border-box;padding:0 4px;font:11px Tahoma,sans-serif}
+    .ficha-anamnese-top{display:grid;grid-template-columns:minmax(300px,1fr) minmax(240px,320px);gap:8px;align-items:end;margin-bottom:5px}
+    .ficha-anamnese-field{display:flex;flex-direction:column;gap:2px}
+    .ficha-anamnese-field label{white-space:nowrap}
+    .ficha-anamnese-field input,.ficha-anamnese-field select{height:24px;border:1px solid #bfc9d6;box-sizing:border-box;padding:0 4px;font:11px Tahoma,sans-serif}
+    .ficha-anamnese-paciente{background:#d0ffff}
     .ficha-anamnese-wrap{display:grid;grid-template-columns:minmax(260px,1fr) minmax(260px,1fr);gap:8px}
     .ficha-box{border:1px solid #cfd8e3}
     .ficha-box-head{background:#f3f7fc;border-bottom:1px solid #dce4ef;padding:3px 5px;font-weight:700}
     .ficha-box-body{padding:5px}
+    .ficha-anamnese-list-body{max-height:310px;overflow:auto}
     .ficha-list{width:100%;border-collapse:collapse}
     .ficha-list td,.ficha-list th{border-bottom:1px solid #edf1f6;padding:3px 4px}
     .ficha-list th{text-align:left;background:#f8fafc}
@@ -5137,13 +5140,19 @@ function fichaEnsureUI(){
           <button id="ficha-anamnese-atualizar" class="materiais-btn" type="button"><img src="/desktop-assets/editar.png" alt="">Atualizar anamnese</button>
         </div>
         <div class="ficha-anamnese-top">
-          <label for="ficha-anamnese-questionario">Questionário:</label>
-          <select id="ficha-anamnese-questionario"><option value="">Carregando questionários...</option></select>
+          <div class="ficha-anamnese-field">
+            <label for="ficha-anamnese-paciente">Nome do paciente:</label>
+            <input id="ficha-anamnese-paciente" class="ficha-anamnese-paciente" type="text" readonly>
+          </div>
+          <div class="ficha-anamnese-field">
+            <label for="ficha-anamnese-questionario">Questionario:</label>
+            <select id="ficha-anamnese-questionario"><option value="">Carregando questionarios...</option></select>
+          </div>
         </div>
         <div class="ficha-anamnese-wrap">
           <div class="ficha-box">
             <div class="ficha-box-head">Perguntas de anamnese</div>
-            <div class="ficha-box-body">
+            <div class="ficha-box-body ficha-anamnese-list-body">
               <table class="ficha-list"><tbody id="ficha-anamnese-list"></tbody></table>
             </div>
           </div>
@@ -5284,6 +5293,7 @@ function fichaEnsureUI(){
     inclusao:document.getElementById("ficha-inclusao"),
     alteracao:document.getElementById("ficha-alteracao"),
     anamneseAtualizar:document.getElementById("ficha-anamnese-atualizar"),
+    anamnesePaciente:document.getElementById("ficha-anamnese-paciente"),
     anamneseQuestionario:document.getElementById("ficha-anamnese-questionario"),
     anamneseList:document.getElementById("ficha-anamnese-list"),
     anamneseResposta:document.getElementById("ficha-anamnese-resposta"),
@@ -22588,6 +22598,18 @@ let fichaAnamneseQuestionarioNome="";
 let fichaAnamneseQuestionarioSelId=null;
 let fichaAnamneseQuestionariosCache=[];
 let fichaAnamneseLoadToken=0;
+function fichaAnamneseTemPacienteValido(){return Number(fichaPacienteAtualId||0)>0}
+function fichaAnamneseNomePacienteAtual(){
+  const bruto=String(ficha?.titulo?.textContent||"").trim();
+  const nome=bruto.replace(/^Ficha pessoal\s*-\s*/i,"").trim();
+  return nome||String(ficha?.nome?.value||"").trim()||"";
+}
+function fichaAnamneseAtualizarCabecalho(){
+  if(!ficha?.anamnesePaciente)return;
+  const nome=fichaAnamneseTemPacienteValido()?fichaAnamneseNomePacienteAtual():"";
+  ficha.anamnesePaciente.value=nome;
+  ficha.anamnesePaciente.title=nome;
+}
 function fichaAnamnesePodeImprimir(){
   return String(sessaoAtual?.email||"").trim().toLowerCase()==="gleissontel@gmail.com";
 }
@@ -22654,7 +22676,8 @@ function fichaAnamneseSelecionar(id){
 }
 async function fichaAnamneseCarregar(){
   const seq=++fichaAnamneseLoadToken;
-  if(!fichaPacienteAtualId||!ficha?.anamneseList){
+  fichaAnamneseAtualizarCabecalho();
+  if(!fichaAnamneseTemPacienteValido()||!ficha?.anamneseList){
     fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";
     fichaAnamneseQuestionarioSelId=null;
     if(ficha?.anamneseList)ficha.anamneseList.innerHTML="";
@@ -22735,11 +22758,18 @@ function fichaAnamneseImprimir(){
 const _fichaEnsureUIOrig=fichaEnsureUI;
 fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;if(ficha.anamneseList&&ficha.anamneseList.dataset.bound!=="1"){ficha.anamneseList.dataset.bound="1";ficha.anamneseList.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;fichaAnamneseSelecionar(tr.dataset.id)});}if(ficha.anamneseQuestionario&&ficha.anamneseQuestionario.dataset.bound!=="1"){ficha.anamneseQuestionario.dataset.bound="1";ficha.anamneseQuestionario.addEventListener("change",ev=>{fichaAnamneseSelecionarQuestionario(ev.target.value);});}if(ficha.anamneseResposta&&ficha.anamneseResposta.dataset.bound!=="1"){ficha.anamneseResposta.dataset.bound="1";ficha.anamneseResposta.addEventListener("blur",()=>{fichaAnamneseSalvarSelecionada();});}if(ficha.anamneseAtualizar&&ficha.anamneseAtualizar.dataset.bound!=="1"){ficha.anamneseAtualizar.dataset.bound="1";ficha.anamneseAtualizar.addEventListener("click",async()=>{await fichaAnamneseSalvarSelecionada();await fichaAnamneseCarregar();if(fichaAnamnesePodeImprimir())fichaAnamneseImprimir();});}};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);if(fichaTabAtual==="anamnese")fichaAnamneseCarregar();};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAtualizarCabecalho();if(fichaTabAtual==="anamnese")fichaAnamneseCarregar();};
 const _fichaLimparNovoOrig=fichaLimparNovo;
-fichaLimparNovo=async function(){fichaAnamneseLoadToken++;await _fichaLimparNovoOrig();fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";fichaAnamneseQuestionarioSelId=null;if(ficha?.anamneseList)ficha.anamneseList.innerHTML="";if(ficha?.anamneseResposta)ficha.anamneseResposta.value="";if(ficha?.anamneseAlerta)ficha.anamneseAlerta.textContent="Sem alertas de anamnese para este paciente.";fichaAnamneseQuestionariosCache=[];fichaAnamneseRenderQuestionarios();};
+fichaLimparNovo=async function(){fichaAnamneseLoadToken++;await _fichaLimparNovoOrig();fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";fichaAnamneseQuestionarioSelId=null;if(ficha?.anamneseList)ficha.anamneseList.innerHTML="";if(ficha?.anamneseResposta)ficha.anamneseResposta.value="";if(ficha?.anamneseAlerta)ficha.anamneseAlerta.textContent="Sem alertas de anamnese para este paciente.";fichaAnamneseQuestionariosCache=[];fichaAnamneseAtualizarCabecalho();fichaAnamneseRenderQuestionarios();};
 const _fichaSetTabOrig=fichaSetTab;
-fichaSetTab=function(tab){_fichaSetTabOrig(tab);if(tab==="anamnese")fichaAnamneseCarregar();};
+fichaSetTab=function(tab){
+  if((tab==="anamnese"||tab==="historico")&&!fichaAnamneseTemPacienteValido()){
+    window.alert("Necessario gravar o paciente antes de abrir esta aba.");
+    return;
+  }
+  _fichaSetTabOrig(tab);
+  if(tab==="anamnese")fichaAnamneseCarregar();
+};
 
 // Overrides - Simbolos graficos CRUD
 const SIMBOLOS_TIPO_MARCA_OPCOES=[
