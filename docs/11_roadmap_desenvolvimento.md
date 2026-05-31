@@ -4160,6 +4160,17 @@ Observacoes:
 - O novo documento é `docs/ficha_pessoal_anamnese_diagnostico_comparativo_easydental_brana.md`.
 - Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
+## Ficha pessoal - Anamnese - Implementação do combo de questionários
+
+- Foi registrada a primeira implementação prática segura da aba `Anamnese` da `Ficha Pessoal`.
+- O combo visível de questionários foi adicionado na aba clínica.
+- A troca do questionário passou a recarregar perguntas/respostas usando a estrutura já existente.
+- O salvamento textual atual foi preservado.
+- `frontend/app.js` foi alterado apenas no trecho da aba Anamnese.
+- Backend, banco, payload, `requestJson` e formato de salvamento não foram alterados.
+- O backup obrigatório foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_combo_questionarios/`.
+- O novo documento é `docs/ficha_pessoal_anamnese_implementacao_combo_questionarios.md`.
+- A blindagem textual/mojibake foi respeitada.
 ## Ficha pessoal - Anamnese - Contrato do combo de questionários e carregamento controlado
 
 - Foi registrado o contrato seguro para a próxima etapa da aba `Anamnese` da `Ficha Pessoal`.

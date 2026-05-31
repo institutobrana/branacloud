@@ -4946,6 +4946,9 @@ function fichaEnsureUI(){
     .ficha-checks label{display:flex;gap:6px;align-items:center}
     .ficha-inline{display:grid;grid-template-columns:1fr 26px;gap:4px}
     .ficha-mini-btn{height:22px;border:1px solid #bfc9d6;background:#f1f6fc;cursor:pointer}
+    .ficha-anamnese-top{display:flex;align-items:center;gap:6px;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap}
+    .ficha-anamnese-top label{white-space:nowrap}
+    .ficha-anamnese-top select{min-width:240px;height:24px;border:1px solid #bfc9d6;box-sizing:border-box;padding:0 4px;font:11px Tahoma,sans-serif}
     .ficha-anamnese-wrap{display:grid;grid-template-columns:minmax(260px,1fr) minmax(260px,1fr);gap:8px}
     .ficha-box{border:1px solid #cfd8e3}
     .ficha-box-head{background:#f3f7fc;border-bottom:1px solid #dce4ef;padding:3px 5px;font-weight:700}
@@ -5133,6 +5136,10 @@ function fichaEnsureUI(){
         <div class="ficha-anamnese-toolbar">
           <button id="ficha-anamnese-atualizar" class="materiais-btn" type="button"><img src="/desktop-assets/editar.png" alt="">Atualizar anamnese</button>
         </div>
+        <div class="ficha-anamnese-top">
+          <label for="ficha-anamnese-questionario">Questionário:</label>
+          <select id="ficha-anamnese-questionario"><option value="">Carregando questionários...</option></select>
+        </div>
         <div class="ficha-anamnese-wrap">
           <div class="ficha-box">
             <div class="ficha-box-head">Perguntas de anamnese</div>
@@ -5277,6 +5284,7 @@ function fichaEnsureUI(){
     inclusao:document.getElementById("ficha-inclusao"),
     alteracao:document.getElementById("ficha-alteracao"),
     anamneseAtualizar:document.getElementById("ficha-anamnese-atualizar"),
+    anamneseQuestionario:document.getElementById("ficha-anamnese-questionario"),
     anamneseList:document.getElementById("ficha-anamnese-list"),
     anamneseResposta:document.getElementById("ficha-anamnese-resposta"),
     anamneseAlerta:document.getElementById("ficha-anamnese-alerta"),
@@ -22577,10 +22585,51 @@ let fichaAnamneseCache=[];
 let fichaAnamneseSelId=null;
 let fichaAnamneseQuestionarioId=null;
 let fichaAnamneseQuestionarioNome="";
+let fichaAnamneseQuestionarioSelId=null;
+let fichaAnamneseQuestionariosCache=[];
 function fichaAnamnesePodeImprimir(){
   return String(sessaoAtual?.email||"").trim().toLowerCase()==="gleissontel@gmail.com";
 }
 function fichaAnamneseSelecionado(){return fichaAnamneseCache.find(x=>x.pergunta_id===fichaAnamneseSelId)||null}
+function fichaAnamneseQuestionarioSelecionado(){return fichaAnamneseQuestionariosCache.find(x=>x.id===fichaAnamneseQuestionarioSelId)||null}
+function fichaAnamneseRenderQuestionarios(){
+  if(!ficha?.anamneseQuestionario)return false;
+  const itens=Array.isArray(fichaAnamneseQuestionariosCache)?fichaAnamneseQuestionariosCache:[];
+  if(!itens.length){
+    ficha.anamneseQuestionario.innerHTML='<option value="">Sem questionários</option>';
+    ficha.anamneseQuestionario.disabled=true;
+    fichaAnamneseQuestionarioSelId=null;
+    return false;
+  }
+  ficha.anamneseQuestionario.disabled=false;
+  const existe=itens.some(x=>x.id===fichaAnamneseQuestionarioSelId);
+  if(!existe){
+    const fallbackId=itens.some(x=>x.id===fichaAnamneseQuestionarioId)?fichaAnamneseQuestionarioId:itens[0]?.id||null;
+    fichaAnamneseQuestionarioSelId=Number(fallbackId||0)||null;
+  }
+  ficha.anamneseQuestionario.innerHTML=itens.map(item=>`<option value="${item.id}">${esc(item.nome||"")}</option>`).join("");
+  ficha.anamneseQuestionario.value=String(fichaAnamneseQuestionarioSelId||"");
+  return true;
+}
+async function fichaAnamneseCarregarQuestionarios(){
+  if(!ficha?.anamneseQuestionario)return false;
+  const{res,data}=await requestJson("GET","/anamnese/questionarios",undefined,true);
+  if(!res.ok){
+    fichaAnamneseQuestionariosCache=[];
+    fichaAnamneseRenderQuestionarios();
+    return false;
+  }
+  fichaAnamneseQuestionariosCache=Array.isArray(data)?data:[];
+  fichaAnamneseRenderQuestionarios();
+  return true;
+}
+function fichaAnamneseSelecionarQuestionario(id){
+  const novo=Number(id||0)||null;
+  if(novo===fichaAnamneseQuestionarioSelId)return;
+  fichaAnamneseQuestionarioId=novo;
+  fichaAnamneseQuestionarioSelId=novo;
+  fichaAnamneseCarregar();
+}
 function fichaAnamneseRender(){
   if(!ficha?.anamneseList)return;
   ficha.anamneseList.innerHTML=fichaAnamneseCache.map(item=>{
@@ -22603,9 +22652,12 @@ function fichaAnamneseSelecionar(id){
 async function fichaAnamneseCarregar(){
   if(!fichaPacienteAtualId||!ficha?.anamneseList){
     fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";
+    fichaAnamneseQuestionarioSelId=null;
     if(ficha?.anamneseList)ficha.anamneseList.innerHTML="";
     if(ficha?.anamneseResposta)ficha.anamneseResposta.value="";
     if(ficha?.anamneseAlerta)ficha.anamneseAlerta.textContent="Sem alertas de anamnese para este paciente.";
+    fichaAnamneseQuestionariosCache=[];
+    fichaAnamneseRenderQuestionarios();
     return;
   }
   const q=Number(fichaAnamneseQuestionarioId||0)||"";
@@ -22619,6 +22671,11 @@ async function fichaAnamneseCarregar(){
   fichaAnamneseQuestionarioNome=data.questionario_nome||"";
   fichaAnamneseCache=Array.isArray(data.itens)?data.itens:[];
   fichaAnamneseSelId=fichaAnamneseCache[0]?.pergunta_id||null;
+  await fichaAnamneseCarregarQuestionarios();
+  if(fichaAnamneseQuestionarioId){
+    fichaAnamneseQuestionarioSelId=Number(fichaAnamneseQuestionarioId||0)||null;
+  }
+  fichaAnamneseRenderQuestionarios();
   fichaAnamneseRender();
   const sel=fichaAnamneseSelecionado();
   if(ficha?.anamneseResposta)ficha.anamneseResposta.value=sel?String(sel.resposta||""):"";
@@ -22670,7 +22727,7 @@ function fichaAnamneseImprimir(){
   win.focus();win.print();
 }
 const _fichaEnsureUIOrig=fichaEnsureUI;
-fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;if(ficha.anamneseList&&ficha.anamneseList.dataset.bound!=="1"){ficha.anamneseList.dataset.bound="1";ficha.anamneseList.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;fichaAnamneseSelecionar(tr.dataset.id)});}if(ficha.anamneseResposta&&ficha.anamneseResposta.dataset.bound!=="1"){ficha.anamneseResposta.dataset.bound="1";ficha.anamneseResposta.addEventListener("blur",()=>{fichaAnamneseSalvarSelecionada();});}if(ficha.anamneseAtualizar&&ficha.anamneseAtualizar.dataset.bound!=="1"){ficha.anamneseAtualizar.dataset.bound="1";ficha.anamneseAtualizar.addEventListener("click",async()=>{await fichaAnamneseSalvarSelecionada();await fichaAnamneseCarregar();if(fichaAnamnesePodeImprimir())fichaAnamneseImprimir();});}};
+fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;if(ficha.anamneseList&&ficha.anamneseList.dataset.bound!=="1"){ficha.anamneseList.dataset.bound="1";ficha.anamneseList.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;fichaAnamneseSelecionar(tr.dataset.id)});}if(ficha.anamneseQuestionario&&ficha.anamneseQuestionario.dataset.bound!=="1"){ficha.anamneseQuestionario.dataset.bound="1";ficha.anamneseQuestionario.addEventListener("change",ev=>{fichaAnamneseSelecionarQuestionario(ev.target.value);});}if(ficha.anamneseResposta&&ficha.anamneseResposta.dataset.bound!=="1"){ficha.anamneseResposta.dataset.bound="1";ficha.anamneseResposta.addEventListener("blur",()=>{fichaAnamneseSalvarSelecionada();});}if(ficha.anamneseAtualizar&&ficha.anamneseAtualizar.dataset.bound!=="1"){ficha.anamneseAtualizar.dataset.bound="1";ficha.anamneseAtualizar.addEventListener("click",async()=>{await fichaAnamneseSalvarSelecionada();await fichaAnamneseCarregar();if(fichaAnamnesePodeImprimir())fichaAnamneseImprimir();});}};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
 fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseCarregar();};
 const _fichaLimparNovoOrig=fichaLimparNovo;
