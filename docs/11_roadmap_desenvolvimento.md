@@ -4113,6 +4113,18 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anotacoes - Implementacao da toolbar com texto puro
+
+- A primeira implementacao pequena da aba `Anotacoes` foi concluida como etapa controlada.
+- O modulo dedicado `frontend/js/modules/ficha_pessoal_anotacoes.js` foi criado e consumido.
+- `frontend/app.js` ficou como fachada fina e integrou a toolbar de forma minima.
+- O texto puro foi preservado com marcacoes simples e reversiveis no textarea.
+- Nao houve alteracao de backend, banco, payload ou formato de salvamento.
+- O backup obrigatorio foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anotacoes_correcao_toolbar/`.
+- O novo documento e `docs/ficha_pessoal_anotacoes_implementacao_toolbar_texto_puro.md`.
+- Nenhum codigo ou banco foi alterado alem do escopo estritamente controlado desta implementacao.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
