@@ -96,66 +96,7 @@ const formatNumFixed=(v,dec=4)=>{const n=Number(v||0);if(!Number.isFinite(n))ret
 const formatMoney=(v)=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const formatScenarioNum=(v)=>{const n=Number(v||0);if(!Number.isFinite(n))return"0";if(Number.isInteger(n))return n.toLocaleString("pt-BR");return n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})};const formatScenarioMes=(v)=>{if(v==null)return"";const n=Number(v);if(!Number.isFinite(n))return"";let s=String(n).replace(".",",");if(s.endsWith(",0"))s=s.slice(0,-2);return s};
 const MATERIAIS_INDICES_FALLBACK=[{id:255,sigla:"R$",nome:"Reais"},{id:2,sigla:"UHO",nome:"Unid. Honorario"},{id:3,sigla:"UPO",nome:"Unid. Procedimento Odontologico"},{id:1,sigla:"USO",nome:"Unid. Servico"}];
-const FICHA_ANOTACOES_MODULE_SRC="/frontend/js/modules/ficha_pessoal_anotacoes.js";
-let fichaAnotacoesModuleLoadPromise=null;
-function fichaAnotacoesEnsureModuleLoaded(){
-  if(window.BranaFichaPessoalAnotacoesModule)return Promise.resolve(window.BranaFichaPessoalAnotacoesModule);
-  if(fichaAnotacoesModuleLoadPromise)return fichaAnotacoesModuleLoadPromise;
-  fichaAnotacoesModuleLoadPromise=new Promise(resolve=>{
-    const done=()=>resolve(window.BranaFichaPessoalAnotacoesModule||null);
-    const existing=[...document.querySelectorAll("script[src]")].find(script=>String(script.src||"").includes(FICHA_ANOTACOES_MODULE_SRC));
-    if(existing){
-      if(window.BranaFichaPessoalAnotacoesModule){resolve(window.BranaFichaPessoalAnotacoesModule);return}
-      existing.addEventListener("load",done,{once:true});
-      existing.addEventListener("error",()=>resolve(null),{once:true});
-      return;
-    }
-    const script=document.createElement("script");
-    script.src=FICHA_ANOTACOES_MODULE_SRC;
-    script.addEventListener("load",done,{once:true});
-    script.addEventListener("error",()=>resolve(null),{once:true});
-    document.head.appendChild(script);
-  });
-  return fichaAnotacoesModuleLoadPromise;
-}
-fichaAnotacoesEnsureModuleLoaded();
-function fichaAnotacoesExecutarComando(comando){
-  const mod=window.BranaFichaPessoalAnotacoesModule;
-  const metodoMap={negrito:"applyNegrito",italico:"applyItalico",sublinhado:"applySublinhado",lista:"applyLista"};
-  const metodo=metodoMap[String(comando||"").trim().toLowerCase()]||null;
-  const fn=metodo&&mod&&typeof mod[metodo]==="function"?mod[metodo]:null;
-  if(typeof fn==="function"){
-    try{return !!fn()}catch{}
-  }
-  return false;
-}
-function fichaConfigurarAnotacoesToolbar(){
-  if(!ficha)return false;
-  const mod=window.BranaFichaPessoalAnotacoesModule;
-  if(mod&&typeof mod.setup==="function"){
-    try{
-      const api=mod.setup({
-        textarea:ficha.anotacoes,
-        buttons:{negrito:ficha.anotNegrito,italico:ficha.anotItalico,sublinhado:ficha.anotSublinhado,lista:ficha.anotLista},
-        footerMsg,
-      });
-      if(api)return true;
-    }catch{}
-  }
-  const msgFallback="Formatacao de texto em anotacoes em planejamento.";
-  const bindFallback=(btn,comando)=>{
-    if(!btn||btn.dataset.fichaAnotacoesFallbackBound==="1")return;
-    btn.dataset.fichaAnotacoesFallbackBound="1";
-    btn.addEventListener("click",()=>{
-      if(!fichaAnotacoesExecutarComando(comando))footerMsg.textContent=msgFallback;
-    });
-  };
-  bindFallback(ficha.anotNegrito,"negrito");
-  bindFallback(ficha.anotItalico,"italico");
-  bindFallback(ficha.anotSublinhado,"sublinhado");
-  bindFallback(ficha.anotLista,"lista");
-  return false;
-}
+let sessaoAtual=null;let usersCache=[];let usersSelecionadoId=null;let usersRefreshTimer=null;let usersModalMode="novo";let usersModalEditId=null;let usersTiposCache=[];let usersPrestadoresLookup=[];let usersUnidadesLookup=[];let usersPermSchema=null;let usersPermEditId=null;let usersPermModules=[];let usersPermLevels=[];let usersPermCurrent={};let usersPermSelectedModule="";let usersPermProfiles=[];let usersPermSelectedProfileCode="";let usersPermFunctionsByModule={};let usersPermActiveTab="acesso";let usersPermFuncLevels={};let usersPermSelectedFuncId="";let usersPermEasyMode=false;let usersPermAutosaveTimer=null;let usersPermSelectionScope="module";let usersPerfProfiles=[];let usersPerfPrestadores=[];let usersPerfAssignments={};let usersPerfSelectedPerfilId=null;let usersPanelOverlay=null;let usersPanelPlaceholder=null;let usersGrantOverride=null;let usersCarregarEmAndamento=false;let usersCarregarPendente=false;let usersRefreshProtectedPaused=false;let usersChangePassContext=null;let materiaisCache=[];let materialSelecionadoId=null;let materialModalId=null;let materiaisAuxTiposCache=[];let materiaisAuxUndsCache=[];let materiaisListasCache=[];let materiaisIndicesCache=[];let materiaisTabelaModalModo="nova";let materiaisTabelaModalListaId=0;let procedimentosCache=[];let procedimentoSelecionadoId=null;let procedimentoAtualId=null;let procedimentoLinks=[];let procEditorSnapshot=null;let procMateriaisGenericoBaseId=0;let procMateriaisGenericoVisualId=0;let procMateriaisGenericoRenderSeq=0;let procMateriaisGenericoCache=new Map();let procCenario={cfpm:0,ir:0,cd:0,cartao:0};let procMaterialSelecionadoId=null;let vinculaMateriaisCache=[];let procVinculaEdicao=null;let procVinculaAvisoCfg=null;let procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};let procSimbolosCache=[];let procTabelaModalModo="nova";let procTabelaModalCodigo="";let procRelatorio=null;let procRelatorioView=null;let prefCfg=null;let sysOptCfg=null;let prot=null;let proteticosCache=[];let proteticoSelecionadoId=null;let protServicosCache=[];let protServicoSelecionadoId=null;let ctrlProt=null;let ctrlProtRegistrosCache=[];let convPlanCfg=null;let convPlanConveniosCache=[];let convPlanPlanosCache=[];let convPlanSelConvenioId=null;let convPlanSelPlanoId=null;let convPlanUltimoCliqueConvenioId=null;let convPlanUltimoCliqueConvenioEm=0;let prestCfg=null;let prestadoresCache=[];let prestadorSelId=null;let unidadeCfg=null;let unidadesCache=[];let unidadeSelId=null;let prestCredCfg=null;let prestCredItens=[];let prestCredSelId=null;let prestCredConvenios=[];let prestComCfg=null;let prestComItens=[];let prestComSelId=null;let pgen=null;let pgenCache=[];let pgenSelId=null;let pgenEditorId=null;let pgenEditorState=null;let pgenEditorBuscaMateriais=[];let pgenFasesAuxCache=[];let pgenFasesSelecionadaIdx=-1;let pgenFasesState=null;let pgenFaseEditIdx=null;let pgenMaterialSelecionadoIdx=-1;let pgenMaterialEditIdx=null;let ficha=null;let fichaTabAtual="dados";let fichaPacienteAtualId=null;let fichaPacientesBuscaCache=[];let fichaCodigoUltimoResolvido="";let fichaConveniosCache=[];let fichaPlanosCache=[];let fichaTabelasCache=[];let fichaMenuPac=null;let fichaInativoAtual=false;let cc=null;let ccLancCache=[];let ccSelecionadoId=null;let ccEditId=null;let ccTipoAtual="debito";let rcc=null;let fcx=null;let fcxData=null;let dash=null;let dashData=[];let dashGrafico=[];let dashTabela=[];let dashSelecionadoId=null;let plano=null;let gruposCache=[];let grupoSelId=null;let catSelId=null;let aux=null;let auxItensCache=[];let auxSelId=null;let licInfoCache=null;let saClinicasCache=[];let saUsuariosCache=[];let agendaContatos=null;let agendaContatosCache=[];let agendaContatosTiposCache=[];let agendaContatosEspecialidadesCache=[];let agendaContatosSelId=null;let agendaLegado=null;let agendaLegadoCache=[];let agendaLegadoSelId=null;let agendaLegadoContatosCache=[];let agendaLegadoContatosMap=new Map();let agendaSemana=null;let agendaSemanaCache=[];let agendaSemanaSlots=[];let agendaSemanaState={};let cid=null;let cidCache=[];let cidSelId=null;let cidBuscaTimer=null;let cidRenderToken=0;let simbolosCfg=null;let simbolosCache=[];let simbolosBibliotecaCache=[];let simbolosSelId=null;let simbolosEspecialidadesMap=new Map();let anamneseCfg=null;let anamneseQuestionariosCache=[];let anamneseQuestionarioSelId=null;let anamneseCache=[];let anamneseSelId=null;let fichaMenuPacMode="paciente";
 let editorTextosCfg=null;
 let editorTextosFontesCache=null;
 let editorTextosFontesPromise=null;
@@ -5398,7 +5339,10 @@ function fichaEnsureUI(){
   ficha.historicoAlterar.addEventListener("click",()=>{footerMsg.textContent="Alteracao de historico em planejamento.";});
   ficha.historicoEliminar.addEventListener("click",()=>{const tr=ficha.historicoList.querySelector("tr");if(tr)tr.remove();footerMsg.textContent="Historico removido em tela.";});
   if(ficha.historicoConfirmar)ficha.historicoConfirmar.addEventListener("click",()=>{footerMsg.textContent="Confirmacao do historico em planejamento.";});
-  fichaConfigurarAnotacoesToolbar();
+  if(ficha.anotNegrito)ficha.anotNegrito.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
+  if(ficha.anotItalico)ficha.anotItalico.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
+  if(ficha.anotSublinhado)ficha.anotSublinhado.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
+  if(ficha.anotLista)ficha.anotLista.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
   if(ficha.nascimento)ficha.nascimento.addEventListener("change",fichaAtualizarIdade);
 }
 function fichaSetSelectValue(el,val){

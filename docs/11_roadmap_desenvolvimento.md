@@ -4125,6 +4125,16 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado alem do escopo estritamente controlado desta implementacao.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anotacoes - Correção emergencial de regressão global
+
+- Foi registrada regressão global de frontend após a implementação da toolbar de `Anotações`.
+- O sintoma informado foi perda de resposta dos menus após login, inclusive do botão `Sair`.
+- A correção emergencial restaurou `frontend/app.js` a partir do backup manual controlado.
+- O módulo `frontend/js/modules/ficha_pessoal_anotacoes.js` ficou sem consumo prático após a restauração.
+- O novo documento é `docs/ficha_pessoal_anotacoes_correcao_regressao_global_frontend.md`.
+- Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado na correção.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
