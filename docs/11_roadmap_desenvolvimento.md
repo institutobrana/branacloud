@@ -4160,6 +4160,16 @@ Observacoes:
 - O novo documento é `docs/ficha_pessoal_anamnese_diagnostico_comparativo_easydental_brana.md`.
 - Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
+## Ficha pessoal - Anamnese - Contrato do combo de questionários e carregamento controlado
+
+- Foi registrado o contrato seguro para a próxima etapa da aba `Anamnese` da `Ficha Pessoal`.
+- A base documental usada foi o diagnóstico comparativo EasyDental x Brana Cloud e a validação da correção emergencial da regressão global da aba `Anotações`.
+- A decisão recomendada ficou em `FICHA-ANAM-CONTR-A`.
+- A primeira implementação futura deve se limitar ao combo visível de questionários e ao carregamento controlado usando endpoints já existentes.
+- O salvamento textual atual deve ser preservado.
+- Backend, banco, payload e `requestJson` não devem ser alterados nesta fase.
+- O novo documento é `docs/ficha_pessoal_anamnese_contrato_combo_questionarios.md`.
+- A blindagem textual/mojibake foi respeitada.
 ## Fase 2B - Ficha pessoal - Contrato profundo do modulo core
 
 - O contrato profundo documental de `Ficha pessoal` foi aberto como etapa autorizada pelo usuario.
