@@ -22587,6 +22587,7 @@ let fichaAnamneseQuestionarioId=null;
 let fichaAnamneseQuestionarioNome="";
 let fichaAnamneseQuestionarioSelId=null;
 let fichaAnamneseQuestionariosCache=[];
+let fichaAnamneseLoadToken=0;
 function fichaAnamnesePodeImprimir(){
   return String(sessaoAtual?.email||"").trim().toLowerCase()==="gleissontel@gmail.com";
 }
@@ -22611,9 +22612,10 @@ function fichaAnamneseRenderQuestionarios(){
   ficha.anamneseQuestionario.value=String(fichaAnamneseQuestionarioSelId||"");
   return true;
 }
-async function fichaAnamneseCarregarQuestionarios(){
+async function fichaAnamneseCarregarQuestionarios(seq=0){
   if(!ficha?.anamneseQuestionario)return false;
   const{res,data}=await requestJson("GET","/anamnese/questionarios",undefined,true);
+  if(seq&&seq!==fichaAnamneseLoadToken)return false;
   if(!res.ok){
     fichaAnamneseQuestionariosCache=[];
     fichaAnamneseRenderQuestionarios();
@@ -22628,6 +22630,7 @@ function fichaAnamneseSelecionarQuestionario(id){
   if(novo===fichaAnamneseQuestionarioSelId)return;
   fichaAnamneseQuestionarioId=novo;
   fichaAnamneseQuestionarioSelId=novo;
+  fichaAnamneseQuestionarioNome="";
   fichaAnamneseCarregar();
 }
 function fichaAnamneseRender(){
@@ -22650,6 +22653,7 @@ function fichaAnamneseSelecionar(id){
   fichaAnamneseRender();
 }
 async function fichaAnamneseCarregar(){
+  const seq=++fichaAnamneseLoadToken;
   if(!fichaPacienteAtualId||!ficha?.anamneseList){
     fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";
     fichaAnamneseQuestionarioSelId=null;
@@ -22663,6 +22667,7 @@ async function fichaAnamneseCarregar(){
   const q=Number(fichaAnamneseQuestionarioId||0)||"";
   const url=q?`/anamnese/pacientes/${fichaPacienteAtualId}/respostas?questionario_id=${q}`:`/anamnese/pacientes/${fichaPacienteAtualId}/respostas`;
   const{res,data}=await requestJson("GET",url,undefined,true);
+  if(seq!==fichaAnamneseLoadToken)return;
   if(!res.ok){
     if(ficha?.anamneseAlerta)ficha.anamneseAlerta.textContent=data.detail||"Falha ao carregar anamnese.";
     return;
@@ -22671,7 +22676,8 @@ async function fichaAnamneseCarregar(){
   fichaAnamneseQuestionarioNome=data.questionario_nome||"";
   fichaAnamneseCache=Array.isArray(data.itens)?data.itens:[];
   fichaAnamneseSelId=fichaAnamneseCache[0]?.pergunta_id||null;
-  await fichaAnamneseCarregarQuestionarios();
+  await fichaAnamneseCarregarQuestionarios(seq);
+  if(seq!==fichaAnamneseLoadToken)return;
   if(fichaAnamneseQuestionarioId){
     fichaAnamneseQuestionarioSelId=Number(fichaAnamneseQuestionarioId||0)||null;
   }
@@ -22729,9 +22735,9 @@ function fichaAnamneseImprimir(){
 const _fichaEnsureUIOrig=fichaEnsureUI;
 fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;if(ficha.anamneseList&&ficha.anamneseList.dataset.bound!=="1"){ficha.anamneseList.dataset.bound="1";ficha.anamneseList.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;fichaAnamneseSelecionar(tr.dataset.id)});}if(ficha.anamneseQuestionario&&ficha.anamneseQuestionario.dataset.bound!=="1"){ficha.anamneseQuestionario.dataset.bound="1";ficha.anamneseQuestionario.addEventListener("change",ev=>{fichaAnamneseSelecionarQuestionario(ev.target.value);});}if(ficha.anamneseResposta&&ficha.anamneseResposta.dataset.bound!=="1"){ficha.anamneseResposta.dataset.bound="1";ficha.anamneseResposta.addEventListener("blur",()=>{fichaAnamneseSalvarSelecionada();});}if(ficha.anamneseAtualizar&&ficha.anamneseAtualizar.dataset.bound!=="1"){ficha.anamneseAtualizar.dataset.bound="1";ficha.anamneseAtualizar.addEventListener("click",async()=>{await fichaAnamneseSalvarSelecionada();await fichaAnamneseCarregar();if(fichaAnamnesePodeImprimir())fichaAnamneseImprimir();});}};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseCarregar();};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);if(fichaTabAtual==="anamnese")fichaAnamneseCarregar();};
 const _fichaLimparNovoOrig=fichaLimparNovo;
-fichaLimparNovo=async function(){await _fichaLimparNovoOrig();fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";if(ficha?.anamneseList)ficha.anamneseList.innerHTML="";if(ficha?.anamneseResposta)ficha.anamneseResposta.value="";if(ficha?.anamneseAlerta)ficha.anamneseAlerta.textContent="Sem alertas de anamnese para este paciente.";};
+fichaLimparNovo=async function(){fichaAnamneseLoadToken++;await _fichaLimparNovoOrig();fichaAnamneseCache=[];fichaAnamneseSelId=null;fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";fichaAnamneseQuestionarioSelId=null;if(ficha?.anamneseList)ficha.anamneseList.innerHTML="";if(ficha?.anamneseResposta)ficha.anamneseResposta.value="";if(ficha?.anamneseAlerta)ficha.anamneseAlerta.textContent="Sem alertas de anamnese para este paciente.";fichaAnamneseQuestionariosCache=[];fichaAnamneseRenderQuestionarios();};
 const _fichaSetTabOrig=fichaSetTab;
 fichaSetTab=function(tab){_fichaSetTabOrig(tab);if(tab==="anamnese")fichaAnamneseCarregar();};
 

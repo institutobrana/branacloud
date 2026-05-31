@@ -4165,6 +4165,7 @@ Observacoes:
 - Foi registrada a primeira implementação prática segura da aba `Anamnese` da `Ficha Pessoal`.
 - O combo visível de questionários foi adicionado na aba clínica.
 - A troca do questionário passou a recarregar perguntas/respostas usando a estrutura já existente.
+- Uma guarda simples de concorrência foi adicionada para evitar sobrescrever a tela com resposta antiga.
 - O salvamento textual atual foi preservado.
 - `frontend/app.js` foi alterado apenas no trecho da aba Anamnese.
 - Backend, banco, payload, `requestJson` e formato de salvamento não foram alterados.

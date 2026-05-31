@@ -71,6 +71,8 @@ A troca do combo atualiza o questionário ativo da aba e chama novamente o fluxo
 
 Esse fluxo usa a API já existente de respostas do paciente e preserva o carregamento das perguntas/respostas do questionário escolhido.
 
+Para evitar que requisições antigas sobrescrevam uma seleção mais recente, a tela usa uma guarda simples de concorrência ao recarregar a anamnese.
+
 ## 10. Como o salvamento textual atual foi preservado
 
 O salvamento continua baseado no texto puro já existente em `anamnese_respostas.resposta`.
@@ -93,6 +95,7 @@ Não houve mudança de contrato de persistência, nem alteração de payload, ne
 - se não houver questionários, o combo fica sem conteúdo útil e a aba continua funcional;
 - se faltar elemento DOM, a lógica não lança erro global;
 - se a troca do combo não produzir seleção válida, o fluxo preserva o comportamento seguro.
+- se uma carga anterior terminar depois de uma mais nova, a resposta antiga é descartada para não deixar alerta ou lista desatualizados.
 
 ## 13. Como testar manualmente
 
@@ -132,6 +135,7 @@ Se houver qualquer regressão, o retorno deve partir do backup manual criado em 
 - A aba `Anamnese` recebeu a primeira implementação prática segura do contrato `FICHA-ANAM-CONTR-A`.
 - O combo visível de questionários foi adicionado.
 - O carregamento controlado de perguntas/respostas passou a usar a estrutura já existente.
+- Uma guarda simples de concorrência foi adicionada para evitar sobrescrever a tela com resposta antiga.
 - O salvamento textual atual foi preservado.
 - Backend, banco, payload e `requestJson` permaneceram inalterados.
 - O backup obrigatório foi criado.
