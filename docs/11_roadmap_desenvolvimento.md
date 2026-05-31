@@ -4325,3 +4325,16 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_ajuste_visual_sim_nao_vertical.md`.
 - O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_ajuste_visual_sim_nao_vertical/`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Validacao do questionario visual sem salvamento
+
+- Foi registrada a validacao manual da implementacao visual do questionario da aba `Anamnese`.
+- O commit validado foi `2f9761c`.
+- O documento de implementacao validado foi `docs/ficha_pessoal_anamnese_implementacao_questionario_visual_sem_salvamento.md`.
+- O usuario informou o resultado `PASSOU`.
+- O fluxo testado confirmou perguntas listadas, troca de questionario, rolagem, controles visuais e estabilidade da `Ficha Pessoal`.
+- A etapa visual sem salvamento foi considerada concluida.
+- A proxima recomendacao e um ajuste visual pequeno para aproximar do EasyDental, especialmente organizar `Sim` e `Nao` em coluna vertical.
+- Nenhum backend, banco, payload ou `requestJson` foi alterado nesta validacao.
+- O novo documento e `docs/ficha_pessoal_anamnese_validacao_questionario_visual_sem_salvamento.md`.
+- A blindagem textual/mojibake foi respeitada.
