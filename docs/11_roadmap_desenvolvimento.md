@@ -4379,6 +4379,20 @@ Observacoes:
 - Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
 
+## Ficha pessoal - Anamnese - Contrato de persistencia real de Sim/Nao + complemento
+
+- Foi aberto o contrato de persistencia real da aba `Anamnese`.
+- O estado atual da aba ja tem cabecalho com nome do paciente, combo `Questionario`, lista visual de perguntas e confirmacao local sem salvamento.
+- A analise do legado EasyDental reforca a existencia de resposta e complemento por pergunta em `ANAMNESE_RESP`.
+- A estrutura atual do Brana Cloud possui rotas/modelos de anamnese, mas continua com persistencia textual em `PUT /anamnese/pacientes/{id}/respostas`.
+- As opcoes analisadas foram B1, B2, B3 e B4.
+- A recomendacao documental foi `FICHA-ANAM-PERSIST-B2`, usando envelope textual estruturado na estrutura atual.
+- Para B2, nao ha necessidade imediata de backend novo, banco novo, migracao ou novo endpoint.
+- A persistencia real futura deve continuar separada de qualquer evolucao posterior para B3, se um dia for necessario aproximar ainda mais o legado.
+- O novo documento e `docs/ficha_pessoal_anamnese_contrato_persistencia_real_sim_nao_complemento.md`.
+- Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
+
 ## Ficha pessoal - Anamnese - Implementacao da confirmacao local sem salvamento
 
 - Foi registrada a implementacao da camada local de confirmacao de alteracoes da aba `Anamnese`.
