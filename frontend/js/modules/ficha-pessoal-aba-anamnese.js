@@ -137,7 +137,7 @@
     if (state.dirty) return "Alteracoes pendentes.";
     if (state.saveStatus === "error") return "Falha ao salvar.";
     if (state.saveStatus === "saved") return "Respostas salvas.";
-    return "Persistencia B2 ativa.";
+    return "";
   }
 
   function questionarioSelecionado() {
@@ -300,7 +300,6 @@
     const perguntas = Array.isArray(state.perguntas) ? state.perguntas : [];
     const questionario = questionarioSelecionado();
     const nomeQuestionario = questionario?.nome || "";
-    const salvarDesabilitado = !state.dirty || state.salvando || !temPacienteValido() || !state.questionarioSelId;
     const selecionadoId = Number(state.questionarioSelId || 0) || null;
     const cards = perguntas.map((item, idx) => {
       const id = Number(item?.pergunta_id || item?.id || 0) || idx + 1;
@@ -332,7 +331,6 @@
           <div class="ficha-anamnese-meta">Questionario: ${esc(nomeQuestionario || "Questionario")}</div>
           <div class="ficha-anamnese-actions">
             <div class="ficha-anamnese-meta">${esc(resumirStatusSalvamento())}</div>
-            <button type="button" class="materiais-btn" data-anamnese-action="salvar" ${salvarDesabilitado ? "disabled" : ""}>Salvar anamnese</button>
           </div>
         </div>
         <div class="ficha-anamnese-scroll ${state.statusPerguntas === "loading" ? "ficha-anamnese-loading" : ""}">
@@ -525,14 +523,6 @@
         if (!perguntaId) return;
         atualizarRespostaLocal(perguntaId, { complemento: alvo.value });
       });
-      wrap.addEventListener("click", (ev) => {
-        const alvo = ev.target;
-        if (!(alvo instanceof HTMLElement)) return;
-        const btnSalvar = alvo.closest?.("[data-anamnese-action='salvar']");
-        if (!btnSalvar) return;
-        ev.preventDefault();
-        void salvarAnamneseAtual("botao");
-      });
     }
     if (ficha.anamneseQuestionario && ficha.anamneseQuestionario.dataset.bound !== "1") {
       ficha.anamneseQuestionario.dataset.bound = "1";
@@ -605,6 +595,9 @@
     selecionarQuestionario,
     carregar,
     salvarAnamneseAtual,
+    temAlteracoesPendentes() {
+      return !!state.dirty;
+    },
     bind,
     onPacienteAplicado,
     onLimparNovo,

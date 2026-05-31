@@ -4437,3 +4437,18 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_validacao_confirmacao_alteracoes_sem_salvamento.md`.
 - Nenhum codigo foi alterado nesta validacao.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Correcao do Grava integrado e remocao do controle temporario
+
+- Foi registrada a correcao da interface temporaria da Anamnese apos a implementacao B2.
+- O texto `Persistencia B2 ativa.` foi removido.
+- O botao `Salvar anamnese` foi removido.
+- A gravacao da Anamnese passou a ocorrer pelo botao geral `Grava` da `Ficha Pessoal`.
+- O modal local de confirmacao continua ativo com `Sim`, `Nao` e `Cancelar`.
+- `Sim` salva a Anamnese e segue o fluxo.
+- `Nao` descarta alteracoes locais e prossegue.
+- `Cancelar` mantem o usuario na aba `Anamnese`.
+- Nenhum backend, banco, payload, `requestJson` ou formato de salvamento novo foi introduzido nesta correcao.
+- O novo documento e `docs/ficha_pessoal_anamnese_correcao_grava_integrado_remocao_controle_temporario.md`.
+- O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_grava_integrado_remocao_controle_temporario/`.
+- A blindagem textual/mojibake foi respeitada.

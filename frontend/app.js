@@ -6017,6 +6017,8 @@ async function fichaAtalhoCodigoBlur(){
   await fichaAbrirPorCodigo(valor,true);
 }
 async function fichaSalvarPaciente(){
+  const anamneseOk=await fichaAnamneseSalvarPendentes("grava-paciente");
+  if(!anamneseOk)return;
   const editando=!!fichaPacienteAtualId;
   const payload=fichaPayloadAtual();
   if(!payload.nome){
@@ -22585,6 +22587,11 @@ function fichaAnamneseRenderQuestionarios(){return fichaAnamneseAba.renderQuesti
 async function fichaAnamneseCarregarQuestionarios(seq=0){return fichaAnamneseAba.carregarQuestionarios(seq);}
 function fichaAnamneseSelecionarQuestionario(id){return fichaAnamneseAba.selecionarQuestionario(id);}
 async function fichaAnamneseCarregar(){return fichaAnamneseAba.carregar();}
+function fichaAnamneseTemAlteracoesPendentes(){return !!fichaAnamneseAba.temAlteracoesPendentes?.();}
+async function fichaAnamneseSalvarPendentes(motivo="grava-paciente"){
+  if(!fichaAnamneseTemAlteracoesPendentes())return true;
+  return !!(await fichaAnamneseAba.salvarAnamneseAtual?.(motivo));
+}
 const _fichaEnsureUIOrig=fichaEnsureUI;
 fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
