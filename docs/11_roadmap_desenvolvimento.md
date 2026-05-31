@@ -4471,3 +4471,18 @@ Observacoes:
 - Nenhum codigo foi alterado nesta validacao.
 - O novo documento e `docs/ficha_pessoal_anamnese_validacao_grava_integrado_remocao_controle_temporario.md`.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Consolidacao pos persistencia B2 e integracao ao Grava
+
+- Foi registrada a consolidacao documental da trilha da aba `Anamnese`.
+- O estado funcional validado inclui paciente, combo `Questionario`, perguntas, `Sim` / `Nao` vertical, complemento, confirmacao local e persistencia B2.
+- A integracao ao botao geral `Grava` foi confirmada como parte do fluxo concluido.
+- O texto temporario `Persistencia B2 ativa.` nao permanece na UI.
+- O botao temporario `Salvar anamnese` nao permanece na UI.
+- A persistencia atual continua sendo B2 por envelope textual.
+- Nao houve persistencia estruturada 1:1 EasyDental nesta trilha.
+- Nao houve backend novo, banco novo, migration nova ou endpoint novo.
+- As pendencias futuras permanecem apenas como possibilidades futuras, com contrato proprio se um dia forem necessarias.
+- A recomendacao registrada e considerar a aba `Anamnese` concluida nesta fase, salvo bugs encontrados em teste futuro.
+- O novo documento e `docs/ficha_pessoal_anamnese_consolidacao_pos_persistencia_b2_grava.md`.
+- A blindagem textual/mojibake foi respeitada.
