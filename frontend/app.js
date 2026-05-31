@@ -22553,97 +22553,39 @@ for(let i=1;i<=6;i++){c[`txtManha${i}`].addEventListener("input",()=>atualizarTo
 c.cboHorasAno.addEventListener("change",cboHorasAnoChange);c.txtGastoAnualParticular.addEventListener("input",atualizarCustos);c.txtGastoAnualEmpresa.addEventListener("input",atualizarCustos);c.txtGastoAnualParticular.addEventListener("blur",()=>{c.txtGastoAnualParticular.value=formatMoney(toFloat(c.txtGastoAnualParticular.value));atualizarCustos()});c.txtGastoAnualEmpresa.addEventListener("blur",()=>{c.txtGastoAnualEmpresa.value=formatMoney(toFloat(c.txtGastoAnualEmpresa.value));atualizarCustos()});c.txtCartao.addEventListener("input",atualizarCustos);c.txtIR.addEventListener("input",atualizarCustos);c.txtCD.addEventListener("input",atualizarCustos);c.box_Ano.value=String(new Date().getFullYear());bootstrapOauthFromUrl();carregarSessao();initMojibakeAutoFix();
 
 // Overrides - Ficha anamnese respostas + impressão
-let fichaAnamneseCache=[];
-let fichaAnamneseSelId=null;
-let fichaAnamneseQuestionarioId=null;
-let fichaAnamneseQuestionarioNome="";
-let fichaAnamneseQuestionarioSelId=null;
-let fichaAnamneseQuestionariosCache=[];
-let fichaAnamneseLoadToken=0;
-function fichaAnamneseTemPacienteValido(){return Number(fichaPacienteAtualId||0)>0}
-function fichaAnamneseNomePacienteAtual(){
-  const bruto=String(ficha?.titulo?.textContent||"").trim();
-  const nome=bruto.replace(/^Ficha pessoal\s*-\s*/i,"").trim();
-  return nome||String(ficha?.nome?.value||"").trim()||"";
-}
-function fichaAnamneseAtualizarCabecalho(){
-  if(!ficha?.anamnesePaciente)return;
-  const nome=fichaAnamneseTemPacienteValido()?fichaAnamneseNomePacienteAtual():"";
-  ficha.anamnesePaciente.value=nome;
-  ficha.anamnesePaciente.title=nome;
-}
-function fichaAnamneseQuestionarioSelecionado(){return fichaAnamneseQuestionariosCache.find(x=>x.id===fichaAnamneseQuestionarioSelId)||null}
-function fichaAnamneseRenderQuestionarios(){
-  if(!ficha?.anamneseQuestionario)return false;
-  const itens=Array.isArray(fichaAnamneseQuestionariosCache)?fichaAnamneseQuestionariosCache:[];
-  if(!itens.length){
-    ficha.anamneseQuestionario.innerHTML='<option value="">Sem questionarios</option>';
-    ficha.anamneseQuestionario.disabled=true;
-    fichaAnamneseQuestionarioSelId=null;
-    return false;
-  }
-  ficha.anamneseQuestionario.disabled=false;
-  const existe=itens.some(x=>x.id===fichaAnamneseQuestionarioSelId);
-  if(!existe){
-    const fallbackId=itens.some(x=>x.id===fichaAnamneseQuestionarioId)?fichaAnamneseQuestionarioId:itens[0]?.id||null;
-    fichaAnamneseQuestionarioSelId=Number(fallbackId||0)||null;
-  }
-  ficha.anamneseQuestionario.innerHTML=itens.map(item=>`<option value="${item.id}">${esc(item.nome||"")}</option>`).join("");
-  ficha.anamneseQuestionario.value=String(fichaAnamneseQuestionarioSelId||"");
-  return true;
-}
-async function fichaAnamneseCarregarQuestionarios(seq=0){
-  if(!ficha?.anamneseQuestionario)return false;
-  const{res,data}=await requestJson("GET","/anamnese/questionarios",undefined,true);
-  if(seq&&seq!==fichaAnamneseLoadToken)return false;
-  if(!res.ok){
-    fichaAnamneseQuestionariosCache=[];
-    fichaAnamneseRenderQuestionarios();
-    return false;
-  }
-  fichaAnamneseQuestionariosCache=Array.isArray(data)?data:[];
-  fichaAnamneseRenderQuestionarios();
-  return true;
-}
-function fichaAnamneseSelecionarQuestionario(id){
-  const novo=Number(id||0)||null;
-  if(novo===fichaAnamneseQuestionarioSelId)return;
-  fichaAnamneseQuestionarioId=novo;
-  fichaAnamneseQuestionarioSelId=novo;
-  fichaAnamneseQuestionarioNome="";
-  fichaAnamneseRenderQuestionarios();
-}
-async function fichaAnamneseCarregar(){
-  const seq=++fichaAnamneseLoadToken;
-  fichaAnamneseAtualizarCabecalho();
-  if(!fichaAnamneseTemPacienteValido()||!ficha?.anamneseQuestionario){
-    fichaAnamneseQuestionarioId=null;
-    fichaAnamneseQuestionarioNome="";
-    fichaAnamneseQuestionarioSelId=null;
-    fichaAnamneseQuestionariosCache=[];
-    fichaAnamneseRenderQuestionarios();
-    return;
-  }
-  const carregou=await fichaAnamneseCarregarQuestionarios(seq);
-  if(seq!==fichaAnamneseLoadToken)return;
-  if(!carregou)return;
-  fichaAnamneseQuestionarioSelId=Number(fichaAnamneseQuestionarioId||0)||fichaAnamneseQuestionarioSelId||fichaAnamneseQuestionariosCache[0]?.id||null;
-  fichaAnamneseRenderQuestionarios();
-}
+const fichaAnamneseAba=window.BranaFichaPessoalAbaAnamnese||{
+  temPacienteValido(){return Number(fichaPacienteAtualId||0)>0;},
+  nomePacienteAtual(){const bruto=String(ficha?.titulo?.textContent||"").trim();const nome=bruto.replace(/^Ficha pessoal\s*-\s*/i,"").trim();return nome||String(ficha?.nome?.value||"").trim()||"";},
+  atualizarCabecalho(){if(!ficha?.anamnesePaciente)return;const nome=this.temPacienteValido()?this.nomePacienteAtual():"";ficha.anamnesePaciente.value=nome;ficha.anamnesePaciente.title=nome;},
+  questionarioSelecionado(){return null;},
+  renderQuestionarios(){if(!ficha?.anamneseQuestionario)return false;return true;},
+  async carregarQuestionarios(){return true;},
+  selecionarQuestionario(){},
+  async carregar(){this.atualizarCabecalho();this.renderQuestionarios();},
+  bind(){if(!ficha?.anamneseQuestionario||ficha.anamneseQuestionario.dataset.bound==="1")return;ficha.anamneseQuestionario.dataset.bound="1";ficha.anamneseQuestionario.addEventListener("change",()=>{});},
+  onPacienteAplicado(){this.atualizarCabecalho();if(fichaTabAtual==="anamnese")this.carregar();},
+  async onLimparNovo(){this.atualizarCabecalho();this.renderQuestionarios();},
+  beforeSetTab(tab){if((tab==="anamnese"||tab==="historico")&&!this.temPacienteValido()){window.alert("Necessario gravar o paciente antes de abrir esta aba.");return false;}return true;}
+};
+function fichaAnamneseTemPacienteValido(){return fichaAnamneseAba.temPacienteValido();}
+function fichaAnamneseNomePacienteAtual(){return fichaAnamneseAba.nomePacienteAtual();}
+function fichaAnamneseAtualizarCabecalho(){return fichaAnamneseAba.atualizarCabecalho();}
+function fichaAnamneseQuestionarioSelecionado(){return fichaAnamneseAba.questionarioSelecionado();}
+function fichaAnamneseRenderQuestionarios(){return fichaAnamneseAba.renderQuestionarios();}
+async function fichaAnamneseCarregarQuestionarios(seq=0){return fichaAnamneseAba.carregarQuestionarios(seq);}
+function fichaAnamneseSelecionarQuestionario(id){return fichaAnamneseAba.selecionarQuestionario(id);}
+async function fichaAnamneseCarregar(){return fichaAnamneseAba.carregar();}
 const _fichaEnsureUIOrig=fichaEnsureUI;
-fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;if(ficha.anamneseQuestionario&&ficha.anamneseQuestionario.dataset.bound!=="1"){ficha.anamneseQuestionario.dataset.bound="1";ficha.anamneseQuestionario.addEventListener("change",ev=>{fichaAnamneseSelecionarQuestionario(ev.target.value);});}};
+fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAtualizarCabecalho();if(fichaTabAtual==="anamnese")fichaAnamneseCarregar();};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();};
 const _fichaLimparNovoOrig=fichaLimparNovo;
-fichaLimparNovo=async function(){fichaAnamneseLoadToken++;await _fichaLimparNovoOrig();fichaAnamneseQuestionarioId=null;fichaAnamneseQuestionarioNome="";fichaAnamneseQuestionarioSelId=null;fichaAnamneseQuestionariosCache=[];fichaAnamneseAtualizarCabecalho();fichaAnamneseRenderQuestionarios();};
+fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();};
 const _fichaSetTabOrig=fichaSetTab;
 fichaSetTab=function(tab){
-  if((tab==="anamnese"||tab==="historico")&&!fichaAnamneseTemPacienteValido()){
-    window.alert("Necessario gravar o paciente antes de abrir esta aba.");
-    return;
-  }
+  if(!fichaAnamneseAba.beforeSetTab(tab)) return;
   _fichaSetTabOrig(tab);
-  if(tab==="anamnese")fichaAnamneseCarregar();
+  if(tab==="anamnese")fichaAnamneseAba.carregar();
 };
 
 // Overrides - Simbolos graficos CRUD

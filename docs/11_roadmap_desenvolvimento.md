@@ -4273,3 +4273,16 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_auditoria_fluxo_questionario_contrato.md`.
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Modularizacao inicial sem mudanca de comportamento
+
+- Foi registrada a modularizacao inicial da aba `Anamnese` da `Ficha Pessoal`.
+- O modulo dedicado `frontend/js/modules/ficha-pessoal-aba-anamnese.js` foi criado e consumido.
+- `frontend/app.js` foi reduzido a fachada fina para a aba.
+- O comportamento visual atual foi preservado: nome do paciente, combo `Questionario` e area inferior vazia/preparada.
+- A lista visual de perguntas ainda nao foi implementada.
+- O arquivo `frontend/index.html` recebeu um script adicional para carregar o novo modulo, por necessidade tecnica indispensavel.
+- O backup manual foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_modularizacao_sem_mudar_comportamento/`.
+- O novo documento e `docs/ficha_pessoal_anamnese_modularizacao_sem_mudar_comportamento.md`.
+- Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa.
+- A blindagem textual/mojibake foi respeitada.
