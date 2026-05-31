@@ -4286,3 +4286,14 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_modularizacao_sem_mudar_comportamento.md`.
 - Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Validacao da modularizacao inicial sem mudanca de comportamento
+
+- Foi registrada a validacao manual da modularizacao inicial da aba `Anamnese` da `Ficha Pessoal`.
+- O commit validado foi `1a89024`.
+- O resultado informado pelo usuario foi `PASSOU`.
+- O fluxo testado confirmou menus, `Sair`, `Procura...`, `Ficha Pessoal`, `Anamnese`, nome do paciente, combo `Questionario` e area inferior vazia/preparada.
+- A modularizacao inicial foi considerada concluida e aprovada como base segura.
+- O novo documento e `docs/ficha_pessoal_anamnese_validacao_modularizacao_sem_mudar_comportamento.md`.
+- Nenhum backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta validacao.
+- A blindagem textual/mojibake foi respeitada.
