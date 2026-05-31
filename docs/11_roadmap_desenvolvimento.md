@@ -4365,3 +4365,16 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_anamnese_auditoria_persistencia_contrato.md`.
 - Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
+
+## Ficha pessoal - Anamnese - Contrato de confirmacao de alteracoes
+
+- Foi registrado o contrato especifico para confirmacao de alteracoes da aba `Anamnese`.
+- A auditorio da persistencia indicou que o legado usa `ANAMNESE_QUEST`, `ANAMNESE_PERG` e `ANAMNESE_RESP`, com `RESPOSTA` e `COMPLEM`.
+- O Brana Cloud atual segue com persistencia textual em `PUT /anamnese/pacientes/{id}/respostas`.
+- A busca de um mecanismo geral de "dados alterados" na `Ficha Pessoal` nao comprovou um contrato existente para a Anamnese.
+- Nao foi encontrado modal padrao unico com `Sim`, `Nao` e `Cancelar`; o frontend usa `window.confirm` e modais especificos em outros fluxos.
+- A decisao recomendada foi `FICHA-ANAM-CONFIRM-A`.
+- O contrato proposto usa a mensagem `Os dados foram alterados. Deseja grava-los?`.
+- O novo documento e `docs/ficha_pessoal_anamnese_contrato_confirmacao_alteracoes.md`.
+- Nenhum codigo, backend, banco, payload, `requestJson` ou formato de salvamento foi alterado nesta etapa documental.
+- A blindagem textual/mojibake foi respeitada.
