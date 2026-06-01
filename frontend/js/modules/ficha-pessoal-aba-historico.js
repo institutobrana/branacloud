@@ -7,11 +7,11 @@
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
     novo: "Inserir linha",
-    alterar: "Edita linha",
-    eliminar: "Elimina linha",
+    alterar: "Editar linha",
+    eliminar: "Excluir linha",
     confirmar: "Propriedades da linha",
   };
-  const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descricao do procedimento"];
+  const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descricao"];
   const state = {
     selectedRow: null,
     activeCellIndex: 0,
