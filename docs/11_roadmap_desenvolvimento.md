@@ -4568,3 +4568,14 @@ Observacoes:
 - O novo documento de revisao e `docs/anamnese_easy_dell_servidor_revisao_dry_run_principal_antes_migracao.md`.
 - Os relat?rios auxiliares criados foram `docs/anamnese_easy_dell_servidor_principal_perguntas_faltantes.csv` e `docs/anamnese_easy_dell_servidor_principal_respostas_perguntas_faltantes.csv`.
 
+
+## Anamnese - Contrato estrutural do questionario Principal na clinica 1
+
+- Foi aberto o contrato estrutural para completar o Principal atual da clinica 1 com as 18 perguntas faltantes do legado.
+- A revisao confirmou que as 17 perguntas atuais devem ser preservadas integralmente.
+- As perguntas 18 a 35 podem ser acrescentadas sem renumerar as existentes, preservando a ordem 1..35.
+- Nao houve divergencia grave nas perguntas 1..17 que obrigue ajustes antes do acrescimo estrutural.
+- A decisao recomendada ficou em `ANAM-MIG-STRUCT-B1`.
+- Nenhuma migracao de respostas foi executada nesta etapa documental.
+- O novo documento de contrato e `docs/anamnese_easy_dell_servidor_contrato_estrutural_principal_clinica_1.md`.
+
