@@ -4805,3 +4805,12 @@ Observacoes:
 - Nao houve alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_2_refino_visual_modal_propriedades.md`.
 - Proxima microetapa sugerida: iniciar a analise e, se autorizado, a execucao do primeiro ajuste funcional de medio risco.
+
+## Ficha Pessoal - Historico - Microetapa 3 - auditoria curta de Cirurgiao e Regiao
+
+- A microetapa 3 foi executada como auditoria curta e documental dos campos `Cirurgiao` e `Regiao`.
+- Os campos permanecem hoje como texto local na grade, na edicao inline, no modal de propriedades e na serializacao via `extra.historico_aba`.
+- Nao houve alteracao funcional, salvo excecao documentada inexistente nesta rodada.
+- Nao houve alteracao de backend ou banco.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_3_cirurgiao_regiao_auditoria.md`.
+- O menor proximo passo seguro definido e criar um contrato local de origem para `Cirurgiao` e `Regiao` antes de qualquer combo, lookup ou integracao externa.
