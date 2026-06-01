@@ -4652,3 +4652,14 @@ Observacoes:
 - Nenhuma nova escrita foi executada nesta validacao.
 - O novo documento de validacao e `docs/anamnese_easy_dell_servidor_validacao_execucao_assistida_principal_clinica_1.md`.
 
+## Anamnese - Auditoria da regra de pergunta critica e icone de alerta no EasyDental
+
+- Foi confirmada em leitura somente a existencia da regra de pergunta critica na Anamnese do EasyDental legado.
+- A tabela `ANAMNESE_PERG` contem `TIPPER`, `TIPRES` e `TEXMEN`, suficientes para descrever a criticidade, o tipo de resposta e a mensagem de alerta.
+- A regra observada ficou em `TIPPER = 1` nao critica, `TIPPER = 2` critica para resposta afirmativa e `TIPPER = 3` critica para resposta negativa.
+- O legado possui recursos de alerta para a Anamnese, incluindo `ico_dedo.bmp`, `ico_dedoanamnese.bmp` e `ico_alert.bmp`.
+- A rotina visual exata de exibicao do icone nao foi localizada em fonte legivel acessivel, entao a conclusao ficou restrita ao lastro em dados e recursos.
+- O Brana Cloud ja possui campos analogos para `tipo_pergunta`, `tipo_resposta` e `mensagem_alerta`, mas a equivalencia visual completa do icone ainda permanece como frente de comparacao futura.
+- O novo documento de auditoria e `docs/anamnese_easydental_auditoria_regra_pergunta_critica_icone_alerta.md`.
+- Nenhum codigo, banco, backend, schema, endpoint, payload ou arquivo do EasyDental foi alterado nesta etapa documental.
+
