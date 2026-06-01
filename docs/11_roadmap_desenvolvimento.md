@@ -4776,3 +4776,13 @@ Observacoes:
 - Cada diferenca foi classificada por impacto, tipo e evidencia, com sugestao de tratamento futuro.
 - A conclusao preliminar e que o Brana ja reproduz o fluxo pratico principal, mas ainda diverge de forma relevante na persistencia relacional e na dependencia estrutural com `INTERVENCAO`.
 - Proxima etapa sugerida: priorizacao das diferencas.
+
+## Ficha Pessoal - Historico - Priorizacao de diferencas e backlog conservador
+
+- Foi aberta a frente documental de priorizacao das diferencas da aba Historico.
+- O objetivo e transformar a auditoria e o comparativo em backlog conservador, sem implementar correcoes nesta etapa.
+- O documento novo e `docs/ficha_pessoal_historico_priorizacao_diferencas_backlog.md`.
+- As diferencas foram separadas em quatro categorias: microajuste imediato, ajuste funcional de medio risco, dependente de observacao pratica adicional e estrutural/futura.
+- A primeira microetapa recomendada foi definida como harmonizacao textual visual da grade, com foco no cabecalho final e nos rótulos da toolbar.
+- As diferencas estruturais foram mantidas fora da trilha de ajuste fino.
+- Proxima etapa sugerida: execucao da primeira microetapa de correcao real, quando autorizada.
