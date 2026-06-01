@@ -4641,3 +4641,14 @@ Observacoes:
 - Nenhuma resposta antiga foi sobrescrita e nenhum outro questionario foi alterado.
 - O novo documento de execucao e `docs/anamnese_easy_dell_servidor_execucao_assistida_principal_clinica_1.md`.
 
+## Anamnese - Validacao pos-execucao assistida do Principal na clinica 1
+
+- A validacao manual pos-execucao da migracao assistida do `Principal` foi aprovada pelo usuario.
+- O usuario confirmou que `todos testes passaram`.
+- As respostas migradas aparecem carregadas na aba `Anamnese`.
+- O paciente `Joon Yun Lee Lee` ficou com o `Principal` preenchido.
+- O botao `Grava` continua funcionando.
+- A aba continua navegavel e sem regressao visual/global percebida.
+- Nenhuma nova escrita foi executada nesta validacao.
+- O novo documento de validacao e `docs/anamnese_easy_dell_servidor_validacao_execucao_assistida_principal_clinica_1.md`.
+
