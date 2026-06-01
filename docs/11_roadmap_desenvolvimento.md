@@ -4823,3 +4823,12 @@ Observacoes:
 - Nao houve alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_4_contrato_local_origem_cirurgiao_regiao.md`.
 - A proxima microetapa sugerida e avaliar se vale introduzir uma sugestao ou lista local nao vinculante, ou manter os campos textuais por enquanto.
+
+## Ficha Pessoal - Historico - Microetapa 5 - avaliacao de sugestao local nao vinculante para Cirurgiao e Regiao
+
+- A microetapa 5 foi executada como avaliacao documental da eventual sugestao ou lista local nao vinculante para `Cirurgiao` e `Regiao`.
+- Nao houve alteracao funcional.
+- Nao houve alteracao de backend ou banco.
+- A recomendacao final registrada e manter os campos textuais por enquanto.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_5_avaliacao_sugestao_local_cirurgiao_regiao.md`.
+- O menor proximo passo seguro, caso surja nova evidencia, e reavaliar uma sugestao local opcional e nao vinculante sem transformar os campos em combo obrigatorio.
