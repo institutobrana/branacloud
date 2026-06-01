@@ -4756,3 +4756,13 @@ Observacoes:
 - A auditoria cobre camadas visuais, de interacao, de regra funcional, de origem de dados, de persistencia e de dependencias cruzadas.
 - A nova documentacao de contrato e `docs/ficha_pessoal_historico_auditoria_comparativa_contrato.md`.
 - Proxima etapa sugerida: engenharia reversa do EasyDental.
+
+## Ficha Pessoal - Historico - Engenharia reversa do EasyDental
+
+- Foi aberta a frente documental de engenharia reversa tecnica da aba Historico no EasyDental legado.
+- A leitura foi feita somente em fontes de consulta, sem alteracao de Brana Cloud, sem backend, sem banco e sem frontend.
+- O nucleo confirmado da modelagem e a tabela `HISTORICO`, com relacao ao paciente em `PESSOAL`, ao tratamento em `INTERVENCAO`, ao profissional em `PRESTADOR` e a auditoria em `USER_STAMP_*` / `TIME_STAMP_*`.
+- O mapeamento tecnico mais provavel ficou alinhado com `Data`, `Cirurgiao`, `Regiao` e `Descricao`.
+- Campos de metadados como `Cor de fundo`, `Data de insercao` e `Data de atualizacao` ficaram classificados como hipotese de exposicao na janela de propriedades.
+- A nova documentacao de engenharia reversa e `docs/ficha_pessoal_historico_easydental_engenharia_reversa.md`.
+- Proxima etapa sugerida: comparacao funcional detalhada EasyDental x Brana Cloud para fechar a equivalencia de tela, teclado e propriedades.
