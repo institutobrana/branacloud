@@ -4623,3 +4623,12 @@ Observacoes:
 - Nenhuma escrita foi executada nesta etapa.
 - O novo documento de contrato e `docs/anamnese_easy_dell_servidor_contrato_escrita_assistida_principal_clinica_1.md`.
 
+## Anamnese - Implementacao do runner assistido do Principal na clinica 1
+
+- Foi implementado o runner controlado `backend/scripts/runner_anamnese_principal_clinica1_write_assisted.py`.
+- O runner manteve `dry-run` como modo padrao e exigiu `--execute` apenas como via futura.
+- O dry-run confirmou `Principal` com 35 perguntas, paciente alvo inequivoco e 0 conflitos para o paciente `273`.
+- O runner criou snapshot de backup em `backups_modularizacao/fase_2c/anamnese_principal_write_assisted_runner_clinica_1/`.
+- Nenhuma escrita real foi executada nesta etapa.
+- O novo documento de implementacao e `docs/anamnese_easy_dell_servidor_implementacao_runner_escrita_assistida_principal_clinica_1.md`.
+
