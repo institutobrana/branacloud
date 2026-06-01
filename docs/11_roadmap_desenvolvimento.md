@@ -4843,3 +4843,13 @@ Observacoes:
 - Nao houve alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_6_reclassificacao_funcional_dependencias.md`.
 - A proxima subetapa recomendada e abrir uma frente de dependencia funcional para o executante do procedimento e para a regiao odontologica, se necessario.
+
+## Ficha Pessoal - Historico - Microetapa 7 - confirmacao EasyDental de Cirurgiao, Regiao e dependencias
+
+- A microetapa 7 foi executada como consolidacao documental da leitura do EasyDental real sobre `Cirurgiao responsavel`, `Regiao` e suas dependencias.
+- O alvo funcional de `Cirurgiao responsavel` foi confirmado como prestador/executante, mas o auto-preenchimento, a origem do combo/lista e a editabilidade visual exata continuam sem prova acessivel nas fontes consultadas.
+- `Regiao` permaneceu como dependencia funcional em aberto, com mapeamento tecnico forte para `NRODENTE`, mas sem confirmacao visual da origem do controle.
+- As dependencias com paciente, intervencao e prestador ficaram consolidadas no documento novo.
+- Nao houve alteracao funcional, nem alteracao de backend ou banco.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_7_confirmacao_easydental_cirurgiao_regiao_dependencias.md`.
+- A proxima subetapa recomendada e abrir uma frente de dependencia somente se o usuario trouxer nova evidencia visual ou um modulo de apoio para fechar o que ainda permanece em aberto.
