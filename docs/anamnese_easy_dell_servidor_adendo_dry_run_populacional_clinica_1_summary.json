@@ -1,0 +1,105 @@
+{
+  "legacy_total_patients": 1627,
+  "legacy_patients_with_responses": 305,
+  "legacy_total_responses": 16102,
+  "legacy_non_empty_responses": 16102,
+  "legacy_complements": 1875,
+  "brana_patient_count": 1627,
+  "brana_questionario_count": 5,
+  "brana_pergunta_count": 112,
+  "brana_resposta_count": 15,
+  "brana_response_patient_count": 1,
+  "match_counts": {
+    "MATCH_ALTO": 304,
+    "MATCH_MEDIO": 0,
+    "MATCH_BAIXO": 0,
+    "SEM_MATCH": 1,
+    "DUPLICADO/CONFLITO": 0
+  },
+  "legacy_response_format": {
+    "2": 11377,
+    "1": 4725
+  },
+  "response_map_status": {
+    "MAPPED_EXATO": 16084,
+    "SEM_EQUIVALENCIA": 17,
+    "MAPPED_EM_OUTRO_QUESTIONARIO": 1
+  },
+  "questionario_comparison": [
+    {
+      "legacy_questionario_id": 1,
+      "legacy_questionario_nome": "Principal",
+      "brana_questionario_id": 2,
+      "brana_questionario_nome": "Principal",
+      "legacy_perguntas": 35,
+      "brana_perguntas": 17,
+      "same_text_by_number": 17,
+      "diff_text_by_number": 0,
+      "same_tipo_pergunta": 2,
+      "same_tipo_resposta": 12,
+      "same_alerta": 2,
+      "missing_in_brana": 18,
+      "extra_in_brana": 0
+    },
+    {
+      "legacy_questionario_id": 2,
+      "legacy_questionario_nome": "Implante",
+      "brana_questionario_id": 8,
+      "brana_questionario_nome": "Implante",
+      "legacy_perguntas": 12,
+      "brana_perguntas": 12,
+      "same_text_by_number": 12,
+      "diff_text_by_number": 0,
+      "same_tipo_pergunta": 12,
+      "same_tipo_resposta": 5,
+      "same_alerta": 12,
+      "missing_in_brana": 0,
+      "extra_in_brana": 0
+    },
+    {
+      "legacy_questionario_id": 3,
+      "legacy_questionario_nome": "Ficha complementar",
+      "brana_questionario_id": 9,
+      "brana_questionario_nome": "Ficha complementar",
+      "legacy_perguntas": 12,
+      "brana_perguntas": 12,
+      "same_text_by_number": 12,
+      "diff_text_by_number": 0,
+      "same_tipo_pergunta": 12,
+      "same_tipo_resposta": 0,
+      "same_alerta": 12,
+      "missing_in_brana": 0,
+      "extra_in_brana": 0
+    },
+    {
+      "legacy_questionario_id": 4,
+      "legacy_questionario_nome": "Anamnese de Saúde",
+      "brana_questionario_id": 10,
+      "brana_questionario_nome": "Anamnese de Saúde",
+      "legacy_perguntas": 55,
+      "brana_perguntas": 55,
+      "same_text_by_number": 55,
+      "diff_text_by_number": 0,
+      "same_tipo_pergunta": 55,
+      "same_tipo_resposta": 48,
+      "same_alerta": 5,
+      "missing_in_brana": 0,
+      "extra_in_brana": 0
+    },
+    {
+      "legacy_questionario_id": 5,
+      "legacy_questionario_nome": "Anamnese pessoal",
+      "brana_questionario_id": 11,
+      "brana_questionario_nome": "Anamnese pessoal",
+      "legacy_perguntas": 16,
+      "brana_perguntas": 16,
+      "same_text_by_number": 16,
+      "diff_text_by_number": 0,
+      "same_tipo_pergunta": 16,
+      "same_tipo_resposta": 2,
+      "same_alerta": 16,
+      "missing_in_brana": 0,
+      "extra_in_brana": 0
+    }
+  ]
+}

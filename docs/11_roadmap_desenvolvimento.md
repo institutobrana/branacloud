@@ -4543,3 +4543,15 @@ Observacoes:
 - A decisao recomendada ficou em `ANAM-MIG-C`.
 - O novo documento de auditoria e `docs/anamnese_easy_dell_servidor_auditoria_migracao_clinica_1.md`.
 - Nenhum codigo, backend, banco, schema, migration, endpoint, payload ou formato de salvamento foi alterado nesta etapa documental.
+
+## Anamnese - Adendo de dry-run populacional clinica 1
+
+- Foi registrada a correcao de rota da auditoria populacional: Gleisson Tel nao e a referencia de migracao do EasyDental legado.
+- A fonte legada `\Dell_servidor\c\EDS70` foi usada apenas em leitura para inventariar todos os pacientes com anamnese preenchida.
+- A comparacao com a clinica ID 1 do Brana Cloud confirmou `5` questionarios, `112` perguntas, `15` respostas salvas e `1` paciente com respostas atuais.
+- O legado EDS70 contabilizou `1627` pacientes, `305` pacientes com anamnese preenchida, `16102` respostas brutas e `1875` complementos.
+- O matching populacional ficou em `304` `MATCH_ALTO`, `0` `MATCH_MEDIO`, `0` `MATCH_BAIXO`, `1` `SEM_MATCH` e `0` `DUPLICADO/CONFLITO`.
+- O novo documento de auditoria e `docs/anamnese_easy_dell_servidor_adendo_dry_run_populacional_clinica_1.md`.
+- A decisao recomendada ficou em `ANAM-MIG-POP-B`.
+- Nao houve escrita, migracao, backend, banco, schema, endpoint ou payload novo nesta etapa documental.
+
