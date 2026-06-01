@@ -4853,3 +4853,12 @@ Observacoes:
 - Nao houve alteracao funcional, nem alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_7_confirmacao_easydental_cirurgiao_regiao_dependencias.md`.
 - A proxima subetapa recomendada e abrir uma frente de dependencia somente se o usuario trouxer nova evidencia visual ou um modulo de apoio para fechar o que ainda permanece em aberto.
+
+## Ficha Pessoal - Historico - Dependencia do prestador/executante para Cirurgiao responsavel - auditoria Brana
+
+- Foi aberta uma frente documental para auditar se o Brana ja possui base suficiente para sustentar `Cirurgiao responsavel` como campo funcional ligado ao executante/prestador da aba Historico.
+- A auditoria confirmou que o Brana ja possui cadastro de prestadores, vinculo explicito usuario/prestador, contexto de sessao com `prestador_id` e default de cirurgiao em tratamento baseado no usuario logado.
+- O modulo do Historico, porem, continua local/textual e ainda nao esta amarrado a essa base para auto-preencher ou fechar a equivalencia real do campo.
+- O novo documento e `docs/ficha_pessoal_historico_dependencia_prestador_executante_auditoria_brana.md`.
+- A conclusao objetiva e que a base existe, mas ainda falta um pequeno ciclo de apoio para ligar o Historico ao contexto de executante/prestador sem improviso.
+- A proxima etapa recomendada e abrir esse ciclo de apoio somente se o usuario autorizar a integracao do Historico com o contexto de login/prestador ou com a logica de tratamento.
