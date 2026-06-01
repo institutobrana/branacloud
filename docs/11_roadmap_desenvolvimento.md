@@ -4766,3 +4766,13 @@ Observacoes:
 - Campos de metadados como `Cor de fundo`, `Data de insercao` e `Data de atualizacao` ficaram classificados como hipotese de exposicao na janela de propriedades.
 - A nova documentacao de engenharia reversa e `docs/ficha_pessoal_historico_easydental_engenharia_reversa.md`.
 - Proxima etapa sugerida: comparacao funcional detalhada EasyDental x Brana Cloud para fechar a equivalencia de tela, teclado e propriedades.
+
+## Ficha Pessoal - Historico - Comparativo detalhado EasyDental x Brana Cloud
+
+- Foi aberta a frente documental de comparacao funcional detalhada entre EasyDental e Brana Cloud para a aba Historico.
+- A comparacao cruza o contrato da auditoria, a engenharia reversa tecnica do legado e o estado atual ja implementado no Brana Cloud.
+- O documento novo e `docs/ficha_pessoal_historico_easydental_vs_brana_comparativo_detalhado.md`.
+- O comparativo organiza diferencas por camada visual, interacao, regra funcional, origem dos dados, persistencia e dependencias cruzadas.
+- Cada diferenca foi classificada por impacto, tipo e evidencia, com sugestao de tratamento futuro.
+- A conclusao preliminar e que o Brana ja reproduz o fluxo pratico principal, mas ainda diverge de forma relevante na persistencia relacional e na dependencia estrutural com `INTERVENCAO`.
+- Proxima etapa sugerida: priorizacao das diferencas.
