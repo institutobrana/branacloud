@@ -4710,3 +4710,12 @@ Observacoes:
 - Nenhuma alteracao funcional adicional foi feita nesta validacao.
 - O novo documento de validacao e `docs/anamnese_brana_validacao_correcao_fina_alerta_icone_alinhamento.md`.
 
+## Ficha Pessoal - Historico
+
+- Foi aberta a nova frente Ficha Pessoal / Historico.
+- A classificacao do modulo foi registrada como comum/core.
+- A referencia funcional foi baseada no EasyDental, com foco em botões, grade, navegação por teclado, propriedades da linha e integração com `Grava`.
+- A auditoria inicial concluiu que a aba Historico hoje está montada em `frontend/app.js`, sem módulo próprio ainda, e sem persistência dedicada identificada.
+- O plano seguro de subetapas foi registrado, prevendo futura modularização em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
+- A etapa documental não alterou código nem banco.
+
