@@ -4862,3 +4862,11 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_historico_dependencia_prestador_executante_auditoria_brana.md`.
 - A conclusao objetiva e que a base existe, mas ainda falta um pequeno ciclo de apoio para ligar o Historico ao contexto de executante/prestador sem improviso.
 - A proxima etapa recomendada e abrir esse ciclo de apoio somente se o usuario autorizar a integracao do Historico com o contexto de login/prestador ou com a logica de tratamento.
+
+## Ficha Pessoal - Historico - Contrato de integracao de Cirurgiao responsavel com login/prestador
+
+- Foi aberto o contrato funcional e tecnico da futura integracao do campo `Cirurgiao responsavel` da aba Historico com o contexto de login/prestador ja existente no Brana Cloud.
+- A recomendacao final e usar `sessaoAtual.prestador_id` como default minimo seguro, manter o catalogo vindo de `GET /cadastros/prestadores`, preservar a edicao manual e nao misturar Regiao nem tratamento nesta primeira fase.
+- O novo documento e `docs/ficha_pessoal_historico_contrato_integracao_cirurgiao_login_prestador.md`.
+- A menor subetapa segura futura e um helper local e conservador na aba Historico que leia a sessao, preencha o prestador quando houver valor e reaplique o valor persistido no envelope atual.
+- A proxima subetapa recomendada, apos este contrato, e a implementacao minima e auditavel dessa integracao, sem abrir ainda dependencia com Regiao.
