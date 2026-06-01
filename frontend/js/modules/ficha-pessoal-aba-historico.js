@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-7-grava-extra";
+  const MODULE_VERSION = "subetapa-8-edita-linha";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -368,6 +368,18 @@
     return true;
   }
 
+  function editarLinhaHistoricoSelecionada() {
+    const tr = linhaHistoricoSelecionada();
+    if (!(tr instanceof HTMLElement)) {
+      if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Selecione uma linha para edicao.";
+      return false;
+    }
+    const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(tr).length - 1));
+    focarCelulaHistorico(tr, indice);
+    if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Linha em edicao.";
+    return true;
+  }
+
   function removerPrimeiraLinha() {
     const list = historicoListEl();
     if (!list) return false;
@@ -406,7 +418,7 @@
     if (alterar && alterar.dataset.historicoBound !== "1") {
       alterar.dataset.historicoBound = "1";
       alterar.addEventListener("click", () => {
-        footerMsg.textContent = "Edicao de linha em planejamento.";
+        editarLinhaHistoricoSelecionada();
       });
     }
     if (eliminar && eliminar.dataset.historicoBound !== "1") {
@@ -506,7 +518,7 @@
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "local-grava-extra",
+      status: "local-edicao-linha",
       controlsFlow: false,
     },
     bind,
