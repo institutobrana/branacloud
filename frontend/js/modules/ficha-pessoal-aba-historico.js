@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-10-propriedades-linha";
+  const MODULE_VERSION = "subetapa-11-contrato-local-origem-cirurgiao-regiao";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -12,6 +12,22 @@
     confirmar: "Propriedades da linha",
   };
   const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descricao"];
+  const HISTORICO_CAMPOS_LOCAIS = Object.freeze({
+    cirurgiao: Object.freeze({
+      chave: "cirurgiao",
+      indice: 1,
+      rotulo: "Cirurgiao",
+      tipoAtual: "texto local",
+      origemAtual: "local/manual",
+    }),
+    regiao: Object.freeze({
+      chave: "regiao",
+      indice: 2,
+      rotulo: "Regiao",
+      tipoAtual: "texto local",
+      origemAtual: "local/manual",
+    }),
+  });
   const state = {
     selectedRow: null,
     activeCellIndex: 0,
@@ -220,6 +236,27 @@
     return true;
   }
 
+  function historicoCampoLocal(chave) {
+    return HISTORICO_CAMPOS_LOCAIS[chave] || null;
+  }
+
+  function historicoCampoCelula(tr, chave) {
+    const campo = historicoCampoLocal(chave);
+    if (!campo) return null;
+    return historicoCelulas(tr)[campo.indice] || null;
+  }
+
+  function historicoCampoTexto(tr, chave) {
+    return String(historicoCampoCelula(tr, chave)?.textContent || "").trim();
+  }
+
+  function historicoCampoDefinirTexto(tr, chave, value) {
+    const cell = historicoCampoCelula(tr, chave);
+    if (!cell) return false;
+    cell.textContent = String(value ?? "").trim();
+    return true;
+  }
+
   function historicoModalEl() {
     let el = document.getElementById("ficha-historico-props-modal-backdrop");
     if (el) return el;
@@ -240,19 +277,19 @@
           <div class="ficha-hist-props-grid">
             <div class="ficha-hist-props-field">
               <label for="ficha-historico-props-data">Data</label>
-              <input id="ficha-historico-props-data" type="text" autocomplete="off">
+              <input id="ficha-historico-props-data" type="text" autocomplete="off" data-historico-campo="data">
             </div>
             <div class="ficha-hist-props-field">
               <label for="ficha-historico-props-cirurgiao">Cirurgiao</label>
-              <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off">
+              <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off" data-historico-campo="cirurgiao">
             </div>
             <div class="ficha-hist-props-field">
               <label for="ficha-historico-props-regiao">Regiao</label>
-              <input id="ficha-historico-props-regiao" type="text" autocomplete="off">
+              <input id="ficha-historico-props-regiao" type="text" autocomplete="off" data-historico-campo="regiao">
             </div>
             <div class="ficha-hist-props-field full">
               <label for="ficha-historico-props-historico">Historico / Descricao</label>
-              <textarea id="ficha-historico-props-historico"></textarea>
+              <textarea id="ficha-historico-props-historico" data-historico-campo="descricao"></textarea>
             </div>
             <div class="ficha-hist-props-note">
               <strong>Campos fora desta etapa</strong>
@@ -310,8 +347,8 @@
     const regiao = modal.querySelector("#ficha-historico-props-regiao");
     const historico = modal.querySelector("#ficha-historico-props-historico");
     historicoDefinirTextoCelula(tr, 0, data instanceof HTMLInputElement ? data.value : "");
-    historicoDefinirTextoCelula(tr, 1, cirurgiao instanceof HTMLInputElement ? cirurgiao.value : "");
-    historicoDefinirTextoCelula(tr, 2, regiao instanceof HTMLInputElement ? regiao.value : "");
+    historicoCampoDefinirTexto(tr, "cirurgiao", cirurgiao instanceof HTMLInputElement ? cirurgiao.value : "");
+    historicoCampoDefinirTexto(tr, "regiao", regiao instanceof HTMLInputElement ? regiao.value : "");
     historicoDefinirTextoCelula(tr, 3, historico instanceof HTMLTextAreaElement ? historico.value : "");
     guardarSnapshotLinhaHistorico(tr);
     const estado = linhaHistoricoEstado(tr);
@@ -341,8 +378,8 @@
     definirLinhaHistoricoEditavel(tr, false);
 
     if (data instanceof HTMLInputElement) data.value = historicoTextoCelula(tr, 0);
-    if (cirurgiao instanceof HTMLInputElement) cirurgiao.value = historicoTextoCelula(tr, 1);
-    if (regiao instanceof HTMLInputElement) regiao.value = historicoTextoCelula(tr, 2);
+    if (cirurgiao instanceof HTMLInputElement) cirurgiao.value = historicoCampoTexto(tr, "cirurgiao");
+    if (regiao instanceof HTMLInputElement) regiao.value = historicoCampoTexto(tr, "regiao");
     if (historico instanceof HTMLTextAreaElement) historico.value = historicoTextoCelula(tr, 3);
 
     const aplicarHandler = () => {

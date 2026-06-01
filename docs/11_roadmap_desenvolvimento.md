@@ -4814,3 +4814,12 @@ Observacoes:
 - Nao houve alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_3_cirurgiao_regiao_auditoria.md`.
 - O menor proximo passo seguro definido e criar um contrato local de origem para `Cirurgiao` e `Regiao` antes de qualquer combo, lookup ou integracao externa.
+
+## Ficha Pessoal - Historico - Microetapa 4 - contrato local de origem para Cirurgiao e Regiao
+
+- A microetapa 4 foi executada com contrato local de origem para `Cirurgiao` e `Regiao` no proprio modulo da aba Historico.
+- Os campos continuam textuais e locais nesta etapa.
+- Nao houve alteracao funcional.
+- Nao houve alteracao de backend ou banco.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_4_contrato_local_origem_cirurgiao_regiao.md`.
+- A proxima microetapa sugerida e avaliar se vale introduzir uma sugestao ou lista local nao vinculante, ou manter os campos textuais por enquanto.
