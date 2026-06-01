@@ -427,11 +427,11 @@
       const mostrarIconeAlerta = alertaCriticoSatisfeito(item, draft);
       return `
         <article class="ficha-anamnese-card ${perguntaMudou(id) ? "selected" : ""}" data-pergunta-id="${id}" data-questionario-id="${selecionadoId || ""}">
-          <div class="ficha-anamnese-num">${esc(String(numero))})</div>
-          <div class="ficha-anamnese-texto">${texto}</div>
           <div class="ficha-anamnese-alerta" aria-hidden="${mostrarIconeAlerta ? "false" : "true"}">
             ${mostrarIconeAlerta ? `<img src="${ALERTA_CRITICO_ICONE}" alt="Alerta critico">` : ""}
           </div>
+          <div class="ficha-anamnese-num">${esc(String(numero))})</div>
+          <div class="ficha-anamnese-texto">${texto}</div>
           <div class="ficha-anamnese-controles ${classeTipo}">
             ${tipoResposta === 3 ? "" : `
               <div class="ficha-anamnese-opcoes" role="group" aria-label="Resposta visual da pergunta ${esc(String(numero))}">

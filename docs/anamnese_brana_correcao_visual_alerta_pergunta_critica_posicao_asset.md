@@ -25,13 +25,14 @@ Na etapa anterior, o alerta crítico por pergunta já estava funcionando logicam
 2. O bitmap correto não estava sendo renderizado; o navegador mostrava uma figura genérica.
 
 ## Causa encontrada para a posição errada
-A grade do card de pergunta estava organizada com o alerta como terceira coluna do bloco, deixando o ícone à direita do conteúdo em vez de antes do número da pergunta.
+A grade do card de pergunta estava organizada com o alerta em coluna própria, mas o markup ainda montava o card na ordem `número -> texto -> alerta`, o que mantinha o ícone separado da posição visual desejada.
 
 ## Causa encontrada para o asset genérico
 O `src` do ícone estava apontando para `/assets/easy/ico_dedo.bmp`, rota que não era o padrão de distribuição de imagens do projeto. O projeto já expõe assets gráficos via `/desktop-assets/easy/...`, então a imagem não estava sendo servida pelo caminho correto.
 
 ## Correção aplicada para posicionar o ícone antes do número
 - a grade do card foi ajustada para colocar o alerta na primeira coluna;
+- o markup do card foi reordenado para `alerta -> número -> texto`;
 - o número da pergunta passou para a segunda coluna;
 - o texto da pergunta permaneceu na terceira coluna;
 - a lógica crítica em tempo real foi preservada.

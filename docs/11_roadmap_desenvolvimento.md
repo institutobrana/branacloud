@@ -4696,6 +4696,7 @@ Observacoes:
 - O teste manual apontou dois problemas visuais no alerta critico: posicao errada do icone e asset generico sendo exibido no lugar do dedo.
 - A correcao reposicionou o alerta para antes do numero da pergunta, alinhado ao comportamento esperado do EasyDental.
 - A correcao ajustou o `src` do alerta para o asset correto do projeto, `assets/easy/ico_dedo.bmp`, servido pela rota de desktop assets.
+- A correcao tambem reordenou o markup do card para garantir que o alerta apareca visualmente antes do numero da pergunta.
 - A logica critica permanece intacta: `TIPPER = 1` sem alerta, `TIPPER = 2` com alerta ao responder `sim`, `TIPPER = 3` com alerta ao responder `nao`.
 - `mensagem_alerta`, envelope B2 e persistencia nao foram alterados nesta correcao.
 - O novo documento de correcao e `docs/anamnese_brana_correcao_visual_alerta_pergunta_critica_posicao_asset.md`.
