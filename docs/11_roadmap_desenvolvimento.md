@@ -4579,3 +4579,12 @@ Observacoes:
 - Nenhuma migracao de respostas foi executada nesta etapa documental.
 - O novo documento de contrato e `docs/anamnese_easy_dell_servidor_contrato_estrutural_principal_clinica_1.md`.
 
+## Anamnese - Implementacao estrutural do Principal na clinica 1
+
+- A expansao controlada do `Principal` da clinica 1 foi executada por script dedicado em modo validado.
+- As 17 perguntas originais foram preservadas integralmente.
+- As perguntas 18 a 35 foram adicionadas sem renumeracao e sem alterar os outros questionarios.
+- Nenhuma resposta foi migrada nesta etapa.
+- O `Principal` da clinica 1 passou de 17 para 35 perguntas.
+- O novo documento de implementacao e `docs/anamnese_easy_dell_servidor_implementacao_estrutural_principal_clinica_1.md`.
+
