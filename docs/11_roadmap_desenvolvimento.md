@@ -4588,3 +4588,17 @@ Observacoes:
 - O `Principal` da clinica 1 passou de 17 para 35 perguntas.
 - O novo documento de implementacao e `docs/anamnese_easy_dell_servidor_implementacao_estrutural_principal_clinica_1.md`.
 
+## Anamnese - Validacao estrutural do Principal na clinica 1
+
+- A expansao estrutural do `Principal` da clinica 1 foi validada manualmente pelo usuario.
+- O resultado informado foi `teste passou`.
+- O `Principal` da clinica 1 foi confirmado com 35 perguntas.
+- As perguntas 1..17 foram preservadas.
+- As perguntas 18..35 permanecem presentes e na ordem correta.
+- A aba `Anamnese` continua carregando sem erro.
+- O botao `Grava` continua funcionando.
+- Nenhuma resposta antiga foi apagada.
+- Nenhuma migracao de respostas foi executada nesta validacao.
+- A proxima pendencia logica e um dry-run somente leitura das respostas do `Principal` com a estrutura agora completa.
+- O novo documento de validacao e `docs/anamnese_easy_dell_servidor_validacao_estrutural_principal_clinica_1.md`.
+
