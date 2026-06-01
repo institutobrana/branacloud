@@ -4731,4 +4731,7 @@ Observacoes:
 - A Etapa 4 - inserir linha foi iniciada com criacao local de nova linha na grade, insercao abaixo da linha ativa quando houver selecao e foco local na primeira celula.
 - A nova linha nasce com data atual padrao e fica selecionada sem persistencia nova, sem TAB/ENTER/ESC e sem integracao com Grava.
 - Proxima etapa sugerida: navegacao por TAB ou preparacao de edicao local, conforme o resultado tecnico encontrado.
+- A Etapa 5 - navegacao por TAB foi iniciada com foco local na grade do Historico e percurso entre Data, Cirurgiao, Regiao e Descricao do procedimento.
+- O `Shift+Tab` tambem foi suportado de forma local e a navegacao permaneceu sem persistencia nova, sem ENTER/ESC e sem integracao com Grava.
+- Proxima etapa sugerida: ENTER/ESC.
 

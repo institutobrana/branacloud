@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-4-inserir-linha";
+  const MODULE_VERSION = "subetapa-5-tab-local";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -14,6 +14,7 @@
   const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descricao do procedimento"];
   const state = {
     selectedRow: null,
+    activeCellIndex: 0,
   };
 
   function historicoListEl() {
@@ -90,12 +91,33 @@
       state.selectedRow.classList.remove(SELECTED_CLASS);
     }
     state.selectedRow = null;
+    state.activeCellIndex = 0;
   }
 
-  function focarPrimeiraCelula(tr) {
-    const cell = tr?.querySelector("td");
+  function historicoCelulas(tr) {
+    return Array.from(tr?.querySelectorAll("td") || []);
+  }
+
+  function eventoHistoricoAlvo(ev) {
+    return ev?.target instanceof Element ? ev.target : null;
+  }
+
+  function definirCelulaAtiva(tr, index = 0) {
+    const cells = historicoCelulas(tr);
+    if (!cells.length) return null;
+    const alvo = Math.max(0, Math.min(Number(index) || 0, cells.length - 1));
+    cells.forEach((cell, idx) => {
+      cell.tabIndex = idx === alvo ? 0 : -1;
+    });
+    state.selectedRow = tr;
+    state.activeCellIndex = alvo;
+    tr.classList.add(SELECTED_CLASS);
+    return cells[alvo] || null;
+  }
+
+  function focarCelulaHistorico(tr, index = 0) {
+    const cell = definirCelulaAtiva(tr, index);
     if (!(cell instanceof HTMLElement)) return;
-    if (!cell.hasAttribute("tabindex")) cell.tabIndex = -1;
     try {
       cell.focus({ preventScroll: true });
     } catch {
@@ -108,8 +130,7 @@
     const tbody = historicoTbodyEl();
     if (!tbody || !tbody.contains(tr)) return null;
     clearSelectedRow();
-    state.selectedRow = tr;
-    tr.classList.add(SELECTED_CLASS);
+    definirCelulaAtiva(tr, 0);
     return tr;
   }
 
@@ -125,9 +146,46 @@
     if (!tbody || tbody.dataset.historicoSelectionBound === "1") return;
     tbody.dataset.historicoSelectionBound = "1";
     tbody.addEventListener("click", (ev) => {
-      const row = ev.target.closest("tr");
+      const alvo = eventoHistoricoAlvo(ev);
+      const cell = alvo?.closest("td") || null;
+      const row = alvo?.closest("tr") || null;
       if (!row || !tbody.contains(row)) return;
+      if (cell && row.contains(cell)) {
+        const idx = historicoCelulas(row).indexOf(cell);
+        selecionarLinhaHistorico(row);
+        if (idx >= 0) focarCelulaHistorico(row, idx);
+        return;
+      }
       selecionarLinhaHistorico(row);
+    });
+    tbody.addEventListener("focusin", (ev) => {
+      const alvo = eventoHistoricoAlvo(ev);
+      const cell = alvo?.closest("td") || null;
+      const row = alvo?.closest("tr") || null;
+      if (!cell || !row || !tbody.contains(row)) return;
+      const idx = historicoCelulas(row).indexOf(cell);
+      if (idx < 0) return;
+      state.selectedRow = row;
+      state.activeCellIndex = idx;
+      row.classList.add(SELECTED_CLASS);
+      historicoCelulas(row).forEach((td, i) => {
+        td.tabIndex = i === idx ? 0 : -1;
+      });
+    });
+    tbody.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Tab") return;
+      const alvo = eventoHistoricoAlvo(ev);
+      const cell = alvo?.closest("td") || null;
+      const row = alvo?.closest("tr") || null;
+      if (!cell || !row || !tbody.contains(row)) return;
+      const cells = historicoCelulas(row);
+      const currentIndex = cells.indexOf(cell);
+      if (currentIndex < 0) return;
+      ev.preventDefault();
+      const delta = ev.shiftKey ? -1 : 1;
+      const nextIndex = Math.max(0, Math.min(currentIndex + delta, cells.length - 1));
+      selecionarLinhaHistorico(row);
+      focarCelulaHistorico(row, nextIndex);
     });
   }
 
@@ -154,8 +212,7 @@
     const texto = historicoTextoEl();
     if (texto) texto.value = "";
     if (typeof fichaSetTab === "function") fichaSetTab("historico");
-    selecionarLinhaHistorico(tr);
-    focarPrimeiraCelula(tr);
+    focarCelulaHistorico(tr, 0);
     return true;
   }
 
