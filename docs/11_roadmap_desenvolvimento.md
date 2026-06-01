@@ -4701,3 +4701,12 @@ Observacoes:
 - `mensagem_alerta`, envelope B2 e persistencia nao foram alterados nesta correcao.
 - O novo documento de correcao e `docs/anamnese_brana_correcao_visual_alerta_pergunta_critica_posicao_asset.md`.
 
+## Anamnese - Validacao manual do ajuste fino visual do icone critico
+
+- A validacao manual informou que o teste passou.
+- O icone ficou antes do numero da pergunta, com asset correto e alinhamento visual adequado.
+- A logica critica permaneceu funcionando e nao houve regressao visual/global percebida.
+- O botao `Grava` continua funcionando e `mensagem_alerta` continua nao exibida nesta fase.
+- Nenhuma alteracao funcional adicional foi feita nesta validacao.
+- O novo documento de validacao e `docs/anamnese_brana_validacao_correcao_fina_alerta_icone_alinhamento.md`.
+
