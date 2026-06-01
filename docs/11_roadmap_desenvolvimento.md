@@ -4786,3 +4786,13 @@ Observacoes:
 - A primeira microetapa recomendada foi definida como harmonizacao textual visual da grade, com foco no cabecalho final e nos rótulos da toolbar.
 - As diferencas estruturais foram mantidas fora da trilha de ajuste fino.
 - Proxima etapa sugerida: execucao da primeira microetapa de correcao real, quando autorizada.
+
+## Ficha Pessoal - Historico - Microetapa 1 - harmonizacao textual visual
+
+- A microetapa 1 foi iniciada com ajustes textuais/visuais de baixissimo risco na aba Historico.
+- O cabeçalho final da grade foi harmonizado de `Descricao do procedimento` para `Descricao`.
+- Os rótulos da toolbar foram harmonizados de `Edita linha` para `Editar linha` e de `Elimina linha` para `Excluir linha`.
+- Nao houve alteracao funcional.
+- Nao houve alteracao de backend ou banco.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_1_harmonizacao_textual_visual.md`.
+- Proxima microetapa sugerida: refinamento visual leve do modal de `Propriedades da linha`, se ainda fizer sentido, ou inicio da analise dos ajustes funcionais de medio risco.
