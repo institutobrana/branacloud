@@ -4722,4 +4722,7 @@ Observacoes:
 - O comportamento atual da aba foi preservado, sem persistencia nova e sem alteracao de banco.
 - O carregamento do modulo foi incluído no frontend e a ponte compatível foi mantida em `frontend/app.js`.
 - Proxima etapa sugerida: ajuste visual e revisao dos botoes ou selecao/linha ativa, conforme o resultado tecnico encontrado.
+- A Etapa 2 - ajuste visual e revisao dos botoes foi iniciada com refinamento da toolbar, grade e rotulos visuais em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
+- A interface da aba Historico foi aproximada ao padrao EasyDental sem persistencia nova, sem atalhos TAB/ENTER/ESC e sem propriedades funcionais ainda.
+- Proxima etapa sugerida: selecao/linha ativa.
 
