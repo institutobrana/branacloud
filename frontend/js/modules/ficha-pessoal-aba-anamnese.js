@@ -36,9 +36,11 @@
       .ficha-anamnese-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;border:1px solid #d6deea;background:#fff}
       .ficha-anamnese-state{padding:14px 12px;font:11px Tahoma,sans-serif;color:#5a697c;background:#fafcff}
       .ficha-anamnese-list{display:flex;flex-direction:column;gap:8px;padding:8px;box-sizing:border-box}
-      .ficha-anamnese-card{border:1px solid #d5ddea;border-radius:4px;background:#fbfdff;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start}
-      .ficha-anamnese-num{font:700 11px Tahoma,sans-serif;color:#35506b;min-width:28px}
-      .ficha-anamnese-texto{font:11px Tahoma,sans-serif;color:#22303f;line-height:1.35;word-break:break-word}
+      .ficha-anamnese-card{border:1px solid #d5ddea;border-radius:4px;background:#fbfdff;padding:8px 10px;display:grid;grid-template-columns:auto 1fr auto;gap:8px 10px;align-items:start}
+      .ficha-anamnese-num{grid-column:1;font:700 11px Tahoma,sans-serif;color:#35506b;min-width:28px}
+      .ficha-anamnese-texto{grid-column:2;font:11px Tahoma,sans-serif;color:#22303f;line-height:1.35;word-break:break-word}
+      .ficha-anamnese-alerta{grid-column:3;align-self:start;justify-self:end;min-width:18px;min-height:18px;display:flex;align-items:center;justify-content:center}
+      .ficha-anamnese-alerta img{display:block;width:16px;height:16px;object-fit:contain}
       .ficha-anamnese-controles{grid-column:1 / -1;display:grid;gap:8px 10px;align-items:start}
       .ficha-anamnese-controles.tipo-1{grid-template-columns:minmax(120px,220px)}
       .ficha-anamnese-controles.tipo-2{grid-template-columns:120px minmax(240px,1fr)}
@@ -104,6 +106,50 @@
     if (base.includes("simnao")) return 1;
     if (base.includes("texto")) return 3;
     return 1;
+  }
+
+  function normalizarTipoPergunta(valor) {
+    const bruto = String(valor ?? "").trim().toLowerCase();
+    if (!bruto) return 1;
+    if (/^\d+$/.test(bruto)) {
+      const n = Number(bruto);
+      if ([1, 2, 3].includes(n)) return n;
+    }
+    const base = bruto
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[\s\-_/]+/g, "");
+    if (base.includes("naocritica") || base.includes("ncritica")) return 1;
+    if (base.includes("criticaparasim") || base.includes("criticaasim") || base.includes("simcritica")) return 2;
+    if (base.includes("criticaparanao") || base.includes("criticanao") || base.includes("naocritica")) return 3;
+    return 1;
+  }
+
+  function alertaCriticoSatisfeito(item, draft) {
+    const tipoPergunta = normalizarTipoPergunta(item?.tipo_pergunta ?? item?.tipoPergunta ?? 1);
+    const tipoResposta = normalizarTipoResposta(item?.tipo_resposta ?? item?.tipoResposta ?? 1);
+    if (tipoPergunta === 1 || tipoResposta === 3) return false;
+    const resposta = normalizarResposta(draft?.resposta || "");
+    if (tipoPergunta === 2) return resposta === "sim";
+    if (tipoPergunta === 3) return resposta === "nao";
+    return false;
+  }
+
+  function atualizarIconePergunta(perguntaId) {
+    const wrap = anamneseWrapEl();
+    if (!wrap) return;
+    const id = Number(perguntaId || 0) || 0;
+    if (!id) return;
+    const card = wrap.querySelector(`.ficha-anamnese-card[data-pergunta-id="${id}"]`);
+    if (!card) return;
+    const item = (Array.isArray(state.perguntas) ? state.perguntas : []).find((p, idx) => Number(p?.pergunta_id || p?.id || idx + 1 || 0) === id) || null;
+    const draft = state.draftPerguntas[String(id)] || { resposta: "", complemento: "" };
+    const slot = card.querySelector(".ficha-anamnese-alerta");
+    const mostrar = alertaCriticoSatisfeito(item, draft);
+    if (slot) {
+      slot.setAttribute("aria-hidden", mostrar ? "false" : "true");
+      slot.innerHTML = mostrar ? '<img src="/assets/easy/ico_dedo.bmp" alt="Alerta critico">' : "";
+    }
   }
 
   function tipoRespostaPergunta(perguntaId) {
@@ -376,10 +422,14 @@
       const labelComplemento = tipoResposta === 3 ? "Resposta textual" : "Complemento / observacao";
       const placeholderComplemento = tipoResposta === 3 ? "Digite a resposta..." : "Complemento / observacao...";
       const classeTipo = tipoResposta === 3 ? "tipo-3" : (tipoResposta === 2 ? "tipo-2" : "tipo-1");
+      const mostrarIconeAlerta = alertaCriticoSatisfeito(item, draft);
       return `
         <article class="ficha-anamnese-card ${perguntaMudou(id) ? "selected" : ""}" data-pergunta-id="${id}" data-questionario-id="${selecionadoId || ""}">
           <div class="ficha-anamnese-num">${esc(String(numero))})</div>
           <div class="ficha-anamnese-texto">${texto}</div>
+          <div class="ficha-anamnese-alerta" aria-hidden="${mostrarIconeAlerta ? "false" : "true"}">
+            ${mostrarIconeAlerta ? '<img src="/assets/easy/ico_dedo.bmp" alt="Alerta critico">' : ""}
+          </div>
           <div class="ficha-anamnese-controles ${classeTipo}">
             ${tipoResposta === 3 ? "" : `
               <div class="ficha-anamnese-opcoes" role="group" aria-label="Resposta visual da pergunta ${esc(String(numero))}">
@@ -578,6 +628,7 @@
           const perguntaId = Number(radio.getAttribute("data-pergunta-id") || 0) || 0;
           if (!perguntaId) return;
           atualizarRespostaLocal(perguntaId, { resposta: radio.getAttribute("data-resposta") || radio.value || "" });
+          atualizarIconePergunta(perguntaId);
           return;
         }
         if (alvo.matches?.("textarea.ficha-anamnese-complemento")) {

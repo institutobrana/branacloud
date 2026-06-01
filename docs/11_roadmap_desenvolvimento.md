@@ -4681,3 +4681,13 @@ Observacoes:
 - O novo documento de contrato e `docs/anamnese_brana_contrato_funcional_alerta_visual_pergunta_critica.md`.
 - Nenhum codigo, banco, backend, schema, endpoint, payload ou arquivo do EasyDental foi alterado nesta etapa documental.
 
+## Anamnese - Implementacao do alerta visual por pergunta critica
+
+- O alerta visual por pergunta critica foi implementado na aba clinica da Anamnese com base no contrato `ANAM-ALERTA-VISUAL-A`.
+- O icone prioritario usado foi `assets/easy/ico_dedo.bmp`.
+- A reacao e em tempo real, por pergunta individual, conforme a resposta marcada pelo usuario.
+- `TIPPER = 1` nao mostra icone; `TIPPER = 2` mostra quando a resposta e `sim`; `TIPPER = 3` mostra quando a resposta e `nao`.
+- `mensagem_alerta` nao foi exibida nesta etapa e a persistencia B2 nao foi alterada.
+- O novo documento de implementacao e `docs/anamnese_brana_implementacao_alerta_visual_pergunta_critica.md`.
+- Nenhum codigo, banco, backend, schema, endpoint ou payload novo foi alterado fora do modulo da aba clinica nesta etapa.
+
