@@ -4555,3 +4555,16 @@ Observacoes:
 - A decisao recomendada ficou em `ANAM-MIG-POP-B`.
 - Nao houve escrita, migracao, backend, banco, schema, endpoint ou payload novo nesta etapa documental.
 
+
+## Anamnese - Revisao do dry-run populacional do questionario Principal antes da migracao
+
+- Foi revisado o pacote de auditoria populacional da Anamnese EasyDental (CSV/JSON) antes de qualquer migracao real.
+- A fonte legada `\Dell_servidor\c\EDS70` permanece como referencia somente leitura.
+- O problema estrutural esta concentrado no questionario Principal: o Brana tem 17 perguntas e o legado tem 35.
+- As perguntas 18 a 35 possuem 18 respostas candidatas, todas com alerta preenchido, e pertencem a 1 unico paciente legada.
+- Os outros quatro questionarios (`Implante`, `Ficha complementar`, `Anamnese de Saude`, `Anamnese pessoal`) estao estruturalmente completos no Brana.
+- A decisao recomendada ficou em `ANAM-MIG-STRUCT-B`.
+- Nenhuma migracao foi executada e nenhum backend, banco, schema, endpoint ou payload novo foi alterado nesta etapa documental.
+- O novo documento de revisao e `docs/anamnese_easy_dell_servidor_revisao_dry_run_principal_antes_migracao.md`.
+- Os relat?rios auxiliares criados foram `docs/anamnese_easy_dell_servidor_principal_perguntas_faltantes.csv` e `docs/anamnese_easy_dell_servidor_principal_respostas_perguntas_faltantes.csv`.
+

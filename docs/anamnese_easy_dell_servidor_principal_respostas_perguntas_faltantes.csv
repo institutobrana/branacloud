@@ -1,0 +1,19 @@
+legacy_patient_id,legacy_full_name,legacy_questionario_id,legacy_questionario_nome,legacy_pergunta_numero,legacy_pergunta_texto,legacy_tipo_pergunta,legacy_tipo_resposta,legacy_mensagem_alerta,legacy_resposta,legacy_complemento,brana_questionario_id,brana_questionario_nome,brana_pergunta_id,brana_pergunta_numero,brana_pergunta_texto,brana_tipo_pergunta,brana_tipo_resposta,brana_mensagem_alerta,map_status
+273,Joon Yun Lee Lee,1,Principal,18,Sente fadiga ou fraqueza?,2,1,Paciente com fadiga.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,19,Tem dor nas articulações?,2,1,Dores articulares no corpo.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,20,"Sente ""palpitações "" no coração?",2,1,Palpitações no coração.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,21,Sua pressão sanguínea é alta?,2,2,Pressão arterial ALTA.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,22,"Sangra, por muito tempo, quando se corta?",2,1,Tempo de sangramento alterado.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,23,Tem anemia?,2,1,Paciente anêmico.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,24,Tem tosse persistente?,2,1,Tosse persistente.,2,,2,Principal,145,26,Tem tosse persistente ?,2,2,,MAPPED_EM_OUTRO_QUESTIONARIO
+273,Joon Yun Lee Lee,1,Principal,25,Tem asma?,2,1,Asma.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,26,Tem alguma alergia?,2,2,Paciente apresenta alergia(as).,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,27,Já teve alguma reação com anestésicos?,2,1,Alergia a anestésicos.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,28,Urina com muita frequência?,2,1,Urina com frequência.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,29,Tem algum diabético em sua família?,2,2,Familiar(es) diabético(s).,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,30,Costuma desmaiar com frequência?,2,1,Sofre desmaios frequentes.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,31,Sente dor de cabeça com frequência?,2,1,Dor de cabeça.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,32,Considera-se nervoso(a)?,2,1,Nervoso(a).,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,33,Está estressado(a)?,2,1,STRESS.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,34,A senhora está grávida?,2,1,Grávida.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
+273,Joon Yun Lee Lee,1,Principal,35,A senhora está na menopausa?,2,1,Paciente na menopausa.,2,,2,Principal,,,,,,,SEM_EQUIVALENCIA
