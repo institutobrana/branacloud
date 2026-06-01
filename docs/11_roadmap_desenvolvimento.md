@@ -4747,3 +4747,12 @@ Observacoes:
 - Os campos efetivamente suportados nesta etapa sao `Data`, `Cirurgiao`, `Regiao` e `Historico / Descricao`; `Cor de fundo`, `Data de insercao` e `Data de atualizacao` ficaram apenas documentados como pendentes.
 - A janela continua compativel com a persistencia via `extra.historico_aba` e nao exigiu alteracao de backend ou banco.
 - Proxima etapa sugerida: validacao final manual.
+
+## Ficha Pessoal - Historico - Auditoria comparativa EasyDental x Brana Cloud
+
+- Foi aberta uma nova frente documental para auditoria comparativa detalhada entre EasyDental real e Brana Cloud na aba Historico.
+- O escopo desta fase e exclusivamente documental e investigativo, sem alteracao de codigo, backend ou banco.
+- As fontes de verdade registradas sao `\\Dell_servidor\\c\\EDS70` e `D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\Dados`.
+- A auditoria cobre camadas visuais, de interacao, de regra funcional, de origem de dados, de persistencia e de dependencias cruzadas.
+- A nova documentacao de contrato e `docs/ficha_pessoal_historico_auditoria_comparativa_contrato.md`.
+- Proxima etapa sugerida: engenharia reversa do EasyDental.
