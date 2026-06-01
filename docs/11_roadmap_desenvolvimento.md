@@ -4672,3 +4672,12 @@ Observacoes:
 - O novo documento comparativo e `docs/anamnese_brana_auditoria_comparativa_regra_critica_icone_alerta.md`.
 - Nenhum codigo, banco, backend, schema, endpoint, payload ou arquivo do EasyDental foi alterado nesta etapa documental.
 
+## Anamnese - Contrato funcional do alerta visual por pergunta critica
+
+- O contrato funcional do alerta visual foi aberto para definir quando o icone aparece, desaparece e como convive com `tipo_pergunta`, `tipo_resposta` e `mensagem_alerta`.
+- A decisao recomendada ficou em `ANAM-ALERTA-VISUAL-A`.
+- O icone prioritario definido no contrato e `assets/easy/ico_dedo.bmp`, com `ico_dedoanamnese.bmp` e `ico_alert.bmp` como recursos correlatos.
+- O contrato define que o alerta visual e local por pergunta, em tempo real, sem impacto no envelope B2 e sem mensagem_alerta visivel nesta primeira etapa.
+- O novo documento de contrato e `docs/anamnese_brana_contrato_funcional_alerta_visual_pergunta_critica.md`.
+- Nenhum codigo, banco, backend, schema, endpoint, payload ou arquivo do EasyDental foi alterado nesta etapa documental.
+
