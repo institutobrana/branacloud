@@ -1,0 +1,66 @@
+{
+  "objective": "Dry-run somente leitura das respostas do questionario Principal apos a expansao estrutural da clinica 1",
+  "decision": "ANAM-MIG-PRINC-DRY-B",
+  "legacy": {
+    "questionario_nome": "Principal",
+    "patients_with_responses": 1,
+    "responses_total": 35,
+    "responses_with_complement": 0,
+    "responses_with_alert": 33,
+    "tipo_resposta_distribution": {
+      "1": 27,
+      "2": 6,
+      "3": 2
+    },
+    "tipo_pergunta_distribution": {
+      "1": 2,
+      "2": 32,
+      "3": 1
+    }
+  },
+  "brana": {
+    "clinic_id": 1,
+    "principal_questions_total": 35,
+    "destination_complete_rows": 35,
+    "missing_destination_rows": 0,
+    "existing_principal_responses_on_target_patient": 0,
+    "current_principal_type_distribution": {
+      "1|1": 17,
+      "2|1": 15,
+      "2|2": 3
+    }
+  },
+  "patient_match": {
+    "legacy_patient_id": "273",
+    "legacy_full_name": "Joon Yun Lee Lee",
+    "brana_patient_id": "273",
+    "brana_nome_completo": "Joon Yun Lee Lee",
+    "match_category": "MATCH_ALTO",
+    "match_score": "130"
+  },
+  "mapping": {
+    "migravel_sem_conflito": 35,
+    "conflito_resposta_existente": 0,
+    "sem_destino_estrutural": 0,
+    "match_paciente_duvidoso": 0,
+    "outro_bloqueio": 0
+  },
+  "compatibility": {
+    "b2_supports_all_legacy_responses": true,
+    "responses_without_destination": true,
+    "conflicts_found": 0,
+    "legacy_response_codes_supported": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  "source_files": [
+    "docs/anamnese_easy_dell_servidor_respostas_candidatas_clinica_1.csv",
+    "docs/anamnese_easy_dell_servidor_matches_pacientes_clinica_1.csv"
+  ],
+  "output_files": [
+    "docs/anamnese_easy_dell_servidor_principal_respostas_dry_run_pos_estrutura.csv",
+    "docs/anamnese_easy_dell_servidor_principal_respostas_dry_run_pos_estrutura_summary.json"
+  ]
+}

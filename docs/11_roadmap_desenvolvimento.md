@@ -4602,3 +4602,14 @@ Observacoes:
 - A proxima pendencia logica e um dry-run somente leitura das respostas do `Principal` com a estrutura agora completa.
 - O novo documento de validacao e `docs/anamnese_easy_dell_servidor_validacao_estrutural_principal_clinica_1.md`.
 
+## Anamnese - Dry-run das respostas do Principal apos estrutura completa
+
+- O dry-run somente leitura das respostas do `Principal` foi executado com a estrutura completa da clinica 1.
+- O legado concentrou respostas do `Principal` em 1 paciente.
+- O total de respostas candidatas do `Principal` no legado foi 35.
+- O destino estrutural no Brana ficou completo para as 35 respostas.
+- Nao houve conflitos com as 15 respostas atuais do Brana.
+- Nenhuma migracao foi executada nesta etapa.
+- A decisao recomendada ficou em `ANAM-MIG-PRINC-DRY-B`.
+- O novo documento de dry-run e `docs/anamnese_easy_dell_servidor_dry_run_respostas_principal_pos_estrutura.md`.
+
