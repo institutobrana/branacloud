@@ -4741,4 +4741,6 @@ Observacoes:
 - Nao houve alteracao de backend, banco, schema, endpoints ou models; o paciente continua gravando pelo fluxo atual e agora recebe e reaplica o Historico sem criar caminho novo.
 - A Etapa 8 - edita linha foi iniciada com foco local na linha selecionada e reaproveitamento da infraestrutura de edicao ja existente.
 - O botao `Edita linha` agora abre a linha selecionada para edicao local sem backend novo, sem banco novo e sem quebrar o fluxo de `ENTER` / `ESC` ou o envelope `extra.historico_aba`.
-- Proxima etapa sugerida: Elimina linha.
+- A Etapa 9 - elimina linha foi iniciada com remocao local da linha selecionada e reencaixe estavel da selecao remanescente.
+- O botao `Elimina linha` agora remove a linha ativa da grade e permanece compativel com a persistencia via `extra.historico_aba`.
+- Proxima etapa sugerida: Propriedades da linha.

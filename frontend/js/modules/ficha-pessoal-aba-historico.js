@@ -380,6 +380,20 @@
     return true;
   }
 
+  function eliminarLinhaHistoricoSelecionada() {
+    const tr = linhaHistoricoSelecionada();
+    if (!(tr instanceof HTMLElement)) {
+      if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Selecione uma linha para eliminar.";
+      return false;
+    }
+    const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(tr).length - 1));
+    const eliminada = removerLinhaHistorico(tr, indice);
+    if (eliminada && typeof footerMsg !== "undefined" && footerMsg) {
+      footerMsg.textContent = "Linha eliminada.";
+    }
+    return eliminada;
+  }
+
   function removerPrimeiraLinha() {
     const list = historicoListEl();
     if (!list) return false;
@@ -424,8 +438,7 @@
     if (eliminar && eliminar.dataset.historicoBound !== "1") {
       eliminar.dataset.historicoBound = "1";
       eliminar.addEventListener("click", () => {
-        removerPrimeiraLinha();
-        footerMsg.textContent = "Historico removido em tela.";
+        eliminarLinhaHistoricoSelecionada();
       });
     }
     if (confirmar && confirmar.dataset.historicoBound !== "1") {
@@ -527,6 +540,7 @@
     serializarHistoricoAba,
     adicionarLinhaPadrao,
     removerPrimeiraLinha,
+    eliminarLinhaHistoricoSelecionada,
     limparTela,
     onLimparNovo,
     onPacienteAplicado,
