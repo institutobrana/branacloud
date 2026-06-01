@@ -4796,3 +4796,12 @@ Observacoes:
 - Nao houve alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_1_harmonizacao_textual_visual.md`.
 - Proxima microetapa sugerida: refinamento visual leve do modal de `Propriedades da linha`, se ainda fizer sentido, ou inicio da analise dos ajustes funcionais de medio risco.
+
+## Ficha Pessoal - Historico - Microetapa 2 - refino visual leve do modal de Propriedades da linha
+
+- A microetapa 2 foi iniciada com refinamento visual leve do modal de `Propriedades da linha`.
+- Houve ajuste de leitura no texto de apoio do cabecalho, no agrupamento interno e no bloco de aviso do modal.
+- Nao houve alteracao funcional.
+- Nao houve alteracao de backend ou banco.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_2_refino_visual_modal_propriedades.md`.
+- Proxima microetapa sugerida: iniciar a analise e, se autorizado, a execucao do primeiro ajuste funcional de medio risco.

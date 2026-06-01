@@ -62,9 +62,9 @@
       .ficha-hist-props-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #e3ebf3;background:linear-gradient(180deg,#f8fbff 0%,#edf4fb 100%)}
       .ficha-hist-props-title{display:grid;gap:4px}
       .ficha-hist-props-title strong{font:700 15px Tahoma,sans-serif}
-      .ficha-hist-props-title span{color:#5b6b7e}
+      .ficha-hist-props-title span{color:#5b6b7e;line-height:1.35}
       .ficha-hist-props-close{border:1px solid #b8c5d4;background:#fff;border-radius:8px;width:32px;height:32px;font:700 18px/1 Tahoma,sans-serif;color:#44546a}
-      .ficha-hist-props-body{display:grid;gap:12px;padding:16px}
+      .ficha-hist-props-body{display:grid;gap:14px;padding:16px}
       .ficha-hist-props-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
       .ficha-hist-props-field{display:grid;gap:4px}
       .ficha-hist-props-field label{font:700 11px Tahoma,sans-serif;color:#4f5f72;text-transform:none}
@@ -72,7 +72,7 @@
       .ficha-hist-props-field textarea{min-height:92px;resize:vertical}
       .ficha-hist-props-field .readonly{background:#f7f9fc;color:#56657a}
       .ficha-hist-props-field.full{grid-column:1 / -1}
-      .ficha-hist-props-note{grid-column:1 / -1;border:1px dashed #c9d5e2;border-radius:10px;background:#f7fafc;padding:10px 12px;color:#526174;display:grid;gap:4px}
+      .ficha-hist-props-note{grid-column:1 / -1;border:1px dashed #c9d5e2;border-radius:10px;background:#f7fafc;padding:12px 12px;color:#526174;display:grid;gap:4px}
       .ficha-hist-props-note strong{font:700 11px Tahoma,sans-serif;color:#334155}
       .ficha-hist-props-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px;border-top:1px solid #e3ebf3;background:#f8fbff}
       .ficha-hist-props-footer .btn{min-width:118px;justify-content:center}
@@ -232,7 +232,7 @@
         <div class="ficha-hist-props-header">
           <div class="ficha-hist-props-title">
             <strong id="ficha-historico-props-title">Propriedades da linha</strong>
-            <span>Campos locais da linha selecionada. Itens futuros seguem pendentes nesta etapa.</span>
+            <span>Campos principais da linha selecionada. Itens futuros permanecem fora desta etapa.</span>
           </div>
           <button type="button" class="ficha-hist-props-close" data-historico-props-close aria-label="Fechar">X</button>
         </div>
@@ -255,7 +255,7 @@
               <textarea id="ficha-historico-props-historico"></textarea>
             </div>
             <div class="ficha-hist-props-note">
-              <strong>Campos pendentes nesta etapa</strong>
+              <strong>Campos fora desta etapa</strong>
               <span>Cor de fundo, data de insercao e data de atualizacao permanecem apenas documentados por enquanto.</span>
             </div>
           </div>
