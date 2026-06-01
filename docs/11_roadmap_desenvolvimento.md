@@ -4613,3 +4613,13 @@ Observacoes:
 - A decisao recomendada ficou em `ANAM-MIG-PRINC-DRY-B`.
 - O novo documento de dry-run e `docs/anamnese_easy_dell_servidor_dry_run_respostas_principal_pos_estrutura.md`.
 
+## Anamnese - Contrato de escrita assistida do Principal na clinica 1
+
+- O contrato de escrita assistida do `Principal` foi aberto para a clinica 1.
+- O escopo ficou restrito ao paciente legado `Joon Yun Lee Lee` e ao paciente Brana correspondente.
+- A regra de nao sobrescrita foi registrada.
+- O modo padrao foi definido como dry-run, com execute apenas explicito.
+- A decisao recomendada ficou em `ANAM-MIG-PRINC-WRITE-B`.
+- Nenhuma escrita foi executada nesta etapa.
+- O novo documento de contrato e `docs/anamnese_easy_dell_servidor_contrato_escrita_assistida_principal_clinica_1.md`.
+
