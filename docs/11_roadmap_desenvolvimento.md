@@ -4632,3 +4632,12 @@ Observacoes:
 - Nenhuma escrita real foi executada nesta etapa.
 - O novo documento de implementacao e `docs/anamnese_easy_dell_servidor_implementacao_runner_escrita_assistida_principal_clinica_1.md`.
 
+## Anamnese - Execucao assistida do Principal na clinica 1
+
+- A execucao real controlada do runner assistido do `Principal` na clinica 1 foi concluida com sucesso.
+- O dry-run imediatamente anterior a execucao permaneceu limpo, com `35` respostas planejadas e `0` conflitos.
+- O backup timestampado previo a execucao foi criado em `backups_modularizacao/fase_2c/anamnese_principal_write_assisted_runner_clinica_1/execucao_real_20260601_112610`.
+- A escrita real gravou `35` respostas para o paciente `273` / `Joon Yun Lee Lee`, com ids `18..52`.
+- Nenhuma resposta antiga foi sobrescrita e nenhum outro questionario foi alterado.
+- O novo documento de execucao e `docs/anamnese_easy_dell_servidor_execucao_assistida_principal_clinica_1.md`.
+
