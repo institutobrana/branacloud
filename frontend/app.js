@@ -5799,6 +5799,8 @@ function fichaPayloadAtual(){
     extra.foto_data_url=null;
     extra.foto_nome=null;
   }
+  const historicoAba=typeof fichaHistoricoAba?.serializarHistoricoAba==="function"?fichaHistoricoAba.serializarHistoricoAba():null;
+  extra.historico_aba=historicoAba;
   return{
     codigo:fichaParseOptionalInt(txt(ficha.codigo)),
     nome:txt(ficha.nome),
@@ -22591,7 +22593,8 @@ const fichaHistoricoAba=window.BranaFichaPessoalAbaHistorico||{
     if(ficha.historicoEliminar){ficha.historicoEliminar.dataset.historicoBound="1";ficha.historicoEliminar.addEventListener("click",()=>{const tr=ficha.historicoList?.querySelector("tr");if(tr)tr.remove();footerMsg.textContent="Historico removido em tela.";});}
     if(ficha.historicoConfirmar&&!ficha.historicoConfirmar.dataset.historicoBound){ficha.historicoConfirmar.dataset.historicoBound="1";ficha.historicoConfirmar.addEventListener("click",()=>{footerMsg.textContent="Confirmacao do historico em planejamento.";});}
   },
-  onPacienteAplicado(){},
+  serializarHistoricoAba(){return null;},
+  onPacienteAplicado(extra){if(ficha?.historicoList)ficha.historicoList.innerHTML="";if(ficha?.historicoTexto)ficha.historicoTexto.value="";if(extra?.historico_aba&&ficha?.historicoList){ficha.historicoList.innerHTML="";}},
   async onLimparNovo(){if(ficha?.historicoList)ficha.historicoList.innerHTML="";if(ficha?.historicoTexto)ficha.historicoTexto.value="";},
   beforeAbandonar(){return true;},
   beforeSetTab(){return true;}
@@ -22612,7 +22615,7 @@ async function fichaAnamneseSalvarPendentes(motivo="grava-paciente"){
 const _fichaEnsureUIOrig=fichaEnsureUI;
 fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();fichaHistoricoAba.bind();};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado();};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado(item?.extra||null);};
 const _fichaLimparNovoOrig=fichaLimparNovo;
 fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();await fichaHistoricoAba.onLimparNovo();};
 const _fichaSetTabOrig=fichaSetTab;

@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-6-enter-esc";
+  const MODULE_VERSION = "subetapa-7-grava-extra";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -103,6 +103,17 @@
 
   function historicoCelulas(tr) {
     return Array.from(tr?.querySelectorAll("td") || []);
+  }
+
+  function historicoRegistroAtual(tr) {
+    const cells = historicoCelulas(tr).map((td) => String(td?.textContent || "").trim());
+    if (!cells.length) return null;
+    return {
+      cells,
+      estado: linhaHistoricoEstado(tr),
+      selected_cell_index: state.selectedRow === tr ? Math.max(0, Math.min(Number(state.activeCellIndex || 0) || 0, cells.length - 1)) : 0,
+      selecionada: state.selectedRow === tr,
+    };
   }
 
   function eventoHistoricoAlvo(ev) {
@@ -417,7 +428,71 @@
     limparTela();
   }
 
-  function onPacienteAplicado() {}
+  function aplicarHistoricoAba(payload) {
+    const list = historicoListEl();
+    if (!list) return false;
+    const dados = payload && typeof payload === "object" ? payload : null;
+    const linhas = Array.isArray(dados?.rows) ? dados.rows : [];
+    list.innerHTML = "";
+    clearSelectedRow();
+    if (!linhas.length) return true;
+
+    let selecionada = null;
+    let selecionadaIdx = 0;
+    linhas.forEach((linha, idx) => {
+      const tr = document.createElement("tr");
+      const cells = Array.isArray(linha?.cells) ? linha.cells.slice(0, 4) : [];
+      while (cells.length < 4) cells.push("");
+      cells.forEach((valor) => {
+        const td = document.createElement("td");
+        td.textContent = String(valor ?? "").trim();
+        td.tabIndex = -1;
+        tr.appendChild(td);
+      });
+      const estado = String(linha?.estado || "confirmada").trim() || "confirmada";
+      marcarLinhaHistoricoEstado(tr, estado);
+      if (estado === "rascunho") tr.dataset.historicoNovo = "1";
+      tr.dataset.historicoSnapshot = tr.innerHTML;
+      list.appendChild(tr);
+      if (!selecionada && (linha?.selecionada || Number(dados?.selected_index) === idx)) {
+        selecionada = tr;
+        selecionadaIdx = Math.max(0, Math.min(Number(linha?.selected_cell_index) || 0, cells.length - 1));
+      }
+    });
+
+    const alvo = selecionada || list.querySelector("tr");
+    if (alvo instanceof HTMLElement) {
+      clearSelectedRow();
+      definirCelulaAtiva(alvo, selecionada ? selecionadaIdx : 0);
+    }
+    return true;
+  }
+
+  function serializarHistoricoAba() {
+    const list = historicoListEl();
+    if (!list) return null;
+    const rows = Array.from(list.querySelectorAll("tr"))
+      .map((tr, idx) => {
+        const registro = historicoRegistroAtual(tr);
+        if (!registro) return null;
+        return {
+          ...registro,
+          row_index: idx,
+        };
+      })
+      .filter(Boolean);
+    if (!rows.length) return null;
+    const selectedIndex = rows.findIndex((row) => row?.selecionada);
+    return {
+      versao: 1,
+      rows,
+      selected_index: selectedIndex >= 0 ? selectedIndex : null,
+    };
+  }
+
+  function onPacienteAplicado(extraHistorico = null) {
+    aplicarHistoricoAba(extraHistorico?.historico_aba ?? null);
+  }
 
   function beforeAbandonar() {
     return true;
@@ -431,11 +506,13 @@
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "local-enter-esc-preview",
+      status: "local-grava-extra",
       controlsFlow: false,
     },
     bind,
     criarLinhaPadrao,
+    aplicarHistoricoAba,
+    serializarHistoricoAba,
     adicionarLinhaPadrao,
     removerPrimeiraLinha,
     limparTela,

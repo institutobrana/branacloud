@@ -4737,4 +4737,6 @@ Observacoes:
 - A Etapa 6 - ENTER / ESC foi iniciada com confirmacao local da linha ativa e cancelamento local sem persistencia nova.
 - O `ENTER` passa a confirmar a linha e abre nova linha abaixo de forma local quando seguro; o `ESC` cancela a linha em rascunho ou reverte a edicao local com snapshot conservador.
 - Proxima etapa sugerida: integracao com Grava.
-
+- A Etapa 7 - integracao com Grava foi implementada usando o envelope ja existente `extra` / `source_payload`, com serializacao local do Historico em `extra.historico_aba`.
+- Nao houve alteracao de backend, banco, schema, endpoints ou models; o paciente continua gravando pelo fluxo atual e agora recebe e reaplica o Historico sem criar caminho novo.
+- Proxima etapa sugerida: Propriedades da linha funcional.
