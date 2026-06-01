@@ -4,6 +4,7 @@
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
   const MODULE_VERSION = "subetapa-1-passive-bridge";
   const STYLE_ID = "ficha-historico-visual-style";
+  const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
     novo: "Inserir linha",
     alterar: "Edita linha",
@@ -11,6 +12,9 @@
     confirmar: "Propriedades da linha",
   };
   const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descricao do procedimento"];
+  const state = {
+    selectedRow: null,
+  };
 
   function historicoListEl() {
     return ficha?.historicoList || null;
@@ -40,6 +44,9 @@
       .ficha-pane[data-ficha-tab="historico"] .ficha-list{width:100%;border-collapse:collapse;table-layout:fixed;font:11px Tahoma,sans-serif}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list thead th{background:#f2f6fb;font:700 11px Tahoma,sans-serif;color:#243444}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list th,.ficha-pane[data-ficha-tab="historico"] .ficha-list td{border-bottom:1px solid #e4ebf2;padding:5px 6px;vertical-align:top;word-break:break-word}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr{cursor:pointer}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS}{background:#dcecff;box-shadow:inset 0 0 0 1px #94bbec}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td{background:#dcecff}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto{display:grid;gap:4px;margin-top:6px}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto label{font:11px Tahoma,sans-serif;color:#4f5f72}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto textarea{width:100%;height:140px;border:1px solid #bfc9d6;box-sizing:border-box;padding:5px;font:11px Tahoma,sans-serif;resize:vertical;background:#fff}
@@ -73,6 +80,45 @@
     if (label) label.textContent = "Descricao do procedimento";
   }
 
+  function historicoTbodyEl() {
+    return historicoListEl();
+  }
+
+  function clearSelectedRow() {
+    if (state.selectedRow?.classList) {
+      state.selectedRow.classList.remove(SELECTED_CLASS);
+    }
+    state.selectedRow = null;
+  }
+
+  function selecionarLinhaHistorico(tr) {
+    if (!(tr instanceof HTMLElement)) return null;
+    const tbody = historicoTbodyEl();
+    if (!tbody || !tbody.contains(tr)) return null;
+    clearSelectedRow();
+    state.selectedRow = tr;
+    tr.classList.add(SELECTED_CLASS);
+    return tr;
+  }
+
+  function linhaHistoricoSelecionada() {
+    const row = state.selectedRow;
+    if (row?.isConnected) return row;
+    state.selectedRow = null;
+    return null;
+  }
+
+  function bindSelection() {
+    const tbody = historicoTbodyEl();
+    if (!tbody || tbody.dataset.historicoSelectionBound === "1") return;
+    tbody.dataset.historicoSelectionBound = "1";
+    tbody.addEventListener("click", (ev) => {
+      const row = ev.target.closest("tr");
+      if (!row || !tbody.contains(row)) return;
+      selecionarLinhaHistorico(row);
+    });
+  }
+
   function applyVisualRefresh() {
     ensureStyles();
     updateButtonLabels();
@@ -91,6 +137,7 @@
     const texto = historicoTextoEl();
     if (texto) texto.value = "";
     if (typeof fichaSetTab === "function") fichaSetTab("historico");
+    selecionarLinhaHistorico(tr);
     return true;
   }
 
@@ -99,6 +146,7 @@
     if (!list) return false;
     const tr = list.querySelector("tr");
     if (!tr) return false;
+    if (state.selectedRow === tr) clearSelectedRow();
     tr.remove();
     return true;
   }
@@ -108,12 +156,14 @@
     if (list) list.innerHTML = "";
     const texto = historicoTextoEl();
     if (texto) texto.value = "";
+    clearSelectedRow();
     return true;
   }
 
   function bind() {
     if (!ficha) return;
     applyVisualRefresh();
+    bindSelection();
 
     const novo = ficha.historicoNovo;
     const alterar = ficha.historicoAlterar;
@@ -177,6 +227,8 @@
     onPacienteAplicado,
     beforeAbandonar,
     beforeSetTab,
+    selecionarLinhaHistorico,
+    linhaHistoricoSelecionada,
   };
 
   Object.freeze(module.meta);

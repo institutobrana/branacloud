@@ -4725,4 +4725,7 @@ Observacoes:
 - A Etapa 2 - ajuste visual e revisao dos botoes foi iniciada com refinamento da toolbar, grade e rotulos visuais em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
 - A interface da aba Historico foi aproximada ao padrao EasyDental sem persistencia nova, sem atalhos TAB/ENTER/ESC e sem propriedades funcionais ainda.
 - Proxima etapa sugerida: selecao/linha ativa.
+- A Etapa 3 - selecao / linha ativa foi iniciada com estado local, destaque visual e helper de linha selecionada em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
+- A grade da aba Historico passou a aceitar selecao por clique sem persistencia nova e sem alterar backend ou HTML de carregamento.
+- Proxima etapa sugerida: Inserir linha.
 
