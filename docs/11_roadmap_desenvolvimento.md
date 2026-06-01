@@ -4832,3 +4832,14 @@ Observacoes:
 - A recomendacao final registrada e manter os campos textuais por enquanto.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_5_avaliacao_sugestao_local_cirurgiao_regiao.md`.
 - O menor proximo passo seguro, caso surja nova evidencia, e reavaliar uma sugestao local opcional e nao vinculante sem transformar os campos em combo obrigatorio.
+
+## Ficha Pessoal - Historico - Microetapa 6 - reclassificacao funcional de Cirurgiao, Regiao e dependencias externas
+
+- A microetapa 6 foi executada como reclassificacao funcional de `Cirurgiao`, `Regiao` e dependencias externas da aba Historico.
+- `Cirurgiao` foi formalmente reclassificado como campo ligado ao executante do procedimento no alvo final.
+- `Regiao` permaneceu dependente de nova evidencia ou de modulo externo ainda nao fechado no Brana.
+- As dependencias que exigirao novo ciclo foram registradas como prestador/executante e possivel estrutura odontologica/regra clinica para Regiao.
+- Nao houve alteracao funcional.
+- Nao houve alteracao de backend ou banco.
+- O novo documento e `docs/ficha_pessoal_historico_microetapa_6_reclassificacao_funcional_dependencias.md`.
+- A proxima subetapa recomendada e abrir uma frente de dependencia funcional para o executante do procedimento e para a regiao odontologica, se necessario.
