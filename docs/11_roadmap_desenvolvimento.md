@@ -4728,4 +4728,7 @@ Observacoes:
 - A Etapa 3 - selecao / linha ativa foi iniciada com estado local, destaque visual e helper de linha selecionada em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
 - A grade da aba Historico passou a aceitar selecao por clique sem persistencia nova e sem alterar backend ou HTML de carregamento.
 - Proxima etapa sugerida: Inserir linha.
+- A Etapa 4 - inserir linha foi iniciada com criacao local de nova linha na grade, insercao abaixo da linha ativa quando houver selecao e foco local na primeira celula.
+- A nova linha nasce com data atual padrao e fica selecionada sem persistencia nova, sem TAB/ENTER/ESC e sem integracao com Grava.
+- Proxima etapa sugerida: navegacao por TAB ou preparacao de edicao local, conforme o resultado tecnico encontrado.
 

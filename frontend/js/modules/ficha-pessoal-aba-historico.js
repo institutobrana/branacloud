@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-1-passive-bridge";
+  const MODULE_VERSION = "subetapa-4-inserir-linha";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -27,6 +27,7 @@
   function criarLinhaPadrao() {
     const data = new Date().toLocaleDateString("pt-BR");
     const tr = document.createElement("tr");
+    tr.dataset.historicoNovo = "1";
     tr.innerHTML = `<td>${data}</td><td>Sistema</td><td>-</td><td>Historico criado manualmente</td>`;
     return tr;
   }
@@ -91,6 +92,17 @@
     state.selectedRow = null;
   }
 
+  function focarPrimeiraCelula(tr) {
+    const cell = tr?.querySelector("td");
+    if (!(cell instanceof HTMLElement)) return;
+    if (!cell.hasAttribute("tabindex")) cell.tabIndex = -1;
+    try {
+      cell.focus({ preventScroll: true });
+    } catch {
+      cell.focus();
+    }
+  }
+
   function selecionarLinhaHistorico(tr) {
     if (!(tr instanceof HTMLElement)) return null;
     const tbody = historicoTbodyEl();
@@ -129,7 +141,12 @@
     const list = historicoListEl();
     if (!list) return false;
     const tr = criarLinhaPadrao();
-    if (typeof list.prepend === "function") {
+    const ativa = linhaHistoricoSelecionada();
+    if (ativa?.parentNode === list && typeof ativa.after === "function") {
+      ativa.after(tr);
+    } else if (list.lastElementChild && typeof list.appendChild === "function") {
+      list.appendChild(tr);
+    } else if (typeof list.prepend === "function") {
       list.prepend(tr);
     } else {
       list.insertBefore(tr, list.firstChild);
@@ -138,6 +155,7 @@
     if (texto) texto.value = "";
     if (typeof fichaSetTab === "function") fichaSetTab("historico");
     selecionarLinhaHistorico(tr);
+    focarPrimeiraCelula(tr);
     return true;
   }
 
@@ -215,7 +233,7 @@
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "passive-bridge",
+      status: "local-insert-preview",
       controlsFlow: false,
     },
     bind,
