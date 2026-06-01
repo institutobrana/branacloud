@@ -4743,4 +4743,7 @@ Observacoes:
 - O botao `Edita linha` agora abre a linha selecionada para edicao local sem backend novo, sem banco novo e sem quebrar o fluxo de `ENTER` / `ESC` ou o envelope `extra.historico_aba`.
 - A Etapa 9 - elimina linha foi iniciada com remocao local da linha selecionada e reencaixe estavel da selecao remanescente.
 - O botao `Elimina linha` agora remove a linha ativa da grade e permanece compativel com a persistencia via `extra.historico_aba`.
-- Proxima etapa sugerida: Propriedades da linha.
+- A Etapa 10 - propriedades da linha foi implementada de forma funcional e conservadora sobre a linha selecionada, usando uma janela modal local.
+- Os campos efetivamente suportados nesta etapa sao `Data`, `Cirurgiao`, `Regiao` e `Historico / Descricao`; `Cor de fundo`, `Data de insercao` e `Data de atualizacao` ficaram apenas documentados como pendentes.
+- A janela continua compativel com a persistencia via `extra.historico_aba` e nao exigiu alteracao de backend ou banco.
+- Proxima etapa sugerida: validacao final manual.

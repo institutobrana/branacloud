@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-8-edita-linha";
+  const MODULE_VERSION = "subetapa-10-propriedades-linha";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -16,6 +16,7 @@
     selectedRow: null,
     activeCellIndex: 0,
     editingRow: null,
+    propertiesRow: null,
   };
 
   function historicoListEl() {
@@ -55,6 +56,26 @@
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto{display:grid;gap:4px;margin-top:6px}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto label{font:11px Tahoma,sans-serif;color:#4f5f72}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto textarea{width:100%;height:140px;border:1px solid #bfc9d6;box-sizing:border-box;padding:5px;font:11px Tahoma,sans-serif;resize:vertical;background:#fff}
+      .ficha-hist-props-backdrop{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;background:rgba(25,34,48,.42);padding:20px}
+      .ficha-hist-props-backdrop.is-open{display:flex}
+      .ficha-hist-props-modal{width:min(680px,92vw);max-height:min(82vh,720px);overflow:auto;background:#fff;border:1px solid #b8c5d4;border-radius:12px;box-shadow:0 24px 56px rgba(15,32,55,.28);font:12px Tahoma,sans-serif;color:#1f2937}
+      .ficha-hist-props-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #e3ebf3;background:linear-gradient(180deg,#f8fbff 0%,#edf4fb 100%)}
+      .ficha-hist-props-title{display:grid;gap:4px}
+      .ficha-hist-props-title strong{font:700 15px Tahoma,sans-serif}
+      .ficha-hist-props-title span{color:#5b6b7e}
+      .ficha-hist-props-close{border:1px solid #b8c5d4;background:#fff;border-radius:8px;width:32px;height:32px;font:700 18px/1 Tahoma,sans-serif;color:#44546a}
+      .ficha-hist-props-body{display:grid;gap:12px;padding:16px}
+      .ficha-hist-props-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      .ficha-hist-props-field{display:grid;gap:4px}
+      .ficha-hist-props-field label{font:700 11px Tahoma,sans-serif;color:#4f5f72;text-transform:none}
+      .ficha-hist-props-field input,.ficha-hist-props-field textarea,.ficha-hist-props-field .readonly{width:100%;border:1px solid #bfc9d6;border-radius:8px;padding:8px 10px;background:#fff;font:12px Tahoma,sans-serif;color:#1f2937}
+      .ficha-hist-props-field textarea{min-height:92px;resize:vertical}
+      .ficha-hist-props-field .readonly{background:#f7f9fc;color:#56657a}
+      .ficha-hist-props-field.full{grid-column:1 / -1}
+      .ficha-hist-props-note{grid-column:1 / -1;border:1px dashed #c9d5e2;border-radius:10px;background:#f7fafc;padding:10px 12px;color:#526174;display:grid;gap:4px}
+      .ficha-hist-props-note strong{font:700 11px Tahoma,sans-serif;color:#334155}
+      .ficha-hist-props-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px;border-top:1px solid #e3ebf3;background:#f8fbff}
+      .ficha-hist-props-footer .btn{min-width:118px;justify-content:center}
     `;
     document.head.appendChild(style);
   }
@@ -186,6 +207,183 @@
     definirCelulaAtiva(tr, alvo);
     definirLinhaHistoricoEditavel(tr, true);
     return cells[alvo] || null;
+  }
+
+  function historicoTextoCelula(tr, index) {
+    return String(historicoCelulas(tr)[index]?.textContent || "").trim();
+  }
+
+  function historicoDefinirTextoCelula(tr, index, value) {
+    const cells = historicoCelulas(tr);
+    if (!cells[index]) return false;
+    cells[index].textContent = String(value ?? "").trim();
+    return true;
+  }
+
+  function historicoModalEl() {
+    let el = document.getElementById("ficha-historico-props-modal-backdrop");
+    if (el) return el;
+
+    el = document.createElement("div");
+    el.id = "ficha-historico-props-modal-backdrop";
+    el.className = "ficha-hist-props-backdrop";
+    el.innerHTML = `
+      <div class="ficha-hist-props-modal" role="dialog" aria-modal="true" aria-labelledby="ficha-historico-props-title">
+        <div class="ficha-hist-props-header">
+          <div class="ficha-hist-props-title">
+            <strong id="ficha-historico-props-title">Propriedades da linha</strong>
+            <span>Campos locais da linha selecionada. Itens futuros seguem pendentes nesta etapa.</span>
+          </div>
+          <button type="button" class="ficha-hist-props-close" data-historico-props-close aria-label="Fechar">X</button>
+        </div>
+        <div class="ficha-hist-props-body">
+          <div class="ficha-hist-props-grid">
+            <div class="ficha-hist-props-field">
+              <label for="ficha-historico-props-data">Data</label>
+              <input id="ficha-historico-props-data" type="text" autocomplete="off">
+            </div>
+            <div class="ficha-hist-props-field">
+              <label for="ficha-historico-props-cirurgiao">Cirurgiao</label>
+              <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off">
+            </div>
+            <div class="ficha-hist-props-field">
+              <label for="ficha-historico-props-regiao">Regiao</label>
+              <input id="ficha-historico-props-regiao" type="text" autocomplete="off">
+            </div>
+            <div class="ficha-hist-props-field full">
+              <label for="ficha-historico-props-historico">Historico / Descricao</label>
+              <textarea id="ficha-historico-props-historico"></textarea>
+            </div>
+            <div class="ficha-hist-props-note">
+              <strong>Campos pendentes nesta etapa</strong>
+              <span>Cor de fundo, data de insercao e data de atualizacao permanecem apenas documentados por enquanto.</span>
+            </div>
+          </div>
+        </div>
+        <div class="ficha-hist-props-footer">
+          <button type="button" class="btn" data-historico-props-cancelar>Cancelar</button>
+          <button type="button" class="btn primary" data-historico-props-aplicar>Aplicar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function historicoFecharPropriedadesLinha(restaurarFoco = true) {
+    const modal = historicoModalEl();
+    const aplicar = modal.querySelector("[data-historico-props-aplicar]");
+    const cancelar = modal.querySelector("[data-historico-props-cancelar]");
+    const fechar = modal.querySelector("[data-historico-props-close]");
+    modal.classList.remove("is-open");
+    modal.dataset.open = "0";
+    if (state.propertiesRow && state.propertiesRow.isConnected) {
+      definirLinhaHistoricoEditavel(state.propertiesRow, false);
+    }
+    const row = state.propertiesRow && state.propertiesRow.isConnected ? state.propertiesRow : null;
+    const focusIndex = Math.max(0, Math.min(state.activeCellIndex || 0, row ? historicoCelulas(row).length - 1 : 0));
+    state.propertiesRow = null;
+    state.editingRow = null;
+    if (aplicar) aplicar.onclick = null;
+    if (cancelar) cancelar.onclick = null;
+    if (fechar) fechar.onclick = null;
+    modal.onkeydown = null;
+    if (restaurarFoco && row) {
+      selecionarLinhaHistorico(row);
+      const cell = definirCelulaAtiva(row, focusIndex);
+      if (cell instanceof HTMLElement) {
+        try {
+          cell.focus({ preventScroll: true });
+        } catch {
+          cell.focus();
+        }
+      }
+    }
+  }
+
+  function historicoAplicarPropriedadesLinha() {
+    const modal = historicoModalEl();
+    const tr = state.propertiesRow;
+    if (!(tr instanceof HTMLElement) || !tr.isConnected) return false;
+    const data = modal.querySelector("#ficha-historico-props-data");
+    const cirurgiao = modal.querySelector("#ficha-historico-props-cirurgiao");
+    const regiao = modal.querySelector("#ficha-historico-props-regiao");
+    const historico = modal.querySelector("#ficha-historico-props-historico");
+    historicoDefinirTextoCelula(tr, 0, data instanceof HTMLInputElement ? data.value : "");
+    historicoDefinirTextoCelula(tr, 1, cirurgiao instanceof HTMLInputElement ? cirurgiao.value : "");
+    historicoDefinirTextoCelula(tr, 2, regiao instanceof HTMLInputElement ? regiao.value : "");
+    historicoDefinirTextoCelula(tr, 3, historico instanceof HTMLTextAreaElement ? historico.value : "");
+    guardarSnapshotLinhaHistorico(tr);
+    const estado = linhaHistoricoEstado(tr);
+    marcarLinhaHistoricoEstado(tr, estado);
+    if (estado !== "rascunho") delete tr.dataset.historicoNovo;
+    return true;
+  }
+
+  function historicoAbrirPropriedadesLinhaSelecionada() {
+    const tr = linhaHistoricoSelecionada();
+    if (!(tr instanceof HTMLElement)) {
+      if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Selecione uma linha para abrir as propriedades.";
+      return false;
+    }
+
+    const modal = historicoModalEl();
+    const data = modal.querySelector("#ficha-historico-props-data");
+    const cirurgiao = modal.querySelector("#ficha-historico-props-cirurgiao");
+    const regiao = modal.querySelector("#ficha-historico-props-regiao");
+    const historico = modal.querySelector("#ficha-historico-props-historico");
+    const fechar = modal.querySelector("[data-historico-props-close]");
+    const cancelar = modal.querySelector("[data-historico-props-cancelar]");
+    const aplicar = modal.querySelector("[data-historico-props-aplicar]");
+
+    state.propertiesRow = tr;
+    state.editingRow = null;
+    definirLinhaHistoricoEditavel(tr, false);
+
+    if (data instanceof HTMLInputElement) data.value = historicoTextoCelula(tr, 0);
+    if (cirurgiao instanceof HTMLInputElement) cirurgiao.value = historicoTextoCelula(tr, 1);
+    if (regiao instanceof HTMLInputElement) regiao.value = historicoTextoCelula(tr, 2);
+    if (historico instanceof HTMLTextAreaElement) historico.value = historicoTextoCelula(tr, 3);
+
+    const aplicarHandler = () => {
+      historicoAplicarPropriedadesLinha();
+      historicoFecharPropriedadesLinha(true);
+      if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Propriedades da linha aplicadas.";
+    };
+    const cancelarHandler = () => {
+      historicoFecharPropriedadesLinha(true);
+      if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Propriedades da linha canceladas.";
+    };
+    const closeHandler = () => cancelarHandler();
+    const keyHandler = (ev) => {
+      if (ev.key === "Escape") {
+        ev.preventDefault();
+        cancelarHandler();
+      }
+      if (ev.key === "Enter" && !(ev.target instanceof HTMLTextAreaElement)) {
+        ev.preventDefault();
+        aplicarHandler();
+      }
+    };
+
+    aplicar.onclick = aplicarHandler;
+    cancelar.onclick = cancelarHandler;
+    fechar.onclick = closeHandler;
+    modal.onkeydown = keyHandler;
+
+    modal.dataset.open = "1";
+    modal.classList.add("is-open");
+    if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Propriedades da linha abertas.";
+
+    const firstField = data instanceof HTMLElement ? data : null;
+    if (firstField) {
+      try {
+        firstField.focus({ preventScroll: true });
+      } catch {
+        firstField.focus();
+      }
+    }
+    return true;
   }
 
   function focarCelulaHistorico(tr, index = 0) {
@@ -444,7 +642,7 @@
     if (confirmar && confirmar.dataset.historicoBound !== "1") {
       confirmar.dataset.historicoBound = "1";
       confirmar.addEventListener("click", () => {
-        footerMsg.textContent = "Propriedades da linha em planejamento.";
+        historicoAbrirPropriedadesLinhaSelecionada();
       });
     }
   }
@@ -531,7 +729,7 @@
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "local-edicao-linha",
+      status: "local-propriedades-linha",
       controlsFlow: false,
     },
     bind,
@@ -541,6 +739,7 @@
     adicionarLinhaPadrao,
     removerPrimeiraLinha,
     eliminarLinhaHistoricoSelecionada,
+    historicoAbrirPropriedadesLinhaSelecionada,
     limparTela,
     onLimparNovo,
     onPacienteAplicado,
