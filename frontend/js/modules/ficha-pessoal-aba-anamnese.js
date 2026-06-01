@@ -36,10 +36,10 @@
       .ficha-anamnese-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;border:1px solid #d6deea;background:#fff}
       .ficha-anamnese-state{padding:14px 12px;font:11px Tahoma,sans-serif;color:#5a697c;background:#fafcff}
       .ficha-anamnese-list{display:flex;flex-direction:column;gap:8px;padding:8px;box-sizing:border-box}
-      .ficha-anamnese-card{border:1px solid #d5ddea;border-radius:4px;background:#fbfdff;padding:8px 10px;display:grid;grid-template-columns:auto 1fr auto;gap:8px 10px;align-items:start}
-      .ficha-anamnese-num{grid-column:1;font:700 11px Tahoma,sans-serif;color:#35506b;min-width:28px}
-      .ficha-anamnese-texto{grid-column:2;font:11px Tahoma,sans-serif;color:#22303f;line-height:1.35;word-break:break-word}
-      .ficha-anamnese-alerta{grid-column:3;align-self:start;justify-self:end;min-width:18px;min-height:18px;display:flex;align-items:center;justify-content:center}
+      .ficha-anamnese-card{border:1px solid #d5ddea;border-radius:4px;background:#fbfdff;padding:8px 10px;display:grid;grid-template-columns:auto auto 1fr;gap:8px 10px;align-items:start}
+      .ficha-anamnese-num{grid-column:2;font:700 11px Tahoma,sans-serif;color:#35506b;min-width:28px}
+      .ficha-anamnese-texto{grid-column:3;font:11px Tahoma,sans-serif;color:#22303f;line-height:1.35;word-break:break-word}
+      .ficha-anamnese-alerta{grid-column:1;align-self:start;justify-self:start;min-width:18px;min-height:18px;display:flex;align-items:center;justify-content:center}
       .ficha-anamnese-alerta img{display:block;width:16px;height:16px;object-fit:contain}
       .ficha-anamnese-controles{grid-column:1 / -1;display:grid;gap:8px 10px;align-items:start}
       .ficha-anamnese-controles.tipo-1{grid-template-columns:minmax(120px,220px)}
@@ -125,6 +125,8 @@
     return 1;
   }
 
+  const ALERTA_CRITICO_ICONE = "/desktop-assets/easy/ico_dedo.bmp";
+
   function alertaCriticoSatisfeito(item, draft) {
     const tipoPergunta = normalizarTipoPergunta(item?.tipo_pergunta ?? item?.tipoPergunta ?? 1);
     const tipoResposta = normalizarTipoResposta(item?.tipo_resposta ?? item?.tipoResposta ?? 1);
@@ -148,7 +150,7 @@
     const mostrar = alertaCriticoSatisfeito(item, draft);
     if (slot) {
       slot.setAttribute("aria-hidden", mostrar ? "false" : "true");
-      slot.innerHTML = mostrar ? '<img src="/assets/easy/ico_dedo.bmp" alt="Alerta critico">' : "";
+      slot.innerHTML = mostrar ? `<img src="${ALERTA_CRITICO_ICONE}" alt="Alerta critico">` : "";
     }
   }
 
@@ -428,7 +430,7 @@
           <div class="ficha-anamnese-num">${esc(String(numero))})</div>
           <div class="ficha-anamnese-texto">${texto}</div>
           <div class="ficha-anamnese-alerta" aria-hidden="${mostrarIconeAlerta ? "false" : "true"}">
-            ${mostrarIconeAlerta ? '<img src="/assets/easy/ico_dedo.bmp" alt="Alerta critico">' : ""}
+            ${mostrarIconeAlerta ? `<img src="${ALERTA_CRITICO_ICONE}" alt="Alerta critico">` : ""}
           </div>
           <div class="ficha-anamnese-controles ${classeTipo}">
             ${tipoResposta === 3 ? "" : `
