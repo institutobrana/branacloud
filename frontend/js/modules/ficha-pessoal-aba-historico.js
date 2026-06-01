@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-5-tab-local";
+  const MODULE_VERSION = "subetapa-6-enter-esc";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const BUTTON_LABELS = {
@@ -15,6 +15,7 @@
   const state = {
     selectedRow: null,
     activeCellIndex: 0,
+    editingRow: null,
   };
 
   function historicoListEl() {
@@ -29,7 +30,9 @@
     const data = new Date().toLocaleDateString("pt-BR");
     const tr = document.createElement("tr");
     tr.dataset.historicoNovo = "1";
+    tr.dataset.historicoEstado = "rascunho";
     tr.innerHTML = `<td>${data}</td><td>Sistema</td><td>-</td><td>Historico criado manualmente</td>`;
+    tr.dataset.historicoSnapshot = tr.innerHTML;
     return tr;
   }
 
@@ -90,8 +93,12 @@
     if (state.selectedRow?.classList) {
       state.selectedRow.classList.remove(SELECTED_CLASS);
     }
+    if (state.editingRow?.isConnected) {
+      definirLinhaHistoricoEditavel(state.editingRow, false);
+    }
     state.selectedRow = null;
     state.activeCellIndex = 0;
+    state.editingRow = null;
   }
 
   function historicoCelulas(tr) {
@@ -115,8 +122,63 @@
     return cells[alvo] || null;
   }
 
+  function linhaHistoricoEstado(tr) {
+    return String(tr?.dataset?.historicoEstado || (tr?.dataset?.historicoNovo === "1" ? "rascunho" : "confirmada")).trim() || "confirmada";
+  }
+
+  function marcarLinhaHistoricoEstado(tr, estado) {
+    if (!(tr instanceof HTMLElement)) return;
+    tr.dataset.historicoEstado = String(estado || "").trim() || "confirmada";
+  }
+
+  function guardarSnapshotLinhaHistorico(tr) {
+    if (!(tr instanceof HTMLElement)) return;
+    tr.dataset.historicoSnapshot = tr.innerHTML;
+  }
+
+  function restaurarSnapshotLinhaHistorico(tr) {
+    const html = String(tr?.dataset?.historicoSnapshot || "");
+    if (!html) return false;
+    tr.innerHTML = html;
+    return true;
+  }
+
+  function definirLinhaHistoricoEditavel(tr, editable) {
+    const cells = historicoCelulas(tr);
+    cells.forEach((cell, idx) => {
+      cell.contentEditable = editable ? "true" : "false";
+      cell.spellcheck = false;
+      cell.tabIndex = idx === state.activeCellIndex ? 0 : -1;
+    });
+    return cells;
+  }
+
+  function ativarEdicaoLinhaHistorico(tr, index = 0) {
+    if (!(tr instanceof HTMLElement)) return null;
+    const cells = historicoCelulas(tr);
+    if (!cells.length) return null;
+    const alvo = Math.max(0, Math.min(Number(index) || 0, cells.length - 1));
+
+    if (state.editingRow && state.editingRow !== tr && state.editingRow.isConnected) {
+      definirLinhaHistoricoEditavel(state.editingRow, false);
+    }
+
+    if (state.editingRow !== tr) {
+      if (linhaHistoricoEstado(tr) !== "rascunho") {
+        guardarSnapshotLinhaHistorico(tr);
+        marcarLinhaHistoricoEstado(tr, "edicao");
+        delete tr.dataset.historicoNovo;
+      }
+      state.editingRow = tr;
+    }
+
+    definirCelulaAtiva(tr, alvo);
+    definirLinhaHistoricoEditavel(tr, true);
+    return cells[alvo] || null;
+  }
+
   function focarCelulaHistorico(tr, index = 0) {
-    const cell = definirCelulaAtiva(tr, index);
+    const cell = ativarEdicaoLinhaHistorico(tr, index);
     if (!(cell instanceof HTMLElement)) return;
     try {
       cell.focus({ preventScroll: true });
@@ -129,8 +191,16 @@
     if (!(tr instanceof HTMLElement)) return null;
     const tbody = historicoTbodyEl();
     if (!tbody || !tbody.contains(tr)) return null;
-    clearSelectedRow();
-    definirCelulaAtiva(tr, 0);
+    if (state.selectedRow && state.selectedRow !== tr) {
+      state.selectedRow.classList.remove(SELECTED_CLASS);
+      if (state.editingRow && state.editingRow !== tr && state.editingRow.isConnected) {
+        definirLinhaHistoricoEditavel(state.editingRow, false);
+      }
+      if (state.editingRow && state.editingRow !== tr) {
+        state.editingRow = null;
+      }
+    }
+    definirCelulaAtiva(tr, state.activeCellIndex);
     return tr;
   }
 
@@ -165,19 +235,24 @@
       if (!cell || !row || !tbody.contains(row)) return;
       const idx = historicoCelulas(row).indexOf(cell);
       if (idx < 0) return;
-      state.selectedRow = row;
-      state.activeCellIndex = idx;
-      row.classList.add(SELECTED_CLASS);
-      historicoCelulas(row).forEach((td, i) => {
-        td.tabIndex = i === idx ? 0 : -1;
-      });
+      ativarEdicaoLinhaHistorico(row, idx);
     });
     tbody.addEventListener("keydown", (ev) => {
-      if (ev.key !== "Tab") return;
       const alvo = eventoHistoricoAlvo(ev);
       const cell = alvo?.closest("td") || null;
       const row = alvo?.closest("tr") || null;
       if (!cell || !row || !tbody.contains(row)) return;
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        confirmarLinhaHistoricoLocal(row);
+        return;
+      }
+      if (ev.key === "Escape") {
+        ev.preventDefault();
+        cancelarLinhaHistoricoLocal(row);
+        return;
+      }
+      if (ev.key !== "Tab") return;
       const cells = historicoCelulas(row);
       const currentIndex = cells.indexOf(cell);
       if (currentIndex < 0) return;
@@ -213,6 +288,72 @@
     if (texto) texto.value = "";
     if (typeof fichaSetTab === "function") fichaSetTab("historico");
     focarCelulaHistorico(tr, 0);
+    return true;
+  }
+
+  function confirmarLinhaHistoricoLocal(tr) {
+    if (!(tr instanceof HTMLElement)) return false;
+    const tbody = historicoTbodyEl();
+    if (!tbody || !tbody.contains(tr)) return false;
+    const indiceAtual = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(tr).length - 1));
+    selecionarLinhaHistorico(tr);
+    definirCelulaAtiva(tr, indiceAtual);
+    definirLinhaHistoricoEditavel(tr, false);
+    marcarLinhaHistoricoEstado(tr, "confirmada");
+    delete tr.dataset.historicoNovo;
+    guardarSnapshotLinhaHistorico(tr);
+    if (state.editingRow === tr) state.editingRow = null;
+    const abriuNova = adicionarLinhaPadrao();
+    if (!abriuNova) {
+      focarCelulaHistorico(tr, indiceAtual);
+    }
+    return true;
+  }
+
+  function removerLinhaHistorico(tr, fallbackIndex = 0) {
+    const list = historicoListEl();
+    if (!list || !(tr instanceof HTMLElement) || !list.contains(tr)) return false;
+    const anterior = tr.previousElementSibling instanceof HTMLElement ? tr.previousElementSibling : null;
+    const posterior = tr.nextElementSibling instanceof HTMLElement ? tr.nextElementSibling : null;
+    if (state.editingRow === tr) state.editingRow = null;
+    if (state.selectedRow === tr) {
+      tr.classList.remove(SELECTED_CLASS);
+    }
+    tr.remove();
+    const destino = anterior || posterior;
+    if (destino) {
+      const indice = Math.max(0, Math.min(Number(fallbackIndex) || 0, historicoCelulas(destino).length - 1));
+      selecionarLinhaHistorico(destino);
+      focarCelulaHistorico(destino, indice);
+    } else {
+      clearSelectedRow();
+    }
+    return true;
+  }
+
+  function cancelarLinhaHistoricoLocal(tr) {
+    if (!(tr instanceof HTMLElement)) return false;
+    const tbody = historicoTbodyEl();
+    if (!tbody || !tbody.contains(tr)) return false;
+    const estado = linhaHistoricoEstado(tr);
+    const indiceAtual = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(tr).length - 1));
+    if (estado === "rascunho") {
+      return removerLinhaHistorico(tr, indiceAtual);
+    }
+    restaurarSnapshotLinhaHistorico(tr);
+    marcarLinhaHistoricoEstado(tr, "confirmada");
+    delete tr.dataset.historicoNovo;
+    definirLinhaHistoricoEditavel(tr, false);
+    if (state.editingRow === tr) state.editingRow = null;
+    selecionarLinhaHistorico(tr);
+    const cell = definirCelulaAtiva(tr, indiceAtual);
+    if (cell instanceof HTMLElement) {
+      try {
+        cell.focus({ preventScroll: true });
+      } catch {
+        cell.focus();
+      }
+    }
     return true;
   }
 
@@ -290,7 +431,7 @@
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "local-insert-preview",
+      status: "local-enter-esc-preview",
       controlsFlow: false,
     },
     bind,

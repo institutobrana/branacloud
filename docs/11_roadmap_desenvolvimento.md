@@ -4734,4 +4734,7 @@ Observacoes:
 - A Etapa 5 - navegacao por TAB foi iniciada com foco local na grade do Historico e percurso entre Data, Cirurgiao, Regiao e Descricao do procedimento.
 - O `Shift+Tab` tambem foi suportado de forma local e a navegacao permaneceu sem persistencia nova, sem ENTER/ESC e sem integracao com Grava.
 - Proxima etapa sugerida: ENTER/ESC.
+- A Etapa 6 - ENTER / ESC foi iniciada com confirmacao local da linha ativa e cancelamento local sem persistencia nova.
+- O `ENTER` passa a confirmar a linha e abre nova linha abaixo de forma local quando seguro; o `ESC` cancela a linha em rascunho ou reverte a edicao local com snapshot conservador.
+- Proxima etapa sugerida: integracao com Grava.
 
