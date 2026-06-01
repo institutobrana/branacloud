@@ -4663,3 +4663,12 @@ Observacoes:
 - O novo documento de auditoria e `docs/anamnese_easydental_auditoria_regra_pergunta_critica_icone_alerta.md`.
 - Nenhum codigo, banco, backend, schema, endpoint, payload ou arquivo do EasyDental foi alterado nesta etapa documental.
 
+## Anamnese - Auditoria comparativa da regra critica e icone de alerta no Brana
+
+- A aba clinica da Anamnese no Brana le `tipo_resposta` para montar a interface e serializar respostas, mas nao demonstrou usar `tipo_pergunta` como gatilho visual de alerta.
+- A configuracao da Anamnese grava `tipo_pergunta`, `tipo_resposta` e `mensagem_alerta`, mas o fluxo clinico inspecionado nao mostrou exibicao de `mensagem_alerta`.
+- O codigo da aba clinica nao mostrou binding direto para `assets/easy/ico_dedo.bmp` nem para outro icone de alerta.
+- A aderencia ao legado ficou parcial: estrutura e persistencia existem, mas o comportamento visual critico ainda nao foi confirmado.
+- O novo documento comparativo e `docs/anamnese_brana_auditoria_comparativa_regra_critica_icone_alerta.md`.
+- Nenhum codigo, banco, backend, schema, endpoint, payload ou arquivo do EasyDental foi alterado nesta etapa documental.
+
