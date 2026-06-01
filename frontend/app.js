@@ -5322,10 +5322,6 @@ function fichaEnsureUI(){
   if(ficha.fotoBox)ficha.fotoBox.addEventListener("click",()=>fichaFotoAbrirMenu(ficha.fotoBox));
   ficha.btnOdontograma.addEventListener("click",()=>{footerMsg.textContent="Abertura do odontograma em planejamento.";});
   if(ficha.btnRetorno)ficha.btnRetorno.addEventListener("click",()=>{footerMsg.textContent="Gerenciamento de retornos em planejamento.";});
-  ficha.historicoNovo.addEventListener("click",()=>{const data=new Date().toLocaleDateString("pt-BR");const tr=document.createElement("tr");tr.innerHTML=`<td>${data}</td><td>Sistema</td><td>-</td><td>Historico criado manualmente</td>`;ficha.historicoList.prepend(tr);ficha.historicoTexto.value="";fichaSetTab("historico")});
-  ficha.historicoAlterar.addEventListener("click",()=>{footerMsg.textContent="Alteracao de historico em planejamento.";});
-  ficha.historicoEliminar.addEventListener("click",()=>{const tr=ficha.historicoList.querySelector("tr");if(tr)tr.remove();footerMsg.textContent="Historico removido em tela.";});
-  if(ficha.historicoConfirmar)ficha.historicoConfirmar.addEventListener("click",()=>{footerMsg.textContent="Confirmacao do historico em planejamento.";});
   if(ficha.anotNegrito)ficha.anotNegrito.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
   if(ficha.anotItalico)ficha.anotItalico.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
   if(ficha.anotSublinhado)ficha.anotSublinhado.addEventListener("click",()=>{footerMsg.textContent="Formatacao de texto em anotacoes em planejamento.";});
@@ -6499,8 +6495,6 @@ async function fichaLimparNovo(confirmar=true){
   if(ficha.proximoRetorno)ficha.proximoRetorno.value="?";
   if(ficha.inclusao)ficha.inclusao.value=hojeBr;
   if(ficha.alteracao)ficha.alteracao.value=hojeBr;
-  ficha.historicoList.innerHTML="";
-  ficha.historicoTexto.value="";
   if(ficha.anotacoes)ficha.anotacoes.value="";
   ficha.titulo.textContent="Ficha pessoal -";
 }
@@ -22579,6 +22573,29 @@ const fichaAnamneseAba=window.BranaFichaPessoalAbaAnamnese||{
   async beforeAbandonar(){return true;},
   async beforeSetTab(tab){if((tab==="anamnese"||tab==="historico")&&!this.temPacienteValido()){window.alert("Necessario gravar o paciente antes de abrir esta aba.");return false;}return true;}
 };
+const fichaHistoricoAba=window.BranaFichaPessoalAbaHistorico||{
+  bind(){
+    if(!ficha||ficha.historicoNovo?.dataset?.historicoBound==="1")return;
+    const addRow=()=>{
+      const list=ficha.historicoList;
+      if(!list)return;
+      const data=new Date().toLocaleDateString("pt-BR");
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${data}</td><td>Sistema</td><td>-</td><td>Historico criado manualmente</td>`;
+      if(typeof list.prepend==="function")list.prepend(tr);else list.insertBefore(tr,list.firstChild);
+      if(ficha.historicoTexto)ficha.historicoTexto.value="";
+      fichaSetTab("historico");
+    };
+    if(ficha.historicoNovo){ficha.historicoNovo.dataset.historicoBound="1";ficha.historicoNovo.addEventListener("click",addRow);}
+    if(ficha.historicoAlterar){ficha.historicoAlterar.dataset.historicoBound="1";ficha.historicoAlterar.addEventListener("click",()=>{footerMsg.textContent="Alteracao de historico em planejamento.";});}
+    if(ficha.historicoEliminar){ficha.historicoEliminar.dataset.historicoBound="1";ficha.historicoEliminar.addEventListener("click",()=>{const tr=ficha.historicoList?.querySelector("tr");if(tr)tr.remove();footerMsg.textContent="Historico removido em tela.";});}
+    if(ficha.historicoConfirmar&&!ficha.historicoConfirmar.dataset.historicoBound){ficha.historicoConfirmar.dataset.historicoBound="1";ficha.historicoConfirmar.addEventListener("click",()=>{footerMsg.textContent="Confirmacao do historico em planejamento.";});}
+  },
+  onPacienteAplicado(){},
+  async onLimparNovo(){if(ficha?.historicoList)ficha.historicoList.innerHTML="";if(ficha?.historicoTexto)ficha.historicoTexto.value="";},
+  beforeAbandonar(){return true;},
+  beforeSetTab(){return true;}
+};
 function fichaAnamneseTemPacienteValido(){return fichaAnamneseAba.temPacienteValido();}
 function fichaAnamneseNomePacienteAtual(){return fichaAnamneseAba.nomePacienteAtual();}
 function fichaAnamneseAtualizarCabecalho(){return fichaAnamneseAba.atualizarCabecalho();}
@@ -22593,11 +22610,11 @@ async function fichaAnamneseSalvarPendentes(motivo="grava-paciente"){
   return !!(await fichaAnamneseAba.salvarAnamneseAtual?.(motivo));
 }
 const _fichaEnsureUIOrig=fichaEnsureUI;
-fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();};
+fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();fichaHistoricoAba.bind();};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado();};
 const _fichaLimparNovoOrig=fichaLimparNovo;
-fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();};
+fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();await fichaHistoricoAba.onLimparNovo();};
 const _fichaSetTabOrig=fichaSetTab;
 fichaSetTab=function(tab){
   const permite=fichaAnamneseAba.beforeSetTab(tab);

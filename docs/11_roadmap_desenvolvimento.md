@@ -4718,4 +4718,8 @@ Observacoes:
 - A auditoria inicial concluiu que a aba Historico hoje está montada em `frontend/app.js`, sem módulo próprio ainda, e sem persistência dedicada identificada.
 - O plano seguro de subetapas foi registrado, prevendo futura modularização em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
 - A etapa documental não alterou código nem banco.
+- A Etapa 1 - modularizacao passiva inicial foi concluida com o novo modulo `frontend/js/modules/ficha-pessoal-aba-historico.js`.
+- O comportamento atual da aba foi preservado, sem persistencia nova e sem alteracao de banco.
+- O carregamento do modulo foi incluído no frontend e a ponte compatível foi mantida em `frontend/app.js`.
+- Proxima etapa sugerida: ajuste visual e revisao dos botoes ou selecao/linha ativa, conforme o resultado tecnico encontrado.
 
