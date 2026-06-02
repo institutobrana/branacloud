@@ -4,7 +4,6 @@
   const MODULE_NAME = "BranaFichaPessoalAbaHistoricoPropriedadesDaLinha";
   const STYLE_ID = "ficha-historico-props-visual-style";
   const MODAL_ID = "ficha-historico-props-modal-backdrop";
-  const DATALIST_ID = "ficha-historico-props-cirurgiao-lista";
   const COR_FUNDO_PADRAO = "Branco";
   const COR_FUNDO_OPCOES = [
     { value: "Branco", swatch: "#ffffff" },
@@ -60,6 +59,14 @@
     function corFundoSwatch(valor) {
       const achada = COR_FUNDO_OPCOES.find((item) => item.value === valor);
       return achada?.swatch || "#ffffff";
+    }
+
+    function historicoTextoNormalizado(value) {
+      return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
     }
 
     function atualizarSwatchCor(modal, valor) {
@@ -139,9 +146,8 @@
                 <div class="ficha-hist-props-field">
                   <label for="ficha-historico-props-cirurgiao">Cirurgião responsável:</label>
                   <div class="ficha-hist-props-combo">
-                    <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off" list="${DATALIST_ID}" data-historico-campo="cirurgiao">
+                    <select id="ficha-historico-props-cirurgiao" data-historico-campo="cirurgiao" data-historico-cirurgiao-select></select>
                   </div>
-                  <datalist id="${DATALIST_ID}" data-historico-cirurgiao-lista></datalist>
                 </div>
                 <div class="ficha-hist-props-field">
                   <label for="ficha-historico-props-regiao">Região:</label>
@@ -185,21 +191,42 @@
       return el;
     }
 
-    function atualizarDatalistPrestadores(modal, catalogo) {
-      const list = modal?.querySelector?.(`#${DATALIST_ID}`);
-      if (!(list instanceof HTMLDataListElement)) return;
-      list.innerHTML = "";
+    function atualizarComboPrestadores(modal, catalogo, valorAtual = "") {
+      const select = modal?.querySelector?.("#ficha-historico-props-cirurgiao");
+      if (!(select instanceof HTMLSelectElement)) return;
+      const valorAntigo = String(valorAtual || select.value || "").trim();
+      select.innerHTML = "";
+      const opcaoVazia = document.createElement("option");
+      opcaoVazia.value = "";
+      opcaoVazia.textContent = "";
+      select.appendChild(opcaoVazia);
       const itens = Array.isArray(catalogo) ? catalogo : [];
       itens.forEach((item) => {
         const valor = String(item?.nome || item?.apelido || item?.codigo || "").trim();
         if (!valor) return;
         const option = document.createElement("option");
-        option.value = valor;
-        option.label = String(item?.codigo || "").trim() && String(item?.nome || item?.apelido || "").trim()
+        option.value = String(Number(item?.id || item?.row_id || 0) || valor);
+        option.textContent = String(item?.codigo || "").trim() && String(item?.nome || item?.apelido || "").trim()
           ? `${String(item?.codigo || "").trim()} - ${String(item?.nome || item?.apelido || "").trim()}`
           : valor;
-        list.appendChild(option);
+        option.dataset.nome = valor;
+        option.dataset.prestadorId = String(Number(item?.id || item?.row_id || 0) || "");
+        select.appendChild(option);
       });
+      const encontrado = itens.find((item) => String(Number(item?.id || item?.row_id || 0) || "") === valorAntigo || historicoTextoNormalizado(String(item?.nome || item?.apelido || item?.codigo || "")) === historicoTextoNormalizado(valorAntigo));
+      if (encontrado) {
+        select.value = String(Number(encontrado.id || encontrado.row_id || 0) || "");
+      } else if (valorAntigo) {
+        const custom = document.createElement("option");
+        custom.value = valorAntigo;
+        custom.textContent = valorAntigo;
+        custom.dataset.nome = valorAntigo;
+        custom.dataset.prestadorId = "";
+        select.appendChild(custom);
+        select.value = valorAntigo;
+      } else {
+        select.value = "";
+      }
     }
 
     function obterCampoTexto(modal, selector, padrao = "") {
@@ -223,12 +250,13 @@
 
       host.historicoDefinirTextoCelula(tr, 0, data instanceof HTMLInputElement ? data.value : "");
       const catalogo = host.getPrestadoresCatalogo();
-      const cirurgiaoValor = cirurgiao instanceof HTMLInputElement ? cirurgiao.value : "";
+      const cirurgiaoValor = cirurgiao instanceof HTMLSelectElement ? cirurgiao.value : "";
+      const cirurgiaoTexto = cirurgiao instanceof HTMLSelectElement ? String(cirurgiao.selectedOptions?.[0]?.dataset?.nome || cirurgiao.selectedOptions?.[0]?.textContent || "").trim() : "";
       const cirurgiaoResolvido = host.historicoEncontrarPrestadorPorTexto(cirurgiaoValor, catalogo);
       if (cirurgiaoResolvido) {
         host.historicoCampoDefinirCirurgiao(tr, cirurgiaoResolvido, cirurgiaoResolvido.id);
       } else {
-        host.historicoCampoDefinirCirurgiao(tr, cirurgiaoValor, String(tr.dataset.historicoCirurgiaoId || "").trim() || null);
+        host.historicoCampoDefinirCirurgiao(tr, cirurgiaoTexto || cirurgiaoValor, String(tr.dataset.historicoCirurgiaoId || "").trim() || null);
         host.historicoSincronizarCirurgiaoLinha(tr, catalogo);
       }
       host.historicoCampoDefinirTexto(tr, "regiao", regiao instanceof HTMLInputElement ? regiao.value : "");
@@ -305,11 +333,20 @@
       host.setPropertiesRow(tr);
       host.setEditingRow(null);
       host.definirLinhaHistoricoEditavel(tr, false);
-      atualizarDatalistPrestadores(modal, catalogo);
+      atualizarComboPrestadores(modal, catalogo, host.historicoCampoTexto(tr, "cirurgiao"));
       host.historicoSincronizarCirurgiaoLinha(tr, catalogo);
 
       if (data instanceof HTMLInputElement) data.value = host.historicoTextoCelula(tr, 0);
-      if (cirurgiao instanceof HTMLInputElement) cirurgiao.value = host.historicoCampoTexto(tr, "cirurgiao");
+      if (cirurgiao instanceof HTMLSelectElement) {
+        const valorCirurgiao = String(tr.dataset.historicoCirurgiaoId || "").trim();
+        if (valorCirurgiao && Array.from(cirurgiao.options).some((opt) => opt.value === valorCirurgiao)) {
+          cirurgiao.value = valorCirurgiao;
+        } else {
+          const texto = host.historicoCampoTexto(tr, "cirurgiao");
+          const encontro = Array.from(cirurgiao.options).find((opt) => historicoTextoNormalizado(opt.dataset.nome || opt.textContent) === historicoTextoNormalizado(texto));
+          cirurgiao.value = encontro?.value || texto || "";
+        }
+      }
       if (regiao instanceof HTMLInputElement) regiao.value = host.historicoCampoTexto(tr, "regiao") || "Todos";
       atualizarSwatchCor(modal, String(tr.dataset.historicoCorFundo || "").trim() || COR_FUNDO_PADRAO);
       if (cor instanceof HTMLSelectElement) cor.value = String(tr.dataset.historicoCorFundo || "").trim() || COR_FUNDO_PADRAO;

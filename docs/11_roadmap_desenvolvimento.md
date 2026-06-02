@@ -4905,3 +4905,8 @@ Observacoes:
 - Os botões inferiores passaram a seguir a assinatura `Ok` e `Cancela`.
 - O novo documento e `docs/ficha_pessoal_historico_refino_visual_exato_modal_propriedades.md`.
 - A proxima validação sugerida e comparar o modal diretamente com a screenshot de referencia no fluxo real da aba Historico.
+## Ficha Pessoal - Historico - Correcao do combo Cirurgiao responsavel
+- O campo `Cirurgiao responsavel` na janela `Propriedades do historico` passou a listar visualmente os prestadores da conta em um combo real.
+- O comportamento de default por sessao, edicao e persistencia foi mantido.
+- O novo documento e `docs/ficha_pessoal_historico_combo_cirurgiao_responsavel_prestadores.md`.
+- A proxima subetapa sugerida e validacao manual do combo com a conta logada e, se necessario, ajuste fino de ordenacao/label dos prestadores.
