@@ -4879,3 +4879,12 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_historico_implementacao_minima_cirurgiao_login_prestador.md`.
 - Proxima subetapa sugerida: validacao funcional/manual desta integracao minima antes de qualquer expansao para `Regiao` ou para regras de tratamento/intervencao.
 - A proxima subetapa recomendada, apos este contrato, e a implementacao minima e auditavel dessa integracao, sem abrir ainda dependencia com Regiao.
+
+## Ficha Pessoal - Historico - Contrato de refatoracao da tela Propriedades da linha
+- Foi definido o contrato documental para separar a tela `Propriedades da linha` em um novo modulo de frontend, sem alterar comportamento nesta etapa.
+- O modulo principal da aba Historico permanece como orquestrador da grade, da selecao de linha, da serializacao e da reaplicacao do envelope.
+- A menor separacao equivalente no backend foi definida como um helper/service minimo de normalizacao do envelope do Historico, sem nova rota e sem superengenharia.
+- A primeira refatoracao segura deve separar apenas a montagem e a edicao do modal, preservando a experiencia atual.
+- `Regiao`, `Cor de fundo`, datas de auditoria e regra de tratamento/intervencao continuam fora desta primeira extracao.
+- O novo documento e `docs/ficha_pessoal_historico_contrato_refatoracao_propriedades_da_linha.md`.
+- A proxima subetapa sugerida e a extracao do modulo de Propriedades da linha no frontend, mantendo a mesma experiencia funcional.
