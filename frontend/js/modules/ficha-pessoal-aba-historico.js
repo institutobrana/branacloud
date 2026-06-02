@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-13-refatoracao-propriedades-linha-modulo-proprio";
+  const MODULE_VERSION = "subetapa-14-ordenacao-historico-por-data-estavel";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const HISTORICO_PRESTADORES_URL = "/cadastros/prestadores";
@@ -34,6 +34,9 @@
     activeCellIndex: 0,
     editingRow: null,
     propertiesRow: null,
+    sortColumnIndex: 0,
+    sortDirection: 1,
+    sortSequence: 0,
   };
   let historicoPrestadoresCache = [];
   let historicoPrestadoresCarregando = null;
@@ -53,6 +56,7 @@
     tr.dataset.historicoDataInsercao = `${data} ${hora} - ${String(sessaoAtual?.apelido || sessaoAtual?.nome || "").trim()}`;
     tr.dataset.historicoDataAtualizacao = "";
     tr.innerHTML = `<td>${data}</td><td></td><td>-</td><td></td>`;
+    historicoDefinirOrdemLinha(tr, historicoProximaOrdemLinha());
     tr.dataset.historicoSnapshot = tr.innerHTML;
     return tr;
   }
@@ -127,6 +131,113 @@
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function historicoSequenciaOrdenacaoAtual() {
+    const list = historicoListEl();
+    const maiores = Array.from(list?.querySelectorAll("tr") || []).reduce((max, tr) => {
+      const ordem = Number(tr?.dataset?.historicoOrdem || 0) || 0;
+      return ordem > max ? ordem : max;
+    }, Number(state.sortSequence || 0) || 0);
+    state.sortSequence = maiores;
+    return maiores;
+  }
+
+  function historicoProximaOrdemLinha() {
+    const proxima = historicoSequenciaOrdenacaoAtual() + 1;
+    state.sortSequence = proxima;
+    return proxima;
+  }
+
+  function historicoDefinirOrdemLinha(tr, ordem = null) {
+    if (!(tr instanceof HTMLElement)) return 0;
+    const valor = Number(ordem ?? 0) || 0;
+    tr.dataset.historicoOrdem = String(valor);
+    state.sortSequence = Math.max(Number(state.sortSequence || 0) || 0, valor);
+    return valor;
+  }
+
+  function historicoOrdemLinha(tr) {
+    return Number(tr?.dataset?.historicoOrdem || 0) || 0;
+  }
+
+  function historicoValorOrdenacaoTexto(tr, index) {
+    const texto = historicoTextoCelula(tr, index);
+    if (index === 0) {
+      const data = historicoDataParaComparacao(texto);
+      if (data !== null) {
+        return { tipo: "data", valor: data };
+      }
+    }
+    return { tipo: "texto", valor: historicoTextoNormalizado(texto) };
+  }
+
+  function historicoDataParaComparacao(valor) {
+    const texto = String(valor ?? "").trim();
+    if (!texto) return null;
+    const dataPt = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?/);
+    if (dataPt) {
+      const dia = Number(dataPt[1]);
+      const mes = Number(dataPt[2]);
+      const ano = Number(dataPt[3]);
+      const hora = Number(dataPt[4] || 0);
+      const minuto = Number(dataPt[5] || 0);
+      const ts = Date.UTC(ano, mes - 1, dia, hora, minuto, 0, 0);
+      return Number.isFinite(ts) ? ts : null;
+    }
+    const parsed = Date.parse(texto);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function historicoCompararRegistros(trA, trB) {
+    const estadoA = linhaHistoricoEstado(trA);
+    const estadoB = linhaHistoricoEstado(trB);
+    const rascunhoA = estadoA === "rascunho";
+    const rascunhoB = estadoB === "rascunho";
+    if (rascunhoA !== rascunhoB) {
+      return rascunhoA ? 1 : -1;
+    }
+    const coluna = Math.max(0, Math.min(Number(state.sortColumnIndex || 0) || 0, 3));
+    const direcao = Number(state.sortDirection || 1) === -1 ? -1 : 1;
+    const valorA = historicoValorOrdenacaoTexto(trA, coluna);
+    const valorB = historicoValorOrdenacaoTexto(trB, coluna);
+    let comparacao = 0;
+    if (valorA.tipo === "data" && valorB.tipo === "data") {
+      comparacao = Number(valorA.valor) - Number(valorB.valor);
+    } else {
+      comparacao = String(valorA.valor).localeCompare(String(valorB.valor), "pt-BR", {
+        sensitivity: "base",
+        numeric: true,
+      });
+    }
+    if (!comparacao) {
+      comparacao = historicoOrdemLinha(trA) - historicoOrdemLinha(trB);
+    }
+    return comparacao * direcao;
+  }
+
+  function historicoOrdenarLinhasDOM() {
+    const list = historicoListEl();
+    if (!list) return false;
+    const rows = Array.from(list.querySelectorAll("tr"));
+    if (rows.length < 2) return true;
+    const selecionada = state.selectedRow && state.selectedRow.isConnected ? state.selectedRow : null;
+    const indiceSelecionado = Math.max(0, Math.min(Number(state.activeCellIndex || 0) || 0, 3));
+    const ordenadas = rows.slice().sort(historicoCompararRegistros);
+    const mudouOrdem = ordenadas.some((tr, idx) => tr !== rows[idx]);
+    if (mudouOrdem) {
+      const fragment = document.createDocumentFragment();
+      ordenadas.forEach((tr) => fragment.appendChild(tr));
+      list.appendChild(fragment);
+    }
+    if (selecionada) {
+      definirCelulaAtiva(selecionada, indiceSelecionado);
+    }
+    return true;
+  }
+
+  function historicoOrdenarRegistrosParaSerializacao(registros) {
+    return Array.isArray(registros) ? registros.slice().sort(historicoCompararRegistros) : [];
   }
 
   function historicoPrestadorRotulo(item) {
@@ -648,15 +759,10 @@
       historicoCampoDefinirCirurgiao(tr, "", null);
     }
     historicoSincronizarCirurgiaoLinha(tr);
-    const ativa = linhaHistoricoSelecionada();
-    if (ativa?.parentNode === list && typeof ativa.after === "function") {
-      ativa.after(tr);
-    } else if (list.lastElementChild && typeof list.appendChild === "function") {
+    if (typeof list.appendChild === "function") {
       list.appendChild(tr);
-    } else if (typeof list.prepend === "function") {
-      list.prepend(tr);
     } else {
-      list.insertBefore(tr, list.firstChild);
+      list.insertBefore(tr, null);
     }
     if (typeof fichaSetTab === "function") fichaSetTab("historico");
     focarCelulaHistorico(tr, 0);
@@ -676,6 +782,7 @@
     delete tr.dataset.historicoNovo;
     guardarSnapshotLinhaHistorico(tr);
     if (state.editingRow === tr) state.editingRow = null;
+    historicoOrdenarLinhasDOM();
     const abriuNova = adicionarLinhaPadrao();
     if (!abriuNova) {
       focarCelulaHistorico(tr, indiceAtual);
@@ -776,6 +883,7 @@
     const list = historicoListEl();
     if (list) list.innerHTML = "";
     clearSelectedRow();
+    state.sortSequence = 0;
     return true;
   }
 
@@ -828,6 +936,7 @@
     const linhas = Array.isArray(dados?.rows) ? dados.rows : [];
     list.innerHTML = "";
     clearSelectedRow();
+    state.sortSequence = 0;
     if (!linhas.length) return true;
 
     let selecionada = null;
@@ -845,6 +954,7 @@
       const estado = String(linha?.estado || "confirmada").trim() || "confirmada";
       marcarLinhaHistoricoEstado(tr, estado);
       if (estado === "rascunho") tr.dataset.historicoNovo = "1";
+      historicoDefinirOrdemLinha(tr, Number(linha?.row_index ?? idx) + 1);
       const cirurgiaoId = linha?.cirurgiao_prestador_id ?? linha?.cirurgiao_id ?? null;
       const cirurgiaoNome = String(linha?.cirurgiao_prestador_nome || linha?.cirurgiao_nome || cells[1] || "").trim();
       if (cirurgiaoId || cirurgiaoNome) {
@@ -864,6 +974,7 @@
       }
     });
 
+    historicoOrdenarLinhasDOM();
     const alvo = selecionada || list.querySelector("tr");
     if (alvo instanceof HTMLElement) {
       clearSelectedRow();
@@ -875,7 +986,7 @@
   function serializarHistoricoAba() {
     const list = historicoListEl();
     if (!list) return null;
-    const rows = Array.from(list.querySelectorAll("tr"))
+    const rows = historicoOrdenarRegistrosParaSerializacao(Array.from(list.querySelectorAll("tr")))
       .map((tr, idx) => {
         const registro = historicoRegistroAtual(tr);
         if (!registro) return null;

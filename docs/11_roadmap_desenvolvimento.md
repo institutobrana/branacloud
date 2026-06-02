@@ -4948,3 +4948,9 @@ Observacoes:
 - Se a descricao obrigatoria estiver vazia, a tela exibe o alerta legada `Campo descrição do procedimento não pode ser nulo.`
 - O novo documento e `docs/ficha_pessoal_historico_trava_insercao_consecutiva_e_alerta_descricao.md`.
 - A proxima subetapa sugerida e validar manualmente que a primeira linha insere, a segunda consecutiva bloqueia e o `Enter`/`Grava` obedecem a mesma regra.
+## Ficha Pessoal - Historico - Ordenacao por data com linha rascunho no final
+- A insercao de nova linha passou a ocorrer sempre no fim da tabela.
+- A ordenacao da lista agora e reavaliada por data ao confirmar a linha e ao serializar a ficha.
+- A linha rascunho permanece por ultimo e o criterio de desempate usa a ordem original do registro.
+- O novo documento e `docs/ficha_pessoal_historico_ordenacao_por_data_estavel.md`.
+- A proxima validacao sugerida e confirmar manualmente que a linha salva com data passada retorna para a posicao correta sem permitir insercao entre outras linhas.
