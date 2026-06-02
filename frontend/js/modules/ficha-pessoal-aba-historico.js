@@ -47,10 +47,15 @@
   }
 
   function criarLinhaPadrao() {
-    const data = new Date().toLocaleDateString("pt-BR");
+    const agora = new Date();
+    const data = agora.toLocaleDateString("pt-BR");
+    const hora = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
     const tr = document.createElement("tr");
     tr.dataset.historicoNovo = "1";
     tr.dataset.historicoEstado = "rascunho";
+    tr.dataset.historicoCorFundo = "Branco";
+    tr.dataset.historicoDataInsercao = `${data} ${hora} - ${String(sessaoAtual?.apelido || sessaoAtual?.nome || "").trim()}`;
+    tr.dataset.historicoDataAtualizacao = "";
     tr.innerHTML = `<td>${data}</td><td></td><td>-</td><td>Historico criado manualmente</td>`;
     tr.dataset.historicoSnapshot = tr.innerHTML;
     return tr;
@@ -316,6 +321,9 @@
       selecionada: state.selectedRow === tr,
       cirurgiao_prestador_id: String(tr?.dataset?.historicoCirurgiaoId || "").trim() || null,
       cirurgiao_prestador_nome: String(tr?.dataset?.historicoCirurgiaoNome || "").trim() || null,
+      cor_fundo: String(tr?.dataset?.historicoCorFundo || "").trim() || null,
+      data_insercao: String(tr?.dataset?.historicoDataInsercao || "").trim() || null,
+      data_atualizacao: String(tr?.dataset?.historicoDataAtualizacao || "").trim() || null,
     };
   }
 
@@ -774,6 +782,9 @@
       } else {
         historicoCampoDefinirCirurgiao(tr, "", null);
       }
+      tr.dataset.historicoCorFundo = String(linha?.cor_fundo || linha?.cor || "Branco").trim() || "Branco";
+      tr.dataset.historicoDataInsercao = String(linha?.data_insercao || linha?.dataInsercao || "").trim();
+      tr.dataset.historicoDataAtualizacao = String(linha?.data_atualizacao || linha?.dataAtualizacao || "").trim();
       historicoSincronizarCirurgiaoLinha(tr);
       tr.dataset.historicoSnapshot = tr.innerHTML;
       list.appendChild(tr);

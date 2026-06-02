@@ -5,6 +5,15 @@
   const STYLE_ID = "ficha-historico-props-visual-style";
   const MODAL_ID = "ficha-historico-props-modal-backdrop";
   const DATALIST_ID = "ficha-historico-props-cirurgiao-lista";
+  const COR_FUNDO_PADRAO = "Branco";
+  const COR_FUNDO_OPCOES = [
+    { value: "Branco", swatch: "#ffffff" },
+    { value: "Amarelo", swatch: "#fff3a6" },
+    { value: "Azul", swatch: "#dbeeff" },
+    { value: "Verde", swatch: "#d8f5d4" },
+    { value: "Vermelho", swatch: "#ffd8d8" },
+    { value: "Cinza", swatch: "#eef1f5" },
+  ];
 
   function createModule(deps = {}) {
     const host = {
@@ -36,31 +45,73 @@
       row: null,
     };
 
+    function pad2(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function dataHoraAuditoriaPadrao() {
+      const agora = new Date();
+      const usuario = String(sessaoAtual?.apelido || sessaoAtual?.nome || "").trim();
+      const data = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()}`;
+      const hora = `${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
+      return usuario ? `${data} ${hora} - ${usuario}` : `${data} ${hora}`;
+    }
+
+    function corFundoSwatch(valor) {
+      const achada = COR_FUNDO_OPCOES.find((item) => item.value === valor);
+      return achada?.swatch || "#ffffff";
+    }
+
+    function atualizarSwatchCor(modal, valor) {
+      const wrapper = modal?.querySelector?.("[data-historico-cor-wrap]");
+      const swatch = modal?.querySelector?.("[data-historico-cor-swatch]");
+      const select = modal?.querySelector?.("#ficha-historico-props-cor");
+      const texto = String(valor || COR_FUNDO_PADRAO).trim() || COR_FUNDO_PADRAO;
+      if (wrapper instanceof HTMLElement) wrapper.dataset.valor = texto;
+      if (swatch instanceof HTMLElement) swatch.style.background = corFundoSwatch(texto);
+      if (select instanceof HTMLSelectElement) select.value = texto;
+    }
+
+    function textoAuditoriaInsercao(tr) {
+      const valor = String(tr?.dataset?.historicoDataInsercao || "").trim();
+      if (valor) return valor;
+      if (host.linhaHistoricoEstado(tr) === "rascunho") return dataHoraAuditoriaPadrao();
+      return "";
+    }
+
     function ensureStyles() {
       if (document.getElementById(STYLE_ID)) return;
       const style = document.createElement("style");
       style.id = STYLE_ID;
       style.textContent = `
-        .ficha-hist-props-backdrop{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;background:rgba(25,34,48,.42);padding:20px}
+        .ficha-hist-props-backdrop{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.18);padding:12px}
         .ficha-hist-props-backdrop.is-open{display:flex}
-        .ficha-hist-props-modal{width:min(680px,92vw);max-height:min(82vh,720px);overflow:auto;background:#fff;border:1px solid #b8c5d4;border-radius:12px;box-shadow:0 24px 56px rgba(15,32,55,.28);font:12px Tahoma,sans-serif;color:#1f2937}
-        .ficha-hist-props-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #e3ebf3;background:linear-gradient(180deg,#f8fbff 0%,#edf4fb 100%)}
-        .ficha-hist-props-title{display:grid;gap:4px}
-        .ficha-hist-props-title strong{font:700 15px Tahoma,sans-serif}
-        .ficha-hist-props-title span{color:#5b6b7e;line-height:1.35}
-        .ficha-hist-props-close{border:1px solid #b8c5d4;background:#fff;border-radius:8px;width:32px;height:32px;font:700 18px/1 Tahoma,sans-serif;color:#44546a}
-        .ficha-hist-props-body{display:grid;gap:14px;padding:16px}
-        .ficha-hist-props-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+        .ficha-hist-props-modal{width:min(760px,96vw);background:#efefef;border:1px solid #c1c1c1;border-radius:0;box-shadow:0 10px 28px rgba(0,0,0,.22);font:12px Tahoma,sans-serif;color:#1f2937}
+        .ficha-hist-props-head{position:relative;display:flex;align-items:center;justify-content:center;height:40px;padding:0 48px;background:#fff;border-bottom:1px solid #c9c9c9}
+        .ficha-hist-props-title{font:400 19px Tahoma,sans-serif;color:#373737;line-height:1}
+        .ficha-hist-props-close{position:absolute;top:0;right:0;border:none;background:#d85a5a;color:#fff;width:48px;height:40px;font:700 24px/1 Tahoma,sans-serif;border-radius:0}
+        .ficha-hist-props-close:hover{background:#c74848}
+        .ficha-hist-props-body{padding:12px 12px 10px}
+        .ficha-hist-props-panel{border:1px solid #c5c5c5;background:#efefef;padding:10px 10px 12px}
+        .ficha-hist-props-grid{display:grid;grid-template-columns:1.02fr 1.52fr 0.95fr 1.62fr;gap:10px 12px;align-items:end}
         .ficha-hist-props-field{display:grid;gap:4px}
-        .ficha-hist-props-field label{font:700 11px Tahoma,sans-serif;color:#4f5f72;text-transform:none}
-        .ficha-hist-props-field input,.ficha-hist-props-field textarea,.ficha-hist-props-field .readonly{width:100%;border:1px solid #bfc9d6;border-radius:8px;padding:8px 10px;background:#fff;font:12px Tahoma,sans-serif;color:#1f2937}
-        .ficha-hist-props-field textarea{min-height:92px;resize:vertical}
-        .ficha-hist-props-field .readonly{background:#f7f9fc;color:#56657a}
+        .ficha-hist-props-field label{font:400 12px Tahoma,sans-serif;color:#353535;text-transform:none}
+        .ficha-hist-props-field input,.ficha-hist-props-field textarea,.ficha-hist-props-field select,.ficha-hist-props-field .readonly{width:100%;border:1px solid #b8b8b8;border-radius:0;padding:4px 6px;background:#fff;font:12px Tahoma,sans-serif;color:#1f1f1f;box-shadow:inset 0 0 0 1px #f8f8f8}
+        .ficha-hist-props-field input,.ficha-hist-props-field select{height:30px}
+        .ficha-hist-props-field textarea{min-height:108px;resize:none;line-height:1.28;padding:6px 6px}
         .ficha-hist-props-field.full{grid-column:1 / -1}
-        .ficha-hist-props-note{grid-column:1 / -1;border:1px dashed #c9d5e2;border-radius:10px;background:#f7fafc;padding:12px 12px;color:#526174;display:grid;gap:4px}
-        .ficha-hist-props-note strong{font:700 11px Tahoma,sans-serif;color:#334155}
-        .ficha-hist-props-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px;border-top:1px solid #e3ebf3;background:#f8fbff}
-        .ficha-hist-props-footer .btn{min-width:118px;justify-content:center}
+        .ficha-hist-props-combo{position:relative}
+        .ficha-hist-props-combo::after{content:"▼";position:absolute;right:8px;top:50%;transform:translateY(-54%);font:400 9px Tahoma,sans-serif;color:#4d4d4d;pointer-events:none}
+        .ficha-hist-props-combo input,.ficha-hist-props-combo select{padding-right:22px}
+        .ficha-hist-props-color{display:block}
+        .ficha-hist-props-color .ficha-hist-props-swatch{position:absolute;left:6px;top:50%;width:24px;height:16px;transform:translateY(-50%);border:1px solid #8a8a8a;background:#fff;box-shadow:inset 0 0 0 1px #f8f8f8;pointer-events:none}
+        .ficha-hist-props-color select{padding-left:34px;padding-right:24px}
+        .ficha-hist-props-body .ficha-hist-props-desc-wrap{margin-top:10px}
+        .ficha-hist-props-audit{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+        .ficha-hist-props-audit .ficha-hist-props-field input{background:#18ebf2;border-color:#86b9c2;color:#121212;font-weight:400}
+        .ficha-hist-props-buttons{display:flex;justify-content:flex-end;gap:20px;padding:12px 6px 0}
+        .ficha-hist-props-buttons .btn{min-width:102px;height:32px;border:1px solid #a9a9a9;border-radius:0;background:linear-gradient(180deg,#fff 0%,#ededed 100%);font:400 12px Tahoma,sans-serif;color:#222;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+        .ficha-hist-props-buttons .btn:hover{background:linear-gradient(180deg,#fff 0%,#e4e4e4 100%)}
       `;
       document.head.appendChild(style);
     }
@@ -74,41 +125,59 @@
       el.className = "ficha-hist-props-backdrop";
       el.innerHTML = `
         <div class="ficha-hist-props-modal" role="dialog" aria-modal="true" aria-labelledby="ficha-historico-props-title">
-          <div class="ficha-hist-props-header">
-            <div class="ficha-hist-props-title">
-              <strong id="ficha-historico-props-title">Propriedades da linha</strong>
-              <span>Campos principais da linha selecionada. O Cirurgiao usa o catalogo de prestadores e continua editavel.</span>
-            </div>
+          <div class="ficha-hist-props-head">
+            <div class="ficha-hist-props-title" id="ficha-historico-props-title">Propriedades do histórico</div>
             <button type="button" class="ficha-hist-props-close" data-historico-props-close aria-label="Fechar">X</button>
           </div>
           <div class="ficha-hist-props-body">
-            <div class="ficha-hist-props-grid">
-              <div class="ficha-hist-props-field">
-                <label for="ficha-historico-props-data">Data</label>
-                <input id="ficha-historico-props-data" type="text" autocomplete="off" data-historico-campo="data">
-              </div>
-              <div class="ficha-hist-props-field">
-                <label for="ficha-historico-props-cirurgiao">Cirurgiao</label>
-                <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off" list="${DATALIST_ID}" data-historico-campo="cirurgiao" placeholder="Digite ou selecione no catalogo">
-                <datalist id="${DATALIST_ID}" data-historico-cirurgiao-lista></datalist>
-              </div>
-              <div class="ficha-hist-props-field">
-                <label for="ficha-historico-props-regiao">Regiao</label>
-                <input id="ficha-historico-props-regiao" type="text" autocomplete="off" data-historico-campo="regiao">
-              </div>
-              <div class="ficha-hist-props-field full">
-                <label for="ficha-historico-props-historico">Historico / Descricao</label>
-                <textarea id="ficha-historico-props-historico" data-historico-campo="descricao"></textarea>
-              </div>
-              <div class="ficha-hist-props-note">
-                <strong>Campos fora desta etapa</strong>
-                <span>Cor de fundo, data de insercao e data de atualizacao permanecem apenas documentados por enquanto.</span>
+            <div class="ficha-hist-props-panel">
+              <div class="ficha-hist-props-grid">
+                <div class="ficha-hist-props-field">
+                  <label for="ficha-historico-props-data">Data:</label>
+                  <input id="ficha-historico-props-data" type="text" autocomplete="off" data-historico-campo="data">
+                </div>
+                <div class="ficha-hist-props-field">
+                  <label for="ficha-historico-props-cirurgiao">Cirurgião responsável:</label>
+                  <div class="ficha-hist-props-combo">
+                    <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off" list="${DATALIST_ID}" data-historico-campo="cirurgiao">
+                  </div>
+                  <datalist id="${DATALIST_ID}" data-historico-cirurgiao-lista></datalist>
+                </div>
+                <div class="ficha-hist-props-field">
+                  <label for="ficha-historico-props-regiao">Região:</label>
+                  <div class="ficha-hist-props-combo">
+                    <input id="ficha-historico-props-regiao" type="text" autocomplete="off" data-historico-campo="regiao">
+                  </div>
+                </div>
+                <div class="ficha-hist-props-field">
+                  <label for="ficha-historico-props-cor">Cor de fundo:</label>
+                  <div class="ficha-hist-props-combo ficha-hist-props-color" data-historico-cor-wrap>
+                    <span class="ficha-hist-props-swatch" data-historico-cor-swatch aria-hidden="true"></span>
+                    <select id="ficha-historico-props-cor" data-historico-campo="cor">
+                      ${COR_FUNDO_OPCOES.map((opcao) => `<option value="${opcao.value}">${opcao.value}</option>`).join("")}
+                    </select>
+                  </div>
+                </div>
+                <div class="ficha-hist-props-field full ficha-hist-props-desc-wrap">
+                  <label for="ficha-historico-props-historico">Histórico:</label>
+                  <textarea id="ficha-historico-props-historico" data-historico-campo="descricao"></textarea>
+                </div>
+                <div class="ficha-hist-props-audit">
+                  <div class="ficha-hist-props-field">
+                    <label for="ficha-historico-props-data-insercao">Data de inserção:</label>
+                    <input id="ficha-historico-props-data-insercao" type="text" class="readonly" readonly data-historico-campo="data-insercao">
+                  </div>
+                  <div class="ficha-hist-props-field">
+                    <label for="ficha-historico-props-data-atualizacao">Data de atualização:</label>
+                    <input id="ficha-historico-props-data-atualizacao" type="text" class="readonly" readonly data-historico-campo="data-atualizacao">
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="ficha-hist-props-footer">
-            <button type="button" class="btn" data-historico-props-cancelar>Cancelar</button>
-            <button type="button" class="btn primary" data-historico-props-aplicar>Aplicar</button>
+            <div class="ficha-hist-props-buttons">
+              <button type="button" class="btn" data-historico-props-aplicar>Ok</button>
+              <button type="button" class="btn" data-historico-props-cancelar>Cancela</button>
+            </div>
           </div>
         </div>
       `;
@@ -133,6 +202,14 @@
       });
     }
 
+    function obterCampoTexto(modal, selector, padrao = "") {
+      const el = modal?.querySelector?.(selector);
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) {
+        return String(el.value || "").trim() || padrao;
+      }
+      return padrao;
+    }
+
     function aplicar() {
       const modal = modalEl();
       const tr = state.row;
@@ -141,6 +218,8 @@
       const cirurgiao = modal.querySelector("#ficha-historico-props-cirurgiao");
       const regiao = modal.querySelector("#ficha-historico-props-regiao");
       const historico = modal.querySelector("#ficha-historico-props-historico");
+      const dataInsercao = modal.querySelector("#ficha-historico-props-data-insercao");
+      const dataAtualizacao = modal.querySelector("#ficha-historico-props-data-atualizacao");
 
       host.historicoDefinirTextoCelula(tr, 0, data instanceof HTMLInputElement ? data.value : "");
       const catalogo = host.getPrestadoresCatalogo();
@@ -154,6 +233,9 @@
       }
       host.historicoCampoDefinirTexto(tr, "regiao", regiao instanceof HTMLInputElement ? regiao.value : "");
       host.historicoDefinirTextoCelula(tr, 3, historico instanceof HTMLTextAreaElement ? historico.value : "");
+      tr.dataset.historicoCorFundo = obterCampoTexto(modal, "#ficha-historico-props-cor", COR_FUNDO_PADRAO);
+      tr.dataset.historicoDataInsercao = obterCampoTexto(modal, "#ficha-historico-props-data-insercao", "");
+      tr.dataset.historicoDataAtualizacao = obterCampoTexto(modal, "#ficha-historico-props-data-atualizacao", "");
       host.guardarSnapshotLinhaHistorico(tr);
       const estado = host.linhaHistoricoEstado(tr);
       host.marcarLinhaHistoricoEstado(tr, estado);
@@ -166,6 +248,7 @@
       const aplicarBtn = modal.querySelector("[data-historico-props-aplicar]");
       const cancelarBtn = modal.querySelector("[data-historico-props-cancelar]");
       const fecharBtn = modal.querySelector("[data-historico-props-close]");
+      const cor = modal.querySelector("#ficha-historico-props-cor");
       modal.classList.remove("is-open");
       modal.dataset.open = "0";
       if (state.row && state.row.isConnected) {
@@ -180,6 +263,10 @@
       if (aplicarBtn) aplicarBtn.onclick = null;
       if (cancelarBtn) cancelarBtn.onclick = null;
       if (fecharBtn) fecharBtn.onclick = null;
+      if (cor instanceof HTMLSelectElement) {
+        cor.onchange = null;
+        cor.oninput = null;
+      }
       modal.onkeydown = null;
       if (restaurarFoco && row) {
         host.selecionarLinhaHistorico(row);
@@ -205,7 +292,10 @@
       const data = modal.querySelector("#ficha-historico-props-data");
       const cirurgiao = modal.querySelector("#ficha-historico-props-cirurgiao");
       const regiao = modal.querySelector("#ficha-historico-props-regiao");
+      const cor = modal.querySelector("#ficha-historico-props-cor");
       const historico = modal.querySelector("#ficha-historico-props-historico");
+      const dataInsercao = modal.querySelector("#ficha-historico-props-data-insercao");
+      const dataAtualizacao = modal.querySelector("#ficha-historico-props-data-atualizacao");
       const fecharBtn = modal.querySelector("[data-historico-props-close]");
       const cancelarBtn = modal.querySelector("[data-historico-props-cancelar]");
       const aplicarBtn = modal.querySelector("[data-historico-props-aplicar]");
@@ -220,8 +310,18 @@
 
       if (data instanceof HTMLInputElement) data.value = host.historicoTextoCelula(tr, 0);
       if (cirurgiao instanceof HTMLInputElement) cirurgiao.value = host.historicoCampoTexto(tr, "cirurgiao");
-      if (regiao instanceof HTMLInputElement) regiao.value = host.historicoCampoTexto(tr, "regiao");
+      if (regiao instanceof HTMLInputElement) regiao.value = host.historicoCampoTexto(tr, "regiao") || "Todos";
+      atualizarSwatchCor(modal, String(tr.dataset.historicoCorFundo || "").trim() || COR_FUNDO_PADRAO);
+      if (cor instanceof HTMLSelectElement) cor.value = String(tr.dataset.historicoCorFundo || "").trim() || COR_FUNDO_PADRAO;
       if (historico instanceof HTMLTextAreaElement) historico.value = host.historicoTextoCelula(tr, 3);
+      if (dataInsercao instanceof HTMLInputElement) dataInsercao.value = textoAuditoriaInsercao(tr);
+      if (dataAtualizacao instanceof HTMLInputElement) dataAtualizacao.value = String(tr.dataset.historicoDataAtualizacao || "").trim();
+
+      const corChangeHandler = () => atualizarSwatchCor(modal, cor instanceof HTMLSelectElement ? cor.value : COR_FUNDO_PADRAO);
+      if (cor instanceof HTMLSelectElement) {
+        cor.onchange = corChangeHandler;
+        cor.oninput = corChangeHandler;
+      }
 
       const aplicarHandler = () => {
         aplicar();

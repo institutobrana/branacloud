@@ -4896,3 +4896,12 @@ Observacoes:
 - A refatoracao preservou o contrato funcional da tela e nao alterou persistencia estrutural.
 - O novo documento e `docs/ficha_pessoal_historico_refatoracao_propriedades_da_linha_impl.md`.
 - A proxima subetapa sugerida e validacao manual completa da tela refatorada antes de qualquer nova expansao.
+
+## Ficha Pessoal - Historico - Ajuste visual exato da janela Propriedades do histórico
+- A janela `Propriedades do histórico` foi ajustada para seguir a screenshot de referência com maior fidelidade visual.
+- O titulo foi alinhado para `Propriedades do histórico`, com fechamento em botão vermelho no canto superior direito.
+- Os campos `Data`, `Cirurgião responsável`, `Região` e `Cor de fundo` passaram a compor a linha superior no estilo do legado.
+- A area central passou a exibir `Histórico` e os metadados `Data de inserção` e `Data de atualização` com destaque visual em ciano.
+- Os botões inferiores passaram a seguir a assinatura `Ok` e `Cancela`.
+- O novo documento e `docs/ficha_pessoal_historico_refino_visual_exato_modal_propriedades.md`.
+- A proxima validação sugerida e comparar o modal diretamente com a screenshot de referencia no fluxo real da aba Historico.
