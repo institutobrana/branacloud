@@ -139,24 +139,32 @@
   }
 
   function historicoPrestadorRotulo(item) {
-    const nome = String(item?.nome || item?.apelido || "").trim();
+    const nome = String(item?.nome || "").trim();
+    const apelido = String(item?.apelido || "").trim();
     const codigo = String(item?.codigo || "").trim();
     if (codigo && nome) return `${codigo} - ${nome}`;
-    return nome || codigo || "";
+    return nome || apelido || codigo || "";
   }
 
   function historicoPrestadorNomeVisivel(item) {
+    return String(item?.apelido || item?.nome || item?.codigo || "").trim();
+  }
+
+  function historicoPrestadorNomeBusca(item) {
     return String(item?.nome || item?.apelido || item?.codigo || "").trim();
   }
 
   function historicoNormalizarPrestador(item, idx = 0) {
-    const nome = historicoPrestadorNomeVisivel(item) || `Prestador ${idx + 1}`;
+    const nome = String(item?.nome || "").trim();
+    const apelido = String(item?.apelido || "").trim();
+    const nomeVisivel = historicoPrestadorNomeVisivel(item) || `Prestador ${idx + 1}`;
     return {
       id: Number(item?.id || item?.row_id || idx + 1) || 0,
       row_id: Number(item?.row_id || item?.id || idx + 1) || 0,
       codigo: String(item?.codigo || "").trim(),
-      nome,
-      apelido: String(item?.apelido || "").trim(),
+      nome: nome || nomeVisivel,
+      apelido,
+      nome_visivel: nomeVisivel,
       ativo: item?.ativo !== false,
     };
   }
@@ -174,6 +182,18 @@
   function historicoPrestadoresCatalogoAtual() {
     const base = historicoCatalogoPrestadoresBase();
     return Array.isArray(base) ? base.map((item, idx) => historicoNormalizarPrestador(item, idx)) : [];
+  }
+
+  function historicoBuscarPrestadorPorNome(valor, catalogo = historicoPrestadoresCatalogoAtual()) {
+    const texto = historicoTextoNormalizado(valor);
+    if (!texto) return null;
+    return Array.isArray(catalogo)
+      ? catalogo.find((item) => {
+          const nome = historicoTextoNormalizado(item?.nome);
+          const apelido = historicoTextoNormalizado(item?.apelido);
+          return nome.includes(texto) || apelido.includes(texto);
+        }) || null
+      : null;
   }
 
   function historicoEncontrarPrestadorPorTexto(valor, catalogo = historicoPrestadoresCatalogoAtual()) {

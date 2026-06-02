@@ -42,6 +42,8 @@
     const state = {
       open: false,
       row: null,
+      comboBusca: "",
+      comboBuscaTimer: null,
     };
 
     function pad2(value) {
@@ -67,6 +69,33 @@
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function limparBuscaComboPrestador() {
+      state.comboBusca = "";
+      if (state.comboBuscaTimer) {
+        clearTimeout(state.comboBuscaTimer);
+        state.comboBuscaTimer = null;
+      }
+    }
+
+    function agendarLimparBuscaComboPrestador() {
+      if (state.comboBuscaTimer) clearTimeout(state.comboBuscaTimer);
+      state.comboBuscaTimer = setTimeout(() => {
+        state.comboBusca = "";
+        state.comboBuscaTimer = null;
+      }, 900);
+    }
+
+    function buscarPrestadorPorNome(catalogo, valor) {
+      const termo = historicoTextoNormalizado(valor);
+      if (!termo) return null;
+      const base = Array.isArray(catalogo) ? catalogo : [];
+      return base.find((item) => {
+        const nome = historicoTextoNormalizado(item?.nome);
+        const apelido = historicoTextoNormalizado(item?.apelido);
+        return nome.includes(termo) || apelido.includes(termo);
+      }) || null;
     }
 
     function atualizarSwatchCor(modal, valor) {
@@ -205,28 +234,36 @@
             .slice()
             .map((item) => ({
               item,
-              label: String(item?.codigo || "").trim() && String(item?.nome || item?.apelido || "").trim()
-                ? `${String(item?.codigo || "").trim()} - ${String(item?.nome || item?.apelido || "").trim()}`
-                : String(item?.nome || item?.apelido || item?.codigo || "").trim(),
+              nome: String(item?.nome || "").trim(),
+              apelido: String(item?.apelido || "").trim(),
+              codigo: String(item?.codigo || "").trim(),
             }))
-            .filter((entry) => entry.label)
-            .sort((a, b) => a.label.localeCompare(b.label, "pt-BR", { sensitivity: "base" }))
+            .filter((entry) => entry.nome || entry.apelido || entry.codigo)
+            .sort((a, b) => (a.nome || a.apelido || a.codigo).localeCompare(b.nome || b.apelido || b.codigo, "pt-BR", { sensitivity: "base" }))
         : [];
-      itens.forEach(({ item }) => {
-        const valor = String(item?.nome || item?.apelido || item?.codigo || "").trim();
+      itens.forEach(({ item, nome, apelido, codigo }) => {
+        const valor = apelido || nome || codigo;
         if (!valor) return;
         const option = document.createElement("option");
         option.value = String(Number(item?.id || item?.row_id || 0) || valor);
-        option.textContent = String(item?.codigo || "").trim() && String(item?.nome || item?.apelido || "").trim()
-          ? `${String(item?.codigo || "").trim()} - ${String(item?.nome || item?.apelido || "").trim()}`
-          : valor;
-        option.dataset.nome = valor;
+        option.textContent = valor;
+        option.title = nome || apelido || codigo || valor;
+        option.dataset.nome = nome || apelido || codigo || valor;
+        option.dataset.apelido = apelido;
         option.dataset.prestadorId = String(Number(item?.id || item?.row_id || 0) || "");
         select.appendChild(option);
       });
-      const encontrado = itens.find((item) => String(Number(item?.id || item?.row_id || 0) || "") === valorAntigo || historicoTextoNormalizado(String(item?.nome || item?.apelido || item?.codigo || "")) === historicoTextoNormalizado(valorAntigo));
+      const normalizadoAntigo = historicoTextoNormalizado(valorAntigo);
+      const encontrado = itens.find(({ item, nome, apelido, codigo }) => {
+        const itemId = String(Number(item?.id || item?.row_id || 0) || "");
+        return itemId === valorAntigo
+          || historicoTextoNormalizado(nome) === normalizadoAntigo
+          || historicoTextoNormalizado(apelido) === normalizadoAntigo
+          || historicoTextoNormalizado(codigo) === normalizadoAntigo
+          || historicoTextoNormalizado(apelido || nome || codigo) === normalizadoAntigo;
+      });
       if (encontrado) {
-        select.value = String(Number(encontrado.id || encontrado.row_id || 0) || "");
+        select.value = String(Number(encontrado.item.id || encontrado.item.row_id || 0) || "");
       } else if (valorAntigo) {
         const custom = document.createElement("option");
         custom.value = valorAntigo;
@@ -238,6 +275,37 @@
       } else {
         select.value = "";
       }
+    }
+
+    function bindBuscaPrestadorCombo(modal, catalogo) {
+      const select = modal?.querySelector?.("#ficha-historico-props-cirurgiao");
+      if (!(select instanceof HTMLSelectElement)) return;
+      select.onkeydown = (ev) => {
+        if (ev.altKey || ev.ctrlKey || ev.metaKey) return;
+        if (ev.key === "Escape") {
+          limparBuscaComboPrestador();
+          return;
+        }
+        if (ev.key === "Backspace") {
+          if (!state.comboBusca) return;
+          ev.preventDefault();
+          state.comboBusca = state.comboBusca.slice(0, -1);
+          const encontrado = buscarPrestadorPorNome(catalogo, state.comboBusca);
+          if (encontrado) {
+            select.value = String(Number(encontrado.id || encontrado.row_id || 0) || "");
+          }
+          agendarLimparBuscaComboPrestador();
+          return;
+        }
+        if (ev.key.length !== 1) return;
+        ev.preventDefault();
+        state.comboBusca += ev.key;
+        const encontrado = buscarPrestadorPorNome(catalogo, state.comboBusca);
+        if (encontrado) {
+          select.value = String(Number(encontrado.id || encontrado.row_id || 0) || "");
+        }
+        agendarLimparBuscaComboPrestador();
+      };
     }
 
     function obterCampoTexto(modal, selector, padrao = "") {
@@ -306,6 +374,11 @@
         cor.onchange = null;
         cor.oninput = null;
       }
+      const cirurgiao = modal.querySelector("#ficha-historico-props-cirurgiao");
+      if (cirurgiao instanceof HTMLSelectElement) {
+        cirurgiao.onkeydown = null;
+      }
+      limparBuscaComboPrestador();
       modal.onkeydown = null;
       if (restaurarFoco && row) {
         host.selecionarLinhaHistorico(row);
@@ -354,7 +427,12 @@
           cirurgiao.value = valorCirurgiao;
         } else {
           const texto = host.historicoCampoTexto(tr, "cirurgiao");
-          const encontro = Array.from(cirurgiao.options).find((opt) => historicoTextoNormalizado(opt.dataset.nome || opt.textContent) === historicoTextoNormalizado(texto));
+          const textoBusca = historicoTextoNormalizado(texto);
+          const encontro = Array.from(cirurgiao.options).find((opt) => {
+            return historicoTextoNormalizado(opt.dataset.nome || opt.textContent) === textoBusca
+              || historicoTextoNormalizado(opt.dataset.apelido || "") === textoBusca
+              || historicoTextoNormalizado(opt.textContent) === textoBusca;
+          });
           cirurgiao.value = encontro?.value || texto || "";
         }
       }
@@ -364,6 +442,7 @@
       if (historico instanceof HTMLTextAreaElement) historico.value = host.historicoTextoCelula(tr, 3);
       if (dataInsercao instanceof HTMLInputElement) dataInsercao.value = textoAuditoriaInsercao(tr);
       if (dataAtualizacao instanceof HTMLInputElement) dataAtualizacao.value = String(tr.dataset.historicoDataAtualizacao || "").trim();
+      bindBuscaPrestadorCombo(modal, catalogo);
 
       const corChangeHandler = () => atualizarSwatchCor(modal, cor instanceof HTMLSelectElement ? cor.value : COR_FUNDO_PADRAO);
       if (cor instanceof HTMLSelectElement) {

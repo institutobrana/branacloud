@@ -4915,6 +4915,12 @@ Observacoes:
 - A lista foi ordenada para ficar mais legivel e o valor legado continua preservado quando existir.
 - O novo documento e `docs/ficha_pessoal_historico_correcao_cirurgiao_responsavel_combo_nativo.md`.
 - A proxima subetapa sugerida e validacao manual do combo na conta real e, se necessario, pequeno ajuste fino de rotulo ou ordenacao.
+## Ficha Pessoal - Historico - Correcao da grade para apelido e busca do combo por nome
+- O baseline desta correcao foi congelado e salvo em `D:\BRANA ARQUIVOS\_backups_brana\historico\20260602_121520`.
+- A grade da aba Historico passou a exibir o `apelido` do prestador na coluna `Cirurgiao`.
+- A combo `Cirurgiao responsavel` passou a ordenar os prestadores por `nome`, manter inativos disponiveis e buscar por nome sem perder o valor legado.
+- O novo documento e `docs/ficha_pessoal_historico_correcao_grade_apelido_combo_nome.md`.
+- A proxima subetapa sugerida e validar manualmente o fluxo real da tela antes de mexer em `Regiao`, `Cor de fundo` ou na dependencia com `INTERVENCAO`.
 ## Ficha Pessoal - Historico - Selecao de linha inteira e edicao por duplo clique
 - A grade da aba Historico passou a manter fundo branco e seleciona a linha inteira ao clicar.
 - O duplo clique em uma celula agora inicia edicao na coluna, aproximando o comportamento do EasyDental.
