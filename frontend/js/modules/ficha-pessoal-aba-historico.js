@@ -71,9 +71,9 @@
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-toolbar .materiais-btn{min-width:138px;justify-content:flex-start;padding:0 10px}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-toolbar .materiais-btn img{width:16px;height:16px}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-wrap{flex:1;min-height:0;max-height:260px;overflow:auto;border:1px solid #cfd8e3;background:#fff}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list{width:100%;border-collapse:collapse;table-layout:fixed;font:11px Tahoma,sans-serif}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list{width:100%;border-collapse:collapse;table-layout:fixed;font:11px Tahoma,sans-serif;background:#fff}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list thead th{background:#f2f6fb;font:700 11px Tahoma,sans-serif;color:#243444}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list th,.ficha-pane[data-ficha-tab="historico"] .ficha-list td{border-bottom:1px solid #e4ebf2;padding:5px 6px;vertical-align:top;word-break:break-word}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th,.ficha-pane[data-ficha-tab="historico"] .ficha-list td{border-bottom:1px solid #e4ebf2;padding:5px 6px;vertical-align:top;word-break:break-word;background:#fff}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr{cursor:pointer}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS}{background:#dcecff;box-shadow:inset 0 0 0 1px #94bbec}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td{background:#dcecff}
@@ -523,10 +523,24 @@
       if (cell && row.contains(cell)) {
         const idx = historicoCelulas(row).indexOf(cell);
         selecionarLinhaHistorico(row);
-        if (idx >= 0) focarCelulaHistorico(row, idx);
+        if (idx >= 0) {
+          state.activeCellIndex = idx;
+          definirCelulaAtiva(row, idx);
+        }
         return;
       }
       selecionarLinhaHistorico(row);
+    });
+    tbody.addEventListener("dblclick", (ev) => {
+      const alvo = eventoHistoricoAlvo(ev);
+      const cell = alvo?.closest("td") || null;
+      const row = alvo?.closest("tr") || null;
+      if (!cell || !row || !tbody.contains(row)) return;
+      const idx = historicoCelulas(row).indexOf(cell);
+      if (idx < 0) return;
+      ev.preventDefault();
+      selecionarLinhaHistorico(row);
+      focarCelulaHistorico(row, idx);
     });
     tbody.addEventListener("focusin", (ev) => {
       const alvo = eventoHistoricoAlvo(ev);

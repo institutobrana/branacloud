@@ -4915,3 +4915,8 @@ Observacoes:
 - A lista foi ordenada para ficar mais legivel e o valor legado continua preservado quando existir.
 - O novo documento e `docs/ficha_pessoal_historico_correcao_cirurgiao_responsavel_combo_nativo.md`.
 - A proxima subetapa sugerida e validacao manual do combo na conta real e, se necessario, pequeno ajuste fino de rotulo ou ordenacao.
+## Ficha Pessoal - Historico - Selecao de linha inteira e edicao por duplo clique
+- A grade da aba Historico passou a manter fundo branco e seleciona a linha inteira ao clicar.
+- O duplo clique em uma celula agora inicia edicao na coluna, aproximando o comportamento do EasyDental.
+- O novo documento e `docs/ficha_pessoal_historico_selecao_linha_inteira_edicao_duplo_clique.md`.
+- A proxima subetapa sugerida e validacao manual do comportamento de clique/duplo clique e, se necessario, pequeno ajuste fino de foco ou destaque visual.
