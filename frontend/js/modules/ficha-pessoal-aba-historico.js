@@ -635,7 +635,9 @@
       const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunhoAtivo).length - 1));
       selecionarLinhaHistorico(rascunhoAtivo);
       focarCelulaHistorico(rascunhoAtivo, indice);
-      if (!historicoValidarDescricaoObrigatoria(rascunhoAtivo, true)) return false;
+      if (!String(historicoTextoCelula(rascunhoAtivo, 3)).trim()) {
+        historicoValidarDescricaoObrigatoria(rascunhoAtivo, true);
+      }
       return false;
     }
     const tr = criarLinhaPadrao();

@@ -4942,3 +4942,9 @@ Observacoes:
 - `Enter` e `Grava` validam a descricao obrigatoria e exibem a mensagem legada quando ela estiver vazia.
 - O novo documento e `docs/ficha_pessoal_historico_controle_linha_unica_descricao_obrigatoria.md`.
 - A proxima subetapa sugerida e validar manualmente o ciclo inserir -> editar -> Enter/Grava -> nova linha, sem acúmulo de rascunhos.
+## Ficha Pessoal - Historico - Trava de insercao consecutiva e alerta de descricao
+- A primeira insercao continua permitida normalmente.
+- A trava atua apenas quando ja existe uma linha rascunho ativa, bloqueando a criacao de uma nova linha consecutiva.
+- Se a descricao obrigatoria estiver vazia, a tela exibe o alerta legada `Campo descrição do procedimento não pode ser nulo.`
+- O novo documento e `docs/ficha_pessoal_historico_trava_insercao_consecutiva_e_alerta_descricao.md`.
+- A proxima subetapa sugerida e validar manualmente que a primeira linha insere, a segunda consecutiva bloqueia e o `Enter`/`Grava` obedecem a mesma regra.
