@@ -671,6 +671,27 @@
     return historicoValidarDescricaoObrigatoria(rascunho, exibirMensagem);
   }
 
+  function historicoBloqueioAcaoComRascunhoAtivo(alvo = null, exibirMensagem = true) {
+    const rascunho = historicoLinhaRascunhoAtiva();
+    if (!rascunho) return true;
+    if (alvo && rascunho === alvo) return true;
+    if (!String(historicoTextoCelula(rascunho, 3)).trim()) {
+      historicoValidarDescricaoObrigatoria(rascunho, exibirMensagem);
+      return false;
+    }
+    const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunho).length - 1));
+    selecionarLinhaHistorico(rascunho);
+    const cell = definirCelulaAtiva(rascunho, indice);
+    if (cell instanceof HTMLElement) {
+      try {
+        cell.focus({ preventScroll: true });
+      } catch {
+        cell.focus();
+      }
+    }
+    return false;
+  }
+
   const historicoPropsModule =
     typeof window.BranaFichaPessoalAbaHistoricoPropriedadesDaLinhaFactory === "function"
       ? window.BranaFichaPessoalAbaHistoricoPropriedadesDaLinhaFactory({
@@ -705,6 +726,7 @@
       : null;
 
   function historicoAbrirPropriedadesLinhaSelecionada() {
+    if (!historicoBloqueioAcaoComRascunhoAtivo(null, true)) return false;
     if (!historicoPropsModule) {
       if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Tela de propriedades indisponivel.";
       return false;
@@ -755,6 +777,7 @@
       const cell = alvo?.closest("td") || null;
       const row = alvo?.closest("tr") || null;
       if (!row || !tbody.contains(row)) return;
+      if (!historicoBloqueioAcaoComRascunhoAtivo(row, true)) return;
       if (cell && row.contains(cell)) {
         const idx = historicoCelulas(row).indexOf(cell);
         selecionarLinhaHistorico(row);
@@ -771,6 +794,7 @@
       const cell = alvo?.closest("td") || null;
       const row = alvo?.closest("tr") || null;
       if (!cell || !row || !tbody.contains(row)) return;
+      if (!historicoBloqueioAcaoComRascunhoAtivo(row, true)) return;
       const idx = historicoCelulas(row).indexOf(cell);
       if (idx < 0) return;
       ev.preventDefault();
@@ -788,6 +812,7 @@
       if (!cell || !row || !tbody.contains(row)) return;
       const idx = historicoCelulas(row).indexOf(cell);
       if (idx < 0) return;
+      if (!historicoBloqueioAcaoComRascunhoAtivo(row, true)) return;
       if (Number(idx) === 1) {
         selecionarLinhaHistorico(row);
         definirCelulaAtiva(row, idx);
@@ -836,7 +861,7 @@
       const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunhoAtivo).length - 1));
       selecionarLinhaHistorico(rascunhoAtivo);
       focarCelulaHistorico(rascunhoAtivo, indice);
-      historicoPodeProsseguirSemDescricaoObrigatoria(true);
+      historicoBloqueioAcaoComRascunhoAtivo(rascunhoAtivo, true);
       return false;
     }
     const tr = criarLinhaPadrao();
@@ -953,6 +978,7 @@
   }
 
   function editarLinhaHistoricoSelecionada() {
+    if (!historicoBloqueioAcaoComRascunhoAtivo(null, true)) return false;
     const tr = linhaHistoricoSelecionada();
     if (!(tr instanceof HTMLElement)) {
       if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Selecione uma linha para edicao.";
@@ -965,6 +991,7 @@
   }
 
   function eliminarLinhaHistoricoSelecionada() {
+    if (!historicoBloqueioAcaoComRascunhoAtivo(null, true)) return false;
     const tr = linhaHistoricoSelecionada();
     if (!(tr instanceof HTMLElement)) {
       if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Selecione uma linha para eliminar.";
@@ -1124,12 +1151,12 @@
   }
 
   function beforeAbandonar() {
-    return historicoPodeProsseguirSemDescricaoObrigatoria(true);
+    return historicoBloqueioAcaoComRascunhoAtivo(null, true);
   }
 
   function beforeSetTab(tab) {
     if (String(tab || "") === "historico") return true;
-    return historicoPodeProsseguirSemDescricaoObrigatoria(true);
+    return historicoBloqueioAcaoComRascunhoAtivo(null, true);
   }
 
   const module = {
