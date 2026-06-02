@@ -4888,3 +4888,11 @@ Observacoes:
 - `Regiao`, `Cor de fundo`, datas de auditoria e regra de tratamento/intervencao continuam fora desta primeira extracao.
 - O novo documento e `docs/ficha_pessoal_historico_contrato_refatoracao_propriedades_da_linha.md`.
 - A proxima subetapa sugerida e a extracao do modulo de Propriedades da linha no frontend, mantendo a mesma experiencia funcional.
+
+## Ficha Pessoal - Historico - Refatoracao da tela Propriedades da linha
+- A tela `Propriedades da linha` foi extraida para o modulo proprio `frontend/js/modules/ficha-pessoal-aba-historico-propriedades-da-linha.js`.
+- O modulo principal da aba Historico ficou como orquestrador da grade, da linha selecionada e da serializacao/reaplicacao.
+- Nao houve separacao equivalente adicional no backend nesta fase; a normalizacao segue no fluxo atual do envelope `source_payload` / `extra.historico_aba`.
+- A refatoracao preservou o contrato funcional da tela e nao alterou persistencia estrutural.
+- O novo documento e `docs/ficha_pessoal_historico_refatoracao_propriedades_da_linha_impl.md`.
+- A proxima subetapa sugerida e validacao manual completa da tela refatorada antes de qualquer nova expansao.
