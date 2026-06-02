@@ -2,9 +2,11 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-11-contrato-local-origem-cirurgiao-regiao";
+  const MODULE_VERSION = "subetapa-12-implementacao-minima-cirurgiao-login-prestador";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
+  const HISTORICO_PRESTADORES_URL = "/cadastros/prestadores";
+  const HISTORICO_CIRURGIAO_DATALIST_ID = "ficha-historico-props-cirurgiao-lista";
   const BUTTON_LABELS = {
     novo: "Inserir linha",
     alterar: "Editar linha",
@@ -34,6 +36,8 @@
     editingRow: null,
     propertiesRow: null,
   };
+  let historicoPrestadoresCache = [];
+  let historicoPrestadoresCarregando = null;
 
   function historicoListEl() {
     return ficha?.historicoList || null;
@@ -48,7 +52,7 @@
     const tr = document.createElement("tr");
     tr.dataset.historicoNovo = "1";
     tr.dataset.historicoEstado = "rascunho";
-    tr.innerHTML = `<td>${data}</td><td>Sistema</td><td>-</td><td>Historico criado manualmente</td>`;
+    tr.innerHTML = `<td>${data}</td><td></td><td>-</td><td>Historico criado manualmente</td>`;
     tr.dataset.historicoSnapshot = tr.innerHTML;
     return tr;
   }
@@ -142,7 +146,203 @@
     return Array.from(tr?.querySelectorAll("td") || []);
   }
 
+  function historicoTextoNormalizado(value) {
+    return String(value ?? "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function historicoPrestadorRotulo(item) {
+    const nome = String(item?.nome || item?.apelido || "").trim();
+    const codigo = String(item?.codigo || "").trim();
+    if (codigo && nome) return `${codigo} - ${nome}`;
+    return nome || codigo || "";
+  }
+
+  function historicoPrestadorNomeVisivel(item) {
+    return String(item?.nome || item?.apelido || item?.codigo || "").trim();
+  }
+
+  function historicoNormalizarPrestador(item, idx = 0) {
+    const nome = historicoPrestadorNomeVisivel(item) || `Prestador ${idx + 1}`;
+    return {
+      id: Number(item?.id || item?.row_id || idx + 1) || 0,
+      row_id: Number(item?.row_id || item?.id || idx + 1) || 0,
+      codigo: String(item?.codigo || "").trim(),
+      nome,
+      apelido: String(item?.apelido || "").trim(),
+      ativo: item?.ativo !== false,
+    };
+  }
+
+  function historicoCatalogoPrestadoresBase() {
+    if (typeof prestadoresCache !== "undefined" && Array.isArray(prestadoresCache) && prestadoresCache.length) {
+      return prestadoresCache;
+    }
+    if (Array.isArray(window.prestadoresCache) && window.prestadoresCache.length) {
+      return window.prestadoresCache;
+    }
+    return historicoPrestadoresCache;
+  }
+
+  function historicoPrestadoresCatalogoAtual() {
+    const base = historicoCatalogoPrestadoresBase();
+    return Array.isArray(base) ? base.map((item, idx) => historicoNormalizarPrestador(item, idx)) : [];
+  }
+
+  function historicoEncontrarPrestadorPorTexto(valor, catalogo = historicoPrestadoresCatalogoAtual()) {
+    const texto = String(valor ?? "").trim();
+    if (!texto) return null;
+    const normalizado = historicoTextoNormalizado(texto);
+    const idNumerico = Number(texto);
+    const base = Array.isArray(catalogo) ? catalogo : [];
+    return base.find((item) => {
+      const itemId = Number(item?.id || item?.row_id || 0);
+      if (Number.isFinite(idNumerico) && idNumerico > 0 && itemId === idNumerico) return true;
+      const codigo = historicoTextoNormalizado(item?.codigo);
+      const nome = historicoTextoNormalizado(item?.nome);
+      const apelido = historicoTextoNormalizado(item?.apelido);
+      const rotulo = historicoTextoNormalizado(historicoPrestadorRotulo(item));
+      return normalizado === codigo || normalizado === nome || normalizado === apelido || normalizado === rotulo;
+    }) || null;
+  }
+
+  function historicoDefinirCirurgiaoLinha(tr, itemOuTexto, prestadorId = null) {
+    if (!(tr instanceof HTMLElement)) return "";
+    const cell = historicoCelulas(tr)[1];
+    if (!cell) return "";
+    const item = typeof itemOuTexto === "object" && itemOuTexto ? itemOuTexto : historicoEncontrarPrestadorPorTexto(itemOuTexto);
+    const textoVisivel = item ? historicoPrestadorNomeVisivel(item) : String(itemOuTexto ?? "").trim();
+    cell.textContent = textoVisivel;
+    tr.dataset.historicoCirurgiaoId = item ? String(Number(item.id || item.row_id || 0) || "") : String(prestadorId || "").trim();
+    tr.dataset.historicoCirurgiaoNome = textoVisivel;
+    return textoVisivel;
+  }
+
+  function historicoSincronizarCirurgiaoLinha(tr, catalogo = historicoPrestadoresCatalogoAtual()) {
+    if (!(tr instanceof HTMLElement)) {
+      return { prestadorId: null, prestadorNome: "" };
+    }
+    const cell = historicoCelulas(tr)[1];
+    if (!cell) return { prestadorId: null, prestadorNome: "" };
+    const textoAtual = String(cell.textContent || "").trim();
+    const idAnterior = String(tr.dataset.historicoCirurgiaoId || "").trim();
+    const nomeAnterior = String(tr.dataset.historicoCirurgiaoNome || "").trim();
+    const item = historicoEncontrarPrestadorPorTexto(textoAtual, catalogo);
+    if (item) {
+      const nome = historicoPrestadorNomeVisivel(item);
+      tr.dataset.historicoCirurgiaoId = String(Number(item.id || item.row_id || 0) || "");
+      tr.dataset.historicoCirurgiaoNome = nome;
+      if (textoAtual !== nome) {
+        cell.textContent = nome;
+      }
+      return { prestadorId: Number(item.id || item.row_id || 0) || null, prestadorNome: nome };
+    }
+    if (idAnterior && textoAtual && textoAtual === nomeAnterior) {
+      const nome = nomeAnterior || textoAtual;
+      if (nome) {
+        cell.textContent = nome;
+      }
+      tr.dataset.historicoCirurgiaoId = idAnterior;
+      tr.dataset.historicoCirurgiaoNome = nome;
+      return { prestadorId: Number(idAnterior) || null, prestadorNome: nome };
+    }
+    tr.dataset.historicoCirurgiaoId = "";
+    tr.dataset.historicoCirurgiaoNome = textoAtual;
+    return { prestadorId: null, prestadorNome: textoAtual };
+  }
+
+  function historicoAtualizarDatalistPrestadores(modal = historicoModalEl(), catalogo = historicoPrestadoresCatalogoAtual()) {
+    const list = modal?.querySelector?.(`#${HISTORICO_CIRURGIAO_DATALIST_ID}`);
+    if (!(list instanceof HTMLDataListElement)) return;
+    const itens = Array.isArray(catalogo) ? catalogo : [];
+    list.innerHTML = "";
+    itens.forEach((item) => {
+      const valor = historicoPrestadorNomeVisivel(item);
+      if (!valor) return;
+      const option = document.createElement("option");
+      option.value = valor;
+      option.label = historicoPrestadorRotulo(item) || valor;
+      list.appendChild(option);
+    });
+  }
+
+  async function historicoGarantirPrestadoresCatalogo(forceReload = false) {
+    if (!forceReload) {
+      const atual = historicoPrestadoresCatalogoAtual();
+      if (atual.length) {
+        historicoPrestadoresCache = atual;
+        return atual;
+      }
+      if (historicoPrestadoresCarregando) return historicoPrestadoresCarregando;
+    }
+
+    historicoPrestadoresCarregando = (async () => {
+      try {
+        const { res, data } = await requestJson("GET", HISTORICO_PRESTADORES_URL, undefined, true);
+        const itens = res.ok && data && Array.isArray(data.itens)
+          ? data.itens.map((item, idx) => historicoNormalizarPrestador(item, idx))
+          : [];
+        historicoPrestadoresCache = itens.length ? itens : historicoPrestadoresCache;
+        if (historicoPrestadoresCache.length) {
+          historicoReconciliarCirurgioesVisiveis();
+        }
+        return historicoPrestadoresCache;
+      } catch {
+        const base = historicoCatalogoPrestadoresBase();
+        historicoPrestadoresCache = Array.isArray(base) ? base.map((item, idx) => historicoNormalizarPrestador(item, idx)) : [];
+        return historicoPrestadoresCache;
+      }
+    })();
+
+    try {
+      return await historicoPrestadoresCarregando;
+    } finally {
+      historicoPrestadoresCarregando = null;
+    }
+  }
+
+  function historicoReconciliarCirurgioesVisiveis() {
+    const list = historicoListEl();
+    if (!list) return;
+    const catalogo = historicoPrestadoresCatalogoAtual();
+    if (!catalogo.length) return;
+    list.querySelectorAll("tr").forEach((tr) => {
+      if (!(tr instanceof HTMLElement)) return;
+      const cell = historicoCelulas(tr)[1];
+      if (!cell) return;
+      const id = String(tr.dataset.historicoCirurgiaoId || "").trim();
+      const itemPorId = id ? catalogo.find((item) => String(Number(item.id || item.row_id || 0) || "") === id) : null;
+      if (itemPorId) {
+        historicoDefinirCirurgiaoLinha(tr, itemPorId);
+        return;
+      }
+      historicoSincronizarCirurgiaoLinha(tr, catalogo);
+    });
+  }
+
+  function historicoCirurgiaoPadraoSessao() {
+    const prestadorId = Number(sessaoAtual?.prestador_id || 0) || 0;
+    if (!prestadorId) return null;
+    const catalogo = historicoPrestadoresCatalogoAtual();
+    const resolvido = historicoEncontrarPrestadorPorTexto(String(prestadorId), catalogo);
+    if (resolvido) {
+      return {
+        prestadorId: Number(resolvido.id || resolvido.row_id || 0) || prestadorId,
+        prestadorNome: historicoPrestadorNomeVisivel(resolvido),
+      };
+    }
+    const fallbackNome = String(sessaoAtual?.apelido || sessaoAtual?.nome || prestadorId || "").trim();
+    return {
+      prestadorId,
+      prestadorNome: fallbackNome,
+    };
+  }
+
   function historicoRegistroAtual(tr) {
+    historicoSincronizarCirurgiaoLinha(tr);
     const cells = historicoCelulas(tr).map((td) => String(td?.textContent || "").trim());
     if (!cells.length) return null;
     return {
@@ -150,6 +350,8 @@
       estado: linhaHistoricoEstado(tr),
       selected_cell_index: state.selectedRow === tr ? Math.max(0, Math.min(Number(state.activeCellIndex || 0) || 0, cells.length - 1)) : 0,
       selecionada: state.selectedRow === tr,
+      cirurgiao_prestador_id: String(tr?.dataset?.historicoCirurgiaoId || "").trim() || null,
+      cirurgiao_prestador_nome: String(tr?.dataset?.historicoCirurgiaoNome || "").trim() || null,
     };
   }
 
@@ -188,6 +390,7 @@
     const html = String(tr?.dataset?.historicoSnapshot || "");
     if (!html) return false;
     tr.innerHTML = html;
+    historicoSincronizarCirurgiaoLinha(tr);
     return true;
   }
 
@@ -236,6 +439,10 @@
     return true;
   }
 
+  function historicoCampoDefinirCirurgiao(tr, value, prestadorId = null) {
+    return historicoDefinirCirurgiaoLinha(tr, value, prestadorId);
+  }
+
   function historicoCampoLocal(chave) {
     return HISTORICO_CAMPOS_LOCAIS[chave] || null;
   }
@@ -269,7 +476,7 @@
         <div class="ficha-hist-props-header">
           <div class="ficha-hist-props-title">
             <strong id="ficha-historico-props-title">Propriedades da linha</strong>
-            <span>Campos principais da linha selecionada. Itens futuros permanecem fora desta etapa.</span>
+            <span>Campos principais da linha selecionada. O Cirurgião usa o catálogo de prestadores e continua editável.</span>
           </div>
           <button type="button" class="ficha-hist-props-close" data-historico-props-close aria-label="Fechar">X</button>
         </div>
@@ -281,7 +488,8 @@
             </div>
             <div class="ficha-hist-props-field">
               <label for="ficha-historico-props-cirurgiao">Cirurgiao</label>
-              <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off" data-historico-campo="cirurgiao">
+              <input id="ficha-historico-props-cirurgiao" type="text" autocomplete="off" list="${HISTORICO_CIRURGIAO_DATALIST_ID}" data-historico-campo="cirurgiao" placeholder="Digite ou selecione no catálogo">
+              <datalist id="${HISTORICO_CIRURGIAO_DATALIST_ID}" data-historico-cirurgiao-lista></datalist>
             </div>
             <div class="ficha-hist-props-field">
               <label for="ficha-historico-props-regiao">Regiao</label>
@@ -347,7 +555,15 @@
     const regiao = modal.querySelector("#ficha-historico-props-regiao");
     const historico = modal.querySelector("#ficha-historico-props-historico");
     historicoDefinirTextoCelula(tr, 0, data instanceof HTMLInputElement ? data.value : "");
-    historicoCampoDefinirTexto(tr, "cirurgiao", cirurgiao instanceof HTMLInputElement ? cirurgiao.value : "");
+    const catalogo = historicoPrestadoresCatalogoAtual();
+    const cirurgiaoValor = cirurgiao instanceof HTMLInputElement ? cirurgiao.value : "";
+    const cirurgiaoResolvido = historicoEncontrarPrestadorPorTexto(cirurgiaoValor, catalogo);
+    if (cirurgiaoResolvido) {
+      historicoCampoDefinirCirurgiao(tr, cirurgiaoResolvido, cirurgiaoResolvido.id);
+    } else {
+      historicoCampoDefinirCirurgiao(tr, cirurgiaoValor, String(tr.dataset.historicoCirurgiaoId || "").trim() || null);
+      historicoSincronizarCirurgiaoLinha(tr, catalogo);
+    }
     historicoCampoDefinirTexto(tr, "regiao", regiao instanceof HTMLInputElement ? regiao.value : "");
     historicoDefinirTextoCelula(tr, 3, historico instanceof HTMLTextAreaElement ? historico.value : "");
     guardarSnapshotLinhaHistorico(tr);
@@ -357,13 +573,14 @@
     return true;
   }
 
-  function historicoAbrirPropriedadesLinhaSelecionada() {
+  async function historicoAbrirPropriedadesLinhaSelecionada() {
     const tr = linhaHistoricoSelecionada();
     if (!(tr instanceof HTMLElement)) {
       if (typeof footerMsg !== "undefined" && footerMsg) footerMsg.textContent = "Selecione uma linha para abrir as propriedades.";
       return false;
     }
 
+    const catalogo = await historicoGarantirPrestadoresCatalogo().catch(() => historicoPrestadoresCatalogoAtual());
     const modal = historicoModalEl();
     const data = modal.querySelector("#ficha-historico-props-data");
     const cirurgiao = modal.querySelector("#ficha-historico-props-cirurgiao");
@@ -376,6 +593,8 @@
     state.propertiesRow = tr;
     state.editingRow = null;
     definirLinhaHistoricoEditavel(tr, false);
+    historicoAtualizarDatalistPrestadores(modal, catalogo);
+    historicoSincronizarCirurgiaoLinha(tr, catalogo);
 
     if (data instanceof HTMLInputElement) data.value = historicoTextoCelula(tr, 0);
     if (cirurgiao instanceof HTMLInputElement) cirurgiao.value = historicoCampoTexto(tr, "cirurgiao");
@@ -520,6 +739,13 @@
     const list = historicoListEl();
     if (!list) return false;
     const tr = criarLinhaPadrao();
+    const padraoCirurgiao = historicoCirurgiaoPadraoSessao();
+    if (padraoCirurgiao) {
+      historicoCampoDefinirCirurgiao(tr, padraoCirurgiao.prestadorNome || "", padraoCirurgiao.prestadorId);
+    } else {
+      historicoCampoDefinirCirurgiao(tr, "", null);
+    }
+    historicoSincronizarCirurgiaoLinha(tr);
     const ativa = linhaHistoricoSelecionada();
     if (ativa?.parentNode === list && typeof ativa.after === "function") {
       ativa.after(tr);
@@ -652,6 +878,7 @@
     if (!ficha) return;
     applyVisualRefresh();
     bindSelection();
+    void historicoGarantirPrestadoresCatalogo().catch(() => {});
 
     const novo = ficha.historicoNovo;
     const alterar = ficha.historicoAlterar;
@@ -679,7 +906,7 @@
     if (confirmar && confirmar.dataset.historicoBound !== "1") {
       confirmar.dataset.historicoBound = "1";
       confirmar.addEventListener("click", () => {
-        historicoAbrirPropriedadesLinhaSelecionada();
+        void historicoAbrirPropriedadesLinhaSelecionada();
       });
     }
   }
@@ -712,6 +939,14 @@
       const estado = String(linha?.estado || "confirmada").trim() || "confirmada";
       marcarLinhaHistoricoEstado(tr, estado);
       if (estado === "rascunho") tr.dataset.historicoNovo = "1";
+      const cirurgiaoId = linha?.cirurgiao_prestador_id ?? linha?.cirurgiao_id ?? null;
+      const cirurgiaoNome = String(linha?.cirurgiao_prestador_nome || linha?.cirurgiao_nome || cells[1] || "").trim();
+      if (cirurgiaoId || cirurgiaoNome) {
+        historicoCampoDefinirCirurgiao(tr, cirurgiaoNome, cirurgiaoId);
+      } else {
+        historicoCampoDefinirCirurgiao(tr, "", null);
+      }
+      historicoSincronizarCirurgiaoLinha(tr);
       tr.dataset.historicoSnapshot = tr.innerHTML;
       list.appendChild(tr);
       if (!selecionada && (linha?.selecionada || Number(dados?.selected_index) === idx)) {
@@ -752,6 +987,7 @@
 
   function onPacienteAplicado(extraHistorico = null) {
     aplicarHistoricoAba(extraHistorico?.historico_aba ?? null);
+    void historicoGarantirPrestadoresCatalogo().catch(() => {});
   }
 
   function beforeAbandonar() {
@@ -766,7 +1002,7 @@
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "local-propriedades-linha",
+      status: "implementacao-minima-cirurgiao-login-prestador",
       controlsFlow: false,
     },
     bind,

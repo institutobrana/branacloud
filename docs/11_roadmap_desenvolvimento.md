@@ -4869,4 +4869,13 @@ Observacoes:
 - A recomendacao final e usar `sessaoAtual.prestador_id` como default minimo seguro, manter o catalogo vindo de `GET /cadastros/prestadores`, preservar a edicao manual e nao misturar Regiao nem tratamento nesta primeira fase.
 - O novo documento e `docs/ficha_pessoal_historico_contrato_integracao_cirurgiao_login_prestador.md`.
 - A menor subetapa segura futura e um helper local e conservador na aba Historico que leia a sessao, preencha o prestador quando houver valor e reaplique o valor persistido no envelope atual.
+
+## Ficha Pessoal - Historico - Implementacao minima de Cirurgiao responsavel com login/prestador
+- A implementacao minima do `Cirurgiao responsavel` foi aplicada na aba `Historico` usando o contexto de sessao e o catalogo existente de prestadores.
+- O default usa `sessaoAtual.prestador_id` quando existe, com reaplicacao segura ao reabrir o paciente.
+- O modal passou a oferecer sugestao de catalogo sem perder a edicao manual do campo.
+- A serializacao continua compativel com o envelope atual e ganhou apoio opcional por id/nome durante a transicao.
+- `Regiao`, `Cor de fundo`, `Data de insercao` e `Data de atualizacao` ficaram fora desta fase.
+- O novo documento e `docs/ficha_pessoal_historico_implementacao_minima_cirurgiao_login_prestador.md`.
+- Proxima subetapa sugerida: validacao funcional/manual desta integracao minima antes de qualquer expansao para `Regiao` ou para regras de tratamento/intervencao.
 - A proxima subetapa recomendada, apos este contrato, e a implementacao minima e auditavel dessa integracao, sem abrir ainda dependencia com Regiao.
