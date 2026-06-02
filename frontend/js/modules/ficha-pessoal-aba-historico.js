@@ -52,7 +52,7 @@
     tr.dataset.historicoCorFundo = "Branco";
     tr.dataset.historicoDataInsercao = `${data} ${hora} - ${String(sessaoAtual?.apelido || sessaoAtual?.nome || "").trim()}`;
     tr.dataset.historicoDataAtualizacao = "";
-    tr.innerHTML = `<td>${data}</td><td></td><td>-</td><td>Historico criado manualmente</td>`;
+    tr.innerHTML = `<td>${data}</td><td></td><td>-</td><td></td>`;
     tr.dataset.historicoSnapshot = tr.innerHTML;
     return tr;
   }
@@ -452,6 +452,24 @@
     return true;
   }
 
+  function historicoLinhaRascunhoAtiva() {
+    const list = historicoListEl();
+    if (!list) return null;
+    return list.querySelector('tr[data-historico-estado="rascunho"], tr[data-historico-novo="1"]') || null;
+  }
+
+  function historicoValidarDescricaoObrigatoria(tr, exibirMensagem = true) {
+    if (!(tr instanceof HTMLElement)) return false;
+    const descricao = String(historicoTextoCelula(tr, 3)).trim();
+    if (descricao) return true;
+    if (exibirMensagem) {
+      window.alert("Campo descrição do procedimento não pode ser nulo.");
+    }
+    selecionarLinhaHistorico(tr);
+    definirCelulaAtiva(tr, 3);
+    return false;
+  }
+
   const historicoPropsModule =
     typeof window.BranaFichaPessoalAbaHistoricoPropriedadesDaLinhaFactory === "function"
       ? window.BranaFichaPessoalAbaHistoricoPropriedadesDaLinhaFactory({
@@ -612,6 +630,14 @@
   function adicionarLinhaPadrao() {
     const list = historicoListEl();
     if (!list) return false;
+    const rascunhoAtivo = historicoLinhaRascunhoAtiva();
+    if (rascunhoAtivo) {
+      const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunhoAtivo).length - 1));
+      selecionarLinhaHistorico(rascunhoAtivo);
+      focarCelulaHistorico(rascunhoAtivo, indice);
+      if (!historicoValidarDescricaoObrigatoria(rascunhoAtivo, true)) return false;
+      return false;
+    }
     const tr = criarLinhaPadrao();
     const padraoCirurgiao = historicoCirurgiaoPadraoSessao();
     if (padraoCirurgiao) {
@@ -639,6 +665,7 @@
     if (!(tr instanceof HTMLElement)) return false;
     const tbody = historicoTbodyEl();
     if (!tbody || !tbody.contains(tr)) return false;
+    if (!historicoValidarDescricaoObrigatoria(tr, true)) return false;
     const indiceAtual = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(tr).length - 1));
     selecionarLinhaHistorico(tr);
     definirCelulaAtiva(tr, indiceAtual);
@@ -725,6 +752,12 @@
       footerMsg.textContent = "Linha eliminada.";
     }
     return eliminada;
+  }
+
+  function validarHistoricoAntesDeGravar() {
+    const rascunho = historicoLinhaRascunhoAtiva();
+    if (!rascunho) return true;
+    return historicoValidarDescricaoObrigatoria(rascunho, true);
   }
 
   function removerPrimeiraLinha() {
@@ -890,6 +923,7 @@
     limparTela,
     onLimparNovo,
     onPacienteAplicado,
+    validarHistoricoAntesDeGravar,
     beforeAbandonar,
     beforeSetTab,
     selecionarLinhaHistorico,

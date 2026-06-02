@@ -6010,6 +6010,10 @@ async function fichaAtalhoCodigoBlur(){
 async function fichaSalvarPaciente(){
   const anamneseOk=await fichaAnamneseSalvarPendentes("grava-paciente");
   if(!anamneseOk)return;
+  if(typeof fichaHistoricoAba?.validarHistoricoAntesDeGravar==="function"){
+    const historicoOk=!!fichaHistoricoAba.validarHistoricoAntesDeGravar();
+    if(!historicoOk)return;
+  }
   const editando=!!fichaPacienteAtualId;
   const payload=fichaPayloadAtual();
   if(!payload.nome){

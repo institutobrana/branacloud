@@ -4936,3 +4936,9 @@ Observacoes:
 - A tela passou a manter apenas a grade unica com fundo branco, e o rodape foi ajustado para `Ficha de histórico`.
 - O novo documento e `docs/ficha_pessoal_historico_remocao_quadro_descricao_procedimento.md`.
 - A proxima subetapa sugerida e conferir visualmente a equivalencia da grade e do rodape com o EasyDental antes de mexer em qualquer outra dependencia.
+## Ficha Pessoal - Historico - Controle de linha unica e descricao obrigatoria
+- A linha rascunho agora nasce sem texto automatico na coluna Historico.
+- O comando `Inserir linha` nao cria novas linhas enquanto existir uma linha rascunho ativa.
+- `Enter` e `Grava` validam a descricao obrigatoria e exibem a mensagem legada quando ela estiver vazia.
+- O novo documento e `docs/ficha_pessoal_historico_controle_linha_unica_descricao_obrigatoria.md`.
+- A proxima subetapa sugerida e validar manualmente o ciclo inserir -> editar -> Enter/Grava -> nova linha, sem acúmulo de rascunhos.
