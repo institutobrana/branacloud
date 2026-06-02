@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-17-historico-alerta-proprio-brana";
+  const MODULE_VERSION = "subetapa-18-historico-bloqueio-saida-linha-vazia";
   const STYLE_ID = "ficha-historico-visual-style";
   const AVISO_ID = "ficha-hist-aviso-backdrop";
   const SELECTED_CLASS = "is-selected";
@@ -665,6 +665,12 @@
     return false;
   }
 
+  function historicoPodeProsseguirSemDescricaoObrigatoria(exibirMensagem = true) {
+    const rascunho = historicoLinhaRascunhoAtiva();
+    if (!rascunho) return true;
+    return historicoValidarDescricaoObrigatoria(rascunho, exibirMensagem);
+  }
+
   const historicoPropsModule =
     typeof window.BranaFichaPessoalAbaHistoricoPropriedadesDaLinhaFactory === "function"
       ? window.BranaFichaPessoalAbaHistoricoPropriedadesDaLinhaFactory({
@@ -830,9 +836,7 @@
       const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunhoAtivo).length - 1));
       selecionarLinhaHistorico(rascunhoAtivo);
       focarCelulaHistorico(rascunhoAtivo, indice);
-      if (!String(historicoTextoCelula(rascunhoAtivo, 3)).trim()) {
-        historicoValidarDescricaoObrigatoria(rascunhoAtivo, true);
-      }
+      historicoPodeProsseguirSemDescricaoObrigatoria(true);
       return false;
     }
     const tr = criarLinhaPadrao();
@@ -975,9 +979,7 @@
   }
 
   function validarHistoricoAntesDeGravar() {
-    const rascunho = historicoLinhaRascunhoAtiva();
-    if (!rascunho) return true;
-    return historicoValidarDescricaoObrigatoria(rascunho, true);
+    return historicoPodeProsseguirSemDescricaoObrigatoria(true);
   }
 
   function removerPrimeiraLinha() {
@@ -1122,18 +1124,19 @@
   }
 
   function beforeAbandonar() {
-    return true;
+    return historicoPodeProsseguirSemDescricaoObrigatoria(true);
   }
 
-  function beforeSetTab() {
-    return true;
+  function beforeSetTab(tab) {
+    if (String(tab || "") === "historico") return true;
+    return historicoPodeProsseguirSemDescricaoObrigatoria(true);
   }
 
   const module = {
     meta: {
       name: MODULE_NAME,
       version: MODULE_VERSION,
-      status: "refatoracao-propriedades-linha-modulo-proprio",
+      status: "subetapa-18-bloqueio-saida-linha-vazia",
       controlsFlow: false,
     },
     bind,
