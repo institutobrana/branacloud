@@ -4954,8 +4954,6 @@ function fichaEnsureUI(){
     .ficha-anamnese-wrap{min-height:420px;border:1px solid #dce4ef;background:#fff;margin-top:8px}
     .ficha-anamnese-toolbar,.ficha-hist-toolbar{display:flex;justify-content:flex-end;gap:6px;margin-bottom:5px}
     .ficha-hist-wrap{max-height:235px;overflow:auto;border:1px solid #cfd8e3}
-    .ficha-hist-texto{margin-top:6px}
-    .ficha-hist-texto textarea{width:100%;height:150px;border:1px solid #bfc9d6;box-sizing:border-box;padding:5px;font:11px Tahoma,sans-serif;resize:vertical}
     .ficha-anot-toolbar{display:flex;gap:6px;margin-bottom:5px}
     .ficha-anot-toolbar .materiais-btn{height:27px;min-height:27px;padding:0 8px;justify-content:center;font-size:11px}
     .ficha-anot-box textarea{width:100%;height:400px;border:1px solid #bfc9d6;box-sizing:border-box;padding:5px;font:11px Tahoma,sans-serif;resize:vertical}
@@ -5152,10 +5150,6 @@ function fichaEnsureUI(){
             <tbody id="ficha-historico-list"></tbody>
           </table>
         </div>
-        <div class="ficha-hist-texto">
-          <label for="ficha-historico-texto">Detalhamento do historico</label>
-          <textarea id="ficha-historico-texto"></textarea>
-        </div>
       </div>
       <div class="ficha-pane hidden" data-ficha-tab="anotacoes">
         <div class="ficha-anot-toolbar">
@@ -5273,7 +5267,6 @@ function fichaEnsureUI(){
     historicoEliminar:document.getElementById("ficha-historico-eliminar"),
     historicoConfirmar:document.getElementById("ficha-historico-confirmar"),
     historicoList:document.getElementById("ficha-historico-list"),
-    historicoTexto:document.getElementById("ficha-historico-texto"),
     anotNegrito:document.getElementById("ficha-anot-negrito"),
     anotItalico:document.getElementById("ficha-anot-italico"),
     anotSublinhado:document.getElementById("ficha-anot-sublinhado"),
@@ -6436,7 +6429,7 @@ function fichaSetTab(tab){
   ficha.tabBtns.forEach(btn=>btn.classList.toggle("active",(btn.getAttribute("data-ficha-tab-btn")||"")==tab));
   ficha.tabPanes.forEach(pane=>pane.classList.toggle("hidden",(pane.getAttribute("data-ficha-tab")||"")!==tab));
   if(ficha.statusBar){
-    const labels={dados:"Dados pessoais",complementares:"Dados complementares",anotacoes:"Anotacoes",anamnese:"Anamnese",historico:"Historico"};
+    const labels={dados:"Dados pessoais",complementares:"Dados complementares",anotacoes:"Anotacoes",anamnese:"Anamnese",historico:"Ficha de histórico"};
     ficha.statusBar.textContent=labels[tab]||"";
   }
 }
@@ -22585,7 +22578,6 @@ const fichaHistoricoAba=window.BranaFichaPessoalAbaHistorico||{
       const tr=document.createElement("tr");
       tr.innerHTML=`<td>${data}</td><td>Sistema</td><td>-</td><td>Historico criado manualmente</td>`;
       if(typeof list.prepend==="function")list.prepend(tr);else list.insertBefore(tr,list.firstChild);
-      if(ficha.historicoTexto)ficha.historicoTexto.value="";
       fichaSetTab("historico");
     };
     if(ficha.historicoNovo){ficha.historicoNovo.dataset.historicoBound="1";ficha.historicoNovo.addEventListener("click",addRow);}
@@ -22594,8 +22586,8 @@ const fichaHistoricoAba=window.BranaFichaPessoalAbaHistorico||{
     if(ficha.historicoConfirmar&&!ficha.historicoConfirmar.dataset.historicoBound){ficha.historicoConfirmar.dataset.historicoBound="1";ficha.historicoConfirmar.addEventListener("click",()=>{footerMsg.textContent="Confirmacao do historico em planejamento.";});}
   },
   serializarHistoricoAba(){return null;},
-  onPacienteAplicado(extra){if(ficha?.historicoList)ficha.historicoList.innerHTML="";if(ficha?.historicoTexto)ficha.historicoTexto.value="";if(extra?.historico_aba&&ficha?.historicoList){ficha.historicoList.innerHTML="";}},
-  async onLimparNovo(){if(ficha?.historicoList)ficha.historicoList.innerHTML="";if(ficha?.historicoTexto)ficha.historicoTexto.value="";},
+  onPacienteAplicado(extra){if(ficha?.historicoList)ficha.historicoList.innerHTML="";if(extra?.historico_aba&&ficha?.historicoList){ficha.historicoList.innerHTML="";}},
+  async onLimparNovo(){if(ficha?.historicoList)ficha.historicoList.innerHTML="";},
   beforeAbandonar(){return true;},
   beforeSetTab(){return true;}
 };

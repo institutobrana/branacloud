@@ -4931,3 +4931,8 @@ Observacoes:
 - O duplo clique em uma celula agora inicia edicao na coluna, aproximando o comportamento do EasyDental.
 - O novo documento e `docs/ficha_pessoal_historico_selecao_linha_inteira_edicao_duplo_clique.md`.
 - A proxima subetapa sugerida e validacao manual do comportamento de clique/duplo clique e, se necessario, pequeno ajuste fino de foco ou destaque visual.
+## Ficha Pessoal - Historico - Remocao do quadro separado de descricao
+- O quadro separado abaixo da grade, que exibia um textarea de detalhamento, foi removido da aba Historico.
+- A tela passou a manter apenas a grade unica com fundo branco, e o rodape foi ajustado para `Ficha de histórico`.
+- O novo documento e `docs/ficha_pessoal_historico_remocao_quadro_descricao_procedimento.md`.
+- A proxima subetapa sugerida e conferir visualmente a equivalencia da grade e do rodape com o EasyDental antes de mexer em qualquer outra dependencia.

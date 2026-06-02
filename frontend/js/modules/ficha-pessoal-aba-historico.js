@@ -42,10 +42,6 @@
     return ficha?.historicoList || null;
   }
 
-  function historicoTextoEl() {
-    return ficha?.historicoTexto || null;
-  }
-
   function criarLinhaPadrao() {
     const agora = new Date();
     const data = agora.toLocaleDateString("pt-BR");
@@ -77,9 +73,6 @@
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr{cursor:pointer}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS}{background:#dcecff;box-shadow:inset 0 0 0 1px #94bbec}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td{background:#dcecff}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto{display:grid;gap:4px;margin-top:6px}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto label{font:11px Tahoma,sans-serif;color:#4f5f72}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto textarea{width:100%;height:140px;border:1px solid #bfc9d6;box-sizing:border-box;padding:5px;font:11px Tahoma,sans-serif;resize:vertical;background:#fff}
     `;
     document.head.appendChild(style);
   }
@@ -106,8 +99,6 @@
     headCells.forEach((cell, idx) => {
       if (TABLE_HEADERS[idx]) cell.textContent = TABLE_HEADERS[idx];
     });
-    const label = document.querySelector('.ficha-pane[data-ficha-tab="historico"] .ficha-hist-texto label');
-    if (label) label.textContent = "Descricao do procedimento";
   }
 
   function historicoTbodyEl() {
@@ -639,8 +630,6 @@
     } else {
       list.insertBefore(tr, list.firstChild);
     }
-    const texto = historicoTextoEl();
-    if (texto) texto.value = "";
     if (typeof fichaSetTab === "function") fichaSetTab("historico");
     focarCelulaHistorico(tr, 0);
     return true;
@@ -751,8 +740,6 @@
   function limparTela() {
     const list = historicoListEl();
     if (list) list.innerHTML = "";
-    const texto = historicoTextoEl();
-    if (texto) texto.value = "";
     clearSelectedRow();
     return true;
   }
