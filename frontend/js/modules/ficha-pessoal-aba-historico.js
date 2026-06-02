@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-15-enter-salva-e-abre-nova-linha";
+  const MODULE_VERSION = "subetapa-16-historico-visual-alinhado-easydental";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const HISTORICO_PRESTADORES_URL = "/cadastros/prestadores";
@@ -12,7 +12,7 @@
     eliminar: "Excluir linha",
     confirmar: "Propriedades da linha",
   };
-  const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descricao"];
+  const TABLE_HEADERS = ["Data", "Cirurgiao", "Regiao", "Descrição do procedimento"];
   const HISTORICO_CAMPOS_LOCAIS = Object.freeze({
     cirurgiao: Object.freeze({
       chave: "cirurgiao",
@@ -67,17 +67,25 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      .ficha-pane[data-ficha-tab="historico"]{display:flex;flex-direction:column;gap:8px;min-height:0}
+      .ficha-pane[data-ficha-tab="historico"]{display:flex;flex-direction:column;gap:6px;min-height:0}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-toolbar{display:flex;justify-content:flex-start;gap:6px;flex-wrap:wrap;margin-bottom:0;padding:4px 0 2px}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-toolbar .materiais-btn{min-width:138px;justify-content:flex-start;padding:0 10px}
       .ficha-pane[data-ficha-tab="historico"] .ficha-hist-toolbar .materiais-btn img{width:16px;height:16px}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-hist-wrap{flex:1;min-height:0;max-height:260px;overflow:auto;border:1px solid #cfd8e3;background:#fff}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-hist-wrap{flex:1;min-height:0;overflow:auto;border:1px solid #cfd8e3;background:#fff}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list{width:100%;border-collapse:collapse;table-layout:fixed;font:11px Tahoma,sans-serif;background:#fff}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list thead th{background:#f2f6fb;font:700 11px Tahoma,sans-serif;color:#243444}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list th,.ficha-pane[data-ficha-tab="historico"] .ficha-list td{border-bottom:1px solid #e4ebf2;padding:5px 6px;vertical-align:top;word-break:break-word;background:#fff}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr{cursor:pointer}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS}{background:#dcecff;box-shadow:inset 0 0 0 1px #94bbec}
-      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td{background:#dcecff}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list thead th{background:#f2f6fb;font:700 11px Tahoma,sans-serif;color:#243444;white-space:nowrap}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th,.ficha-pane[data-ficha-tab="historico"] .ficha-list td{border-bottom:1px solid #d7dfe7;border-right:1px solid #edf1f5;padding:3px 6px;vertical-align:middle;background:#fff;box-sizing:border-box}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th:last-child,.ficha-pane[data-ficha-tab="historico"] .ficha-list td:last-child{border-right:none}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th:nth-child(1),.ficha-pane[data-ficha-tab="historico"] .ficha-list td:nth-child(1){width:88px;white-space:nowrap}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th:nth-child(2),.ficha-pane[data-ficha-tab="historico"] .ficha-list td:nth-child(2){width:108px;white-space:nowrap}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th:nth-child(3),.ficha-pane[data-ficha-tab="historico"] .ficha-list td:nth-child(3){width:72px;white-space:nowrap}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list th:nth-child(4),.ficha-pane[data-ficha-tab="historico"] .ficha-list td:nth-child(4){width:auto;word-break:break-word;overflow-wrap:anywhere}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr{cursor:pointer;height:22px}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr:nth-child(even) td{background:#fbfdff}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr:hover td{background:#eef5ff}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td{background:#2f8fe6;color:#fff}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS}:hover td{background:#2f8fe6}
+      .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td::selection{background:#fff;color:#2f8fe6}
     `;
     document.head.appendChild(style);
   }
