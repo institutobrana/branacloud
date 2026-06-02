@@ -108,8 +108,8 @@
         .ficha-hist-props-field textarea{min-height:108px;resize:none;line-height:1.28;padding:6px 6px}
         .ficha-hist-props-field.full{grid-column:1 / -1}
         .ficha-hist-props-combo{position:relative}
-        .ficha-hist-props-combo::after{content:"▼";position:absolute;right:8px;top:50%;transform:translateY(-54%);font:400 9px Tahoma,sans-serif;color:#4d4d4d;pointer-events:none}
         .ficha-hist-props-combo input,.ficha-hist-props-combo select{padding-right:22px}
+        .ficha-hist-props-combo select{appearance:auto;-webkit-appearance:menulist;-moz-appearance:menulist}
         .ficha-hist-props-color{display:block}
         .ficha-hist-props-color .ficha-hist-props-swatch{position:absolute;left:6px;top:50%;width:24px;height:16px;transform:translateY(-50%);border:1px solid #8a8a8a;background:#fff;box-shadow:inset 0 0 0 1px #f8f8f8;pointer-events:none}
         .ficha-hist-props-color select{padding-left:34px;padding-right:24px}
@@ -200,8 +200,19 @@
       opcaoVazia.value = "";
       opcaoVazia.textContent = "";
       select.appendChild(opcaoVazia);
-      const itens = Array.isArray(catalogo) ? catalogo : [];
-      itens.forEach((item) => {
+      const itens = Array.isArray(catalogo)
+        ? catalogo
+            .slice()
+            .map((item) => ({
+              item,
+              label: String(item?.codigo || "").trim() && String(item?.nome || item?.apelido || "").trim()
+                ? `${String(item?.codigo || "").trim()} - ${String(item?.nome || item?.apelido || "").trim()}`
+                : String(item?.nome || item?.apelido || item?.codigo || "").trim(),
+            }))
+            .filter((entry) => entry.label)
+            .sort((a, b) => a.label.localeCompare(b.label, "pt-BR", { sensitivity: "base" }))
+        : [];
+      itens.forEach(({ item }) => {
         const valor = String(item?.nome || item?.apelido || item?.codigo || "").trim();
         if (!valor) return;
         const option = document.createElement("option");

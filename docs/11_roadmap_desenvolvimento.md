@@ -4910,3 +4910,8 @@ Observacoes:
 - O comportamento de default por sessao, edicao e persistencia foi mantido.
 - O novo documento e `docs/ficha_pessoal_historico_combo_cirurgiao_responsavel_prestadores.md`.
 - A proxima subetapa sugerida e validacao manual do combo com a conta logada e, se necessario, ajuste fino de ordenacao/label dos prestadores.
+## Ficha Pessoal - Historico - Correcao cirurgica do combo Cirurgiao responsavel
+- O campo `Cirurgiao responsavel` da janela `Propriedades da linha` passou a usar combo nativo com lista visivel de prestadores da conta.
+- A lista foi ordenada para ficar mais legivel e o valor legado continua preservado quando existir.
+- O novo documento e `docs/ficha_pessoal_historico_correcao_cirurgiao_responsavel_combo_nativo.md`.
+- A proxima subetapa sugerida e validacao manual do combo na conta real e, se necessario, pequeno ajuste fino de rotulo ou ordenacao.
