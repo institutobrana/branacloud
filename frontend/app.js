@@ -6009,26 +6009,27 @@ async function fichaAtalhoCodigoBlur(){
 }
 async function fichaSalvarPaciente(){
   const anamneseOk=await fichaAnamneseSalvarPendentes("grava-paciente");
-  if(!anamneseOk)return;
+  if(!anamneseOk)return false;
   if(typeof fichaHistoricoAba?.validarHistoricoAntesDeGravar==="function"){
     const historicoOk=!!fichaHistoricoAba.validarHistoricoAntesDeGravar();
-    if(!historicoOk)return;
+    if(!historicoOk)return false;
   }
   const editando=!!fichaPacienteAtualId;
   const payload=fichaPayloadAtual();
   if(!payload.nome){
     window.alert("Informe o nome do paciente.");
-    return;
+    return false;
   }
   const path=fichaPacienteAtualId?`/cadastros/pacientes/${fichaPacienteAtualId}`:"/cadastros/pacientes";
   const method=fichaPacienteAtualId?"PUT":"POST";
   const{res,data}=await requestJson(method,path,payload,true);
   if(!res.ok){
     window.alert(data.detail||"Falha ao gravar paciente.");
-    return;
+    return false;
   }
   fichaAplicarPaciente(data);
   footerMsg.textContent=editando?"Paciente atualizado com sucesso.":"Paciente cadastrado com sucesso.";
+  return true;
 }
 async function fichaProcurarPaciente(){
   if(!(await fichaAnamneseAba.beforeAbandonar?.("procurar paciente"))) return;

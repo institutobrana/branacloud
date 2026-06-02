@@ -53,4 +53,4 @@ Integrar de forma conservadora a aba Historico com o botao geral Grava da Ficha 
 9. Confirmar que nenhuma outra aba da Ficha Pessoal foi afetada.
 
 ## Proxima subetapa recomendada
-Proxima etapa sugerida: Propriedades da linha funcional.
+Proxima etapa sugerida: ENTER do Historico com persistencia sincronizada ao Grava, abrindo nova linha somente apos salvamento bem-sucedido.

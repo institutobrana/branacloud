@@ -2,7 +2,7 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-14-ordenacao-historico-por-data-estavel";
+  const MODULE_VERSION = "subetapa-15-enter-salva-e-abre-nova-linha";
   const STYLE_ID = "ficha-historico-visual-style";
   const SELECTED_CLASS = "is-selected";
   const HISTORICO_PRESTADORES_URL = "/cadastros/prestadores";
@@ -40,6 +40,7 @@
   };
   let historicoPrestadoresCache = [];
   let historicoPrestadoresCarregando = null;
+  let historicoEnterGravando = false;
 
   function historicoListEl() {
     return ficha?.historicoList || null;
@@ -712,7 +713,7 @@
       if (!cell || !row || !tbody.contains(row)) return;
       if (ev.key === "Enter") {
         ev.preventDefault();
-        confirmarLinhaHistoricoLocal(row);
+        void confirmarLinhaHistoricoLocal(row, { salvarAposConfirmar: true });
         return;
       }
       if (ev.key === "Escape") {
@@ -769,10 +770,12 @@
     return true;
   }
 
-  function confirmarLinhaHistoricoLocal(tr) {
+  async function confirmarLinhaHistoricoLocal(tr, opcoes = {}) {
     if (!(tr instanceof HTMLElement)) return false;
     const tbody = historicoTbodyEl();
     if (!tbody || !tbody.contains(tr)) return false;
+    const salvarAposConfirmar = !!opcoes?.salvarAposConfirmar;
+    if (salvarAposConfirmar && historicoEnterGravando) return false;
     if (!historicoValidarDescricaoObrigatoria(tr, true)) return false;
     const indiceAtual = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(tr).length - 1));
     selecionarLinhaHistorico(tr);
@@ -783,6 +786,31 @@
     guardarSnapshotLinhaHistorico(tr);
     if (state.editingRow === tr) state.editingRow = null;
     historicoOrdenarLinhasDOM();
+    if (salvarAposConfirmar) {
+      historicoEnterGravando = true;
+      try {
+        const salvou = typeof fichaSalvarPaciente === "function" ? await fichaSalvarPaciente() : false;
+        if (!salvou) {
+          selecionarLinhaHistorico(tr);
+          const cell = definirCelulaAtiva(tr, indiceAtual);
+          if (cell instanceof HTMLElement) {
+            try {
+              cell.focus({ preventScroll: true });
+            } catch {
+              cell.focus();
+            }
+          }
+          return false;
+        }
+        const abriuNova = adicionarLinhaPadrao();
+        if (!abriuNova) {
+          focarCelulaHistorico(tr, indiceAtual);
+        }
+        return true;
+      } finally {
+        historicoEnterGravando = false;
+      }
+    }
     const abriuNova = adicionarLinhaPadrao();
     if (!abriuNova) {
       focarCelulaHistorico(tr, indiceAtual);
