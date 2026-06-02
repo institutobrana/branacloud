@@ -2,8 +2,9 @@
   "use strict";
 
   const MODULE_NAME = "BranaFichaPessoalAbaHistorico";
-  const MODULE_VERSION = "subetapa-16-historico-visual-alinhado-easydental";
+  const MODULE_VERSION = "subetapa-17-historico-alerta-proprio-brana";
   const STYLE_ID = "ficha-historico-visual-style";
+  const AVISO_ID = "ficha-hist-aviso-backdrop";
   const SELECTED_CLASS = "is-selected";
   const HISTORICO_PRESTADORES_URL = "/cadastros/prestadores";
   const BUTTON_LABELS = {
@@ -86,8 +87,82 @@
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td{background:#2f8fe6;color:#fff}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS}:hover td{background:#2f8fe6}
       .ficha-pane[data-ficha-tab="historico"] .ficha-list tbody tr.${SELECTED_CLASS} td::selection{background:#fff;color:#2f8fe6}
+      .ficha-hist-aviso-backdrop{position:fixed;inset:0;z-index:5200;display:flex;align-items:flex-start;justify-content:center;padding-top:30px;background:rgba(255,255,255,.18)}
+      .ficha-hist-aviso-backdrop.hidden{display:none}
+      .ficha-hist-aviso-modal{width:min(820px,96vw);min-height:172px;background:#efefef;border:1px solid #d2d2d2;box-shadow:0 10px 26px rgba(0,0,0,.24);box-sizing:border-box;font:12px Tahoma,sans-serif;color:#1f1f1f;display:flex;flex-direction:column}
+      .ficha-hist-aviso-head{position:relative;display:flex;align-items:center;justify-content:center;height:38px;padding:0 52px;background:#fff;border-bottom:1px solid #d4d4d4;box-sizing:border-box}
+      .ficha-hist-aviso-title{font:400 19px Tahoma,sans-serif;color:#363636;line-height:1;text-align:center}
+      .ficha-hist-aviso-close{position:absolute;top:0;right:0;width:50px;height:38px;border:none;border-radius:0;background:#d85a5a;color:#fff;font:700 24px/1 Tahoma,sans-serif;cursor:pointer}
+      .ficha-hist-aviso-close:hover{background:#c44747}
+      .ficha-hist-aviso-body{display:grid;grid-template-columns:92px 1fr;gap:16px;align-items:center;flex:1;padding:18px 16px 14px}
+      .ficha-hist-aviso-icone{width:68px;height:68px;justify-self:center;object-fit:contain}
+      .ficha-hist-aviso-texto{font:12px Tahoma,sans-serif;color:#222;line-height:1.4;align-self:start;padding-top:10px}
+      .ficha-hist-aviso-actions{display:flex;justify-content:flex-end;padding:0 16px 14px}
+      .ficha-hist-aviso-ok{min-width:86px;height:30px;padding:0 18px;border:1px solid #8d8d8d;background:linear-gradient(180deg,#fff 0%,#ececec 100%);font:400 12px Tahoma,sans-serif;color:#111;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+      .ficha-hist-aviso-ok:hover{background:linear-gradient(180deg,#fff 0%,#e4e4e4 100%)}
     `;
     document.head.appendChild(style);
+  }
+
+  function historicoAvisoTitulo() {
+    return String(ficha?.titulo?.textContent || "Ficha pessoal -").trim() || "Ficha pessoal -";
+  }
+
+  function historicoAvisoEl() {
+    let el = document.getElementById(AVISO_ID);
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = AVISO_ID;
+    el.className = "ficha-hist-aviso-backdrop hidden";
+    el.innerHTML = `
+      <div class="ficha-hist-aviso-modal" role="alertdialog" aria-modal="true" aria-labelledby="ficha-hist-aviso-title">
+        <div class="ficha-hist-aviso-head">
+          <div id="ficha-hist-aviso-title" class="ficha-hist-aviso-title"></div>
+          <button type="button" class="ficha-hist-aviso-close" aria-label="Fechar aviso">X</button>
+        </div>
+        <div class="ficha-hist-aviso-body">
+          <img class="ficha-hist-aviso-icone" src="/assets/easy/ico_alerta.bmp" alt="" aria-hidden="true">
+          <div class="ficha-hist-aviso-texto"></div>
+        </div>
+        <div class="ficha-hist-aviso-actions">
+          <button type="button" class="ficha-hist-aviso-ok">Ok</button>
+        </div>
+      </div>
+    `;
+    const close = el.querySelector(".ficha-hist-aviso-close");
+    const ok = el.querySelector(".ficha-hist-aviso-ok");
+    const fechar = () => el.classList.add("hidden");
+    close?.addEventListener("click", fechar);
+    ok?.addEventListener("click", fechar);
+    el.addEventListener("click", (ev) => {
+      if (ev.target === el) fechar();
+    });
+    el.addEventListener("keydown", (ev) => {
+      if (ev.key === "Escape") {
+        ev.preventDefault();
+        fechar();
+      }
+    });
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function historicoMostrarAviso(mensagem) {
+    const el = historicoAvisoEl();
+    const titulo = el.querySelector(".ficha-hist-aviso-title");
+    const texto = el.querySelector(".ficha-hist-aviso-texto");
+    const ok = el.querySelector(".ficha-hist-aviso-ok");
+    if (titulo) titulo.textContent = historicoAvisoTitulo();
+    if (texto) texto.textContent = String(mensagem || "").trim();
+    el.classList.remove("hidden");
+    if (ok instanceof HTMLElement) {
+      try {
+        ok.focus({ preventScroll: true });
+      } catch {
+        ok.focus();
+      }
+    }
+    return true;
   }
 
   function setButtonLabel(btn, label) {
@@ -583,7 +658,7 @@
     const descricao = String(historicoTextoCelula(tr, 3)).trim();
     if (descricao) return true;
     if (exibirMensagem) {
-      window.alert("Campo descrição do procedimento não pode ser nulo.");
+      historicoMostrarAviso("Campo descrição do procedimento não pode ser nulo.");
     }
     selecionarLinhaHistorico(tr);
     definirCelulaAtiva(tr, 3);
