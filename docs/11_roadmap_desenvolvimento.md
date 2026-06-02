@@ -4921,6 +4921,11 @@ Observacoes:
 - A combo `Cirurgiao responsavel` passou a ordenar os prestadores por `nome`, manter inativos disponiveis e buscar por nome sem perder o valor legado.
 - O novo documento e `docs/ficha_pessoal_historico_correcao_grade_apelido_combo_nome.md`.
 - A proxima subetapa sugerida e validar manualmente o fluxo real da tela antes de mexer em `Regiao`, `Cor de fundo` ou na dependencia com `INTERVENCAO`.
+## Ficha Pessoal - Historico - Trava da coluna Cirurgiao no duplo clique
+- A coluna 2 `Cirurgiao` da grade foi travada para nao entrar em edicao por duplo clique.
+- A selecao e o foco continuam possiveis, mas a celula permanece bloqueada para edicao.
+- O novo documento e `docs/ficha_pessoal_historico_trava_coluna_cirurgiao_duplo_clique.md`.
+- A proxima subetapa sugerida e validar manualmente a trava da coluna antes de mexer em `Regiao`.
 ## Ficha Pessoal - Historico - Selecao de linha inteira e edicao por duplo clique
 - A grade da aba Historico passou a manter fundo branco e seleciona a linha inteira ao clicar.
 - O duplo clique em uma celula agora inicia edicao na coluna, aproximando o comportamento do EasyDental.

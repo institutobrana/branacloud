@@ -389,7 +389,8 @@
   function definirLinhaHistoricoEditavel(tr, editable) {
     const cells = historicoCelulas(tr);
     cells.forEach((cell, idx) => {
-      cell.contentEditable = editable ? "true" : "false";
+      const bloqueada = Number(idx) === 1;
+      cell.contentEditable = editable && !bloqueada ? "true" : "false";
       cell.spellcheck = false;
       cell.tabIndex = idx === state.activeCellIndex ? 0 : -1;
     });
@@ -416,6 +417,10 @@
     }
 
     definirCelulaAtiva(tr, alvo);
+    if (Number(alvo) === 1) {
+      definirLinhaHistoricoEditavel(tr, false);
+      return cells[alvo] || null;
+    }
     definirLinhaHistoricoEditavel(tr, true);
     return cells[alvo] || null;
   }
@@ -560,6 +565,10 @@
       if (idx < 0) return;
       ev.preventDefault();
       selecionarLinhaHistorico(row);
+      if (Number(idx) === 1) {
+        definirCelulaAtiva(row, idx);
+        return;
+      }
       focarCelulaHistorico(row, idx);
     });
     tbody.addEventListener("focusin", (ev) => {
@@ -569,6 +578,11 @@
       if (!cell || !row || !tbody.contains(row)) return;
       const idx = historicoCelulas(row).indexOf(cell);
       if (idx < 0) return;
+      if (Number(idx) === 1) {
+        selecionarLinhaHistorico(row);
+        definirCelulaAtiva(row, idx);
+        return;
+      }
       ativarEdicaoLinhaHistorico(row, idx);
     });
     tbody.addEventListener("keydown", (ev) => {
