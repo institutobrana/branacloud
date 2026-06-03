@@ -675,9 +675,8 @@
     const rascunho = historicoLinhaRascunhoAtiva();
     if (!rascunho) return true;
     if (alvo && rascunho === alvo) return true;
-    if (!String(historicoTextoCelula(rascunho, 3)).trim()) {
-      historicoValidarDescricaoObrigatoria(rascunho, exibirMensagem);
-      return false;
+    if (exibirMensagem) {
+      historicoMostrarAviso("Campo descrição do procedimento não pode ser nulo.");
     }
     const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunho).length - 1));
     selecionarLinhaHistorico(rascunho);
@@ -861,7 +860,7 @@
       const indice = Math.max(0, Math.min(state.activeCellIndex || 0, historicoCelulas(rascunhoAtivo).length - 1));
       selecionarLinhaHistorico(rascunhoAtivo);
       focarCelulaHistorico(rascunhoAtivo, indice);
-      historicoBloqueioAcaoComRascunhoAtivo(rascunhoAtivo, true);
+      historicoBloqueioAcaoComRascunhoAtivo(null, true);
       return false;
     }
     const tr = criarLinhaPadrao();
