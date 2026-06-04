@@ -18,6 +18,7 @@
     loading: false,
     error: "",
     requestSeq: 0,
+    debounceTimer: null,
     handlers: {},
   };
 
@@ -225,12 +226,30 @@
     const cfg = getElements();
     if (!cfg.root || cfg.root.dataset.bound === "1") return cfg;
     cfg.root.dataset.bound = "1";
+    const runLiveSearch = () => {
+      const value = String(cfg.input?.value || "").trim();
+      if (state.debounceTimer) {
+        clearTimeout(state.debounceTimer);
+      }
+      state.debounceTimer = setTimeout(() => {
+        void search(value);
+      }, 250);
+    };
+    cfg.input?.addEventListener("input", runLiveSearch);
     cfg.input?.addEventListener("keydown", (ev) => {
       if (ev.key !== "Enter") return;
       ev.preventDefault();
+      if (state.debounceTimer) {
+        clearTimeout(state.debounceTimer);
+        state.debounceTimer = null;
+      }
       void search(cfg.input?.value || "");
     });
     cfg.btn?.addEventListener("click", () => {
+      if (state.debounceTimer) {
+        clearTimeout(state.debounceTimer);
+        state.debounceTimer = null;
+      }
       void search(cfg.input?.value || "");
     });
     cfg.results?.addEventListener("click", (ev) => {
@@ -262,6 +281,9 @@
     }
     renderCurrentPatient();
     renderResults();
+    if (cfg.input && !cfg.input.value.trim()) {
+      setStatus("Digite um código ou nome para localizar o paciente.", false);
+    }
     return cfg;
   }
 
