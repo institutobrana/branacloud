@@ -5000,3 +5000,12 @@ Observacoes:
 - Nenhum banco alterado.
 - Nenhuma migration, endpoint ou tela criada.
 - Proxima trilha futura: eventual contrato tecnico final antes da primeira implementacao.
+## Odontograma Brana - Contrato tecnico final da V1
+- Criacao do contrato tecnico final da V1 do odontograma Brana.
+- Definicao de payloads minimos e leituras minimas.
+- Reforco da implementacao modular no backend e frontend.
+- Etapa somente documental.
+- Nenhum codigo alterado.
+- Nenhum banco alterado.
+- Nenhuma migration, endpoint ou tela criada.
+- Proxima etapa futura sugerida: migration minima da V1.
