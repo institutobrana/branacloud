@@ -5009,3 +5009,11 @@ Observacoes:
 - Nenhum banco alterado.
 - Nenhuma migration, endpoint ou tela criada.
 - Proxima etapa futura sugerida: migration minima da V1.
+
+## Odontograma Brana - Migration minima V1
+- Inicio da subetapa tecnica do odontograma Brana com migration minima da V1.
+- Estrutura persistente minima criada para arcada, intervencao, dente, face e status.
+- Mantida a diretriz de modularizacao futura no backend e frontend.
+- Sem frontend nesta etapa.
+- Sem tela nesta etapa.
+- Proxima subetapa sugerida: contratos, models e schemas backend de leitura.
