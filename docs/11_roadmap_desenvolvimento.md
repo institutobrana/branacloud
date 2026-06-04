@@ -5017,3 +5017,9 @@ Observacoes:
 - Sem frontend nesta etapa.
 - Sem tela nesta etapa.
 - Proxima subetapa sugerida: contratos, models e schemas backend de leitura.
+
+## Odontograma Brana - Conferencia pos-migration V1
+- Conferencia somente leitura da migration minima concluida no banco local.
+- Tabelas, seed, FKs e indices da V1 validados documentalmente.
+- Nenhuma alteracao em frontend, `frontend/app.js` ou telas.
+- Proxima subetapa sugerida: contratos, models e schemas backend de leitura.
