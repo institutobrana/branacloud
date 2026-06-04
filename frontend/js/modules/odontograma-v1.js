@@ -39,7 +39,6 @@
 
   function getPacienteId() {
     if (state.paciente?.id) return num(state.paciente.id);
-    if (typeof fichaPacienteAtualId !== "undefined") return num(fichaPacienteAtualId);
     return 0;
   }
 
@@ -171,7 +170,34 @@
       if (searchModule && typeof searchModule.mount === "function" && cfg.paciente) {
         searchModule.mount(cfg.paciente, {
           currentPatient: state.paciente,
-          initialQuery: state.paciente ? formatPacienteLabel(state.paciente) : "",
+          initialQuery: "",
+          onSelect: async (item) => {
+            const paciente = item || null;
+            state.paciente = paciente;
+            state.tratamentos = [];
+            state.statusLookup = [];
+            state.resumo = null;
+            state.selectedTreatmentId = 0;
+            state.error = "";
+            state.notice = "";
+            renderSummaryHeader();
+            if (!paciente) {
+              renderEmpty("Selecione um paciente para carregar o odontograma.");
+              return null;
+            }
+            if (typeof fichaAplicarPaciente === "function") {
+              const result = fichaAplicarPaciente(paciente);
+              if (result && typeof result.then === "function") {
+                await result;
+              }
+            } else if (typeof fichaCarregarPacientePorId === "function") {
+              const result = fichaCarregarPacientePorId(num(paciente.id), true);
+              if (result && typeof result.then === "function") {
+                await result;
+              }
+            }
+            return paciente;
+          },
         });
       }
     } catch {}
@@ -427,9 +453,9 @@
       state.selectedTreatmentId = 0;
       state.statusLookup = [];
       state.resumo = null;
-      state.error = "Abra um paciente para carregar o odontograma.";
+      state.error = "";
       state.notice = "";
-      renderEmpty(state.error);
+      renderEmpty("Selecione um paciente para carregar o odontograma.");
       return false;
     }
     state.paciente = paciente;
@@ -525,9 +551,19 @@
     try {
       if (typeof ensurePanelChrome === "function") ensurePanelChrome(state.panel);
     } catch {}
-    void refresh(true);
+    state.paciente = null;
+    state.tratamentos = [];
+    state.statusLookup = [];
+    state.resumo = null;
+    state.selectedTreatmentId = 0;
+    state.error = "";
+    state.notice = "";
+    if (window.BranaOdontoPacienteSearchV1 && typeof window.BranaOdontoPacienteSearchV1.setCurrentPatient === "function") {
+      window.BranaOdontoPacienteSearchV1.setCurrentPatient(null);
+    }
+    renderEmpty("Selecione um paciente para carregar o odontograma.");
     if (typeof footerMsg !== "undefined" && footerMsg) {
-      footerMsg.textContent = "Odontograma V1 aberto em modo de leitura.";
+      footerMsg.textContent = "Odontograma V1 aberto sem paciente selecionado.";
     }
   }
 

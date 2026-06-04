@@ -180,6 +180,10 @@
       state.resultsData = Array.isArray(data) ? data : [];
       setStatus(state.resultsData.length ? `${state.resultsData.length} paciente(s) encontrado(s).` : "Nenhum paciente encontrado.", false);
       renderResults();
+      if (state.resultsData.length === 1 && state.handlers.autoOpenSingle !== false) {
+        setStatus("1 paciente encontrado. Abrindo paciente...", false);
+        await openPatient(state.resultsData[0]);
+      }
       return true;
     } catch (err) {
       if (seq !== state.requestSeq) return false;
@@ -201,6 +205,13 @@
     setCurrentPatient(item);
     setStatus(`Abrindo paciente #${num(item?.codigo) || id}...`, false);
     try {
+      if (typeof state.handlers.onSelect === "function") {
+        const selected = await state.handlers.onSelect(item);
+        setCurrentPatient(selected || item);
+        setStatus(`Paciente ${formatPacienteLabel(selected || item)} selecionado.`, false);
+        renderResults();
+        return true;
+      }
       if (typeof fichaCarregarPacientePorId === "function") {
         const loaded = await fichaCarregarPacientePorId(id, true);
         if (loaded) {

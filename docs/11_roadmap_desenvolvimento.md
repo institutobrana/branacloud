@@ -5076,3 +5076,6 @@ Observacoes:
 - A busca foi ajustada para reagir enquanto o usuario digita, com debounce leve, mantendo Enter e botao como alternativas.
 - O contêiner visual do paciente foi liberado para altura auto, permitindo que os resultados aparecam abaixo da linha de busca.
 - Proxima subetapa sugerida: contexto de tratamento em modulo proprio depois da busca de paciente.
+
+- Odontograma V1: correcao do fluxo de abertura do paciente e da tela vazia inicial, com abertura explicita do paciente selecionado na busca.
+
