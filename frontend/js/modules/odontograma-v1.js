@@ -149,9 +149,21 @@
   function panelHtml() {
     return `
       <section id="${PANEL_ID}" class="odonto-v1-panel hidden">
-        <div class="panel-title">Odontograma V1</div>
-        <div class="odonto-v1-toolbar">
-          <div class="odonto-v1-toolbar-left">
+        <div class="odonto-v1-shell">
+          <div class="odonto-v1-hero">
+            <div class="odonto-v1-hero-copy">
+              <div class="odonto-v1-hero-title">Odontograma V1</div>
+              <div class="odonto-v1-hero-subtitle">
+                <span id="odonto-v1-resumo-paciente" class="odonto-v1-muted">Sem paciente selecionado.</span>
+                <span id="odonto-v1-resumo-tratamento" class="odonto-v1-muted">Sem tratamento selecionado.</span>
+              </div>
+            </div>
+            <div class="odonto-v1-hero-actions">
+              <button id="odonto-v1-btn-atualizar" class="materiais-btn" type="button"><img src="/desktop-assets/restaurar.png" alt="">Atualiza</button>
+              <button id="odonto-v1-btn-fechar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Fecha</button>
+            </div>
+          </div>
+          <div class="odonto-v1-contextbar">
             <div class="odonto-v1-field">
               <label for="odonto-v1-paciente">Paciente</label>
               <div id="odonto-v1-paciente" class="box"></div>
@@ -160,31 +172,28 @@
               <label for="odonto-v1-tratamento">Tratamento</label>
               <select id="odonto-v1-tratamento"></select>
             </div>
+            <div class="odonto-v1-summary">
+              <span id="odonto-v1-resumo-contagem" class="odonto-v1-muted">0 intervenções.</span>
+              <span id="odonto-v1-loading" class="odonto-v1-muted odonto-v1-small">Pronto.</span>
+            </div>
           </div>
-          <div class="odonto-v1-actions">
-            <button id="odonto-v1-btn-atualizar" class="materiais-btn" type="button"><img src="/desktop-assets/restaurar.png" alt="">Atualiza</button>
-            <button id="odonto-v1-btn-fechar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Fecha</button>
+          <div class="odonto-v1-stage">
+            <section class="odonto-v1-stage-main odonto-v1-arcada-panel">
+              <div class="odonto-v1-card-title">Arcada clínica</div>
+              <div id="odonto-v1-arcada" class="odonto-v1-card-body"></div>
+            </section>
+            <aside class="odonto-v1-stage-rail">
+              <section class="odonto-v1-support-card odonto-v1-support-card-legend">
+                <div class="odonto-v1-support-title">Legenda clínica</div>
+                <div id="odonto-v1-legend" class="odonto-v1-card-body"></div>
+              </section>
+              <section class="odonto-v1-support-card odonto-v1-support-card-interventions">
+                <div class="odonto-v1-support-title">Intervenções registradas</div>
+                <div id="odonto-v1-intervencoes" class="odonto-v1-card-body"></div>
+              </section>
+            </aside>
           </div>
-        </div>
-        <div class="odonto-v1-subhead">
-          <div class="odonto-v1-summary">
-            <span id="odonto-v1-resumo-paciente" class="odonto-v1-muted">Sem paciente selecionado.</span>
-            <span id="odonto-v1-resumo-tratamento" class="odonto-v1-muted">Sem tratamento selecionado.</span>
-            <span id="odonto-v1-resumo-contagem" class="odonto-v1-muted">0 intervenções.</span>
-          </div>
-          <div id="odonto-v1-loading" class="odonto-v1-muted odonto-v1-small">Pronto.</div>
-        </div>
-        <div id="odonto-v1-feedback" class="odonto-v1-feedback">Pronto para carregar o odontograma em modo de leitura.</div>
-        <div id="odonto-v1-legend" class="odonto-v1-legend"></div>
-        <div class="odonto-v1-main">
-          <section class="odonto-v1-card">
-            <div class="odonto-v1-card-title">Estrutura visual da arcada</div>
-            <div id="odonto-v1-arcada" class="odonto-v1-card-body"></div>
-          </section>
-          <section class="odonto-v1-card">
-            <div class="odonto-v1-card-title">Intervenções registradas</div>
-            <div id="odonto-v1-intervencoes" class="odonto-v1-card-body"></div>
-          </section>
+          <div id="odonto-v1-feedback" class="odonto-v1-feedback">Pronto para carregar o odontograma em modo de leitura.</div>
         </div>
       </section>
     `;
@@ -209,6 +218,11 @@
   }
 
   function ensureUI() {
+    try {
+      if (window.BranaOdontoLayoutV1 && typeof window.BranaOdontoLayoutV1.ensureStyle === "function") {
+        window.BranaOdontoLayoutV1.ensureStyle();
+      }
+    } catch {}
     if (document.getElementById(PANEL_ID)) {
       state.panel = document.getElementById(PANEL_ID);
       return getPanelElements();

@@ -50,6 +50,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Validacao manual do vinculo usuario -> prestador Clinica confirmada pelo usuario; correcao backend-only considerada validada e documentada em `docs/validacao_manual_usuario_vinculo_prestador_clinica.md`; protecao estrutural preservada; nenhuma alteracao de codigo ou banco nesta etapa.
 - Bootstrap frontend do odontograma V1 documentado em `docs/odontograma_v1_frontend_bootstrap_leitura.md`; painel de leitura validado em DOM simulado com backend real, usando status, resumo e fallback de referencia vazia quando nao ha tratamentos cadastrados; `frontend/app.js` permaneceu intacto.
 - Refino visual controlado da arcada do odontograma V1 documentado em `docs/odontograma_v1_refino_visual_arcada_leitura.md`; arcada passou a renderizar em faixas superior/inferior via modulo separado, intervencoes ficaram em cards simples, sem escrita e sem tocar em `frontend/app.js`.
+- Reorganizacao do layout clinico do odontograma V1 documentada em `docs/odontograma_v1_reorganizacao_layout_clinico.md`; shell clinico prioriza a arcada como area principal, suporte ficou lateral/auxiliar, sem escrita e com modularizacao preservada.
 
 ## Proximas prioridades sugeridas
 
