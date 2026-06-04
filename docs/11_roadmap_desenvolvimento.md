@@ -48,6 +48,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Contrato tecnico da correcao de vinculo usuario -> prestador Clinica registrado em `docs/contrato_correcao_usuario_vinculo_prestador_clinica.md`; abordagem escolhida `USER-PREST-CONTRATO-B`; regra definida: manter a protecao estrutural do prestador Clinica e liberar apenas o vinculo operacional de usuario no backend, sem mexer em frontend, payload ou banco nesta etapa.
 - Correcao backend-only do vinculo usuario -> prestador Clinica aplicada em `backend/routes/user_admin_routes.py`, com helper operacional separado para `admin_create_user` e `admin_update_user` e preservacao do helper estrutural; proxima validacao recomendada: teste manual controlado do vinculo e consolidacao documental final.
 - Validacao manual do vinculo usuario -> prestador Clinica confirmada pelo usuario; correcao backend-only considerada validada e documentada em `docs/validacao_manual_usuario_vinculo_prestador_clinica.md`; protecao estrutural preservada; nenhuma alteracao de codigo ou banco nesta etapa.
+- Bootstrap frontend do odontograma V1 documentado em `docs/odontograma_v1_frontend_bootstrap_leitura.md`; painel de leitura validado em DOM simulado com backend real, usando status, resumo e fallback de referencia vazia quando nao ha tratamentos cadastrados; `frontend/app.js` permaneceu intacto.
 
 ## Proximas prioridades sugeridas
 
