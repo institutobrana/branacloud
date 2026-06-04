@@ -53,6 +53,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Reorganizacao do layout clinico do odontograma V1 documentada em `docs/odontograma_v1_reorganizacao_layout_clinico.md`; shell clinico prioriza a arcada como area principal, suporte ficou lateral/auxiliar, sem escrita e com modularizacao preservada.
 - Auditoria documental de `assets/easy` para o odontograma registrada em `docs/odontograma_assets_easy_auditoria.md`; o acervo e quase todo BMP e tem blocos promissores de dentes, arcadas, simbolos e intervencoes, com risco de acoplamento direto ao legado.
 - Inspecao visual controlada dos BMPs mais promissores de `assets/easy` registrada em `docs/odontograma_assets_easy_inspecao_visual_bmps.md`; arcadas e dentes servem como melhor referencia de layout, enquanto simbolos e intervencoes ficam mais indicados para fase futura, sem copiar o legado.
+- Refino da geometria da arcada V1 por referencia visual dos BMPs Easy registrado em `docs/odontograma_v1_refino_geometria_arcada_por_referencia_easy.md`; a arcada passou a usar composicao mais curva e odontologica, sem importar assets legados e sem escrita.
 
 ## Proximas prioridades sugeridas
 
