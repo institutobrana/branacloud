@@ -194,15 +194,23 @@
   }
 
   function clearSelectedRow() {
-    if (state.selectedRow?.classList) {
-      state.selectedRow.classList.remove(SELECTED_CLASS);
-    }
+    historicoLimparSelecaoVisual();
     if (state.editingRow?.isConnected) {
       definirLinhaHistoricoEditavel(state.editingRow, false);
     }
     state.selectedRow = null;
     state.activeCellIndex = 0;
     state.editingRow = null;
+  }
+
+  function historicoLimparSelecaoVisual(exceto = null) {
+    const tbody = historicoTbodyEl();
+    if (!tbody) return;
+    const rows = tbody.querySelectorAll(`tr.${SELECTED_CLASS}`);
+    rows.forEach((row) => {
+      if (exceto && row === exceto) return;
+      row.classList.remove(SELECTED_CLASS);
+    });
   }
 
   function historicoCelulas(tr) {
@@ -544,6 +552,7 @@
     cells.forEach((cell, idx) => {
       cell.tabIndex = idx === alvo ? 0 : -1;
     });
+    historicoLimparSelecaoVisual(tr);
     state.selectedRow = tr;
     state.activeCellIndex = alvo;
     tr.classList.add(SELECTED_CLASS);
