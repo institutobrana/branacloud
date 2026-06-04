@@ -85,6 +85,18 @@ class OdontogramaListaStatusResponse(BaseModel):
     itens: list[OdontogramaIntervencaoStatusSchema] = Field(default_factory=list)
 
 
+class OdontogramaArcadaSlotsResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    itens: list[OdontogramaArcadaSlotSchema] = Field(default_factory=list)
+
+
+class OdontogramaIntervencoesResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    itens: list[OdontogramaIntervencaoSchema] = Field(default_factory=list)
+
+
 class OdontogramaResumoResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

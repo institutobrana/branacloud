@@ -28,6 +28,13 @@ from models.indice_financeiro import IndiceCotacao, IndiceFinanceiro  # noqa: F4
 from models.medicamento import Medicamento, RestricaoTerapeutica  # noqa: F401
 from models.modelo_documento import ModeloDocumento  # noqa: F401
 from models.paciente import Paciente  # noqa: F401
+from models.odontograma_model import (  # noqa: F401
+    OdontogramaArcadaSlot,
+    OdontogramaDente,
+    OdontogramaFace,
+    OdontogramaIntervencao,
+    OdontogramaIntervencaoStatus,
+)
 from models.prestador_odonto import PrestadorComissaoOdonto, PrestadorCredenciamentoOdonto, PrestadorOdonto  # noqa: F401
 from models.protetico import Protetico, ServicoProtetico  # noqa: F401
 from models.procedimento_generico import (  # noqa: F401
@@ -57,6 +64,7 @@ from routes.financeiro_routes import router as financeiro_router
 from routes.indices_financeiros_routes import router as indices_financeiros_router
 from routes.licenca_routes import router as licenca_router
 from routes.materiais_routes import router as materiais_router
+from routes.odontograma_routes import router as odontograma_router
 from routes.medicamentos_routes import router as medicamentos_router
 from routes.procedimentos_routes import router as procedimentos_router
 from routes.relatorios_routes import router as relatorios_router
@@ -377,6 +385,7 @@ app.include_router(indices_financeiros_router)
 app.include_router(relatorios_router)
 app.include_router(licenca_router)
 app.include_router(materiais_router)
+app.include_router(odontograma_router)
 app.include_router(medicamentos_router)
 app.include_router(procedimentos_router)
 app.include_router(etiquetas_router)

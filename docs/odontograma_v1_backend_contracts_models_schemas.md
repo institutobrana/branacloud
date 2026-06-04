@@ -21,6 +21,9 @@ Criar a camada minima de backend estrutural de leitura da V1 do odontograma Bran
 
 Arquivos novos desta subetapa:
 
+- `backend/repositories/odontograma_repository.py`
+- `backend/services/odontograma_service.py`
+- `backend/routes/odontograma_routes.py`
 - `backend/contracts/odontograma_contract.py`
 - `backend/models/odontograma_model.py`
 - `backend/schemas/odontograma_schema.py`
@@ -33,6 +36,9 @@ Arquivos de apoio desta subetapa:
 ## 4. Estrutura modular adotada
 
 - `contracts` para tipagem e contrato interno de leitura
+- `repositories` para consultas SQLAlchemy de leitura
+- `services` para orquestração mínima e montagem do payload
+- `routes` para exposição HTTP dos endpoints de leitura
 - `models` para representacao ORM das tabelas da V1
 - `schemas` para serializacao e validacao de respostas futuras
 
@@ -58,10 +64,12 @@ Os models espelham as tabelas criadas pela migration minima da V1 e mantem relac
 ## 7. Schemas criados
 
 - `OdontogramaIntervencaoStatusSchema`
+- `OdontogramaArcadaSlotsResponse`
 - `OdontogramaArcadaSlotSchema`
 - `OdontogramaDenteSchema`
 - `OdontogramaFaceSchema`
 - `OdontogramaIntervencaoSchema`
+- `OdontogramaIntervencoesResponse`
 - `OdontogramaResumoSchema`
 - `OdontogramaListaStatusResponse`
 - `OdontogramaResumoResponse`

@@ -5045,3 +5045,10 @@ Observacoes:
 - Sem escrita no banco durante a validacao.
 - Frontend e `app.js` mantidos intactos.
 - Proxima subetapa sugerida: bootstrap, API, estado e render base do frontend do odontograma V1.
+
+## Odontograma Brana - Fechamento tecnico das rotas backend de leitura da V1
+- Fechamento correto da subetapa tecnica em commit seletivo.
+- Arquivos backend da leitura do odontograma V1 consolidados.
+- Validacao local confirmada com respostas `200 OK`.
+- Sem frontend e sem escrita.
+- Proxima subetapa sugerida: bootstrap, API, estado e render base do frontend do odontograma V1.
