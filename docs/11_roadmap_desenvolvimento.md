@@ -49,6 +49,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Correcao backend-only do vinculo usuario -> prestador Clinica aplicada em `backend/routes/user_admin_routes.py`, com helper operacional separado para `admin_create_user` e `admin_update_user` e preservacao do helper estrutural; proxima validacao recomendada: teste manual controlado do vinculo e consolidacao documental final.
 - Validacao manual do vinculo usuario -> prestador Clinica confirmada pelo usuario; correcao backend-only considerada validada e documentada em `docs/validacao_manual_usuario_vinculo_prestador_clinica.md`; protecao estrutural preservada; nenhuma alteracao de codigo ou banco nesta etapa.
 - Bootstrap frontend do odontograma V1 documentado em `docs/odontograma_v1_frontend_bootstrap_leitura.md`; painel de leitura validado em DOM simulado com backend real, usando status, resumo e fallback de referencia vazia quando nao ha tratamentos cadastrados; `frontend/app.js` permaneceu intacto.
+- Refino visual controlado da arcada do odontograma V1 documentado em `docs/odontograma_v1_refino_visual_arcada_leitura.md`; arcada passou a renderizar em faixas superior/inferior via modulo separado, intervencoes ficaram em cards simples, sem escrita e sem tocar em `frontend/app.js`.
 
 ## Proximas prioridades sugeridas
 

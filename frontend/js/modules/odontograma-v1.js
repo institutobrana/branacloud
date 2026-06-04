@@ -119,6 +119,20 @@
       .odonto-v1-empty{padding:18px 12px;color:#5d6b79;background:#fbfcfe;border:1px dashed #d7dfe8}
       .odonto-v1-muted{color:#667788}
       .odonto-v1-small{font-size:11px}
+      .odonto-v1-interv-list{display:grid;gap:8px}
+      .odonto-v1-interv-card{border:1px solid #d7e0ea;background:#fff;padding:9px 10px;display:grid;gap:6px}
+      .odonto-v1-interv-head{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+      .odonto-v1-interv-core{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-width:0}
+      .odonto-v1-interv-id{font:700 11px Consolas,Monaco,monospace;color:#34475d}
+      .odonto-v1-interv-status{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;border:1px solid #ccd7e4;background:#f7f9fc;font:700 10px Tahoma,sans-serif;text-transform:uppercase;letter-spacing:.02em;color:#334155}
+      .odonto-v1-interv-status.is-realizada{border-color:#bde1c5;background:#f2fbf3;color:#1f7a3f}
+      .odonto-v1-interv-status.is-realizar{border-color:#f4d2a4;background:#fff8ef;color:#9b6a1a}
+      .odonto-v1-interv-status.is-observada{border-color:#d7dfe8;background:#f7f9fc;color:#475569}
+      .odonto-v1-interv-proc{font:700 12px Tahoma,sans-serif;color:#1f2937;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .odonto-v1-interv-prestador{font:11px Tahoma,sans-serif;color:#667788}
+      .odonto-v1-interv-meta{display:flex;gap:12px;flex-wrap:wrap;font:11px Tahoma,sans-serif;color:#4b5563}
+      .odonto-v1-interv-meta strong{color:#243244}
+      .odonto-v1-interv-obs{font:12px Tahoma,sans-serif;color:#1f2937;line-height:1.35;background:#fbfcfe;border:1px solid #edf2f7;padding:6px 8px}
       @media (max-width: 1180px){
         .odonto-v1-main{grid-template-columns:1fr}
         .odonto-v1-arcada-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -278,13 +292,22 @@
   function renderArcada() {
     const cfg = getPanelElements();
     if (!cfg.arcada) return;
-    const itens = Array.isArray(state.resumo?.arcada_slots) ? [...state.resumo.arcada_slots] : [];
-    itens.sort((a, b) => num(a.slot_ordem) - num(b.slot_ordem));
-    if (!itens.length) {
+    const itens = Array.isArray(state.resumo?.arcada_slots) ? state.resumo.arcada_slots : [];
+    const renderer = window.BranaOdontoArcadaV1;
+    if (renderer && typeof renderer.render === "function") {
+      renderer.render(cfg.arcada, itens, {
+        emptyMessage: "Nenhum slot de arcada encontrado para o tratamento selecionado.",
+        superiorLabel: "Arcada superior",
+        inferiorLabel: "Arcada inferior",
+      });
+      return;
+    }
+    const lista = [...itens].sort((a, b) => num(a.slot_ordem) - num(b.slot_ordem));
+    if (!lista.length) {
       cfg.arcada.innerHTML = '<div class="odonto-v1-empty">Nenhum slot de arcada encontrado para o tratamento selecionado.</div>';
       return;
     }
-    cfg.arcada.innerHTML = `<div class="odonto-v1-arcada-grid">${itens
+    cfg.arcada.innerHTML = `<div class="odonto-v1-arcada-grid">${lista
       .map((item) => {
         const slot = num(item.slot_ordem);
         const dente = item.numero_dente_fdi == null ? "" : String(item.numero_dente_fdi);
@@ -322,9 +345,11 @@
       cfg.intervencoes.innerHTML = '<div class="odonto-v1-empty">Nenhuma intervenção encontrada para o tratamento selecionado.</div>';
       return;
     }
-    const rows = itens
+    const cards = itens
       .map((item) => {
         const status = item.status?.descricao || item.status?.codigo || "-";
+        const statusBase = String(item.status?.codigo || item.status?.descricao || "status").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        const statusClass = `is-${statusBase || "status"}`;
         const denteTexto = Array.isArray(item.dentes) && item.dentes.length
           ? item.dentes.map((dente) => String(dente.numero_dente_fdi)).join(", ")
           : "—";
@@ -335,38 +360,27 @@
         const dataExecucao = String(item.data_execucao || "").trim() || "—";
         const observacao = String(item.observacao_resumida || "").trim() || "—";
         return `
-          <tr>
-            <td class="mono">${escHtml(num(item.id))}</td>
-            <td>${escHtml(status)}</td>
-            <td class="mono">${escHtml(num(item.procedimento_id))}</td>
-            <td class="mono">${escHtml(num(item.prestador_id) || "—")}</td>
-            <td class="mono">${escHtml(dataPlanejada)}</td>
-            <td class="mono">${escHtml(dataExecucao)}</td>
-            <td>${escHtml(denteTexto)}</td>
-            <td>${escHtml(faceTexto)}</td>
-            <td>${escHtml(observacao)}</td>
-          </tr>
+          <article class="odonto-v1-interv-card">
+            <div class="odonto-v1-interv-head">
+              <div class="odonto-v1-interv-core">
+                <span class="odonto-v1-interv-id">#${escHtml(num(item.id))}</span>
+                <span class="odonto-v1-interv-status ${escHtml(statusClass)}">${escHtml(status)}</span>
+                <strong class="odonto-v1-interv-proc">${escHtml(item.procedimento_nome || num(item.procedimento_id) || "-")}</strong>
+              </div>
+              <span class="odonto-v1-interv-prestador">Prestador ${escHtml(num(item.prestador_id) || "—")}</span>
+            </div>
+            <div class="odonto-v1-interv-meta">
+              <span><strong>Dentes:</strong> ${escHtml(denteTexto)}</span>
+              <span><strong>Faces:</strong> ${escHtml(faceTexto)}</span>
+              <span><strong>Planejada:</strong> ${escHtml(dataPlanejada)}</span>
+              <span><strong>Execucao:</strong> ${escHtml(dataExecucao)}</span>
+            </div>
+            <div class="odonto-v1-interv-obs">${escHtml(observacao)}</div>
+          </article>
         `;
       })
       .join("");
-    cfg.intervencoes.innerHTML = `
-      <table class="odonto-v1-list">
-        <thead>
-          <tr>
-            <th style="width:72px">ID</th>
-            <th style="width:118px">Status</th>
-            <th style="width:90px">Proced.</th>
-            <th style="width:90px">Prest.</th>
-            <th style="width:108px">Planejada</th>
-            <th style="width:108px">Execução</th>
-            <th style="width:140px">Dentes</th>
-            <th style="width:180px">Faces</th>
-            <th>Observação</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `;
+    cfg.intervencoes.innerHTML = `<div class="odonto-v1-interv-list">${cards}</div>`;
   }
 
   function renderEmpty(message) {
