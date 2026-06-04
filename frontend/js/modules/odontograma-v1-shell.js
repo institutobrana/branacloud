@@ -21,8 +21,14 @@
       .odonto-v1-hero-actions .materiais-btn{height:30px;min-width:94px;padding:0 10px;justify-content:center}
       .odonto-v1-contextbar{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.95fr) minmax(220px,.75fr);gap:10px;align-items:end;padding:8px 10px;border:1px solid #d7e0ea;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.02)}
       .odonto-v1-contextbar .odonto-v1-field label{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:#425266}
-      .odonto-v1-contextbar .odonto-v1-field .box,
       .odonto-v1-contextbar .odonto-v1-field select{height:30px;border:1px solid #bfc9d6;background:#fff;padding:0 8px;font:12px Tahoma,sans-serif}
+      .odonto-v1-contextbar .odonto-v1-field #odonto-v1-paciente{
+        height:auto;
+        min-height:30px;
+        padding:0;
+        border:none;
+        background:transparent;
+      }
       .odonto-v1-contextbar .odonto-v1-summary{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:flex-end;color:#425266}
       .odonto-v1-contextbar .odonto-v1-summary .odonto-v1-muted{white-space:nowrap}
       .odonto-v1-stage{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,.5fr);gap:10px;align-items:start;min-height:0}

@@ -5074,4 +5074,5 @@ Observacoes:
 - Pesquisa reaproveita o contrato da ficha principal e nao introduz escrita.
 - `frontend/app.js` permanece fora da solucao do modulo.
 - A busca foi ajustada para reagir enquanto o usuario digita, com debounce leve, mantendo Enter e botao como alternativas.
+- O contêiner visual do paciente foi liberado para altura auto, permitindo que os resultados aparecam abaixo da linha de busca.
 - Proxima subetapa sugerida: contexto de tratamento em modulo proprio depois da busca de paciente.
