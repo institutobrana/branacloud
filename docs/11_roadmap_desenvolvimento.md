@@ -5031,3 +5031,17 @@ Observacoes:
 - Sem frontend nesta etapa.
 - Modularizacao preservada.
 - Proxima subetapa sugerida: rotas backend de leitura.
+
+## Odontograma Brana - Rotas backend de leitura da V1
+- Rotas de leitura do odontograma V1 materializadas no backend.
+- Modulos separados em route, service e repository minimo.
+- Sem frontend nesta etapa.
+- Sem escrita nesta etapa.
+- Proxima subetapa sugerida: validacao tecnica das rotas e, depois, frontend bootstrap/api/estado/render base.
+
+## Odontograma Brana - Validacao tecnica das rotas backend de leitura da V1
+- Validacao local concluida com `200 OK` nas rotas de leitura do odontograma V1.
+- JSON coerente com os schemas de leitura.
+- Sem escrita no banco durante a validacao.
+- Frontend e `app.js` mantidos intactos.
+- Proxima subetapa sugerida: bootstrap, API, estado e render base do frontend do odontograma V1.
