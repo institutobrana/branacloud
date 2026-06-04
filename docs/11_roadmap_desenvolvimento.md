@@ -5023,3 +5023,11 @@ Observacoes:
 - Tabelas, seed, FKs e indices da V1 validados documentalmente.
 - Nenhuma alteracao em frontend, `frontend/app.js` ou telas.
 - Proxima subetapa sugerida: contratos, models e schemas backend de leitura.
+
+## Odontograma Brana - Contracts, models e schemas backend da V1
+- Camada backend estrutural de leitura da V1 criada.
+- Contracts, models e schemas do odontograma adicionados.
+- Sem rotas nesta etapa.
+- Sem frontend nesta etapa.
+- Modularizacao preservada.
+- Proxima subetapa sugerida: rotas backend de leitura.
