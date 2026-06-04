@@ -57,6 +57,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Mapeamento funcional da tela principal do EasyDental registrado em `docs/easydental_tela_principal_odontograma_mapeamento_e_plano.md`; a tela foi decomposta em shell, busca de paciente, odontograma, procedimentos, contexto lateral e historico inferior para orientar a proxima evolucao modular do Brana.
 - Investigacao detalhada da tela principal odontologica no `Y:\\EDS70` registrada em `docs/easydental_investigacao_tela_principal_odontograma_y_eds70.md`; a base viva confirmou a tela integrada com menus, toolbar, busca de paciente, arcada, procedimentos, contexto lateral e grade inferior de historico, exigindo modularizacao clara no Brana.
 - Especificacao de implementacao modular da tela odontologica do Brana registrada em `docs/brana_odontograma_especificacao_implementacao_modular.md`; ordem de arquivos, responsabilidades e sequencia de entrega definidas para evitar monolito e manter `frontend/app.js` fora do fluxo odontologico.
+- Plano de subtarefas da implementacao modular do odontograma Brana registrado em `docs/brana_odontograma_plano_subtarefas_implementacao.md`; a especificacao foi quebrada em fases pequenas e validaveis para shell, busca de paciente, tratamento, arcada, procedimentos, contexto lateral e historico.
 
 ## Proximas prioridades sugeridas
 
