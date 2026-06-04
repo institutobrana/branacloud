@@ -54,6 +54,9 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Auditoria documental de `assets/easy` para o odontograma registrada em `docs/odontograma_assets_easy_auditoria.md`; o acervo e quase todo BMP e tem blocos promissores de dentes, arcadas, simbolos e intervencoes, com risco de acoplamento direto ao legado.
 - Inspecao visual controlada dos BMPs mais promissores de `assets/easy` registrada em `docs/odontograma_assets_easy_inspecao_visual_bmps.md`; arcadas e dentes servem como melhor referencia de layout, enquanto simbolos e intervencoes ficam mais indicados para fase futura, sem copiar o legado.
 - Refino da geometria da arcada V1 por referencia visual dos BMPs Easy registrado em `docs/odontograma_v1_refino_geometria_arcada_por_referencia_easy.md`; a arcada passou a usar composicao mais curva e odontologica, sem importar assets legados e sem escrita.
+- Mapeamento funcional da tela principal do EasyDental registrado em `docs/easydental_tela_principal_odontograma_mapeamento_e_plano.md`; a tela foi decomposta em shell, busca de paciente, odontograma, procedimentos, contexto lateral e historico inferior para orientar a proxima evolucao modular do Brana.
+- Investigacao detalhada da tela principal odontologica no `Y:\\EDS70` registrada em `docs/easydental_investigacao_tela_principal_odontograma_y_eds70.md`; a base viva confirmou a tela integrada com menus, toolbar, busca de paciente, arcada, procedimentos, contexto lateral e grade inferior de historico, exigindo modularizacao clara no Brana.
+- Especificacao de implementacao modular da tela odontologica do Brana registrada em `docs/brana_odontograma_especificacao_implementacao_modular.md`; ordem de arquivos, responsabilidades e sequencia de entrega definidas para evitar monolito e manter `frontend/app.js` fora do fluxo odontologico.
 
 ## Proximas prioridades sugeridas
 
