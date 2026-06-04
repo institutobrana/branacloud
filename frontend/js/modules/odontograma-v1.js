@@ -166,6 +166,15 @@
     const cfg = shell.mountPanel();
     if (!cfg) return null;
     state.panel = cfg.panel || document.getElementById(PANEL_ID);
+    try {
+      const searchModule = window.BranaOdontoPacienteSearchV1;
+      if (searchModule && typeof searchModule.mount === "function" && cfg.paciente) {
+        searchModule.mount(cfg.paciente, {
+          currentPatient: state.paciente,
+          initialQuery: state.paciente ? formatPacienteLabel(state.paciente) : "",
+        });
+      }
+    } catch {}
     if (!state.uiBound && typeof shell.bindControls === "function") {
       shell.bindControls({
         onRefresh: () => {
@@ -199,7 +208,9 @@
 
   function renderSummaryHeader() {
     const cfg = getPanelElements();
-    if (cfg.paciente) cfg.paciente.textContent = formatPacienteLabel(state.paciente);
+    if (window.BranaOdontoPacienteSearchV1 && typeof window.BranaOdontoPacienteSearchV1.setCurrentPatient === "function") {
+      window.BranaOdontoPacienteSearchV1.setCurrentPatient(state.paciente);
+    }
     if (cfg.resumoPaciente) {
       cfg.resumoPaciente.textContent = state.paciente ? formatPacienteLabel(state.paciente) : "Sem paciente selecionado.";
     }

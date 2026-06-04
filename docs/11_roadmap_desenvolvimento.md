@@ -5068,3 +5068,9 @@ Observacoes:
 - `frontend/index.html` atualizado para carregar a moldura antes do fluxo principal.
 - Modo de leitura preservado, sem escrita e sem tocar em `frontend/app.js`.
 - Proxima subetapa sugerida: busca de paciente em modulo proprio mantendo a shell como base estavel da tela principal odontologica.
+
+## Odontograma Brana - Busca de paciente modular da V1
+- Campo de paciente do Odontograma V1 passou a consultar pacientes por texto e abrir o contexto atual.
+- Pesquisa reaproveita o contrato da ficha principal e nao introduz escrita.
+- `frontend/app.js` permanece fora da solucao do modulo.
+- Proxima subetapa sugerida: contexto de tratamento em modulo proprio depois da busca de paciente.
