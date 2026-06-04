@@ -4983,3 +4983,11 @@ Observacoes:
 - Nenhum banco alterado.
 - Sem migration, endpoint ou UI.
 - Proxima etapa futura recomendada: validar `DENTE`/`FACE` e status de `INTERVENCAO` antes de codificar.
+## Odontograma EasyDental - Validacao de DENTE, FACE e _STATUS_INTERV
+- Validacao documental de `DENTE`, `FACE` e `_STATUS_INTERV` no EasyDental em uso.
+- Fechamento parcial das cardinalidades do odontograma.
+- Etapa somente leitura.
+- Modulo classificado como especifico de Odontologia.
+- Nenhum codigo alterado.
+- Nenhum banco alterado.
+- Futura implementacao deve seguir padrao modularizado no backend e frontend, evitando monolitos.
