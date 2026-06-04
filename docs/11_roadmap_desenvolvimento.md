@@ -4991,3 +4991,12 @@ Observacoes:
 - Nenhum codigo alterado.
 - Nenhum banco alterado.
 - Futura implementacao deve seguir padrao modularizado no backend e frontend, evitando monolitos.
+## Odontograma Brana - Contrato minimo de implementacao modular
+- Criacao do contrato minimo de implementacao modular do odontograma Brana.
+- Reforco explicito de modularizacao futura no backend e frontend.
+- Etapa somente documental.
+- Modulo especifico de Odontologia.
+- Nenhum codigo alterado.
+- Nenhum banco alterado.
+- Nenhuma migration, endpoint ou tela criada.
+- Proxima trilha futura: eventual contrato tecnico final antes da primeira implementacao.
