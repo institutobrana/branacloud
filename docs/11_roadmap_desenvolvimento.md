@@ -4974,3 +4974,12 @@ Observacoes:
 - Nenhum codigo alterado.
 - Nenhum banco alterado.
 - Documento de referência: `docs/odontograma_easydental_diagramas_mermaid.md`.
+## Odontograma Brana - Contrato futuro de modelagem
+- Criacao do contrato inicial de modelagem futura do odontograma Brana.
+- Base em auditoria EasyDental, diagrama relacional e diagramas Mermaid.
+- Modulo classificado como especifico de Odontologia.
+- Etapa somente documental, sem implementacao.
+- Nenhum codigo alterado.
+- Nenhum banco alterado.
+- Sem migration, endpoint ou UI.
+- Proxima etapa futura recomendada: validar `DENTE`/`FACE` e status de `INTERVENCAO` antes de codificar.
