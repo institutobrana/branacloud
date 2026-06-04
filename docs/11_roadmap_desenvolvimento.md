@@ -4960,3 +4960,10 @@ Observacoes:
 - Objetivo: mapear armazenamento, estados, cores e tabelas participantes.
 - Etapa somente leitura; nenhum código, banco ou arquivo do EasyDental foi alterado.
 - Documento de referência: `docs/odontograma_easydental_auditoria_armazenamento_estados_cores_tabelas.md`.
+## Odontograma EasyDental - Diagrama relacional e contrato inicial de modelagem Brana
+- Consolidacao do diagrama relacional do odontograma EasyDental concluida em etapa somente documental.
+- Contrato inicial de modelagem futura para o odontograma Brana registrado sem implementacao.
+- Modulo classificado como especifico de Odontologia.
+- Nenhum codigo alterado.
+- Nenhum banco alterado.
+- Documento de referência: `docs/odontograma_easydental_diagrama_relacional_contrato_modelagem_brana.md`.
