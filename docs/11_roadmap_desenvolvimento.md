@@ -52,6 +52,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Refino visual controlado da arcada do odontograma V1 documentado em `docs/odontograma_v1_refino_visual_arcada_leitura.md`; arcada passou a renderizar em faixas superior/inferior via modulo separado, intervencoes ficaram em cards simples, sem escrita e sem tocar em `frontend/app.js`.
 - Reorganizacao do layout clinico do odontograma V1 documentada em `docs/odontograma_v1_reorganizacao_layout_clinico.md`; shell clinico prioriza a arcada como area principal, suporte ficou lateral/auxiliar, sem escrita e com modularizacao preservada.
 - Auditoria documental de `assets/easy` para o odontograma registrada em `docs/odontograma_assets_easy_auditoria.md`; o acervo e quase todo BMP e tem blocos promissores de dentes, arcadas, simbolos e intervencoes, com risco de acoplamento direto ao legado.
+- Inspecao visual controlada dos BMPs mais promissores de `assets/easy` registrada em `docs/odontograma_assets_easy_inspecao_visual_bmps.md`; arcadas e dentes servem como melhor referencia de layout, enquanto simbolos e intervencoes ficam mais indicados para fase futura, sem copiar o legado.
 
 ## Proximas prioridades sugeridas
 
