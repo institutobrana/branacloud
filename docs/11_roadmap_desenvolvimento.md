@@ -5062,3 +5062,9 @@ Observacoes:
 - Validacao local confirmada com respostas `200 OK`.
 - Sem frontend e sem escrita.
 - Proxima subetapa sugerida: bootstrap, API, estado e render base do frontend do odontograma V1.
+
+## Odontograma Brana - Shell odontologica modular da V1
+- Shell visual principal do odontograma V1 separada em modulo proprio no frontend.
+- `frontend/index.html` atualizado para carregar a moldura antes do fluxo principal.
+- Modo de leitura preservado, sem escrita e sem tocar em `frontend/app.js`.
+- Proxima subetapa sugerida: busca de paciente em modulo proprio mantendo a shell como base estavel da tela principal odontologica.

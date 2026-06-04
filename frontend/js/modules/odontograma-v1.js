@@ -16,6 +16,7 @@
     loading: false,
     error: "",
     notice: "",
+    uiBound: false,
   };
 
   function escHtml(value) {
@@ -147,115 +148,41 @@
   }
 
   function panelHtml() {
-    return `
-      <section id="${PANEL_ID}" class="odonto-v1-panel hidden">
-        <div class="odonto-v1-shell">
-          <div class="odonto-v1-hero">
-            <div class="odonto-v1-hero-copy">
-              <div class="odonto-v1-hero-title">Odontograma V1</div>
-              <div class="odonto-v1-hero-subtitle">
-                <span id="odonto-v1-resumo-paciente" class="odonto-v1-muted">Sem paciente selecionado.</span>
-                <span id="odonto-v1-resumo-tratamento" class="odonto-v1-muted">Sem tratamento selecionado.</span>
-              </div>
-            </div>
-            <div class="odonto-v1-hero-actions">
-              <button id="odonto-v1-btn-atualizar" class="materiais-btn" type="button"><img src="/desktop-assets/restaurar.png" alt="">Atualiza</button>
-              <button id="odonto-v1-btn-fechar" class="materiais-btn" type="button"><img src="/desktop-assets/cancela.png" alt="">Fecha</button>
-            </div>
-          </div>
-          <div class="odonto-v1-contextbar">
-            <div class="odonto-v1-field">
-              <label for="odonto-v1-paciente">Paciente</label>
-              <div id="odonto-v1-paciente" class="box"></div>
-            </div>
-            <div class="odonto-v1-field">
-              <label for="odonto-v1-tratamento">Tratamento</label>
-              <select id="odonto-v1-tratamento"></select>
-            </div>
-            <div class="odonto-v1-summary">
-              <span id="odonto-v1-resumo-contagem" class="odonto-v1-muted">0 intervenções.</span>
-              <span id="odonto-v1-loading" class="odonto-v1-muted odonto-v1-small">Pronto.</span>
-            </div>
-          </div>
-          <div class="odonto-v1-stage">
-            <section class="odonto-v1-stage-main odonto-v1-arcada-panel">
-              <div class="odonto-v1-card-title">Arcada clínica</div>
-              <div id="odonto-v1-arcada" class="odonto-v1-card-body"></div>
-            </section>
-            <aside class="odonto-v1-stage-rail">
-              <section class="odonto-v1-support-card odonto-v1-support-card-legend">
-                <div class="odonto-v1-support-title">Legenda clínica</div>
-                <div id="odonto-v1-legend" class="odonto-v1-card-body"></div>
-              </section>
-              <section class="odonto-v1-support-card odonto-v1-support-card-interventions">
-                <div class="odonto-v1-support-title">Intervenções registradas</div>
-                <div id="odonto-v1-intervencoes" class="odonto-v1-card-body"></div>
-              </section>
-            </aside>
-          </div>
-          <div id="odonto-v1-feedback" class="odonto-v1-feedback">Pronto para carregar o odontograma em modo de leitura.</div>
-        </div>
-      </section>
-    `;
+    const shell = window.BranaOdontoShellV1;
+    if (shell && typeof shell.panelHtml === "function") return shell.panelHtml();
+    return "";
   }
 
   function getPanelElements() {
-    return {
-      panel: document.getElementById(PANEL_ID),
-      paciente: document.getElementById("odonto-v1-paciente"),
-      tratamento: document.getElementById("odonto-v1-tratamento"),
-      btnAtualizar: document.getElementById("odonto-v1-btn-atualizar"),
-      btnFechar: document.getElementById("odonto-v1-btn-fechar"),
-      resumoPaciente: document.getElementById("odonto-v1-resumo-paciente"),
-      resumoTratamento: document.getElementById("odonto-v1-resumo-tratamento"),
-      resumoContagem: document.getElementById("odonto-v1-resumo-contagem"),
-      loading: document.getElementById("odonto-v1-loading"),
-      feedback: document.getElementById("odonto-v1-feedback"),
-      legend: document.getElementById("odonto-v1-legend"),
-      arcada: document.getElementById("odonto-v1-arcada"),
-      intervencoes: document.getElementById("odonto-v1-intervencoes"),
-    };
+    const shell = window.BranaOdontoShellV1;
+    if (shell && typeof shell.getPanelElements === "function") return shell.getPanelElements();
+    return {};
   }
 
   function ensureUI() {
-    try {
-      if (window.BranaOdontoLayoutV1 && typeof window.BranaOdontoLayoutV1.ensureStyle === "function") {
-        window.BranaOdontoLayoutV1.ensureStyle();
-      }
-    } catch {}
-    if (document.getElementById(PANEL_ID)) {
-      state.panel = document.getElementById(PANEL_ID);
-      return getPanelElements();
-    }
     ensureStyle();
-    const anchor =
-      (typeof workspaceEmpty !== "undefined" && workspaceEmpty && typeof workspaceEmpty.insertAdjacentHTML === "function")
-        ? workspaceEmpty
-        : document.getElementById("workspace-empty");
-    if (!anchor || typeof anchor.insertAdjacentHTML !== "function") return null;
-
-    anchor.insertAdjacentHTML("afterend", panelHtml());
-    state.panel = document.getElementById(PANEL_ID);
-    const cfg = getPanelElements();
-    if (!cfg.panel) return null;
-
-    try {
-      if (typeof ensurePanelChrome === "function") ensurePanelChrome(cfg.panel);
-    } catch {}
-
-    cfg.btnAtualizar?.addEventListener("click", () => {
-      void refresh(true);
-    });
-    cfg.btnFechar?.addEventListener("click", () => {
-      closePanel();
-    });
-    cfg.tratamento?.addEventListener("change", () => {
-      const value = num(cfg.tratamento?.value);
-      if (!value) return;
-      state.selectedTreatmentId = value;
-      void loadResumo(true);
-    });
-
+    const shell = window.BranaOdontoShellV1;
+    if (!shell || typeof shell.mountPanel !== "function") return null;
+    const cfg = shell.mountPanel();
+    if (!cfg) return null;
+    state.panel = cfg.panel || document.getElementById(PANEL_ID);
+    if (!state.uiBound && typeof shell.bindControls === "function") {
+      shell.bindControls({
+        onRefresh: () => {
+          void refresh(true);
+        },
+        onClose: () => {
+          closePanel();
+        },
+        onTreatmentChange: (value) => {
+          const selected = num(value);
+          if (!selected) return;
+          state.selectedTreatmentId = selected;
+          void loadResumo(true);
+        },
+      });
+      state.uiBound = true;
+    }
     return cfg;
   }
 
