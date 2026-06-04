@@ -4967,3 +4967,10 @@ Observacoes:
 - Nenhum codigo alterado.
 - Nenhum banco alterado.
 - Documento de referência: `docs/odontograma_easydental_diagrama_relacional_contrato_modelagem_brana.md`.
+## Odontograma EasyDental - Diagramas Mermaid revisaveis
+- Conversao do contrato relacional consolidado em diagramas Mermaid para revisao visual.
+- Etapa somente documental, sem implementacao.
+- Modulo classificado como especifico de Odontologia.
+- Nenhum codigo alterado.
+- Nenhum banco alterado.
+- Documento de referência: `docs/odontograma_easydental_diagramas_mermaid.md`.
