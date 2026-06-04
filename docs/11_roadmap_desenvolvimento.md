@@ -4954,3 +4954,9 @@ Observacoes:
 - A linha rascunho permanece por ultimo e o criterio de desempate usa a ordem original do registro.
 - O novo documento e `docs/ficha_pessoal_historico_ordenacao_por_data_estavel.md`.
 - A proxima validacao sugerida e confirmar manualmente que a linha salva com data passada retorna para a posicao correta sem permitir insercao entre outras linhas.
+## Odontograma EasyDental - Auditoria de armazenamento, estados e cores
+- Inicio da trilha de auditoria do odontograma EasyDental em uso.
+- Módulo classificado como específico de Odontologia, fora do core comum.
+- Objetivo: mapear armazenamento, estados, cores e tabelas participantes.
+- Etapa somente leitura; nenhum código, banco ou arquivo do EasyDental foi alterado.
+- Documento de referência: `docs/odontograma_easydental_auditoria_armazenamento_estados_cores_tabelas.md`.
