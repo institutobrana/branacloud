@@ -228,7 +228,7 @@
     cabecalho.appendChild(meta);
 
     const palco = document.createElement("div");
-    palco.style.minHeight = "620px";
+    palco.style.minHeight = "560px";
     palco.style.border = "1px solid #dde6ef";
     palco.style.borderRadius = "16px";
     palco.style.background = "#fff";
@@ -528,7 +528,7 @@
 
     const corpo = document.createElement("div");
     corpo.style.display = "grid";
-    corpo.style.gridTemplateColumns = "minmax(0,1.65fr) minmax(300px,.78fr)";
+    corpo.style.gridTemplateColumns = "minmax(0,1.86fr) minmax(280px,.72fr)";
     corpo.style.gap = "10px";
     corpo.style.padding = "12px";
     corpo.style.alignItems = "start";

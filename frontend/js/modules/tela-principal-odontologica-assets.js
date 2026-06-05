@@ -55,6 +55,10 @@
     return meta ? meta.caminho : null;
   }
 
+  function obterAssetDente(numero) {
+    return obterCaminhoImagemDentePermanente(numero);
+  }
+
   function obterCaminhoArcadaSuperior() {
     return CAMINHO_ARCADA_SUPERIOR;
   }
@@ -67,12 +71,24 @@
     return CAMINHO_ARC_FACES;
   }
 
+  function obterAssetFace() {
+    return obterCaminhoArcFaces();
+  }
+
   function obterOrdemDentesSuperiores() {
     return ORDEM_DENTES_SUPERIORES.slice();
   }
 
   function obterOrdemDentesInferiores() {
     return ORDEM_DENTES_INFERIORES.slice();
+  }
+
+  function obterOrdemSuperiorOdontograma() {
+    return obterOrdemDentesSuperiores();
+  }
+
+  function obterOrdemInferiorOdontograma() {
+    return obterOrdemDentesInferiores();
   }
 
   function obterMapaDentesPermanentes() {
@@ -87,6 +103,8 @@
       arcadaInferior: CAMINHO_ARCADA_INFERIOR,
       arcFaces: CAMINHO_ARC_FACES,
       mapaDentesPermanentes: MAPA_DENTES_PERMANENTES,
+      ordemOdontogramaSuperior: ORDEM_DENTES_SUPERIORES,
+      ordemOdontogramaInferior: ORDEM_DENTES_INFERIORES,
     });
   }
 
@@ -103,11 +121,15 @@
     validarNumeroDentePermanente,
     obterMetadadoDentePermanente,
     obterCaminhoImagemDentePermanente,
+    obterAssetDente,
     obterCaminhoArcadaSuperior,
     obterCaminhoArcadaInferior,
     obterCaminhoArcFaces,
+    obterAssetFace,
     obterOrdemDentesSuperiores,
     obterOrdemDentesInferiores,
+    obterOrdemSuperiorOdontograma,
+    obterOrdemInferiorOdontograma,
     obterMapaDentesPermanentes,
     obterMetadadosAssetsOdontologicos,
   });
