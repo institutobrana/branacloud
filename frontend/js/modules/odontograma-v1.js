@@ -582,13 +582,103 @@
     }
   }
 
+  const ENTRY_HOST_ID = "odonto-v1-entrada-isolada-host";
+
+  function obterContextoEntradaOdontologica() {
+    const fichaAtual = typeof ficha !== "undefined" ? ficha : null;
+    const paciente = state.paciente || null;
+    const nome = [
+      String(paciente?.nome || "").trim(),
+      String(paciente?.sobrenome || "").trim(),
+    ].filter(Boolean).join(" ").trim() || String(fichaAtual?.nome?.value || "").trim();
+    return {
+      origem: "ficha-pessoal-historico",
+      modo: "visual-estatico",
+      comPaciente: !!(paciente || nome || String(fichaAtual?.codigo?.value || "").trim()),
+      pacienteId: paciente?.id ?? paciente?.paciente_id ?? "",
+      pacienteCodigo: String(paciente?.codigo ?? paciente?.codigo_paciente ?? fichaAtual?.codigo?.value ?? "").trim(),
+      pacienteNome: nome || String(fichaAtual?.nome?.value || "").trim(),
+      container: null,
+    };
+  }
+
+  function obterOuCriarHostEntradaOdontologica() {
+    let host = document.getElementById(ENTRY_HOST_ID);
+    if (host && host.isConnected) return host;
+    host = document.createElement("section");
+    host.id = ENTRY_HOST_ID;
+    host.setAttribute("data-odonto-v1-entrada-isolada", "1");
+    host.style.cssText = [
+      "position:fixed",
+      "inset:8px",
+      "z-index:5300",
+      "display:block",
+      "background:#f6f7fb",
+      "border:1px solid #9fb0c2",
+      "box-shadow:0 16px 34px rgba(15,23,42,.18)",
+      "overflow:auto",
+      "box-sizing:border-box",
+    ].join(";");
+    document.body.appendChild(host);
+    return host;
+  }
+
+  function removerHostEntradaOdontologica() {
+    const host = document.getElementById(ENTRY_HOST_ID);
+    if (host?.isConnected) host.remove();
+  }
+
+  async function tentarAbrirEntradaOdontologicaIsolada() {
+    const abrirEntrada = typeof window !== "undefined" ? window.abrirTelaPrincipalOdontologicaPorPaciente : null;
+    if (typeof abrirEntrada !== "function") {
+      removerHostEntradaOdontologica();
+      openPanel();
+      return { ok: false, status: "entrada-isolada-indisponivel", fallback: "legacy" };
+    }
+
+    const host = obterOuCriarHostEntradaOdontologica();
+    const contexto = { ...obterContextoEntradaOdontologica(), container: host };
+
+    try {
+      const resultado = await Promise.resolve(abrirEntrada(contexto));
+      if (resultado && resultado.ok) {
+        if (typeof footerMsg !== "undefined" && footerMsg) {
+          footerMsg.textContent = "Odontograma isolado aberto.";
+        }
+        return {
+          ok: true,
+          status: resultado.status || "entrada-isolada-aberta",
+          resultado,
+          host,
+        };
+      }
+      removerHostEntradaOdontologica();
+      openPanel();
+      return {
+        ok: false,
+        status: resultado?.status || "fallback-legacy-opened",
+        resultado,
+        fallback: "legacy",
+      };
+    } catch (erro) {
+      removerHostEntradaOdontologica();
+      openPanel();
+      return {
+        ok: false,
+        status: "fallback-legacy-opened",
+        erro: String(erro?.message || erro || ""),
+        fallback: "legacy",
+      };
+    }
+  }
+
   function interceptButtonClick(ev) {
     const alvo = ev?.target?.closest ? ev.target.closest("#ficha-btn-odontograma") : null;
     if (!alvo) return;
     ev.preventDefault();
     ev.stopPropagation();
     if (typeof ev.stopImmediatePropagation === "function") ev.stopImmediatePropagation();
-    openPanel();
+    void tentarAbrirEntradaOdontologicaIsolada();
   }
 
   function patchHooks() {
