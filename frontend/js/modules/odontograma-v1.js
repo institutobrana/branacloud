@@ -584,6 +584,63 @@
 
   const ENTRY_HOST_ID = "odonto-v1-entrada-isolada-host";
 
+  const MODULOS_ENTRADA_ODONTOLOGICA = Object.freeze([
+    "/frontend/js/modules/tela-principal-odontologica-contratos.js",
+    "/frontend/js/modules/tela-principal-odontologica-estado.js",
+    "/frontend/js/modules/tela-principal-odontologica-layout.js",
+    "/frontend/js/modules/tela-principal-odontologica-entrada.js",
+  ]);
+
+  function carregarScriptEntradaOdontologica(src) {
+    return new Promise((resolve, reject) => {
+      if (typeof document === "undefined") {
+        reject(new Error("Document indisponivel para carregamento dinamico."));
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      script.dataset.odontoEntradaScript = "1";
+      script.onload = () => {
+        script.dataset.odontoEntradaScriptLoaded = "1";
+        resolve({ ok: true, status: "carregado", src });
+      };
+      script.onerror = () => reject(new Error("Falha ao carregar " + src));
+      const alvo = document.head || document.body || document.documentElement;
+      if (!alvo || typeof alvo.appendChild !== "function") {
+        reject(new Error("Sem alvo de insercao para carregamento dinamico."));
+        return;
+      }
+      alvo.appendChild(script);
+    });
+  }
+
+  async function carregarModulosEntradaOdontologica() {
+    if (typeof window !== "undefined" && typeof window.abrirTelaPrincipalOdontologicaPorPaciente === "function") {
+      return { ok: true, status: "entrada-isolada-ja-disponivel" };
+    }
+    if (typeof window !== "undefined" && window.__odontoEntradaIsoladaLoadPromise) {
+      return window.__odontoEntradaIsoladaLoadPromise;
+    }
+    const promessa = (async () => {
+      for (const src of MODULOS_ENTRADA_ODONTOLOGICA) {
+        await carregarScriptEntradaOdontologica(src);
+      }
+      if (typeof window === "undefined" || typeof window.abrirTelaPrincipalOdontologicaPorPaciente !== "function") {
+        throw new Error("Entrada isolada indisponivel apos carregamento dos modulos.");
+      }
+      return { ok: true, status: "entrada-isolada-carregada" };
+    })();
+    if (typeof window !== "undefined") {
+      window.__odontoEntradaIsoladaLoadPromise = promessa.catch((erro) => {
+        window.__odontoEntradaIsoladaLoadPromise = null;
+        throw erro;
+      });
+      return window.__odontoEntradaIsoladaLoadPromise;
+    }
+    return promessa;
+  }
+
   function obterContextoEntradaOdontologica() {
     const fichaAtual = typeof ficha !== "undefined" ? ficha : null;
     const paciente = state.paciente || null;
@@ -629,6 +686,30 @@
   }
 
   async function tentarAbrirEntradaOdontologicaIsolada() {
+    let carregamento = null;
+    try {
+      carregamento = await carregarModulosEntradaOdontologica();
+    } catch (erro) {
+      removerHostEntradaOdontologica();
+      openPanel();
+      return {
+        ok: false,
+        status: "entrada-isolada-carregamento-falhou",
+        erro: String(erro?.message || erro || ""),
+        fallback: "legacy",
+      };
+    }
+
+    if (!carregamento || !carregamento.ok) {
+      removerHostEntradaOdontologica();
+      openPanel();
+      return {
+        ok: false,
+        status: carregamento?.status || "entrada-isolada-indisponivel",
+        fallback: "legacy",
+      };
+    }
+
     const abrirEntrada = typeof window !== "undefined" ? window.abrirTelaPrincipalOdontologicaPorPaciente : null;
     if (typeof abrirEntrada !== "function") {
       removerHostEntradaOdontologica();
