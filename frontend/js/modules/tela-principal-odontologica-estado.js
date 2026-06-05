@@ -23,7 +23,7 @@
 
   const ARCADA_SUPERIOR_BASE = Object.freeze([
     { numero: "18", status: "observado", observacao: "Acompanhamento visual." },
-    { numero: "17", status: "neutro", observacao: "Sem destaque simulado." },
+    { numero: "17", status: "neutro", observacao: "Sem destaque." },
     { numero: "16", status: "restaurado", observacao: "Leitura com restauracao." },
     { numero: "15", status: "neutro", observacao: "Estado visual neutro." },
     { numero: "14", status: "programado", observacao: "Procedimento futuro." },
@@ -59,6 +59,16 @@
     { numero: "38", status: "ausente", observacao: "Espaco ausente na leitura." },
   ]);
 
+  function obterModuloAssets() {
+    if (typeof globalThis !== "undefined" && globalThis.BranaTelaPrincipalOdontologicaAssets) {
+      return globalThis.BranaTelaPrincipalOdontologicaAssets;
+    }
+    if (typeof window !== "undefined" && window.BranaTelaPrincipalOdontologicaAssets) {
+      return window.BranaTelaPrincipalOdontologicaAssets;
+    }
+    return null;
+  }
+
   function texto(valor, fallback = "") {
     const result = String(valor ?? "").trim();
     return result || String(fallback ?? "").trim();
@@ -76,12 +86,25 @@
     return {
       id: 900001,
       codigo: texto(contexto.pacienteCodigo, "TMP-OD-01"),
-      nome: texto(contexto.pacienteNome, "Paciente Simulado 01"),
-      nomeCompleto: texto(contexto.pacienteNome, "Paciente Simulado 01"),
-      status: "simulado",
+      nome: texto(contexto.pacienteNome, "Paciente Ilustrativo 01"),
+      nomeCompleto: texto(contexto.pacienteNome, "Paciente Ilustrativo 01"),
+      status: "ilustrativo",
       simulado: true,
       origem: texto(contexto.origem, MOCK_ORIGEM),
     };
+  }
+
+  function obterOrdemDentesCompativel(arco) {
+    const assets = obterModuloAssets();
+    if (assets) {
+      if (arco === "superior" && typeof assets.obterOrdemDentesSuperiores === "function") {
+        return assets.obterOrdemDentesSuperiores();
+      }
+      if (arco === "inferior" && typeof assets.obterOrdemDentesInferiores === "function") {
+        return assets.obterOrdemDentesInferiores();
+      }
+    }
+    return (arco === "superior" ? ARCADA_SUPERIOR_BASE : ARCADA_INFERIOR_BASE).map((item) => texto(item.numero));
   }
 
   function montarTooth(base, arco, indice, comPaciente) {
@@ -96,8 +119,27 @@
   }
 
   function criarArcadaDentariaMock(comPaciente = false) {
-    const superior = ARCADA_SUPERIOR_BASE.map((item, indice) => montarTooth(item, "superior", indice, comPaciente));
-    const inferior = ARCADA_INFERIOR_BASE.map((item, indice) => montarTooth(item, "inferior", indice, comPaciente));
+    const ordemSuperior = obterOrdemDentesCompativel("superior");
+    const ordemInferior = obterOrdemDentesCompativel("inferior");
+
+    const superior = ordemSuperior.map((numero, indice) => {
+      const base = ARCADA_SUPERIOR_BASE[indice] || {};
+      return montarTooth({
+        numero,
+        status: base.status,
+        observacao: base.observacao,
+      }, "superior", indice, comPaciente);
+    });
+
+    const inferior = ordemInferior.map((numero, indice) => {
+      const base = ARCADA_INFERIOR_BASE[indice] || {};
+      return montarTooth({
+        numero,
+        status: base.status,
+        observacao: base.observacao,
+      }, "inferior", indice, comPaciente);
+    });
+
     return { superior, inferior };
   }
 
@@ -116,17 +158,17 @@
     const procedimentos = [
       {
         codigo: "PRO-101",
-        nome: "Procedimento simulado A",
+        nome: "Procedimento local A",
         observacao: "Item apenas ilustrativo.",
       },
       {
         codigo: "PRO-202",
-        nome: "Procedimento simulado B",
+        nome: "Procedimento local B",
         observacao: "Sem vinculo com banco real.",
       },
       {
         codigo: "PRO-303",
-        nome: "Procedimento simulado C",
+        nome: "Procedimento local C",
         observacao: "Usado somente em leitura visual.",
       },
     ];
@@ -144,19 +186,19 @@
     const linhas = [
       {
         data: "01/06/2026",
-        cirurgiao: "Cirurgiao Simulado",
+        cirurgiao: "Cirurgiao local",
         regiao: "18",
         descricao: "Registro visual sem dados reais.",
       },
       {
         data: "03/06/2026",
-        cirurgiao: "Prestador Ficticio",
+        cirurgiao: "Prestador local",
         regiao: "16",
         descricao: "Linha de historico apenas ilustrativa.",
       },
       {
         data: "05/06/2026",
-        cirurgiao: "Equipe Simulada",
+        cirurgiao: "Equipe local",
         regiao: "11",
         descricao: "Fluxo de leitura isolado.",
       },
@@ -173,8 +215,8 @@
 
   function criarAgendaMock(comPaciente = false) {
     const agenda = [
-      { hora: "07:30", descricao: "Acolhimento simulado" },
-      { hora: "08:00", descricao: "Consulta simulada" },
+      { hora: "07:30", descricao: "Acolhimento local" },
+      { hora: "08:00", descricao: "Consulta local" },
       { hora: "09:15", descricao: "Retorno ilustrativo" },
     ];
 
@@ -206,12 +248,12 @@
       agenda: criarAgendaMock(comPaciente),
       legendaOdontograma: LEGENDA_ODONTOGRAMA,
       observacoesVisuais: comPaciente
-        ? "Paciente simulado em leitura visual odontologica."
-        : "Sem paciente selecionado. Arcadas neutras para teste.",
-      statusVisual: comPaciente ? "simulado" : "neutro",
+        ? "Paciente ilustrativo para leitura visual odontologica."
+        : "Sem paciente selecionado. Arcadas neutras.",
+      statusVisual: comPaciente ? "ilustrativo" : "neutro",
       resumoVisual: comPaciente
-        ? "Esqueleto visual isolado com arcadas odontologicas mockadas."
-        : "Esqueleto visual isolado aguardando paciente.",
+        ? "Estrutura visual com paciente ilustrativo."
+        : "Estrutura visual aguardando paciente.",
     });
   }
 

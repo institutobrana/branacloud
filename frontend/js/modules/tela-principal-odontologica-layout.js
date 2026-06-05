@@ -86,28 +86,31 @@
     tituloWrap.style.gap = "3px";
 
     const titulo = document.createElement("div");
-    titulo.textContent = "Tela principal odontologica";
+    titulo.textContent = "Tela odontologica";
     titulo.style.font = "700 15px Tahoma, sans-serif";
     titulo.style.color = "#203040";
 
     const subtitulo = document.createElement("div");
-    subtitulo.textContent = "Leitura visual isolada com foco em arcadas odontologicas.";
+    subtitulo.textContent = "Leitura visual com assets locais do Brana Cloud.";
     subtitulo.style.font = "12px Tahoma, sans-serif";
     subtitulo.style.color = "#586776";
 
     tituloWrap.appendChild(titulo);
     tituloWrap.appendChild(subtitulo);
 
-    const badges = document.createElement("div");
-    badges.style.display = "flex";
-    badges.style.flexWrap = "wrap";
-    badges.style.gap = "6px";
-    badges.appendChild(criarTagTexto(estado.statusVisual || "neutro", true));
-    badges.appendChild(criarTagTexto(toText(opcoes.modo, estado.modo || "visual-estatico")));
-    badges.appendChild(criarTagTexto(toText(opcoes.origem, estado.origem || "ficha-pessoal-historico")));
+    const estadoResumo = document.createElement("div");
+    estadoResumo.textContent = estado.comPaciente ? "Paciente ativo" : "Sem paciente";
+    estadoResumo.style.display = "inline-flex";
+    estadoResumo.style.alignItems = "center";
+    estadoResumo.style.padding = "5px 10px";
+    estadoResumo.style.border = "1px solid #d7e0ea";
+    estadoResumo.style.borderRadius = "999px";
+    estadoResumo.style.background = "#fff";
+    estadoResumo.style.font = "11px Tahoma, sans-serif";
+    estadoResumo.style.color = "#314052";
 
     shell.appendChild(tituloWrap);
-    shell.appendChild(badges);
+    shell.appendChild(estadoResumo);
     return shell;
   }
 
@@ -159,7 +162,7 @@
     nome.style.color = "#1f2937";
 
     const meta = document.createElement("div");
-    meta.textContent = estado.paciente?.simulado ? "Paciente simulado para leitura visual." : "Estado neutro de entrada.";
+    meta.textContent = estado.paciente?.simulado ? "Paciente ilustrativo para leitura visual." : "Entrada neutra.";
     meta.style.font = "11px Tahoma, sans-serif";
     meta.style.color = "#6b7280";
 
@@ -201,12 +204,12 @@
     tituloWrap.style.gap = "4px";
 
     const titulo = document.createElement("div");
-    titulo.textContent = "Odontograma visual";
+    titulo.textContent = "Odontograma local";
     titulo.style.font = "700 13px Tahoma, sans-serif";
     titulo.style.color = "#213042";
 
     const subtitulo = document.createElement("div");
-    subtitulo.textContent = "Arcadas superior e inferior com leitura odontologica destacada.";
+    subtitulo.textContent = "Arcadas superior e inferior com imagens locais.";
     subtitulo.style.font = "11px Tahoma, sans-serif";
     subtitulo.style.color = "#5d6b79";
 
@@ -218,9 +221,8 @@
     meta.style.flexWrap = "wrap";
     meta.style.justifyContent = "flex-end";
     meta.style.gap = "6px";
-    meta.appendChild(criarTagTexto(estado.statusVisual || "neutro", true));
-    meta.appendChild(criarTagTexto(toText(opcoes.modo, estado.modo || "visual-estatico")));
-    meta.appendChild(criarTagTexto(estado.comPaciente ? "Paciente simulado" : "Sem paciente"));
+    meta.appendChild(criarTagTexto(estado.comPaciente ? "Paciente ativo" : "Sem paciente", true));
+    meta.appendChild(criarTagTexto("Imagens locais"));
 
     cabecalho.appendChild(tituloWrap);
     cabecalho.appendChild(meta);
@@ -252,7 +254,7 @@
       fallback.style.padding = "16px";
       fallback.style.color = "#516273";
       fallback.style.font = "12px Tahoma, sans-serif";
-      fallback.textContent = "Renderer odontologico indisponivel. Exibindo estado simplificado.";
+      fallback.textContent = "Renderer odontologico indisponivel. Exibindo leitura simplificada.";
       palco.appendChild(fallback);
 
       const resumoFallback = document.createElement("div");
@@ -526,7 +528,7 @@
 
     const corpo = document.createElement("div");
     corpo.style.display = "grid";
-    corpo.style.gridTemplateColumns = "minmax(0,1.48fr) minmax(320px,.92fr)";
+    corpo.style.gridTemplateColumns = "minmax(0,1.65fr) minmax(300px,.78fr)";
     corpo.style.gap = "10px";
     corpo.style.padding = "12px";
     corpo.style.alignItems = "start";
