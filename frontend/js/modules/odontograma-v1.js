@@ -588,6 +588,7 @@
     "/frontend/js/modules/tela-principal-odontologica-contratos.js",
     "/frontend/js/modules/tela-principal-odontologica-estado.js",
     "/frontend/js/modules/tela-principal-odontologica-layout.js",
+    "/frontend/js/modules/tela-principal-odontologica-odontograma.js",
     "/frontend/js/modules/tela-principal-odontologica-entrada.js",
   ]);
 
