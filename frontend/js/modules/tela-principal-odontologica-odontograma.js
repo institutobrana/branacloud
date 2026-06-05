@@ -329,7 +329,7 @@
 
     const imagem = document.createElement("img");
     imagem.className = "brana-odonto-face-img";
-    imagem.alt = "Face";
+    imagem.alt = "";
     imagem.decoding = "async";
     imagem.loading = "lazy";
     const caminho = obterCaminhoFaces();

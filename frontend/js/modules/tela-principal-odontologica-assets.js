@@ -2,12 +2,13 @@
   "use strict";
 
   const MODULE_NAME = "BranaTelaPrincipalOdontologicaAssets";
+  const CAMINHO_BASE_PUBLICO = "/desktop-assets/easy";
   const CAMINHO_BASE_ASSETS = "assets/easy";
-  const CAMINHO_BASE_DENTES = "assets/easy/dentes";
+  const CAMINHO_BASE_DENTES = `${CAMINHO_BASE_PUBLICO}/dentes`;
 
-  const CAMINHO_ARCADA_SUPERIOR = `${CAMINHO_BASE_ASSETS}/arc_superior_perm.bmp`;
-  const CAMINHO_ARCADA_INFERIOR = `${CAMINHO_BASE_ASSETS}/arc_inferior_perm.bmp`;
-  const CAMINHO_ARC_FACES = `${CAMINHO_BASE_ASSETS}/arc_faces.bmp`;
+  const CAMINHO_ARCADA_SUPERIOR = `${CAMINHO_BASE_PUBLICO}/arc_superior_perm.bmp`;
+  const CAMINHO_ARCADA_INFERIOR = `${CAMINHO_BASE_PUBLICO}/arc_inferior_perm.bmp`;
+  const CAMINHO_ARC_FACES = `${CAMINHO_BASE_PUBLICO}/arc_faces.bmp`;
 
   const ORDEM_DENTES_SUPERIORES = Object.freeze(["18", "17", "16", "15", "14", "13", "12", "11", "21", "22", "23", "24", "25", "26", "27", "28"]);
   const ORDEM_DENTES_INFERIORES = Object.freeze(["48", "47", "46", "45", "44", "43", "42", "41", "31", "32", "33", "34", "35", "36", "37", "38"]);
@@ -97,7 +98,8 @@
 
   function obterMetadadosAssetsOdontologicos() {
     return Object.freeze({
-      baseAssets: CAMINHO_BASE_ASSETS,
+      baseAssets: CAMINHO_BASE_PUBLICO,
+      baseDisco: CAMINHO_BASE_ASSETS,
       baseDentes: CAMINHO_BASE_DENTES,
       arcadaSuperior: CAMINHO_ARCADA_SUPERIOR,
       arcadaInferior: CAMINHO_ARCADA_INFERIOR,
@@ -110,6 +112,7 @@
 
   const api = Object.freeze({
     MODULE_NAME,
+    CAMINHO_BASE_PUBLICO,
     CAMINHO_BASE_ASSETS,
     CAMINHO_BASE_DENTES,
     CAMINHO_ARCADA_SUPERIOR,
