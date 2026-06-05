@@ -15,6 +15,26 @@
     return null;
   }
 
+  function obterEstadoModulo() {
+    if (typeof globalThis !== "undefined" && globalThis.BranaTelaPrincipalOdontologicaEstado) {
+      return globalThis.BranaTelaPrincipalOdontologicaEstado;
+    }
+    if (typeof window !== "undefined" && window.BranaTelaPrincipalOdontologicaEstado) {
+      return window.BranaTelaPrincipalOdontologicaEstado;
+    }
+    return null;
+  }
+
+  function obterLayoutModulo() {
+    if (typeof globalThis !== "undefined" && globalThis.BranaTelaPrincipalOdontologicaLayout) {
+      return globalThis.BranaTelaPrincipalOdontologicaLayout;
+    }
+    if (typeof window !== "undefined" && window.BranaTelaPrincipalOdontologicaLayout) {
+      return window.BranaTelaPrincipalOdontologicaLayout;
+    }
+    return null;
+  }
+
   function resolverContainer(container) {
     if (container == null) return null;
     if (typeof HTMLElement !== "undefined" && container instanceof HTMLElement) return container;
@@ -100,26 +120,55 @@
 
     limparMarcadorTecnico(containerResolvido);
 
-    if (!validacao.ok) {
+    const estadoModulo = obterEstadoModulo();
+    const layoutModulo = obterLayoutModulo();
+
+    if (!estadoModulo || typeof estadoModulo.obterEstadoTelaPrincipalOdontologicaMock !== "function" || !layoutModulo || typeof layoutModulo.renderTelaPrincipalOdontologicaLayout !== "function") {
       containerResolvido.appendChild(criarMarcadorTecnico(validacao.contexto));
       return montarResultadoBase(validacao.contexto, {
         ok: false,
-        status: "contexto-invalido",
+        status: "modulo-visual-indisponivel",
         container: containerResolvido,
         marcadorCriado: true,
-        mensagem: "Contexto normalizado com restrições.",
-        problemas: validacao.problemas,
+        mensagem: "Módulos visuais indisponíveis; marcador técnico mantido.",
+        problemas: validacao.problemas.concat(["modulo-visual-indisponivel"]),
       });
     }
 
-    containerResolvido.appendChild(criarMarcadorTecnico(validacao.contexto));
+    const estadoMock = estadoModulo.obterEstadoTelaPrincipalOdontologicaMock({
+      ...validacao.contexto,
+      comPaciente: !!(
+        validacao.contexto.comPaciente ||
+        validacao.contexto.pacienteId ||
+        validacao.contexto.pacienteCodigo ||
+        validacao.contexto.pacienteNome
+      ),
+    });
+
+    const renderizacao = layoutModulo.renderTelaPrincipalOdontologicaLayout(containerResolvido, estadoMock, {
+      contexto: validacao.contexto,
+      origem: validacao.contexto.origem,
+      modo: validacao.contexto.modo,
+    });
+
+    if (!renderizacao || !renderizacao.ok) {
+      containerResolvido.appendChild(criarMarcadorTecnico(validacao.contexto));
+      return montarResultadoBase(validacao.contexto, {
+        ok: false,
+        status: "falha-renderizacao",
+        container: containerResolvido,
+        marcadorCriado: true,
+        mensagem: "Falha ao renderizar o esqueleto visual estático.",
+        problemas: validacao.problemas.concat(["falha-renderizacao"]),
+      });
+    }
 
     return montarResultadoBase(validacao.contexto, {
       ok: true,
-      status: "entrada-isolada-minima",
+      status: "esqueleto-visual-estatico-renderizado",
       container: containerResolvido,
-      marcadorCriado: true,
-      mensagem: "Entrada técnica inicial criada.",
+      marcadorCriado: false,
+      mensagem: "Esqueleto visual estático renderizado.",
       problemas: [],
     });
   }
