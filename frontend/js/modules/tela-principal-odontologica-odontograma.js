@@ -119,7 +119,7 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      .brana-odonto-visual{display:grid;gap:12px;min-width:0;padding:4px}
+      .brana-odonto-visual{display:grid;gap:10px;min-width:0;padding:2px}
       .brana-odonto-visual-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:0 2px}
       .brana-odonto-visual-brand{display:flex;align-items:center;gap:10px;min-width:0}
       .brana-odonto-visual-face{width:32px;height:25px;object-fit:contain;flex:0 0 auto}
@@ -133,27 +133,27 @@
       .brana-odonto-visual-legend .brana-odonto-visual-chip{padding:3px 8px}
       .brana-odonto-visual-stage{display:grid;gap:12px}
       .brana-odonto-empty{padding:16px 12px;border:1px dashed #d7e0ea;border-radius:14px;background:#fcfdff;color:#607080;font:12px Tahoma,sans-serif}
-      .brana-odonto-arcada{position:relative;display:grid;gap:8px;padding:14px 10px 12px;border:1px solid #d9e2ec;border-radius:18px;background:linear-gradient(180deg,#fff 0%,#f8fbff 100%);overflow:hidden}
+      .brana-odonto-arcada{position:relative;display:grid;gap:6px;padding:10px 8px 8px;border:1px solid #d9e2ec;border-radius:18px;background:linear-gradient(180deg,#fff 0%,#f8fbff 100%);overflow:hidden}
       .brana-odonto-arcada::before{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:1px;transform:translateX(-.5px);background:linear-gradient(180deg,transparent 0%,rgba(141,177,214,.34) 16%,rgba(141,177,214,.44) 50%,rgba(141,177,214,.34) 84%,transparent 100%);pointer-events:none}
-      .brana-odonto-band{position:relative;display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;align-items:center}
-      .brana-odonto-band.is-teeth{min-height:76px;padding:2px 4px;border-radius:14px;background:rgba(247,250,253,.82)}
-      .brana-odonto-band.is-faces{min-height:34px;align-items:center}
-      .brana-odonto-band.is-numbers{min-height:28px;align-items:center}
+      .brana-odonto-band{position:relative;display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;align-items:center}
+      .brana-odonto-band.is-teeth{min-height:70px;padding:0 2px 1px;border-radius:14px;background:rgba(247,250,253,.82)}
+      .brana-odonto-band.is-faces{min-height:26px;align-items:center}
+      .brana-odonto-band.is-numbers{min-height:22px;align-items:center}
       .brana-odonto-band.is-upper.is-teeth{background-image:linear-gradient(180deg,rgba(248,252,255,.74) 0%,rgba(241,246,251,.9) 100%)}
       .brana-odonto-band.is-lower.is-teeth{background-image:linear-gradient(180deg,rgba(248,252,255,.86) 0%,rgba(244,248,252,.95) 100%)}
-      .brana-odonto-band .brana-odonto-band-backdrop{position:absolute;inset:0;opacity:.18;object-fit:contain;pointer-events:none;filter:saturate(.92) contrast(1.04)}
+      .brana-odonto-band .brana-odonto-band-backdrop{position:absolute;inset:0;opacity:.055;object-fit:contain;object-position:center center;pointer-events:none;transform:scale(.985);filter:saturate(.9) contrast(1.03)}
       .brana-odonto-band-label{position:absolute;left:8px;top:4px;font:700 9px Tahoma,sans-serif;color:#8aa1b7;text-transform:uppercase;letter-spacing:.04em;pointer-events:none}
       .brana-odonto-slot{position:relative;display:grid;place-items:center;min-width:0}
-      .brana-odonto-slot.is-tooth{min-height:62px}
-      .brana-odonto-slot.is-face{min-height:24px}
-      .brana-odonto-slot.is-number{min-height:20px}
-      .brana-odonto-tooth-img{width:min(100%,54px);height:auto;display:block;object-fit:contain;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(16,24,40,.07))}
+      .brana-odonto-slot.is-tooth{min-height:58px}
+      .brana-odonto-slot.is-face{min-height:22px}
+      .brana-odonto-slot.is-number{min-height:18px}
+      .brana-odonto-tooth-img{width:min(100%,52px);height:auto;display:block;object-fit:contain;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(16,24,40,.07))}
       .brana-odonto-slot[data-status="observado"] .brana-odonto-tooth-img{filter:drop-shadow(0 1px 1px rgba(37,99,235,.12))}
       .brana-odonto-slot[data-status="restaurado"] .brana-odonto-tooth-img{filter:drop-shadow(0 1px 1px rgba(19,115,51,.12))}
       .brana-odonto-slot[data-status="programado"] .brana-odonto-tooth-img{filter:drop-shadow(0 1px 1px rgba(155,106,26,.12))}
       .brana-odonto-slot[data-status="ausente"] .brana-odonto-tooth-img{opacity:.84;filter:grayscale(.08) drop-shadow(0 1px 1px rgba(107,114,128,.08))}
-      .brana-odonto-face-img{width:min(100%,30px);height:auto;display:block;object-fit:contain;pointer-events:none;opacity:.94}
-      .brana-odonto-face-dot{position:absolute;top:2px;left:50%;width:8px;height:8px;border-radius:999px;transform:translateX(-50%);box-shadow:0 0 0 1px rgba(255,255,255,.88)}
+      .brana-odonto-face-img{width:min(100%,28px);height:auto;display:block;object-fit:contain;pointer-events:none;opacity:.94}
+      .brana-odonto-face-dot{position:absolute;top:1px;left:50%;width:7px;height:7px;border-radius:999px;transform:translateX(-50%);box-shadow:0 0 0 1px rgba(255,255,255,.88)}
       .brana-odonto-face-dot.is-observado{background:#ef4444}
       .brana-odonto-face-dot.is-restaurado{background:#16a34a}
       .brana-odonto-face-dot.is-programado{background:#f59e0b}
@@ -373,7 +373,8 @@
     if (backdropPath) {
       const backdrop = document.createElement("img");
       backdrop.className = "brana-odonto-band-backdrop";
-      backdrop.alt = title;
+      backdrop.alt = "";
+      backdrop.setAttribute("aria-hidden", "true");
       backdrop.decoding = "async";
       backdrop.loading = "lazy";
       backdrop.src = backdropPath;
