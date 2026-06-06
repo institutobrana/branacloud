@@ -5106,3 +5106,13 @@ Observacoes:
 - Documento de referência: `docs/easydental_tela_principal_odontologica_subetapa_d2a_montagem_area_principal.md`.
 - Proxima etapa sugerida: D2-B, se a decisao for ligar a abertura principal ao fluxo real de inicializacao do sistema.
 
+## Odontograma Brana - Bootstrap real da area principal
+- O bootstrap real foi ligado em `frontend/app.js`, na funcao `carregarSessao()`, apos a validacao de sessao em `/me`.
+- A tela odontologica passou a abrir automaticamente na area principal abaixo da toolbar/menu com `abrirTelaPrincipalOdontologicaNoWorkspace({ origem: "workspace-principal", modo: "visual-estatico" })`.
+- A entrada secundaria do botao `Odontograma` foi corrigida para reutilizar a mesma area principal.
+- Menus e toolbar foram preservados.
+- O fallback antigo e a implementacao antiga foram preservados.
+- Nenhum backend, banco ou asset foi alterado.
+- Documento de referência: `docs/easydental_tela_principal_odontologica_subetapa_d2b_bootstrap_real_area_principal.md`.
+- Proxima etapa sugerida: D2-C, refino de encaixe/layout da tela odontologica ja no workspace principal.
+

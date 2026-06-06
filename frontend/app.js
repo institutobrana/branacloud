@@ -12273,6 +12273,23 @@ async function carregarSessao(){
       await editorTextosAbrir();
       return;
     }
+    if(typeof window!=="undefined"){
+      const abrirOdontoInicial=typeof window.abrirTelaPrincipalOdontologicaNoWorkspace==="function"
+        ? window.abrirTelaPrincipalOdontologicaNoWorkspace
+        : null;
+      if(abrirOdontoInicial){
+        try{
+          const resultadoOdonto=await Promise.resolve(abrirOdontoInicial({origem:"workspace-principal",modo:"visual-estatico"}));
+          if(!(resultadoOdonto&&resultadoOdonto.ok)&&window.BranaOdontogramaV1Module&&typeof window.BranaOdontogramaV1Module.abrir==="function"){
+            window.BranaOdontogramaV1Module.abrir();
+          }
+        }catch{
+          if(window.BranaOdontogramaV1Module&&typeof window.BranaOdontogramaV1Module.abrir==="function"){
+            try{window.BranaOdontogramaV1Module.abrir()}catch{}
+          }
+        }
+      }
+    }
   }catch{
     stopSessionHeartbeat();
     if(btnOpenUsers)btnOpenUsers.classList.add("hidden");

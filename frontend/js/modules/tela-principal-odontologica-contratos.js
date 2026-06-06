@@ -38,6 +38,7 @@
       pacienteId: fonte.pacienteId == null ? null : fonte.pacienteId,
       pacienteCodigo: fonte.pacienteCodigo == null ? "" : String(fonte.pacienteCodigo).trim(),
       pacienteNome: fonte.pacienteNome == null ? "" : String(fonte.pacienteNome).trim(),
+      origemSecundaria: fonte.origemSecundaria == null ? "" : String(fonte.origemSecundaria).trim(),
       origem: resolverOrigemTelaPrincipalOdontologica(fonte.origem),
       modo: resolverModoTelaPrincipalOdontologica(fonte.modo),
       container: fonte.container == null ? null : fonte.container,
@@ -48,7 +49,7 @@
     const normalizado = normalizarContextoTelaPrincipalOdontologica(contexto);
     const problemas = [];
 
-    if (normalizado.origem !== ORIGENS_TELA_PRINCIPAL_ODONTOLOGICA["ficha-pessoal-historico"]) {
+    if (!Object.prototype.hasOwnProperty.call(ORIGENS_TELA_PRINCIPAL_ODONTOLOGICA, normalizado.origem)) {
       problemas.push("origem-invalida");
     }
 

@@ -618,7 +618,7 @@
   }
 
   async function carregarModulosEntradaOdontologica() {
-    if (typeof window !== "undefined" && typeof window.abrirTelaPrincipalOdontologicaPorPaciente === "function") {
+    if (typeof window !== "undefined" && (typeof window.abrirTelaPrincipalOdontologicaNoWorkspace === "function" || typeof window.abrirTelaPrincipalOdontologicaPorPaciente === "function")) {
       return { ok: true, status: "entrada-isolada-ja-disponivel" };
     }
     if (typeof window !== "undefined" && window.__odontoEntradaIsoladaLoadPromise) {
@@ -628,7 +628,7 @@
       for (const src of MODULOS_ENTRADA_ODONTOLOGICA) {
         await carregarScriptEntradaOdontologica(src);
       }
-      if (typeof window === "undefined" || typeof window.abrirTelaPrincipalOdontologicaPorPaciente !== "function") {
+      if (typeof window === "undefined" || (typeof window.abrirTelaPrincipalOdontologicaNoWorkspace !== "function" && typeof window.abrirTelaPrincipalOdontologicaPorPaciente !== "function")) {
         throw new Error("Entrada isolada indisponivel apos carregamento dos modulos.");
       }
       return { ok: true, status: "entrada-isolada-carregada" };
@@ -712,30 +712,31 @@
       };
     }
 
-    const abrirEntrada = typeof window !== "undefined" ? window.abrirTelaPrincipalOdontologicaPorPaciente : null;
+    const abrirEntrada = typeof window !== "undefined" ? (window.abrirTelaPrincipalOdontologicaNoWorkspace || window.abrirTelaPrincipalOdontologicaPorPaciente) : null;
     if (typeof abrirEntrada !== "function") {
       removerHostEntradaOdontologica();
       openPanel();
       return { ok: false, status: "entrada-isolada-indisponivel", fallback: "legacy" };
     }
 
-    const host = obterOuCriarHostEntradaOdontologica();
-    const contexto = { ...obterContextoEntradaOdontologica(), container: host };
+    const contexto = {
+      ...obterContextoEntradaOdontologica(),
+      origemSecundaria: "ficha-pessoal-historico",
+      container: null,
+    };
 
     try {
       const resultado = await Promise.resolve(abrirEntrada(contexto));
       if (resultado && resultado.ok) {
         if (typeof footerMsg !== "undefined" && footerMsg) {
-          footerMsg.textContent = "Odontograma isolado aberto.";
+          footerMsg.textContent = "Odontograma aberto na area principal.";
         }
         return {
           ok: true,
           status: resultado.status || "entrada-isolada-aberta",
           resultado,
-          host,
         };
       }
-      removerHostEntradaOdontologica();
       openPanel();
       return {
         ok: false,
@@ -744,7 +745,6 @@
         fallback: "legacy",
       };
     } catch (erro) {
-      removerHostEntradaOdontologica();
       openPanel();
       return {
         ok: false,

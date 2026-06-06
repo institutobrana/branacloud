@@ -189,20 +189,11 @@
     const normalizado = contratos.normalizarContextoTelaPrincipalOdontologica(contexto);
     const validacao = contratos.validarContextoTelaPrincipalOdontologica(normalizado);
 
-    const containerResolvido = resolverContainer(normalizado.container);
-    if (!containerResolvido) {
-      return montarResultadoBase(normalizado, {
-        ok: false,
-        status: "container-nao-encontrado",
-        mensagem: "Container nao encontrado.",
-        problemas: validacao.problemas.concat(["container-nao-encontrado"]),
-      });
-    }
-
-    return renderizarContextoOdontologico(validacao.contexto, containerResolvido, {
-      origem: validacao.contexto.origem,
-      statusOk: "esqueleto-visual-estatico-renderizado",
-      mensagemOk: "Esqueleto visual estatico renderizado.",
+    return abrirTelaPrincipalOdontologicaNoWorkspace({
+      ...validacao.contexto,
+      origemSecundaria: validacao.contexto.origem,
+      origem: "workspace-principal",
+      container: null,
     });
   }
 
@@ -220,9 +211,16 @@
       );
     }
 
+    const origemSecundaria = contexto && typeof contexto === "object"
+      ? String(
+          contexto.origemSecundaria ||
+          (String(contexto.origem || "").trim() === "workspace-principal" ? "" : contexto.origem || "")
+        ).trim()
+      : "";
     const normalizado = contratos.normalizarContextoTelaPrincipalOdontologica({
       ...(contexto && typeof contexto === "object" ? contexto : {}),
       origem: "workspace-principal",
+      origemSecundaria,
       container: null,
     });
     const validacao = contratos.validarContextoTelaPrincipalOdontologica(normalizado);
