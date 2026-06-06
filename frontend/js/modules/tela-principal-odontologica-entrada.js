@@ -3,7 +3,8 @@
 
   const MODULE_NAME = "BranaTelaPrincipalOdontologicaEntrada";
   const CHAVE_TEXTO = "tela-principal-odontologica-entrada";
-  const MARCADOR_TECNICO = "Tela odontológica isolada — entrada técnica inicial";
+  const MARCADOR_TECNICO = "Tela odontologica isolada - entrada tecnica inicial";
+  const WORKSPACE_HOST_ID = "tela-principal-odontologica-workspace-host";
 
   function obterContratos() {
     if (typeof globalThis !== "undefined" && globalThis.BranaTelaPrincipalOdontologicaContratos) {
@@ -35,6 +36,15 @@
     return null;
   }
 
+  function obterElementoWorkspacePrincipal() {
+    if (typeof document === "undefined") return null;
+    const workspaceEmpty = document.getElementById("workspace-empty");
+    if (workspaceEmpty instanceof HTMLElement) return workspaceEmpty;
+    const workspace = document.querySelector("main.workspace");
+    if (workspace instanceof HTMLElement) return workspace;
+    return null;
+  }
+
   function resolverContainer(container) {
     if (container == null) return null;
     if (typeof HTMLElement !== "undefined" && container instanceof HTMLElement) return container;
@@ -56,6 +66,29 @@
     const marcadores = container.querySelectorAll(`[data-${CHAVE_TEXTO}]`);
     marcadores.forEach((node) => node.remove());
     return true;
+  }
+
+  function obterOuCriarHostWorkspacePrincipal() {
+    const workspace = obterElementoWorkspacePrincipal();
+    if (!(workspace instanceof HTMLElement)) return null;
+
+    let host = document.getElementById(WORKSPACE_HOST_ID);
+    if (host && host.isConnected) return host;
+
+    host = document.createElement("section");
+    host.id = WORKSPACE_HOST_ID;
+    host.setAttribute("data-tela-principal-odontologica-workspace", "1");
+    host.style.minHeight = "0";
+    host.style.width = "100%";
+    host.style.boxSizing = "border-box";
+
+    if (workspace.id === "workspace-empty") {
+      workspace.replaceChildren(host);
+    } else {
+      workspace.appendChild(host);
+    }
+
+    return host;
   }
 
   function criarMarcadorTecnico(contexto) {
@@ -82,6 +115,63 @@
     });
   }
 
+  function renderizarContextoOdontologico(contextoValidado, containerResolvido, opcoes = {}) {
+    limparMarcadorTecnico(containerResolvido);
+
+    const estadoModulo = obterEstadoModulo();
+    const layoutModulo = obterLayoutModulo();
+
+    if (!estadoModulo || typeof estadoModulo.obterEstadoTelaPrincipalOdontologicaMock !== "function" || !layoutModulo || typeof layoutModulo.renderTelaPrincipalOdontologicaLayout !== "function") {
+      containerResolvido.appendChild(criarMarcadorTecnico(contextoValidado));
+      return montarResultadoBase(contextoValidado, {
+        ok: false,
+        status: "modulo-visual-indisponivel",
+        container: containerResolvido,
+        marcadorCriado: true,
+        mensagem: "Modulos visuais indisponiveis; marcador tecnico mantido.",
+        problemas: ["modulo-visual-indisponivel"],
+      });
+    }
+
+    const estadoMock = estadoModulo.obterEstadoTelaPrincipalOdontologicaMock({
+      ...contextoValidado,
+      origem: opcoes.origem || contextoValidado.origem,
+      comPaciente: !!(
+        contextoValidado.comPaciente ||
+        contextoValidado.pacienteId ||
+        contextoValidado.pacienteCodigo ||
+        contextoValidado.pacienteNome
+      ),
+    });
+
+    const renderizacao = layoutModulo.renderTelaPrincipalOdontologicaLayout(containerResolvido, estadoMock, {
+      contexto: contextoValidado,
+      origem: opcoes.origem || contextoValidado.origem,
+      modo: contextoValidado.modo,
+    });
+
+    if (!renderizacao || !renderizacao.ok) {
+      containerResolvido.appendChild(criarMarcadorTecnico(contextoValidado));
+      return montarResultadoBase(contextoValidado, {
+        ok: false,
+        status: "falha-renderizacao",
+        container: containerResolvido,
+        marcadorCriado: true,
+        mensagem: "Falha ao renderizar o esqueleto visual.",
+        problemas: ["falha-renderizacao"],
+      });
+    }
+
+    return montarResultadoBase(contextoValidado, {
+      ok: true,
+      status: opcoes.statusOk || "esqueleto-visual-estatico-renderizado",
+      container: containerResolvido,
+      marcadorCriado: false,
+      mensagem: opcoes.mensagemOk || "Esqueleto visual renderizado.",
+      problemas: [],
+    });
+  }
+
   function abrirTelaPrincipalOdontologicaPorPaciente(contexto) {
     const contratos = obterContratos();
     if (!contratos || typeof contratos.normalizarContextoTelaPrincipalOdontologica !== "function" || typeof contratos.validarContextoTelaPrincipalOdontologica !== "function") {
@@ -90,7 +180,7 @@
         {
           ok: false,
           status: "erro-sem-contrato",
-          mensagem: "Contrato de contexto indisponível.",
+          mensagem: "Contrato de contexto indisponivel.",
           problemas: ["contrato-indisponivel"],
         }
       );
@@ -98,84 +188,77 @@
 
     const normalizado = contratos.normalizarContextoTelaPrincipalOdontologica(contexto);
     const validacao = contratos.validarContextoTelaPrincipalOdontologica(normalizado);
-    const resultadoBase = {
-      ok: validacao.ok,
-      status: validacao.ok ? "ok" : "contexto-invalido",
-      contexto: validacao.contexto,
-      problemas: validacao.problemas,
-      mensagem: "",
-      container: null,
-      marcadorCriado: false,
-    };
 
     const containerResolvido = resolverContainer(normalizado.container);
     if (!containerResolvido) {
       return montarResultadoBase(normalizado, {
         ok: false,
         status: "container-nao-encontrado",
-        mensagem: "Container não encontrado.",
+        mensagem: "Container nao encontrado.",
         problemas: validacao.problemas.concat(["container-nao-encontrado"]),
       });
     }
 
-    limparMarcadorTecnico(containerResolvido);
-
-    const estadoModulo = obterEstadoModulo();
-    const layoutModulo = obterLayoutModulo();
-
-    if (!estadoModulo || typeof estadoModulo.obterEstadoTelaPrincipalOdontologicaMock !== "function" || !layoutModulo || typeof layoutModulo.renderTelaPrincipalOdontologicaLayout !== "function") {
-      containerResolvido.appendChild(criarMarcadorTecnico(validacao.contexto));
-      return montarResultadoBase(validacao.contexto, {
-        ok: false,
-        status: "modulo-visual-indisponivel",
-        container: containerResolvido,
-        marcadorCriado: true,
-        mensagem: "Módulos visuais indisponíveis; marcador técnico mantido.",
-        problemas: validacao.problemas.concat(["modulo-visual-indisponivel"]),
-      });
-    }
-
-    const estadoMock = estadoModulo.obterEstadoTelaPrincipalOdontologicaMock({
-      ...validacao.contexto,
-      comPaciente: !!(
-        validacao.contexto.comPaciente ||
-        validacao.contexto.pacienteId ||
-        validacao.contexto.pacienteCodigo ||
-        validacao.contexto.pacienteNome
-      ),
-    });
-
-    const renderizacao = layoutModulo.renderTelaPrincipalOdontologicaLayout(containerResolvido, estadoMock, {
-      contexto: validacao.contexto,
+    return renderizarContextoOdontologico(validacao.contexto, containerResolvido, {
       origem: validacao.contexto.origem,
-      modo: validacao.contexto.modo,
+      statusOk: "esqueleto-visual-estatico-renderizado",
+      mensagemOk: "Esqueleto visual estatico renderizado.",
     });
+  }
 
-    if (!renderizacao || !renderizacao.ok) {
-      containerResolvido.appendChild(criarMarcadorTecnico(validacao.contexto));
+  function abrirTelaPrincipalOdontologicaNoWorkspace(contexto) {
+    const contratos = obterContratos();
+    if (!contratos || typeof contratos.normalizarContextoTelaPrincipalOdontologica !== "function" || typeof contratos.validarContextoTelaPrincipalOdontologica !== "function") {
+      return montarResultadoBase(
+        contexto,
+        {
+          ok: false,
+          status: "erro-sem-contrato",
+          mensagem: "Contrato de contexto indisponivel.",
+          problemas: ["contrato-indisponivel"],
+        }
+      );
+    }
+
+    const normalizado = contratos.normalizarContextoTelaPrincipalOdontologica({
+      ...(contexto && typeof contexto === "object" ? contexto : {}),
+      origem: "workspace-principal",
+      container: null,
+    });
+    const validacao = contratos.validarContextoTelaPrincipalOdontologica(normalizado);
+
+    const workspaceHost = obterOuCriarHostWorkspacePrincipal();
+    if (!workspaceHost) {
       return montarResultadoBase(validacao.contexto, {
         ok: false,
-        status: "falha-renderizacao",
-        container: containerResolvido,
-        marcadorCriado: true,
-        mensagem: "Falha ao renderizar o esqueleto visual estático.",
-        problemas: validacao.problemas.concat(["falha-renderizacao"]),
+        status: "workspace-nao-encontrado",
+        mensagem: "Workspace principal nao encontrado.",
+        problemas: validacao.problemas.concat(["workspace-nao-encontrado"]),
       });
     }
 
-    return montarResultadoBase(validacao.contexto, {
-      ok: true,
-      status: "esqueleto-visual-estatico-renderizado",
-      container: containerResolvido,
-      marcadorCriado: false,
-      mensagem: "Esqueleto visual estático renderizado.",
-      problemas: [],
+    if (typeof hideAllPanels === "function") {
+      try {
+        hideAllPanels();
+      } catch {}
+    }
+
+    const workspaceEmpty = obterElementoWorkspacePrincipal();
+    if (workspaceEmpty?.classList) workspaceEmpty.classList.remove("hidden");
+
+    return renderizarContextoOdontologico(validacao.contexto, workspaceHost, {
+      origem: "workspace-principal",
+      statusOk: "workspace-principal-renderizado",
+      mensagemOk: "Tela odontologica montada no workspace principal.",
     });
   }
 
   const api = Object.freeze({
     MODULE_NAME,
     abrirTelaPrincipalOdontologicaPorPaciente,
+    abrirTelaPrincipalOdontologicaNoWorkspace,
+    obterElementoWorkspacePrincipal,
+    obterOuCriarHostWorkspacePrincipal,
     resolverContainer,
     limparMarcadorTecnico,
   });
@@ -183,10 +266,12 @@
   if (typeof window !== "undefined") {
     window.BranaTelaPrincipalOdontologicaEntrada = api;
     window.abrirTelaPrincipalOdontologicaPorPaciente = abrirTelaPrincipalOdontologicaPorPaciente;
+    window.abrirTelaPrincipalOdontologicaNoWorkspace = abrirTelaPrincipalOdontologicaNoWorkspace;
   }
 
   if (typeof globalThis !== "undefined") {
     globalThis.BranaTelaPrincipalOdontologicaEntrada = api;
     globalThis.abrirTelaPrincipalOdontologicaPorPaciente = abrirTelaPrincipalOdontologicaPorPaciente;
+    globalThis.abrirTelaPrincipalOdontologicaNoWorkspace = abrirTelaPrincipalOdontologicaNoWorkspace;
   }
 })();

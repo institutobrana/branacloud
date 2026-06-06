@@ -5096,3 +5096,13 @@ Observacoes:
 
 - Odontograma V1: correcao do fluxo de abertura do paciente e da tela vazia inicial, com abertura explicita do paciente selecionado na busca.
 
+## Odontograma Brana - Montagem da area principal da tela odontologica
+- A area principal de workspace passou a servir como ponto de montagem da tela odontologica.
+- O fluxo principal usa `workspace-empty` quando disponivel e cai para `main.workspace` apenas como fallback tecnico.
+- A entrada secundaria por botao na Ficha Pessoal > Historico continua preservada.
+- A origem `workspace-principal` foi adicionada ao contrato da tela odontologica.
+- `frontend/app.js` e `frontend/index.html` permaneceram intactos.
+- Nenhum backend, banco ou asset foi alterado.
+- Documento de referência: `docs/easydental_tela_principal_odontologica_subetapa_d2a_montagem_area_principal.md`.
+- Proxima etapa sugerida: D2-B, se a decisao for ligar a abertura principal ao fluxo real de inicializacao do sistema.
+

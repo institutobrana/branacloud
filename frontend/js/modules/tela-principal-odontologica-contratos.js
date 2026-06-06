@@ -2,6 +2,7 @@
   "use strict";
 
   const ORIGENS_TELA_PRINCIPAL_ODONTOLOGICA = Object.freeze({
+    "workspace-principal": "workspace-principal",
     "ficha-pessoal-historico": "ficha-pessoal-historico",
   });
 
