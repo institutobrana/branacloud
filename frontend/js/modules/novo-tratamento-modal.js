@@ -40,7 +40,7 @@
       observacoes: "",
       inclusao: "",
       alteracao: "",
-      idade: "64a 6m",
+      idade: "",
       arcadaPredominante: "Copiar do tratamento anterior",
       copiarIntervencoes: false,
       convenio: "Particular",
