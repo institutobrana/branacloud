@@ -44,6 +44,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A Subetapa 8V-A auditou o setup para usuarios criados posteriormente e confirmou que o gatilho atual esta no `setup_completed` do proprio usuario.
 - A Subetapa 8V-B implementou a menor correcao segura para que usuarios criados posteriormente nascam com `setup_completed = True`.
 - O contrato tecnico preliminar do modulo Tratamento foi registrado em `docs/contrato_tecnico_modulo_tratamento.md`, e o contrato complementar de layout/comportamento da tela `Novo tratamento` foi criado em `docs/contrato_layout_comportamento_tela_novo_tratamento.md`; nenhuma implementacao foi feita nesta etapa.
+- A etapa visual isolada da janela `Novo tratamento` foi iniciada no frontend com o modulo dedicado `frontend/js/modules/novo-tratamento-modal.js`, carregado por `frontend/index.html` e acionado pela acao `tratamento-novo` em `frontend/app.js`; a abertura atual e apenas visual, sem salvar tratamento, sem backend, sem banco e sem integracao com odontograma ou financeiro.
 - Auditoria documental da regra usuario -> prestador Clinica concluida: o combo de usuarios carrega o prestador sistêmico, o frontend nao filtra esse item e o backend bloqueia o vínculo em `_load_prestador_from_same_clinic()`; o banco confirmou o par usuario/prestador sistemico nas clinicas 1, 4, 13, 17 e 18; classificacao preliminar `REGRA-B + REGRA-F`; proxima etapa recomendada: comparar com EasyDental virgem antes de qualquer correção.
 - Comparacao EasyDental virgem concluida com fonte local somente leitura (`PROJETO_PRECIFICACAO_LEGADO\\Dados`, `eds70.sql`, `Dist\\USUARIO.raw`, `Dist\\PRESTADOR.raw`, `Dist\\UNIDADE.raw`, `Dist\\SISTEMA.raw` e `D:\\UTIL\\EasyDental_7.6_BR\\Readme.doc`): o legado confirma `Clínica` como prestador sistemico protegido, mas também confirma o vinculo operacional usuario/prestador e o uso desse contexto para agenda/conta da clinica; classificacao `EASY-A + REGRA-A + REGRA-F`; proxima etapa recomendada: abrir contrato de correção pequena no backend para permitir o vínculo operacional sem mexer na protecao estrutural.
 - Contrato tecnico da correcao de vinculo usuario -> prestador Clinica registrado em `docs/contrato_correcao_usuario_vinculo_prestador_clinica.md`; abordagem escolhida `USER-PREST-CONTRATO-B`; regra definida: manter a protecao estrutural do prestador Clinica e liberar apenas o vinculo operacional de usuario no backend, sem mexer em frontend, payload ou banco nesta etapa.
@@ -85,6 +86,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Decidir o destino dos untracked antigos fora da trilha principal.
 - Tratar mojibake/UTF-8 em trilha propria, sem misturar com correcoes funcionais.
 - Retomar modularizacao/refatoracao somente depois da documentacao base estar consolidada.
+- Validar manualmente a janela visual `Novo tratamento` e depois fechar a matriz de lacunas do convenio antes de qualquer persistencia real.
 - Revisar anamnese/SQLServer/restauracao em trilha separada.
 
 ## Frente aberta: auditoria comparativa EasyDental virgem x Brana Cloud

@@ -21947,7 +21947,12 @@ async function executarAcaoMenu(action){
   }
 
   if(action==="tratamento-novo"){
-    footerMsg.textContent="Novo tratamento: em planejamento.";
+    if(window.BranaNovoTratamentoModal?.open){
+      window.BranaNovoTratamentoModal.open();
+      footerMsg.textContent="Novo tratamento aberto.";
+    } else {
+      footerMsg.textContent="Novo tratamento: em planejamento.";
+    }
     return;
   }
   if(action==="tratamento-altera"){
