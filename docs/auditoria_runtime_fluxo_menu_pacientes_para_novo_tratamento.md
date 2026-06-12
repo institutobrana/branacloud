@@ -1,5 +1,7 @@
 # Auditoria runtime - fluxo `Tratamento -> Novo tratamento`
 
+> Status histórico: esta auditoria registrou a etapa regressiva que acabou revertida seletivamente no rollback posterior ao commit `d895078`. O documento foi preservado como referencia historica da trilha.
+
 ## Objetivo
 
 Registrar a auditoria técnica do fluxo real em runtime para o acionamento `Tratamento -> Novo tratamento`, com foco em:
@@ -99,4 +101,3 @@ Sequencia confirmada:
 - O teste foi feito com conta de auditoria local e senha temporaria aplicada para validar o runtime.
 - Nao houve alteracao de backend, banco, migração ou persistencia de negocio.
 - O fluxo da `Ficha pessoal` continua existindo como fallback do menu de pacientes fora deste caso especial.
-
