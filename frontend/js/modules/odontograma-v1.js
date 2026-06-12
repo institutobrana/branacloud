@@ -166,6 +166,20 @@
     if (!cfg) return null;
     state.panel = cfg.panel || document.getElementById(PANEL_ID);
     try {
+      const headerModule = window.BranaPacienteEmUsoHeaderV1;
+      if (headerModule && typeof headerModule.sync === "function") {
+        headerModule.sync(state.paciente);
+      } else {
+        void import("/frontend/js/modules/paciente-em-uso-header.js")
+          .then(() => {
+            try {
+              window.BranaPacienteEmUsoHeaderV1?.sync?.(state.paciente);
+            } catch {}
+          })
+          .catch((err) => console.warn("Falha ao carregar cabeçalho de paciente em uso.", err));
+      }
+    } catch {}
+    try {
       const searchModule = window.BranaOdontoPacienteSearchV1;
       if (searchModule && typeof searchModule.mount === "function" && cfg.paciente) {
         searchModule.mount(cfg.paciente, {
@@ -236,6 +250,9 @@
     const cfg = getPanelElements();
     if (window.BranaOdontoPacienteSearchV1 && typeof window.BranaOdontoPacienteSearchV1.setCurrentPatient === "function") {
       window.BranaOdontoPacienteSearchV1.setCurrentPatient(state.paciente);
+    }
+    if (window.BranaPacienteEmUsoHeaderV1 && typeof window.BranaPacienteEmUsoHeaderV1.sync === "function") {
+      window.BranaPacienteEmUsoHeaderV1.sync(state.paciente);
     }
     if (cfg.resumoPaciente) {
       cfg.resumoPaciente.textContent = state.paciente ? formatPacienteLabel(state.paciente) : "Sem paciente selecionado.";

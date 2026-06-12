@@ -22680,9 +22680,9 @@ async function fichaPodeTrocarTab(tab){
 const _fichaEnsureUIOrig=fichaEnsureUI;
 fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();fichaHistoricoAba.bind();};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado(item?.extra||null);};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado(item?.extra||null);if(window.BranaPacienteEmUsoHeaderV1?.sync){window.BranaPacienteEmUsoHeaderV1.sync(item||null)}};
 const _fichaLimparNovoOrig=fichaLimparNovo;
-fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();await fichaHistoricoAba.onLimparNovo();};
+fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();await fichaHistoricoAba.onLimparNovo();if(window.BranaPacienteEmUsoHeaderV1?.sync){window.BranaPacienteEmUsoHeaderV1.sync(null)}};
 const _fichaSetTabOrig=fichaSetTab;
 fichaSetTab=function(tab){
   const permite=fichaPodeTrocarTab(tab);
