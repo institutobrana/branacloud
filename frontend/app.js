@@ -22680,9 +22680,9 @@ async function fichaPodeTrocarTab(tab){
 const _fichaEnsureUIOrig=fichaEnsureUI;
 fichaEnsureUI=function(){_fichaEnsureUIOrig();if(!ficha)return;fichaAnamneseAba.bind();fichaHistoricoAba.bind();};
 const _fichaAplicarPacienteOrig=fichaAplicarPaciente;
-fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado(item?.extra||null);if(window.BranaPacienteEmUsoHeaderV1?.sync){window.BranaPacienteEmUsoHeaderV1.sync(item||null)}};
+fichaAplicarPaciente=function(item){_fichaAplicarPacienteOrig(item);fichaAnamneseAba.onPacienteAplicado();fichaHistoricoAba.onPacienteAplicado(item?.extra||null);if(window.BranaPacienteEmUsoHeaderV1?.sync){window.BranaPacienteEmUsoHeaderV1.sync(item||null)}else{void import("/frontend/js/modules/paciente-em-uso-header.js").then(()=>{try{window.BranaPacienteEmUsoHeaderV1?.sync?.(item||null)}catch{}}).catch(err=>console.warn("Falha ao carregar cabeçalho de paciente em uso.",err))}};
 const _fichaLimparNovoOrig=fichaLimparNovo;
-fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();await fichaHistoricoAba.onLimparNovo();if(window.BranaPacienteEmUsoHeaderV1?.sync){window.BranaPacienteEmUsoHeaderV1.sync(null)}};
+fichaLimparNovo=async function(){await _fichaLimparNovoOrig();await fichaAnamneseAba.onLimparNovo();await fichaHistoricoAba.onLimparNovo();if(window.BranaPacienteEmUsoHeaderV1?.sync){window.BranaPacienteEmUsoHeaderV1.sync(null)}else{void import("/frontend/js/modules/paciente-em-uso-header.js").then(()=>{try{window.BranaPacienteEmUsoHeaderV1?.sync?.(null)}catch{}}).catch(err=>console.warn("Falha ao carregar cabeçalho de paciente em uso.",err))}};
 const _fichaSetTabOrig=fichaSetTab;
 fichaSetTab=function(tab){
   const permite=fichaPodeTrocarTab(tab);

@@ -143,42 +143,67 @@
 
   function criarLinhaPaciente(estado) {
     const faixa = document.createElement("div");
+    faixa.id = "brana-paciente-em-uso-header";
+    faixa.className = "brana-paciente-em-uso-header";
     faixa.style.display = "grid";
-    faixa.style.gridTemplateColumns = "1fr auto";
-    faixa.style.gap = "10px";
-    faixa.style.padding = "10px 12px";
+    faixa.style.gridTemplateColumns = "auto minmax(110px,150px) minmax(0,1fr)";
+    faixa.style.gap = "8px";
+    faixa.style.alignItems = "center";
+    faixa.style.padding = "6px 8px";
     faixa.style.borderBottom = "1px solid #e3eaf1";
-    faixa.style.background = "#fff";
+    faixa.style.background = "linear-gradient(180deg,#fcfdff 0%,#f3f6fa 100%)";
+    faixa.style.boxSizing = "border-box";
+    faixa.style.font = "12px Tahoma, sans-serif";
+    faixa.style.color = "#1f2f3e";
 
-    const info = document.createElement("div");
-    info.style.display = "grid";
-    info.style.gap = "4px";
+    const paciente = estado?.paciente || {};
+    const codigo = String(paciente.codigo || paciente.numero || "").trim();
+    const nomeCompleto = String(paciente.nomeCompleto || paciente.nome || "").trim();
+    const numeroTexto = codigo ? `#${codigo}` : "—";
+    const nomeTexto = nomeCompleto || "—";
+    const isEmpty = !codigo && !nomeCompleto;
+
+    const rotulo = document.createElement("div");
+    rotulo.textContent = "Paciente:";
+    rotulo.style.font = "700 11px Tahoma, sans-serif";
+    rotulo.style.textTransform = "uppercase";
+    rotulo.style.letterSpacing = ".03em";
+    rotulo.style.color = "#425266";
+    rotulo.style.whiteSpace = "nowrap";
+
+    const numero = document.createElement("div");
+    numero.textContent = numeroTexto;
+    numero.style.minHeight = "24px";
+    numero.style.display = "flex";
+    numero.style.alignItems = "center";
+    numero.style.padding = "0 8px";
+    numero.style.border = "1px solid #c6ced8";
+    numero.style.background = "#fff";
+    numero.style.boxSizing = "border-box";
+    numero.style.whiteSpace = "nowrap";
+    numero.style.overflow = "hidden";
+    numero.style.textOverflow = "ellipsis";
+    numero.style.font = "700 12px Tahoma, sans-serif";
+    numero.style.color = isEmpty ? "#7a8794" : "#1f2f3e";
 
     const nome = document.createElement("div");
-    nome.textContent = estado.paciente?.nomeCompleto
-      ? `${estado.paciente.codigo || ""}${estado.paciente.codigo ? " - " : ""}${estado.paciente.nomeCompleto}`
-      : "Sem paciente selecionado";
-    nome.style.font = "700 13px Tahoma, sans-serif";
-    nome.style.color = "#1f2937";
+    nome.textContent = nomeTexto;
+    nome.style.minHeight = "24px";
+    nome.style.display = "flex";
+    nome.style.alignItems = "center";
+    nome.style.padding = "0 8px";
+    nome.style.border = "1px solid #c6ced8";
+    nome.style.background = "#fff";
+    nome.style.boxSizing = "border-box";
+    nome.style.whiteSpace = "nowrap";
+    nome.style.overflow = "hidden";
+    nome.style.textOverflow = "ellipsis";
+    nome.style.color = isEmpty ? "#7a8794" : "#1f2f3e";
 
-    const meta = document.createElement("div");
-    meta.textContent = estado.paciente?.simulado ? "Paciente ilustrativo para leitura visual." : "Entrada neutra.";
-    meta.style.font = "11px Tahoma, sans-serif";
-    meta.style.color = "#6b7280";
-
-    info.appendChild(nome);
-    info.appendChild(meta);
-
-    const resumo = document.createElement("div");
-    resumo.style.display = "flex";
-    resumo.style.flexWrap = "wrap";
-    resumo.style.gap = "6px";
-    resumo.appendChild(criarTagTexto(`Dentes: ${(estado.arcadas?.superior?.length || 0) + (estado.arcadas?.inferior?.length || 0)}`));
-    resumo.appendChild(criarTagTexto(`Arcadas: ${estado.arcadas ? 2 : 0}`));
-    resumo.appendChild(criarTagTexto(`Historico: ${estado.historico.length}`));
-
-    faixa.appendChild(info);
-    faixa.appendChild(resumo);
+    faixa.appendChild(rotulo);
+    faixa.appendChild(numero);
+    faixa.appendChild(nome);
+    faixa.title = isEmpty ? "Nenhum paciente ativo." : `Paciente ${numeroTexto} ${nomeTexto}`.trim();
     return faixa;
   }
 
