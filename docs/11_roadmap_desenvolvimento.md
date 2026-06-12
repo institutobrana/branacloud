@@ -30,6 +30,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 ## Estado validado recente
 
 - Login, senha interna e perfis: validado manualmente.
+- Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
 - Signup com Brana: validado manualmente.
 - Brana nasce com seed canonico proprio de 336 procedimentos.
 - Tabela exemplo permanece separada.
