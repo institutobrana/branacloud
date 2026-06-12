@@ -31,6 +31,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 - Login, senha interna e perfis: validado manualmente.
 - Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
+- Revalidacao runtime posterior detectou que o login de `gleissontel@gmail.com` voltou a responder `400` no momento da checagem, impedindo a observacao do fluxo `Tratamento -> Novo tratamento`; o novo documento de runtime foi registrado em `docs/revalidacao_runtime_pos_rollback_novo_tratamento.md`.
 - Signup com Brana: validado manualmente.
 - Brana nasce com seed canonico proprio de 336 procedimentos.
 - Tabela exemplo permanece separada.
