@@ -21947,7 +21947,29 @@ async function executarAcaoMenu(action){
   }
 
   if(action==="tratamento-novo"){
-    if(window.BranaNovoTratamentoModal?.open){
+    let gate=window.BranaNovoTratamentoPacienteGate;
+    if(!gate){
+      try{
+        await import("/frontend/js/modules/novo-tratamento-paciente-gate.js");
+        gate=window.BranaNovoTratamentoPacienteGate;
+      }catch(err){
+        console.warn("Falha ao carregar gate de paciente em uso para Novo tratamento.", err);
+      }
+    }
+    if(gate?.abrirNovoTratamentoComPacienteOuMenuPacientes){
+      const resultado=await gate.abrirNovoTratamentoComPacienteOuMenuPacientes();
+      if(resultado?.openedModal){
+        footerMsg.textContent="Novo tratamento aberto.";
+      } else if(resultado?.openedMenu){
+        footerMsg.textContent="Menu de pacientes aberto para selecionar paciente.";
+      } else if(resultado?.reason==="modal-indisponivel"){
+        footerMsg.textContent="Novo tratamento indisponível no momento.";
+      } else if(resultado?.reason==="menu-indisponivel"){
+        footerMsg.textContent="Menu de pacientes indisponível.";
+      } else {
+        footerMsg.textContent="Novo tratamento: em planejamento.";
+      }
+    } else if(window.BranaNovoTratamentoModal?.open){
       window.BranaNovoTratamentoModal.open();
       footerMsg.textContent="Novo tratamento aberto.";
     } else {
