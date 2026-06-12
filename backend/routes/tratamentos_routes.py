@@ -178,8 +178,8 @@ def _listar_tabelas(db: Session, clinica_id: int) -> list[dict]:
     )
     payload: list[dict] = []
     for t in tabelas:
-        indice_id = _resolver_indice(db, current_user.clinica_id, t.nro_indice, DEFAULT_INDICE_NUMERO)
-        indice_item = dados_indice_por_numero(db, current_user.clinica_id, indice_id)
+        indice_id = _resolver_indice(db, clinica_id, t.nro_indice, DEFAULT_INDICE_NUMERO)
+        indice_item = dados_indice_por_numero(db, clinica_id, indice_id)
         payload.append(
             {
                 "id": int(t.codigo or 0),
@@ -554,6 +554,8 @@ def carregar_combos_novo_tratamento(
             "convenio": convenio_default,
             "sinais_doenca_periodontal": 3,
             "alteracao_tecidos": 3,
+            "arcada_predominante": "Copiar do tratamento anterior",
+            "copiar_intervencoes": False,
             "idade_texto": _idade_texto(paciente.data_nascimento),
             "inclusao": hoje_iso,
             "alteracao": hoje_iso,

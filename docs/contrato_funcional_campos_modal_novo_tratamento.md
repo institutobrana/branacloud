@@ -26,7 +26,7 @@ O modal atual:
 - exibe as abas `Principal` e `Convenio`;
 - abre na aba `Principal` por padrao;
 - centraliza a janela em estilo classico;
-- usa valores padrao visuais definidos no modulo JS;
+- usa valores padrao visuais definidos no modulo JS e, quando existe paciente em uso, carrega o payload de combos do backend para preencher os campos principais;
 - fecha por `Ok`, `Cancela`, `X`, `ESC` e clique fora;
 - nao grava dados;
 - nao chama backend para persistencia.

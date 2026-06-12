@@ -52,7 +52,11 @@
     const paciente = obterPacienteEmUsoSeguro();
     if (paciente) {
       if (window.BranaNovoTratamentoModal?.open) {
-        window.BranaNovoTratamentoModal.open();
+        window.BranaNovoTratamentoModal.open({
+          pacienteId: paciente.id,
+          paciente: paciente.paciente || null,
+          source: paciente.source || "",
+        });
         return {
           openedModal: true,
           openedMenu: false,

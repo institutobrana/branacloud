@@ -32,6 +32,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Login, senha interna e perfis: validado manualmente.
 - Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
 - Revalidacao runtime posterior detectou que o login de `gleissontel@gmail.com` voltou a responder `400` no momento da checagem, impedindo a observacao do fluxo `Tratamento -> Novo tratamento`; o novo documento de runtime foi registrado em `docs/revalidacao_runtime_pos_rollback_novo_tratamento.md`.
+- A janela `Novo tratamento` foi revalidada em runtime com paciente em uso e carregamento real do endpoint `GET /tratamentos/novo/combos`; a modal abriu com os campos principais preenchidos e sem persistencia.
 - Signup com Brana: validado manualmente.
 - Brana nasce com seed canonico proprio de 336 procedimentos.
 - Tabela exemplo permanece separada.
@@ -699,7 +700,7 @@ Observacoes:
 
 * O contrato tecnico do modulo Tratamento ja existe em `docs/contrato_tecnico_modulo_tratamento.md`.
 * O contrato de layout/comportamento da tela `Novo tratamento` ja existe em `docs/contrato_layout_comportamento_tela_novo_tratamento.md`.
-* Esta etapa permaneceu apenas documental; nenhuma implementacao foi feita.
+* A janela `Novo tratamento` passou a consumir o endpoint `GET /tratamentos/novo/combos` ao abrir com paciente em uso, sem persistencia e sem alterar `frontend/app.js`.
 * Modulo depende de paciente, procedimentos e usuarios/prestadores.
 * Usa permissao `procedimentos`.
 * Deve manter filtro por `clinica_id` em todos os acessos.

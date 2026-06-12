@@ -10,6 +10,7 @@
   let mounted = false;
   let visible = false;
   let elements = null;
+  let loadSeq = 0;
 
   function todayBR() {
     return new Date().toLocaleDateString("pt-BR");
@@ -28,6 +29,33 @@
     return String(fallback || "").trim();
   }
 
+  function toText(value, fallback = "") {
+    return String(value ?? fallback ?? "").trim();
+  }
+
+  function readAuthToken() {
+    try {
+      return String(localStorage.getItem("brana_token") || "").trim();
+    } catch {
+      return "";
+    }
+  }
+
+  function resolvePacienteId(context = {}) {
+    const directId = Number(context?.pacienteId || context?.patientId || context?.id || 0) || 0;
+    if (directId > 0) return directId;
+    try {
+      const paciente = typeof BranaOdontogramaV1Module !== "undefined" ? BranaOdontogramaV1Module?.state?.paciente : null;
+      const odontoId = Number(paciente?.id || 0) || 0;
+      if (odontoId > 0) return odontoId;
+    } catch {}
+    try {
+      const fichaId = Number(typeof fichaPacienteAtualId !== "undefined" ? fichaPacienteAtualId : 0) || 0;
+      if (fichaId > 0) return fichaId;
+    } catch {}
+    return 0;
+  }
+
   function resolveDefaults() {
     return {
       inicio: todayBR(),
@@ -43,13 +71,13 @@
       idade: "",
       arcadaPredominante: "Copiar do tratamento anterior",
       copiarIntervencoes: false,
-      convenio: "Particular",
+      convenio: "particular",
       tipoAtendimento: "Tratamento Odontológico",
       cirurgiaoContratado: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
       cirurgiaoSolicitante: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
       cirurgiaoExecutante: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
-      sinaisClinicos: "<<Não avaliado>>",
-      alteracaoTecidos: "<<Não avaliado>>",
+      sinaisClinicos: 3,
+      alteracaoTecidos: 3,
       numeroGuia: "",
       dataAutorizacao: "",
       senhaAutorizacao: "",
@@ -109,20 +137,58 @@
     document.head.appendChild(style);
   }
 
-  function setSelectOptions(select, values, selected) {
+  function normalizeOptionItem(value) {
+    if (value && typeof value === "object") {
+      const itemValue = value.value ?? value.id ?? value.numero ?? value.codigo ?? value.sigla ?? value.nome ?? value.label ?? "";
+      const itemLabel = value.label ?? value.nome ?? value.sigla ?? value.descricao ?? String(itemValue ?? "");
+      return {
+        value: toText(itemValue),
+        label: toText(itemLabel),
+      };
+    }
+    const text = toText(value);
+    return { value: text, label: text };
+  }
+
+  function setFieldValue(el, value) {
+    if (!el) return;
+    el.value = toText(value);
+  }
+
+  function applySelectSelection(select, selected) {
+    if (!select || selected == null) return;
+    const wanted = toText(selected);
+    if (!wanted) return;
+    const wantedLower = wanted.toLowerCase();
+    const exact = Array.from(select.options || []).find((opt) => toText(opt.value) === wanted);
+    if (exact) {
+      select.value = exact.value;
+      return;
+    }
+    const byLabel = Array.from(select.options || []).find((opt) => {
+      const label = toText(opt.textContent);
+      return label && (label.toLowerCase() === wantedLower || label.toLowerCase().includes(wantedLower));
+    });
+    if (byLabel) select.value = byLabel.value;
+  }
+
+  function setSelectOptions(select, values, selected, labelMapper) {
     if (!select) return;
     const seen = new Set();
     const opts = [];
     (Array.isArray(values) ? values : []).forEach((value) => {
-      const text = String(value ?? "").trim();
-      if (!text) return;
-      const key = text.toLowerCase();
+      const item = normalizeOptionItem(value);
+      if (!item.value && !item.label) return;
+      const key = String(item.value || item.label).toLowerCase();
       if (seen.has(key)) return;
       seen.add(key);
-      opts.push(text);
+      opts.push({
+        value: item.value,
+        label: typeof labelMapper === "function" ? toText(labelMapper(value, item)) : item.label || item.value,
+      });
     });
-    select.innerHTML = opts.map((text) => `<option value="${esc(text)}">${esc(text)}</option>`).join("");
-    if (selected != null) select.value = String(selected);
+    select.innerHTML = opts.map((item) => `<option value="${esc(item.value)}">${esc(item.label || item.value)}</option>`).join("");
+    applySelectSelection(select, selected);
   }
 
   function esc(value) {
@@ -132,6 +198,113 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  async function loadPayloadForPaciente(pacienteId) {
+    const id = Number(pacienteId || 0) || 0;
+    if (id <= 0) return null;
+    const token = readAuthToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const res = await fetch(`/tratamentos/novo/combos?paciente_id=${encodeURIComponent(String(id))}`, {
+      method: "GET",
+      headers,
+    });
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {}
+    if (!res.ok) {
+      throw new Error(toText(data?.detail, "Falha ao carregar dados do novo tratamento."));
+    }
+    return data || null;
+  }
+
+  function applyPayload(rawPayload) {
+    const cfg = getElements();
+    if (!cfg) return;
+    const payload = rawPayload && typeof rawPayload === "object" ? rawPayload : {};
+    const defaults = payload.defaults && typeof payload.defaults === "object" ? payload.defaults : {};
+    const fallback = resolveDefaults();
+    const tabelas = Array.isArray(payload.tabelas) && payload.tabelas.length
+      ? payload.tabelas
+      : [
+          { id: "PARTICULAR", nome: "PARTICULAR" },
+          { id: "CONVENIO", nome: "CONVENIO" },
+        ];
+    const indices = Array.isArray(payload.indices) && payload.indices.length
+      ? payload.indices
+      : [
+          { id: "R$", sigla: "R$", nome: "Reais" },
+          { id: "US$", sigla: "US$", nome: "Dolar" },
+        ];
+    const cirurgioes = Array.isArray(payload.cirurgioes) && payload.cirurgioes.length
+      ? payload.cirurgioes
+      : [
+          { id: fallback.cirurgiaoResponsavel, nome: fallback.cirurgiaoResponsavel },
+        ];
+    const unidades = Array.isArray(payload.unidades) && payload.unidades.length
+      ? payload.unidades
+      : [
+          { id: fallback.unidadeAtendimento, nome: fallback.unidadeAtendimento },
+        ];
+    const convenios = Array.isArray(payload.convenios) && payload.convenios.length
+      ? payload.convenios
+      : [
+          { id: "particular", nome: "Particular" },
+        ];
+    const tiposTiss = Array.isArray(payload.tipos_tiss) && payload.tipos_tiss.length
+      ? payload.tipos_tiss
+      : [
+          { id: fallback.tipoAtendimento, nome: fallback.tipoAtendimento },
+        ];
+    const sinais = Array.isArray(payload.sinais) && payload.sinais.length
+      ? payload.sinais
+      : [
+          { id: 3, nome: "<<Nao avaliado>>" },
+          { id: 1, nome: "Sim" },
+          { id: 2, nome: "Nao" },
+        ];
+    const tecidos = Array.isArray(payload.tecidos) && payload.tecidos.length
+      ? payload.tecidos
+      : sinais;
+    const arcadasBase = Array.isArray(payload.arcadas) && payload.arcadas.length
+      ? payload.arcadas
+      : [
+          { id: "Decidua", nome: "Decidua" },
+          { id: "Mista", nome: "Mista" },
+          { id: "Permanente", nome: "Permanente" },
+        ];
+    const arcadas = [
+      { id: "Copiar do tratamento anterior", nome: "Copiar do tratamento anterior" },
+      ...arcadasBase.filter((item) => toText(item?.id || item?.nome).toLowerCase() !== "copiar do tratamento anterior"),
+    ];
+
+    setFieldValue(cfg.inicio, defaults.data_inicio ?? fallback.inicio);
+    setFieldValue(cfg.finalizacao, defaults.data_finalizacao ?? fallback.finalizacao);
+    setFieldValue(cfg.observacoes, defaults.observacoes ?? fallback.observacoes);
+    setFieldValue(cfg.inclusao, defaults.inclusao ?? fallback.inclusao);
+    setFieldValue(cfg.alteracao, defaults.alteracao ?? fallback.alteracao);
+    setFieldValue(cfg.idade, defaults.idade_texto ?? defaults.idade ?? fallback.idade);
+    cfg.copiar.checked = !!(defaults.copiar_intervencoes ?? fallback.copiarIntervencoes);
+    setFieldValue(cfg.convGuia, defaults.numero_guia ?? fallback.numeroGuia);
+    setFieldValue(cfg.convAutorizacao, defaults.data_autorizacao ?? fallback.dataAutorizacao);
+    setFieldValue(cfg.convSenha, defaults.senha_autorizacao ?? fallback.senhaAutorizacao);
+    setFieldValue(cfg.convValidade, defaults.validade_senha ?? fallback.validadeSenha);
+
+    setSelectOptions(cfg.situacao, payload.situacoes || ["Aberto", "Finalizado", "Cancelado"], defaults.situacao ?? fallback.situacao);
+    setSelectOptions(cfg.tabela, tabelas, defaults.tabela_codigo ?? fallback.tabelaPrincipal, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.indice, indices, defaults.indice ?? fallback.indice, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.cirurgiao, cirurgioes, defaults.cirurgiao_responsavel_id ?? fallback.cirurgiaoResponsavel, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.unidade, unidades, defaults.unidade_atendimento ?? fallback.unidadeAtendimento, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.arcada, arcadas, defaults.arcada_predominante ?? fallback.arcadaPredominante, (value, item) => item.label || item.value);
+
+    setSelectOptions(cfg.convConvenio, convenios, defaults.convenio ?? fallback.convenio, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.convTipo, tiposTiss, defaults.tipo_atendimento_tiss_id ?? fallback.tipoAtendimento, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.convContratado, cirurgioes, defaults.cirurgiao_contratado_id ?? fallback.cirurgiaoContratado, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.convSolicitante, cirurgioes, defaults.cirurgiao_solicitante_id ?? fallback.cirurgiaoSolicitante, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.convExecutante, cirurgioes, defaults.cirurgiao_executante_id ?? fallback.cirurgiaoExecutante, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.convSinais, sinais, defaults.sinais_doenca_periodontal ?? fallback.sinaisClinicos, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.convTecidos, tecidos, defaults.alteracao_tecidos ?? fallback.alteracaoTecidos, (value, item) => item.label || item.value);
   }
 
   function buildHtml() {
@@ -392,16 +565,38 @@
     cfg.backdrop.classList.add("hidden");
     cfg.backdrop.setAttribute("aria-hidden", "true");
     visible = false;
+    loadSeq += 1;
   }
 
-  function open() {
+  async function loadAndApplyContext(context = {}) {
+    const cfg = getElements();
+    if (!cfg) return;
+    const seq = ++loadSeq;
+    const pacienteId = resolvePacienteId(context);
+    if (pacienteId <= 0) {
+      applyPayload(null);
+      return;
+    }
+    try {
+      const payload = await loadPayloadForPaciente(pacienteId);
+      if (seq !== loadSeq) return;
+      applyPayload(payload);
+    } catch (err) {
+      console.warn(`[${MODULE_NAME}]`, err);
+      if (seq !== loadSeq) return;
+      applyPayload(null);
+    }
+  }
+
+  function open(context = {}) {
     const cfg = ensureMounted();
     if (!cfg?.backdrop) return;
-    populateDefaults();
     setTab(TAB_PRINCIPAL);
     cfg.backdrop.classList.remove("hidden");
     cfg.backdrop.setAttribute("aria-hidden", "false");
     visible = true;
+    applyPayload(null);
+    void loadAndApplyContext(context);
     setTimeout(() => {
       try {
         cfg.inicio?.focus();

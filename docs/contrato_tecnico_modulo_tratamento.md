@@ -64,6 +64,7 @@ Para este contrato:
 - busca/listagem de tratamentos por paciente;
 - endpoint para carregar combos do novo tratamento;
 - endpoint para salvar novo tratamento;
+- modal visual de novo tratamento ja consome os combos do backend quando ha paciente em uso, ainda sem persistencia;
 - campos principais do tratamento ja modelados no banco e no backend;
 - regras basicas de autenticacao e isolamento por clinica;
 - uso de paciente como contexto principal;
