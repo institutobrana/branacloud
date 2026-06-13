@@ -33,6 +33,38 @@
     return String(value ?? fallback ?? "").trim();
   }
 
+  function onlyDigits(value) {
+    return String(value ?? "").replace(/\D+/g, "").slice(0, 8);
+  }
+
+  function formatDateBr(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "";
+    const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (iso) {
+      return `${iso[3]}/${iso[2]}/${iso[1]}`;
+    }
+    const br = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (br) {
+      return `${br[1]}/${br[2]}/${br[3]}`;
+    }
+    const digits = onlyDigits(raw);
+    if (digits.length === 8) {
+      return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+    }
+    return raw;
+  }
+
+  function normalizeDateInput(value) {
+    const digits = onlyDigits(value);
+    const dd = digits.slice(0, 2);
+    const mm = digits.slice(2, 4);
+    const yyyy = digits.slice(4, 8);
+    if (digits.length <= 2) return dd;
+    if (digits.length <= 4) return `${dd}/${mm}`;
+    return `${dd}/${mm}/${yyyy}`;
+  }
+
   function readAuthToken() {
     try {
       return String(localStorage.getItem("brana_token") || "").trim();
@@ -153,6 +185,28 @@
   function setFieldValue(el, value) {
     if (!el) return;
     el.value = toText(value);
+  }
+
+  function setDateFieldValue(el, value) {
+    if (!el) return;
+    el.value = formatDateBr(value);
+  }
+
+  function bindDateMask(input) {
+    if (!input || input.dataset.ntDateMaskBound === "1") return;
+    input.dataset.ntDateMaskBound = "1";
+    input.addEventListener("input", () => {
+      const normalized = normalizeDateInput(input.value);
+      if (input.value !== normalized) input.value = normalized;
+    });
+    input.addEventListener("blur", () => {
+      input.value = normalizeDateInput(input.value);
+    });
+    input.addEventListener("paste", () => {
+      setTimeout(() => {
+        input.value = normalizeDateInput(input.value);
+      }, 0);
+    });
   }
 
   function applySelectSelection(select, selected) {
@@ -279,7 +333,7 @@
       ...arcadasBase.filter((item) => toText(item?.id || item?.nome).toLowerCase() !== "copiar do tratamento anterior"),
     ];
 
-    setFieldValue(cfg.inicio, defaults.data_inicio ?? fallback.inicio);
+    setDateFieldValue(cfg.inicio, defaults.data_inicio ?? fallback.inicio);
     setFieldValue(cfg.finalizacao, defaults.data_finalizacao ?? fallback.finalizacao);
     setFieldValue(cfg.observacoes, defaults.observacoes ?? fallback.observacoes);
     setFieldValue(cfg.inclusao, defaults.inclusao ?? fallback.inclusao);
@@ -324,7 +378,7 @@
               <div class="nt-grid-top">
                 <div class="nt-field">
                   <label for="nt-inicio">Início:</label>
-                  <input id="nt-inicio" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10">
+                  <input id="nt-inicio" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="off">
                 </div>
                 <div class="nt-field">
                   <label for="nt-finalizacao">Finalização:</label>
@@ -494,6 +548,7 @@
       elements.tabs = Array.from(elements.backdrop.querySelectorAll("[data-nt-tab]"));
       elements.panes = Array.from(elements.backdrop.querySelectorAll("[data-nt-pane]"));
     }
+    bindDateMask(elements?.inicio);
     return elements;
   }
 

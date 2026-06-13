@@ -33,6 +33,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
 - Revalidacao runtime posterior detectou que o login de `gleissontel@gmail.com` voltou a responder `400` no momento da checagem, impedindo a observacao do fluxo `Tratamento -> Novo tratamento`; o novo documento de runtime foi registrado em `docs/revalidacao_runtime_pos_rollback_novo_tratamento.md`.
 - A janela `Novo tratamento` foi revalidada em runtime com paciente em uso e carregamento real do endpoint `GET /tratamentos/novo/combos`; a modal abriu com os campos principais preenchidos e sem persistencia.
+- O campo `Inicio` do modal `Novo tratamento` passou a exibir e aceitar a data em `DD/MM/AAAA`, com mascara local no frontend, sem mudar o contrato de persistencia.
 - Signup com Brana: validado manualmente.
 - Brana nasce com seed canonico proprio de 336 procedimentos.
 - Tabela exemplo permanece separada.
