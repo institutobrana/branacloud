@@ -6,15 +6,17 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models.clinica import Clinica
 from models.convenio_odonto import ConvenioOdonto
 from models.financeiro import ItemAuxiliar
 from models.paciente import Paciente
+from models.prestador_odonto import PrestadorOdonto
+from models.unidade_atendimento import UnidadeAtendimento
 from models.procedimento_tabela import ProcedimentoTabela
-from models.tiss_tipo_tabela import TissTipoTabela
+from models.tiss_tipo_atendimento import TISS_TIPO_ATENDIMENTO_PADRAO, TissTipoAtendimento
 from models.tratamento import Tratamento
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
@@ -50,7 +52,7 @@ class NovoTratamentoPayload(BaseModel):
     tabela_codigo: int | str | None = None
     indice: int | str | None = None
 
-    cirurgiao_responsavel_id: int | None = None
+    cirurgiao_responsavel_id: int | str | None = None
     unidade_atendimento: str | None = None
     observacoes: str | None = None
 
@@ -62,9 +64,9 @@ class NovoTratamentoPayload(BaseModel):
     id_convenio: int | None = None
     tipo_atendimento_tiss_id: int | str | None = None
 
-    cirurgiao_contratado_id: int | None = None
-    cirurgiao_solicitante_id: int | None = None
-    cirurgiao_executante_id: int | None = None
+    cirurgiao_contratado_id: int | str | None = None
+    cirurgiao_solicitante_id: int | str | None = None
+    cirurgiao_executante_id: int | str | None = None
 
     sinais_doenca_periodontal: int | str | None = None
     alteracao_tecidos: int | str | None = None
@@ -122,6 +124,22 @@ def _iso_to_br(value: str | None) -> str:
         return ""
     y, m, d = iso.split("-")
     return f"{d}/{m}/{y}"
+
+
+def _today_br_date() -> str:
+    return date.today().strftime("%d/%m/%Y")
+
+
+def _audit_label(data: str | None, apelido: str | None) -> str:
+    data_txt = _clean_text(data)
+    apelido_txt = _clean_text(apelido)
+    if data_txt and apelido_txt:
+        return f"{data_txt} - {apelido_txt}"
+    if data_txt:
+        return data_txt
+    if apelido_txt:
+        return apelido_txt
+    return ""
 
 
 def _idade_texto(data_nascimento: str | None) -> str:
@@ -202,17 +220,20 @@ def _resolver_tabela_codigo(valor: int | str | None, tabelas: list[dict], defaul
     return int(default)
 
 
-def _listar_tipos_tiss(db: Session) -> list[dict]:
-    rows = (
-        db.query(TissTipoTabela)
-        .filter(TissTipoTabela.ativo.is_(True))
-        .order_by(TissTipoTabela.id.asc())
-        .all()
-    )
+def _listar_tipos_atendimento_tiss(db: Session) -> list[dict]:
+    try:
+        rows = (
+            db.query(TissTipoAtendimento)
+            .filter(TissTipoAtendimento.ativo.is_(True))
+            .order_by(TissTipoAtendimento.id.asc())
+            .all()
+        )
+        if not rows:
+            rows = db.query(TissTipoAtendimento).order_by(TissTipoAtendimento.id.asc()).all()
+    except SQLAlchemyError:
+        rows = []
     if not rows:
-        rows = db.query(TissTipoTabela).order_by(TissTipoTabela.id.asc()).all()
-    if not rows:
-        return [{"id": 1, "codigo": "00", "nome": "Outras Tabelas"}]
+        rows = [type("_TissTipoAtendimentoSeed", (), item)() for item in TISS_TIPO_ATENDIMENTO_PADRAO]
     return [
         {
             "id": int(x.id),
@@ -224,48 +245,110 @@ def _listar_tipos_tiss(db: Session) -> list[dict]:
 
 
 def _listar_cirurgioes(db: Session, clinica_id: int) -> list[dict]:
-    usuarios = (
-        db.query(Usuario)
+    prestadores = (
+        db.query(PrestadorOdonto)
         .filter(
-            Usuario.clinica_id == clinica_id,
-            Usuario.ativo.is_(True),
+            PrestadorOdonto.clinica_id == clinica_id,
+            PrestadorOdonto.inativo.is_(False),
         )
-        .order_by(func.lower(Usuario.nome).asc(), Usuario.id.asc())
+        .order_by(func.lower(PrestadorOdonto.nome).asc(), PrestadorOdonto.id.asc())
         .all()
     )
-    return [
-        {
-            "id": int(u.id),
-            "codigo": int(u.codigo or u.id),
-            "nome": (u.nome or "").strip(),
-        }
-        for u in usuarios
-    ]
-
-
-def _listar_unidades(db: Session, clinica_id: int, clinica_nome: str) -> list[dict]:
-    unidades = (
-        db.query(ItemAuxiliar)
-        .filter(
-            ItemAuxiliar.clinica_id == clinica_id,
-            ItemAuxiliar.tipo.ilike("Unidade de atendimento"),
-        )
-        .order_by(ItemAuxiliar.descricao.asc())
-        .all()
-    )
-    nomes: list[str] = []
-    vistos: set[str] = set()
-    for item in unidades:
-        nome = (item.descricao or "").strip()
-        chave = _norm(nome)
-        if not nome or not chave or chave in vistos:
+    itens: list[dict[str, Any]] = []
+    for item in prestadores:
+        nome = (item.apelido or item.nome or "").strip()
+        if not nome:
             continue
-        vistos.add(chave)
-        nomes.append(nome)
-    if not nomes:
-        fallback = (clinica_nome or "").strip() or "Unidade principal"
-        nomes = [fallback]
-    return [{"id": idx + 1, "nome": nome} for idx, nome in enumerate(nomes)]
+        usuario_id = int(item.usuario_id or 0) or None
+        itens.append(
+            {
+                "id": int(item.id),
+                "value": f"u:{int(usuario_id)}" if usuario_id else f"p:{int(item.id)}",
+                "usuario_id": usuario_id,
+                "codigo": int(item.codigo or item.id),
+                "nome": nome,
+                "apelido": (item.apelido or "").strip(),
+                "prestador_id": int(item.id),
+                "source_id": int(item.source_id),
+                "ativo": True,
+            }
+        )
+    return itens
+
+
+def _resolver_cirurgiao_prestador(
+    db: Session,
+    clinica_id: int,
+    valor: int | str | None,
+    cirurgioes: list[dict[str, Any]],
+) -> tuple[int | None, str | None]:
+    raw = str(valor or "").strip()
+    if not raw:
+        return None, None
+    if raw.startswith("u:"):
+        usuario_id = _clean_int(raw[2:])
+        if not usuario_id:
+            return None, None
+        row = next((x for x in cirurgioes if str(x.get("value")) == raw), None)
+        if row:
+            nome = str(row.get("apelido") or row.get("nome") or "").strip() or None
+            return int(usuario_id), nome
+        return int(usuario_id), None
+    if raw.startswith("p:"):
+        prestador_id = _clean_int(raw[2:])
+        if not prestador_id:
+            return None, None
+        row = (
+            db.query(PrestadorOdonto)
+            .filter(
+                PrestadorOdonto.clinica_id == clinica_id,
+                PrestadorOdonto.id == int(prestador_id),
+            )
+            .first()
+        )
+        if not row:
+            return None, None
+        nome = (row.apelido or row.nome or "").strip() or None
+        usuario_id = int(row.usuario_id or 0) or None
+        return usuario_id, nome
+    usuario_id = _clean_int(raw)
+    if usuario_id:
+        row = next((x for x in cirurgioes if int(x.get("usuario_id") or 0) == usuario_id), None)
+        if row:
+            nome = str(row.get("apelido") or row.get("nome") or "").strip() or None
+            return usuario_id, nome
+        return usuario_id, None
+    return None, None
+
+
+def _listar_unidades(db: Session, clinica_id: int) -> list[dict]:
+    unidades = (
+        db.query(UnidadeAtendimento)
+        .filter(
+            UnidadeAtendimento.clinica_id == clinica_id,
+            UnidadeAtendimento.inativo.is_(False),
+        )
+        .order_by(UnidadeAtendimento.source_id.asc(), UnidadeAtendimento.id.asc())
+        .all()
+    )
+    itens: list[dict[str, Any]] = []
+    for item in unidades:
+        nome = (item.nome or "").strip()
+        if not nome:
+            continue
+        itens.append(
+            {
+                "id": int(item.id),
+                "value": f"u:{int(item.id)}",
+                "row_id": int(item.id),
+                "source_id": int(item.source_id or item.id),
+                "codigo": (item.codigo or "").strip(),
+                "nome": nome,
+                "descricao": nome,
+                "ativo": True,
+            }
+        )
+    return itens
 
 
 def _listar_convenios(db: Session, clinica_id: int, paciente: Paciente) -> list[dict]:
@@ -358,8 +441,25 @@ def _resolver_tiss_id(db: Session, valor: int | str | None, default: int = 1) ->
     tipo_id = _clean_int(valor)
     if not tipo_id:
         return int(default)
-    existe = db.query(TissTipoTabela.id).filter(TissTipoTabela.id == int(tipo_id)).first()
+    try:
+        existe = db.query(TissTipoAtendimento.id).filter(TissTipoAtendimento.id == int(tipo_id)).first()
+    except SQLAlchemyError:
+        existe = None
     return int(tipo_id) if existe else int(default)
+
+
+def _nome_tipo_atendimento_tiss_por_id(db: Session, tipo_id: int | None) -> str:
+    numero = _clean_int(tipo_id)
+    if not numero:
+        return ""
+    try:
+        row = db.query(TissTipoAtendimento).filter(TissTipoAtendimento.id == int(numero)).first()
+    except SQLAlchemyError:
+        row = None
+    if row:
+        return (row.nome or "").strip()
+    fallback = next((x for x in TISS_TIPO_ATENDIMENTO_PADRAO if int(x["id"]) == int(numero)), None)
+    return str(fallback["nome"]).strip() if fallback else ""
 
 
 def _resolver_sinal(valor: int | str | None, default: int = 3) -> int:
@@ -378,6 +478,9 @@ def _nome_usuario_por_id(cirurgioes: list[dict], usuario_id: int | None) -> str 
 
 
 def _tratamento_to_dict(item: Tratamento) -> dict[str, Any]:
+    extra = dict(item.source_payload or {})
+    inclusao = _audit_label(extra.get("data_inclusao"), extra.get("usuario_inclusao"))
+    alteracao = _audit_label(extra.get("data_alteracao"), extra.get("usuario_alteracao"))
     return {
         "id": int(item.id),
         "paciente_id": int(item.paciente_id),
@@ -407,6 +510,8 @@ def _tratamento_to_dict(item: Tratamento) -> dict[str, Any]:
         "data_autorizacao": item.data_autorizacao or "",
         "senha_autorizacao": item.senha_autorizacao or "",
         "validade_senha": item.validade_senha or "",
+        "inclusao": inclusao,
+        "alteracao": alteracao,
         "criado_em": item.criado_em.isoformat() if item.criado_em else None,
         "atualizado_em": item.atualizado_em.isoformat() if item.atualizado_em else None,
     }
@@ -454,6 +559,9 @@ def listar_tratamentos_paciente(
         tabela_nome = tabelas_map.get(tabela_codigo) or f"Tabela {tabela_codigo}"
         indice_id = _resolver_indice(db, current_user.clinica_id, item.indice, default=DEFAULT_INDICE_NUMERO)
         indice_item = dados_indice_por_numero(db, current_user.clinica_id, indice_id)
+        extra = dict(item.source_payload or {})
+        inclusao = _audit_label(extra.get("data_inclusao"), extra.get("usuario_inclusao"))
+        alteracao = _audit_label(extra.get("data_alteracao"), extra.get("usuario_alteracao"))
         data_inicio_br = _iso_to_br(item.data_inicio)
         data_finalizacao_br = _iso_to_br(item.data_finalizacao)
 
@@ -480,6 +588,8 @@ def listar_tratamentos_paciente(
                 "cirurgiao_responsavel_nome": item.cirurgiao_responsavel_nome or "",
                 "unidade_atendimento": item.unidade_atendimento or "",
                 "observacoes": item.observacoes or "",
+                "inclusao": inclusao,
+                "alteracao": alteracao,
             }
         )
 
@@ -503,8 +613,6 @@ def carregar_combos_novo_tratamento(
 
     clinica_id = current_user.clinica_id
     paciente = _paciente_or_404(db, clinica_id, pid)
-    clinica = db.query(Clinica).filter(Clinica.id == clinica_id).first()
-    clinica_nome = (clinica.nome if clinica else "") or ""
 
     tabelas = _listar_tabelas(db, clinica_id)
     tabela_default = _resolver_tabela_codigo(paciente.tabela_codigo, tabelas, default=1)
@@ -512,11 +620,46 @@ def carregar_combos_novo_tratamento(
     indice_default = int(tabela_sel["indice_id"]) if tabela_sel else DEFAULT_INDICE_NUMERO
 
     cirurgioes = _listar_cirurgioes(db, clinica_id)
-    cirurgiao_default_id = int(current_user.id)
-    if not any(int(x["id"]) == cirurgiao_default_id for x in cirurgioes):
-        cirurgiao_default_id = int(cirurgioes[0]["id"]) if cirurgioes else 0
+    cirurgiao_default = next((x for x in cirurgioes if int(x.get("usuario_id") or 0) == int(current_user.id)), None)
+    if cirurgiao_default is None and cirurgioes:
+        cirurgiao_default = cirurgioes[0]
+    cirurgiao_default_value = str(cirurgiao_default.get("value") or "") if cirurgiao_default else ""
 
-    tipos_tiss = _listar_tipos_tiss(db)
+    unidades = _listar_unidades(db, clinica_id)
+    unidade_default = None
+    try:
+        unidade_id = int(current_user.unidade_atendimento_id or 0) or None
+    except Exception:
+        unidade_id = None
+    if unidade_id:
+        unidade_default = next((x for x in unidades if int(x.get("row_id") or 0) == unidade_id), None)
+        if unidade_default is None:
+            unidade_default_row = (
+                db.query(UnidadeAtendimento)
+                .filter(
+                    UnidadeAtendimento.clinica_id == clinica_id,
+                    UnidadeAtendimento.id == unidade_id,
+                    UnidadeAtendimento.inativo.is_(False),
+                )
+                .first()
+            )
+            if unidade_default_row:
+                unidade_default = {
+                    "id": int(unidade_default_row.id),
+                    "value": f"u:{int(unidade_default_row.id)}",
+                    "row_id": int(unidade_default_row.id),
+                    "source_id": int(unidade_default_row.source_id or unidade_default_row.id),
+                    "codigo": (unidade_default_row.codigo or "").strip(),
+                    "nome": (unidade_default_row.nome or "").strip(),
+                    "descricao": (unidade_default_row.nome or "").strip(),
+                    "ativo": True,
+                }
+                unidades = [unidade_default, *[x for x in unidades if int(x.get("row_id") or 0) != int(unidade_default_row.id)]]
+    if unidade_default is None and unidades:
+        unidade_default = unidades[0]
+    unidade_default_value = str(unidade_default.get("nome") or unidade_default.get("descricao") or "") if unidade_default else ""
+
+    tipos_tiss = _listar_tipos_atendimento_tiss(db)
     tipo_tiss_default = int(tipos_tiss[0]["id"]) if tipos_tiss else 1
 
     convenios = _listar_convenios(db, clinica_id, paciente)
@@ -536,7 +679,7 @@ def carregar_combos_novo_tratamento(
         "situacoes": [{"id": x, "nome": x} for x in SITUACOES_PADRAO],
         "arcadas": [{"id": x, "nome": x} for x in ARCADAS_PADRAO],
         "cirurgioes": cirurgioes,
-        "unidades": _listar_unidades(db, clinica_id, clinica_nome),
+        "unidades": unidades,
         "convenios": convenios,
         "tipos_tiss": tipos_tiss,
         "sinais": [dict(x) for x in SINAIS_PADRAO],
@@ -548,8 +691,8 @@ def carregar_combos_novo_tratamento(
             "situacao": "Aberto",
             "tabela_codigo": int(tabela_default),
             "indice": int(indice_default),
-            "cirurgiao_responsavel_id": int(cirurgiao_default_id or 0),
-            "unidade_atendimento": (clinica_nome or "Unidade principal"),
+            "cirurgiao_responsavel_id": cirurgiao_default_value,
+            "unidade_atendimento": unidade_default_value,
             "tipo_atendimento_tiss_id": int(tipo_tiss_default),
             "convenio": convenio_default,
             "sinais_doenca_periodontal": 3,
@@ -557,8 +700,8 @@ def carregar_combos_novo_tratamento(
             "arcada_predominante": "Copiar do tratamento anterior",
             "copiar_intervencoes": False,
             "idade_texto": _idade_texto(paciente.data_nascimento),
-            "inclusao": hoje_iso,
-            "alteracao": hoje_iso,
+            "inclusao": "",
+            "alteracao": "",
         },
     }
 
@@ -585,17 +728,15 @@ def salvar_novo_tratamento(
     situacao = _clean_text(payload.situacao) or "Aberto"
 
     cirurgioes = _listar_cirurgioes(db, clinica_id)
-
-    cir_resp = _resolver_usuario_id(db, clinica_id, payload.cirurgiao_responsavel_id)
-    cir_con = _resolver_usuario_id(db, clinica_id, payload.cirurgiao_contratado_id)
-    cir_sol = _resolver_usuario_id(db, clinica_id, payload.cirurgiao_solicitante_id)
-    cir_exe = _resolver_usuario_id(db, clinica_id, payload.cirurgiao_executante_id)
+    cir_resp, cir_resp_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_responsavel_id, cirurgioes)
+    cir_con, cir_con_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_contratado_id, cirurgioes)
+    cir_sol, cir_sol_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_solicitante_id, cirurgioes)
+    cir_exe, cir_exe_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_executante_id, cirurgioes)
 
     convenio_nome = _clean_text(payload.convenio_nome)
     id_convenio = _clean_int(payload.id_convenio)
     tipo_tiss = _resolver_tiss_id(db, payload.tipo_atendimento_tiss_id, default=1)
-    tipo_tiss_row = db.query(TissTipoTabela).filter(TissTipoTabela.id == tipo_tiss).first()
-    tipo_tiss_nome = (tipo_tiss_row.nome or "").strip() if tipo_tiss_row else ""
+    tipo_tiss_nome = _nome_tipo_atendimento_tiss_por_id(db, tipo_tiss)
 
     max_nro = (
         db.query(func.max(Tratamento.nrotra))
@@ -607,6 +748,12 @@ def salvar_novo_tratamento(
     )
     nrotra = int(max_nro or 0) + 1
 
+    source_payload = dict(payload.extra) if isinstance(payload.extra, dict) else {}
+    source_payload["data_inclusao"] = _today_br_date()
+    source_payload["usuario_inclusao"] = _clean_text(getattr(current_user, "apelido", None) or getattr(current_user, "nome", None))
+    source_payload["data_alteracao"] = ""
+    source_payload["usuario_alteracao"] = ""
+
     item = Tratamento(
         clinica_id=clinica_id,
         paciente_id=int(paciente.id),
@@ -617,7 +764,7 @@ def salvar_novo_tratamento(
         tabela_codigo=tabela_codigo,
         indice=indice,
         cirurgiao_responsavel_id=cir_resp,
-        cirurgiao_responsavel_nome=_nome_usuario_por_id(cirurgioes, cir_resp),
+        cirurgiao_responsavel_nome=cir_resp_nome,
         unidade_atendimento=_clean_text(payload.unidade_atendimento),
         observacoes=_clean_text(payload.observacoes),
         arcada_predominante=_clean_text(payload.arcada_predominante),
@@ -628,18 +775,18 @@ def salvar_novo_tratamento(
         tipo_atendimento_tiss_id=tipo_tiss,
         tipo_atendimento_tiss_nome=tipo_tiss_nome or None,
         cirurgiao_contratado_id=cir_con,
-        cirurgiao_contratado_nome=_nome_usuario_por_id(cirurgioes, cir_con),
+        cirurgiao_contratado_nome=cir_con_nome,
         cirurgiao_solicitante_id=cir_sol,
-        cirurgiao_solicitante_nome=_nome_usuario_por_id(cirurgioes, cir_sol),
+        cirurgiao_solicitante_nome=cir_sol_nome,
         cirurgiao_executante_id=cir_exe,
-        cirurgiao_executante_nome=_nome_usuario_por_id(cirurgioes, cir_exe),
+        cirurgiao_executante_nome=cir_exe_nome,
         sinais_doenca_periodontal=_resolver_sinal(payload.sinais_doenca_periodontal, default=3),
         alteracao_tecidos=_resolver_sinal(payload.alteracao_tecidos, default=3),
         numero_guia=_clean_text(payload.numero_guia),
         data_autorizacao=data_autorizacao,
         senha_autorizacao=_clean_text(payload.senha_autorizacao),
         validade_senha=validade_senha,
-        source_payload=payload.extra if isinstance(payload.extra, dict) else None,
+        source_payload=source_payload or None,
     )
     db.add(item)
     db.flush()
@@ -667,5 +814,113 @@ def salvar_novo_tratamento(
 
     return {
         "detail": "Tratamento cadastrado com sucesso.",
+        "tratamento": _tratamento_to_dict(item),
+    }
+
+
+@router.put("/{tratamento_id}")
+def atualizar_tratamento(
+    tratamento_id: int,
+    payload: NovoTratamentoPayload,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = current_user.clinica_id
+    item = (
+        db.query(Tratamento)
+        .filter(
+            Tratamento.id == int(tratamento_id),
+            Tratamento.clinica_id == clinica_id,
+        )
+        .first()
+    )
+    if not item:
+        raise HTTPException(status_code=404, detail="Tratamento nao encontrado.")
+
+    paciente = _paciente_or_404(db, clinica_id, int(item.paciente_id))
+
+    tabelas = _listar_tabelas(db, clinica_id)
+    tabela_codigo = _resolver_tabela_codigo(payload.tabela_codigo, tabelas, default=int(item.tabela_codigo or paciente.tabela_codigo or 1))
+    tabela_sel = next((x for x in tabelas if int(x["id"]) == tabela_codigo), None)
+    indice_default = int(tabela_sel["indice_id"]) if tabela_sel else DEFAULT_INDICE_NUMERO
+    indice = _resolver_indice(db, current_user.clinica_id, payload.indice, default=indice_default)
+
+    data_inicio = _clean_date(payload.data_inicio) or item.data_inicio or date.today().isoformat()
+    data_finalizacao = _clean_date(payload.data_finalizacao)
+    data_autorizacao = _clean_date(payload.data_autorizacao)
+    validade_senha = _clean_date(payload.validade_senha)
+    situacao = _clean_text(payload.situacao) or item.situacao or "Aberto"
+
+    cirurgioes = _listar_cirurgioes(db, clinica_id)
+    cir_resp, cir_resp_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_responsavel_id, cirurgioes)
+    cir_con, cir_con_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_contratado_id, cirurgioes)
+    cir_sol, cir_sol_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_solicitante_id, cirurgioes)
+    cir_exe, cir_exe_nome = _resolver_cirurgiao_prestador(db, clinica_id, payload.cirurgiao_executante_id, cirurgioes)
+
+    convenio_nome = _clean_text(payload.convenio_nome)
+    id_convenio = _clean_int(payload.id_convenio)
+    tipo_tiss = _resolver_tiss_id(db, payload.tipo_atendimento_tiss_id, default=int(item.tipo_atendimento_tiss_id or 1))
+    tipo_tiss_nome = _nome_tipo_atendimento_tiss_por_id(db, tipo_tiss)
+
+    source_payload = dict(item.source_payload or {})
+    if not str(source_payload.get("data_inclusao") or "").strip():
+        source_payload["data_inclusao"] = item.criado_em.strftime("%d/%m/%Y") if item.criado_em else _today_br_date()
+    if not str(source_payload.get("usuario_inclusao") or "").strip():
+        source_payload["usuario_inclusao"] = _clean_text(getattr(current_user, "apelido", None) or getattr(current_user, "nome", None))
+    source_payload["data_alteracao"] = _today_br_date()
+    source_payload["usuario_alteracao"] = _clean_text(getattr(current_user, "apelido", None) or getattr(current_user, "nome", None))
+
+    item.data_inicio = data_inicio
+    item.data_finalizacao = data_finalizacao
+    item.situacao = situacao
+    item.tabela_codigo = tabela_codigo
+    item.indice = indice
+    item.cirurgiao_responsavel_id = cir_resp
+    item.cirurgiao_responsavel_nome = cir_resp_nome
+    item.unidade_atendimento = _clean_text(payload.unidade_atendimento)
+    item.observacoes = _clean_text(payload.observacoes)
+    item.arcada_predominante = _clean_text(payload.arcada_predominante)
+    item.copiar_de = _clean_text(payload.copiar_de)
+    item.copiar_intervencoes = bool(payload.copiar_intervencoes)
+    item.convenio_nome = convenio_nome
+    item.id_convenio = id_convenio
+    item.tipo_atendimento_tiss_id = tipo_tiss
+    item.tipo_atendimento_tiss_nome = tipo_tiss_nome or None
+    item.cirurgiao_contratado_id = cir_con
+    item.cirurgiao_contratado_nome = cir_con_nome
+    item.cirurgiao_solicitante_id = cir_sol
+    item.cirurgiao_solicitante_nome = cir_sol_nome
+    item.cirurgiao_executante_id = cir_exe
+    item.cirurgiao_executante_nome = cir_exe_nome
+    item.sinais_doenca_periodontal = _resolver_sinal(payload.sinais_doenca_periodontal, default=3)
+    item.alteracao_tecidos = _resolver_sinal(payload.alteracao_tecidos, default=3)
+    item.numero_guia = _clean_text(payload.numero_guia)
+    item.data_autorizacao = data_autorizacao
+    item.senha_autorizacao = _clean_text(payload.senha_autorizacao)
+    item.validade_senha = validade_senha
+    item.source_payload = source_payload or None
+
+    paciente.tabela_codigo = int(tabela_codigo)
+    if id_convenio is not None:
+        paciente.id_convenio = int(id_convenio)
+    elif not convenio_nome:
+        paciente.id_convenio = None
+
+    extra_paciente = dict(paciente.source_payload or {})
+    if convenio_nome:
+        extra_paciente["convenio_nome"] = convenio_nome
+    else:
+        extra_paciente.pop("convenio_nome", None)
+    extra_paciente["ultimo_tratamento_id"] = int(item.id)
+    extra_paciente["ultimo_tratamento_nrotra"] = int(item.nrotra or 0)
+    extra_paciente["ultimo_tratamento_situacao"] = item.situacao or ""
+    extra_paciente["ultimo_tratamento_data_inicio"] = item.data_inicio or ""
+    paciente.source_payload = extra_paciente or None
+
+    db.commit()
+    db.refresh(item)
+
+    return {
+        "detail": "Tratamento atualizado com sucesso.",
         "tratamento": _tratamento_to_dict(item),
     }

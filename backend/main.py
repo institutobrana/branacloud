@@ -47,6 +47,7 @@ from models.procedimento_tabela import ProcedimentoTabela  # noqa: F401
 from models.procedimento import ProcedimentoFase  # noqa: F401
 from models.tratamento import Tratamento  # noqa: F401
 from models.tiss_tipo_tabela import TissTipoTabela  # noqa: F401
+from models.tiss_tipo_atendimento import TissTipoAtendimento, seed_tiss_tipo_atendimento  # noqa: F401
 from models.unidade_atendimento import UnidadeAtendimento  # noqa: F401
 from models.usuario_perfil_acesso import UsuarioPerfilAcesso  # noqa: F401
 from models.relatorio_config import RelatorioConfig  # noqa: F401
@@ -140,6 +141,8 @@ def _garantir_diretorios_modelos_clinicas_existentes() -> None:
 # Criar tabelas no banco (uso local/desenvolvimento)
 if RUN_SCHEMA_BOOTSTRAP:
     Base.metadata.create_all(bind=engine)
+    with engine.begin() as conn:
+        seed_tiss_tipo_atendimento(conn)
     _garantir_diretorios_modelos()
     _garantir_diretorios_modelos_clinicas_existentes()
 else:
