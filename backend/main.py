@@ -1,4 +1,5 @@
 ﻿import os
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -45,6 +46,7 @@ from models.procedimento_generico import (  # noqa: F401
 from models.simbolo_grafico import SimboloGrafico  # noqa: F401
 from models.procedimento_tabela import ProcedimentoTabela  # noqa: F401
 from models.procedimento import ProcedimentoFase  # noqa: F401
+from models.quadro_avisos import QuadroAviso  # noqa: F401
 from models.tratamento import Tratamento  # noqa: F401
 from models.tiss_tipo_tabela import TissTipoTabela  # noqa: F401
 from models.tiss_tipo_atendimento import TissTipoAtendimento, seed_tiss_tipo_atendimento  # noqa: F401
@@ -66,6 +68,7 @@ from routes.indices_financeiros_routes import router as indices_financeiros_rout
 from routes.licenca_routes import router as licenca_router
 from routes.materiais_routes import router as materiais_router
 from routes.odontograma_routes import router as odontograma_router
+from routes.orcamento_routes import router as orcamento_router
 from routes.medicamentos_routes import router as medicamentos_router
 from routes.procedimentos_routes import router as procedimentos_router
 from routes.relatorios_routes import router as relatorios_router
@@ -346,6 +349,27 @@ def _garantir_colunas_criticas_anamnese() -> None:
         print(f"[startup] aviso: nao foi possivel garantir colunas criticas de anamnese: {exc}")
 
 
+def _garantir_tabela_quadro_avisos() -> None:
+    """Garante a tabela aditiva do quadro de avisos sem depender de migrations."""
+    try:
+        QuadroAviso.__table__.create(bind=engine, checkfirst=True)
+    except Exception as exc:
+        print(f"[startup] aviso: nao foi possivel garantir tabela quadro_avisos: {exc}")
+
+
+def _carregar_router_dinamico(nome: str, arquivo: str):
+    caminho = Path(__file__).resolve().parent / "routes" / arquivo
+    spec = spec_from_file_location(nome, caminho)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Nao foi possivel carregar o router dinamico em {caminho}")
+    module = module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.router
+
+
+quadro_avisos_router = _carregar_router_dinamico("routes.quadro_de_avisos", "quadro-de-avisos.py")
+
+
 @app.on_event("startup")
 def _iniciar_bootstrap():
     import threading
@@ -353,6 +377,7 @@ def _iniciar_bootstrap():
     _garantir_colunas_criticas_usuarios()
     _garantir_colunas_criticas_simbolos()
     _garantir_colunas_criticas_anamnese()
+    _garantir_tabela_quadro_avisos()
 
     if str(os.getenv("BRANA_SKIP_BOOTSTRAP", "")).strip().lower() in {"1", "true", "yes", "sim"}:
         return
@@ -382,6 +407,7 @@ app.include_router(prestadores_router)
 app.include_router(cid_router)
 app.include_router(agenda_contatos_router)
 app.include_router(agenda_legado_router)
+app.include_router(quadro_avisos_router)
 app.include_router(anamnese_router)
 app.include_router(financeiro_router)
 app.include_router(indices_financeiros_router)
@@ -389,6 +415,7 @@ app.include_router(relatorios_router)
 app.include_router(licenca_router)
 app.include_router(materiais_router)
 app.include_router(odontograma_router)
+app.include_router(orcamento_router)
 app.include_router(medicamentos_router)
 app.include_router(procedimentos_router)
 app.include_router(etiquetas_router)

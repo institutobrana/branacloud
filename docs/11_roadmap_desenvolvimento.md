@@ -122,6 +122,9 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Com o cabeçalho de paciente em uso visível, a continuidade do fluxo Menu de pacientes -> paciente ativo -> Novo tratamento fica mais auditável na tela principal.
 - A proxima etapa apos o rollback seletivo e uma nova auditoria de runtime antes de qualquer nova mudanca no fluxo `Tratamento -> Novo tratamento`.
 - Revisar anamnese/SQLServer/restauracao em trilha separada.
+- O plano tecnico do modulo Orcamento foi formalizado em `docs/15_plano_execucao_orcamento.md`; proxima etapa recomendada: iniciar a Fase 1 apenas depois de backup/checkpoint e aviso explicito antes da primeira alteracao de codigo.
+- O checklist de execucao por onda do modulo Orcamento foi formalizado em `docs/16_checklist_execucao_orcamento.md`; proxima etapa recomendada: aguardar autorizacao para iniciar a Onda 1 com backup/checkpoint antes da primeira alteracao real.
+- A Onda 1 do modulo Orcamento foi iniciada em base de backend, com checkpoint fisico criado em `backups_modularizacao/orcamento_onda1_pre_impl_20260617_121407` e novos arquivos separados em `backend/schemas/`, `backend/services/` e `backend/routes/`; ainda falta validacao runtime completa no ambiente com dependencias da aplicacao.
 
 ## Frente aberta: auditoria comparativa EasyDental virgem x Brana Cloud
 
