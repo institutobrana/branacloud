@@ -213,9 +213,22 @@ Transformar a especificacao funcional do modulo Orcamento em um roteiro tecnico 
 - O proximo checkpoint deve ser isolado para frontend antes de qualquer alteracao da Onda 2.
 - Os arquivos da Onda 2 permanecem os mesmos definidos abaixo.
 
+## Status da Onda 2
+
+- Checkpoint fisico criado em `backups_modularizacao/orcamento_onda2_pre_impl_20260617_125540`.
+- Arquivos novos isolados criados em `frontend/orcamento/`:
+  - `frontend/orcamento/orcamento.js`
+  - `frontend/orcamento/orcamento-api.js`
+  - `frontend/orcamento/orcamento-state.js`
+  - `frontend/orcamento/orcamento-render.js`
+- Roteamento minimo em `frontend/app.js` ligado ao novo modulo.
+- Validacao de sintaxe concluida com sucesso.
+- Validacao visual do browser ficou pendente por timeout da sessao de browser nesta rodada.
+
 ## Pendencias atuais
 
 - Confirmar se o backend possui modelos ou tabelas suficientes para o agregado do orcamento sem migration nova.
 - Confirmar o ponto exato de integracao com a conta corrente no Brana Cloude.
 - Confirmar o layout final da impressao antes do P2.
 - Confirmar se `Grava todas` deve atuar somente no tratamento atual em todos os cenarios de grupo.
+- Validar visualmente a tela principal do Orçamento no browser local apos a estabilizacao da sessao de browser.

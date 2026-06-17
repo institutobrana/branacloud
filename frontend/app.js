@@ -220,6 +220,7 @@ const hardResetSessionState=()=>{
   try{sessionStorage.clear()}catch{}
   mpReturnPaymentId="";
   sessaoAtual=null;
+  if(typeof window!=="undefined")window.sessaoAtual=null;
   clearProtectedGrants();
   usersStopRefresh();
   if(btnOpenUsers)btnOpenUsers.classList.add("hidden");
@@ -298,7 +299,9 @@ const startSessionHeartbeat=()=>{
     try{
       const {res,data}=await requestJson("GET","/me",undefined,true,{heartbeat:true});
       if(res.ok&&data&&typeof data==="object"){
-        sessaoAtual={...(sessaoAtual||{}),...data};
+      sessaoAtual={...(sessaoAtual||{}),...data};
+      if(typeof window!=="undefined")window.sessaoAtual=sessaoAtual;
+        if(typeof window!=="undefined")window.sessaoAtual=sessaoAtual;
       }
     }catch{}
   },SESSION_HEARTBEAT_MS);
@@ -548,6 +551,11 @@ const requestJson=async(method,path,payload,auth=false,options={})=>{
   return{res,data};
 };
 const postJson=async(path,payload,auth=false)=>requestJson("POST",path,payload,auth);
+if(typeof window!=="undefined"){
+  window.requestJson=requestJson;
+  window.postJson=postJson;
+  window.requestJsonBase=requestJsonBase;
+}
 const licSetStatus=(msg,erro=false,sucesso=false)=>{if(!licDlg.status)return;licDlg.status.textContent=msg||"";licDlg.status.style.color=erro?"#b00020":(sucesso?"#0a7a00":"#1f2937")};
 const licPlanoLabel=(info)=>{if(!info)return"Licença";if(info.status==="OWNER")return"Licença Vitalícia";if(info.status==="SUPERADMIN")return"Super Admin";if(info.status==="DEMO")return`Demo (${info.dias_restantes||0} dias)`;if(info.status==="MENSAL")return"Plano Mensal";if(info.status==="ANUAL")return"Plano Anual";if(info.status==="EXPIRADO")return"Licença Expirada";return"Licença"};
 const licUpdateBadge=(info)=>{if(!userLicense)return;userLicense.textContent=licPlanoLabel(info)};
@@ -567,8 +575,8 @@ async function forgotRequestCode(){const email=forgotEmailEl.value.trim();if(!em
 async function forgotResetPassword(){const p={email:forgotEmailEl.value.trim(),codigo:forgotCodigoEl.value.trim(),nova_senha:forgotSenhaEl.value};if(!p.email||!p.codigo||!p.nova_senha){setLoginStatus("Preencha email, codigo e nova senha.",true);return}if((p.nova_senha||"").length<6){setLoginStatus("A senha deve ter no minimo 6 digitos.",true);return}try{const{res,data}=await postJson("/password/reset",p);if(!res.ok){setLoginStatus(data.detail||"Falha ao redefinir senha.",true);return}setLoginStatus(data.detail||"Senha redefinida. Faca login.",false);showPanel(panelLogin);emailEl.value=p.email}catch{setLoginStatus("Erro de conexao ao redefinir senha.",true)}}
 function abrirTelaSetup(user){if(setupEmailEl)setupEmailEl.value=String(user?.email||"");if(setupSenhaEl)setupSenhaEl.value="";if(setupConfirmaEl)setupConfirmaEl.value="";loginWrap.classList.remove("hidden");shell.classList.add("hidden");showPanel(panelSetup||panelLogin);setLoginStatus("Primeiro acesso: defina a senha interna para continuar.",false)}
 async function setupComplete(){const senha=String(setupSenhaEl?.value||"");const confirma=String(setupConfirmaEl?.value||"");if(!senha||!confirma){setLoginStatus("Informe e confirme a senha interna.",true);return}if(senha.length<6){setLoginStatus("A senha deve ter no minimo 6 digitos.",true);return}if(senha!==confirma){setLoginStatus("A confirmacao de senha nao confere.",true);return}try{const{res,data}=await postJson("/auth/setup/complete",{senha,confirma_senha:confirma},true);if(!res.ok){setLoginStatus(data.detail||"Falha ao concluir primeiro acesso.",true);return}setLoginStatus(data.detail||"Configuracao inicial concluida.",false);await carregarSessao()}catch{setLoginStatus("Erro de conexao ao concluir primeiro acesso.",true)}}
-async function setupLogout(){try{await postJson("/logout",{},true)}catch{}stopSessionHeartbeat();setToken("");sessaoAtual=null;if(setupSenhaEl)setupSenhaEl.value="";if(setupConfirmaEl)setupConfirmaEl.value="";setLoginStatus("Sessao encerrada.",false);showPanel(panelLogin)}
-let hideAllPanels=()=>{if(preserveProtectedGrantOnHide){preserveProtectedGrantOnHide=false}else{clearProtectedGrants()}usersDetachOverlay();cenarioPanel.classList.add("hidden");materiaisPanel.classList.add("hidden");proc.panel.classList.add("hidden");proc.novoPanel.classList.add("hidden");usersPanel.classList.add("hidden");if(sa&&sa.panel){sa.panel.classList.add("hidden")}if(prot&&prot.panel){prot.panel.classList.add("hidden")}if(ctrlProt&&ctrlProt.panel){ctrlProt.panel.classList.add("hidden")}if(convPlanCfg&&convPlanCfg.panel){convPlanCfg.panel.classList.add("hidden")}if(convPlanCalCfg&&convPlanCalCfg.panel){convPlanCalCfg.panel.classList.add("hidden")}if(prestCfg&&prestCfg.panel){prestCfg.panel.classList.add("hidden")}if(unidadeCfg&&unidadeCfg.panel){unidadeCfg.panel.classList.add("hidden")}if(pgen&&pgen.panel){pgen.panel.classList.add("hidden")}if(ficha&&ficha.panel){ficha.panel.classList.add("hidden")}if(fichaMenuPac)fichaMenuPacFechar();if(cc){cc.panel.classList.add("hidden")}if(rcc){rcc.panel.classList.add("hidden");rcc.viewPanel.classList.add("hidden")}if(fcx&&fcx.panel){fcx.panel.classList.add("hidden")}if(dash&&dash.panel){dash.panel.classList.add("hidden")}if(plano){plano.panel.classList.add("hidden")}if(aux){aux.panel.classList.add("hidden")}if(agendaContatos&&agendaContatos.panel){agendaContatos.panel.classList.add("hidden")}if(agendaLegado&&agendaLegado.panel){agendaLegado.panel.classList.add("hidden")}if(agendaSemana&&agendaSemana.panel){agendaSemanaDesconectarResizeObserver();agendaSemana.panel.classList.add("hidden")}if(cid&&cid.panel){cid.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.panel){editorTextosCfg.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.openBackdrop){editorTextosCfg.openBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.newBackdrop){editorTextosCfg.newBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.mergeBackdrop){editorTextosCfg.mergeBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.tableBackdrop){editorTextosCfg.tableBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageBackdrop){editorTextosCfg.imageBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageOverlay){editorTextosCfg.imageOverlay.style.display="none";editorTextosCfg.imageSelectedEl=null;editorTextosCfg.imageResize=null}if(editorTextosCfg&&editorTextosCfg.assistBackdrop){editorTextosCfg.assistBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistMedMenuBackdrop){editorTextosCfg.assistMedMenuBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoBackdrop){editorTextosCfg.assistAtestadoBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoCidMenuBackdrop){editorTextosCfg.assistAtestadoCidMenuBackdrop.classList.add("hidden")}usersStopRefresh();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();workspaceEmpty.classList.remove("hidden")};
+async function setupLogout(){try{await postJson("/logout",{},true)}catch{}stopSessionHeartbeat();setToken("");sessaoAtual=null;if(typeof window!=="undefined")window.sessaoAtual=null;if(setupSenhaEl)setupSenhaEl.value="";if(setupConfirmaEl)setupConfirmaEl.value="";setLoginStatus("Sessao encerrada.",false);showPanel(panelLogin)}
+let hideAllPanels=()=>{if(preserveProtectedGrantOnHide){preserveProtectedGrantOnHide=false}else{clearProtectedGrants()}usersDetachOverlay();cenarioPanel.classList.add("hidden");materiaisPanel.classList.add("hidden");proc.panel.classList.add("hidden");proc.novoPanel.classList.add("hidden");usersPanel.classList.add("hidden");if(sa&&sa.panel){sa.panel.classList.add("hidden")}if(prot&&prot.panel){prot.panel.classList.add("hidden")}if(ctrlProt&&ctrlProt.panel){ctrlProt.panel.classList.add("hidden")}if(convPlanCfg&&convPlanCfg.panel){convPlanCfg.panel.classList.add("hidden")}if(convPlanCalCfg&&convPlanCalCfg.panel){convPlanCalCfg.panel.classList.add("hidden")}if(prestCfg&&prestCfg.panel){prestCfg.panel.classList.add("hidden")}if(unidadeCfg&&unidadeCfg.panel){unidadeCfg.panel.classList.add("hidden")}if(pgen&&pgen.panel){pgen.panel.classList.add("hidden")}if(ficha&&ficha.panel){ficha.panel.classList.add("hidden")}if(fichaMenuPac)fichaMenuPacFechar();if(cc){cc.panel.classList.add("hidden")}if(rcc){rcc.panel.classList.add("hidden");rcc.viewPanel.classList.add("hidden")}if(fcx&&fcx.panel){fcx.panel.classList.add("hidden")}if(dash&&dash.panel){dash.panel.classList.add("hidden")}if(plano){plano.panel.classList.add("hidden")}if(aux){aux.panel.classList.add("hidden")}if(agendaContatos&&agendaContatos.panel){agendaContatos.panel.classList.add("hidden")}if(agendaLegado&&agendaLegado.panel){agendaLegado.panel.classList.add("hidden")}if(agendaSemana&&agendaSemana.panel){agendaSemanaDesconectarResizeObserver();agendaSemana.panel.classList.add("hidden")}if(window.BranaQuadroAvisosModule?.fechar){try{window.BranaQuadroAvisosModule.fechar({origem:"hideAllPanels"})}catch{}}if(cid&&cid.panel){cid.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.panel){editorTextosCfg.panel.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.openBackdrop){editorTextosCfg.openBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.newBackdrop){editorTextosCfg.newBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.mergeBackdrop){editorTextosCfg.mergeBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.tableBackdrop){editorTextosCfg.tableBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageBackdrop){editorTextosCfg.imageBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.imageOverlay){editorTextosCfg.imageOverlay.style.display="none";editorTextosCfg.imageSelectedEl=null;editorTextosCfg.imageResize=null}if(editorTextosCfg&&editorTextosCfg.assistBackdrop){editorTextosCfg.assistBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistMedMenuBackdrop){editorTextosCfg.assistMedMenuBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoBackdrop){editorTextosCfg.assistAtestadoBackdrop.classList.add("hidden")}if(editorTextosCfg&&editorTextosCfg.assistAtestadoCidMenuBackdrop){editorTextosCfg.assistAtestadoCidMenuBackdrop.classList.add("hidden")}usersStopRefresh();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();workspaceEmpty.classList.remove("hidden")};
 const showScenarioPanel=(s)=>{hideAllPanels();if(s){cenarioPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden")}};
 const showMateriaisPanel=(s)=>{hideAllPanels();if(s){materiaisPanel.classList.remove("hidden");workspaceEmpty.classList.add("hidden")}};
 const usersAttachOverlay=()=>{if(usersPanelOverlay)return;const panel=usersPanel;if(!panel||!panel.parentElement)return;const backdrop=document.createElement("div");backdrop.id="users-panel-backdrop";backdrop.className="modal-backdrop";backdrop.style.background="rgba(0,0,0,0)";backdrop.style.zIndex="1100";usersPanelPlaceholder=document.createComment("users-panel-placeholder");panel.parentElement.insertBefore(usersPanelPlaceholder,panel);backdrop.appendChild(panel);document.body.appendChild(backdrop);panel.classList.add("panel-floating");chromeResetDragOffset(panel);ensurePanelChrome(panel);usersPanelOverlay=backdrop;if(!usersGrantOverride){const grant=getProtectedGrantFromCache("configuracao","usuarios","*");usersGrantOverride=grant||null}};
@@ -6730,6 +6738,21 @@ function ccEnsureUI(){
   cc.mDataVenc.addEventListener("change",ccAtualizarDiaSemana);
   cc.mDataVenc.addEventListener("input",ccAtualizarDiaSemana);
   cc.mValor.addEventListener("blur",()=>{try{cc.mValor.value=Number(toFloat(cc.mValor.value)).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}catch{cc.mValor.value="0,00"}});
+  if(cc.btnND)cc.btnND.addEventListener("click",()=>ccAbrirModal("debito"));
+  if(cc.btnNC)cc.btnNC.addEventListener("click",()=>ccAbrirModal("credito"));
+  if(cc.btnEditar)cc.btnEditar.addEventListener("click",()=>{const l=ccSelecionado();if(!l){window.alert("Selecione um lançamento.");return}ccAbrirModal(l.tipo||"debito",l)});
+  if(cc.btnExcluir)cc.btnExcluir.addEventListener("click",ccExcluirSelecionado);
+  if(cc.btnImprime)cc.btnImprime.addEventListener("click",()=>rccAbrir("cc"));
+  if(cc.btnFechar)cc.btnFechar.addEventListener("click",()=>{cc.panel.classList.add("hidden");workspaceEmpty.classList.remove("hidden")});
+  if(cc.mes)cc.mes.addEventListener("change",ccCarregar);
+  if(cc.ano)cc.ano.addEventListener("change",ccCarregar);
+  if(cc.conta)cc.conta.addEventListener("change",ccCarregar);
+  if(cc.filtro)cc.filtro.addEventListener("change",ccCarregar);
+  if(cc.tbody)cc.tbody.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;ccSelecionadoId=Number(tr.dataset.id);cc.tbody.querySelectorAll("tr").forEach(x=>x.classList.remove("selected"));tr.classList.add("selected")});
+  if(cc.tbody)cc.tbody.addEventListener("dblclick",()=>{const l=ccSelecionado();if(l)ccAbrirModal(l.tipo||"debito",l)});
+  if(cc.mOk)cc.mOk.addEventListener("click",ccSalvarModal);
+  if(cc.mCancel)cc.mCancel.addEventListener("click",ccFecharModal);
+  if(cc.mb)cc.mb.addEventListener("click",ev=>{if(ev.target===cc.mb)ccFecharModal()});
 }
 function ccFmt(v){return Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}
 function ccDateISOToBR(x){if(!x||String(x).length<10)return"";const [y,m,d]=String(x).slice(0,10).split("-");return`${d}/${m}/${y}`}
@@ -11827,7 +11850,61 @@ function auxMoverItem(delta){const rows=auxItensRows();if(!rows.length)return;le
 function auxTecladoItens(ev){if(ev.altKey||ev.ctrlKey||ev.metaKey)return;if(ev.key==="ArrowDown"||ev.key==="Down"){ev.preventDefault();auxMoverItem(1);return}if(ev.key==="ArrowUp"||ev.key==="Up"){ev.preventDefault();auxMoverItem(-1)}}
 async function auxCarregarTipos(){const{res,data}=await requestJson("GET","/cadastros/auxiliares/tipos",undefined,true);if(!res.ok)return;const tipos=Array.isArray(data)?data:[];aux.tbTipos.innerHTML=tipos.map(x=>`<tr data-tipo="${esc(x)}"><td>${esc(x)}</td></tr>`).join("");const first=aux.tbTipos.querySelector("tr[data-tipo]");if(first){await auxSelecionarTipoLinha(first,true)}else{aux.tbItens.innerHTML="";auxItensCache=[];auxSelId=null;auxAtualizarTotal()}}
 async function auxCarregarItens(){const tr=aux.tbTipos.querySelector("tr.selected");const tipo=tr?.dataset?.tipo||"";if(!tipo){aux.tbItens.innerHTML="";auxItensCache=[];auxSelId=null;auxAtualizarTotal();return}const{res,data}=await requestJson("GET",`/cadastros/auxiliares?tipo=${encodeURIComponent(tipo)}`,undefined,true);if(!res.ok){window.alert(data.detail||"Falha ao carregar itens.");return}auxItensCache=Array.isArray(data)?data:[];auxSelId=null;aux.tbItens.innerHTML=auxItensCache.map((x,i)=>`<tr data-id="${x.id}"><td class="aux-item-idx">${i+1}</td><td class="aux-item-cod">${esc(x.codigo)}</td><td>${esc(x.descricao)}</td></tr>`).join("");auxAtualizarTotal()}
-async function auxAbrir(){planoEnsureUI();auxAplicarLayoutDesktop();hideAllPanels();ensurePanelChrome(aux.panel);aux.panel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");if(aux.tbTipos)aux.tbTipos.tabIndex=0;if(aux.tbItens)aux.tbItens.tabIndex=0;await auxCarregarTipos();if(aux.tbTipos)aux.tbTipos.focus()}
+function auxBindGridInteractions(){
+  if(aux?.tbTipos&&!aux.tbTipos.dataset.auxClickBound){
+    aux.tbTipos.dataset.auxClickBound="1";
+    aux.tbTipos.tabIndex=0;
+    aux.tbTipos.addEventListener("click",async ev=>{
+      const tr=ev.target.closest("tr[data-tipo]");
+      if(!tr)return;
+      await auxSelecionarTipoLinha(tr,true);
+      if(aux.tbTipos)aux.tbTipos.focus();
+    });
+    aux.tbTipos.addEventListener("keydown",auxTecladoTipos);
+  }
+  if(aux?.tbItens&&!aux.tbItens.dataset.auxClickBound){
+    aux.tbItens.dataset.auxClickBound="1";
+    aux.tbItens.tabIndex=0;
+    aux.tbItens.addEventListener("click",ev=>{
+      const tr=ev.target.closest("tr[data-id]");
+      if(!tr)return;
+      auxSelecionarItemLinha(tr);
+      if(aux.tbItens)aux.tbItens.focus();
+    });
+    aux.tbItens.addEventListener("keydown",auxTecladoItens);
+    aux.tbItens.addEventListener("dblclick",ev=>{
+      const tr=ev.target.closest("tr[data-id]");
+      if(!tr)return;
+      auxSelecionarItemLinha(tr);
+      const it=auxSel();
+      if(it)auxDialogItem(it);
+    });
+  }
+  if(aux?.btnNovo&&!aux.btnNovo.dataset.auxActionBound){
+    aux.btnNovo.dataset.auxActionBound="1";
+    aux.btnNovo.addEventListener("click",()=>auxDialogItem());
+  }
+  if(aux?.btnAltera&&!aux.btnAltera.dataset.auxActionBound){
+    aux.btnAltera.dataset.auxActionBound="1";
+    aux.btnAltera.addEventListener("click",()=>{
+      const it=auxSel();
+      if(!it){window.alert("Selecione um item.");return}
+      auxDialogItem(it);
+    });
+  }
+  if(aux?.btnElimina&&!aux.btnElimina.dataset.auxActionBound){
+    aux.btnElimina.dataset.auxActionBound="1";
+    aux.btnElimina.addEventListener("click",auxExcluirItem);
+  }
+  if(aux?.btnFechar&&!aux.btnFechar.dataset.auxActionBound){
+    aux.btnFechar.dataset.auxActionBound="1";
+    aux.btnFechar.addEventListener("click",()=>{
+      aux.panel.classList.add("hidden");
+      workspaceEmpty.classList.remove("hidden");
+    });
+  }
+}
+async function auxAbrir(){planoEnsureUI();auxAplicarLayoutDesktop();hideAllPanels();ensurePanelChrome(aux.panel);aux.panel.classList.remove("hidden");workspaceEmpty.classList.add("hidden");auxBindGridInteractions();await auxCarregarTipos();if(aux.tbTipos)aux.tbTipos.focus()}
 function auxSel(){return auxItensCache.find(x=>x.id===auxSelId)||null}
 function auxDialogItem(ed=null){
   const tr=aux.tbTipos.querySelector("tr.selected");
@@ -12235,6 +12312,7 @@ async function carregarSessao(){
       return;
     }
     sessaoAtual=data;
+    if(typeof window!=="undefined")window.sessaoAtual=sessaoAtual;
     userEmail.textContent=data.email||"-";
     userRole.textContent="Perfil: "+(data.is_superadmin?"Super Admin":(data.is_admin?"Administrador":"Usuario"));
     if(btnOpenUsers)btnOpenUsers.classList.toggle("hidden",!(data.is_admin||data.is_superadmin));
@@ -12289,6 +12367,11 @@ async function carregarSessao(){
           }
         }
       }
+    }
+    if(window.BranaQuadroAvisosModule?.abrirAposLoginSeConfigurado){
+      try{
+        await window.BranaQuadroAvisosModule.abrirAposLoginSeConfigurado();
+      }catch{}
     }
   }catch{
     stopSessionHeartbeat();
@@ -18120,7 +18203,7 @@ function editorTextosAbrirModalImagem(){
   if(!editorTextosCfg?.imageBackdrop)return;
   editorTextosSalvarRangeAtual();
   editorTextosImagemLimparEstado();
-  editorTextosCfg.imageBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.imageBackdrop,9050);
   if(editorTextosCfg.imageEscolher)editorTextosCfg.imageEscolher.focus();
 }
 function editorTextosFecharModalImagem(){
@@ -18378,7 +18461,7 @@ function editorTextosAbrirModalAssinarPdf(){
       editorTextosCfg.signField.value=String(signSource.fieldName||"Signature1").trim()||"Signature1";
     }
   }
-  editorTextosCfg.signBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.signBackdrop,9060);
   editorTextosSincronizarCamadasAssinatura();
   editorTextosAtualizarModoAssinaturaPdf();
   void editorTextosBridgeCarregarCertificados();
@@ -19187,7 +19270,7 @@ function editorTextosAbrirModalTabela(){
   if(editorTextosCfg.tableCols)editorTextosCfg.tableCols.value="1";
   if(editorTextosCfg.tableRows)editorTextosCfg.tableRows.value="1";
   if(editorTextosCfg.tableBorder)editorTextosCfg.tableBorder.checked=true;
-  editorTextosCfg.tableBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.tableBackdrop,9050);
   if(editorTextosCfg.tableCols){
     editorTextosCfg.tableCols.focus();
     editorTextosCfg.tableCols.select();
@@ -19357,7 +19440,7 @@ function editorTextosSincronizarModalPagina(){
 function editorTextosAbrirModalPagina(){
   if(!editorTextosCfg?.paginaBackdrop)return;
   editorTextosSincronizarModalPagina();
-  editorTextosCfg.paginaBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.paginaBackdrop,9050);
   if(editorTextosCfg.paginaMargemSuperior){
     editorTextosCfg.paginaMargemSuperior.focus();
     editorTextosCfg.paginaMargemSuperior.select();
@@ -19489,7 +19572,7 @@ function editorTextosNovoNormalizarNome(valor){
 async function editorTextosAbrirModalAbrir(){
   if(!editorTextosCfg)return;
   await editorTextosCarregarModelos();
-  editorTextosCfg.openBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.openBackdrop,9050);
   if(editorTextosCfg.openQ)editorTextosCfg.openQ.focus();
 }
 function editorTextosNovoAplicarModo(){
@@ -19497,8 +19580,25 @@ function editorTextosNovoAplicarModo(){
   const modoAbrir=!!editorTextosCfg.newModeOpen?.checked;
   if(editorTextosCfg.newType)editorTextosCfg.newType.disabled=modoAbrir;
 }
+function editorTextosGarantirOverlayGlobal(backdrop,zIndex=9050){
+  if(!(backdrop instanceof HTMLElement))return null;
+  if(backdrop.parentElement!==document.body){
+    document.body.appendChild(backdrop);
+  }
+  backdrop.style.position="fixed";
+  backdrop.style.inset="0";
+  backdrop.style.zIndex=String(zIndex);
+  return backdrop;
+}
+function editorTextosAbrirOverlayGlobal(backdrop,zIndex=9050){
+  const el=editorTextosGarantirOverlayGlobal(backdrop,zIndex);
+  if(!el)return null;
+  el.classList.remove("hidden");
+  return el;
+}
 function editorTextosAbrirModalNovo(){
   if(!editorTextosCfg?.newBackdrop)return;
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.newBackdrop,9050);
   if(editorTextosCfg.newModeType)editorTextosCfg.newModeType.checked=true;
   if(editorTextosCfg.newModeOpen)editorTextosCfg.newModeOpen.checked=false;
   if(editorTextosCfg.newType){
@@ -19506,7 +19606,6 @@ function editorTextosAbrirModalNovo(){
     if(editorTextosCfg.newType.selectedIndex<0&&editorTextosCfg.newType.options.length)editorTextosCfg.newType.selectedIndex=0;
   }
   editorTextosNovoAplicarModo();
-  editorTextosCfg.newBackdrop.classList.remove("hidden");
   if(editorTextosCfg.newType&&!editorTextosCfg.newType.disabled)editorTextosCfg.newType.focus();
   else if(editorTextosCfg.newOk)editorTextosCfg.newOk.focus();
 }
@@ -19719,7 +19818,7 @@ async function editorTextosAssistAbrirMenuMedicamentos(){
     editorTextosCfg.assistMedMenuFiltro.value="";
   }
   editorTextosAssistAplicarFiltrosMenuMedicamentos();
-  editorTextosCfg.assistMedMenuBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.assistMedMenuBackdrop,9060);
   if(editorTextosCfg.assistMedMenuQ){
     editorTextosCfg.assistMedMenuQ.focus();
     editorTextosCfg.assistMedMenuQ.select();
@@ -20256,7 +20355,7 @@ function editorTextosAssistAbrir(){
   editorTextosCfg.formatoAtual=String(editorTextosCfg.assistConteudoBaseFormato||"text").toLowerCase()==="html"?"html":"text";
   editorTextosAplicarConfiguracaoPagina();
   editorTextosCfg.alterado=false;
-  editorTextosCfg.assistBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.assistBackdrop,9050);
   editorTextosAssistAtualizarAcoes();
   void editorTextosAssistCarregarContexto({pacienteId:editorTextosCfg.assistPacienteId,sincronizarModeloNoEditor:true});
 }
@@ -20462,7 +20561,7 @@ async function editorTextosAssistAtestadoCidMenuAbrir(){
   if(editorTextosCfg.assistAtestadoCidMenuPreferidos)editorTextosCfg.assistAtestadoCidMenuPreferidos.checked=false;
   editorTextosAssistAtestadoCidMenuRenderAlfabeto();
   editorTextosAssistAtestadoCidMenuRenderTabela();
-  editorTextosCfg.assistAtestadoCidMenuBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.assistAtestadoCidMenuBackdrop,9060);
   if(editorTextosCfg.assistAtestadoCidMenuQ)editorTextosCfg.assistAtestadoCidMenuQ.focus();
   await editorTextosAssistAtestadoCidMenuCarregar();
 }
@@ -20572,7 +20671,7 @@ async function editorTextosAssistAtestadoCarregarContexto(opts={}){
 function editorTextosAssistAtestadoAbrir(){
   if(!editorTextosCfg?.assistAtestadoBackdrop)return;
   editorTextosCfg.assistAtestadoPacienteId=Number(fichaPacienteAtualId||0)||0;
-  editorTextosCfg.assistAtestadoBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.assistAtestadoBackdrop,9050);
   editorTextosAssistAtestadoAtualizarAcoes();
   void editorTextosAssistAtestadoCarregarContexto({pacienteId:editorTextosCfg.assistAtestadoPacienteId});
 }
@@ -20934,7 +21033,7 @@ function editorTextosOpenConfirmarExclusao(item){
   if(typeof editorTextosCfg.openDeleteResolve==="function"){
     try{editorTextosCfg.openDeleteResolve(false);}catch{}
   }
-  editorTextosCfg.openDeleteBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.openDeleteBackdrop,9050);
   try{editorTextosCfg.openDeleteBackdrop.focus({preventScroll:true});}catch{}
   return new Promise(resolve=>{
     editorTextosCfg.openDeleteResolve=resolve;
@@ -20963,7 +21062,7 @@ function editorTextosPerguntarAbrirPdfGerado(filePath){
   if(typeof editorTextosCfg.pdfPromptResolve==="function"){
     try{editorTextosCfg.pdfPromptResolve(false);}catch{}
   }
-  editorTextosCfg.pdfPromptBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.pdfPromptBackdrop,9050);
   try{editorTextosCfg.pdfPromptBackdrop.focus({preventScroll:true});}catch{}
   return new Promise(resolve=>{
     editorTextosCfg.pdfPromptResolve=resolve;
@@ -21130,7 +21229,7 @@ function editorTextosAbrirModalMesclagem(){
   editorTextosCfg.mergeCategoriaAtual=String(editorTextosCfg.mergeCategoriaPadrao||editorTextosCfg.mergeCategoriaAtual||"").trim();
   editorTextosCfg.mergeCampoSelecionado=null;
   editorTextosRenderModalMesclagem();
-  editorTextosCfg.mergeBackdrop.classList.remove("hidden");
+  editorTextosAbrirOverlayGlobal(editorTextosCfg.mergeBackdrop,9050);
   if(editorTextosCfg.mergeCategory)editorTextosCfg.mergeCategory.focus();
 }
 function editorTextosFecharModalMesclagem(){
@@ -21990,7 +22089,27 @@ async function executarAcaoMenu(action){
     return;
   }
   if(action==="tratamento-orcamento"){
-    footerMsg.textContent="Orçamento de tratamento: em planejamento.";
+    let mod=window.BranaOrcamentoModule;
+    if(!mod){
+      try{
+        await import("/frontend/orcamento/orcamento.js?v=20260617-onda2-1");
+        mod=window.BranaOrcamentoModule;
+      }catch(err){
+        console.warn("Falha ao carregar modulo de Orçamento.", err);
+      }
+    }
+    if(mod?.open){
+      const resultado=await mod.open();
+      if(resultado?.openedMenu){
+        footerMsg.textContent="Orçamento aguardando seleção de paciente.";
+      } else if(resultado?.opened){
+        footerMsg.textContent="Orçamento aberto.";
+      } else {
+        footerMsg.textContent="Orçamento indisponível no momento.";
+      }
+    } else {
+      footerMsg.textContent="Orçamento de tratamento: em planejamento.";
+    }
     return;
   }
   if(action==="tratamento-imprime"){
@@ -22016,6 +22135,10 @@ async function executarAcaoMenu(action){
     return;
   }
   if(action==="agenda-avisos"){
+    if(window.BranaQuadroAvisosModule?.abrir){
+      await window.BranaQuadroAvisosModule.abrir({origem:"menu"});
+      return;
+    }
     footerMsg.textContent="Quadro de avisos: em planejamento.";
     return;
   }
@@ -22341,9 +22464,9 @@ sobreDlg.btnFechar.addEventListener("click",fecharSobreModal);sobreDlg.backdrop.
 licDlg.btnFechar.addEventListener("click",fecharLicencaModal);licDlg.backdrop.addEventListener("click",ev=>{if(ev.target===licDlg.backdrop)fecharLicencaModal()});licDlg.btnCopiar.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(licDlg.machine.value||"");licSetStatus("ID copiado.",false,true)}catch{licSetStatus("Não foi possível copiar o ID.",true,false)}});licDlg.btnMensal.addEventListener("click",()=>licIniciarCheckout("MENSAL"));licDlg.btnAnual.addEventListener("click",()=>licIniciarCheckout("ANUAL"));if(licDlg.btnAtualizar)licDlg.btnAtualizar.addEventListener("click",licSincronizarStatus);
 document.getElementById("btn-login").addEventListener("click",login);emailEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();login()}});senhaEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();login()}});document.getElementById("btn-open-signup").addEventListener("click",()=>showPanel(panelSignup));document.getElementById("btn-open-forgot").addEventListener("click",()=>showPanel(panelForgot));document.getElementById("btn-signup-code").addEventListener("click",signupRequestCode);document.getElementById("btn-signup-confirm").addEventListener("click",signupConfirm);document.getElementById("btn-forgot-code").addEventListener("click",forgotRequestCode);document.getElementById("btn-forgot-reset").addEventListener("click",forgotResetPassword);document.getElementById("btn-back-login-from-signup").addEventListener("click",()=>showPanel(panelLogin));document.getElementById("btn-back-login-from-forgot").addEventListener("click",()=>showPanel(panelLogin));if(document.getElementById("btn-setup-complete"))document.getElementById("btn-setup-complete").addEventListener("click",setupComplete);if(document.getElementById("btn-setup-logout"))document.getElementById("btn-setup-logout").addEventListener("click",setupLogout);if(setupSenhaEl)setupSenhaEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setupComplete()}});if(setupConfirmaEl)setupConfirmaEl.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setupComplete()}});
 document.getElementById("btn-google-login").addEventListener("click",()=>{window.location.href="/auth/google/login"});
-document.getElementById("btn-sair").addEventListener("click",async()=>{if(!(await fichaPodeAbandonarFicha("sair")))return;stopSessionHeartbeat();try{if(getToken())await requestJson("POST","/logout",{},true)}catch{}setToken("");mpReturnPaymentId="";sessaoAtual=null;menuApplyPermissions();usersCache=[];usersSelecionadoId=null;usersStopRefresh();usersPermSchema=null;usersPermEditId=null;materiaisCache=[];materialSelecionadoId=null;materialModalId=null;materiaisAuxTiposCache=[];materiaisAuxUndsCache=[];materiaisListasCache=[];materiaisIndicesCache=[];materiaisTabelaModalModo="nova";materiaisTabelaModalListaId=0;procedimentosCache=[];procedimentoSelecionadoId=null;procedimentoAtualId=null;procedimentoLinks=[];procEditorSnapshot=null;procMateriaisGenericoBaseId=0;procMateriaisGenericoVisualId=0;procMateriaisGenericoRenderSeq=0;procMaterialSelecionadoId=null;procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};pgenCache=[];pgenSelId=null;unidadesCache=[];unidadeSelId=null;fichaPacienteAtualId=null;fichaPacientesBuscaCache=[];fichaCodigoUltimoResolvido="";if(fichaMenuPac)fichaMenuPacFechar();fcxData=null;dashData=[];dashGrafico=[];dashTabela=[];dashSelecionadoId=null;gruposCache=[];grupoSelId=null;catSelId=null;auxItensCache=[];auxSelId=null;licInfoCache=null;saClinicasCache=[];saUsuariosCache=[];if(btnOpenUsers)btnOpenUsers.classList.add("hidden");if(menuSuperAdminAction)menuSuperAdminAction.classList.add("hidden");if(menuSuperAdminSep)menuSuperAdminSep.classList.add("hidden");userRole.textContent="Perfil: -";licUpdateBadge(null);hideAllPanels();materiaisFecharModal();materiaisTabelaFecharModal();procFecharVincular();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();if(prefCfg?.backdrop)prefCfg.backdrop.classList.add("hidden");if(sysOptCfg?.backdrop)sysOptCfg.backdrop.classList.add("hidden");fecharSobreModal();fecharLicencaModal();const cadMb=document.getElementById("cad-modal-backdrop");if(cadMb)cadMb.classList.add("hidden");loginWrap.classList.remove("hidden");shell.classList.add("hidden");showPanel(panelLogin);setLoginStatus("Sessao encerrada.",false)});
+document.getElementById("btn-sair").addEventListener("click",async()=>{if(!(await fichaPodeAbandonarFicha("sair")))return;stopSessionHeartbeat();try{if(getToken())await requestJson("POST","/logout",{},true)}catch{}setToken("");mpReturnPaymentId="";sessaoAtual=null;if(typeof window!=="undefined")window.sessaoAtual=null;menuApplyPermissions();usersCache=[];usersSelecionadoId=null;usersStopRefresh();usersPermSchema=null;usersPermEditId=null;materiaisCache=[];materialSelecionadoId=null;materialModalId=null;materiaisAuxTiposCache=[];materiaisAuxUndsCache=[];materiaisListasCache=[];materiaisIndicesCache=[];materiaisTabelaModalModo="nova";materiaisTabelaModalListaId=0;procedimentosCache=[];procedimentoSelecionadoId=null;procedimentoAtualId=null;procedimentoLinks=[];procEditorSnapshot=null;procMateriaisGenericoBaseId=0;procMateriaisGenericoVisualId=0;procMateriaisGenericoRenderSeq=0;procMaterialSelecionadoId=null;procFiltros={tabelas:[],especialidades:[],tipos_tiss:[],indices:[]};pgenCache=[];pgenSelId=null;unidadesCache=[];unidadeSelId=null;fichaPacienteAtualId=null;fichaPacientesBuscaCache=[];fichaCodigoUltimoResolvido="";if(window.BranaOrcamentoModule?.close){try{await window.BranaOrcamentoModule.close()}catch{}}if(fichaMenuPac)fichaMenuPacFechar();fcxData=null;dashData=[];dashGrafico=[];dashTabela=[];dashSelecionadoId=null;gruposCache=[];grupoSelId=null;catSelId=null;auxItensCache=[];auxSelId=null;licInfoCache=null;saClinicasCache=[];saUsuariosCache=[];if(btnOpenUsers)btnOpenUsers.classList.add("hidden");if(menuSuperAdminAction)menuSuperAdminAction.classList.add("hidden");if(menuSuperAdminSep)menuSuperAdminSep.classList.add("hidden");userRole.textContent="Perfil: -";licUpdateBadge(null);hideAllPanels();materiaisFecharModal();materiaisTabelaFecharModal();procFecharVincular();usersFecharModal();usersFecharModalSenha();usersFecharPermissoes();if(prefCfg?.backdrop)prefCfg.backdrop.classList.add("hidden");if(sysOptCfg?.backdrop)sysOptCfg.backdrop.classList.add("hidden");fecharSobreModal();fecharLicencaModal();const cadMb=document.getElementById("cad-modal-backdrop");if(cadMb)cadMb.classList.add("hidden");loginWrap.classList.remove("hidden");shell.classList.add("hidden");showPanel(panelLogin);setLoginStatus("Sessao encerrada.",false)});
 document.getElementById("btn-sair").addEventListener("click",()=>{ccLancCache=[];ccSelecionadoId=null;ccEditId=null;if(cc)ccFecharModal()});
-document.getElementById("btn-open-cenario").addEventListener("click",abrirCenario);if(btnOpenUsers)btnOpenUsers.addEventListener("click",abrirPainelAdministradorToolbar);document.getElementById("btn-fechar-cenario").addEventListener("click",()=>showScenarioPanel(false));document.getElementById("btn-salvar-cenario").addEventListener("click",salvarCenario);document.getElementById("btn-calcular-fixos").addEventListener("click",calcularFixosAno);if(usersBtnNovo)usersBtnNovo.addEventListener("click",usersAbrirModalNovo);if(usersBtnEditar)usersBtnEditar.addEventListener("click",usersEditarSelecionado);if(usersBtnExcluir)usersBtnExcluir.addEventListener("click",usersExcluirSelecionado);if(usersBtnImpressos)usersBtnImpressos.addEventListener("click",usersAbrirImpressos);if(usersBtnPreferencias)usersBtnPreferencias.addEventListener("click",usersAbrirPreferencias);if(usersBtnPermissoes)usersBtnPermissoes.addEventListener("click",usersAbrirPermissoes);if(usersBtnFechar)usersBtnFechar.addEventListener("click",()=>showUsersPanel(false));if(usersModalOk)usersModalOk.addEventListener("click",usersSalvarNovo);if(usersModalCancelar)usersModalCancelar.addEventListener("click",usersFecharModal);if(usersModalShowSenha)usersModalShowSenha.addEventListener("change",usersToggleSenhaVisibilidade);if(usersPassOk)usersPassOk.addEventListener("click",usersSalvarSenha);if(usersPassCancelar)usersPassCancelar.addEventListener("click",usersFecharModalSenha);if(protectedPassOk)protectedPassOk.addEventListener("click",protectedPassSubmit);if(protectedPassCancelar)protectedPassCancelar.addEventListener("click",()=>protectedPassClose(null));if(protectedPassInput)protectedPassInput.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();protectedPassSubmit()}if(ev.key==="Escape"){ev.preventDefault();protectedPassClose(null)}});if(usersPermOk)usersPermOk.addEventListener("click",usersSalvarPermissoes);if(usersPermCancelar)usersPermCancelar.addEventListener("click",usersFecharPermissoes);if(usersPermFechar)usersPermFechar.addEventListener("click",usersFecharPermissoes);if(usersPermTabAcessoBtn)usersPermTabAcessoBtn.addEventListener("click",()=>usersPermSetTab("acesso"));if(usersPermTabPerfisBtn)usersPermTabPerfisBtn.addEventListener("click",()=>usersPermSetTab("perfis"));if(usersPermProfileSelect)usersPermProfileSelect.addEventListener("change",()=>{usersPermSelectedProfileCode=String(usersPermProfileSelect.value||"").trim();usersPermRenderPerfilPreview()});if(usersPermProfileApply)usersPermProfileApply.addEventListener("click",usersPermAplicarPerfilSelecionado);const usersPermActionButtons=Array.from(document.querySelectorAll(".users-perm-action"));usersPermActionButtons.forEach(btn=>{btn.addEventListener("click",()=>{const level=String(btn.getAttribute("data-level")||"").trim();if(level)usersPermApplyLevel(level,"module")})});if(usersModalBackdrop)usersModalBackdrop.addEventListener("click",ev=>{if(ev.target===usersModalBackdrop)usersFecharModal()});if(usersPassBackdrop)usersPassBackdrop.addEventListener("click",ev=>{if(ev.target===usersPassBackdrop)usersFecharModalSenha()});if(usersPermBackdrop)usersPermBackdrop.addEventListener("click",ev=>{if(ev.target===usersPermBackdrop)usersFecharPermissoes()});
+if(btnOpenUsers)btnOpenUsers.addEventListener("click",abrirPainelAdministradorToolbar);if(usersBtnNovo)usersBtnNovo.addEventListener("click",usersAbrirModalNovo);if(usersBtnEditar)usersBtnEditar.addEventListener("click",usersEditarSelecionado);if(usersBtnExcluir)usersBtnExcluir.addEventListener("click",usersExcluirSelecionado);if(usersBtnImpressos)usersBtnImpressos.addEventListener("click",usersAbrirImpressos);if(usersBtnPreferencias)usersBtnPreferencias.addEventListener("click",usersAbrirPreferencias);if(usersBtnPermissoes)usersBtnPermissoes.addEventListener("click",usersAbrirPermissoes);if(usersBtnFechar)usersBtnFechar.addEventListener("click",()=>showUsersPanel(false));if(usersModalOk)usersModalOk.addEventListener("click",usersSalvarNovo);if(usersModalCancelar)usersModalCancelar.addEventListener("click",usersFecharModal);if(usersModalShowSenha)usersModalShowSenha.addEventListener("change",usersToggleSenhaVisibilidade);if(usersPassOk)usersPassOk.addEventListener("click",usersSalvarSenha);if(usersPassCancelar)usersPassCancelar.addEventListener("click",usersFecharModalSenha);if(protectedPassOk)protectedPassOk.addEventListener("click",protectedPassSubmit);if(protectedPassCancelar)protectedPassCancelar.addEventListener("click",()=>protectedPassClose(null));if(protectedPassInput)protectedPassInput.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();protectedPassSubmit()}if(ev.key==="Escape"){ev.preventDefault();protectedPassClose(null)}});if(usersPermOk)usersPermOk.addEventListener("click",usersSalvarPermissoes);if(usersPermCancelar)usersPermCancelar.addEventListener("click",usersFecharPermissoes);if(usersPermFechar)usersPermFechar.addEventListener("click",usersFecharPermissoes);if(usersPermTabAcessoBtn)usersPermTabAcessoBtn.addEventListener("click",()=>usersPermSetTab("acesso"));if(usersPermTabPerfisBtn)usersPermTabPerfisBtn.addEventListener("click",()=>usersPermSetTab("perfis"));if(usersPermProfileSelect)usersPermProfileSelect.addEventListener("change",()=>{usersPermSelectedProfileCode=String(usersPermProfileSelect.value||"").trim();usersPermRenderPerfilPreview()});if(usersPermProfileApply)usersPermProfileApply.addEventListener("click",usersPermAplicarPerfilSelecionado);const usersPermActionButtons=Array.from(document.querySelectorAll(".users-perm-action"));usersPermActionButtons.forEach(btn=>{btn.addEventListener("click",()=>{const level=String(btn.getAttribute("data-level")||"").trim();if(level)usersPermApplyLevel(level,"module")})});if(usersModalBackdrop)usersModalBackdrop.addEventListener("click",ev=>{if(ev.target===usersModalBackdrop)usersFecharModal()});if(usersPassBackdrop)usersPassBackdrop.addEventListener("click",ev=>{if(ev.target===usersPassBackdrop)usersFecharModalSenha()});if(usersPermBackdrop)usersPermBackdrop.addEventListener("click",ev=>{if(ev.target===usersPermBackdrop)usersFecharPermissoes()});
 if(protectedPassBackdrop)protectedPassBackdrop.addEventListener("click",ev=>{if(ev.target===protectedPassBackdrop)protectedPassClose(null)});
 if(usersPermModuleRadioH)usersPermModuleRadioH.addEventListener("change",()=>usersPermApplyLevel("habilitado","module"));
 if(usersPermModuleRadioD)usersPermModuleRadioD.addEventListener("change",()=>usersPermApplyLevel("desabilitado","module"));
@@ -22351,8 +22474,7 @@ if(usersPermModuleRadioP)usersPermModuleRadioP.addEventListener("change",()=>use
 if(usersPermFuncRadioH)usersPermFuncRadioH.addEventListener("change",()=>usersPermApplyLevel("habilitado","func"));
 if(usersPermFuncRadioD)usersPermFuncRadioD.addEventListener("change",()=>usersPermApplyLevel("desabilitado","func"));
 if(usersPermFuncRadioP)usersPermFuncRadioP.addEventListener("change",()=>usersPermApplyLevel("protegido","func"));
-const btnOpenDashboard=document.getElementById("btn-open-dashboard");if(btnOpenDashboard)btnOpenDashboard.addEventListener("click",dashAbrir);
-m.btnOpen.addEventListener("click",abrirMateriais);m.btnFechar.addEventListener("click",()=>showMateriaisPanel(false));m.cboListas.addEventListener("change",materiaisCarregar);if(m.cboClassificacao)m.cboClassificacao.addEventListener("change",materiaisCarregar);m.txtPesquisar.addEventListener("input",materiaisCarregar);m.btnNovaTabela.addEventListener("click",materiaisCriarTabela);m.btnAlteraTabela.addEventListener("click",materiaisAlterarTabela);m.btnExcluirTabela.addEventListener("click",materiaisExcluirTabela);m.btnNovo.addEventListener("click",()=>{if(!materiaisListaIdAtual())return;materiaisAbrirModal(null)});m.btnEditar.addEventListener("click",()=>{const item=materiaisSelecionadoAtual();if(!item){window.alert("Selecione um material para editar.");return}materiaisAbrirModal(item)});m.btnExcluir.addEventListener("click",materiaisExcluirSelecionado);m.btnModalCancelar.addEventListener("click",materiaisFecharModal);m.btnModalGravar.addEventListener("click",materiaisSalvarModal);if(m.tabBtnPrincipal)m.tabBtnPrincipal.addEventListener("click",()=>materiaisSetModalTab("principal"));if(m.tabBtnDetalhes)m.tabBtnDetalhes.addEventListener("click",()=>materiaisSetModalTab("detalhes"));m.txtPreco.addEventListener("input",materiaisCalcularCustoModal);m.txtRelacao.addEventListener("input",materiaisCalcularCustoModal);m.tbody.addEventListener("click",(ev)=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;materiaisSelecionar(Number(tr.dataset.id))});m.tbody.addEventListener("dblclick",(ev)=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;materiaisSelecionar(Number(tr.dataset.id));const item=materiaisSelecionadoAtual();if(item)materiaisAbrirModal(item)});
+m.btnFechar.addEventListener("click",()=>showMateriaisPanel(false));m.cboListas.addEventListener("change",materiaisCarregar);if(m.cboClassificacao)m.cboClassificacao.addEventListener("change",materiaisCarregar);m.txtPesquisar.addEventListener("input",materiaisCarregar);m.btnNovaTabela.addEventListener("click",materiaisCriarTabela);m.btnAlteraTabela.addEventListener("click",materiaisAlterarTabela);m.btnExcluirTabela.addEventListener("click",materiaisExcluirTabela);m.btnNovo.addEventListener("click",()=>{if(!materiaisListaIdAtual())return;materiaisAbrirModal(null)});m.btnEditar.addEventListener("click",()=>{const item=materiaisSelecionadoAtual();if(!item){window.alert("Selecione um material para editar.");return}materiaisAbrirModal(item)});m.btnExcluir.addEventListener("click",materiaisExcluirSelecionado);m.btnModalCancelar.addEventListener("click",materiaisFecharModal);m.btnModalGravar.addEventListener("click",materiaisSalvarModal);if(m.tabBtnPrincipal)m.tabBtnPrincipal.addEventListener("click",()=>materiaisSetModalTab("principal"));if(m.tabBtnDetalhes)m.tabBtnDetalhes.addEventListener("click",()=>materiaisSetModalTab("detalhes"));m.txtPreco.addEventListener("input",materiaisCalcularCustoModal);m.txtRelacao.addEventListener("input",materiaisCalcularCustoModal);m.tbody.addEventListener("click",(ev)=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;materiaisSelecionar(Number(tr.dataset.id))});m.tbody.addEventListener("dblclick",(ev)=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;materiaisSelecionar(Number(tr.dataset.id));const item=materiaisSelecionadoAtual();if(item)materiaisAbrirModal(item)});
 if(materiaisTabelaModal.btnOk)materiaisTabelaModal.btnOk.addEventListener("click",materiaisTabelaSalvarModal);
 if(materiaisTabelaModal.btnCancelar)materiaisTabelaModal.btnCancelar.addEventListener("click",materiaisTabelaFecharModal);
 if(materiaisTabelaModal.btnClose)materiaisTabelaModal.btnClose.addEventListener("click",materiaisTabelaFecharModal);
@@ -22371,7 +22493,6 @@ procCarregarCombosEditor=async function(){procPreencherEspecialidadesEditor();co
 procAplicarDadosEditor=function(data={},resetLinks=false){procCorrigirRotulosEditor();proc.txtCodigo.value=String(data?.codigo??"");proc.txtNome.value=String(data?.nome??"");proc.txtTempo.value=String(data?.tempo??0);proc.txtPreco.value=procFmtBr(data?.preco??0);proc.txtLab.value=procFmtBr(data?.custo_lab??0);if(proc.txtGarantia)proc.txtGarantia.value=String(data?.garantia_meses??0);if(proc.txtRepasse)proc.txtRepasse.value=procFmtBr(data?.valor_repasse??0);if(proc.chkInativar)proc.chkInativar.checked=Boolean(data?.inativo);if(proc.chkPreferidos)proc.chkPreferidos.checked=Boolean(data?.preferido);if(proc.txtObs)proc.txtObs.value=String(data?.observacoes??"");if(proc.lblInclusao)proc.lblInclusao.textContent=String(data?.data_inclusao??"");if(proc.lblAlteracao)proc.lblAlteracao.textContent=String(data?.data_alteracao??"");procPreencherEspecialidadesEditor();const genericoAtual=data?.procedimento_generico_id==null?"":String(data.procedimento_generico_id);procGarantirOpcaoSelect(proc.cboGenerico,genericoAtual,genericoAtual?`Registro atual (${genericoAtual})`:"");procSetSelectValue(proc.cboGenerico,genericoAtual);const especialidadeAtual=String(data?.especialidade??"").trim();procGarantirOpcaoSelect(proc.cboEditorEspecialidade,especialidadeAtual,especialidadeAtual);procSetSelectValue(proc.cboEditorEspecialidade,especialidadeAtual);const simboloAtual=String(data?.simbolo_grafico??"").trim();procGarantirOpcaoSelect(proc.cboSimbolo,simboloAtual,procSimboloDescricao(simboloAtual));procSetSelectValue(proc.cboSimbolo,simboloAtual);procAtualizarPreviewSimbolo(simboloAtual);const cobrancaAtual=procNormalizarFormaCobrancaV2(data?.forma_cobranca);procGarantirOpcaoSelect(proc.cboCobranca,cobrancaAtual,PROC_FORMAS_COBRANCA_V2.find(item=>item.codigo===cobrancaAtual)?.descricao||cobrancaAtual);procSetSelectValue(proc.cboCobranca,cobrancaAtual);if(Object.prototype.hasOwnProperty.call(data,"materiais_vinculados"))procRenderLinks(data.materiais_vinculados||procEditorLinksVazio);else if(resetLinks)procRenderLinks(procEditorLinksVazio);procAtualizarFinanceiro()};
 procSalvar=async function(){const tabSel=procTabelaSelecionadaAtual();if(tabSel?.inativo){window.alert("Tabela inativa. Reative a tabela antes de gravar procedimentos.");return}let codigo=0,tempo=0,preco=0,lab=0,repasse=0,garantia=0;const nome=proc.txtNome.value.trim();try{codigo=parseInt(proc.txtCodigo.value||"0",10);tempo=parseInt(proc.txtTempo.value||"0",10);preco=procParse(proc.txtPreco.value);lab=procParse(proc.txtLab.value);repasse=procParse(proc.txtRepasse?.value||"0");garantia=Math.max(0,parseInt(proc.txtGarantia?.value||"0",10)||0)}catch{window.alert("Valores num\u00e9ricos inv\u00e1lidos.");return}if(!nome){window.alert("Informe o nome.");return}const genericoValue=String(proc.cboGenerico?.value||"").trim();const simboloSelecionado=String(proc.cboSimbolo?.value||"").trim();const payload={codigo,nome,tempo,preco,custo_lab:lab,custo:0,tabela_id:String(proc.cboTabela?.value||"1"),especialidade:String(proc.cboEditorEspecialidade?.value||"").trim(),procedimento_generico_id:genericoValue?Number(genericoValue):null,simbolo_grafico:simboloSelecionado,mostrar_simbolo:!!simboloSelecionado,garantia_meses:garantia,forma_cobranca:procNormalizarFormaCobrancaV2(proc.cboCobranca?.value||""),valor_repasse:repasse,preferido:!!proc.chkPreferidos?.checked,inativo:!!proc.chkInativar?.checked,observacoes:String(proc.txtObs?.value||"").trim()};const method=procedimentoAtualId?"PUT":"POST";const path=procedimentoAtualId?`/procedimentos/${procedimentoAtualId}`:"/procedimentos";const{res,data}=await requestJson(method,path,payload,true);if(!res.ok){window.alert(data.detail||"Falha ao gravar procedimento.");return}if(!procedimentoAtualId)procedimentoAtualId=data.id;procAplicarDadosEditor(data);if(!Object.prototype.hasOwnProperty.call(data||{},"materiais_vinculados"))await procRecarregarLinks();window.alert("Procedimento salvo.");await procCarregarLista()};
 procCorrigirRotulosEditor=function(){const setLabel=(id,texto)=>{const el=document.getElementById(id);const label=el?.closest(".nproc-field")?.querySelector("label");if(label)label.textContent=texto};setLabel("nproc-nome","Nome da interven\u00e7\u00e3o / procedimento");setLabel("nproc-generico","Procedimento gen\u00e9rico");setLabel("nproc-codigo","C\u00f3digo");setLabel("nproc-simbolo","S\u00edmbolo gr\u00e1fico");setLabel("nproc-cobranca","Forma de cobran\u00e7a");setLabel("nproc-lab","Custo de laborat\u00f3rio");setLabel("nproc-tempo","Tempo de execu\u00e7\u00e3o (min)");setLabel("nproc-obs","Observa\u00e7\u00f5es");const checks=[...document.querySelectorAll("#novo-proc-panel .nproc-check")];if(checks[0])checks[0].lastChild.textContent=" Inativar interven\u00e7\u00e3o";if(checks[1])checks[1].lastChild.textContent=" Incluir na lista de preferidos";const incLabel=document.getElementById("nproc-inclusao")?.parentElement?.querySelector("label");if(incLabel)incLabel.textContent="Inclus\u00e3o";const altLabel=document.getElementById("nproc-alteracao")?.parentElement?.querySelector("label");if(altLabel)altLabel.textContent="Altera\u00e7\u00e3o";const finLabels=[["nproc-cd","Comiss\u00e3o CD"],["nproc-cartao","Taxa Cart\u00e3o"],["nproc-valormin","Valor M\u00ednimo"],["nproc-lucroliq","Lucro L\u00edquido"]];finLabels.forEach(([id,texto])=>{const label=document.getElementById(id)?.parentElement?.querySelector("label");if(label)label.textContent=texto});const menuSimbolos=document.querySelector('[data-menu-action="config-simbolos-graficos"]');if(menuSimbolos)menuSimbolos.textContent="S\u00edmbolos gr\u00e1ficos...";const simboloImg=document.getElementById("nproc-simbolo-img");if(simboloImg)simboloImg.alt="S\u00edmbolo gr\u00e1fico do procedimento";const simboloFrameTitulo=document.querySelector("#nproc-simbolo-frame span");if(simboloFrameTitulo)simboloFrameTitulo.textContent="S\u00edmbolo";const colunas=["C\u00f3digo","Material vinculado ao procedimento","Rela\u00e7\u00e3o","Pre\u00e7o R$","Custo / UND","Quantidade","Custo R$"];[...document.querySelectorAll(".nproc-table-head span")].forEach((el,idx)=>{if(colunas[idx])el.textContent=colunas[idx]});[...document.querySelectorAll(".nproc-table thead th")].forEach((el,idx)=>{if(colunas[idx])el.textContent=colunas[idx]})};
-proc.btnOpen.addEventListener("click",abrirProcedimentos);
 proc.btnFechar.addEventListener("click",()=>{proc.panel.classList.add("hidden");workspaceEmpty.classList.remove("hidden")});
 if(proc.btnNovaTabela)proc.btnNovaTabela.addEventListener("click",procCriarTabela);
 if(proc.btnAlteraTabela)proc.btnAlteraTabela.addEventListener("click",procAlterarTabela);
@@ -22412,7 +22533,6 @@ if(proc.cboEspecialidade)proc.cboEspecialidade.addEventListener("change",procCar
 proc.tbody.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;procSelectRow(Number(tr.dataset.id))});
 proc.tbody.addEventListener("dblclick",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;procSelectRow(Number(tr.dataset.id));const p=procSelecionado();if(p)procAbrirEditor(p.id)});
 proc.btnVoltar.addEventListener("click",procFecharEditor);
-if(proc.btnOpen)proc.btnOpen.onclick=()=>abrirProcedimentos();
 proc.btnGravar.addEventListener("click",procSalvar);
 proc.btnVincular.addEventListener("click",()=>procAbrirVincular("novo"));
 proc.btnDesvincular.addEventListener("click",procDesvincularSelecionado);
@@ -22434,9 +22554,6 @@ if(proc.vinculaQ)proc.vinculaQ.addEventListener("input",procVinculaCarregarMater
 proc.vinculaMateriais.addEventListener("change",procVinculaMaterialSelecionado);
 proc.vinculaQuantidade.addEventListener("input",procVinculaAtualizarCustoTotal);
 proc.vinculaBtnOk.addEventListener("click",procConfirmarVinculo);
-ccEnsureUI();rccEnsureUI();ensurePanelChrome(cc?.panel);if(cc&&cc.btnOpen){cc.btnOpen.addEventListener("click",ccAbrir);cc.btnND.addEventListener("click",()=>ccAbrirModal("debito"));cc.btnNC.addEventListener("click",()=>ccAbrirModal("credito"));cc.btnEditar.addEventListener("click",()=>{const l=ccSelecionado();if(!l){window.alert("Selecione um lançamento.");return}ccAbrirModal(l.tipo||"debito",l)});cc.btnExcluir.addEventListener("click",ccExcluirSelecionado);cc.btnImprime.addEventListener("click",()=>rccAbrir("cc"));cc.btnFechar.addEventListener("click",()=>{cc.panel.classList.add("hidden");workspaceEmpty.classList.remove("hidden")});cc.mes.addEventListener("change",ccCarregar);cc.ano.addEventListener("change",ccCarregar);cc.conta.addEventListener("change",ccCarregar);cc.filtro.addEventListener("change",ccCarregar);cc.tbody.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;ccSelecionadoId=Number(tr.dataset.id);cc.tbody.querySelectorAll("tr").forEach(x=>x.classList.remove("selected"));tr.classList.add("selected")});cc.tbody.addEventListener("dblclick",()=>{const l=ccSelecionado();if(l)ccAbrirModal(l.tipo||"debito",l)});cc.mOk.addEventListener("click",ccSalvarModal);cc.mCancel.addEventListener("click",ccFecharModal)}
-planoEnsureUI();if(plano){ensurePanelChrome(plano.panel);ensurePanelChrome(aux.panel);if(plano.btnOpen)plano.btnOpen.addEventListener("click",planoAbrir);plano.btnFechar.addEventListener("click",()=>{plano.panel.classList.add("hidden");workspaceEmpty.classList.remove("hidden")});plano.btnNovoGrupo.addEventListener("click",()=>planoDialogGrupo());plano.btnAlteraGrupo.addEventListener("click",()=>{const g=planoGrupoSel();if(!g){window.alert("Selecione um grupo.");return}planoDialogGrupo(g)});plano.btnEliminaGrupo.addEventListener("click",planoExcluirGrupo);plano.btnNovaCat.addEventListener("click",()=>planoDialogCategoria());plano.btnAlteraCat.addEventListener("click",()=>{const c=planoCatSel();if(!c){window.alert("Selecione uma categoria.");return}planoDialogCategoria(c)});plano.btnEliminaCat.addEventListener("click",planoExcluirCategoria);const bindPlanoGridActivation=(tbody,onSelect,onEdit,flag)=>{if(!(tbody instanceof HTMLElement)||tbody.dataset[flag]==="true")return;tbody.dataset[flag]="true";let ultimoId=null;let ultimoEm=0;tbody.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-id]");if(!tr)return;const id=Number(tr.dataset.id||0)||null;const agora=Date.now();const mesmoItem=ultimoId===id;const rapido=agora-ultimoEm<700;if(typeof onSelect==="function")onSelect(tr);if(mesmoItem&&rapido){ultimoId=null;ultimoEm=0;if(typeof onEdit==="function")onEdit(tr);return}ultimoId=id;ultimoEm=agora})};bindPlanoGridActivation(plano.tbGrupos,tr=>{grupoSelId=Number(tr.dataset.id||0)||null;catSelId=null;planoRenderGrupos();planoRenderCats()},()=>{const g=planoGrupoSel();if(g)planoDialogGrupo(g)},"planoGrupoClickBound");bindPlanoGridActivation(plano.tbCats,tr=>{catSelId=Number(tr.dataset.id||0)||null;planoRenderCats()},()=>{const c=planoCatSel();if(c)planoDialogCategoria(c)},"planoCatClickBound")}
-if(aux){if(aux.btnOpen)aux.btnOpen.addEventListener("click",auxAbrir);aux.btnFechar.addEventListener("click",()=>{aux.panel.classList.add("hidden");workspaceEmpty.classList.remove("hidden")});aux.btnNovo.addEventListener("click",()=>auxDialogItem());aux.btnAltera.addEventListener("click",()=>{const it=auxSel();if(!it){window.alert("Selecione um item.");return}auxDialogItem(it)});aux.btnElimina.addEventListener("click",auxExcluirItem);if(aux.tbTipos){aux.tbTipos.tabIndex=0;aux.tbTipos.addEventListener("keydown",auxTecladoTipos);aux.tbTipos.addEventListener("click",ev=>{const tr=ev.target.closest("tr[data-tipo]");if(!tr)return;auxSelecionarTipoLinha(tr,true);aux.tbTipos.focus()})}if(aux.tbItens){aux.tbItens.tabIndex=0;aux.tbItens.addEventListener("keydown",auxTecladoItens);bindStandardGridActivation(aux.tbItens,tr=>{auxSelecionarItemLinha(tr);aux.tbItens.focus()},()=>{const it=auxSel();if(it)auxDialogItem(it)})}}
 document.querySelectorAll('[data-menu-action="tabelas-protetico"]').forEach(btn=>btn.addEventListener("click",async ev=>{ev.preventDefault();ev.stopImmediatePropagation();await protAbrir()},true));
 bindStandardGridActivation(usersTbody,tr=>usersSelecionar(Number(tr.dataset.id||0)),()=>usersEditarSelecionado());
 ensurePanelChrome(sa?.panel);

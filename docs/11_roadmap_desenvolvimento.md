@@ -127,6 +127,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - O checklist de execucao por onda do modulo Orcamento foi formalizado em `docs/16_checklist_execucao_orcamento.md`; proxima etapa recomendada: aguardar autorizacao para iniciar a Onda 1 com backup/checkpoint antes da primeira alteracao real.
 - A Onda 1 do modulo Orcamento foi iniciada em base de backend, com checkpoint fisico criado em `backups_modularizacao/orcamento_onda1_pre_impl_20260617_121407` e novos arquivos separados em `backend/schemas/`, `backend/services/` e `backend/routes/`; ainda falta validacao runtime completa no ambiente com dependencias da aplicacao.
 - A Onda 1 do modulo Orcamento teve validacao runtime concluida no backend real com login autentico e retorno consistente dos endpoints principais; o proximo passo operacional segue sendo a preparacao da Onda 2 com checkpoint isolado de frontend antes de qualquer alteracao de codigo.
+- A Onda 2 do modulo Orcamento foi iniciada em frontend com checkpoint fisico criado em `backups_modularizacao/orcamento_onda2_pre_impl_20260617_125540`, novos arquivos separados em `frontend/orcamento/` e roteamento minimo ligado em `frontend/app.js`; a validacao de sintaxe terminou limpa.
 
 ## Frente aberta: auditoria comparativa EasyDental virgem x Brana Cloud
 

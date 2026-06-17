@@ -88,8 +88,11 @@ Criar o contrato tecnico e a espinha dorsal do modulo sem expor ainda toda a UI 
 
 ### Status preparatorio
 
-- Pronta para inicio documental e checkpoint isolado.
-- Nenhuma alteracao de frontend deve acontecer sem backup/checkpoint e aviso previo.
+- Iniciada com checkpoint fisico em `backups_modularizacao/orcamento_onda2_pre_impl_20260617_125540`.
+- Os arquivos novos do frontend foram criados de forma isolada para o modulo Orcamento.
+- O roteamento minimo no shell foi ligado ao novo modulo.
+- A validacao de sintaxe terminou limpa.
+- A validacao visual no browser local ficou pendente por timeout da sessao de browser nesta rodada.
 
 ### Arquivos alvo
 
