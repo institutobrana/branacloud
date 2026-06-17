@@ -48,6 +48,7 @@ Preparar o terreno documental e tecnico antes de qualquer codificacao.
 
 - Iniciada com checkpoint fisico em `backups_modularizacao/orcamento_onda1_pre_impl_20260617_121407`.
 - Os arquivos novos do backend foram criados de forma isolada para o modulo Orcamento.
+- Validacao runtime real concluida com login autentico e endpoints principais respondendo no ambiente local.
 
 ### Arquivos alvo
 
@@ -84,6 +85,11 @@ Criar o contrato tecnico e a espinha dorsal do modulo sem expor ainda toda a UI 
 - Quebrar calculos, totals ou regras de aprovacao.
 
 ## Onda 2 - Estrutura de frontend
+
+### Status preparatorio
+
+- Pronta para inicio documental e checkpoint isolado.
+- Nenhuma alteracao de frontend deve acontecer sem backup/checkpoint e aviso previo.
 
 ### Arquivos alvo
 

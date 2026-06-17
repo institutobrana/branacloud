@@ -30,6 +30,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 ## Estado validado recente
 
 - Login, senha interna e perfis: validado manualmente.
+- Validacao runtime do backend de Orcamento concluida com login real em `POST /login` usando `gleissontel@gmail.com` e validacao dos endpoints principais `GET /orcamento/pacientes/1/tratamentos`, `GET /orcamento/tratamentos/1` e `POST /orcamento/tratamentos/1/impressao`.
 - Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
 - Revalidacao runtime posterior detectou que o login de `gleissontel@gmail.com` voltou a responder `400` no momento da checagem, impedindo a observacao do fluxo `Tratamento -> Novo tratamento`; o novo documento de runtime foi registrado em `docs/revalidacao_runtime_pos_rollback_novo_tratamento.md`.
 - A janela `Novo tratamento` foi revalidada em runtime com paciente em uso e carregamento real do endpoint `GET /tratamentos/novo/combos`; a modal abriu com os campos principais preenchidos e sem persistencia.
@@ -125,6 +126,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - O plano tecnico do modulo Orcamento foi formalizado em `docs/15_plano_execucao_orcamento.md`; proxima etapa recomendada: iniciar a Fase 1 apenas depois de backup/checkpoint e aviso explicito antes da primeira alteracao de codigo.
 - O checklist de execucao por onda do modulo Orcamento foi formalizado em `docs/16_checklist_execucao_orcamento.md`; proxima etapa recomendada: aguardar autorizacao para iniciar a Onda 1 com backup/checkpoint antes da primeira alteracao real.
 - A Onda 1 do modulo Orcamento foi iniciada em base de backend, com checkpoint fisico criado em `backups_modularizacao/orcamento_onda1_pre_impl_20260617_121407` e novos arquivos separados em `backend/schemas/`, `backend/services/` e `backend/routes/`; ainda falta validacao runtime completa no ambiente com dependencias da aplicacao.
+- A Onda 1 do modulo Orcamento teve validacao runtime concluida no backend real com login autentico e retorno consistente dos endpoints principais; o proximo passo operacional segue sendo a preparacao da Onda 2 com checkpoint isolado de frontend antes de qualquer alteracao de codigo.
 
 ## Frente aberta: auditoria comparativa EasyDental virgem x Brana Cloud
 

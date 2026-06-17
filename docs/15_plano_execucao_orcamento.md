@@ -205,7 +205,13 @@ Transformar a especificacao funcional do modulo Orcamento em um roteiro tecnico 
 
 - Base de backend iniciada com checkpoint fisico criado em `backups_modularizacao/orcamento_onda1_pre_impl_20260617_121407`.
 - Novos arquivos isolados criados para schema, services e routes do Orçamento.
-- Ainda falta validacao runtime completa no ambiente com dependencias da aplicacao.
+- Validacao runtime completa concluida em backend real com login autentico e chamadas principais do modulo.
+
+## Pronto para a Onda 2
+
+- O backend da Onda 1 pode ser tratado como baseline validado.
+- O proximo checkpoint deve ser isolado para frontend antes de qualquer alteracao da Onda 2.
+- Os arquivos da Onda 2 permanecem os mesmos definidos abaixo.
 
 ## Pendencias atuais
 
