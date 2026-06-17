@@ -129,6 +129,14 @@ Criar a tela principal com estado e integracao minima ao backend.
 
 ## Onda 3 - Modais centrais
 
+### Status atual
+
+- Checkpoint fisico criado em `backups_modularizacao/orcamento_onda3_pre_impl_20260617_131837`.
+- Os modais centrais foram criados em arquivos separados por responsabilidade.
+- O shell do Orçamento agora abre os modais pelo roteamento dedicado do proprio modulo.
+- A validacao de sintaxe foi concluida com sucesso.
+- A eliminacao de intervencao ainda nao possui endpoint de persistencia dedicado.
+
 ### Arquivos alvo
 
 - `frontend/orcamento/modals/propriedades-da-intervencao.js`
@@ -156,6 +164,7 @@ Fechar as acoes mais sensiveis do fluxo financeiro e clinico.
 - `Nao incluir no orcamento` remove a intervencao do calculo sem apagar o tratamento.
 - Aprovacao gera o evento esperado para a conta corrente.
 - Alteracao de parcela atualiza o cronograma sem corromper o restante.
+- A confirmacao de exclusao nao remove dados ate existir persistencia especifica para o endpoint.
 
 ### Ponto de parada
 

@@ -225,6 +225,15 @@ Transformar a especificacao funcional do modulo Orcamento em um roteiro tecnico 
 - Validacao de sintaxe concluida com sucesso.
 - Validacao visual do browser ficou pendente por timeout da sessao de browser nesta rodada.
 
+## Status da Onda 3
+
+- Checkpoint fisico criado em `backups_modularizacao/orcamento_onda3_pre_impl_20260617_131837`.
+- Modais centrais do Orçamento criados em arquivos isolados sob `frontend/orcamento/modals/`.
+- O modulo principal `frontend/orcamento/orcamento.js` passou a abrir cada modal pelo roteamento proprio.
+- `frontend/app.js` foi atualizado para carregar a nova versao do modulo.
+- Validacao de sintaxe concluida com sucesso.
+- A exclusao de intervencao permanece sem endpoint dedicado de persistencia.
+
 ## Pendencias atuais
 
 - Confirmar se o backend possui modelos ou tabelas suficientes para o agregado do orcamento sem migration nova.
@@ -232,3 +241,4 @@ Transformar a especificacao funcional do modulo Orcamento em um roteiro tecnico 
 - Confirmar o layout final da impressao antes do P2.
 - Confirmar se `Grava todas` deve atuar somente no tratamento atual em todos os cenarios de grupo.
 - Validar visualmente a tela principal do Orçamento no browser local apos a estabilizacao da sessao de browser.
+- Definir a persistencia real da exclusao de intervencao, caso o comportamento legado precise ser reproduzido de ponta a ponta.

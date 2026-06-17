@@ -22092,7 +22092,7 @@ async function executarAcaoMenu(action){
     let mod=window.BranaOrcamentoModule;
     if(!mod){
       try{
-        await import("/frontend/orcamento/orcamento.js?v=20260617-onda2-1");
+        await import("/frontend/orcamento/orcamento.js?v=20260617-onda3-1");
         mod=window.BranaOrcamentoModule;
       }catch(err){
         console.warn("Falha ao carregar modulo de Orçamento.", err);

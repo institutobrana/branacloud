@@ -2,9 +2,10 @@
   "use strict";
 
   const MODULE_NAME = "BranaOrcamentoModule";
-  const VERSION = "20260617-onda2-1";
+  const VERSION = "20260617-onda3-1";
 
   let depsPromise = null;
+  const modalPromises = new Map();
   let bound = false;
 
   function getStateModule() {
@@ -43,6 +44,38 @@
       api: getApiModule(),
       render: getRenderModule(),
     };
+  }
+
+  async function ensureModalModule(cacheKey, path, globalName) {
+    if (window[globalName]) {
+      return window[globalName];
+    }
+    if (!modalPromises.has(cacheKey)) {
+      modalPromises.set(
+        cacheKey,
+        import(`/frontend/orcamento/modals/${path}?v=${VERSION}`).catch((err) => {
+          modalPromises.delete(cacheKey);
+          throw err;
+        })
+      );
+    }
+    await modalPromises.get(cacheKey);
+    return window[globalName] || null;
+  }
+
+  function closeOpenOrcamentoModals() {
+    const names = [
+      "BranaOrcamentoPropriedadesIntervencaoModal",
+      "BranaOrcamentoEliminaIntervencaoModal",
+      "BranaOrcamentoAprovacaoOrcamentoModal",
+      "BranaOrcamentoAlteraParcelaModal",
+      "BranaOrcamentoImpressaoTratamentoModal",
+    ];
+    names.forEach((name) => {
+      try {
+        window[name]?.close?.();
+      } catch {}
+    });
   }
 
   function num(value, fallback = 0) {
@@ -143,6 +176,174 @@
     };
   }
 
+  function getSnapshotState() {
+    const state = getStateModule();
+    return typeof state?.snapshot === "function" ? state.snapshot() : null;
+  }
+
+  function getSelectedIntervention(snapshot = null) {
+    const data = snapshot || getSnapshotState();
+    const items = Array.isArray(data?.treatmentData?.intervencoes) ? data.treatmentData.intervencoes : [];
+    const selectedId = Number(data?.selectedInterventionId || 0) || 0;
+    if (selectedId > 0) {
+      const found = items.find((item) => Number(item?.id || 0) === selectedId);
+      if (found) return found;
+    }
+    return items[0] || null;
+  }
+
+  function getSelectedParcel(snapshot = null) {
+    const data = snapshot || getSnapshotState();
+    const items = Array.isArray(data?.treatmentData?.parcelas) ? data.treatmentData.parcelas : [];
+    const selectedId = Number(data?.selectedParcelId || 0) || 0;
+    if (selectedId > 0) {
+      const found = items.find((item) => Number(item?.numero || 0) === selectedId);
+      if (found) return found;
+    }
+    return items[0] || null;
+  }
+
+  async function openInterventionPropertiesModal(scope = "esta") {
+    closeOpenOrcamentoModals();
+    const snapshot = getSnapshotState();
+    const intervention = getSelectedIntervention(snapshot);
+    if (!intervention) {
+      updateFooterMessage("Selecione uma intervenção para alterar.");
+      return { opened: false, reason: "sem-intervencao" };
+    }
+    const modal = await ensureModalModule(
+      "propriedades-intervencao",
+      "propriedades-da-intervencao.js",
+      "BranaOrcamentoPropriedadesIntervencaoModal"
+    );
+    if (!modal?.open) {
+      updateFooterMessage("Modal de propriedades da intervenção indisponível.");
+      return { opened: false, reason: "modal-indisponivel" };
+    }
+    await modal.open({
+      snapshot,
+      treatmentId: Number(snapshot?.selectedTreatmentId || 0) || 0,
+      intervention,
+      api: getApiModule(),
+      onSaved: async ({ scope: savedScope } = {}) => {
+        await refreshCurrentTreatment();
+        updateFooterMessage(savedScope === "all" ? "Grava todas concluído para o tratamento atual." : "Intervenção gravada.");
+      },
+      onClose: () => updateFooterMessage(scope === "all" ? "Propriedades fechadas sem gravar todas." : "Propriedades fechadas."),
+    });
+    return { opened: true };
+  }
+
+  async function openDeleteInterventionModal() {
+    closeOpenOrcamentoModals();
+    const snapshot = getSnapshotState();
+    const intervention = getSelectedIntervention(snapshot);
+    if (!intervention) {
+      updateFooterMessage("Selecione uma intervenção para eliminar.");
+      return { opened: false, reason: "sem-intervencao" };
+    }
+    const modal = await ensureModalModule(
+      "elimina-intervencao",
+      "elimina-intervencao.js",
+      "BranaOrcamentoEliminaIntervencaoModal"
+    );
+    if (!modal?.open) {
+      updateFooterMessage("Modal de eliminação indisponível.");
+      return { opened: false, reason: "modal-indisponivel" };
+    }
+    await modal.open({
+      intervention,
+      onConfirm: async () => {
+        updateFooterMessage("Eliminação confirmada no modal. Persistência do delete ainda pendente.");
+      },
+      onCancel: () => updateFooterMessage("Eliminação cancelada."),
+    });
+    return { opened: true };
+  }
+
+  async function openApprovalModal() {
+    closeOpenOrcamentoModals();
+    const snapshot = getSnapshotState();
+    const modal = await ensureModalModule(
+      "aprovacao-orcamento",
+      "aprovacao-orcamento.js",
+      "BranaOrcamentoAprovacaoOrcamentoModal"
+    );
+    if (!modal?.open) {
+      updateFooterMessage("Modal de aprovação indisponível.");
+      return { opened: false, reason: "modal-indisponivel" };
+    }
+    await modal.open({
+      phase: "confirm",
+      snapshot,
+      treatmentId: Number(snapshot?.selectedTreatmentId || 0) || 0,
+      patient: snapshot?.patient || null,
+      patientName: snapshot?.patientLabel || "",
+      api: getApiModule(),
+      onApproved: async () => {
+        await refreshCurrentTreatment();
+        updateFooterMessage("Orçamento aprovado.");
+      },
+      onCancel: () => updateFooterMessage("Aprovação cancelada."),
+    });
+    return { opened: true };
+  }
+
+  async function openParcelModal() {
+    closeOpenOrcamentoModals();
+    const snapshot = getSnapshotState();
+    const parcel = getSelectedParcel(snapshot);
+    if (!parcel) {
+      updateFooterMessage("Selecione uma parcela para alterar.");
+      return { opened: false, reason: "sem-parcela" };
+    }
+    const modal = await ensureModalModule(
+      "altera-parcela",
+      "altera-parcela.js",
+      "BranaOrcamentoAlteraParcelaModal"
+    );
+    if (!modal?.open) {
+      updateFooterMessage("Modal de parcela indisponível.");
+      return { opened: false, reason: "modal-indisponivel" };
+    }
+    await modal.open({
+      parcel,
+      snapshot,
+      treatmentId: Number(snapshot?.selectedTreatmentId || 0) || 0,
+      api: getApiModule(),
+      onSaved: async () => {
+        await refreshCurrentTreatment();
+        updateFooterMessage("Parcela gravada.");
+      },
+      onCancel: () => updateFooterMessage("Alteração de parcela cancelada."),
+    });
+    return { opened: true };
+  }
+
+  async function openPrintModal() {
+    closeOpenOrcamentoModals();
+    const snapshot = getSnapshotState();
+    const modal = await ensureModalModule(
+      "impressao-tratamento",
+      "impressao-tratamento.js",
+      "BranaOrcamentoImpressaoTratamentoModal"
+    );
+    if (!modal?.open) {
+      updateFooterMessage("Modal de impressão indisponível.");
+      return { opened: false, reason: "modal-indisponivel" };
+    }
+    await modal.open({
+      snapshot,
+      treatmentId: Number(snapshot?.selectedTreatmentId || 0) || 0,
+      api: getApiModule(),
+      onPrepared: async () => {
+        updateFooterMessage("Impressão preparada.");
+      },
+      onCancel: () => updateFooterMessage("Impressão cancelada."),
+    });
+    return { opened: true };
+  }
+
   async function loadTratamento(tratamentoId) {
     const { state, api, render } = await ensureDependencies();
     const id = num(tratamentoId || 0);
@@ -216,7 +417,8 @@
     const { state, render } = await ensureDependencies();
     await bind();
     const panel = ensureMounted();
-    if (!panel) {
+    const panelEl = panel?.panel || panel || null;
+    if (!panelEl) {
       updateFooterMessage("Orçamento indisponível no momento.");
       return { opened: false, reason: "panel-indisponivel" };
     }
@@ -226,8 +428,8 @@
         hideAllPanels();
       } catch {}
     }
-    if (panel?.classList) {
-      panel.classList.remove("hidden");
+    if (panelEl?.classList) {
+      panelEl.classList.remove("hidden");
     }
 
     const workspaceEmpty = typeof window !== "undefined" ? window.workspaceEmpty : null;
@@ -267,21 +469,20 @@
   }
 
   async function handleAction(action) {
-    const { state, render } = await ensureDependencies();
     if (action === "edit-intervencao") {
-      updateFooterMessage("Alteração de intervenção: em planejamento.");
+      await openInterventionPropertiesModal("esta");
       return;
     }
     if (action === "delete-intervencao") {
-      updateFooterMessage("Eliminação de intervenção: em planejamento.");
+      await openDeleteInterventionModal();
       return;
     }
     if (action === "approve-intervencao") {
-      updateFooterMessage("Aprovação de orçamento: modal próprio ainda em planejamento.");
+      await openApprovalModal();
       return;
     }
     if (action === "print") {
-      updateFooterMessage("Impressão de tratamento: modal próprio ainda em planejamento.");
+      await openPrintModal();
       return;
     }
     if (action === "indice" || action === "calcular-juros" || action === "recalcular-parcelas" || action === "insere-comissao" || action === "elimina-comissao" || action === "distribui-comissao") {
@@ -335,6 +536,7 @@
 
   async function close() {
     const { state, render } = await ensureDependencies();
+    closeOpenOrcamentoModals();
     state.reset();
     render.render(state.snapshot());
     if (typeof hideAllPanels === "function") {
@@ -364,12 +566,12 @@
       onInterventionDblClick: (id) => {
         state.setSelectedIntervention(id);
         render.render(state.snapshot());
-        updateFooterMessage("Duplo clique em intervenção: em planejamento.");
+        openInterventionPropertiesModal("esta");
       },
       onParcelDblClick: (id) => {
         state.setSelectedParcel(id);
         render.render(state.snapshot());
-        updateFooterMessage("Duplo clique em parcela: em planejamento.");
+        openParcelModal();
       },
     });
     bound = true;
