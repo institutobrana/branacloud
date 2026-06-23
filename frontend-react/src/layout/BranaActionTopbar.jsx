@@ -1,4 +1,4 @@
-import { Button, Input, Space, Typography } from 'antd';
+import { Button, Input, Space, Typography, Tooltip } from 'antd';
 import {
   CalendarOutlined,
   DollarOutlined,
@@ -24,7 +24,7 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
     <header className="brana-action-topbar">
       <div className="brana-action-topbar-left">
         <div>
-          <Typography.Text className="brana-action-topbar-kicker" type="secondary">
+          <Typography.Text className="brana-action-topbar-kicker">
             Brana Cloud
           </Typography.Text>
           <Typography.Title level={4} className="brana-action-topbar-title">
@@ -42,24 +42,26 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
         />
       </div>
 
-      <Space size={8} wrap className="brana-action-topbar-actions">
+      <Space size={6} wrap className="brana-action-topbar-actions">
         {quickActions.map((action) => (
-          <Button
-            key={action.key}
-            icon={action.icon}
-            onClick={onPlaceholderAction}
-            className="brana-action-button"
-          >
-            {action.label}
-          </Button>
+          <Tooltip key={action.key} title={action.label} placement="bottom">
+            <Button
+              icon={action.icon}
+              onClick={onPlaceholderAction}
+              className="brana-action-button"
+              size="small"
+            >
+              <span className="brana-action-button-label">{action.label}</span>
+            </Button>
+          </Tooltip>
         ))}
       </Space>
 
       <div className="brana-action-topbar-session">
-        <Typography.Text type="secondary" className="brana-action-topbar-user">
+        <Typography.Text className="brana-action-topbar-user">
           {loading ? 'Validando sessão...' : displayName ? `Logado como ${displayName}` : 'Sessão ativa'}
         </Typography.Text>
-        <Button size="small" onClick={onSignOut} disabled={loading}>
+        <Button size="small" onClick={onSignOut} disabled={loading} className="brana-action-signout">
           Sair
         </Button>
       </div>

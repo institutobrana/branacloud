@@ -5322,3 +5322,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar manualmente `/app`, `Sair` e o layout; depois criar contrato da tela `Pacientes` em modo somente leitura.
+
+## Refino visual do Shell Operacional Odontologico
+
+- O refino visual do `Shell Operacional Odontológico` foi realizado no `frontend-react`.
+- A toolbar superior foi compactada e refinada.
+- A barra lateral foi reforçada com a paleta Brana.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validação visual pelo usuário.

@@ -17,7 +17,8 @@ body {
 .brana-shell {
   min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(29, 143, 95, 0.04), rgba(29, 143, 95, 0.01)),
+    radial-gradient(circle at top left, rgba(0, 167, 157, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(0, 104, 56, 0.06), rgba(0, 123, 116, 0.03)),
     var(--brana-background);
   display: grid;
   grid-template-columns: 72px 1fr;
@@ -32,9 +33,10 @@ body {
   align-items: center;
   padding: 12px 0;
   background:
-    linear-gradient(180deg, rgba(0, 167, 157, 0.09), rgba(0, 104, 56, 0.04)),
-    #ffffff;
-  border-right: 1px solid rgba(0, 123, 116, 0.12);
+    linear-gradient(180deg, rgba(0, 167, 157, 0.98), rgba(0, 123, 116, 0.96) 62%, rgba(0, 104, 56, 0.98)),
+    var(--brana-teal);
+  border-right: 1px solid rgba(0, 104, 56, 0.55);
+  box-shadow: 10px 0 26px rgba(0, 75, 37, 0.16);
 }
 
 .brana-icon-rail-brand {
@@ -50,14 +52,15 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: var(--brana-teal);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
   font-weight: 800;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 
 .brana-icon-rail-title {
   font-size: 11px;
-  color: var(--brana-neutral-gray);
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .brana-icon-rail-nav,
@@ -83,7 +86,7 @@ body {
   border: 0;
   border-radius: 14px;
   background: transparent;
-  color: var(--brana-neutral-gray);
+  color: rgba(255, 255, 255, 0.88);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -95,19 +98,19 @@ body {
 }
 
 .brana-icon-rail-button:hover {
-  background: rgba(0, 167, 157, 0.09);
-  color: var(--brana-teal);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
 .brana-icon-rail-button.is-active {
-  background: linear-gradient(135deg, rgba(0, 167, 157, 0.18), rgba(0, 104, 56, 0.12));
-  color: var(--brana-green);
-  box-shadow: inset 0 0 0 1px rgba(0, 104, 56, 0.2);
+  background: rgba(255, 255, 255, 0.93);
+  color: var(--brana-deep-green);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
 
 .brana-icon-rail-button.is-signout {
-  color: var(--brana-support-teal);
+  color: #ffffff;
 }
 
 .brana-icon-rail-icon {
@@ -123,20 +126,22 @@ body {
 
 .brana-action-topbar {
   display: grid;
-  grid-template-columns: minmax(320px, 1.1fr) minmax(280px, 1.4fr) auto;
-  gap: 16px;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(360px, 1.6fr) auto;
+  gap: 10px 12px;
   align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid rgba(0, 123, 116, 0.12);
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
+  padding: 10px 16px;
+  border-bottom: 3px solid var(--brana-teal);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 247, 0.98));
+  box-shadow: 0 8px 20px rgba(0, 75, 37, 0.05);
 }
 
 .brana-action-topbar-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .brana-action-topbar-kicker {
@@ -144,23 +149,39 @@ body {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--brana-support-teal);
+  font-weight: 700;
 }
 
 .brana-action-topbar-title {
   margin-bottom: 0 !important;
+  font-size: 16px !important;
 }
 
 .brana-action-topbar-search {
-  max-width: 280px;
+  max-width: 260px;
 }
 
 .brana-action-topbar-actions {
   min-width: 0;
+  flex: 1;
 }
 
 .brana-action-button {
-  border-color: rgba(0, 123, 116, 0.15);
-  color: var(--brana-text);
+  border-color: rgba(0, 104, 56, 0.18);
+  color: var(--brana-deep-green);
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(0, 167, 157, 0.06);
+  height: 34px;
+  padding-inline: 10px;
+}
+
+.brana-action-button .ant-btn-icon {
+  color: var(--brana-teal);
+}
+
+.brana-action-button-label {
+  margin-left: 4px;
 }
 
 .brana-action-topbar-session {
@@ -175,11 +196,34 @@ body {
   max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--brana-deep-green);
+  font-weight: 600;
+}
+
+.brana-action-signout {
+  border-color: rgba(0, 104, 56, 0.28);
+  color: var(--brana-green);
+}
+
+.brana-action-topbar .ant-input-affix-wrapper {
+  border-color: rgba(0, 104, 56, 0.2);
+  box-shadow: none;
+  background: #ffffff;
+}
+
+.brana-action-topbar .ant-input-affix-wrapper:focus,
+.brana-action-topbar .ant-input-affix-wrapper-focused {
+  border-color: var(--brana-teal);
+  box-shadow: 0 0 0 2px rgba(0, 167, 157, 0.16);
+}
+
+.brana-action-topbar .ant-input-prefix {
+  color: var(--brana-support-teal);
 }
 
 .brana-content {
-  padding: 20px 22px 24px;
-  max-width: 1600px;
+  padding: 18px 20px 22px;
+  max-width: 1640px;
   width: 100%;
 }
 

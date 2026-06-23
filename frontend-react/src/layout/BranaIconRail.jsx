@@ -1,4 +1,5 @@
 import { Tooltip, Typography } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
 
 export function BranaIconRail({ items = [], activeKey, onNavigate, onSignOut }) {
   return (
@@ -30,7 +31,9 @@ export function BranaIconRail({ items = [], activeKey, onNavigate, onSignOut }) 
       <div className="brana-icon-rail-footer">
         <Tooltip title="Sair" placement="right">
           <button type="button" className="brana-icon-rail-button is-signout" onClick={onSignOut} aria-label="Sair">
-            <span className="brana-icon-rail-icon">⎋</span>
+            <span className="brana-icon-rail-icon">
+              <LogoutOutlined />
+            </span>
           </button>
         </Tooltip>
       </div>
