@@ -5189,3 +5189,10 @@ Observacoes:
 - O shell visual inicial do `frontend-react\` foi refinado e validado.
 - O frontend-react continua isolado do frontend legado.
 - A proxima etapa sugerida e criar uma tela de login experimental sem autenticacao real ou preparar o contrato de integracao com o backend atual.
+
+## Contrato de autenticacao do frontend-react
+
+- O contrato de autenticacao do `frontend-react\` foi documentado.
+- O login real ainda nao foi implementado no novo frontend.
+- O frontend legado segue preservado como referencia.
+- A proxima etapa sugerida e criar a tela visual de login experimental conforme o contrato documentado.
