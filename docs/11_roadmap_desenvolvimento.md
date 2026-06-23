@@ -5411,3 +5411,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é implementar a tela `Pacientes` somente leitura usando apenas os endpoints já confirmados.
+
+## Implementacao de Pacientes somente leitura
+
+- A tela `Pacientes` somente leitura foi implementada no `frontend-react`.
+- A navegação pelo ícone `Pacientes` da rail agora abre a tela dentro do shell atual.
+- A listagem usa apenas `GET /pacientes` e o resumo usa apenas `GET /pacientes/{paciente_id}`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a lista, a busca e o resumo, e só depois planejar a próxima tela funcional.

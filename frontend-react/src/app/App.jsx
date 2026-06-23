@@ -1,4 +1,5 @@
 import { ConfigProvider, Typography } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import {
   DashboardOutlined,
   HomeOutlined,
@@ -17,6 +18,7 @@ import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { InicioPage } from '../features/inicio/InicioPage.jsx';
+import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 
 const menuItems = [
   { key: 'inicio', icon: <HomeOutlined />, label: 'Inicio' },
@@ -36,12 +38,45 @@ function isLoginRoute() {
 
 function isAppRoute() {
   const path = window.location.pathname || '/';
-  return path === '/' || path === '/app' || path === '/app/inicio' || path === '';
+  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '';
+}
+
+function resolveScreenFromPath() {
+  const path = window.location.pathname || '/';
+  if (path === '/app/pacientes') return 'pacientes';
+  return 'inicio';
+}
+
+function syncAppPath(screen) {
+  const nextPath = screen === 'pacientes' ? '/app/pacientes' : '/app';
+  if ((window.location.pathname || '/') === nextPath) return;
+  window.history.pushState({ screen }, '', nextPath);
 }
 
 function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
-  const activeKey = 'inicio';
+  const [screen, setScreen] = useState(resolveScreenFromPath);
+
+  useEffect(() => {
+    const onPopState = () => setScreen(resolveScreenFromPath());
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const activeKey = screen;
+
+  const handleNavigate = (nextScreen) => {
+    if (!nextScreen) return;
+    setScreen(nextScreen);
+    syncAppPath(nextScreen);
+  };
+
+  const activePage = useMemo(() => {
+    if (screen === 'pacientes') {
+      return <PacientesPage onBackHome={() => handleNavigate('inicio')} />;
+    }
+    return <InicioPage />;
+  }, [screen]);
 
   if (loading) {
     return (
@@ -67,7 +102,7 @@ function AppContent() {
   if (isAppRoute()) {
     return (
       <div className="brana-shell">
-        <BranaIconRail items={menuItems} activeKey={activeKey} onNavigate={() => {}} onSignOut={signOut} />
+        <BranaIconRail items={menuItems} activeKey={activeKey} onNavigate={handleNavigate} onSignOut={signOut} />
         <BranaWorkspace
           topbar={
             <BranaActionTopbar
@@ -78,7 +113,7 @@ function AppContent() {
             />
           }
         >
-          <InicioPage />
+          {activePage}
         </BranaWorkspace>
       </div>
     );
