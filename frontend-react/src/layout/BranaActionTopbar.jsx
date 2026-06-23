@@ -23,7 +23,7 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
   return (
     <header className="brana-action-topbar">
       <div className="brana-action-topbar-left">
-        <div>
+        <div className="brana-action-topbar-brand">
           <Typography.Text className="brana-action-topbar-kicker">
             Brana Cloud
           </Typography.Text>
@@ -32,14 +32,19 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
           </Typography.Title>
         </div>
 
-        <Input
-          allowClear
-          prefix={<SearchOutlined />}
-          placeholder="Pesquisar paciente"
-          className="brana-action-topbar-search"
-          onChange={onPlaceholderAction}
-          onPressEnter={onPlaceholderAction}
-        />
+        <div className="brana-action-topbar-search-wrap">
+          <Input
+            allowClear
+            prefix={<SearchOutlined />}
+            placeholder="Pesquisar paciente"
+            className="brana-action-topbar-search"
+            onChange={onPlaceholderAction}
+            onPressEnter={onPlaceholderAction}
+          />
+          <Typography.Text className="brana-action-topbar-hint" type="secondary">
+            Busca será ativada em etapa futura
+          </Typography.Text>
+        </div>
       </div>
 
       <Space size={6} wrap className="brana-action-topbar-actions">

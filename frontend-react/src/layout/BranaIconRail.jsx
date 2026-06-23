@@ -6,7 +6,7 @@ export function BranaIconRail({ items = [], activeKey, onNavigate, onSignOut }) 
     <aside className="brana-icon-rail" aria-label="Navegação principal">
       <div className="brana-icon-rail-brand">
         <div className="brana-icon-rail-mark">B</div>
-        <Typography.Text className="brana-icon-rail-title">Brana</Typography.Text>
+        <Typography.Text className="brana-icon-rail-title">Brana Cloud</Typography.Text>
       </div>
 
       <nav className="brana-icon-rail-nav">

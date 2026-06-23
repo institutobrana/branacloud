@@ -5332,3 +5332,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validação visual pelo usuário.
+
+## Refino visual 2 do Shell Operacional Odontologico
+
+- O Shell Operacional Odontológico recebeu um segundo refino visual no `frontend-react`.
+- A barra lateral ficou mais presente.
+- A toolbar superior ficou mais integrada e compacta.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validação visual pelo usuário em `/app`.
