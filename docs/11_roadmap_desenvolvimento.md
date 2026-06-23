@@ -5217,3 +5217,11 @@ Observacoes:
 - A página `/login` respondeu corretamente no dev server.
 - O backend preservou o comportamento esperado de `/login`, `/me` e `/logout`.
 - A validação completa ainda depende de credencial real disponível no ambiente.
+
+## Validação do login React com usuario real
+
+- A tentativa de validacao com usuario real permaneceu bloqueada por ausencia de credencial real disponivel para digitação manual no ambiente local.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é corrigir apenas o bloqueio específico no `frontend-react` se ele reaparecer em nova tentativa, ou concluir a validação completa quando uma credencial real estiver disponível.
