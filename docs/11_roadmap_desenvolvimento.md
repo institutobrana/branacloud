@@ -5249,3 +5249,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é repetir o teste manual de login real em `http://localhost:5173/login`.
+
+## Correcao do CORS/preflight do `/me` via proxy Vite
+
+- O bloqueio de CORS/preflight do `GET /me` foi tratado no `frontend-react` com proxy local do Vite.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é repetir o teste manual de login real e validar `POST /api/login` e `GET /api/me` no Network.

@@ -12,10 +12,10 @@ export function AuthProvider({ children }) {
 
   const formatSessionError = (err) => {
     if (err?.status === 401) {
-      return 'Login aceito, mas a sessao nao foi validada pelo backend (401).';
+      return 'Login aceito, mas nao foi possivel validar a sessao em /me.';
     }
     if (err?.status === 403) {
-      return 'Login aceito, mas o backend negou a validacao da sessao (403).';
+      return 'Login aceito, mas nao foi possivel validar a sessao em /me.';
     }
     if (err?.message) {
       return err.message;
