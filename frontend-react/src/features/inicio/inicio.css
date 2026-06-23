@@ -84,8 +84,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 18px;
-  border-radius: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
   background:
     linear-gradient(135deg, rgba(0, 167, 157, 0.08), rgba(0, 104, 56, 0.04)),
     #ffffff;
@@ -102,6 +102,7 @@
 
 .inicio-strip-title {
   margin-bottom: 0 !important;
+  font-size: 15px !important;
 }
 
 .inicio-strip-action {

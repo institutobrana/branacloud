@@ -5352,3 +5352,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validação visual do usuário em `/app`.
+
+## Recomposicao estrutural do Shell Operacional Odontologico
+
+- O Shell Operacional Odontológico recebeu uma recomposição estrutural no `frontend-react`.
+- A lateral passou a parecer menu principal de software clínico.
+- O topo passou a parecer uma toolbar desktop única.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validação visual do usuário em `/app`.
