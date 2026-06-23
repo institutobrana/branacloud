@@ -5421,3 +5421,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a lista, a busca e o resumo, e só depois planejar a próxima tela funcional.
+
+## Menu contextual lateral da shell
+
+- A rail operacional do `frontend-react` passou a usar grupos principais e painel contextual lateral.
+- O caminho `Cadastro -> Pacientes` foi preservado para a tela somente leitura já entregue.
+- Os demais submenus permanecem como placeholders visuais.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a rail expandida/recolhida e o painel contextual.

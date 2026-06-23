@@ -1,4 +1,4 @@
-import { Tooltip, Typography } from 'antd';
+import { Tooltip } from 'antd';
 import {
   CalendarOutlined,
   DashboardOutlined,
@@ -6,67 +6,63 @@ import {
   FileTextOutlined,
   HomeOutlined,
   LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   SettingOutlined,
   SmileOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 
-const railSections = [
-  [
-    { key: 'inicio', label: 'Início', icon: <HomeOutlined /> },
-    { key: 'pacientes', label: 'Pacientes', icon: <UserOutlined /> },
-    { key: 'odontograma', label: 'Odontograma', icon: <SmileOutlined /> },
-  ],
-  [
-    { key: 'tratamentos', label: 'Tratamentos', icon: <DashboardOutlined /> },
-    { key: 'agenda', label: 'Agenda', icon: <CalendarOutlined /> },
-    { key: 'financeiro', label: 'Financeiro', icon: <DollarOutlined /> },
-  ],
-  [
-    { key: 'usuarios', label: 'Usuários', icon: <TeamOutlined /> },
-    { key: 'configuracoes', label: 'Configurações', icon: <SettingOutlined /> },
-    { key: 'documentos', label: 'Documentos', icon: <FileTextOutlined /> },
-  ],
-];
-
-export function BranaIconRail({ activeKey, onNavigate, onSignOut }) {
+export function BranaIconRail({
+  activeKey,
+  expanded,
+  groups,
+  activeGroupKey,
+  onNavigate,
+  onOpenGroup,
+  onToggleExpand,
+  onSignOut,
+}) {
   return (
-    <aside className="brana-icon-rail" aria-label="Navegação principal">
+    <aside className={`brana-icon-rail${expanded ? ' is-expanded' : ' is-collapsed'}`} aria-label="Navegação principal">
       <Tooltip title="Brana Cloud Operacional" placement="right">
-        <div className="brana-icon-rail-brand" aria-hidden="true">
+        <button type="button" className="brana-icon-rail-brand" onClick={() => onNavigate?.('inicio')} aria-label="Ir para Início">
           <div className="brana-icon-rail-mark">B</div>
-          <div className="brana-icon-rail-brand-glow" />
-        </div>
+          {expanded ? (
+            <div className="brana-icon-rail-brand-copy">
+              <span>Brana Cloud</span>
+              <span>Operacional</span>
+            </div>
+          ) : null}
+        </button>
       </Tooltip>
 
       <nav className="brana-icon-rail-nav">
-        {railSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className="brana-icon-rail-section">
-            {sectionIndex > 0 ? <div className="brana-icon-rail-divider" aria-hidden="true" /> : null}
-            <div className="brana-icon-rail-group">
-              {section.map((item) => {
-                const active = item.key === activeKey;
-                return (
-                  <Tooltip key={item.key} title={item.label} placement="right">
-                    <button
-                      type="button"
-                      className={`brana-icon-rail-button${active ? ' is-active' : ''}`}
-                      onClick={() => onNavigate?.(item.key)}
-                      aria-label={item.label}
-                      aria-current={active ? 'page' : undefined}
-                    >
-                      <span className="brana-icon-rail-icon" aria-hidden="true">
-                        {item.icon}
-                      </span>
-                      <span className="sr-only">{item.label}</span>
-                    </button>
-                  </Tooltip>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+        {(groups || []).map((group) => {
+          const active = group.key === activeGroupKey || (group.key === 'inicio' && activeKey === 'inicio');
+          const button = (
+            <button
+              type="button"
+              className={`brana-icon-rail-button${active ? ' is-active' : ''}`}
+              onClick={() => onOpenGroup?.(group.key)}
+              onMouseEnter={() => onOpenGroup?.(group.key)}
+              aria-label={group.label}
+              aria-current={active ? 'page' : undefined}
+            >
+              <span className="brana-icon-rail-icon" aria-hidden="true">
+                {group.icon}
+              </span>
+              {expanded ? <span className="brana-icon-rail-label">{group.label}</span> : <span className="sr-only">{group.label}</span>}
+            </button>
+          );
+
+          return (
+            <Tooltip key={group.key} title={expanded ? null : group.label} placement="right">
+              {button}
+            </Tooltip>
+          );
+        })}
       </nav>
 
       <div className="brana-icon-rail-footer">
@@ -80,10 +76,27 @@ export function BranaIconRail({ activeKey, onNavigate, onSignOut }) {
             <span className="brana-icon-rail-icon" aria-hidden="true">
               <LogoutOutlined />
             </span>
-            <span className="sr-only">Sair</span>
+            {expanded ? <span className="brana-icon-rail-label">Sair</span> : <span className="sr-only">Sair</span>}
+          </button>
+        </Tooltip>
+        <Tooltip title={expanded ? 'Recolher barra' : 'Expandir barra'} placement="right">
+          <button type="button" className="brana-icon-rail-toggle" onClick={onToggleExpand} aria-label="Recolher ou expandir a barra">
+            {expanded ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
           </button>
         </Tooltip>
       </div>
     </aside>
   );
 }
+
+export const branaMainGroups = [
+  { key: 'inicio', label: 'Início', icon: <HomeOutlined /> },
+  { key: 'atendimento', label: 'Atendimento', icon: <CalendarOutlined /> },
+  { key: 'cadastro', label: 'Cadastro', icon: <UserOutlined /> },
+  { key: 'financeiro', label: 'Financeiro', icon: <DollarOutlined /> },
+  { key: 'tabelas', label: 'Tabelas', icon: <DashboardOutlined /> },
+  { key: 'relatorios', label: 'Relatórios', icon: <FileTextOutlined /> },
+  { key: 'configuracao', label: 'Configuração', icon: <SettingOutlined /> },
+  { key: 'ferramentas', label: 'Ferramentas', icon: <TeamOutlined /> },
+  { key: 'ajuda', label: 'Ajuda', icon: <SmileOutlined /> },
+];
