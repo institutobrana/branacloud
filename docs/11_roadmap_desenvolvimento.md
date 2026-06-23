@@ -5210,3 +5210,10 @@ Observacoes:
 - O frontend legado continua preservado.
 - O backend continua preservado.
 - A próxima etapa sugerida é a validação runtime do login React com usuário real em ambiente local.
+
+## Validação runtime do login
+
+- A validação runtime do login React foi executada de forma parcial e controlada.
+- A página `/login` respondeu corretamente no dev server.
+- O backend preservou o comportamento esperado de `/login`, `/me` e `/logout`.
+- A validação completa ainda depende de credencial real disponível no ambiente.
