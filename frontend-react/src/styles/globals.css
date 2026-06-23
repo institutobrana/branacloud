@@ -21,7 +21,7 @@ body {
     linear-gradient(180deg, rgba(0, 104, 56, 0.04), rgba(0, 123, 116, 0.02)),
     var(--brana-background);
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 72px 1fr;
 }
 
 .brana-icon-rail {
@@ -30,43 +30,44 @@ body {
   top: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  padding: 10px 10px 8px;
+  align-items: center;
+  padding: 12px 8px 10px;
   background:
-    linear-gradient(180deg, rgba(0, 123, 116, 0.96), rgba(0, 104, 56, 0.98) 60%, rgba(0, 75, 37, 1)),
+    linear-gradient(180deg, rgba(0, 167, 157, 0.96) 0%, rgba(0, 123, 116, 0.94) 28%, rgba(0, 104, 56, 0.98) 68%, rgba(0, 75, 37, 1) 100%),
     #006838;
-  border-right: 1px solid rgba(0, 75, 37, 0.72);
-  box-shadow: 12px 0 28px rgba(0, 75, 37, 0.24);
+  border-right: 1px solid rgba(0, 75, 37, 0.68);
+  box-shadow: 10px 0 22px rgba(0, 75, 37, 0.2);
 }
 
 .brana-icon-rail-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  margin: 0 0 12px;
-  padding: 8px 10px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 0 14px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 6px 16px rgba(0, 75, 37, 0.18);
 }
 
 .brana-icon-rail-mark {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.18);
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
   color: #ffffff;
   font-weight: 800;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  font-size: 16px;
+  letter-spacing: 0.04em;
 }
 
 .brana-icon-rail-brand-text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+  display: none;
 }
 
 .brana-icon-rail-title {
@@ -85,25 +86,26 @@ body {
 .brana-icon-rail-footer {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  align-items: stretch;
+  gap: 10px;
+  align-items: center;
   width: 100%;
 }
 
 .brana-icon-rail-nav {
   flex: 1;
-  padding: 0;
+  padding: 2px 0 0;
 }
 
 .brana-icon-rail-footer {
   margin-top: auto;
-  padding: 0 0 6px;
+  padding: 10px 0 6px;
 }
 
 .brana-icon-rail-section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  width: 100%;
 }
 
 .brana-icon-rail-section-title {
@@ -117,22 +119,31 @@ body {
 .brana-icon-rail-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  width: 100%;
+  align-items: center;
+}
+
+.brana-icon-rail-divider {
+  width: 24px;
+  height: 1px;
+  margin: 0 auto 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .brana-icon-rail-button {
   position: relative;
-  width: 100%;
-  min-height: 44px;
+  width: 48px;
+  height: 48px;
   border: 0;
   border-radius: 14px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.94);
   display: grid;
-  grid-template-columns: 18px 1fr;
+  place-items: center;
   align-items: center;
-  gap: 8px;
-  padding: 0 10px 0 10px;
+  padding: 0;
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -143,13 +154,13 @@ body {
 }
 
 .brana-icon-rail-button:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
   transform: translateY(-1px);
 }
 
 .brana-icon-rail-button.is-active {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 247, 244, 0.96));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 247, 244, 0.98));
   color: var(--brana-green);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.28),
@@ -157,12 +168,14 @@ body {
 }
 
 .brana-icon-rail-button.is-signout {
-  color: rgba(255, 255, 255, 0.92);
+  width: 42px;
+  height: 42px;
+  color: rgba(255, 255, 255, 0.88);
   background: rgba(255, 255, 255, 0.06);
 }
 
 .brana-icon-rail-button.is-signout:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
 
@@ -172,11 +185,16 @@ body {
   color: inherit;
 }
 
-.brana-icon-rail-label {
-  font-size: 11px;
-  font-weight: 600;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  color: inherit;
+  border: 0;
 }
 
 .brana-workspace {
@@ -357,6 +375,7 @@ body {
   }
 
   .brana-icon-rail-button {
-    grid-template-columns: 18px 1fr;
+    width: 44px;
+    height: 44px;
   }
 }

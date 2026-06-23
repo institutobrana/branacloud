@@ -5381,3 +5381,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validação visual do usuário em `/app`.
+
+## Rail compacta com icones e tooltips
+
+- A rail lateral do `frontend-react` foi compactada para operar como navegação por ícones.
+- Os rótulos passaram a aparecer apenas em tooltip, sem ocupar largura fixa.
+- O botão `Sair` foi mantido discreto e funcional.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validacao visual da rail compacta em `/app`.
