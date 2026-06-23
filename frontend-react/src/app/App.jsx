@@ -4,15 +4,16 @@ import {
   HomeOutlined,
   CalendarOutlined,
   DollarOutlined,
+  FileTextOutlined,
   SettingOutlined,
   SmileOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { branaTheme } from '../theme/branaTheme.js';
-import { BranaShell } from '../layout/BranaShell.jsx';
-import { BranaSidebar } from '../layout/BranaSidebar.jsx';
-import { BranaTopbar } from '../layout/BranaTopbar.jsx';
+import { BranaIconRail } from '../layout/BranaIconRail.jsx';
+import { BranaActionTopbar } from '../layout/BranaActionTopbar.jsx';
+import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { InicioPage } from '../features/inicio/InicioPage.jsx';
@@ -26,6 +27,7 @@ const menuItems = [
   { key: 'financeiro', icon: <DollarOutlined />, label: 'Financeiro' },
   { key: 'usuarios', icon: <TeamOutlined />, label: 'Usuarios' },
   { key: 'configuracoes', icon: <SettingOutlined />, label: 'Configuracoes' },
+  { key: 'documentos', icon: <FileTextOutlined />, label: 'Documentos' },
 ];
 
 function isLoginRoute() {
@@ -39,6 +41,7 @@ function isAppRoute() {
 
 function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
+  const activeKey = 'inicio';
 
   if (loading) {
     return (
@@ -63,12 +66,21 @@ function AppContent() {
 
   if (isAppRoute()) {
     return (
-      <BranaShell
-        sidebar={<BranaSidebar menuItems={menuItems} />}
-        topbar={<BranaTopbar user={user} onSignOut={signOut} loading={loading} />}
-      >
-        <InicioPage />
-      </BranaShell>
+      <div className="brana-shell">
+        <BranaIconRail items={menuItems} activeKey={activeKey} onNavigate={() => {}} onSignOut={signOut} />
+        <BranaWorkspace
+          topbar={
+            <BranaActionTopbar
+              user={user}
+              onSignOut={signOut}
+              loading={loading}
+              onPlaceholderAction={() => {}}
+            />
+          }
+        >
+          <InicioPage />
+        </BranaWorkspace>
+      </div>
     );
   }
 

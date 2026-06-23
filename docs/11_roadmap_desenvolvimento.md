@@ -5310,3 +5310,15 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é implementar o refino do shell operacional sem novas APIs.
+
+## Implementacao do Shell Operacional Odontologico
+
+- O Shell Operacional Odontológico foi implementado no `frontend-react`.
+- A barra lateral estreita foi criada.
+- A toolbar superior horizontal foi criada.
+- A tela `Início` foi mantida como conteúdo autenticado.
+- As ações da nova barra superior seguem como placeholders.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar manualmente `/app`, `Sair` e o layout; depois criar contrato da tela `Pacientes` em modo somente leitura.

@@ -42,6 +42,10 @@
   min-height: 164px;
 }
 
+.inicio-access-card-compact {
+  min-height: 146px;
+}
+
 .inicio-access-icon {
   display: grid;
   place-items: center;
@@ -75,8 +79,42 @@
   border-bottom: 0;
 }
 
+.inicio-workspace-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(0, 167, 157, 0.08), rgba(0, 104, 56, 0.04)),
+    #ffffff;
+  border: 1px solid rgba(0, 123, 116, 0.14);
+  box-shadow: 0 10px 30px rgba(18, 63, 42, 0.05);
+}
+
+.inicio-strip-label {
+  display: block;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.inicio-strip-title {
+  margin-bottom: 0 !important;
+}
+
+.inicio-strip-action {
+  background: var(--brana-green);
+}
+
 @media (max-width: 768px) {
   .inicio-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .inicio-workspace-strip {
     align-items: flex-start;
     flex-direction: column;
   }

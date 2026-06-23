@@ -19,55 +19,167 @@ body {
   background:
     linear-gradient(180deg, rgba(29, 143, 95, 0.04), rgba(29, 143, 95, 0.01)),
     var(--brana-background);
+  display: grid;
+  grid-template-columns: 72px 1fr;
 }
 
-.brana-sidebar {
-  background: #ffffff !important;
-  border-right: 1px solid #e7efe9;
+.brana-icon-rail {
+  height: 100vh;
   position: sticky;
   top: 0;
-  height: 100vh;
-  overflow: auto;
-  box-shadow: 12px 0 30px rgba(17, 63, 42, 0.03);
-}
-
-.brana-sidebar-inner {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  height: 100%;
-  padding: 20px 16px;
-}
-
-.brana-brand {
-  padding: 8px 12px;
-}
-
-.brana-topbar {
-  background: #ffffff !important;
-  border-bottom: 1px solid #e7efe9;
-  display: flex;
   align-items: center;
-  padding: 0 24px !important;
-  height: 64px;
+  padding: 12px 0;
+  background:
+    linear-gradient(180deg, rgba(0, 167, 157, 0.09), rgba(0, 104, 56, 0.04)),
+    #ffffff;
+  border-right: 1px solid rgba(0, 123, 116, 0.12);
 }
 
-.brana-topbar-inner {
+.brana-icon-rail-brand {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 8px 0 18px;
+}
+
+.brana-icon-rail-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--brana-teal);
+  color: #fff;
+  font-weight: 800;
+}
+
+.brana-icon-rail-title {
+  font-size: 11px;
+  color: var(--brana-neutral-gray);
+}
+
+.brana-icon-rail-nav,
+.brana-icon-rail-footer {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+}
+
+.brana-icon-rail-nav {
+  flex: 1;
+}
+
+.brana-icon-rail-footer {
+  margin-top: auto;
+  padding-bottom: 6px;
+}
+
+.brana-icon-rail-button {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--brana-neutral-gray);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.brana-icon-rail-button:hover {
+  background: rgba(0, 167, 157, 0.09);
+  color: var(--brana-teal);
+  transform: translateY(-1px);
+}
+
+.brana-icon-rail-button.is-active {
+  background: linear-gradient(135deg, rgba(0, 167, 157, 0.18), rgba(0, 104, 56, 0.12));
+  color: var(--brana-green);
+  box-shadow: inset 0 0 0 1px rgba(0, 104, 56, 0.2);
+}
+
+.brana-icon-rail-button.is-signout {
+  color: var(--brana-support-teal);
+}
+
+.brana-icon-rail-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.brana-workspace {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brana-action-topbar {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.1fr) minmax(280px, 1.4fr) auto;
   gap: 16px;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(0, 123, 116, 0.12);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
 }
 
-.brana-topbar-subtitle {
+.brana-action-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.brana-action-topbar-kicker {
   display: block;
-  line-height: 1.2;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brana-action-topbar-title {
+  margin-bottom: 0 !important;
+}
+
+.brana-action-topbar-search {
+  max-width: 280px;
+}
+
+.brana-action-topbar-actions {
+  min-width: 0;
+}
+
+.brana-action-button {
+  border-color: rgba(0, 123, 116, 0.15);
+  color: var(--brana-text);
+}
+
+.brana-action-topbar-session {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.brana-action-topbar-user {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brana-content {
-  padding: 24px;
-  max-width: 1440px;
+  padding: 20px 22px 24px;
+  max-width: 1600px;
   width: 100%;
 }
 
@@ -92,4 +204,18 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--brana-text);
+}
+
+@media (max-width: 768px) {
+  .brana-shell {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .brana-action-topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .brana-content {
+    padding: 16px;
+  }
 }

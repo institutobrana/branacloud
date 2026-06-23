@@ -1,9 +1,10 @@
-import { Badge, Card, Col, Row, Space, Tag, Typography } from 'antd';
+import { Badge, Card, Col, Row, Space, Tag, Typography, Button } from 'antd';
 import {
   CalendarOutlined,
   DollarOutlined,
   ExperimentOutlined,
   MedicineBoxOutlined,
+  ArrowRightOutlined,
   SmileOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
@@ -72,10 +73,24 @@ export function InicioPage() {
         </Space>
       </Card>
 
-      <Row gutter={[16, 16]}>
+      <div className="inicio-workspace-strip">
+        <div>
+          <Typography.Text className="inicio-strip-label" type="secondary">
+            Espaço operacional
+          </Typography.Text>
+          <Typography.Title level={4} className="inicio-strip-title">
+            Acesso rápido aos módulos planejados
+          </Typography.Title>
+        </div>
+        <Button type="primary" icon={<ArrowRightOutlined />} className="inicio-strip-action">
+          Abrir painel
+        </Button>
+      </div>
+
+      <Row gutter={[12, 12]}>
         {accessCards.map((item) => (
           <Col xs={24} sm={12} lg={8} xl={4} key={item.title}>
-            <Card className="inicio-access-card" bordered={false}>
+            <Card className="inicio-access-card inicio-access-card-compact" bordered={false}>
               <div className="inicio-access-icon">{item.icon}</div>
               <Typography.Title level={4} className="inicio-access-title">
                 {item.title}
