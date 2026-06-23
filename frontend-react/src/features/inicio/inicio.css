@@ -39,23 +39,23 @@
 
 .inicio-access-card {
   height: 100%;
-  min-height: 164px;
+  min-height: 152px;
 }
 
 .inicio-access-card-compact {
-  min-height: 146px;
+  min-height: 136px;
 }
 
 .inicio-access-icon {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  margin-bottom: 14px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 12px;
+  border-radius: 11px;
   color: var(--brana-teal);
   background: rgba(0, 167, 157, 0.1);
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .inicio-access-title {
@@ -84,8 +84,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 18px 20px;
-  border-radius: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
   background:
     linear-gradient(135deg, rgba(0, 167, 157, 0.08), rgba(0, 104, 56, 0.04)),
     #ffffff;
@@ -97,7 +97,7 @@
   display: block;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .inicio-strip-title {
@@ -106,6 +106,7 @@
 
 .inicio-strip-action {
   background: var(--brana-green);
+  height: 30px;
 }
 
 @media (max-width: 768px) {

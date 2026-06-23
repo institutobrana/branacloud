@@ -24,9 +24,7 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
     <header className="brana-action-topbar">
       <div className="brana-action-topbar-left">
         <div className="brana-action-topbar-brand">
-          <Typography.Text className="brana-action-topbar-kicker">
-            Brana Cloud
-          </Typography.Text>
+          <Typography.Text className="brana-action-topbar-kicker">Brana Cloud</Typography.Text>
           <Typography.Title level={4} className="brana-action-topbar-title">
             Shell Operacional Odontológico
           </Typography.Title>
