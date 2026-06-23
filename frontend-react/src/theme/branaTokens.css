@@ -1,6 +1,14 @@
 :root {
-  --brana-primary: #1d8f5f;
+  --brana-teal: #00a79d;
+  --brana-green: #006838;
+  --brana-deep-green: #004b25;
+  --brana-gray: #939598;
+  --brana-neutral-gray: #808285;
+  --brana-support-teal: #007b74;
   --brana-surface: #ffffff;
-  --brana-background: #f4f8f5;
+  --brana-background: #f6f8f8;
   --brana-text: #163328;
+  --brana-neutral-gray-30: rgba(128, 130, 133, 0.3);
+  --brana-support-teal-30: rgba(0, 123, 116, 0.3);
+  --brana-deep-green-30: rgba(0, 75, 37, 0.3);
 }

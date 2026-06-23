@@ -5275,3 +5275,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa recomendada é implementar a tela `Início` autenticada.
+
+## Tokens da marca Brana
+
+- Os tokens visuais oficiais da marca Brana foram registrados no `frontend-react`.
+- A paleta oficial foi documentada.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa recomendada é implementar a tela `Início` autenticada usando os tokens oficiais.
