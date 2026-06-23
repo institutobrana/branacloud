@@ -1,7 +1,9 @@
-// Base preparada para a integração futura com o backend.
-// A API real será conectada em uma etapa posterior, após o shell e o login experimental.
-export const API_BASE_URL = '';
+const DEFAULT_API_BASE_URL = 'http://localhost:8000';
 
-export async function requestPlaceholder() {
-  return Promise.resolve({ ok: true, message: 'API placeholder only' });
+export const API_BASE_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
+  DEFAULT_API_BASE_URL;
+
+export function buildApiUrl(path) {
+  return `${API_BASE_URL}${path}`;
 }

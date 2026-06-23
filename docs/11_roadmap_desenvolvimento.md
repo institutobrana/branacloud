@@ -5233,3 +5233,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é repetir o teste manual de login real.
+
+## Correcao do Failed to fetch no login
+
+- O erro `Failed to fetch` no login foi tratado no `frontend-react` com base de API centralizada e mensagem mais clara de conexao.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é repetir o teste manual de login real em `http://localhost:5173/login`.

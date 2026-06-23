@@ -1,22 +1,29 @@
-const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8000';
-const API_BASE_URL =
-  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
-  DEFAULT_API_BASE_URL;
+import { buildApiUrl } from '../../services/api.js';
 
 async function requestJson(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, options);
+  let response;
+  try {
+    response = await fetch(buildApiUrl(path), options);
+  } catch (err) {
+    const error = new Error(`Falha de conexao com o servidor de autenticacao em ${buildApiUrl('/')}.`);
+    error.cause = err;
+    throw error;
+  }
+
   let data = null;
   try {
     data = await response.json();
   } catch {
     data = null;
   }
+
   if (!response.ok) {
-    const error = new Error((data && (data.detail || data.message)) || 'Falha na requisição de autenticação.');
+    const error = new Error((data && (data.detail || data.message)) || 'Falha na requisicao de autenticacao.');
     error.status = response.status;
     error.data = data;
     throw error;
   }
+
   return data;
 }
 
