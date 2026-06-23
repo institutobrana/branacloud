@@ -110,7 +110,7 @@ function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
   const [screen, setScreen] = useState(resolveScreenFromPath);
   const [railExpanded, setRailExpanded] = useState(false);
-  const [activeGroupKey, setActiveGroupKey] = useState(() => (resolveScreenFromPath() === 'pacientes' ? 'cadastro' : 'inicio'));
+  const [activeGroupKey, setActiveGroupKey] = useState(() => (resolveScreenFromPath() === 'pacientes' ? 'cadastro' : 'atendimento'));
   const [panelGroupKey, setPanelGroupKey] = useState('');
 
   useEffect(() => {
@@ -127,7 +127,7 @@ function AppContent() {
     setScreen(nextScreen);
     syncAppPath(nextScreen);
     if (nextScreen === 'inicio') {
-      setActiveGroupKey('inicio');
+      setActiveGroupKey('atendimento');
       setPanelGroupKey('');
       return;
     }
@@ -141,10 +141,6 @@ function AppContent() {
     if (!groupKey) return;
     setActiveGroupKey(groupKey);
     setPanelGroupKey(groupKey);
-    if (groupKey === 'inicio') {
-      setScreen('inicio');
-      syncAppPath('inicio');
-    }
   };
 
   const handleSelectMenuItem = async (groupKey, item) => {

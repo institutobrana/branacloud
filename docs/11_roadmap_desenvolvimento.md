@@ -5471,3 +5471,14 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o encaixe visual da logo e, se necessário, refinar apenas espaçamentos.
+
+## Ajuste de logo Brana e rail sem Início
+
+- A logo da topbar passou a usar `assets/brana.png`.
+- O bloco inicial da rail foi removido.
+- O item `Início` foi removido da rail.
+- O acesso ao `Início` foi mantido pelo botão `Dashboard` da toolbar superior.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o novo encaixe da rail e do workspace, e só depois seguir para refinamentos visuais finais.

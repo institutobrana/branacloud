@@ -4,7 +4,6 @@ import {
   DashboardOutlined,
   DollarOutlined,
   FileTextOutlined,
-  HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -26,21 +25,9 @@ export function BranaIconRail({
 }) {
   return (
     <aside className={`brana-icon-rail${expanded ? ' is-expanded' : ' is-collapsed'}`} aria-label="Navegação principal">
-      <Tooltip title="Brana Cloud Operacional" placement="right">
-        <button type="button" className="brana-icon-rail-brand" onClick={() => onNavigate?.('inicio')} aria-label="Ir para Início">
-          <div className="brana-icon-rail-mark">B</div>
-          {expanded ? (
-            <div className="brana-icon-rail-brand-copy">
-              <span>Brana Cloud</span>
-              <span>Operacional</span>
-            </div>
-          ) : null}
-        </button>
-      </Tooltip>
-
       <nav className="brana-icon-rail-nav">
         {(groups || []).map((group) => {
-          const active = group.key === activeGroupKey || (group.key === 'inicio' && activeKey === 'inicio');
+          const active = group.key === activeGroupKey;
           const button = (
             <button
               type="button"
@@ -90,7 +77,6 @@ export function BranaIconRail({
 }
 
 export const branaMainGroups = [
-  { key: 'inicio', label: 'Início', icon: <HomeOutlined /> },
   { key: 'atendimento', label: 'Atendimento', icon: <CalendarOutlined /> },
   { key: 'cadastro', label: 'Cadastro', icon: <UserOutlined /> },
   { key: 'financeiro', label: 'Financeiro', icon: <DollarOutlined /> },

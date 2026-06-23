@@ -15,7 +15,7 @@ import {
   UserAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import branaLogo from '../assets/logo_brana.png';
+import branaLogo from '../assets/brana.png';
 
 const toolbarGroups = [
   {
