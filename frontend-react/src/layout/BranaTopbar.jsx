@@ -13,7 +13,7 @@ export function BranaTopbar({ user, onSignOut, loading }) {
       </div>
       <Space size={12} align="center">
         <Typography.Text type="secondary">
-          {loading ? 'Validando sessao...' : displayName ? `Logado como ${displayName}` : 'Ambiente experimental isolado'}
+          {loading ? 'Validando sessão...' : displayName ? `Logado como ${displayName}` : 'Ambiente experimental isolado'}
         </Typography.Text>
         {onSignOut ? (
           <Button size="small" onClick={onSignOut} disabled={loading}>

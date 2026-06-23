@@ -13,9 +13,9 @@ import { branaTheme } from '../theme/branaTheme.js';
 import { BranaShell } from '../layout/BranaShell.jsx';
 import { BranaSidebar } from '../layout/BranaSidebar.jsx';
 import { BranaTopbar } from '../layout/BranaTopbar.jsx';
-import { HomePlaceholder } from '../features/home/HomePlaceholder.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
+import { InicioPage } from '../features/inicio/InicioPage.jsx';
 
 const menuItems = [
   { key: 'inicio', icon: <HomeOutlined />, label: 'Inicio' },
@@ -34,7 +34,7 @@ function isLoginRoute() {
 
 function isAppRoute() {
   const path = window.location.pathname || '/';
-  return path === '/' || path === '/app' || path === '';
+  return path === '/' || path === '/app' || path === '/app/inicio' || path === '';
 }
 
 function AppContent() {
@@ -43,7 +43,7 @@ function AppContent() {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
-        <Typography.Text type="secondary">Validando sessao...</Typography.Text>
+        <Typography.Text type="secondary">Validando sessão...</Typography.Text>
       </div>
     );
   }
@@ -67,7 +67,7 @@ function AppContent() {
         sidebar={<BranaSidebar menuItems={menuItems} />}
         topbar={<BranaTopbar user={user} onSignOut={signOut} loading={loading} />}
       >
-        <HomePlaceholder />
+        <InicioPage />
       </BranaShell>
     );
   }

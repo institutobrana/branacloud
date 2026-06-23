@@ -5284,3 +5284,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa recomendada é implementar a tela `Início` autenticada usando os tokens oficiais.
+
+## Primeira tela autenticada Início/Painel Inicial
+
+- A primeira tela autenticada `Início/Painel Inicial` foi implementada no `frontend-react`.
+- Os tokens oficiais da marca Brana foram utilizados.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar manualmente `/app` e logout; depois criar contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
