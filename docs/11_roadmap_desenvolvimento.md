@@ -5461,3 +5461,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o shell reorganizado e ajustar apenas detalhes de densidade, se necessário.
+
+## Ajuste de logo e cor lateral
+
+- A logo oficial `assets/logo_brana.png` foi copiada para o `frontend-react` e aplicada na topbar.
+- A busca de paciente foi reduzida para equilibrar a faixa superior.
+- A lateral passou a usar cor sólida baseada na marca, em `#16AAA1`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o encaixe visual da logo e, se necessário, refinar apenas espaçamentos.

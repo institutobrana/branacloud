@@ -15,6 +15,7 @@ import {
   UserAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import branaLogo from '../assets/logo_brana.png';
 
 const toolbarGroups = [
   {
@@ -77,10 +78,8 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
   return (
     <header className="brana-action-topbar">
       <div className="brana-action-topbar-brand">
-        <Typography.Text className="brana-action-topbar-kicker">Brana Cloud</Typography.Text>
-        <Typography.Title level={4} className="brana-action-topbar-title">
-          Shell Operacional Odontológico
-        </Typography.Title>
+        <img className="brana-action-topbar-logo" src={branaLogo} alt="Instituto Brana Odontologia" />
+        <Typography.Text className="brana-action-topbar-kicker">Shell Operacional Odontológico</Typography.Text>
       </div>
 
       <div className="brana-action-topbar-center">
