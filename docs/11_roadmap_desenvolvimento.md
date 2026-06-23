@@ -5372,3 +5372,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validação visual do usuário em `/app`.
+
+## Teste de paleta do shell operacional
+
+- A paleta do shell operacional foi testada com combinação mais equilibrada da marca Brana.
+- A lateral passou a usar `#006838` como base visual principal.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validação visual do usuário em `/app`.
