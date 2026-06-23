@@ -5391,3 +5391,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validacao visual da rail compacta em `/app`.
+
+## Auditoria do sistema odontologico de referencia
+
+- Foi registrada uma auditoria documental do sistema odontologico externo aberto como referencia visual e funcional.
+- O material serviu apenas para mapear shell, módulos e fluxo de alto nivel.
+- Nenhum codigo, asset ou credencial do sistema externo foi copiado.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é transformar o mapa observado em contrato de `Pacientes` em modo somente leitura.
