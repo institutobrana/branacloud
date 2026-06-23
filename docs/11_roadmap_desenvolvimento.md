@@ -5451,3 +5451,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o topo compacto e só então avançar para a próxima tela funcional.
+
+## Shell com topbar full-width
+
+- O shell do `frontend-react` foi reorganizado para que a topbar horizontal ocupe toda a largura no topo.
+- A rail lateral e o painel contextual passaram a iniciar abaixo da topbar.
+- O workspace foi corrigido para evitar compressão excessiva e quebra visual vertical.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o shell reorganizado e ajustar apenas detalhes de densidade, se necessário.

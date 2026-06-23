@@ -211,35 +211,38 @@ function AppContent() {
   if (isAppRoute()) {
     return (
       <div className="brana-shell" style={shellStyle}>
-        <BranaIconRail
-          activeKey={activeKey}
-          expanded={railExpanded}
-          groups={branaMainGroups}
-          activeGroupKey={activeGroupKey}
-          onNavigate={handleNavigate}
-          onOpenGroup={handleOpenGroup}
-          onToggleExpand={handleToggleExpand}
-          onSignOut={signOut}
-        />
-        <BranaContextPanel
-          group={panelGroup}
-          items={contextualMenus[panelGroupKey] || []}
-          onClose={() => setPanelGroupKey('')}
-          onSelectItem={handleSelectMenuItem}
-        />
-        <BranaWorkspace
-          topbar={
-            <BranaActionTopbar
-              user={user}
-              onSignOut={signOut}
-              loading={loading}
-              onPlaceholderAction={handleToolbarAction}
-              onUserMenuAction={handleUserMenuAction}
-            />
-          }
+        <div className="brana-shell-topbar">
+          <BranaActionTopbar
+            user={user}
+            onSignOut={signOut}
+            loading={loading}
+            onPlaceholderAction={handleToolbarAction}
+            onUserMenuAction={handleUserMenuAction}
+          />
+        </div>
+
+        <div
+          className={`brana-shell-body${panelGroup ? ' has-panel' : ''}`}
+          onMouseLeave={() => setPanelGroupKey('')}
         >
-          {activePage}
-        </BranaWorkspace>
+          <BranaIconRail
+            activeKey={activeKey}
+            expanded={railExpanded}
+            groups={branaMainGroups}
+            activeGroupKey={activeGroupKey}
+            onNavigate={handleNavigate}
+            onOpenGroup={handleOpenGroup}
+            onToggleExpand={handleToggleExpand}
+            onSignOut={signOut}
+          />
+          <BranaContextPanel
+            group={panelGroup}
+            items={contextualMenus[panelGroupKey] || []}
+            onClose={() => setPanelGroupKey('')}
+            onSelectItem={handleSelectMenuItem}
+          />
+          <BranaWorkspace>{activePage}</BranaWorkspace>
+        </div>
       </div>
     );
   }

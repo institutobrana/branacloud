@@ -1,7 +1,6 @@
-export function BranaWorkspace({ topbar, children }) {
+export function BranaWorkspace({ children }) {
   return (
     <section className="brana-workspace">
-      {topbar}
       <main className="brana-workspace-content">{children}</main>
     </section>
   );
