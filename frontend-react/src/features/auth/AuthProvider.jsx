@@ -10,7 +10,20 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const syncSession = async (nextToken = getToken()) => {
+  const formatSessionError = (err) => {
+    if (err?.status === 401) {
+      return 'Login aceito, mas a sessao nao foi validada pelo backend (401).';
+    }
+    if (err?.status === 403) {
+      return 'Login aceito, mas o backend negou a validacao da sessao (403).';
+    }
+    if (err?.message) {
+      return err.message;
+    }
+    return 'Sessao invalida.';
+  };
+
+  const syncSession = async (nextToken = getToken(), { preserveTokenOnFailure = false } = {}) => {
     if (!nextToken) {
       setUser(null);
       setTokenState('');
@@ -28,9 +41,14 @@ export function AuthProvider({ children }) {
       return me;
     } catch (err) {
       setUser(null);
-      setTokenState('');
-      clearToken();
-      setError(err?.message || 'Sessão inválida.');
+      if (preserveTokenOnFailure) {
+        setTokenState(nextToken);
+        setToken(nextToken);
+      } else {
+        setTokenState('');
+        clearToken();
+      }
+      setError(formatSessionError(err));
       return null;
     } finally {
       setLoading(false);
@@ -44,21 +62,33 @@ export function AuthProvider({ children }) {
   const signIn = async (credentials) => {
     setLoading(true);
     setError('');
+    let accessToken = '';
     try {
-      const { accessToken } = await loginRequest(credentials);
+      const loginResult = await loginRequest(credentials);
+      accessToken = loginResult?.accessToken || '';
       if (!accessToken) {
         throw new Error('Token de acesso não retornado pelo backend.');
       }
       setToken(accessToken);
       setTokenState(accessToken);
-      const me = await syncSession(accessToken);
-      if (!me) {
-        throw new Error('Não foi possível validar a sessão após o login.');
+      try {
+        const me = await getMe(accessToken);
+        setUser(me);
+        setError('');
+        return me;
+      } catch (meError) {
+        const sessionMessage = formatSessionError(meError);
+        setUser(null);
+        setTokenState(accessToken);
+        setToken(accessToken);
+        setError(sessionMessage);
+        throw new Error(sessionMessage);
       }
-      return me;
     } catch (err) {
-      clearToken();
-      setTokenState('');
+      if (!accessToken) {
+        clearToken();
+        setTokenState('');
+      }
       setUser(null);
       setError(err?.message || 'Falha ao autenticar.');
       throw err;

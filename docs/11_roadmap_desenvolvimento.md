@@ -5225,3 +5225,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é corrigir apenas o bloqueio específico no `frontend-react` se ele reaparecer em nova tentativa, ou concluir a validação completa quando uma credencial real estiver disponível.
+
+## Correção da validação de sessão apos login
+
+- A validacao de sessao apos login foi ajustada no `frontend-react` para diferenciar melhor o resultado de `POST /login` e `GET /me`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é repetir o teste manual de login real.
