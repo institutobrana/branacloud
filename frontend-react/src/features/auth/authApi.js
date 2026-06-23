@@ -5,7 +5,7 @@ async function requestJson(path, options = {}) {
   try {
     response = await fetch(buildApiUrl(path), options);
   } catch (err) {
-    const error = new Error(`Falha de conexao com o servidor de autenticacao em ${buildApiUrl('/')}.`);
+    const error = new Error(`Falha de conexao com o servidor de autenticacao em ${buildApiUrl('/login')}.`);
     error.cause = err;
     throw error;
   }
@@ -18,7 +18,11 @@ async function requestJson(path, options = {}) {
   }
 
   if (!response.ok) {
-    const error = new Error((data && (data.detail || data.message)) || 'Falha na requisicao de autenticacao.');
+    const fallbackMessage =
+      response.status === 401 || response.status === 400
+        ? 'Credenciais invalidas ou login recusado.'
+        : 'Falha na requisicao de autenticacao.';
+    const error = new Error((data && (data.detail || data.message)) || fallbackMessage);
     error.status = response.status;
     error.data = data;
     throw error;

@@ -5241,3 +5241,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é repetir o teste manual de login real em `http://localhost:5173/login`.
+
+## Correcao da URL do login auth
+
+- A montagem da URL do `POST /login` foi normalizada no `frontend-react` para evitar raiz solta ou barra duplicada.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é repetir o teste manual de login real em `http://localhost:5173/login`.

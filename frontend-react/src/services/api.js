@@ -5,5 +5,7 @@ export const API_BASE_URL =
   DEFAULT_API_BASE_URL;
 
 export function buildApiUrl(path) {
-  return `${API_BASE_URL}${path}`;
+  const base = String(API_BASE_URL || '').replace(/\/+$/, '');
+  const normalizedPath = `/${String(path || '').replace(/^\/+/, '')}`;
+  return `${base}${normalizedPath}`;
 }
