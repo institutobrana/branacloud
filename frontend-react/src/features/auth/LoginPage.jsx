@@ -37,10 +37,10 @@ export function LoginPage() {
             <div>
               <Typography.Text className="login-experiment-brand">Brana Cloud</Typography.Text>
               <Typography.Title level={2} className="login-experiment-title">
-                Sistema odontológico em nuvem
+                Sistema odontologico em nuvem
               </Typography.Title>
               <Typography.Paragraph type="secondary" className="login-experiment-subtitle">
-                Tela experimental do novo frontend React. Autenticação real ainda não conectada.
+                Tela experimental do novo frontend React.
               </Typography.Paragraph>
             </div>
 

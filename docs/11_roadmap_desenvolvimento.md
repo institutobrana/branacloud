@@ -5257,3 +5257,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é repetir o teste manual de login real e validar `POST /api/login` e `GET /api/me` no Network.
+
+## Validacao final do login real
+
+- O login real foi validado no `frontend-react` e a area experimental abriu com sucesso.
+- A protecao simples de sessao entre `/login` e `/app` foi criada.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é criar o contrato da primeira tela piloto autenticada.
