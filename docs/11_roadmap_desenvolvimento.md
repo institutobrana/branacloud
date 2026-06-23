@@ -5196,3 +5196,10 @@ Observacoes:
 - O login real ainda nao foi implementado no novo frontend.
 - O frontend legado segue preservado como referencia.
 - A proxima etapa sugerida e criar a tela visual de login experimental conforme o contrato documentado.
+
+## Login visual experimental
+
+- A tela visual de login experimental foi criada no `frontend-react\`.
+- A autenticação real ainda não está conectada.
+- O frontend legado foi preservado.
+- A próxima etapa sugerida é implementar `AuthProvider` ou `SessionProvider` e `authApi.js` conforme o contrato de autenticação.
