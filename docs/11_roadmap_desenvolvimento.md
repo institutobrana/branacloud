@@ -5177,3 +5177,9 @@ Observacoes:
 - Foi registrada a decisao de iniciar o planejamento do novo frontend do Brana Cloude em React + Vite + Ant Design.
 - O frontend atual em `frontend\` segue preservado como base legada enquanto a migracao nao for validada.
 - A proxima etapa recomendada e criar a pasta `frontend-react\` de forma isolada, com escopo pequeno e documentacao propria.
+
+## Criacao inicial do frontend React
+
+- A pasta isolada `frontend-react\` foi criada com esqueleto inicial em React + Vite + Ant Design.
+- O frontend legado em `frontend\` segue preservado.
+- A proxima etapa sugerida e validar a execucao local e depois criar a tela de login experimental ou um shell de navegacao mais completo.

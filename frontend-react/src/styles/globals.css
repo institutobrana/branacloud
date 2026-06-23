@@ -1,0 +1,59 @@
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--brana-background);
+}
+
+body {
+  color: var(--brana-text);
+}
+
+.brana-sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid #e7efe9;
+}
+
+.brana-sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+  padding: 20px 16px;
+}
+
+.brana-brand {
+  padding: 8px 12px;
+}
+
+.brana-topbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e7efe9;
+  display: flex;
+  align-items: center;
+  padding: 0 24px !important;
+}
+
+.brana-topbar-inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.brana-content {
+  padding: 24px;
+}
+
+.brana-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brana-card {
+  box-shadow: 0 10px 30px rgba(18, 63, 42, 0.06);
+}
