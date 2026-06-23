@@ -5362,3 +5362,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validação visual do usuário em `/app`.
+
+## Ajuste de cores CMYK da lateral do shell operacional
+
+- A lateral do shell operacional recebeu ajuste de cor solicitado pelo usuário.
+- A barra lateral foi alinhada ao tom `#0B5006`.
+- Os ícones e botões laterais foram alinhados ao tom `#666666`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validação visual do usuário em `/app`.
