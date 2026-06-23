@@ -155,6 +155,18 @@ function AppContent() {
     message.info('Funcionalidade em breve.');
   };
 
+  const handleToolbarAction = async (actionKey) => {
+    if (actionKey === 'dashboard') {
+      handleNavigate('inicio');
+      return;
+    }
+    if (actionKey === 'cadastro-pacientes') {
+      handleNavigate('pacientes');
+      return;
+    }
+    message.info('Funcionalidade em breve.');
+  };
+
   const handleUserMenuAction = async () => {
     message.info('Funcionalidade em breve.');
   };
@@ -221,7 +233,7 @@ function AppContent() {
               user={user}
               onSignOut={signOut}
               loading={loading}
-              onPlaceholderAction={() => {}}
+              onPlaceholderAction={handleToolbarAction}
               onUserMenuAction={handleUserMenuAction}
             />
           }

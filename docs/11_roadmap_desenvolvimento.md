@@ -5441,3 +5441,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validação visual final do shell contextual e, só então, seguir para a próxima frente funcional.
+
+## Toolbar horizontal operacional
+
+- A barra superior horizontal do `frontend-react` foi reorganizada em grupos de ações com ícones e separadores visuais.
+- A busca por paciente ficou posicionada após os grupos operacionais.
+- O menu do usuário permanece com ações de conta e logout.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o topo compacto e só então avançar para a próxima tela funcional.
