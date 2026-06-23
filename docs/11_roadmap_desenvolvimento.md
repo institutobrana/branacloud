@@ -5301,3 +5301,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é criar o contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
+
+## Shell Operacional Odontológico
+
+- O contrato do `Shell Operacional Odontológico` foi criado para orientar o refino visual do `frontend-react`.
+- A decisão visual consolidada aponta para toolbar lateral estreita + toolbar superior horizontal.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é implementar o refino do shell operacional sem novas APIs.
