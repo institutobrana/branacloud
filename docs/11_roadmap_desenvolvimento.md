@@ -5401,3 +5401,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é transformar o mapa observado em contrato de `Pacientes` em modo somente leitura.
+
+## Contrato de Pacientes somente leitura
+
+- O contrato da primeira tela real do `frontend-react` foi definido para a tela `Pacientes` em modo somente leitura.
+- A leitura técnica confirmou que o backend atual já possui endpoints de pacientes.
+- O frontend legado também já consome pacientes em múltiplos pontos.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é implementar a tela `Pacientes` somente leitura usando apenas os endpoints já confirmados.
