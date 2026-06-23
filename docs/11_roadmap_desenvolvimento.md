@@ -5171,3 +5171,9 @@ Observacoes:
 - O fallback da toolbar antiga foi preservado como estrategia de reversao.
 - Falta fechar a validacao funcional completa em sessao autenticada no navegador do usuario antes de expandir para a segunda onda.
 - O inventario de residuos antigos da toolbar foi registrado em `docs/inventario_remocao_toolbar_legado_brana_cloude.md` para orientar a limpeza por etapas.
+
+## Planejamento do novo frontend
+
+- Foi registrada a decisao de iniciar o planejamento do novo frontend do Brana Cloude em React + Vite + Ant Design.
+- O frontend atual em `frontend\` segue preservado como base legada enquanto a migracao nao for validada.
+- A proxima etapa recomendada e criar a pasta `frontend-react\` de forma isolada, com escopo pequeno e documentacao propria.
