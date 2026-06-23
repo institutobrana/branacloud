@@ -404,6 +404,10 @@ body {
   justify-content: flex-end;
   white-space: nowrap;
   min-width: max-content;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
 }
 
 .brana-action-topbar-user {

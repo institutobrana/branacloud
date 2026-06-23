@@ -5431,3 +5431,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a rail expandida/recolhida e o painel contextual.
+
+## Menu lateral por grupos e submenus
+
+- O shell do `frontend-react` foi ajustado para o padrão de grupos principais e painel contextual branco.
+- O menu do usuário no topo agora oferece preferências, alteração de senha, opções da conta e logout.
+- A tela `Pacientes` continua acessível em `Cadastro -> Pacientes`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validação visual final do shell contextual e, só então, seguir para a próxima frente funcional.

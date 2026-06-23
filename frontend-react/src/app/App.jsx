@@ -12,10 +12,11 @@ import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 
 const contextualMenus = {
   atendimento: [
-    { key: 'agenda', label: 'Agenda', hint: 'em breve', disabled: true },
-    { key: 'novo-atendimento', label: 'Novo atendimento', hint: 'em breve', disabled: true },
-    { key: 'timeline', label: 'Timeline do paciente', hint: 'em breve', disabled: true },
-    { key: 'tratamentos-gerenciar', label: 'Gerenciar tratamentos', hint: 'em breve', disabled: true },
+    { key: 'agenda-semanal', label: 'Agenda semanal', hint: 'em breve', disabled: true },
+    { key: 'agenda-diaria', label: 'Agenda diária', hint: 'em breve', disabled: true },
+    { key: 'timeline-paciente', label: 'Timeline do paciente', hint: 'em breve', disabled: true },
+    { key: 'retornos', label: 'Controle de retornos', hint: 'em breve', disabled: true },
+    { key: 'gerenciar-tratamentos', label: 'Gerenciar tratamentos', hint: 'em breve', disabled: true },
     { key: 'ficha-clinica', label: 'Ficha clínica', hint: 'em breve', disabled: true },
     { key: 'ficha-anamnese', label: 'Ficha de anamnese', hint: 'em breve', disabled: true },
     { key: 'documentos', label: 'Documentos', hint: 'em breve', disabled: true },
@@ -25,42 +26,61 @@ const contextualMenus = {
     { key: 'convenios', label: 'Convênios atendidos', hint: 'em breve', disabled: true },
     { key: 'corpo-clinico', label: 'Corpo clínico', hint: 'em breve', disabled: true },
     { key: 'fornecedores', label: 'Fornecedores', hint: 'em breve', disabled: true },
-    { key: 'unidades', label: 'Unidades de atendimento', hint: 'em breve', disabled: true },
   ],
   financeiro: [
-    { key: 'recebimentos', label: 'Recebimentos', hint: 'em breve', disabled: true },
+    { key: 'contas-receber', label: 'Contas a receber', hint: 'em breve', disabled: true },
     { key: 'contas-pagar', label: 'Contas a pagar', hint: 'em breve', disabled: true },
-    { key: 'caixa', label: 'Caixa', hint: 'em breve', disabled: true },
-    { key: 'formas-pagamento', label: 'Formas de pagamento', hint: 'em breve', disabled: true },
-    { key: 'relatorios-financeiros', label: 'Relatórios financeiros', hint: 'em breve', disabled: true },
+    { key: 'gerenciar-recibos', label: 'Gerenciar recibos', hint: 'em breve', disabled: true },
+    { key: 'controle-estoque', label: 'Controle de estoque', hint: 'em breve', disabled: true },
+    { key: 'fluxo-caixa', label: 'Fluxo de caixa', hint: 'em breve', disabled: true },
+    { key: 'recebiveis-digitais', label: 'Recebíveis digitais', hint: 'em breve', disabled: true },
+    { key: 'faturamento-convenio', label: 'Faturamento de convênio', hint: 'em breve', disabled: true },
+    { key: 'servicos-proteticos', label: 'Serviços protéticos', hint: 'em breve', disabled: true },
   ],
   tabelas: [
     { key: 'procedimentos', label: 'Procedimentos', hint: 'em breve', disabled: true },
-    { key: 'indices-financeiros', label: 'Índices financeiros', hint: 'em breve', disabled: true },
-    { key: 'convenios', label: 'Convênios', hint: 'em breve', disabled: true },
-    { key: 'materiais', label: 'Materiais', hint: 'em breve', disabled: true },
-    { key: 'bancos', label: 'Bancos', hint: 'em breve', disabled: true },
+    { key: 'procedimentos-genericos', label: 'Procedimentos genéricos', hint: 'em breve', disabled: true },
+    { key: 'materiais-estoque', label: 'Materiais de estoque', hint: 'em breve', disabled: true },
+    { key: 'medicamentos', label: 'Medicamentos', hint: 'em breve', disabled: true },
+    { key: 'servicos-protese', label: 'Serviços de prótese', hint: 'em breve', disabled: true },
+    { key: 'doencas-cid', label: 'Doenças (CID)', hint: 'em breve', disabled: true },
   ],
   relatorios: [
-    { key: 'relatorios-clinicos', label: 'Relatórios clínicos', hint: 'em breve', disabled: true },
-    { key: 'relatorios-financeiros', label: 'Relatórios financeiros', hint: 'em breve', disabled: true },
-    { key: 'relatorios-estatisticos', label: 'Relatórios estatísticos', hint: 'em breve', disabled: true },
-    { key: 'documentos-relatorios', label: 'Documentos', hint: 'em breve', disabled: true },
+    { key: 'favoritos', label: 'Favoritos', hint: 'em breve', disabled: true },
+    { key: 'relatorios-pacientes', label: 'Pacientes', hint: 'em breve', disabled: true },
+    { key: 'relatorios-atendimentos', label: 'Atendimentos', hint: 'em breve', disabled: true },
+    { key: 'relatorios-tabelas', label: 'Tabelas', hint: 'em breve', disabled: true },
+    { key: 'relatorios-financeiros', label: 'Financeiros', hint: 'em breve', disabled: true },
+    { key: 'relatorios-estoque', label: 'Estoque', hint: 'em breve', disabled: true },
+    { key: 'relatorios-gerenciais', label: 'Gerenciais', hint: 'em breve', disabled: true },
   ],
   configuracao: [
-    { key: 'usuarios', label: 'Usuários', hint: 'em breve', disabled: true },
-    { key: 'permissoes', label: 'Permissões', hint: 'em breve', disabled: true },
-    { key: 'preferencias', label: 'Preferências', hint: 'em breve', disabled: true },
-    { key: 'parametros', label: 'Parâmetros do sistema', hint: 'em breve', disabled: true },
+    { key: 'usuarios', label: 'Usuários do sistema', hint: 'em breve', disabled: true },
+    { key: 'perfis-usuario', label: 'Perfis de usuário', hint: 'em breve', disabled: true },
+    { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares', hint: 'em breve', disabled: true },
+    { key: 'plano-contas', label: 'Plano de contas', hint: 'em breve', disabled: true },
+    { key: 'agendas', label: 'Agendas', hint: 'em breve', disabled: true },
+    { key: 'questionarios-anamnese', label: 'Questionários de anamnese', hint: 'em breve', disabled: true },
+    { key: 'unidades-atendimento', label: 'Unidades de atendimento', hint: 'em breve', disabled: true },
+    { key: 'campos-livres', label: 'Campos livres', hint: 'em breve', disabled: true },
+    { key: 'taxas-cobranca', label: 'Taxas de cobrança', hint: 'em breve', disabled: true },
+    { key: 'contas-bancarias', label: 'Contas bancárias', hint: 'em breve', disabled: true },
   ],
   ferramentas: [
-    { key: 'importacoes', label: 'Importações', hint: 'em breve', disabled: true },
-    { key: 'utilitarios', label: 'Utilitários', hint: 'em breve', disabled: true },
-    { key: 'manutencao', label: 'Manutenção', hint: 'em breve', disabled: true },
+    { key: 'dashboard', label: 'Dashboard', hint: 'em breve', disabled: true },
+    { key: 'editor-textos', label: 'Editor de textos', hint: 'em breve', disabled: true },
+    { key: 'mala-direta', label: 'Mala direta', hint: 'em breve', disabled: true },
+    { key: 'mensagens-enviadas', label: 'Mensagens enviadas', hint: 'em breve', disabled: true },
+    { key: 'assinatura-eletronica', label: 'Assinatura eletrônica', hint: 'em breve', disabled: true },
+    { key: 'gerenciar-avisos', label: 'Gerenciar avisos', hint: 'em breve', disabled: true },
+    { key: 'orientacao-paciente', label: 'Orientação ao paciente', hint: 'em breve', disabled: true },
+    { key: 'exportacao-dados', label: 'Exportação de dados', hint: 'em breve', disabled: true },
+    { key: 'trilha-auditoria', label: 'Trilha de auditoria', hint: 'em breve', disabled: true },
+    { key: 'crm-vendas', label: 'CRM de vendas', hint: 'em breve', disabled: true },
   ],
   ajuda: [
-    { key: 'suporte', label: 'Suporte', hint: 'em breve', disabled: true },
-    { key: 'sobre', label: 'Sobre o Brana Cloud', hint: 'em breve', disabled: true },
+    { key: 'videos-tutoriais', label: 'Vídeos tutoriais', hint: 'em breve', disabled: true },
+    { key: 'treinamentos-online', label: 'Treinamentos on-line', hint: 'em breve', disabled: true },
   ],
   inicio: [],
 };
@@ -108,7 +128,7 @@ function AppContent() {
     syncAppPath(nextScreen);
     if (nextScreen === 'inicio') {
       setActiveGroupKey('inicio');
-      setPanelGroupKey('inicio');
+      setPanelGroupKey('');
       return;
     }
     if (nextScreen === 'pacientes') {
@@ -132,6 +152,10 @@ function AppContent() {
       handleNavigate('pacientes');
       return;
     }
+    message.info('Funcionalidade em breve.');
+  };
+
+  const handleUserMenuAction = async () => {
     message.info('Funcionalidade em breve.');
   };
 
@@ -198,6 +222,7 @@ function AppContent() {
               onSignOut={signOut}
               loading={loading}
               onPlaceholderAction={() => {}}
+              onUserMenuAction={handleUserMenuAction}
             />
           }
         >

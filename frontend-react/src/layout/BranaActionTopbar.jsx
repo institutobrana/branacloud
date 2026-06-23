@@ -1,4 +1,4 @@
-import { Button, Input, Space, Typography, Tooltip } from 'antd';
+import { Button, Dropdown, Input, Space, Typography, Tooltip } from 'antd';
 import {
   CalendarOutlined,
   DollarOutlined,
@@ -17,8 +17,15 @@ const quickActions = [
   { key: 'documentos', label: 'Relatórios/Documentos', icon: <FileTextOutlined /> },
 ];
 
-export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderAction }) {
+export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderAction, onUserMenuAction }) {
   const displayName = user?.apelido || user?.nome || user?.email || '';
+  const userMenuItems = [
+    { key: 'preferencias', label: 'Preferências' },
+    { key: 'alterar-senha', label: 'Alterar senha' },
+    { key: 'opcoes-conta', label: 'Opções da conta' },
+    { type: 'divider' },
+    { key: 'sair', label: 'Sair' },
+  ];
 
   return (
     <header className="brana-action-topbar">
@@ -60,14 +67,29 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
         </Space>
       </div>
 
-      <div className="brana-action-topbar-session">
-        <Typography.Text className="brana-action-topbar-user">
-          {loading ? 'Validando sessão...' : displayName ? `Logado como ${displayName}` : 'Sessão ativa'}
-        </Typography.Text>
-        <Button size="small" onClick={onSignOut} disabled={loading} className="brana-action-signout">
-          Sair
-        </Button>
-      </div>
+      <Dropdown
+        trigger={['click']}
+        placement="bottomRight"
+        menu={{
+          items: userMenuItems,
+          onClick: ({ key }) => {
+            if (key === 'sair') {
+              onSignOut?.();
+              return;
+            }
+            onUserMenuAction?.(key);
+          },
+        }}
+      >
+        <button type="button" className="brana-action-topbar-session" aria-label="Menu do usuário">
+          <Typography.Text className="brana-action-topbar-user">
+            {loading ? 'Validando sessão...' : displayName ? `Logado como ${displayName}` : 'Sessão ativa'}
+          </Typography.Text>
+          <Button size="small" disabled={loading} className="brana-action-signout">
+            Opções
+          </Button>
+        </button>
+      </Dropdown>
     </header>
   );
 }
