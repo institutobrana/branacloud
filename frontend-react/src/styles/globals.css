@@ -6,13 +6,29 @@ body,
   background: var(--brana-background);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   color: var(--brana-text);
+}
+
+.brana-shell {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(29, 143, 95, 0.04), rgba(29, 143, 95, 0.01)),
+    var(--brana-background);
 }
 
 .brana-sidebar {
   background: #ffffff !important;
   border-right: 1px solid #e7efe9;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  box-shadow: 12px 0 30px rgba(17, 63, 42, 0.03);
 }
 
 .brana-sidebar-inner {
@@ -33,27 +49,47 @@ body {
   display: flex;
   align-items: center;
   padding: 0 24px !important;
+  height: 64px;
 }
 
 .brana-topbar-inner {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   gap: 16px;
 }
 
+.brana-topbar-subtitle {
+  display: block;
+  line-height: 1.2;
+}
+
 .brana-content {
   padding: 24px;
+  max-width: 1440px;
+  width: 100%;
 }
 
 .brana-page-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
 }
 
 .brana-card {
   box-shadow: 0 10px 30px rgba(18, 63, 42, 0.06);
+}
+
+.brana-form-section {
+  display: grid;
+  gap: 12px;
+}
+
+.brana-form-section-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brana-text);
 }

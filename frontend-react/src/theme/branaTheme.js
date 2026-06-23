@@ -9,6 +9,8 @@ export const branaTheme = {
     fontFamily:
       'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     colorBgLayout: '#f4f8f5',
+    colorBgContainer: '#ffffff',
+    colorBorderSecondary: '#dfe9e3',
   },
   components: {
     Layout: {
@@ -20,5 +22,3 @@ export const branaTheme = {
     },
   },
 };
-
-export const branaThemeAlgorithm = theme.defaultAlgorithm;

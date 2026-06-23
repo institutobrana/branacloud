@@ -5183,3 +5183,9 @@ Observacoes:
 - A pasta isolada `frontend-react\` foi criada com esqueleto inicial em React + Vite + Ant Design.
 - O frontend legado em `frontend\` segue preservado.
 - A proxima etapa sugerida e validar a execucao local e depois criar a tela de login experimental ou um shell de navegacao mais completo.
+
+## Validacao do shell visual inicial
+
+- O shell visual inicial do `frontend-react\` foi refinado e validado.
+- O frontend-react continua isolado do frontend legado.
+- A proxima etapa sugerida e criar uma tela de login experimental sem autenticacao real ou preparar o contrato de integracao com o backend atual.

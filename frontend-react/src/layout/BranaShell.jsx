@@ -2,8 +2,8 @@ import { Layout } from 'antd';
 
 export function BranaShell({ sidebar, topbar, children }) {
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Layout.Sider width={260} breakpoint="lg" collapsible={false} className="brana-sidebar">
+    <Layout className="brana-shell">
+      <Layout.Sider width={272} breakpoint="lg" collapsible={false} className="brana-sidebar">
         {sidebar}
       </Layout.Sider>
       <Layout>
