@@ -5293,3 +5293,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar manualmente `/app` e logout; depois criar contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
+
+## Validacao manual de Início e logout
+
+- A validacao manual da tela `Início` e do logout foi registrada em documento proprio.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é criar o contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
