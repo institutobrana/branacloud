@@ -5203,3 +5203,10 @@ Observacoes:
 - A autenticação real ainda não está conectada.
 - O frontend legado foi preservado.
 - A próxima etapa sugerida é implementar `AuthProvider` ou `SessionProvider` e `authApi.js` conforme o contrato de autenticação.
+
+## AuthProvider inicial
+
+- A base real de autenticação do `frontend-react\` foi criada com `AuthProvider`, `authApi.js` e `authStorage.js`.
+- O frontend legado continua preservado.
+- O backend continua preservado.
+- A próxima etapa sugerida é a validação runtime do login React com usuário real em ambiente local.

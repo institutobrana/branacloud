@@ -1,19 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Checkbox, Form, Input, Space, Typography, message } from 'antd';
 import { LockOutlined, MailOutlined, LoginOutlined } from '@ant-design/icons';
 
+import { useAuth } from './useAuth.js';
 import './login.css';
 
 export function LoginPage() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const { signIn, isAuthenticated, loading: authLoading, error, clearError } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      window.location.replace('/app');
+    }
+  }, [isAuthenticated]);
 
   const handleFinish = async (values) => {
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 120));
-      message.success('Login visual validado. Integração real será feita em etapa posterior.');
-      form.setFieldsValue({ senha: values.senha });
+      await signIn(values);
+      message.success('Login realizado com sucesso.');
+      window.location.replace('/app');
+    } catch (err) {
+      message.error(err?.message || error || 'Falha ao autenticar.');
     } finally {
       setLoading(false);
     }
@@ -47,6 +57,17 @@ export function LoginPage() {
               requiredMark={false}
               className="login-experiment-form"
             >
+              {error ? (
+                <Alert
+                  type="error"
+                  showIcon
+                  message={error}
+                  className="login-experiment-error"
+                  closable
+                  onClose={clearError}
+                />
+              ) : null}
+
               <Form.Item
                 label="E-mail"
                 name="email"
@@ -82,7 +103,7 @@ export function LoginPage() {
                   type="primary"
                   htmlType="submit"
                   icon={<LoginOutlined />}
-                  loading={loading}
+                  loading={loading || authLoading}
                   block
                   size="large"
                 >
