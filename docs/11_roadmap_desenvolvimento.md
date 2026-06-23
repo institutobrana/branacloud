@@ -5266,3 +5266,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é criar o contrato da primeira tela piloto autenticada.
+
+## Contrato da primeira tela piloto autenticada
+
+- O contrato da primeira tela piloto autenticada foi criado.
+- A tela escolhida é `Início / Painel Inicial`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa recomendada é implementar a tela `Início` autenticada.
