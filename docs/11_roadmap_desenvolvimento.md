@@ -5806,3 +5806,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o novo aperto em `/app`.
+
+## Redesenho campo a campo do modal de Preferências
+
+- O modal Preferências foi redesenhado campo a campo com base nos prints do EasyDental.
+- A aba NFS-e passou a exibir campos visuais reais da referência.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o modal redesenhado em `/app`.
