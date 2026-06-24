@@ -5844,3 +5844,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é comparar novamente com o print e repetir o mesmo padrão de refinamento nas demais abas, se necessário.
+
+## Refino da faixa inferior e grade do modal Preferências
+
+- O modal Preferências recebeu faixa inferior fixa cinza e ajustes na grade clássica da aba Geral.
+- As tabs ficaram menos arredondadas e o avatar ganhou encaixe visual melhor.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a nova faixa inferior e comparar os campos da aba Geral com os prints de referência.
