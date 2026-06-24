@@ -5575,3 +5575,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar no navegador a leitura final da faixa e do encaixe lateral.
+
+## Refino do miolo do Quadro de avisos
+
+- A saudação do `frontend-react` foi compactada para ficar mais próxima do EasyDental.
+- Os avisos passaram a aparecer como barras brancas separadas e mais densas.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a nova densidade do miolo esquerdo no navegador.

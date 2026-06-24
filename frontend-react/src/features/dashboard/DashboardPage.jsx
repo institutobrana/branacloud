@@ -107,7 +107,7 @@ export function DashboardPage() {
             <div className="dashboard-body-layout">
               <div className="dashboard-main">
                 <Card className="dashboard-greeting-card" bordered={false}>
-                  <Space direction="vertical" size={4} style={{ width: '100%' }}>
+                  <Space direction="vertical" size={2} style={{ width: '100%' }}>
                     <Typography.Text className="dashboard-greeting-label" type="secondary">
                       Olá
                     </Typography.Text>
@@ -119,29 +119,26 @@ export function DashboardPage() {
                   </Space>
                 </Card>
 
-                <Card className="dashboard-alerts-card" bordered={false}>
-                  <Space direction="vertical" size={0} style={{ width: '100%' }}>
-                    {avisos.map((item, index) => (
-                      <button key={item.key} type="button" className="dashboard-alert-row">
-                        <span className="dashboard-alert-left">
-                          <CaretRightOutlined className="dashboard-alert-chevron" />
-                          <span className="dashboard-alert-icon">{item.icon}</span>
-                          <span className="dashboard-alert-label">{replaceUser(item.label)}</span>
+                <div className="dashboard-alerts-stack">
+                  {avisos.map((item, index) => (
+                    <button key={item.key} type="button" className="dashboard-alert-row">
+                      <span className="dashboard-alert-left">
+                        <CaretRightOutlined className="dashboard-alert-chevron" />
+                        <span className="dashboard-alert-label">{replaceUser(item.label)}</span>
+                      </span>
+                      <span className="dashboard-alert-actions">
+                        <span className="dashboard-alert-action" aria-hidden="true">
+                          {item.action}
                         </span>
-                        <span className="dashboard-alert-actions">
-                          <span className="dashboard-alert-action" aria-hidden="true">
-                            {item.action}
-                          </span>
-                          {index % 2 === 0 ? (
-                            <ArrowDownOutlined className="dashboard-alert-expand" />
-                          ) : (
-                            <ArrowRightOutlined className="dashboard-alert-expand" />
-                          )}
-                        </span>
-                      </button>
-                    ))}
-                  </Space>
-                </Card>
+                        {index % 2 === 0 ? (
+                          <ArrowDownOutlined className="dashboard-alert-expand" />
+                        ) : (
+                          <ArrowRightOutlined className="dashboard-alert-expand" />
+                        )}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <aside className="dashboard-side">
