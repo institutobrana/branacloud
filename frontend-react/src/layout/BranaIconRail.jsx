@@ -1,14 +1,14 @@
 import { Tooltip } from 'antd';
 import {
   CalendarOutlined,
-  DashboardOutlined,
   DollarOutlined,
   FileTextOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
-  SmileOutlined,
-  TeamOutlined,
+  TableOutlined,
+  ToolOutlined,
+  CustomerServiceOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 
@@ -73,9 +73,9 @@ export const branaMainGroups = [
   { key: 'atendimento', label: 'Atendimento', icon: <CalendarOutlined /> },
   { key: 'cadastro', label: 'Cadastro', icon: <UserOutlined /> },
   { key: 'financeiro', label: 'Financeiro', icon: <DollarOutlined /> },
-  { key: 'tabelas', label: 'Tabelas', icon: <DashboardOutlined /> },
+  { key: 'tabelas', label: 'Tabelas', icon: <TableOutlined /> },
   { key: 'relatorios', label: 'Relatórios', icon: <FileTextOutlined /> },
   { key: 'configuracao', label: 'Configuração', icon: <SettingOutlined /> },
-  { key: 'ferramentas', label: 'Ferramentas', icon: <TeamOutlined /> },
-  { key: 'ajuda', label: 'Ajuda', icon: <SmileOutlined /> },
+  { key: 'ferramentas', label: 'Ferramentas', icon: <ToolOutlined /> },
+  { key: 'ajuda', label: 'Ajuda', icon: <CustomerServiceOutlined /> },
 ];

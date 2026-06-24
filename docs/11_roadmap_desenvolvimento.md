@@ -5698,3 +5698,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a rail lateral em `/app`.
+
+## Troca do desenho dos ícones da rail
+
+- Os ícones da rail lateral passaram a usar desenhos semanticamente mais próximos da referência EasyDental.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente os glyphs da rail em `/app`.
