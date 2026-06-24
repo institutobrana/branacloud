@@ -5853,3 +5853,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a nova faixa inferior e comparar os campos da aba Geral com os prints de referência.
+
+## Correção textual do modal Preferências
+
+- Os textos quebrados/mojibake do modal Preferências e dos documentos da frente foram corrigidos para português UTF-8.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é seguir apenas com ajustes visuais ou funcionais, se houver nova validação do usuário.

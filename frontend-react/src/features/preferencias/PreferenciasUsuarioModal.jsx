@@ -3,7 +3,7 @@ import { CameraOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons'
 import './preferenciasUsuario.css';
 
 const moduloAberturaOptions = [
-  'Agenda diÃ¡ria',
+  'Agenda diária',
   'Agenda por unidade',
   'Agenda semanal',
   'Cadastro de pacientes',
@@ -11,21 +11,21 @@ const moduloAberturaOptions = [
   'Contas a receber',
   'Controle de estoque',
   'Dashboard',
-  'Ficha clÃ­nica',
+  'Ficha clínica',
   'Fluxo de caixa',
   'Gerenciar tratamentos',
 ];
 
 const especialidadesOptions = [
   'Cirurgia',
-  'DentÃ­stica',
-  'DiagnÃ³stico',
-  'EmergÃªncia',
+  'Dentística',
+  'Diagnóstico',
+  'Emergência',
   'Endodontia',
   'Estomatologia',
-  'EstÃ©tica',
+  'Estética',
   'Gerais',
-  'HarmonizaÃ§Ã£o Orofacial',
+  'Harmonização Orofacial',
   'Implantodontia',
   'Odontologia Legal',
   'Odontopediatria',
@@ -62,7 +62,7 @@ function GeneralTab() {
           </div>
           <div className="preferencias-photo-strip">
             <Button icon={<CameraOutlined />} size="small" type="text">
-              CÃ¢mera
+              Câmera
             </Button>
             <Button icon={<UploadOutlined />} size="small" type="text">
               Upload
@@ -72,32 +72,32 @@ function GeneralTab() {
       </div>
 
       <div className="preferencias-general-form">
-        <ClassicFormRow label="ApresentaÃ§Ã£o:">
-          <Input.TextArea rows={3} defaultValue="ApresentaÃ§Ã£o ou CV resumido do profissional" />
+        <ClassicFormRow label="Apresentação:">
+          <Input.TextArea rows={3} defaultValue="Apresentação ou CV resumido do profissional" />
         </ClassicFormRow>
-        <ClassicFormRow label="Envio padrÃ£o para mensagens:">
+        <ClassicFormRow label="Envio padrão para mensagens:">
           <Select
             className="preferencias-select-wide"
             defaultValue="WhatsApp Web (apenas 1 envio)"
             options={[{ label: 'WhatsApp Web (apenas 1 envio)', value: 'WhatsApp Web (apenas 1 envio)' }]}
           />
         </ClassicFormRow>
-        <ClassicFormRow label="Conta bancÃ¡ria padrÃ£o:">
+        <ClassicFormRow label="Conta bancária padrão:">
           <Select
             className="preferencias-select-wide"
-            defaultValue="Conta padrÃ£o"
-            options={[{ label: 'Conta padrÃ£o', value: 'Conta padrÃ£o' }]}
+            defaultValue="Conta padrão"
+            options={[{ label: 'Conta padrão', value: 'Conta padrão' }]}
           />
         </ClassicFormRow>
-        <ClassicFormRow label="Estoque padrÃ£o:">
+        <ClassicFormRow label="Estoque padrão:">
           <Select
             className="preferencias-select-wide"
             allowClear
-            defaultValue="Estoque padrÃ£o"
-            options={[{ label: 'Estoque padrÃ£o', value: 'Estoque padrÃ£o' }]}
+            defaultValue="Estoque padrão"
+            options={[{ label: 'Estoque padrão', value: 'Estoque padrão' }]}
           />
         </ClassicFormRow>
-        <ClassicFormRow label="MÃ³dulo de abertura:">
+        <ClassicFormRow label="Módulo de abertura:">
           <Select
             className="preferencias-select-wide"
             allowClear
@@ -118,9 +118,9 @@ function ClinicalTab() {
           <div className="preferencias-specialty-line">
             <Select
               allowClear
-              defaultValue="Especialidade odontolÃ³gica"
+              defaultValue="Especialidade odontológica"
               options={[
-                { label: 'Especialidade odontolÃ³gica', value: 'Especialidade odontolÃ³gica' },
+                { label: 'Especialidade odontológica', value: 'Especialidade odontológica' },
                 ...especialidadesOptions.map((item) => ({ label: item, value: item })),
               ]}
             />
@@ -142,10 +142,10 @@ function ClinicalTab() {
 
       <div className="preferencias-clinical-checks">
         <div className="preferencias-form-row preferencias-checks-row">
-          <div className="preferencias-form-label">Ficha clÃ­nica:</div>
+          <div className="preferencias-form-label">Ficha clínica:</div>
           <div className="preferencias-form-field preferencias-checkbox-stack">
             <Checkbox defaultChecked>Abrir automaticamente painel de aceleradores</Checkbox>
-            <Checkbox>Solicitar assinatura eletrÃ´nica na finalizaÃ§Ã£o de procedimentos</Checkbox>
+            <Checkbox>Solicitar assinatura eletrônica na finalização de procedimentos</Checkbox>
           </div>
         </div>
       </div>
@@ -157,18 +157,18 @@ function BudgetTab() {
   return (
     <div className="preferencias-tab-content preferencias-classic-window">
       <div className="preferencias-general-form preferencias-budget-form">
-        <ClassicFormRow label="Modelo padrÃ£o de orÃ§amentos:">
+        <ClassicFormRow label="Modelo padrão de orçamentos:">
           <Select
             className="preferencias-select-wide"
-            defaultValue="OrÃ§amento com odontograma"
-            options={[{ label: 'OrÃ§amento com odontograma', value: 'OrÃ§amento com odontograma' }]}
+            defaultValue="Orçamento com odontograma"
+            options={[{ label: 'Orçamento com odontograma', value: 'Orçamento com odontograma' }]}
           />
         </ClassicFormRow>
-        <ClassicFormRow label="Mensagem para impressÃ£o:">
-          <Input.TextArea rows={2} defaultValue="Mensagem padrÃ£o para orÃ§amento impresso" />
+        <ClassicFormRow label="Mensagem para impressão:">
+          <Input.TextArea rows={2} defaultValue="Mensagem padrão para orçamento impresso" />
         </ClassicFormRow>
         <div className="preferencias-form-row preferencias-checks-row">
-          <div className="preferencias-form-label">Assinatura de orÃ§amento:</div>
+          <div className="preferencias-form-label">Assinatura de orçamento:</div>
           <div className="preferencias-form-field preferencias-checkbox-stack">
             <Checkbox defaultChecked>Apresentar CPF/CNPJ</Checkbox>
             <Checkbox defaultChecked>Apresentar CRO/UF</Checkbox>
@@ -182,23 +182,23 @@ function BudgetTab() {
 function NfseTab() {
   return (
     <div className="preferencias-tab-content preferencias-classic-window preferencias-nfse-form">
-      <ClassicFormRow label="CÃ³digo de cancelamento:">
-        <Input placeholder="CÃ³digo de cancelamento de NFS-e de sua prefeitura" />
+      <ClassicFormRow label="Código de cancelamento:">
+        <Input placeholder="Código de cancelamento de NFS-e de sua prefeitura" />
       </ClassicFormRow>
       <ClassicFormRow label="Motivo de cancelamento:">
         <Input placeholder="Informe o motivo para cancelamento da NFS-e" />
       </ClassicFormRow>
-      <ClassicFormRow label="Valor alÃ­quota ISS:">
+      <ClassicFormRow label="Valor alíquota ISS:">
         <Input type="number" suffix="%" />
       </ClassicFormRow>
-      <ClassicFormRow label="Valor de deduÃ§Ã£o:">
+      <ClassicFormRow label="Valor de dedução:">
         <Input type="number" suffix="%" />
       </ClassicFormRow>
       <ClassicFormRow label="Percentual sobre o valor bruto:">
         <Input type="number" suffix="%" />
       </ClassicFormRow>
       <Typography.Text className="preferencias-nfse-help" type="secondary">
-        Campos visuais do print de referÃªncia EasyDental.
+        Campos visuais do print de referência EasyDental.
       </Typography.Text>
     </div>
   );
@@ -209,13 +209,13 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
   const titleName = userName || 'Tel';
   const tabItems = [
     { key: 'geral', label: <PreferenciasTabLabel>Geral</PreferenciasTabLabel>, children: <GeneralTab /> },
-    { key: 'clinica', label: <PreferenciasTabLabel>Ficha clÃ­nica</PreferenciasTabLabel>, children: <ClinicalTab /> },
-    { key: 'orcamento', label: <PreferenciasTabLabel>OrÃ§amento</PreferenciasTabLabel>, children: <BudgetTab /> },
+    { key: 'clinica', label: <PreferenciasTabLabel>Ficha clínica</PreferenciasTabLabel>, children: <ClinicalTab /> },
+    { key: 'orcamento', label: <PreferenciasTabLabel>Orçamento</PreferenciasTabLabel>, children: <BudgetTab /> },
     { key: 'nfse', label: <PreferenciasTabLabel>NFS-e</PreferenciasTabLabel>, children: <NfseTab /> },
   ];
 
   const handleSave = () => {
-    messageApi.info('PersistÃªncia de preferÃªncias ainda nÃ£o implementada.');
+    messageApi.info('Persistência de preferências ainda não implementada.');
   };
 
   return (
@@ -230,7 +230,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         centered
         destroyOnClose
         maskClosable={false}
-        title={<span className="preferencias-classic-title">ConfiguraÃ§Ãµes e preferÃªncias de {titleName}</span>}
+        title={<span className="preferencias-classic-title">Configurações e preferências de {titleName}</span>}
         className="preferencias-modal"
       >
         <div className="preferencias-classic-window">
@@ -240,7 +240,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
             <div className="preferencias-footer">
               <Button onClick={onClose}>Cancelar</Button>
               <Button type="primary" onClick={handleSave}>
-                Gravar preferÃªncias
+                Gravar preferências
               </Button>
             </div>
           </div>
