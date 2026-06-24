@@ -5724,3 +5724,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a rail em `/app`.
+
+## Rail com icones semanticos prontos
+
+- A rail lateral do `frontend-react` passou a usar icones prontos e semanticos do `@ant-design/icons`.
+- Os SVGs locais da rail foram removidos.
+- A ordem dos grupos, o hover e o fechamento por mouseleave foram preservados.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a rail em `/app` e seguir apenas com ajustes finos, se necessários.

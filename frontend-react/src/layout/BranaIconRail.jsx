@@ -2,17 +2,15 @@ import { Tooltip } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  DollarOutlined,
+  FileTextOutlined,
+  CustomerServiceOutlined,
+  SettingOutlined,
+  TableOutlined,
+  TeamOutlined,
+  ToolOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-import {
-  RailDocumentsIcon,
-  RailGearIcon,
-  RailMoneyIcon,
-  RailPatientIcon,
-  RailSupportIcon,
-  RailToolsIcon,
-  RailUsersIcon,
-  RailFileIcon,
-} from './BranaRailIcons.jsx';
 
 export function BranaIconRail({
   activeKey,
@@ -72,12 +70,12 @@ export function BranaIconRail({
 }
 
 export const branaMainGroups = [
-  { key: 'atendimento', label: 'Atendimento', icon: <RailUsersIcon /> },
-  { key: 'cadastro', label: 'Cadastro', icon: <RailPatientIcon /> },
-  { key: 'financeiro', label: 'Financeiro', icon: <RailMoneyIcon /> },
-  { key: 'tabelas', label: 'Tabelas', icon: <RailDocumentsIcon /> },
-  { key: 'relatorios', label: 'Relatórios', icon: <RailFileIcon /> },
-  { key: 'configuracao', label: 'Configuração', icon: <RailGearIcon /> },
-  { key: 'ferramentas', label: 'Ferramentas', icon: <RailToolsIcon /> },
-  { key: 'ajuda', label: 'Ajuda', icon: <RailSupportIcon /> },
+  { key: 'atendimento', label: 'Atendimento', icon: <TeamOutlined /> },
+  { key: 'cadastro', label: 'Cadastro', icon: <UserOutlined /> },
+  { key: 'financeiro', label: 'Financeiro', icon: <DollarOutlined /> },
+  { key: 'tabelas', label: 'Tabelas', icon: <TableOutlined /> },
+  { key: 'relatorios', label: 'Relatórios', icon: <FileTextOutlined /> },
+  { key: 'configuracao', label: 'Configuração', icon: <SettingOutlined /> },
+  { key: 'ferramentas', label: 'Ferramentas', icon: <ToolOutlined /> },
+  { key: 'ajuda', label: 'Ajuda', icon: <CustomerServiceOutlined /> },
 ];
