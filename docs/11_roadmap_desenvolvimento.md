@@ -5744,3 +5744,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a topbar em `/app`.
+
+## Refino dos desenhos dos icones da topbar
+
+- A barra horizontal superior do `frontend-react` recebeu um segundo refinamento de desenho dos icones.
+- Alguns símbolos foram aproximados ainda mais da leitura semântica da referência visual enviada.
+- A ordem dos botões, os grupos e os separadores foram preservados.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a topbar em `/app`.

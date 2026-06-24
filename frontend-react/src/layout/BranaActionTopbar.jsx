@@ -1,9 +1,10 @@
 import { Button, Dropdown, Input, Space, Typography, Tooltip } from 'antd';
 import {
-  ApartmentOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
   DollarOutlined,
+  DollarCircleFilled,
+  FieldTimeOutlined,
   FileTextOutlined,
   HomeOutlined,
   InboxOutlined,
@@ -15,8 +16,10 @@ import {
   ShoppingCartOutlined,
   SnippetsOutlined,
   TransactionOutlined,
+  UsergroupAddOutlined,
   UserAddOutlined,
   UserOutlined,
+  RocketOutlined,
 } from '@ant-design/icons';
 import branaLogo from '../assets/brana.png';
 
@@ -26,8 +29,8 @@ const toolbarGroups = [
     items: [
       { key: 'dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
       { key: 'agenda', label: 'Agenda', icon: <CalendarOutlined /> },
-      { key: 'proximo-agendado', label: 'Próximo agendado', icon: <ClockCircleOutlined /> },
-      { key: 'cadastro-pacientes', label: 'Cadastro de pacientes', icon: <UserOutlined /> },
+      { key: 'proximo-agendado', label: 'Próximo agendado', icon: <FieldTimeOutlined /> },
+      { key: 'cadastro-pacientes', label: 'Cadastro de pacientes', icon: <UsergroupAddOutlined /> },
       { key: 'novo-paciente', label: 'Novo paciente', icon: <UserAddOutlined /> },
       { key: 'anamnese', label: 'Anamnese', icon: <SnippetsOutlined /> },
       { key: 'ficha-clinica', label: 'Ficha clínica', icon: <FileTextOutlined /> },
@@ -36,7 +39,7 @@ const toolbarGroups = [
   {
     key: 'financeiro-estoque',
     items: [
-      { key: 'contas-pagar', label: 'Contas a pagar', icon: <DollarOutlined /> },
+      { key: 'contas-pagar', label: 'Contas a pagar', icon: <DollarCircleFilled /> },
       { key: 'contas-receber', label: 'Contas a receber', icon: <MoneyCollectOutlined /> },
       { key: 'fluxo-caixa', label: 'Fluxo de caixa', icon: <TransactionOutlined /> },
       { key: 'controle-estoque', label: 'Controle de estoque', icon: <ShoppingCartOutlined /> },
@@ -47,7 +50,7 @@ const toolbarGroups = [
     items: [
       { key: 'editor-textos', label: 'Editor de textos', icon: <FileTextOutlined /> },
       { key: 'mala-direta', label: 'Mala direta', icon: <MailOutlined /> },
-      { key: 'crm-vendas', label: 'CRM de vendas', icon: <PartitionOutlined /> },
+      { key: 'crm-vendas', label: 'CRM de vendas', icon: <RocketOutlined /> },
     ],
   },
 ];
