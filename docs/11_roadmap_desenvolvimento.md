@@ -5557,3 +5557,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a densidade da faixa operacional, abas e avisos.
+
+## Barra turquesa e coluna lateral do dashboard
+
+- A área inicial do `frontend-react` recebeu uma barra operacional turquesa mais forte.
+- O dashboard passou a exibir uma coluna lateral fixa com cards de apoio e orientação.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar no navegador o encaixe visual e manter apenas refinamentos finos.
