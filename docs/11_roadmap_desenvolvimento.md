@@ -5645,3 +5645,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a união visual com a rail em tela larga.
+
+## Faixa operacional e rail no mesmo nível
+
+- A rail lateral e a faixa operacional passaram a iniciar na mesma linha logo abaixo da topbar.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a quina visual em reload completo do `/app`.

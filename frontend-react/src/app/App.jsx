@@ -227,16 +227,15 @@ function AppContent() {
           />
         </div>
 
-        {screen === 'dashboard' ? (
-          <div className="brana-shell-band">
-            <DashboardOperationalStrip />
-          </div>
-        ) : null}
-
         <div
           className={`brana-shell-body${panelGroup ? ' has-panel' : ''}`}
           onMouseLeave={() => setPanelGroupKey('')}
         >
+          {screen === 'dashboard' ? (
+            <div className="brana-shell-band">
+              <DashboardOperationalStrip />
+            </div>
+          ) : null}
           <BranaIconRail
             activeKey={activeKey}
             expanded={railExpanded}
