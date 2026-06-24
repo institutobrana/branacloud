@@ -194,7 +194,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         open={open}
         onCancel={onClose}
         footer={null}
-        width={1080}
+        width={980}
         centered
         destroyOnClose
         maskClosable={false}

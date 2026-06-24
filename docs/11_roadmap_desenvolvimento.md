@@ -5796,3 +5796,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é revalidar visualmente o modal em `/app`.
+
+## Refino adicional de estilo desktop do modal de Preferências
+
+- O modal Preferências recebeu um novo aperto visual para se aproximar ainda mais de uma janela desktop clássica.
+- A largura, os campos, os botões e as abas foram compactados novamente.
+- A aba NFS-e continuou apenas como pendência visual.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o novo aperto em `/app`.
