@@ -5513,3 +5513,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar no navegador a solidez visual do painel e o comportamento do menu do usuário.
+
+## Dashboard inicial do frontend-react no estilo EasyDental
+
+- A tela inicial do `frontend-react` foi aproximada do painel inicial do EasyDental com faixa operacional, abas e miolo de avisos.
+- O `Dashboard` continua levando para `Início`.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a leitura da nova tela inicial e, se necessário, ajustar densidade e responsividade.
