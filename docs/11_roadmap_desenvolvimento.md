@@ -5715,3 +5715,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente os novos ícones em `/app`.
+
+## Refino da presença dos ícones da rail
+
+- Os SVGs locais da rail foram aumentados e ganharam mais presença visual no `frontend-react`.
+- A leitura dos ícones ficou mais próxima da referência EasyDental.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a rail em `/app`.
