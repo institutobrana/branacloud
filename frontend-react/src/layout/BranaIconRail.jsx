@@ -18,6 +18,7 @@ export function BranaIconRail({
   expanded,
   groups,
   activeGroupKey,
+  panelOpen,
   onNavigate,
   onOpenGroup,
   onToggleExpand,
@@ -45,7 +46,7 @@ export function BranaIconRail({
           );
 
           return (
-            <Tooltip key={group.key} title={expanded ? null : group.label} placement="right">
+            <Tooltip key={group.key} title={expanded || panelOpen ? null : group.label} placement="right">
               {button}
             </Tooltip>
           );

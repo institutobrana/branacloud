@@ -5493,3 +5493,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a nova marca e, se necessário, ajustar apenas espaçamento fino.
+
+## Refino do submenu lateral estilo EasyDental
+
+- O submenu lateral contextual do `frontend-react` foi refinado para um estilo operacional compacto, sem cards.
+- Os itens passaram a usar hover em faixa cinza e densidade vertical menor.
+- O tooltip da rail lateral foi suprimido enquanto o painel contextual está aberto, reduzindo sobreposição visual.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o submenu lateral no navegador.

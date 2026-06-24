@@ -195,19 +195,23 @@ body {
   top: 66px;
   background: #ffffff;
   border-right: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 8px 0 18px rgba(15, 23, 42, 0.08);
-  padding: 14px 12px;
+  box-shadow: 6px 0 14px rgba(15, 23, 42, 0.06);
+  padding: 12px 10px 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   overflow: hidden;
 }
 
 .brana-context-panel-header {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   align-items: flex-start;
+}
+
+.brana-context-panel-header-copy {
+  min-width: 0;
 }
 
 .brana-context-panel-kicker {
@@ -220,44 +224,50 @@ body {
 
 .brana-context-panel-title {
   margin-bottom: 0 !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
 }
 
 .brana-context-panel-list {
   display: grid;
-  gap: 6px;
+  gap: 2px;
   overflow: auto;
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .brana-context-panel-item {
   width: 100%;
-  border: 1px solid rgba(0, 123, 116, 0.14);
+  border: 0;
   background: #ffffff;
-  border-radius: 12px;
-  padding: 10px 12px;
-  display: grid;
-  gap: 2px;
+  border-radius: 0;
+  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   text-align: left;
   cursor: pointer;
   color: var(--brana-text);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .brana-context-panel-item:hover {
-  border-color: rgba(0, 167, 157, 0.36);
-  background: rgba(0, 167, 157, 0.04);
+  background: #f3f4f6;
 }
 
 .brana-context-panel-item.is-disabled {
-  opacity: 0.72;
+  opacity: 1;
+  color: var(--brana-text);
+  cursor: not-allowed;
 }
 
-.brana-context-panel-item span:first-child {
+.brana-context-panel-item-label {
   font-weight: 700;
 }
 
-.brana-context-panel-item .ant-typography {
+.brana-context-panel-item-state {
+  flex: 0 0 auto;
   font-size: 11px;
+  color: var(--brana-gray);
 }
 
 .sr-only {
