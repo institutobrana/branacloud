@@ -5706,3 +5706,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente os glyphs da rail em `/app`.
+
+## Ícones SVG locais para a rail
+
+- A rail lateral passou a usar ícones SVG/React locais próprios no `frontend-react`.
+- Os desenhos ficaram mais robustos e próximos da leitura visual do EasyDental.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente os novos ícones em `/app`.
