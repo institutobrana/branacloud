@@ -5826,3 +5826,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é revalidar o modal em `/app` e seguir apenas com acabamento fino, se necessário.
+
+## Modal Preferências com tamanho estático
+
+- O modal Preferências passou a ter tamanho fixo e estrutura em flex column.
+- As abas ficaram com geometria estável e o conteúdo passou a rolar internamente quando necessário.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a troca de abas e, se necessário, ajustar apenas microdetalhes de densidade.

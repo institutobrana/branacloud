@@ -3,11 +3,15 @@
   overflow: hidden;
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.28);
   background: #fdfdfd;
+  height: 620px;
+  display: flex;
+  flex-direction: column;
 }
 
 .preferencias-modal .ant-modal-header {
   padding: 7px 10px 4px;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  flex: 0 0 auto;
 }
 
 .preferencias-modal .ant-modal-title {
@@ -23,33 +27,72 @@
 
 .preferencias-modal .ant-modal-body {
   padding: 7px 8px 9px;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
 }
 
 .preferencias-classic-window {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 5px;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
 .preferencias-classic-tabs .ant-tabs-nav {
   margin: 0 0 3px;
+  min-height: 42px;
+  flex: 0 0 auto;
+}
+
+.preferencias-classic-tabs {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.preferencias-classic-tabs.ant-tabs {
+  min-height: 0;
 }
 
 .preferencias-classic-tabs .ant-tabs-nav-list {
   gap: 2px;
+  align-items: flex-end;
 }
 
 .preferencias-classic-tabs .ant-tabs-tab {
-  padding: 4px 12px;
+  min-width: 104px;
+  height: 38px;
+  padding: 0 14px;
   border: 1px solid transparent;
   border-radius: 3px 3px 0 0;
   background: #f1f1f1;
   margin: 0 2px 0 0;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .preferencias-classic-tabs .ant-tabs-tab.ant-tabs-tab-active {
   background: #ffffff;
   border-color: rgba(22, 170, 161, 0.22);
   border-bottom-color: #ffffff;
+  height: 38px;
+}
+
+.preferencias-classic-tabs .ant-tabs-tab-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preferencias-tab-label {
+  display: block;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .preferencias-classic-tabs .ant-tabs-ink-bar {
@@ -58,11 +101,29 @@
 }
 
 .preferencias-classic-tabs .ant-tabs-content-holder {
-  padding-top: 2px;
+  padding-top: 1px;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.preferencias-classic-tabs .ant-tabs-content {
+  min-height: 0;
+  height: 100%;
+}
+
+.preferencias-classic-tabs .ant-tabs-tabpane {
+  min-height: 0;
+  height: 100%;
 }
 
 .preferencias-tab-content {
-  min-height: 238px;
+  min-height: 420px;
+  height: 420px;
+  overflow: auto;
+  box-sizing: border-box;
+  padding-right: 6px;
+  width: 100%;
 }
 
 .preferencias-form-row {
@@ -180,6 +241,7 @@
 .preferencias-clinical-topline {
   display: grid;
   gap: 4px;
+  min-height: 1px;
 }
 
 .preferencias-general-form {
@@ -213,6 +275,7 @@
   min-height: 182px;
   max-height: 182px;
   overflow: auto;
+  box-sizing: border-box;
 }
 
 .preferencias-listbox-wrap {
@@ -247,7 +310,9 @@
   display: flex;
   justify-content: flex-end;
   gap: 7px;
-  padding-top: 2px;
+  padding-top: 4px;
+  flex: 0 0 auto;
+  margin-top: auto;
 }
 
 .preferencias-nfse-form .preferencias-form-row {

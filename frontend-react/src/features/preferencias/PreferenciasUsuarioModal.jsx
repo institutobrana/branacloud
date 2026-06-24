@@ -177,6 +177,12 @@ function NfseTab() {
 export function PreferenciasUsuarioModal({ open, userName, onClose }) {
   const [messageApi, contextHolder] = message.useMessage();
   const titleName = userName || 'Tel';
+  const tabItems = [
+    { key: 'geral', label: <PreferenciasTabLabel>Geral</PreferenciasTabLabel>, children: <GeneralTab /> },
+    { key: 'clinica', label: <PreferenciasTabLabel>Ficha clínica</PreferenciasTabLabel>, children: <ClinicalTab /> },
+    { key: 'orcamento', label: <PreferenciasTabLabel>Orçamento</PreferenciasTabLabel>, children: <BudgetTab /> },
+    { key: 'nfse', label: <PreferenciasTabLabel>NFS-e</PreferenciasTabLabel>, children: <NfseTab /> },
+  ];
 
   const handleSave = () => {
     messageApi.info('Persistência de preferências ainda não implementada.');
@@ -190,6 +196,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         onCancel={onClose}
         footer={null}
         width={952}
+        styles={{ body: { padding: 0 } }}
         centered
         destroyOnClose
         maskClosable={false}
@@ -197,17 +204,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         className="preferencias-modal"
       >
         <div className="preferencias-classic-window">
-          <Tabs
-            defaultActiveKey="geral"
-            type="card"
-            className="preferencias-classic-tabs"
-            items={[
-              { key: 'geral', label: <PreferenciasTabLabel>Geral</PreferenciasTabLabel>, children: <GeneralTab /> },
-              { key: 'clinica', label: <PreferenciasTabLabel>Ficha clínica</PreferenciasTabLabel>, children: <ClinicalTab /> },
-              { key: 'orcamento', label: <PreferenciasTabLabel>Orçamento</PreferenciasTabLabel>, children: <BudgetTab /> },
-              { key: 'nfse', label: <PreferenciasTabLabel>NFS-e</PreferenciasTabLabel>, children: <NfseTab /> },
-            ]}
-          />
+          <Tabs defaultActiveKey="geral" type="card" className="preferencias-classic-tabs" items={tabItems} />
 
           <div className="preferencias-footer">
             <Button onClick={onClose}>Cancelar</Button>
