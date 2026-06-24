@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Badge, Card, Space, Tag, Typography } from 'antd';
+import { Badge, Card, Space, Typography } from 'antd';
 import {
   ArrowDownOutlined,
   ArrowRightOutlined,
@@ -46,21 +46,10 @@ export function DashboardPage() {
   const replaceUser = (label) => label.replace('{user}', displayName);
 
   return (
-    <Space direction="vertical" size={16} className="dashboard-page">
-      <div className="dashboard-header">
-        <div>
-          <Typography.Title level={2} className="dashboard-title">
-            Quadro de avisos
-          </Typography.Title>
-          <Typography.Paragraph type="secondary" className="dashboard-subtitle">
-            Painel inicial operacional do Brana Cloud
-          </Typography.Paragraph>
-        </div>
-        <Tag color="cyan" className="dashboard-tag">
-          Dashboard
-        </Tag>
-      </div>
-
+    <Space direction="vertical" size={12} className="dashboard-page">
+      <Typography.Title level={2} className="dashboard-sr-title">
+        Quadro de avisos
+      </Typography.Title>
       <div className="dashboard-strip">
         <div className="dashboard-strip-action">
           <FilterOutlined />
@@ -91,7 +80,7 @@ export function DashboardPage() {
         <div className="dashboard-body">
           <div className="dashboard-main">
             <Card className="dashboard-greeting-card" bordered={false}>
-              <Space direction="vertical" size={6} style={{ width: '100%' }}>
+              <Space direction="vertical" size={4} style={{ width: '100%' }}>
                 <Typography.Text className="dashboard-greeting-label" type="secondary">
                   Olá
                 </Typography.Text>
@@ -113,7 +102,9 @@ export function DashboardPage() {
                       <span className="dashboard-alert-label">{replaceUser(item.label)}</span>
                     </span>
                     <span className="dashboard-alert-actions">
-                      <span className="dashboard-alert-action">{item.action}</span>
+                      <span className="dashboard-alert-action" aria-hidden="true">
+                        {item.action}
+                      </span>
                       {index % 2 === 0 ? <ArrowDownOutlined className="dashboard-alert-expand" /> : <ArrowRightOutlined className="dashboard-alert-expand" />}
                     </span>
                   </button>

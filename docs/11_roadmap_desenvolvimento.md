@@ -5548,3 +5548,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o carregamento imediato do Dashboard e o comportamento do painel contextual.
+
+## Refino visual do Quadro de avisos no estilo EasyDental
+
+- O Quadro de avisos foi compactado visualmente para se aproximar mais do EasyDental.
+- O título grande deixou de ocupar destaque no topo do conteúdo.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a densidade da faixa operacional, abas e avisos.
