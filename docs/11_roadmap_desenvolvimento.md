@@ -5522,3 +5522,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a leitura da nova tela inicial e, se necessário, ajustar densidade e responsividade.
+
+## Correção do render do Dashboard / Quadro de avisos
+
+- O `frontend-react` passou a renderizar um módulo próprio de `Dashboard / Quadro de avisos` no `/app`.
+- A tela deixou de depender de hover na lateral para aparecer.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o fluxo inicial e o retorno pelo botão `Dashboard` da toolbar superior.

@@ -7,7 +7,7 @@ import { BranaContextPanel } from '../layout/BranaContextPanel.jsx';
 import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
-import { InicioPage } from '../features/inicio/InicioPage.jsx';
+import { DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 
 const contextualMenus = {
@@ -97,7 +97,7 @@ function isAppRoute() {
 function resolveScreenFromPath() {
   const path = window.location.pathname || '/';
   if (path === '/app/pacientes') return 'pacientes';
-  return 'inicio';
+  return 'dashboard';
 }
 
 function syncAppPath(screen) {
@@ -126,7 +126,7 @@ function AppContent() {
     if (!nextScreen) return;
     setScreen(nextScreen);
     syncAppPath(nextScreen);
-    if (nextScreen === 'inicio') {
+    if (nextScreen === 'dashboard') {
       setActiveGroupKey('atendimento');
       setPanelGroupKey('');
       return;
@@ -153,7 +153,7 @@ function AppContent() {
 
   const handleToolbarAction = async (actionKey) => {
     if (actionKey === 'dashboard') {
-      handleNavigate('inicio');
+      handleNavigate('dashboard');
       return;
     }
     if (actionKey === 'cadastro-pacientes') {
@@ -173,9 +173,9 @@ function AppContent() {
 
   const activePage = useMemo(() => {
     if (screen === 'pacientes') {
-      return <PacientesPage onBackHome={() => handleNavigate('inicio')} />;
+      return <PacientesPage onBackHome={() => handleNavigate('dashboard')} />;
     }
-    return <InicioPage />;
+    return <DashboardPage />;
   }, [screen]);
 
   const shellStyle = {
