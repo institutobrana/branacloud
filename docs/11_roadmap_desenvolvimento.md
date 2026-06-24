@@ -5566,3 +5566,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar no navegador o encaixe visual e manter apenas refinamentos finos.
+
+## Correção da barra turquesa e do alinhamento do dashboard
+
+- A barra operacional do dashboard foi tornada sólida e mais visível logo abaixo da topbar.
+- O dashboard deixou de parecer centralizado e passou a iniciar alinhado à esquerda da área útil.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar no navegador a leitura final da faixa e do encaixe lateral.
