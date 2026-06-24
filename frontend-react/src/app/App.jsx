@@ -232,6 +232,9 @@ function AppContent() {
           onMouseLeave={() => setPanelGroupKey('')}
         >
           {screen === 'dashboard' ? (
+            <div className="brana-shell-corner" aria-hidden="true" />
+          ) : null}
+          {screen === 'dashboard' ? (
             <div className="brana-shell-band">
               <DashboardOperationalStrip />
             </div>

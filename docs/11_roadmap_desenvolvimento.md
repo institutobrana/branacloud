@@ -5662,3 +5662,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar novamente o `/app` em reload completo.
+
+## Quina real entre rail e faixa operacional
+
+- A quina do shell ganhou uma célula turquesa real na coluna da rail.
+- A faixa operacional passou a continuar estruturalmente a partir desse canto.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o canto em reload completo do `/app`.
