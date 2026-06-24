@@ -54,6 +54,7 @@ body {
   grid-column: 2 / -1;
   grid-row: 1;
   min-width: 0;
+  margin-left: -1px;
 }
 
 .brana-icon-rail {
@@ -67,8 +68,8 @@ body {
   align-items: center;
   padding: 12px 8px 10px;
   background: #16aaa1;
-  border-right: 1px solid rgba(17, 102, 97, 0.54);
-  box-shadow: 10px 0 22px rgba(0, 75, 37, 0.12);
+  border-right: 0;
+  box-shadow: none;
   overflow: hidden;
   transition: width 0.2s ease;
 }

@@ -5653,3 +5653,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a quina visual em reload completo do `/app`.
+
+## Refino da quina entre rail e faixa operacional
+
+- A quina entre a rail lateral e a faixa turquesa foi refinada no `frontend-react`.
+- A junção passou a parecer uma estrutura visual única em "L", sem degrau aparente.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar novamente o `/app` em reload completo.
