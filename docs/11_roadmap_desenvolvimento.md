@@ -5620,3 +5620,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o balanceamento final da faixa e das barras em desktop largo.
+
+## Alinhamento final da barra turquesa
+
+- A barra turquesa foi alinhada como faixa estrutural contínua do shell.
+- O quadro de avisos recebeu um refinamento final de proporção e densidade.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a leitura final da faixa e do miolo em tela larga.
