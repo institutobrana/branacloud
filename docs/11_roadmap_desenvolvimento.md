@@ -5629,3 +5629,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a leitura final da faixa e do miolo em tela larga.
+
+## Conexão da barra turquesa com a rail lateral
+
+- A faixa horizontal ganhou uma continuidade visual na borda esquerda para eliminar a emenda com a rail.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o canto de junção entre rail e faixa em reload completo.
