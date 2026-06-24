@@ -7,7 +7,7 @@ import { BranaContextPanel } from '../layout/BranaContextPanel.jsx';
 import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
-import { DashboardPage } from '../features/dashboard/DashboardPage.jsx';
+import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 
 const contextualMenus = {
@@ -226,6 +226,12 @@ function AppContent() {
             onUserMenuAction={handleUserMenuAction}
           />
         </div>
+
+        {screen === 'dashboard' ? (
+          <div className="brana-shell-band">
+            <DashboardOperationalStrip />
+          </div>
+        ) : null}
 
         <div
           className={`brana-shell-body${panelGroup ? ' has-panel' : ''}`}

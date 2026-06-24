@@ -38,6 +38,23 @@ function resolveUserLabel(user) {
   return user?.apelido || user?.nome || user?.email || 'Usuário';
 }
 
+export function DashboardOperationalStrip() {
+  return (
+    <div className="dashboard-operational-strip" aria-label="Faixa operacional">
+      <div className="dashboard-strip-action">
+        <FilterOutlined />
+        <ReloadOutlined />
+      </div>
+      <div className="dashboard-strip-divider" />
+      <div className="dashboard-strip-text">Todos os profissionais</div>
+      <div className="dashboard-strip-divider" />
+      <div className="dashboard-strip-text">Todas as unidades</div>
+      <div className="dashboard-strip-divider" />
+      <div className="dashboard-strip-text">Todas as contas bancárias</div>
+    </div>
+  );
+}
+
 export function DashboardPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('avisos');
@@ -50,19 +67,6 @@ export function DashboardPage() {
         Quadro de avisos
       </Typography.Title>
       <div className="dashboard-shell">
-        <div className="dashboard-strip">
-          <div className="dashboard-strip-action">
-            <FilterOutlined />
-            <ReloadOutlined />
-          </div>
-          <div className="dashboard-strip-divider" />
-          <div className="dashboard-strip-text">Todos os profissionais</div>
-          <div className="dashboard-strip-divider" />
-          <div className="dashboard-strip-text">Todas as unidades</div>
-          <div className="dashboard-strip-divider" />
-          <div className="dashboard-strip-text">Todas as contas bancárias</div>
-        </div>
-
         <div className="dashboard-tabs">
           {tabs.map((tab) => (
             <button

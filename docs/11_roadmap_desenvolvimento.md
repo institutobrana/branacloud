@@ -5637,3 +5637,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o canto de junção entre rail e faixa em reload completo.
+
+## Faixa operacional no shell
+
+- A faixa turquesa operacional passou a ser tratada como parte do shell, acima do workspace.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a união visual com a rail em tela larga.

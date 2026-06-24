@@ -32,6 +32,11 @@ body {
   width: 100%;
 }
 
+.brana-shell-band {
+  width: 100%;
+  min-width: 0;
+}
+
 .brana-shell-body {
   display: grid;
   grid-template-columns: var(--brana-rail-width, 72px) var(--brana-panel-width, 0px) minmax(0, 1fr);
