@@ -46,7 +46,7 @@ function PreferenciasTabLabel({ children }) {
 function GeneralTab() {
   return (
     <div className="preferencias-tab-content">
-      <Row gutter={16} className="preferencias-general-grid">
+      <Row gutter={[12, 8]} className="preferencias-general-grid">
         <Col xs={24} md={6} lg={5}>
           <div className="preferencias-avatar-card">
             <Avatar size={72} icon={<UserOutlined />} className="preferencias-avatar" />
@@ -117,7 +117,7 @@ function GeneralTab() {
 function ClinicalTab() {
   return (
     <div className="preferencias-tab-content">
-      <Row gutter={16}>
+      <Row gutter={[12, 8]}>
         <Col xs={24} md={8}>
           <Form.Item label="Especialidade(s)">
             <Select
@@ -150,7 +150,7 @@ function ClinicalTab() {
 function BudgetTab() {
   return (
     <div className="preferencias-tab-content">
-      <Row gutter={16}>
+      <Row gutter={[12, 8]}>
         <Col xs={24} md={12}>
           <Form.Item label="Modelo padrão de orçamentos">
             <Input placeholder="Modelo padrão" />
@@ -204,6 +204,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         <Form layout="vertical" className="preferencias-form">
           <Tabs
             defaultActiveKey="geral"
+            type="card"
             items={[
               { key: 'geral', label: <PreferenciasTabLabel>Geral</PreferenciasTabLabel>, children: <GeneralTab /> },
               { key: 'clinica', label: <PreferenciasTabLabel>Ficha clínica</PreferenciasTabLabel>, children: <ClinicalTab /> },

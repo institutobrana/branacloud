@@ -5785,3 +5785,14 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o modal compactado em `/app`.
+
+## Refino de estilo desktop do modal de Preferências
+
+- O modal Preferências recebeu um novo ajuste para ficar mais parecido com uma janela desktop clássica.
+- As abas ficaram mais simples e densas.
+- A aba Geral, Ficha clínica e Orçamento foram aproximadas ainda mais da referência operacional.
+- A aba NFS-e permaneceu somente como pendência compacta.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é revalidar visualmente o modal em `/app`.
