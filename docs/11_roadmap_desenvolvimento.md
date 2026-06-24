@@ -5689,3 +5689,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o submenu lateral em `/app`.
+
+## Refino dos ícones da rail no estilo EasyDental
+
+- Os ícones da rail lateral foram aproximados do EasyDental no `frontend-react`.
+- O visual de cards/botões modernos foi reduzido.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a rail lateral em `/app`.

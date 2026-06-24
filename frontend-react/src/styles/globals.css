@@ -74,7 +74,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 8px 10px;
+  padding: 14px 0 12px;
   background: #16aaa1;
   border-right: 0;
   box-shadow: none;
@@ -90,20 +90,20 @@ body {
 .brana-icon-rail-footer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   width: 100%;
 }
 
 .brana-icon-rail-nav {
   flex: 1;
-  padding: 2px 0 0;
+  padding: 0;
 }
 
 .brana-icon-rail-footer {
   margin-top: auto;
-  padding: 10px 0 6px;
-  min-height: 58px;
+  padding: 8px 0 2px;
+  min-height: 50px;
 }
 
 .brana-icon-rail-section {
@@ -140,15 +140,16 @@ body {
 .brana-icon-rail-button {
   position: relative;
   width: 100%;
-  height: 48px;
+  min-height: 40px;
   border: 0;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.94);
-  display: grid;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.95);
+  display: flex;
   place-items: center;
   align-items: center;
-  padding: 0;
+  justify-content: center;
+  padding: 8px 0;
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -156,49 +157,45 @@ body {
     color 0.2s ease,
     box-shadow 0.2s ease;
   text-align: left;
-  padding: 0 12px;
 }
 
 .brana-icon-rail-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  transform: translateY(-1px);
 }
 
 .brana-icon-rail-button.is-active {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 247, 244, 0.98));
-  color: #16aaa1;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
-    0 8px 18px rgba(0, 75, 37, 0.18);
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
 }
 
 .brana-icon-rail-icon {
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1;
   color: inherit;
 }
 
 .brana-icon-rail-label {
-  margin-left: 10px;
+  margin-left: 0;
   font-size: 12px;
   font-weight: 700;
   color: inherit;
   white-space: nowrap;
+  margin-top: 2px;
 }
 
 .brana-icon-rail-toggle {
   width: 100%;
-  height: 42px;
+  min-height: 40px;
   border: 0;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   cursor: pointer;
 }
 
 .brana-icon-rail-toggle:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .brana-context-panel {
@@ -563,7 +560,6 @@ body {
   }
 
   .brana-icon-rail-button {
-    width: 44px;
-    height: 44px;
+    min-height: 42px;
   }
 }
