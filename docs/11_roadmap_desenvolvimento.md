@@ -5815,3 +5815,14 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o modal redesenhado em `/app`.
+
+## Refino visual do modal de Preferências por print de referência
+
+- O modal Preferências recebeu um novo ajuste fino com base direta nos prints do EasyDental.
+- A aba Geral passou a aproximar melhor o bloco de identidade, o avatar e os campos centrais.
+- A aba Ficha clínica ganhou listbox mais centralizada e leitura mais parecida com o layout legado.
+- A aba Orçamento e a aba NFS-e foram compactadas para reforçar o estilo de janela desktop clássica.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é revalidar o modal em `/app` e seguir apenas com acabamento fino, se necessário.

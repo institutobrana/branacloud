@@ -51,9 +51,9 @@ function GeneralTab() {
     <div className="preferencias-tab-content preferencias-classic-window">
       <div className="preferencias-general-head">
         <div className="preferencias-general-identity">
-          <div className="preferencias-identity-line"><strong>Nome:</strong> Tel</div>
-          <div className="preferencias-identity-line"><strong>CPF:</strong> 000.000.000-00</div>
-          <div className="preferencias-identity-line"><strong>CRO/UF:</strong> 00000-SP</div>
+          <div className="preferencias-identity-line"><strong>Nome:</strong> Gleisson Tel</div>
+          <div className="preferencias-identity-line"><strong>CPF:</strong> 280.106.918-36</div>
+          <div className="preferencias-identity-line"><strong>CRO/UF:</strong> 81611-SP</div>
         </div>
 
         <div className="preferencias-photo-right">
@@ -67,7 +67,7 @@ function GeneralTab() {
 
       <div className="preferencias-general-form">
         <ClassicFormRow label="Apresentação:">
-          <Input.TextArea rows={2} defaultValue="Apresentação ou CV resumido do profissional" />
+          <Input.TextArea rows={3} defaultValue="Apresentação ou CV resumido do profissional" />
         </ClassicFormRow>
         <ClassicFormRow label="Envio padrão para mensagens:">
           <Select
@@ -105,12 +105,13 @@ function ClinicalTab() {
             <Button type="link" className="preferencias-inline-link">Incluir</Button>
           </div>
         </ClassicFormRow>
-      </div>
-
-      <div className="preferencias-listbox">
-        {especialidadesOptions.map((specialty) => (
-          <div key={specialty} className="preferencias-listbox-item">{specialty}</div>
-        ))}
+        <div className="preferencias-listbox-wrap">
+          <div className="preferencias-listbox">
+            {especialidadesOptions.map((specialty) => (
+              <div key={specialty} className="preferencias-listbox-item">{specialty}</div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="preferencias-clinical-checks">
@@ -188,7 +189,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         open={open}
         onCancel={onClose}
         footer={null}
-        width={940}
+        width={952}
         centered
         destroyOnClose
         maskClosable={false}
