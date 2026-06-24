@@ -5680,3 +5680,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o comportamento do mouse em `/app`.
+
+## Remoção do texto MENU CONTEXTUAL
+
+- O texto `MENU CONTEXTUAL` foi removido do topo do painel contextual no `frontend-react`.
+- O título do grupo e o fechamento automático foram preservados.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o submenu lateral em `/app`.

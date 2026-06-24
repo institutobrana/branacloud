@@ -8,7 +8,6 @@ export function BranaContextPanel({ group, items, onClose, onSelectItem, onMouse
     <aside className="brana-context-panel" aria-label={`Menu ${group.label}`} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div className="brana-context-panel-header">
         <div className="brana-context-panel-header-copy">
-          <Typography.Text className="brana-context-panel-kicker">Menu contextual</Typography.Text>
           <Typography.Title level={4} className="brana-context-panel-title">
             {group.label}
           </Typography.Title>
