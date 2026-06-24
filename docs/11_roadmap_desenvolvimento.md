@@ -5734,3 +5734,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a rail em `/app` e seguir apenas com ajustes finos, se necessários.
+
+## Topbar com icones semanticos prontos
+
+- A barra horizontal superior do `frontend-react` passou a usar icones prontos e semanticos do `@ant-design/icons`.
+- Os desenhos ficaram mais claros para cada ação e mais próximos de um ERP clínico.
+- A ordem dos botões, os grupos e os separadores foram preservados.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a topbar em `/app`.

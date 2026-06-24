@@ -2,15 +2,17 @@ import { Button, Dropdown, Input, Space, Typography, Tooltip } from 'antd';
 import {
   ApartmentOutlined,
   CalendarOutlined,
+  CreditCardOutlined,
   DollarOutlined,
   FileTextOutlined,
   InboxOutlined,
-  MenuOutlined,
-  MedicineBoxOutlined,
   MoreOutlined,
   PartitionOutlined,
+  ProfileOutlined,
   SearchOutlined,
+  ScheduleOutlined,
   ShoppingCartOutlined,
+  DashboardOutlined,
   TeamOutlined,
   UserAddOutlined,
   UserOutlined,
@@ -21,20 +23,20 @@ const toolbarGroups = [
   {
     key: 'agenda-clinica',
     items: [
-      { key: 'dashboard', label: 'Dashboard', icon: <MenuOutlined /> },
+      { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined /> },
       { key: 'agenda', label: 'Agenda', icon: <CalendarOutlined /> },
-      { key: 'proximo-agendado', label: 'Próximo agendado', icon: <CalendarOutlined /> },
+      { key: 'proximo-agendado', label: 'Próximo agendado', icon: <ScheduleOutlined /> },
       { key: 'cadastro-pacientes', label: 'Cadastro de pacientes', icon: <TeamOutlined /> },
       { key: 'novo-paciente', label: 'Novo paciente', icon: <UserAddOutlined /> },
       { key: 'anamnese', label: 'Anamnese', icon: <FileTextOutlined /> },
-      { key: 'ficha-clinica', label: 'Ficha clínica', icon: <MedicineBoxOutlined /> },
+      { key: 'ficha-clinica', label: 'Ficha clínica', icon: <ProfileOutlined /> },
     ],
   },
   {
     key: 'financeiro-estoque',
     items: [
       { key: 'contas-pagar', label: 'Contas a pagar', icon: <DollarOutlined /> },
-      { key: 'contas-receber', label: 'Contas a receber', icon: <DollarOutlined /> },
+      { key: 'contas-receber', label: 'Contas a receber', icon: <CreditCardOutlined /> },
       { key: 'fluxo-caixa', label: 'Fluxo de caixa', icon: <ApartmentOutlined /> },
       { key: 'controle-estoque', label: 'Controle de estoque', icon: <InboxOutlined /> },
     ],
@@ -74,8 +76,6 @@ function ActionButton({ action, onAction }) {
 export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderAction, onUserMenuAction }) {
   const displayName = user?.apelido || user?.nome || user?.email || '';
   const userLabel = loading ? 'Validando sessão...' : displayName || 'Sessão ativa';
-  const iconColorStyle = { color: '#16AAA1' };
-
   return (
     <header className="brana-action-topbar">
       <div className="brana-action-topbar-brand">
@@ -91,7 +91,7 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
           {toolbarGroups.map((group, groupIndex) => (
             <Space key={group.key} size={6} className="brana-action-topbar-group">
               {group.items.map((action) => (
-                <ActionButton key={action.key} action={{ ...action, icon: <span style={iconColorStyle}>{action.icon}</span> }} onAction={onPlaceholderAction} />
+                <ActionButton key={action.key} action={action} onAction={onPlaceholderAction} />
               ))}
               {groupIndex < toolbarGroups.length - 1 ? <span className="brana-action-topbar-divider" aria-hidden="true" /> : null}
             </Space>
