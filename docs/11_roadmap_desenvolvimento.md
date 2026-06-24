@@ -5540,3 +5540,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar no navegador o carregamento imediato do dashboard e o retorno pelo botão.
+
+## Correção da visibilidade do dashboard no workspace
+
+- O workspace passou a ocupar explicitamente a terceira coluna do grid do shell, evitando colapsar na coluna vazia quando o painel contextual não está aberto.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o carregamento imediato do Dashboard e o comportamento do painel contextual.
