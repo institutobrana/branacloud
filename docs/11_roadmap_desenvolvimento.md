@@ -5754,3 +5754,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a topbar em `/app`.
+
+## Contrato funcional da tela Preferências
+
+- Foi criado o contrato funcional inicial da tela Preferências com base no vídeo do EasyDental.
+- A documentação registrou estrutura visual, abas, campos observados e pendências de mapeamento.
+- Nenhum código foi alterado nesta etapa.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é mapear a tela em mais detalhe antes de qualquer implementação.
