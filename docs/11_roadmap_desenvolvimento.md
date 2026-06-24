@@ -5602,3 +5602,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a leitura final do quadro com as barras de aviso mais amplas.
+
+## Largura do miolo e barra integrada
+
+- O quadro de avisos passou a ocupar mais da área útil do workspace.
+- A barra turquesa ficou mais reta e integrada ao shell operacional.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a leitura da barra e do miolo em telas largas.
