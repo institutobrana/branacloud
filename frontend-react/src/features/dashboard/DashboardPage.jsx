@@ -12,8 +12,6 @@ import {
   TeamOutlined,
   UserOutlined,
   BellOutlined,
-  InfoCircleOutlined,
-  PhoneOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../auth/useAuth.js';
 import './dashboard.css';
@@ -45,29 +43,6 @@ export function DashboardPage() {
   const [activeTab, setActiveTab] = useState('avisos');
   const displayName = useMemo(() => resolveUserLabel(user), [user]);
   const replaceUser = (label) => label.replace('{user}', displayName);
-  const helperCards = [
-    {
-      key: 'setup',
-      title: 'Configure seu Brana Cloud',
-      description: 'Acompanhe a estrutura inicial da clínica e valide os blocos operacionais desta área.',
-      icon: <InfoCircleOutlined />,
-      meta: 'Fluxo inicial',
-    },
-    {
-      key: 'pacientes',
-      title: 'Cadastre seus pacientes',
-      description: 'Prepare a base de pacientes para iniciar os próximos módulos com dados organizados.',
-      icon: <UserOutlined />,
-      meta: 'Próxima etapa',
-    },
-    {
-      key: 'suporte',
-      title: 'Suporte e implantação',
-      description: 'Use este espaço para acompanhamento da implantação e ajustes assistidos da clínica.',
-      icon: <PhoneOutlined />,
-      meta: 'Apoio operacional',
-    },
-  ];
 
   return (
     <Space direction="vertical" size={12} className="dashboard-page">
@@ -104,68 +79,40 @@ export function DashboardPage() {
 
         {activeTab === 'avisos' ? (
           <div className="dashboard-body">
-            <div className="dashboard-body-layout">
-              <div className="dashboard-main">
-                <Card className="dashboard-greeting-card" bordered={false}>
-                  <Space direction="vertical" size={2} style={{ width: '100%' }}>
-                    <Typography.Text className="dashboard-greeting-label" type="secondary">
-                      Olá
-                    </Typography.Text>
-                    <Typography.Title level={3} className="dashboard-greeting-value">
-                      {displayName}
-                    </Typography.Title>
-                    <Typography.Text type="secondary">Seu último acesso foi em 24/06/2026 às 08:30</Typography.Text>
-                    <Typography.Text type="secondary">Validade da licença: 30/06/2026</Typography.Text>
-                  </Space>
-                </Card>
-
-                <div className="dashboard-alerts-stack">
-                  {avisos.map((item, index) => (
-                    <button key={item.key} type="button" className="dashboard-alert-row">
-                      <span className="dashboard-alert-left">
-                        <CaretRightOutlined className="dashboard-alert-chevron" />
-                        <span className="dashboard-alert-label">{replaceUser(item.label)}</span>
-                      </span>
-                      <span className="dashboard-alert-actions">
-                        <span className="dashboard-alert-action" aria-hidden="true">
-                          {item.action}
-                        </span>
-                        {index % 2 === 0 ? (
-                          <ArrowDownOutlined className="dashboard-alert-expand" />
-                        ) : (
-                          <ArrowRightOutlined className="dashboard-alert-expand" />
-                        )}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <aside className="dashboard-side">
-                {helperCards.map((card) => (
-                  <Card key={card.key} className="dashboard-side-card" bordered={false}>
-                    <div className="dashboard-side-card-head">
-                      <span className="dashboard-side-card-icon">{card.icon}</span>
-                      <Typography.Text className="dashboard-side-card-meta">{card.meta}</Typography.Text>
-                    </div>
-                    <Typography.Title level={4} className="dashboard-side-card-title">
-                      {card.title}
-                    </Typography.Title>
-                    <Typography.Paragraph className="dashboard-side-card-description">
-                      {card.description}
-                    </Typography.Paragraph>
-                  </Card>
-                ))}
-                <Card className="dashboard-side-card dashboard-side-card-highlight" bordered={false}>
-                  <Typography.Text className="dashboard-side-card-meta">Observação operacional</Typography.Text>
-                  <Typography.Title level={4} className="dashboard-side-card-title">
-                    Espaço reservado para a implantação assistida
+            <div className="dashboard-main">
+              <Card className="dashboard-greeting-card" bordered={false}>
+                <Space direction="vertical" size={2} style={{ width: '100%' }}>
+                  <Typography.Text className="dashboard-greeting-label" type="secondary">
+                    Olá
+                  </Typography.Text>
+                  <Typography.Title level={3} className="dashboard-greeting-value">
+                    {displayName}
                   </Typography.Title>
-                  <Typography.Paragraph className="dashboard-side-card-description">
-                    Esta área mantém o dashboard compacto, com leitura rápida e sem depender de novas integrações.
-                  </Typography.Paragraph>
-                </Card>
-              </aside>
+                  <Typography.Text type="secondary">Seu último acesso foi em 24/06/2026 às 08:30</Typography.Text>
+                  <Typography.Text type="secondary">Validade da licença: 30/06/2026</Typography.Text>
+                </Space>
+              </Card>
+
+              <div className="dashboard-alerts-stack">
+                {avisos.map((item, index) => (
+                  <button key={item.key} type="button" className="dashboard-alert-row">
+                    <span className="dashboard-alert-left">
+                      <CaretRightOutlined className="dashboard-alert-chevron" />
+                      <span className="dashboard-alert-label">{replaceUser(item.label)}</span>
+                    </span>
+                    <span className="dashboard-alert-actions">
+                      <span className="dashboard-alert-action" aria-hidden="true">
+                        {item.action}
+                      </span>
+                      {index % 2 === 0 ? (
+                        <ArrowDownOutlined className="dashboard-alert-expand" />
+                      ) : (
+                        <ArrowRightOutlined className="dashboard-alert-expand" />
+                      )}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ) : (

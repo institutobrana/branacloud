@@ -5584,3 +5584,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a nova densidade do miolo esquerdo no navegador.
+
+## Remoção da coluna direita do Quadro de avisos
+
+- Os cards informativos da direita foram removidos do dashboard.
+- O miolo principal ficou em uma única coluna ampla e alinhada à esquerda.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o encaixe operacional final do quadro de avisos.
