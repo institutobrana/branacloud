@@ -1,6 +1,6 @@
 .dashboard-page {
   width: 100%;
-  gap: 10px;
+  gap: 4px;
   background: transparent;
 }
 
@@ -59,7 +59,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 0 0;
+  padding: 0;
   background: #ecefe9;
   border: 1px solid rgba(0, 75, 37, 0.08);
   border-bottom: 0;
@@ -89,7 +89,7 @@
 .dashboard-body {
   width: 100%;
   margin-top: 0;
-  padding: 6px 0 0;
+  padding: 2px 0 0;
   background: linear-gradient(180deg, rgba(237, 242, 236, 0.96), rgba(240, 246, 241, 0.92));
 }
 

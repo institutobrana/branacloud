@@ -5671,3 +5671,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o canto em reload completo do `/app`.
+
+## Ajuste do miolo e fechamento automático do submenu
+
+- O miolo do Quadro de avisos foi aproximado das abas no `frontend-react`.
+- O submenu lateral/contextual passou a fechar sozinho ao sair da região combinada.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o comportamento do mouse em `/app`.

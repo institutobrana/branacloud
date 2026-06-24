@@ -21,9 +21,16 @@ export function BranaIconRail({
   onNavigate,
   onOpenGroup,
   onToggleExpand,
+  onMouseEnter,
+  onMouseLeave,
 }) {
   return (
-    <aside className={`brana-icon-rail${expanded ? ' is-expanded' : ' is-collapsed'}`} aria-label="Navegação principal">
+    <aside
+      className={`brana-icon-rail${expanded ? ' is-expanded' : ' is-collapsed'}`}
+      aria-label="Navegação principal"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <nav className="brana-icon-rail-nav">
         {(groups || []).map((group) => {
           const active = group.key === activeGroupKey;

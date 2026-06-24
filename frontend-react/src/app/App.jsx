@@ -1,5 +1,5 @@
 import { ConfigProvider, Typography, message } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { branaTheme } from '../theme/branaTheme.js';
 import { BranaIconRail, branaMainGroups } from '../layout/BranaIconRail.jsx';
 import { BranaActionTopbar } from '../layout/BranaActionTopbar.jsx';
@@ -114,6 +114,7 @@ function AppContent() {
   const [railExpanded, setRailExpanded] = useState(false);
   const [activeGroupKey, setActiveGroupKey] = useState(() => (initialScreen === 'pacientes' ? 'cadastro' : 'atendimento'));
   const [panelGroupKey, setPanelGroupKey] = useState('');
+  const panelCloseTimerRef = useRef(null);
 
   useEffect(() => {
     const onPopState = () => setScreen(resolveScreenFromPath());
@@ -149,8 +150,29 @@ function AppContent() {
 
   const handleOpenGroup = (groupKey) => {
     if (!groupKey) return;
+    if (panelCloseTimerRef.current) {
+      window.clearTimeout(panelCloseTimerRef.current);
+      panelCloseTimerRef.current = null;
+    }
     setActiveGroupKey(groupKey);
     setPanelGroupKey(groupKey);
+  };
+
+  const handleContextRegionEnter = () => {
+    if (panelCloseTimerRef.current) {
+      window.clearTimeout(panelCloseTimerRef.current);
+      panelCloseTimerRef.current = null;
+    }
+  };
+
+  const handleContextRegionLeave = () => {
+    if (panelCloseTimerRef.current) {
+      window.clearTimeout(panelCloseTimerRef.current);
+    }
+    panelCloseTimerRef.current = window.setTimeout(() => {
+      setPanelGroupKey('');
+      panelCloseTimerRef.current = null;
+    }, 140);
   };
 
   const handleSelectMenuItem = async (groupKey, item) => {
@@ -229,7 +251,6 @@ function AppContent() {
 
         <div
           className={`brana-shell-body${panelGroup ? ' has-panel' : ''}`}
-          onMouseLeave={() => setPanelGroupKey('')}
         >
           {screen === 'dashboard' ? (
             <div className="brana-shell-corner" aria-hidden="true" />
@@ -248,12 +269,16 @@ function AppContent() {
             onNavigate={handleNavigate}
             onOpenGroup={handleOpenGroup}
             onToggleExpand={handleToggleExpand}
+            onMouseEnter={handleContextRegionEnter}
+            onMouseLeave={handleContextRegionLeave}
           />
           <BranaContextPanel
             group={panelGroup}
             items={contextualMenus[panelGroupKey] || []}
             onClose={() => setPanelGroupKey('')}
             onSelectItem={handleSelectMenuItem}
+            onMouseEnter={handleContextRegionEnter}
+            onMouseLeave={handleContextRegionLeave}
           />
           <BranaWorkspace>{activePage}</BranaWorkspace>
         </div>

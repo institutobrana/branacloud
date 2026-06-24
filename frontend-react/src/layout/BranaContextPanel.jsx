@@ -1,11 +1,11 @@
 import { Button, Typography } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
-export function BranaContextPanel({ group, items, onClose, onSelectItem }) {
+export function BranaContextPanel({ group, items, onClose, onSelectItem, onMouseEnter, onMouseLeave }) {
   if (!group) return null;
 
   return (
-    <aside className="brana-context-panel" aria-label={`Menu ${group.label}`}>
+    <aside className="brana-context-panel" aria-label={`Menu ${group.label}`} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div className="brana-context-panel-header">
         <div className="brana-context-panel-header-copy">
           <Typography.Text className="brana-context-panel-kicker">Menu contextual</Typography.Text>
