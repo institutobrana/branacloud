@@ -79,10 +79,18 @@ function GeneralTab() {
           <Select defaultValue="Conta padrão" options={[{ label: 'Conta padrão', value: 'Conta padrão' }]} />
         </ClassicFormRow>
         <ClassicFormRow label="Estoque padrão:">
-          <Select defaultValue="Estoque padrão" options={[{ label: 'Estoque padrão', value: 'Estoque padrão' }]} />
+          <Select
+            allowClear
+            defaultValue="Estoque padrão"
+            options={[{ label: 'Estoque padrão', value: 'Estoque padrão' }]}
+          />
         </ClassicFormRow>
         <ClassicFormRow label="Módulo de abertura:">
-          <Select defaultValue="Dashboard" options={moduloAberturaOptions.map((item) => ({ label: item, value: item }))} />
+          <Select
+            allowClear
+            defaultValue="Dashboard"
+            options={moduloAberturaOptions.map((item) => ({ label: item, value: item }))}
+          />
         </ClassicFormRow>
       </div>
     </div>
@@ -96,6 +104,7 @@ function ClinicalTab() {
         <ClassicFormRow label="Especialidade(s):" className="preferencias-inline-row">
           <div className="preferencias-specialty-line">
             <Select
+              allowClear
               defaultValue="Especialidade odontológica"
               options={[
                 { label: 'Especialidade odontológica', value: 'Especialidade odontológica' },

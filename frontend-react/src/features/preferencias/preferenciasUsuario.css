@@ -120,15 +120,17 @@
 .preferencias-tab-content {
   min-height: 420px;
   height: 420px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
-  padding-right: 6px;
+  padding-right: 0;
+  padding-bottom: 8px;
   width: 100%;
 }
 
 .preferencias-form-row {
   display: grid;
-  grid-template-columns: 238px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   align-items: center;
   gap: 8px;
   margin-bottom: 5px;
@@ -152,6 +154,7 @@
   min-height: 24px !important;
   border-radius: 3px !important;
   font-size: 11px;
+  width: 100%;
 }
 
 .preferencias-classic-window .ant-input-textarea textarea {
@@ -180,21 +183,21 @@
 
 .preferencias-general-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 134px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap: 12px;
   align-items: start;
 }
 
 .preferencias-general-identity {
   display: grid;
-  gap: 5px;
+  gap: 6px;
   justify-content: center;
-  padding-top: 12px;
+  padding-top: 8px;
 }
 
 .preferencias-identity-line {
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.15;
 }
 
@@ -222,13 +225,14 @@
   align-items: center;
   gap: 4px;
   padding: 4px 5px;
-  background: #a9a9a9;
+  background: #a6a6a6;
   border: 1px solid #d6d6d6;
   border-radius: 0 0 3px 3px;
 }
 
 .preferencias-photo-strip .ant-btn {
   color: #ffffff;
+  padding-inline: 6px;
 }
 
 .preferencias-photo-strip .ant-btn .anticon {
@@ -245,7 +249,7 @@
 }
 
 .preferencias-general-form {
-  margin-top: 2px;
+  margin-top: 10px;
 }
 
 .preferencias-inline-row {
@@ -332,11 +336,13 @@
 
 .preferencias-nfse-form .preferencias-form-field .ant-input {
   max-width: 428px;
+  width: 100%;
 }
 
 .preferencias-nfse-form .preferencias-form-field .ant-input-number,
 .preferencias-nfse-form .preferencias-form-field .ant-input-affix-wrapper {
   max-width: 160px;
+  width: 100%;
 }
 
 .preferencias-nfse-form .preferencias-form-field .ant-input-number .ant-input-number-input {

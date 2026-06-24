@@ -5835,3 +5835,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a troca de abas e, se necessário, ajustar apenas microdetalhes de densidade.
+
+## Refino interno da aba Geral das Preferências
+
+- A aba Geral do modal Preferências foi aproximada do print do EasyDental sem alterar a geometria estável já conquistada.
+- A composição da identidade, do avatar e dos campos centrais foi ajustada.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é comparar novamente com o print e repetir o mesmo padrão de refinamento nas demais abas, se necessário.
