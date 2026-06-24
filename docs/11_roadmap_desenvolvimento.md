@@ -5593,3 +5593,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o encaixe operacional final do quadro de avisos.
+
+## Ampliação do miolo sem coluna direita
+
+- O badge da barra turquesa foi removido.
+- O bloco principal do quadro de avisos ficou mais largo e compacto.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar a leitura final do quadro com as barras de aviso mais amplas.

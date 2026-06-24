@@ -51,7 +51,6 @@ export function DashboardPage() {
       </Typography.Title>
       <div className="dashboard-shell">
         <div className="dashboard-strip">
-          <div className="dashboard-strip-badge">Brana Cloud</div>
           <div className="dashboard-strip-action">
             <FilterOutlined />
             <ReloadOutlined />
