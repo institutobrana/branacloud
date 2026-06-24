@@ -5611,3 +5611,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar a leitura da barra e do miolo em telas largas.
+
+## Refino de proporção do quadro de avisos
+
+- O miolo do quadro de avisos ganhou mais largura útil.
+- As barras de aviso ficaram mais próximas do padrão visual do EasyDental.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o balanceamento final da faixa e das barras em desktop largo.
