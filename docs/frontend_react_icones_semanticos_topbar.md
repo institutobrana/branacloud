@@ -94,7 +94,7 @@ Os ícones não precisam ser iguais aos do EasyDental. Eles precisam apenas faze
 
 - Os ícones permaneceram turquesa.
 - O hover ficou mais discreto.
-- A aparência de card pesado foi reduzida.
+- A aparência de card pesado foi reduzida para lembrar a referência visual enviada.
 - Os separadores verticais entre grupos foram preservados.
 - A topbar não mudou de altura.
 

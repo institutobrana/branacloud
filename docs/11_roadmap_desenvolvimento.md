@@ -5738,7 +5738,7 @@ Observacoes:
 ## Topbar com icones semanticos prontos
 
 - A barra horizontal superior do `frontend-react` passou a usar icones prontos e semanticos do `@ant-design/icons`.
-- Os desenhos ficaram mais claros para cada ação e mais próximos de um ERP clínico.
+- Os desenhos ficaram mais claros para cada ação e mais próximos da referencia visual enviada pelo usuário.
 - A ordem dos botões, os grupos e os separadores foram preservados.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
