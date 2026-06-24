@@ -5531,3 +5531,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o fluxo inicial e o retorno pelo botão `Dashboard` da toolbar superior.
+
+## Correção do Dashboard inicial sem depender de hover
+
+- O estado inicial do workspace foi fixado em `dashboard` com fallback seguro.
+- O botão `Dashboard` passou a reforçar explicitamente a mesma tela inicial.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar no navegador o carregamento imediato do dashboard e o retorno pelo botão.

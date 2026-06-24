@@ -108,9 +108,11 @@ function syncAppPath(screen) {
 
 function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
-  const [screen, setScreen] = useState(resolveScreenFromPath);
+  const initialScreen = resolveScreenFromPath() === 'pacientes' ? 'pacientes' : 'dashboard';
+  const [screen, setScreen] = useState(initialScreen);
+  const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
-  const [activeGroupKey, setActiveGroupKey] = useState(() => (resolveScreenFromPath() === 'pacientes' ? 'cadastro' : 'atendimento'));
+  const [activeGroupKey, setActiveGroupKey] = useState(() => (initialScreen === 'pacientes' ? 'cadastro' : 'atendimento'));
   const [panelGroupKey, setPanelGroupKey] = useState('');
 
   useEffect(() => {
@@ -118,6 +120,12 @@ function AppContent() {
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  useEffect(() => {
+    if (screen !== 'pacientes' && screen !== 'dashboard') {
+      setScreen('dashboard');
+    }
+  }, [screen]);
 
   const activeKey = screen;
   const panelGroup = panelGroupKey ? branaMainGroups.find((item) => item.key === panelGroupKey) : null;
@@ -129,6 +137,8 @@ function AppContent() {
     if (nextScreen === 'dashboard') {
       setActiveGroupKey('atendimento');
       setPanelGroupKey('');
+      setDashboardVersion((current) => current + 1);
+      window.scrollTo?.(0, 0);
       return;
     }
     if (nextScreen === 'pacientes') {
@@ -175,8 +185,8 @@ function AppContent() {
     if (screen === 'pacientes') {
       return <PacientesPage onBackHome={() => handleNavigate('dashboard')} />;
     }
-    return <DashboardPage />;
-  }, [screen]);
+    return <DashboardPage key={dashboardVersion} />;
+  }, [dashboardVersion, screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
