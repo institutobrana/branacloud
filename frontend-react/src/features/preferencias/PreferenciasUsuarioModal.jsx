@@ -47,9 +47,9 @@ function GeneralTab() {
   return (
     <div className="preferencias-tab-content">
       <Row gutter={16} className="preferencias-general-grid">
-        <Col xs={24} md={8} lg={7}>
+        <Col xs={24} md={6} lg={5}>
           <div className="preferencias-avatar-card">
-            <Avatar size={92} icon={<UserOutlined />} className="preferencias-avatar" />
+            <Avatar size={72} icon={<UserOutlined />} className="preferencias-avatar" />
             <div className="preferencias-avatar-actions">
               <Button icon={<CameraOutlined />} size="small" type="text">Câmera</Button>
               <Button icon={<UploadOutlined />} size="small" type="text">Upload</Button>
@@ -57,7 +57,7 @@ function GeneralTab() {
           </div>
         </Col>
 
-        <Col xs={24} md={16} lg={17}>
+        <Col xs={24} md={18} lg={19}>
           <Row gutter={12}>
             <Col xs={24} sm={12}>
               <Form.Item label="Nome">
@@ -81,7 +81,7 @@ function GeneralTab() {
             </Col>
             <Col span={24}>
               <Form.Item label="Apresentação/CV resumido">
-                <Input.TextArea rows={3} placeholder="Resumo profissional" />
+                <Input.TextArea rows={2} placeholder="Resumo profissional" />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
@@ -118,7 +118,7 @@ function ClinicalTab() {
   return (
     <div className="preferencias-tab-content">
       <Row gutter={16}>
-        <Col xs={24} md={10}>
+        <Col xs={24} md={8}>
           <Form.Item label="Especialidade(s)">
             <Select
               mode="multiple"
@@ -128,10 +128,10 @@ function ClinicalTab() {
           </Form.Item>
           <Button type="default" className="preferencias-inline-action">Incluir</Button>
         </Col>
-        <Col xs={24} md={14}>
+        <Col xs={24} md={16}>
           <Form.Item label="Especialidades incluídas">
             <Input.TextArea
-              rows={10}
+              rows={8}
               placeholder="Lista visual de especialidades incluídas"
               value={especialidadesOptions.join('\n')}
               readOnly
@@ -158,7 +158,7 @@ function BudgetTab() {
         </Col>
         <Col xs={24} md={12}>
           <Form.Item label="Mensagem para impressão">
-            <Input.TextArea rows={4} placeholder="Mensagem do orçamento" />
+            <Input.TextArea rows={3} placeholder="Mensagem do orçamento" />
           </Form.Item>
         </Col>
       </Row>

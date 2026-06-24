@@ -5774,3 +5774,14 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o modal em `/app` e só depois pensar em persistência.
+
+## Refino visual do modal de Preferências
+
+- O modal Preferências foi compactado para ficar mais denso e operacional.
+- A aba Geral ficou menos espaçada e a área de avatar foi reduzida.
+- As abas Ficha clínica e Orçamento ganharam leitura mais próxima de formulário desktop.
+- A aba NFS-e permaneceu apenas como pendência visual.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o modal compactado em `/app`.

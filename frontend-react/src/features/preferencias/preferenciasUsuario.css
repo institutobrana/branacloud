@@ -4,17 +4,17 @@
 }
 
 .preferencias-modal .ant-modal-header {
-  padding: 16px 20px 10px;
+  padding: 12px 16px 8px;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .preferencias-modal .ant-modal-body {
-  padding: 16px 20px 18px;
+  padding: 12px 16px 14px;
 }
 
 .preferencias-form {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .preferencias-tab-label {
@@ -22,7 +22,7 @@
 }
 
 .preferencias-tab-content {
-  min-height: 420px;
+  min-height: 320px;
 }
 
 .preferencias-general-grid {
@@ -32,11 +32,11 @@
 .preferencias-avatar-card {
   display: grid;
   justify-items: center;
-  gap: 12px;
-  padding: 16px;
+  gap: 8px;
+  padding: 10px;
   border: 1px solid rgba(22, 170, 161, 0.14);
   border-radius: 12px;
-  background: linear-gradient(180deg, rgba(22, 170, 161, 0.06), rgba(255, 255, 255, 0.96));
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .preferencias-avatar {
@@ -45,21 +45,21 @@
 
 .preferencias-avatar-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .preferencias-inline-action {
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .preferencias-clinical-checks,
 .preferencias-budget-checks {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .preferencias-nfse-pending {
@@ -68,23 +68,52 @@
   border: 1px dashed rgba(22, 170, 161, 0.25);
   border-radius: 12px;
   background: rgba(22, 170, 161, 0.04);
-  padding: 32px 16px;
+  padding: 18px 16px;
   text-align: center;
+  min-height: 180px;
 }
 
 .preferencias-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding-top: 8px;
+  padding-top: 4px;
 }
 
 @media (max-width: 768px) {
   .preferencias-modal .ant-modal-body {
-    padding: 14px;
+    padding: 12px;
   }
 
   .preferencias-tab-content {
     min-height: auto;
   }
+}
+
+.preferencias-modal .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.preferencias-modal .ant-form-item-label {
+  padding-bottom: 3px;
+}
+
+.preferencias-modal .ant-input,
+.preferencias-modal .ant-input-affix-wrapper,
+.preferencias-modal .ant-select-selector {
+  min-height: 30px !important;
+}
+
+.preferencias-modal .ant-input,
+.preferencias-modal .ant-select-selector,
+.preferencias-modal .ant-input-textarea textarea {
+  border-radius: 8px !important;
+}
+
+.preferencias-modal .ant-tabs-tab {
+  padding: 6px 10px;
+}
+
+.preferencias-modal .ant-tabs-content-holder {
+  padding-top: 4px;
 }
