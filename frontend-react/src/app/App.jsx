@@ -230,7 +230,6 @@ function AppContent() {
             onNavigate={handleNavigate}
             onOpenGroup={handleOpenGroup}
             onToggleExpand={handleToggleExpand}
-            onSignOut={signOut}
           />
           <BranaContextPanel
             group={panelGroup}

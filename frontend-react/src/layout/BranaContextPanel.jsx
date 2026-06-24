@@ -31,7 +31,6 @@ export function BranaContextPanel({ group, items, onClose, onSelectItem }) {
             onClick={() => onSelectItem?.(group.key, item)}
           >
             <span className="brana-context-panel-item-label">{item.label}</span>
-            {item.disabled ? <span className="brana-context-panel-item-state">Em breve</span> : null}
           </button>
         ))}
       </div>

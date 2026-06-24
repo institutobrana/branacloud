@@ -4,7 +4,6 @@ import {
   DashboardOutlined,
   DollarOutlined,
   FileTextOutlined,
-  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
@@ -22,7 +21,6 @@ export function BranaIconRail({
   onNavigate,
   onOpenGroup,
   onToggleExpand,
-  onSignOut,
 }) {
   return (
     <aside className={`brana-icon-rail${expanded ? ' is-expanded' : ' is-collapsed'}`} aria-label="Navegação principal">
@@ -54,19 +52,6 @@ export function BranaIconRail({
       </nav>
 
       <div className="brana-icon-rail-footer">
-        <Tooltip title="Sair" placement="right">
-          <button
-            type="button"
-            className="brana-icon-rail-button is-signout"
-            onClick={onSignOut}
-            aria-label="Sair"
-          >
-            <span className="brana-icon-rail-icon" aria-hidden="true">
-              <LogoutOutlined />
-            </span>
-            {expanded ? <span className="brana-icon-rail-label">Sair</span> : <span className="sr-only">Sair</span>}
-          </button>
-        </Tooltip>
         <Tooltip title={expanded ? 'Recolher barra' : 'Expandir barra'} placement="right">
           <button type="button" className="brana-icon-rail-toggle" onClick={onToggleExpand} aria-label="Recolher ou expandir a barra">
             {expanded ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}

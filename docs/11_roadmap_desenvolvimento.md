@@ -5503,3 +5503,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o submenu lateral no navegador.
+
+## Refino de contraste do submenu e remocao do logout da rail
+
+- O painel contextual do `frontend-react` recebeu contraste visual maior, com fundo branco opaco e sombra mais perceptível.
+- O botão `Sair` foi removido da rail lateral inferior esquerda.
+- O logout da topbar foi preservado.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar no navegador a solidez visual do painel e o comportamento do menu do usuário.

@@ -80,6 +80,7 @@ body {
 .brana-icon-rail-footer {
   margin-top: auto;
   padding: 10px 0 6px;
+  min-height: 58px;
 }
 
 .brana-icon-rail-section {
@@ -149,18 +150,6 @@ body {
     0 8px 18px rgba(0, 75, 37, 0.18);
 }
 
-.brana-icon-rail-button.is-signout {
-  width: 100%;
-  height: 42px;
-  color: rgba(255, 255, 255, 0.88);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.brana-icon-rail-button.is-signout:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-}
-
 .brana-icon-rail-icon {
   font-size: 18px;
   line-height: 1;
@@ -194,19 +183,20 @@ body {
   position: sticky;
   top: 66px;
   background: #ffffff;
-  border-right: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 6px 0 14px rgba(15, 23, 42, 0.06);
-  padding: 12px 10px 10px;
+  border-right: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 10px 0 22px rgba(15, 23, 42, 0.12);
+  padding: 14px 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   overflow: hidden;
+  z-index: 2;
 }
 
 .brana-context-panel-header {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-start;
 }
 
@@ -224,14 +214,16 @@ body {
 
 .brana-context-panel-title {
   margin-bottom: 0 !important;
-  font-size: 14px !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: var(--brana-deep-green);
 }
 
 .brana-context-panel-list {
   display: grid;
-  gap: 2px;
+  gap: 0;
   overflow: auto;
-  padding-right: 2px;
+  padding-right: 4px;
 }
 
 .brana-context-panel-item {
@@ -239,35 +231,31 @@ body {
   border: 0;
   background: #ffffff;
   border-radius: 0;
-  padding: 10px 10px;
+  padding: 11px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   text-align: left;
   cursor: pointer;
-  color: var(--brana-text);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  color: #111827;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.09);
 }
 
 .brana-context-panel-item:hover {
-  background: #f3f4f6;
+  background: #e5e7eb;
+  color: #111827;
 }
 
 .brana-context-panel-item.is-disabled {
   opacity: 1;
-  color: var(--brana-text);
+  color: #111827;
   cursor: not-allowed;
 }
 
 .brana-context-panel-item-label {
   font-weight: 700;
-}
-
-.brana-context-panel-item-state {
-  flex: 0 0 auto;
-  font-size: 11px;
-  color: var(--brana-gray);
+  color: inherit;
 }
 
 .sr-only {
