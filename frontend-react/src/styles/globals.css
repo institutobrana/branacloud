@@ -275,6 +275,7 @@ body {
 .brana-workspace {
   display: flex;
   flex-direction: column;
+  width: 100%;
   min-width: 0;
   min-height: 0;
 }
@@ -282,9 +283,9 @@ body {
 .brana-action-topbar {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-bottom: 4px solid var(--brana-support-teal);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.985), rgba(240, 247, 245, 0.985));
@@ -292,33 +293,51 @@ body {
 }
 
 .brana-action-topbar-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
   min-width: 0;
-  width: 190px;
+  width: 260px;
 }
 
 .brana-action-topbar-logo {
   display: block;
   width: auto;
-  height: 40px;
-  max-width: 190px;
+  height: 44px;
+  max-width: 50px;
   object-fit: contain;
 }
 
-.brana-action-topbar-kicker {
+.brana-action-topbar-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.08;
+}
+
+.brana-action-topbar-brand-name {
   display: block;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--brana-gray);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--brana-deep-green);
+  white-space: nowrap;
+}
+
+.brana-action-topbar-brand-subtitle {
+  display: block;
+  font-size: 11px;
   font-weight: 600;
+  color: var(--brana-gray);
+  white-space: nowrap;
 }
 
 .brana-action-topbar-center {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
   flex: 1;
 }
@@ -326,7 +345,7 @@ body {
 .brana-action-topbar-toolbar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
   flex-wrap: nowrap;
 }
@@ -349,16 +368,16 @@ body {
 .brana-action-topbar-search-wrap {
   display: flex;
   align-items: center;
-  min-width: 280px;
-  max-width: 460px;
-  width: 380px;
+  min-width: 260px;
+  max-width: 420px;
+  width: 340px;
   flex: 1;
 }
 
 .brana-action-button {
-  width: 34px;
-  height: 34px;
-  border-color: rgba(0, 75, 37, 0.18);
+  width: 40px;
+  height: 40px;
+  border-color: rgba(22, 170, 161, 0.22);
   color: var(--brana-deep-green);
   background: #ffffff;
   box-shadow:
@@ -371,13 +390,15 @@ body {
 }
 
 .brana-action-button .ant-btn-icon {
-  color: var(--brana-green);
+  color: #16aaa1;
+  font-size: 22px;
+  line-height: 1;
 }
 
 .brana-action-button:hover {
-  border-color: rgba(0, 123, 116, 0.28);
-  color: var(--brana-green);
-  background: rgba(0, 167, 157, 0.04);
+  border-color: rgba(22, 170, 161, 0.36);
+  color: #16aaa1;
+  background: rgba(22, 170, 161, 0.06);
 }
 
 .brana-action-topbar-session {
@@ -443,7 +464,9 @@ body {
 }
 
 .brana-workspace-content {
+  width: 100%;
   min-width: 0;
+  overflow: hidden;
 }
 
 .brana-page-header {

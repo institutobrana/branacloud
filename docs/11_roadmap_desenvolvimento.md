@@ -5482,3 +5482,14 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar o novo encaixe da rail e do workspace, e só depois seguir para refinamentos visuais finais.
+
+## Marca da topbar e workspace
+
+- A marca superior passou a exibir `BranaCloud` com `Sistema de Gestão Odontológica.` abaixo, usando a logo local.
+- O texto `Shell Operacional Odontológico` foi removido da topbar.
+- Os ícones da toolbar horizontal foram ampliados e receberam a cor da lateral.
+- O workspace recebeu ajuste fino para evitar o texto quebrado verticalmente.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a nova marca e, se necessário, ajustar apenas espaçamento fino.

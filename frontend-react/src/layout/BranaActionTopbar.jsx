@@ -74,12 +74,16 @@ function ActionButton({ action, onAction }) {
 export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderAction, onUserMenuAction }) {
   const displayName = user?.apelido || user?.nome || user?.email || '';
   const userLabel = loading ? 'Validando sessão...' : displayName || 'Sessão ativa';
+  const iconColorStyle = { color: '#16AAA1' };
 
   return (
     <header className="brana-action-topbar">
       <div className="brana-action-topbar-brand">
         <img className="brana-action-topbar-logo" src={branaLogo} alt="Instituto Brana Odontologia" />
-        <Typography.Text className="brana-action-topbar-kicker">Shell Operacional Odontológico</Typography.Text>
+        <div className="brana-action-topbar-brand-copy">
+          <Typography.Text className="brana-action-topbar-brand-name">BranaCloud</Typography.Text>
+          <Typography.Text className="brana-action-topbar-brand-subtitle">Sistema de Gestão Odontológica.</Typography.Text>
+        </div>
       </div>
 
       <div className="brana-action-topbar-center">
@@ -87,7 +91,7 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
           {toolbarGroups.map((group, groupIndex) => (
             <Space key={group.key} size={6} className="brana-action-topbar-group">
               {group.items.map((action) => (
-                <ActionButton key={action.key} action={action} onAction={onPlaceholderAction} />
+                <ActionButton key={action.key} action={{ ...action, icon: <span style={iconColorStyle}>{action.icon}</span> }} onAction={onPlaceholderAction} />
               ))}
               {groupIndex < toolbarGroups.length - 1 ? <span className="brana-action-topbar-divider" aria-hidden="true" /> : null}
             </Space>
