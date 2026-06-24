@@ -9,6 +9,7 @@ import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
+import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -114,6 +115,7 @@ function AppContent() {
   const [railExpanded, setRailExpanded] = useState(false);
   const [activeGroupKey, setActiveGroupKey] = useState(() => (initialScreen === 'pacientes' ? 'cadastro' : 'atendimento'));
   const [panelGroupKey, setPanelGroupKey] = useState('');
+  const [preferenciasOpen, setPreferenciasOpen] = useState(false);
   const panelCloseTimerRef = useRef(null);
 
   useEffect(() => {
@@ -195,7 +197,11 @@ function AppContent() {
     message.info('Funcionalidade em breve.');
   };
 
-  const handleUserMenuAction = async () => {
+  const handleUserMenuAction = async (key) => {
+    if (key === 'preferencias') {
+      setPreferenciasOpen(true);
+      return;
+    }
     message.info('Funcionalidade em breve.');
   };
 
@@ -282,6 +288,11 @@ function AppContent() {
           />
           <BranaWorkspace>{activePage}</BranaWorkspace>
         </div>
+        <PreferenciasUsuarioModal
+          open={preferenciasOpen}
+          userName={user?.apelido || user?.nome || user?.email || 'Tel'}
+          onClose={() => setPreferenciasOpen(false)}
+        />
       </div>
     );
   }

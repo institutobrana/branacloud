@@ -1,0 +1,90 @@
+.preferencias-modal .ant-modal-content {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.preferencias-modal .ant-modal-header {
+  padding: 16px 20px 10px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.preferencias-modal .ant-modal-body {
+  padding: 16px 20px 18px;
+}
+
+.preferencias-form {
+  display: grid;
+  gap: 14px;
+}
+
+.preferencias-tab-label {
+  font-weight: 600;
+}
+
+.preferencias-tab-content {
+  min-height: 420px;
+}
+
+.preferencias-general-grid {
+  align-items: start;
+}
+
+.preferencias-avatar-card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(22, 170, 161, 0.14);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(22, 170, 161, 0.06), rgba(255, 255, 255, 0.96));
+}
+
+.preferencias-avatar {
+  background: #16aaa1;
+}
+
+.preferencias-avatar-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.preferencias-inline-action {
+  margin-top: 4px;
+}
+
+.preferencias-clinical-checks,
+.preferencias-budget-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.preferencias-nfse-pending {
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(22, 170, 161, 0.25);
+  border-radius: 12px;
+  background: rgba(22, 170, 161, 0.04);
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.preferencias-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .preferencias-modal .ant-modal-body {
+    padding: 14px;
+  }
+
+  .preferencias-tab-content {
+    min-height: auto;
+  }
+}

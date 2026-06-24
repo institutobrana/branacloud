@@ -5764,3 +5764,13 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é mapear a tela em mais detalhe antes de qualquer implementação.
+
+## Modal visual de Preferências
+
+- O modal visual da tela Preferências foi implementado no `frontend-react` sem persistência.
+- A abertura foi ligada ao item `Preferências` do menu do usuário na topbar.
+- A aba NFS-e foi mantida como pendência visual segura.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar o modal em `/app` e só depois pensar em persistência.
