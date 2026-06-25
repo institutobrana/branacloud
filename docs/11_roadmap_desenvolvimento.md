@@ -5879,3 +5879,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é apenas microajustar alinhamentos, se o usuário trouxer nova comparação visual.
+
+## Aba Geral das Preferências - alinhamento dos dados de identidade
+
+- Nome, CPF e CRO/UF passaram a usar a mesma grade clássica dos demais campos da aba Geral.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é apenas validar visualmente o alinhamento final em `/app`.

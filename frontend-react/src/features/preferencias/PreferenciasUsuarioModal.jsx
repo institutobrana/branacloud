@@ -51,21 +51,16 @@ function GeneralTab() {
     <div className="preferencias-tab-content preferencias-classic-window preferencias-general-tab">
       <div className="preferencias-geral-easy-layout">
         <div className="preferencias-geral-form-area">
-          <div className="preferencias-general-head preferencias-general-head-compact">
-            <div className="preferencias-general-identity preferencias-general-identity-compact">
-              <div className="preferencias-identity-line">
-                <strong>Nome:</strong> Gleisson Tel
-              </div>
-              <div className="preferencias-identity-line">
-                <strong>CPF:</strong> 280.106.918-36
-              </div>
-              <div className="preferencias-identity-line">
-                <strong>CRO/UF:</strong> 81611-SP
-              </div>
-            </div>
-          </div>
-
-          <div className="preferencias-general-form preferencias-general-form-fixed">
+          <div className="preferencias-general-form preferencias-general-form-fixed preferencias-general-identity-grid">
+            <ClassicFormRow label="Nome:">
+              <span className="preferencias-form-value">Gleisson Tel</span>
+            </ClassicFormRow>
+            <ClassicFormRow label="CPF:">
+              <span className="preferencias-form-value">280.106.918-36</span>
+            </ClassicFormRow>
+            <ClassicFormRow label="CRO/UF:">
+              <span className="preferencias-form-value">81611-SP</span>
+            </ClassicFormRow>
             <ClassicFormRow label="Apresentação:">
               <Input.TextArea rows={3} defaultValue="Apresentação ou CV resumido do profissional" />
             </ClassicFormRow>
