@@ -3,7 +3,7 @@
   overflow: hidden;
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.28);
   background: #fdfdfd;
-  height: 620px;
+  height: 590px;
   display: flex;
   flex-direction: column;
 }
@@ -114,8 +114,8 @@
 }
 
 .preferencias-tab-content {
-  min-height: 420px;
-  height: 420px;
+  min-height: 392px;
+  height: 392px;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -412,18 +412,11 @@
   margin-bottom: 3px;
 }
 
-.preferencias-nfse-help {
-  display: block;
-  margin-top: 2px;
-  font-size: 11px;
-  text-align: center;
-}
-
 .preferencias-nfse-form {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding-top: 4px;
+  gap: 4px;
+  padding-top: 2px;
 }
 
 .preferencias-nfse-form .preferencias-form-field .ant-input {

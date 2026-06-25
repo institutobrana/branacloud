@@ -202,9 +202,6 @@ function NfseTab() {
       <ClassicFormRow label="Percentual sobre o valor bruto:">
         <Input type="number" suffix="%" />
       </ClassicFormRow>
-      <Typography.Text className="preferencias-nfse-help" type="secondary">
-        Campos visuais do print de referência EasyDental.
-      </Typography.Text>
     </div>
   );
 }

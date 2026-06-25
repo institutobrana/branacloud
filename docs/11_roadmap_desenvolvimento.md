@@ -5895,3 +5895,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente a aba NFS-e em `/app`.
+
+## Preferências - remoção do texto auxiliar da NFS-e e redução do modal
+
+- O texto auxiliar da NFS-e foi removido e o modal ficou um pouco mais baixo.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente o modal em `/app`.
