@@ -16,6 +16,27 @@ const moduloAberturaOptions = [
   'Gerenciar tratamentos',
 ];
 
+const envioPadraoOptions = [
+  'WhatsApp Web (apenas 1 envio)',
+  'E-mail',
+  'SMS',
+  'Nenhum',
+];
+
+const contaBancariaOptions = [
+  'CX Gleisson Tel',
+  'Conta padrão',
+  'Nenhuma',
+];
+
+const estoquePadraoOptions = ['Estoque padrão', 'Nenhum'];
+
+const modeloOrcamentoOptions = [
+  'Orçamento com odontograma',
+  'Orçamento simplificado',
+  'Orçamento detalhado',
+];
+
 const especialidadesOptions = [
   'Cirurgia',
   'Dentística',
@@ -68,14 +89,14 @@ function GeneralTab() {
               <Select
                 className="preferencias-select-wide"
                 defaultValue="WhatsApp Web (apenas 1 envio)"
-                options={[{ label: 'WhatsApp Web (apenas 1 envio)', value: 'WhatsApp Web (apenas 1 envio)' }]}
+                options={envioPadraoOptions.map((item) => ({ label: item, value: item }))}
               />
             </ClassicFormRow>
             <ClassicFormRow label="Conta bancária padrão:">
               <Select
                 className="preferencias-select-wide"
                 defaultValue="CX Gleisson Tel"
-                options={[{ label: 'CX Gleisson Tel', value: 'CX Gleisson Tel' }]}
+                options={contaBancariaOptions.map((item) => ({ label: item, value: item }))}
               />
             </ClassicFormRow>
             <ClassicFormRow label="Estoque padrão:">
@@ -83,7 +104,7 @@ function GeneralTab() {
                 className="preferencias-select-wide"
                 allowClear
                 defaultValue="Estoque padrão"
-                options={[{ label: 'Estoque padrão', value: 'Estoque padrão' }]}
+                options={estoquePadraoOptions.map((item) => ({ label: item, value: item }))}
               />
             </ClassicFormRow>
             <ClassicFormRow label="Módulo de abertura:">
@@ -166,7 +187,7 @@ function BudgetTab() {
           <Select
             className="preferencias-select-wide"
             defaultValue="Orçamento com odontograma"
-            options={[{ label: 'Orçamento com odontograma', value: 'Orçamento com odontograma' }]}
+            options={modeloOrcamentoOptions.map((item) => ({ label: item, value: item }))}
           />
         </ClassicFormRow>
         <ClassicFormRow label="Mensagem para impressão:">

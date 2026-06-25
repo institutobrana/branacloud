@@ -5903,3 +5903,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar visualmente o modal em `/app`.
+
+## Preferências - ajuste das opções dos combos
+
+- As listas visuais dos combos do modal Preferências foram ajustadas conforme o contrato funcional.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar os combos em `/app`.
