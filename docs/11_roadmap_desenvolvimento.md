@@ -5870,3 +5870,12 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A pr�xima etapa sugerida � validar visualmente a nova composi��o da aba Geral.
+
+## Grid real da aba Geral das Preferências
+
+- A aba Geral do modal Preferências recebeu uma grade real com coluna fixa de formulário e coluna fixa de foto.
+- Os campos ficaram com largura controlada e a foto passou a manter a barra inferior totalmente visível.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é apenas microajustar alinhamentos, se o usuário trouxer nova comparação visual.

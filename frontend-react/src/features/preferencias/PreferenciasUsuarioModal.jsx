@@ -48,59 +48,73 @@ function ClassicFormRow({ label, children, className = '' }) {
 
 function GeneralTab() {
   return (
-    <div className="preferencias-tab-content preferencias-classic-window">
-      <div className="preferencias-general-head">
-        <div className="preferencias-general-identity">
-          <div className="preferencias-identity-line"><strong>Nome:</strong> Gleisson Tel</div>
-          <div className="preferencias-identity-line"><strong>CPF:</strong> 280.106.918-36</div>
-          <div className="preferencias-identity-line"><strong>CRO/UF:</strong> 81611-SP</div>
+    <div className="preferencias-tab-content preferencias-classic-window preferencias-general-tab">
+      <div className="preferencias-geral-easy-layout">
+        <div className="preferencias-geral-form-area">
+          <div className="preferencias-general-head preferencias-general-head-compact">
+            <div className="preferencias-general-identity preferencias-general-identity-compact">
+              <div className="preferencias-identity-line">
+                <strong>Nome:</strong> Gleisson Tel
+              </div>
+              <div className="preferencias-identity-line">
+                <strong>CPF:</strong> 280.106.918-36
+              </div>
+              <div className="preferencias-identity-line">
+                <strong>CRO/UF:</strong> 81611-SP
+              </div>
+            </div>
+          </div>
+
+          <div className="preferencias-general-form preferencias-general-form-fixed">
+            <ClassicFormRow label="Apresentação:">
+              <Input.TextArea rows={3} defaultValue="Apresentação ou CV resumido do profissional" />
+            </ClassicFormRow>
+            <ClassicFormRow label="Envio padrão para mensagens:">
+              <Select
+                className="preferencias-select-wide"
+                defaultValue="WhatsApp Web (apenas 1 envio)"
+                options={[{ label: 'WhatsApp Web (apenas 1 envio)', value: 'WhatsApp Web (apenas 1 envio)' }]}
+              />
+            </ClassicFormRow>
+            <ClassicFormRow label="Conta bancária padrão:">
+              <Select
+                className="preferencias-select-wide"
+                defaultValue="CX Gleisson Tel"
+                options={[{ label: 'CX Gleisson Tel', value: 'CX Gleisson Tel' }]}
+              />
+            </ClassicFormRow>
+            <ClassicFormRow label="Estoque padrão:">
+              <Select
+                className="preferencias-select-wide"
+                allowClear
+                defaultValue="Estoque padrão"
+                options={[{ label: 'Estoque padrão', value: 'Estoque padrão' }]}
+              />
+            </ClassicFormRow>
+            <ClassicFormRow label="Módulo de abertura:">
+              <Select
+                className="preferencias-select-wide"
+                allowClear
+                defaultValue="Dashboard"
+                options={moduloAberturaOptions.map((item) => ({ label: item, value: item }))}
+              />
+            </ClassicFormRow>
+          </div>
         </div>
 
-        <div className="preferencias-photo-right">
+        <div className="preferencias-geral-photo-area">
           <div className="preferencias-avatar-frame">
             <Avatar size={80} icon={<UserOutlined />} className="preferencias-avatar" />
           </div>
           <div className="preferencias-photo-strip">
-            <Button icon={<CameraOutlined />} size="small" type="text">Câmera</Button>
-            <Button icon={<UploadOutlined />} size="small" type="text">Upload</Button>
+            <Button icon={<CameraOutlined />} size="small" type="text">
+              Câmera
+            </Button>
+            <Button icon={<UploadOutlined />} size="small" type="text">
+              Upload
+            </Button>
           </div>
         </div>
-      </div>
-
-      <div className="preferencias-general-form">
-        <ClassicFormRow label="Apresentação:">
-          <Input.TextArea rows={3} defaultValue="Apresentação ou CV resumido do profissional" />
-        </ClassicFormRow>
-        <ClassicFormRow label="Envio padrão para mensagens:">
-          <Select
-            className="preferencias-select-wide"
-            defaultValue="WhatsApp Web (apenas 1 envio)"
-            options={[{ label: 'WhatsApp Web (apenas 1 envio)', value: 'WhatsApp Web (apenas 1 envio)' }]}
-          />
-        </ClassicFormRow>
-        <ClassicFormRow label="Conta bancária padrão:">
-          <Select
-            className="preferencias-select-wide"
-            defaultValue="Conta padrão"
-            options={[{ label: 'Conta padrão', value: 'Conta padrão' }]}
-          />
-        </ClassicFormRow>
-        <ClassicFormRow label="Estoque padrão:">
-          <Select
-            className="preferencias-select-wide"
-            allowClear
-            defaultValue="Estoque padrão"
-            options={[{ label: 'Estoque padrão', value: 'Estoque padrão' }]}
-          />
-        </ClassicFormRow>
-        <ClassicFormRow label="Módulo de abertura:">
-          <Select
-            className="preferencias-select-wide"
-            allowClear
-            defaultValue="Dashboard"
-            options={moduloAberturaOptions.map((item) => ({ label: item, value: item }))}
-          />
-        </ClassicFormRow>
       </div>
     </div>
   );
