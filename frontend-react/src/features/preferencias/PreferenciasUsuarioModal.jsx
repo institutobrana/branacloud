@@ -61,12 +61,8 @@ function GeneralTab() {
             <Avatar size={80} icon={<UserOutlined />} className="preferencias-avatar" />
           </div>
           <div className="preferencias-photo-strip">
-            <Button icon={<CameraOutlined />} size="small" type="text">
-              Câmera
-            </Button>
-            <Button icon={<UploadOutlined />} size="small" type="text">
-              Upload
-            </Button>
+            <Button icon={<CameraOutlined />} size="small" type="text">Câmera</Button>
+            <Button icon={<UploadOutlined />} size="small" type="text">Upload</Button>
           </div>
         </div>
       </div>

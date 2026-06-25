@@ -1,14 +1,14 @@
-﻿# COMO USAR ESTE ARQUIVO
+�# COMO USAR ESTE ARQUIVO
 
 Este documento representa o estado atual de desenvolvimento do sistema.
 
-Sempre que um mÃ³dulo for alterado:
+Sempre que um módulo for alterado:
 
 * Atualizar as fases
-* Atualizar o prÃ³ximo passo
-* Atualizar observaÃ§Ãµes
+* Atualizar o próximo passo
+* Atualizar observações
 
-Nenhuma funcionalidade Ã© considerada concluÃ­da sem atualizaÃ§Ã£o deste arquivo.
+Nenhuma funcionalidade é considerada concluída sem atualização deste arquivo.
 
 Este arquivo deve ser consultado antes de iniciar qualquer nova tarefa.
 
@@ -35,8 +35,8 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Revalidacao runtime posterior detectou que o login de `gleissontel@gmail.com` voltou a responder `400` no momento da checagem, impedindo a observacao do fluxo `Tratamento -> Novo tratamento`; o novo documento de runtime foi registrado em `docs/revalidacao_runtime_pos_rollback_novo_tratamento.md`.
 - A janela `Novo tratamento` foi revalidada em runtime com paciente em uso e carregamento real do endpoint `GET /tratamentos/novo/combos`; a modal abriu com os campos principais preenchidos e sem persistencia.
 - Os campos de data do modal `Novo tratamento` passaram a exibir e aceitar datas em `DD/MM/AAAA`, com validacao local e calendario popup, e `Finalizacao` agora recebe a data vigente quando a `Situacao` vira `Finalizado`, sem mudar o contrato de persistencia.
-- O combo `Cirurgiao responsavel` do modal `Novo tratamento` passou a carregar prestadores ativos da clinica no endpoint de combos, com selecao preferencial do prestador vinculado ao usuario atual; a aba `Convenio` passou a usar o mesmo catalogo para `Cirurgiao contratado`, `Solicitante` e `Executante`; a validacao runtime mostrou `Agenda - TLMK`, `Butarelo`, `Clínica` e `Tel` na clinica 1.
-- O combo `Tabela principal` do modal `Novo tratamento` passou a respeitar a preferencia salva em `Preferências > Geral > Tabela de intervenções padrão para novos cadastros`, mantendo a lista completa de tabelas e caindo para `PARTICULAR` quando a preferencia estiver ausente ou invalida.
+- O combo `Cirurgiao responsavel` do modal `Novo tratamento` passou a carregar prestadores ativos da clinica no endpoint de combos, com selecao preferencial do prestador vinculado ao usuario atual; a aba `Convenio` passou a usar o mesmo catalogo para `Cirurgiao contratado`, `Solicitante` e `Executante`; a validacao runtime mostrou `Agenda - TLMK`, `Butarelo`, `Cl�nica` e `Tel` na clinica 1.
+- O combo `Tabela principal` do modal `Novo tratamento` passou a respeitar a preferencia salva em `Prefer�ncias > Geral > Tabela de interven��es padr�o para novos cadastros`, mantendo a lista completa de tabelas e caindo para `PARTICULAR` quando a preferencia estiver ausente ou invalida.
 - O combo `Unidade de atendimento` do modal `Novo tratamento` passou a listar apenas unidades ativas do cadastro de `Unidade de atendimento`, com selecao preferencial da unidade vinculada ao usuario atual e fallback para a primeira unidade ativa.
 - Os campos `Inclusao` e `Alteracao` do modal `Novo tratamento` agora abrem vazios; a primeira gravacao preenche `Inclusao` com `DD/MM/AAAA - apelido` e gravacoes posteriores do mesmo tratamento preenchem `Alteracao` com a nova data e apelido, preservando a `Inclusao`.
 - O combo `Tipo de atendimento (TISS)` da aba `Convenio` do modal `Novo tratamento` passou a usar um catalogo proprio aditivo no backend, com os cinco itens do EasyDental, mantendo `payload.tipos_tiss` para o frontend e preservando a reabertura do tratamento com o valor salvo.
@@ -65,16 +65,16 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - O checklist operacional da Subetapa 6 da Onda 1 da extracao da tela principal e da faixa de paciente foi registrado em `docs/onda1_tela_principal_paciente_em_uso_subetapa_6_checklist_operacional.md`; o documento fecha a frente em modo de estabilizacao, confirmando que nao ha novo comportamento funcional a adicionar antes da proxima onda.
 - O ajuste funcional posterior da frente adicionou a busca por nome na tela principal: o campo de nome agora pode abrir diretamente o prontuario quando o nome completo estiver exato, ou abrir o Menu de pacientes quando a entrada for parcial, preservando a mesma fonte de contexto do paciente em uso. O modulo da tela principal foi renomeado no frontend para `frontend/js/modules/prontuario.js`, mantendo a API interna de paciente em uso e o fallback existente.
 - A etapa visual isolada da janela `Novo tratamento` foi iniciada no frontend com o modulo dedicado `frontend/js/modules/novo-tratamento-modal.js`, carregado por `frontend/index.html` e acionado pela acao `tratamento-novo` em `frontend/app.js`; a abertura atual e apenas visual, sem salvar tratamento, sem backend, sem banco e sem integracao com odontograma ou financeiro.
-- A validacao visual em runtime do modal `Novo tratamento` foi concluida com sessao autenticada local, abrindo o menu `Tratamento -> Novo tratamento`, alternando a aba `Convenio` e confirmando os fechamentos por `Ok`, `Cancela`, `X`, `ESC` e clique fora, sem qualquer requisicao de gravação.
+- A validacao visual em runtime do modal `Novo tratamento` foi concluida com sessao autenticada local, abrindo o menu `Tratamento -> Novo tratamento`, alternando a aba `Convenio` e confirmando os fechamentos por `Ok`, `Cancela`, `X`, `ESC` e clique fora, sem qualquer requisicao de grava��o.
 - O contrato funcional campo por campo do modal `Novo tratamento` foi registrado em `docs/contrato_funcional_campos_modal_novo_tratamento.md`; nenhuma implementacao foi feita e a proxima etapa recomendada passou a ser a correcao controlada por grupo de campos apos confirmacao do usuario.
-- A correcao funcional leve dos campos provisórios do modal `Novo tratamento` removeu o valor hardcoded de `Idade`; sem paciente seguro, o campo permanece vazio, e `Inclusao`/`Alteracao` continuam neutros ate existir persistencia real.
+- A correcao funcional leve dos campos provis�rios do modal `Novo tratamento` removeu o valor hardcoded de `Idade`; sem paciente seguro, o campo permanece vazio, e `Inclusao`/`Alteracao` continuam neutros ate existir persistencia real.
 - O contrato tecnico do fluxo `Novo tratamento` com paciente em uso foi registrado em `docs/contrato_fluxo_novo_tratamento_paciente_em_uso.md`; o documento consolida a regra de abrir o modal apenas com paciente em uso, ou abrir o `Menu de pacientes` quando nao houver paciente ativo, sem qualquer implementacao nesta etapa.
 - A implementacao modular do gate de paciente em uso para `Tratamento -> Novo tratamento` foi aplicada com o helper isolado `frontend/js/modules/novo-tratamento-paciente-gate.js` e uma ligacao minima sob demanda em `frontend/app.js`; nao houve persistencia real nem alteracao de backend/banco.
-- O cabeçalho de paciente em uso da tela principal foi adicionado como faixa discreta no topo do shell odontologico, reaproveitando `BranaOdontoV1Module.state.paciente` e `fichaPacienteAtualId` apenas como leitura segura; a faixa serve para dar visibilidade ao contexto ativo antes do fluxo `Novo tratamento`.
+- O cabe�alho de paciente em uso da tela principal foi adicionado como faixa discreta no topo do shell odontologico, reaproveitando `BranaOdontoV1Module.state.paciente` e `fichaPacienteAtualId` apenas como leitura segura; a faixa serve para dar visibilidade ao contexto ativo antes do fluxo `Novo tratamento`.
 - A correcao runtime do header de paciente em uso ajustou a tela principal odontologica isolada, que era o fluxo realmente exibido no navegador; a linha de paciente do layout passou a mostrar numero e nome de forma visivel, e o fluxo legado da ficha ganhou sincronizacao sob demanda para o mesmo elemento.
 - A etapa posterior de integracao do fluxo `Tratamento -> Novo tratamento` foi detectada como regressiva e revertida seletivamente apos o commit `d895078`, para retornar ao estado funcional anterior antes de qualquer nova mudanca no fluxo.
-- Auditoria documental da regra usuario -> prestador Clinica concluida: o combo de usuarios carrega o prestador sistêmico, o frontend nao filtra esse item e o backend bloqueia o vínculo em `_load_prestador_from_same_clinic()`; o banco confirmou o par usuario/prestador sistemico nas clinicas 1, 4, 13, 17 e 18; classificacao preliminar `REGRA-B + REGRA-F`; proxima etapa recomendada: comparar com EasyDental virgem antes de qualquer correção.
-- Comparacao EasyDental virgem concluida com fonte local somente leitura (`PROJETO_PRECIFICACAO_LEGADO\\Dados`, `eds70.sql`, `Dist\\USUARIO.raw`, `Dist\\PRESTADOR.raw`, `Dist\\UNIDADE.raw`, `Dist\\SISTEMA.raw` e `D:\\UTIL\\EasyDental_7.6_BR\\Readme.doc`): o legado confirma `Clínica` como prestador sistemico protegido, mas também confirma o vinculo operacional usuario/prestador e o uso desse contexto para agenda/conta da clinica; classificacao `EASY-A + REGRA-A + REGRA-F`; proxima etapa recomendada: abrir contrato de correção pequena no backend para permitir o vínculo operacional sem mexer na protecao estrutural.
+- Auditoria documental da regra usuario -> prestador Clinica concluida: o combo de usuarios carrega o prestador sist�mico, o frontend nao filtra esse item e o backend bloqueia o v�nculo em `_load_prestador_from_same_clinic()`; o banco confirmou o par usuario/prestador sistemico nas clinicas 1, 4, 13, 17 e 18; classificacao preliminar `REGRA-B + REGRA-F`; proxima etapa recomendada: comparar com EasyDental virgem antes de qualquer corre��o.
+- Comparacao EasyDental virgem concluida com fonte local somente leitura (`PROJETO_PRECIFICACAO_LEGADO\\Dados`, `eds70.sql`, `Dist\\USUARIO.raw`, `Dist\\PRESTADOR.raw`, `Dist\\UNIDADE.raw`, `Dist\\SISTEMA.raw` e `D:\\UTIL\\EasyDental_7.6_BR\\Readme.doc`): o legado confirma `Cl�nica` como prestador sistemico protegido, mas tamb�m confirma o vinculo operacional usuario/prestador e o uso desse contexto para agenda/conta da clinica; classificacao `EASY-A + REGRA-A + REGRA-F`; proxima etapa recomendada: abrir contrato de corre��o pequena no backend para permitir o v�nculo operacional sem mexer na protecao estrutural.
 - Contrato tecnico da correcao de vinculo usuario -> prestador Clinica registrado em `docs/contrato_correcao_usuario_vinculo_prestador_clinica.md`; abordagem escolhida `USER-PREST-CONTRATO-B`; regra definida: manter a protecao estrutural do prestador Clinica e liberar apenas o vinculo operacional de usuario no backend, sem mexer em frontend, payload ou banco nesta etapa.
 - Correcao backend-only do vinculo usuario -> prestador Clinica aplicada em `backend/routes/user_admin_routes.py`, com helper operacional separado para `admin_create_user` e `admin_update_user` e preservacao do helper estrutural; proxima validacao recomendada: teste manual controlado do vinculo e consolidacao documental final.
 - Validacao manual do vinculo usuario -> prestador Clinica confirmada pelo usuario; correcao backend-only considerada validada e documentada em `docs/validacao_manual_usuario_vinculo_prestador_clinica.md`; protecao estrutural preservada; nenhuma alteracao de codigo ou banco nesta etapa.
@@ -117,10 +117,10 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Validar manualmente a janela visual `Novo tratamento` e depois fechar a matriz de lacunas do convenio antes de qualquer persistencia real.
 - Apos a validacao visual, o proximo passo mais provavel e o aceite humano comparando com o print do EasyDental, antes de qualquer persistencia real.
 - Apos o contrato funcional dos campos, o proximo passo recomendado e priorizar apenas um grupo pequeno de campos de baixo risco, sem persistencia, se o usuario confirmar.
-- A correção leve atual deixou o modal pronto para validacao dos campos pendentes ou para o contrato da aba `Convenio`, sem tocar em persistência.
+- A corre��o leve atual deixou o modal pronto para validacao dos campos pendentes ou para o contrato da aba `Convenio`, sem tocar em persist�ncia.
 - O fluxo Novo tratamento com paciente em uso passou a ser a nova lacuna formalizada; a proxima etapa recomendada e implementar somente o gate modular de paciente em uso no acionamento `Tratamento -> Novo tratamento`, sem gravar tratamento.
 - A proxima etapa apos o gate e validar runtime com e sem paciente em uso e, depois, fechar a origem de `Idade` ou os campos restantes do modal sem misturar persistencia.
-- Com o cabeçalho de paciente em uso visível, a continuidade do fluxo Menu de pacientes -> paciente ativo -> Novo tratamento fica mais auditável na tela principal.
+- Com o cabe�alho de paciente em uso vis�vel, a continuidade do fluxo Menu de pacientes -> paciente ativo -> Novo tratamento fica mais audit�vel na tela principal.
 - A proxima etapa apos o rollback seletivo e uma nova auditoria de runtime antes de qualquer nova mudanca no fluxo `Tratamento -> Novo tratamento`.
 - Revisar anamnese/SQLServer/restauracao em trilha separada.
 - O plano tecnico do modulo Orcamento foi formalizado em `docs/15_plano_execucao_orcamento.md`; proxima etapa recomendada: iniciar a Fase 1 apenas depois de backup/checkpoint e aviso explicito antes da primeira alteracao de codigo.
@@ -162,7 +162,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Conclusao cautelosa: a correspondencia fisica direta com a share externa nao foi confirmada; o volume populado nao deve ser usado isoladamente como prova de base usada, pois pode refletir seeds estruturais do proprio EasyDental.
 - Tabelas analisadas: `_TIPO_USUARIO`, `LOGON`, `USUARIO`, `CCCIRURGIAO`, `PESSOAL`, `PREST_ESP`, `PRESTADOR`, `TMP_PARTICIPACAO`, `USUARIO_FUNCAO`, `USUARIO_MODULO`, `USUARIO_PERFIL`.
 - Principais achados sobre usuarios/login: `USUARIO` e a tabela clara de login; `LOGON` e vazia e parece ser sessao/log; `_TIPO_USUARIO` e seed auxiliar de tipos.
-- Principais achados sobre prestadores/profissionais: `PRESTADOR` e a tabela clara de prestador; `PREST_ESP` e a junção formal com especialidades; `PESSOAL` e amplo cadastro de pessoas com FK para prestador; `CCCIRURGIAO` e operacional com `ID_PRESTADOR` por nomenclatura.
+- Principais achados sobre prestadores/profissionais: `PRESTADOR` e a tabela clara de prestador; `PREST_ESP` e a jun��o formal com especialidades; `PESSOAL` e amplo cadastro de pessoas com FK para prestador; `CCCIRURGIAO` e operacional com `ID_PRESTADOR` por nomenclatura.
 - Principais achados sobre vinculos: `USUARIO_FUNCAO`, `USUARIO_MODULO` e `USUARIO_PERFIL` possuem FKs formais e representam os vinculos de acesso/perfil; `TMP_PARTICIPACAO` e auxiliar/temporaria sem FKs observadas.
 - Nao houve implementacao.
 - Nao houve alteracao no EasyDental.
@@ -173,7 +173,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Subetapa executada: analise estrutural somente leitura de permissoes, perfis, modulos e funcoes.
 - Tabelas analisadas: `SIS_FUNCAO`, `SIS_MODULO`, `SIS_PERFIL`, `USUARIO_FUNCAO`, `USUARIO_MODULO`, `USUARIO_PERFIL`, `USUARIO`, `_TIPO_USUARIO`, `PRESTADOR`, `UNIDADE`.
 - Contagens registradas: `SIS_FUNCAO` 127, `SIS_MODULO` 52, `SIS_PERFIL` 10, `USUARIO_FUNCAO` 740, `USUARIO_MODULO` 312, `USUARIO_PERFIL` 184, `USUARIO` 7, `_TIPO_USUARIO` 10, `PRESTADOR` 5, `UNIDADE` 1.
-- `SIS_PERFIL` nao apresenta um perfil nomeado explicitamente como administrador; os nomes sao funcionais, como `Pacientes`, `Intervenções`, `Agenda de horários`, `Controle de estoque` e relatórios.
+- `SIS_PERFIL` nao apresenta um perfil nomeado explicitamente como administrador; os nomes sao funcionais, como `Pacientes`, `Interven��es`, `Agenda de hor�rios`, `Controle de estoque` e relat�rios.
 - `SIS_MODULO` possui 52 modulos e o campo `PERMITE_SENHA`; a maior parte dos modulos consultados exige senha, com excecao inicial de `Odontograma`.
 - `SIS_FUNCAO` possui 127 funcoes, todas ligadas formalmente a `SIS_MODULO`; os nomes observados sao operacionais, como inserir, alterar e eliminar, com `PERMITE_SENHA` em boa parte delas.
 - `USUARIO_MODULO`, `USUARIO_FUNCAO` e `USUARIO_PERFIL` formam a matriz de acesso; o usuario `1` aparece com cobertura muito ampla, o que sugere um usuario inicial/admin de fato comportamental, embora nao exista perfil chamado `Administrador`.
@@ -196,7 +196,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Nao houve implementacao.
 - Nao houve alteracao no EasyDental.
 - Impacto futuro previsto: novas contas no Brana Cloud provavelmente precisarao nascer com unidade inicial, config global e seeds auxiliares protegidos, para evitar tela quebrada, menu vazio ou identidade de instalacao incompleta.
-- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 5 - analise somente leitura de Intervenções/Procedimentos, seeds odontológicos e tabelas clínicas estruturais`.
+- Proxima subetapa recomendada: `EasyDental virgem - Subetapa 5 - analise somente leitura de Interven��es/Procedimentos, seeds odontol�gicos e tabelas cl�nicas estruturais`.
 
 ## Subetapa 5 da frente EasyDental virgem
 
@@ -255,8 +255,8 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 ## Subetapa 8A da frente EasyDental virgem
 
 - Subetapa executada: decisao de tabelas, usuarios e prestadores para novas contas Brana, ainda sem implementacao.
-- Foco documental: fechamento do papel de `Mestre` e `Clínica`, sem forcar conclusao literal onde a busca textual nao confirmou o termo `Mestre`.
-- Resultado preliminar: `Clínica` foi localizada de forma literal em `USUARIO 255` / `PRESTADOR 255` / `UNIDADE 1`; `Mestre` permanece como papel admin-like inferido, com `USUARIO 1` como melhor equivalente funcional.
+- Foco documental: fechamento do papel de `Mestre` e `Cl�nica`, sem forcar conclusao literal onde a busca textual nao confirmou o termo `Mestre`.
+- Resultado preliminar: `Cl�nica` foi localizada de forma literal em `USUARIO 255` / `PRESTADOR 255` / `UNIDADE 1`; `Mestre` permanece como papel admin-like inferido, com `USUARIO 1` como melhor equivalente funcional.
 - Matriz completa EasyDental x Brana: classifica tabelas em manter Brana atual, regular no contrato, incluir no contrato de novas contas, melhorar equivalente existente, nao incluir ou deixar pendente.
 - Regra reforcada: nao duplicar conceitos que ja existem no Brana; quando o EasyDental for melhor, registrar como melhoria do equivalente existente em vez de criar novo conceito.
 - Regra reforcada: logs, historicos, transacionais e temporarios nao devem nascer como seed de novas contas.
@@ -268,7 +268,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 ## Subetapa 8B da frente EasyDental virgem
 
 - Subetapa executada: fechamento final do contrato de usuarios, prestadores e seeds, sem implementacao.
-- Decisao final documental: `Clínica` permanece como papel estrutural literal (`USUARIO 255` / `PRESTADOR 255` / `UNIDADE 1`); `Mestre` permanece como admin-like inferido (`USUARIO 1` / `PRESTADOR 1`).
+- Decisao final documental: `Cl�nica` permanece como papel estrutural literal (`USUARIO 255` / `PRESTADOR 255` / `UNIDADE 1`); `Mestre` permanece como admin-like inferido (`USUARIO 1` / `PRESTADOR 1`).
 - Contrato final de seeds: CID, tabela generica, procedimentos canonicos, procedimentos genericos, tabela Brana, especialidades, fases/status, simbolos, anamnese, lookups auxiliares e configuracoes minimas devem nascer para novas contas.
 - Ficam fora do nascimento: logs, historicos, transacionais, movimentos e `TMP_*`.
 - Regra final: novas contas nascem prontas, setup nao cria estrutura minima, contas existentes preservam PARTICULAR.
@@ -298,10 +298,10 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - A nova conta testada passou nos pontos principais ja fechados pelas Subetapas 8P, 8K, 8R e 8S:
   - tabelas de procedimentos corretas;
   - unidade Principal / 0001 correta;
-  - prestador Clínica correto;
+  - prestador Cl�nica correto;
   - prestador ADM/Mestre funcional correto;
-  - prestador ADM com tipo Cirurgião dentista.
-- Nova pendencia funcional registrada: o modulo Usuários ainda precisa nascer com Tipo de usuário = Dentista (CD), prestador associado = prestador ADM/Mestre funcional e unidade de atendimento = Principal / 0001.
+  - prestador ADM com tipo Cirurgi�o dentista.
+- Nova pendencia funcional registrada: o modulo Usu�rios ainda precisa nascer com Tipo de usu�rio = Dentista (CD), prestador associado = prestador ADM/Mestre funcional e unidade de atendimento = Principal / 0001.
 - Decisao atualizada sobre setup: manter a tela de setup para o primeiro acesso do ADM inicial da nova conta e impedir que ela apareca para usuarios criados depois dentro da mesma conta.
 - Contrato complementar fechado para a proxima implementacao isolada:
   - 8U: ajustar o nascimento do usuario ADM;
@@ -322,7 +322,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - Fonte consultada nesta sessao: o share UNC principal `\\Sonyvaio\c\EDS70` nao estava acessivel; a leitura foi complementada por mirror local somente leitura e pelos documentos historicos da trilha.
 - Achados diretos no EasyDental:
   - `USUARIO.raw`, `PRESTADOR.raw` e os contratos historicos confirmam a presenca funcional de `Mestre`.
-  - `PRESTADOR.raw` e `USUARIO.raw` confirmam `Clínica` como referencia estrutural do legado.
+  - `PRESTADOR.raw` e `USUARIO.raw` confirmam `Cl�nica` como referencia estrutural do legado.
   - `_TIPO_USUARIO` contem o tipo `Dentista (CD)`.
   - `UNIDADE.raw` traz `0001` / `Principal`.
   - `SISTEMA.raw` traz `ControleUsuarios=0` e `Auditoria=0`.
@@ -346,29 +346,29 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 ## Subetapa 8T-C da frente EasyDental virgem
 
-- Subetapa executada: confirmação complementar no UNC principal sobre usuário, prestador, unidade e setup, sem implementação.
-- Motivo da confirmação: a 8T-B usou mirror local porque o UNC principal não estava acessível naquela sessão; nesta sessão o UNC voltou a responder.
-- Resultado do acesso ao UNC principal: acessível.
+- Subetapa executada: confirma��o complementar no UNC principal sobre usu�rio, prestador, unidade e setup, sem implementa��o.
+- Motivo da confirma��o: a 8T-B usou mirror local porque o UNC principal n�o estava acess�vel naquela sess�o; nesta sess�o o UNC voltou a responder.
+- Resultado do acesso ao UNC principal: acess�vel.
 - Achados confirmados:
   - `Mestre` em `USUARIO.raw` e `PRESTADOR.raw`.
-  - `Clínica` em `PRESTADOR.raw` e na referência estrutural da base.
+  - `Cl�nica` em `PRESTADOR.raw` e na refer�ncia estrutural da base.
   - `Dentista (CD)` em `_TIPO_USUARIO.raw`.
   - `Principal / 0001` em `UNIDADE.raw`.
   - `USUARIO.ID_UNIDADE` e `USUARIO.ID_PRESTADOR` no layout de `eds70.sql`.
   - `ControleUsuarios=0` e `Auditoria=0` em `SISTEMA.raw`.
-  - ausência de setup genérico obrigatório para todo usuário novo nos arquivos consultados.
+  - aus�ncia de setup gen�rico obrigat�rio para todo usu�rio novo nos arquivos consultados.
 - Regra confirmada:
-  - o usuário ADM inicial das novas contas deve nascer como `Dentista (CD)`;
+  - o usu�rio ADM inicial das novas contas deve nascer como `Dentista (CD)`;
   - deve apontar para o prestador ADM/Mestre funcional;
   - deve apontar para `Principal / 0001`;
   - setup continua apenas para o ADM inicial;
-  - setup não deve aparecer para usuários criados depois.
-- Próxima subetapa liberada: `8U`, mantendo `8V` separada e posterior.
-- Não houve implementação.
-- Nenhum código foi alterado.
+  - setup n�o deve aparecer para usu�rios criados depois.
+- Pr�xima subetapa liberada: `8U`, mantendo `8V` separada e posterior.
+- N�o houve implementa��o.
+- Nenhum c�digo foi alterado.
 - Nenhum banco foi alterado.
 - Nenhum arquivo EasyDental foi alterado.
-- Nenhuma conta foi criada ou excluída.
+- Nenhuma conta foi criada ou exclu�da.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Subetapa 8U-B da frente EasyDental virgem
@@ -434,7 +434,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - O checkbox `Ativar controle de usuarios e senhas` foi identificado como flag em `clinica.opcoes_sistema_json.seguranca.ativar_controle_usuarios`, com default atual ligado no Brana, afetando a exigencia de senha/admin password, mas nao recriando sozinho a matriz de permissao.
 - O comparativo com o EasyDental virgem foi mantido: controle de usuarios/senhas e auditoria nascem desativados na fonte observada, enquanto o Brana atual ainda combina permissao de modulo com gate interno mais rigido.
 - O contrato tecnico preliminar registrado recomenda que usuarios posteriores nascam com acesso mais livre em geral, mas com `Usuarios` e `Opcoes do Sistema` protegidos por padrao, sem abrir acesso indevido.
-- A recomendacao para a proxima etapa passa a ser uma implementacao isolada de permissões padrao para usuarios novos, ou contrato complementar se ainda houver duvida.
+- A recomendacao para a proxima etapa passa a ser uma implementacao isolada de permiss�es padrao para usuarios novos, ou contrato complementar se ainda houver duvida.
 - Confirmacao funcional: nenhuma implementacao foi feita nesta etapa.
 - Nenhuma conta foi criada ou excluida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
@@ -447,7 +447,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 - `is_admin=True` continua liberando todos os modulos.
 - As permissoes existentes de contas antigas nao foram alteradas, porque a mudanca atingiu apenas o baseline de novos usuarios.
 - `user_admin_routes.py` e `superadmin_routes.py` nao precisaram de alteracao, pois ja consomem o baseline do backend ou a derivacao em leitura sem criar nova regra paralela.
-- Os checks executados confirmaram `default_permissions()` para Dentista (CD), Clínica, Gerente administrativo, Funcionário(a) administrativo(a) e admin com os valores esperados.
+- Os checks executados confirmaram `default_permissions()` para Dentista (CD), Cl�nica, Gerente administrativo, Funcion�rio(a) administrativo(a) e admin com os valores esperados.
 - O comportamento do checkbox `Ativar controle de usuarios e senhas` foi preservado; esta etapa nao mudou seu default nem a sua persistencia.
 - A validacao manual recomendada agora e criar um novo usuario nao-admin e conferir que os modulos comuns nascem livres, com `Usuarios` e `Opcoes do Sistema/Configuracao` protegidos.
 - A proxima subetapa recomendada passa a ser a validacao manual da 8W-B.
@@ -457,7 +457,7 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 - Subetapa executada: validacao manual bem-sucedida da nova conta apos 8P/8K/8R/8U.
 - Validacao informada pelo usuario: testes ok, conta criada corretamente e 8U-C considerada ok.
-- Itens confirmados: `signup/confirm`, unidade `Principal / 0001`, tabelas da 8P, `Tabela Exemplo` ausente, `Brana` padrao/privada, prestador `Clínica`, prestador ADM/Mestre funcional, tipo `Cirurgiao dentista` no prestador ADM, usuario ADM como `Dentista (CD)`, vinculo ao prestador ADM e vinculo a unidade `Principal / 0001`.
+- Itens confirmados: `signup/confirm`, unidade `Principal / 0001`, tabelas da 8P, `Tabela Exemplo` ausente, `Brana` padrao/privada, prestador `Cl�nica`, prestador ADM/Mestre funcional, tipo `Cirurgiao dentista` no prestador ADM, usuario ADM como `Dentista (CD)`, vinculo ao prestador ADM e vinculo a unidade `Principal / 0001`.
 - Setup para o ADM inicial: confirmado como ainda presente, sem alteracao nesta etapa.
 - Correcoes acumuladas confirmadas: `PRIVATE_TABLE_NAME`, `senha_interna_hash` e `_apply_user_links`.
 - Proxima subetapa recomendada: `8V` para impedir setup em usuarios criados posteriormente.
@@ -503,8 +503,8 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
   - nenhuma conta foi criada automaticamente.
 - Onde testar manualmente:
   - criar nova conta limpa;
-  - abrir o modulo Usuários e confirmar `Dentista (CD)`, prestador ADM e unidade `Principal / 0001`;
-  - abrir o modulo Prestadores e confirmar `Clínica` e o prestador ADM;
+  - abrir o modulo Usu�rios e confirmar `Dentista (CD)`, prestador ADM e unidade `Principal / 0001`;
+  - abrir o modulo Prestadores e confirmar `Cl�nica` e o prestador ADM;
   - verificar que `Tabela Exemplo` nao nasce;
   - verificar que o setup continua aparecendo para o ADM inicial.
 - Confirmacao funcional:
@@ -533,10 +533,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Login por email e senha implementado em `POST /login`.
-[Ã¢Å“â€] Fase 2 - JWT implementado em `backend/security/jwt_handler.py` usando `JWT_SECRET_KEY` obrigatoria.
-[Ã¢Å“â€] Fase 3 - Endpoint `/me`, logout, setup inicial e validacao de usuario atual implementados.
-[Ã¢Å“â€] Fase 4 - Cadastro com codigo, recuperacao de senha e Google OAuth presentes em `auth_routes.py`.
+[â�⬝] Fase 1 - Login por email e senha implementado em `POST /login`.
+[â�⬝] Fase 2 - JWT implementado em `backend/security/jwt_handler.py` usando `JWT_SECRET_KEY` obrigatoria.
+[â�⬝] Fase 3 - Endpoint `/me`, logout, setup inicial e validacao de usuario atual implementados.
+[â�⬝] Fase 4 - Cadastro com codigo, recuperacao de senha e Google OAuth presentes em `auth_routes.py`.
 [ ] Fase 5 - Criar testes automatizados para login, token expirado, usuario inativo, setup pendente e erro de credenciais.
 
 Proximo passo:
@@ -559,10 +559,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - CRUD administrativo de usuarios presente em `backend/routes/user_admin_routes.py`.
-[Ã¢Å“â€] Fase 2 - Controle de perfis e vinculos presente em `access_profile.py` e `usuario_perfil_acesso.py`.
-[Ã¢Å“â€] Fase 3 - Matriz de permissoes por modulo implementada em `backend/security/permissions.py`.
-[Ã¢Å“â€] Fase 4 - Modulos protegidos com senha administrativa/grant temporario implementados em `dependencies.py`.
+[â�⬝] Fase 1 - CRUD administrativo de usuarios presente em `backend/routes/user_admin_routes.py`.
+[â�⬝] Fase 2 - Controle de perfis e vinculos presente em `access_profile.py` e `usuario_perfil_acesso.py`.
+[â�⬝] Fase 3 - Matriz de permissoes por modulo implementada em `backend/security/permissions.py`.
+[â�⬝] Fase 4 - Modulos protegidos com senha administrativa/grant temporario implementados em `dependencies.py`.
 [ ] Fase 5 - Testar todos os niveis de acesso: habilitado, protegido e desabilitado.
 
 Proximo passo:
@@ -584,10 +584,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelo `Paciente` implementado em `backend/models/paciente.py`.
-[Ã¢Å“â€] Fase 2 - Rotas de pacientes implementadas em `backend/routes/cadastros_routes.py`.
-[Ã¢Å“â€] Fase 3 - Frontend chama endpoints de pacientes em `frontend/app.js`.
-[Ã¢Å“â€] Fase 4 - Filtros por `clinica_id` aparecem nas consultas principais.
+[â�⬝] Fase 1 - Modelo `Paciente` implementado em `backend/models/paciente.py`.
+[â�⬝] Fase 2 - Rotas de pacientes implementadas em `backend/routes/cadastros_routes.py`.
+[â�⬝] Fase 3 - Frontend chama endpoints de pacientes em `frontend/app.js`.
+[â�⬝] Fase 4 - Filtros por `clinica_id` aparecem nas consultas principais.
 [ ] Fase 5 - Criar testes de tenant para impedir acesso a paciente de outra clinica.
 
 Proximo passo:
@@ -608,10 +608,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Auxiliares, grupos, categorias e simbolos graficos existem em `cadastros_routes.py`.
-[Ã¢Å“â€] Fase 2 - Unidades de atendimento existem em `unidades_atendimento_routes.py`.
-[Ã¢Å“â€] Fase 3 - CID existe em `cid_routes.py`.
-[Ã¢Å“â€] Fase 4 - Frontend possui chamadas para cadastros e menus auxiliares.
+[â�⬝] Fase 1 - Auxiliares, grupos, categorias e simbolos graficos existem em `cadastros_routes.py`.
+[â�⬝] Fase 2 - Unidades de atendimento existem em `unidades_atendimento_routes.py`.
+[â�⬝] Fase 3 - CID existe em `cid_routes.py`.
+[â�⬝] Fase 4 - Frontend possui chamadas para cadastros e menus auxiliares.
 [ ] Fase 5 - Separar `cadastros_routes.py` em arquivos menores por dominio.
 
 Proximo passo:
@@ -632,11 +632,11 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Eventos e bloqueios de agenda existem em `agenda_legado.py`.
-[Ã¢Å“â€] Fase 2 - Rotas principais implementadas em `agenda_legado_routes.py`.
-[Ã¢Å“â€] Fase 3 - Contatos de agenda implementados em `agenda_contatos_routes.py`.
-[Ã¢Å“â€] Fase 4 - Frontend possui tela e chamadas para agenda, repeticao, combos e filtros.
-[Ã¢Å“â€] Fase 5 - Integracao Google Calendar presente em rotas e servicos.
+[â�⬝] Fase 1 - Eventos e bloqueios de agenda existem em `agenda_legado.py`.
+[â�⬝] Fase 2 - Rotas principais implementadas em `agenda_legado_routes.py`.
+[â�⬝] Fase 3 - Contatos de agenda implementados em `agenda_contatos_routes.py`.
+[â�⬝] Fase 4 - Frontend possui tela e chamadas para agenda, repeticao, combos e filtros.
+[â�⬝] Fase 5 - Integracao Google Calendar presente em rotas e servicos.
 [ ] Fase 6 - Criar testes de repeticao, horarios livres e tenant.
 
 Proximo passo:
@@ -658,11 +658,11 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos financeiros existem em `backend/models/financeiro.py`.
-[Ã¢Å“â€] Fase 2 - Lancamentos, categorias, formas de pagamento e situacoes existem em `financeiro_routes.py`.
-[Ã¢Å“â€] Fase 3 - Relatorio de conta corrente e fluxo de caixa existem no backend e frontend.
-[Ã¢Å“â€] Fase 4 - Indices financeiros e cotacoes existem em `indices_financeiros_routes.py`.
-[Ã¢Å“â€] Fase 5 - Cenario financeiro existe em `cenario_routes.py`.
+[â�⬝] Fase 1 - Modelos financeiros existem em `backend/models/financeiro.py`.
+[â�⬝] Fase 2 - Lancamentos, categorias, formas de pagamento e situacoes existem em `financeiro_routes.py`.
+[â�⬝] Fase 3 - Relatorio de conta corrente e fluxo de caixa existem no backend e frontend.
+[â�⬝] Fase 4 - Indices financeiros e cotacoes existem em `indices_financeiros_routes.py`.
+[â�⬝] Fase 5 - Cenario financeiro existe em `cenario_routes.py`.
 [ ] Fase 6 - Criar testes para exclusao/migracao de categorias em uso e relatorios.
 
 Proximo passo:
@@ -683,11 +683,11 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos de procedimento, fases, materiais e tabelas existem.
-[Ã¢Å“â€] Fase 2 - CRUD de tabelas e procedimentos existe em `procedimentos_routes.py`.
-[Ã¢Å“â€] Fase 3 - Procedimentos genericos existem em `cadastros_routes.py`.
-[Ã¢Å“â€] Fase 4 - Dashboard e relatorio de tabela existem no backend/frontend.
-[Ã¢Å“â€] Fase 5 - Vinculo de materiais a procedimentos existe.
+[â�⬝] Fase 1 - Modelos de procedimento, fases, materiais e tabelas existem.
+[â�⬝] Fase 2 - CRUD de tabelas e procedimentos existe em `procedimentos_routes.py`.
+[â�⬝] Fase 3 - Procedimentos genericos existem em `cadastros_routes.py`.
+[â�⬝] Fase 4 - Dashboard e relatorio de tabela existem no backend/frontend.
+[â�⬝] Fase 5 - Vinculo de materiais a procedimentos existe.
 [ ] Fase 6 - Criar testes complementares para materiais vinculados, filtros por clinica e modularizacao posterior.
 
 Proximo passo:
@@ -709,10 +709,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelo `Tratamento` existe em `backend/models/tratamento.py`.
-[Ã¢Å“â€] Fase 2 - Rotas existem em `backend/routes/tratamentos_routes.py`.
-[Ã¢Å“â€] Fase 3 - Combos de novo tratamento existem no backend.
-[Ã¢Å“â€] Fase 4 - Frontend possui chamadas vinculadas ao contexto de paciente/procedimentos.
+[â�⬝] Fase 1 - Modelo `Tratamento` existe em `backend/models/tratamento.py`.
+[â�⬝] Fase 2 - Rotas existem em `backend/routes/tratamentos_routes.py`.
+[â�⬝] Fase 3 - Combos de novo tratamento existem no backend.
+[â�⬝] Fase 4 - Frontend possui chamadas vinculadas ao contexto de paciente/procedimentos.
 [ ] Fase 5 - Testar ciclo completo de tratamento por paciente e isolamento por clinica.
 
 Proximo passo:
@@ -736,10 +736,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos de prestadores existem em `prestador.py` e `prestador_odonto.py`.
-[Ã¢Å“â€] Fase 2 - Rotas de prestadores existem em `prestadores_routes.py`.
-[Ã¢Å“â€] Fase 3 - Credenciamentos e comissoes existem no backend.
-[Ã¢Å“â€] Fase 4 - Frontend possui tela/chamadas para prestadores.
+[â�⬝] Fase 1 - Modelos de prestadores existem em `prestador.py` e `prestador_odonto.py`.
+[â�⬝] Fase 2 - Rotas de prestadores existem em `prestadores_routes.py`.
+[â�⬝] Fase 3 - Credenciamentos e comissoes existem no backend.
+[â�⬝] Fase 4 - Frontend possui tela/chamadas para prestadores.
 [ ] Fase 5 - Testar credenciamentos, comissoes e vinculo com usuarios.
 
 Proximo passo:
@@ -760,10 +760,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos `ConvenioOdonto`, `PlanoOdonto` e `CalendarioFaturamentoOdonto` existem.
-[Ã¢Å“â€] Fase 2 - Rotas existem em `convenios_planos_routes.py`.
-[Ã¢Å“â€] Fase 3 - Frontend possui chamadas para convenios, planos e calendario.
-[Ã¢Å“â€] Fase 4 - Combos sao usados por pacientes/prestadores/agenda.
+[â�⬝] Fase 1 - Modelos `ConvenioOdonto`, `PlanoOdonto` e `CalendarioFaturamentoOdonto` existem.
+[â�⬝] Fase 2 - Rotas existem em `convenios_planos_routes.py`.
+[â�⬝] Fase 3 - Frontend possui chamadas para convenios, planos e calendario.
+[â�⬝] Fase 4 - Combos sao usados por pacientes/prestadores/agenda.
 [ ] Fase 5 - Testar exclusao segura e dependencias com prestadores/pacientes.
 
 Proximo passo:
@@ -783,10 +783,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos `ListaMaterial` e `Material` existem.
-[Ã¢Å“â€] Fase 2 - Rotas CRUD existem em `materiais_routes.py`.
-[Ã¢Å“â€] Fase 3 - Frontend possui chamadas para listas, materiais e indices.
-[Ã¢Å“â€] Fase 4 - Materiais vinculam com procedimentos.
+[â�⬝] Fase 1 - Modelos `ListaMaterial` e `Material` existem.
+[â�⬝] Fase 2 - Rotas CRUD existem em `materiais_routes.py`.
+[â�⬝] Fase 3 - Frontend possui chamadas para listas, materiais e indices.
+[â�⬝] Fase 4 - Materiais vinculam com procedimentos.
 [ ] Fase 5 - Testar vinculos antes de excluir materiais/listas.
 
 Proximo passo:
@@ -806,10 +806,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos `Medicamento` e `RestricaoTerapeutica` existem.
-[Ã¢Å“â€] Fase 2 - Rotas CRUD e opcoes existem em `medicamentos_routes.py`.
-[Ã¢Å“â€] Fase 3 - Frontend possui chamadas para medicamentos, grupos, apresentacoes e usos.
-[Ã¢Å“â€] Fase 4 - Editor de textos consulta medicamentos para assistente de receitas.
+[â�⬝] Fase 1 - Modelos `Medicamento` e `RestricaoTerapeutica` existem.
+[â�⬝] Fase 2 - Rotas CRUD e opcoes existem em `medicamentos_routes.py`.
+[â�⬝] Fase 3 - Frontend possui chamadas para medicamentos, grupos, apresentacoes e usos.
+[â�⬝] Fase 4 - Editor de textos consulta medicamentos para assistente de receitas.
 [ ] Fase 5 - Testar integracao com receitas e filtros por clinica.
 
 Proximo passo:
@@ -829,10 +829,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos `Protetico`, `ServicoProtetico` e `ControleProtetico` existem.
-[Ã¢Å“â€] Fase 2 - Rotas de proteticos existem em `proteticos_routes.py`.
-[Ã¢Å“â€] Fase 3 - Rotas de controle existem em `controle_proteticos_routes.py`.
-[Ã¢Å“â€] Fase 4 - Agenda contatos pode criar/usar proteticos.
+[â�⬝] Fase 1 - Modelos `Protetico`, `ServicoProtetico` e `ControleProtetico` existem.
+[â�⬝] Fase 2 - Rotas de proteticos existem em `proteticos_routes.py`.
+[â�⬝] Fase 3 - Rotas de controle existem em `controle_proteticos_routes.py`.
+[â�⬝] Fase 4 - Agenda contatos pode criar/usar proteticos.
 [ ] Fase 5 - Testar ciclo completo com paciente, servico e controle.
 
 Proximo passo:
@@ -852,10 +852,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Questionarios e perguntas existem em `anamnese.py`.
-[Ã¢Å“â€] Fase 2 - Respostas existem em `anamnese_resposta.py`.
-[Ã¢Å“â€] Fase 3 - Rotas CRUD e respostas por paciente existem em `anamnese_routes.py`.
-[Ã¢Å“â€] Fase 4 - Frontend possui chamadas para questionarios, perguntas e respostas.
+[â�⬝] Fase 1 - Questionarios e perguntas existem em `anamnese.py`.
+[â�⬝] Fase 2 - Respostas existem em `anamnese_resposta.py`.
+[â�⬝] Fase 3 - Rotas CRUD e respostas por paciente existem em `anamnese_routes.py`.
+[â�⬝] Fase 4 - Frontend possui chamadas para questionarios, perguntas e respostas.
 [ ] Fase 5 - Testar renumeracao, resposta por paciente e tenant.
 
 Proximo passo:
@@ -875,11 +875,11 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos de documentos existem em `modelo_documento.py`.
-[Ã¢Å“â€] Fase 2 - Rotas de editor/modelos/mesclagem existem em `editor_textos_routes.py`.
-[Ã¢Å“â€] Fase 3 - Exportacao PDF existe em `editor_pdf_service.py`.
-[Ã¢Å“â€] Fase 4 - Assinatura digital/local e preparacao para Acrobat existem.
-[Ã¢Å“â€] Fase 5 - Assistentes de receita e atestado existem.
+[â�⬝] Fase 1 - Modelos de documentos existem em `modelo_documento.py`.
+[â�⬝] Fase 2 - Rotas de editor/modelos/mesclagem existem em `editor_textos_routes.py`.
+[â�⬝] Fase 3 - Exportacao PDF existe em `editor_pdf_service.py`.
+[â�⬝] Fase 4 - Assinatura digital/local e preparacao para Acrobat existem.
+[â�⬝] Fase 5 - Assistentes de receita e atestado existem.
 [ ] Fase 6 - Testar storage por clinica, PDF, assinatura e local bridge em ambiente limpo.
 
 Proximo passo:
@@ -893,7 +893,7 @@ Observacoes:
 * Arquivo `editor_textos_routes.py` e um dos mais sensiveis do backend.
 * FASE 6 do editor: captura de Tab agora usa `editorTextosCalcularOffsetLinear` com `selection.focusNode/focusOffset` no `keydown`, antes de render/rebuild, e a reancoragem usa `posDepois.textOffset`.
 * Logs de diagnostico adicionados/ajustados: `SELECTION RAW`, `OFFSET LINEAR CALCULADO` e `REANCORAGEM ALVO`.
-* FASE 6.1: adicionada protecao curta de cursor durante Tab (`editorTextosProtegendoCursor`), bloqueando `editorTextosDocumentoModelAtualizar` ate o proximo frame apos a reancoragem para impedir rebuild assÃ­ncrono que recriava a selecao em offset `0`.
+* FASE 6.1: adicionada protecao curta de cursor durante Tab (`editorTextosProtegendoCursor`), bloqueando `editorTextosDocumentoModelAtualizar` ate o proximo frame apos a reancoragem para impedir rebuild assíncrono que recriava a selecao em offset `0`.
 * FASE 6: `posDepois.cursorXPx`, `posDepois.indentXPx` e `posDepois.xPx` sao sincronizados com a indentacao do modelo, com log `CURSOR XPX SINCRONIZADO`, evitando `cursorXPx=0` quando `textOffset` ja esta correto.
 * FASE 6: aplicacao visual do Tab corrigida em `editorTextosAplicarTabOperationsNoDOM`; o bloco recebe `paddingLeft` baseado no `tabStateKey` ativo e o log `TAB DOM TARGET` mostra alvo, estilo antes/depois e computed style.
 * FASE 6: reforcada aplicacao CSS real do Tab com `padding-left` inline/important, `data-tab-indent-px`, log `TAB DOM STYLE CONFIRMADO` e reaplicacao apos render/update do modelo.
@@ -941,8 +941,8 @@ Observacoes:
 * FASE 6.2: dropdowns de fonte/tamanho passam a usar estado neutro em selecao multi-bloco com estilos mistos, evitando exibir valor unico enganoso.
 * FASE 6.2: corrigida pendencia especifica de merge de estilos inline entre `font-family` e `font-size`; ao aplicar fonte ou tamanho, o editor preserva os estilos existentes relevantes (`color`, `font-family`, `font-size`) em selecoes simples e multi-bloco.
 * FASE 6.2: Fase 7 continua bloqueada ate validacao manual de fonte/tamanho em selecao curta, multi-bloco, alternancia entre dropdowns e selecao envolvendo campos de mesclagem.
-* FASE 6.2: modal de campos de mesclagem refinado com deduplicacao visual por alias historico (ex.: `Data.MêsExtenso` oculto em favor de `Data.MêsExt`), mantendo token principal de insercao e sem alterar a fonte primaria restaurada.
-* FASE 6.2: coluna de descricao do modal passa a exibir rótulos amigaveis na categoria Data (`Ano atual`, `Data atual`, `Dia atual`, `Dia da semana`, `Mês atual`, `Mês por extenso`) e renderizacao visual da grade foi ajustada para melhorar leitura de Campo/Descricao.
+* FASE 6.2: modal de campos de mesclagem refinado com deduplicacao visual por alias historico (ex.: `Data.M�sExtenso` oculto em favor de `Data.M�sExt`), mantendo token principal de insercao e sem alterar a fonte primaria restaurada.
+* FASE 6.2: coluna de descricao do modal passa a exibir r�tulos amigaveis na categoria Data (`Ano atual`, `Data atual`, `Dia atual`, `Dia da semana`, `M�s atual`, `M�s por extenso`) e renderizacao visual da grade foi ajustada para melhorar leitura de Campo/Descricao.
 * FASE 6.2: Fase 7 continua bloqueada ate validacao visual final do modal de mesclagem, incluindo deduplicacao, descricoes amigaveis e insercao real no editor.
 * FASE 6.2: sincronizacao do dropdown de tamanho corrigida para priorizar leitura do `font-size` CSS efetivo da selecao (em vez da escala legada de `queryCommandValue("fontSize")`), evitando salto/desalinhamento entre 8/9/10/11 e mantendo estado neutro em selecao multi-bloco mista.
 * FASE 6.2: Fase 7 continua bloqueada ate validacao manual final da barra de tamanho (8, 9, 10, 11, 12 e transicoes alternadas) em selecao simples e multi-bloco.
@@ -964,10 +964,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos de etiqueta existem.
-[Ã¢Å“â€] Fase 2 - Rotas de etiquetas existem em `etiquetas_routes.py`.
-[Ã¢Å“â€] Fase 3 - Configuracao de relatorio existe em `relatorio_config.py` e `preferences_routes.py`.
-[Ã¢Å“â€] Fase 4 - Envio de relatorio por email existe em `relatorios_routes.py`.
+[â�⬝] Fase 1 - Modelos de etiqueta existem.
+[â�⬝] Fase 2 - Rotas de etiquetas existem em `etiquetas_routes.py`.
+[â�⬝] Fase 3 - Configuracao de relatorio existe em `relatorio_config.py` e `preferences_routes.py`.
+[â�⬝] Fase 4 - Envio de relatorio por email existe em `relatorios_routes.py`.
 [ ] Fase 5 - Testar email, anexos e limites de tamanho.
 
 Proximo passo:
@@ -988,10 +988,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Preferencias gerais, modelos, ambiente, dados do usuario, odontograma e relatorio existem.
-[Ã¢Å“â€] Fase 2 - Rotas de preferencias existem em `preferences_routes.py`.
-[Ã¢Å“â€] Fase 3 - Opcoes do sistema existem em `system_options_routes.py`.
-[Ã¢Å“â€] Fase 4 - Frontend possui chamadas para salvar preferencias.
+[â�⬝] Fase 1 - Preferencias gerais, modelos, ambiente, dados do usuario, odontograma e relatorio existem.
+[â�⬝] Fase 2 - Rotas de preferencias existem em `preferences_routes.py`.
+[â�⬝] Fase 3 - Opcoes do sistema existem em `system_options_routes.py`.
+[â�⬝] Fase 4 - Frontend possui chamadas para salvar preferencias.
 [ ] Fase 5 - Testar impacto das opcoes de seguranca sobre permissoes e senha administrativa.
 
 Proximo passo:
@@ -1034,10 +1034,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Modelos de planos, assinaturas e plataforma existem.
-[Ã¢Å“â€] Fase 2 - Rotas de licenca existem em `licenca_routes.py`.
-[Ã¢Å“â€] Fase 3 - Checkout, confirmacao, sincronizacao e webhook Mercado Pago existem no codigo.
-[Ã¢Å“â€] Fase 4 - Frontend possui chamadas para licenca e checkout.
+[â�⬝] Fase 1 - Modelos de planos, assinaturas e plataforma existem.
+[â�⬝] Fase 2 - Rotas de licenca existem em `licenca_routes.py`.
+[â�⬝] Fase 3 - Checkout, confirmacao, sincronizacao e webhook Mercado Pago existem no codigo.
+[â�⬝] Fase 4 - Frontend possui chamadas para licenca e checkout.
 [ ] Fase 5 - Testar fluxo completo com Mercado Pago em sandbox e validar webhook.
 
 Proximo passo:
@@ -1057,10 +1057,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Rotas de overview, clinicas, usuarios, cobrancas, auditoria e assinaturas existem.
-[Ã¢Å“â€] Fase 2 - Servico de administracao de plataforma existe em `platform_admin_service.py`.
-[Ã¢Å“â€] Fase 3 - Frontend possui chamadas para `/superadmin/*`.
-[Ã¢Å“â€] Fase 4 - Alteracoes de status/plano/trial e reset de senha existem no codigo.
+[â�⬝] Fase 1 - Rotas de overview, clinicas, usuarios, cobrancas, auditoria e assinaturas existem.
+[â�⬝] Fase 2 - Servico de administracao de plataforma existe em `platform_admin_service.py`.
+[â�⬝] Fase 3 - Frontend possui chamadas para `/superadmin/*`.
+[â�⬝] Fase 4 - Alteracoes de status/plano/trial e reset de senha existem no codigo.
 [ ] Fase 5 - Testar autorizacao de superadmin e impedir acesso por admin comum.
 
 Proximo passo:
@@ -1080,9 +1080,9 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Frontend estatico servido por `backend/main.py` em `/app` e `/frontend`.
-[Ã¢Å“â€] Fase 2 - Login, token, chamadas autenticadas e varias telas operacionais existem em `frontend/app.js`.
-[Ã¢Å“â€] Fase 3 - Arquivos auxiliares de prestadores, agenda, preferencias e dialogo de fonte existem.
+[â�⬝] Fase 1 - Frontend estatico servido por `backend/main.py` em `/app` e `/frontend`.
+[â�⬝] Fase 2 - Login, token, chamadas autenticadas e varias telas operacionais existem em `frontend/app.js`.
+[â�⬝] Fase 3 - Arquivos auxiliares de prestadores, agenda, preferencias e dialogo de fonte existem.
 [ ] Fase 4 - Modularizar `frontend/app.js` por dominio.
 [ ] Fase 5 - Criar testes/smoke de interface para fluxos principais.
 
@@ -1106,10 +1106,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Conexao PostgreSQL implementada em `backend/database.py`.
-[Ã¢Å“â€] Fase 2 - Modelos SQLAlchemy implementados em `backend/models/`.
-[Ã¢Å“â€] Fase 3 - `Base.metadata.create_all` e hotfixes aditivos existem no startup.
-[Ã¢Å“â€] Fase 4 - Bootstrap runtime existe em `runtime_bootstrap_service.py`.
+[â�⬝] Fase 1 - Conexao PostgreSQL implementada em `backend/database.py`.
+[â�⬝] Fase 2 - Modelos SQLAlchemy implementados em `backend/models/`.
+[â�⬝] Fase 3 - `Base.metadata.create_all` e hotfixes aditivos existem no startup.
+[â�⬝] Fase 4 - Bootstrap runtime existe em `runtime_bootstrap_service.py`.
 [ ] Fase 5 - Criar migrations formais versionadas.
 
 Proximo passo:
@@ -1130,11 +1130,11 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[Ã¢Å“â€] Fase 1 - Email SMTP/Resend existe em `email_service.py`.
-[Ã¢Å“â€] Fase 2 - Google OAuth/Calendar existe em `auth_routes.py` e `google_calendar_service.py`.
-[Ã¢Å“â€] Fase 3 - Mercado Pago existe em `licenca_routes.py`.
-[Ã¢Å“â€] Fase 4 - WhatsApp aparece no fluxo de avisos da agenda.
-[Ã¢Å“â€] Fase 5 - Assinatura PDF possui variaveis e servico dedicados.
+[â�⬝] Fase 1 - Email SMTP/Resend existe em `email_service.py`.
+[â�⬝] Fase 2 - Google OAuth/Calendar existe em `auth_routes.py` e `google_calendar_service.py`.
+[â�⬝] Fase 3 - Mercado Pago existe em `licenca_routes.py`.
+[â�⬝] Fase 4 - WhatsApp aparece no fluxo de avisos da agenda.
+[â�⬝] Fase 5 - Assinatura PDF possui variaveis e servico dedicados.
 [ ] Fase 6 - Criar checklist de configuracao e teste para cada integracao.
 
 Proximo passo:
@@ -1222,7 +1222,7 @@ Observacoes:
 - Mapa de fronteiras por dominio e dependencias de permissao concluido.
 - Nenhuma alteracao de codigo foi feita.
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
-- A classificacao multiárea herdada permanece `mista`.
+- A classificacao multi�rea herdada permanece `mista`.
 - Proxima subetapa recomendada: continuidade documental em `Auxiliares / Tabelas auxiliares`.
 - O primeiro recorte funcional segue proibido nesta etapa.
 
@@ -1286,7 +1286,7 @@ Observacoes:
 
 - Subetapa 6 de `Agenda de contatos` concluida com implementacao minima.
 - Helper visual puro `agendaContatosTelefonesTexto` extraido para modulo proprio.
-- Wrapper compatível preservado em `frontend/app.js`.
+- Wrapper compat�vel preservado em `frontend/app.js`.
 - `Agenda de contatos` continua tratada como `core / comum`.
 - Nenhuma alteracao de backend, banco, endpoint ou permissao foi feita.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 7 - Validacao documental da separacao do helper visual e do wrapper no app.js`.
@@ -1752,7 +1752,7 @@ Observacoes:
 - A Subetapa 29 foi executada apenas como validacao documental da URL standalone da agenda semana.
 - O helper `agendaSemanaBuildStandaloneUrl` permanece como a nona extracao minima.
 - Nenhum codigo foi alterado.
-- Nao houve alteracao de frontend, backend, banco, schema, migrations, seeds, endpoints ou permissões.
+- Nao houve alteracao de frontend, backend, banco, schema, migrations, seeds, endpoints ou permiss�es.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
 - O usuario ja havia testado URL/standalone e `agenda_modo` sem identificar erros.
@@ -1779,7 +1779,7 @@ Observacoes:
 - A ordem conservadora de extracao futura foi documentada antes de qualquer alteracao funcional.
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
-- Nenhum arquivo de frontend, backend, banco, schema, migrations, seeds, endpoints, permissões, `package.json` ou configuracao foi alterado.
+- Nenhum arquivo de frontend, backend, banco, schema, migrations, seeds, endpoints, permiss�es, `package.json` ou configuracao foi alterado.
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e a implementacao minima do helper puro mais seguro, com validacao manual do fluxo de ambiente.
 
@@ -1788,7 +1788,7 @@ Observacoes:
 - `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
 - A Subetapa 4 foi concluida com implementacao minima do helper puro `prefAmbEstiloPadrao`.
 - Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_4_implementacao_pref_amb_estilo_padrao.md`.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado.
 - `frontend/app.js` preservou fallback local equivalente para o helper de estilo padrao.
 - `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefAmbEstiloPadrao` em `window.BranaPreferenciasOpcoesSistemaModule`.
 - `Agenda principal` permanece pausada temporariamente.
@@ -1806,7 +1806,7 @@ Observacoes:
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta validacao.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permiss�es, `frontend/index.html` ou configuracao foi alterado nesta validacao.
 - A proxima subetapa recomendada e a implementacao minima do helper puro `prefValoresPadraoDados`.
 
 ## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 5
@@ -1814,7 +1814,7 @@ Observacoes:
 - `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
 - A Subetapa 5 foi concluida com implementacao minima do helper puro `prefValoresPadraoDados`.
 - Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_5_implementacao_pref_valores_padrao_dados.md`.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado.
 - `frontend/app.js` preservou fallback local equivalente para o helper de dados.
 - `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefValoresPadraoDados` em `window.BranaPreferenciasOpcoesSistemaModule`.
 - `Agenda principal` permanece pausada temporariamente.
@@ -1832,7 +1832,7 @@ Observacoes:
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta validacao.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permiss�es, `frontend/index.html` ou configuracao foi alterado nesta validacao.
 - A proxima subetapa recomendada e a implementacao minima do helper puro `prefValoresPadraoOdontograma`.
 
 ## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 6
@@ -1840,7 +1840,7 @@ Observacoes:
 - `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
 - A Subetapa 6 foi concluida com implementacao minima do helper puro `prefValoresPadraoOdontograma`.
 - Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_6_implementacao_pref_valores_padrao_odontograma.md`.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado.
 - `frontend/app.js` preservou fallback local equivalente para o helper de odontograma.
 - `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefValoresPadraoOdontograma` em `window.BranaPreferenciasOpcoesSistemaModule`.
 - `Agenda principal` permanece pausada temporariamente.
@@ -1858,7 +1858,7 @@ Observacoes:
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta validacao.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permiss�es, `frontend/index.html` ou configuracao foi alterado nesta validacao.
 - A proxima subetapa recomendada foi registrada para a fila seguinte apos o odontograma.
 
 ## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 8
@@ -1871,7 +1871,7 @@ Observacoes:
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints, permissões, `frontend/index.html` ou configuracao foi alterado nesta etapa.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints, permiss�es, `frontend/index.html` ou configuracao foi alterado nesta etapa.
 - A proxima subetapa recomendada e a implementacao minima do helper puro `prefAmbienteTextoExemplo`.
 
 ## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 9
@@ -1879,7 +1879,7 @@ Observacoes:
 - `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
 - A Subetapa 9 foi concluida com implementacao minima do helper puro `prefAmbienteTextoExemplo`.
 - Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_9_implementacao_pref_ambiente_texto_exemplo.md`.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado.
 - `frontend/app.js` preservou fallback local equivalente para o helper de texto exemplo.
 - `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefAmbienteTextoExemplo` em `window.BranaPreferenciasOpcoesSistemaModule`.
 - `Agenda principal` permanece pausada temporariamente.
@@ -1897,7 +1897,7 @@ Observacoes:
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado nesta validacao.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado nesta validacao.
 - A proxima subetapa recomendada e a implementacao minima do helper puro `prefAmbienteDialogoValor`.
 
 ## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 11
@@ -1905,7 +1905,7 @@ Observacoes:
 - `Preferencias / Configuracoes comuns` continua tratada como `core / comum`.
 - A Subetapa 11 foi concluida com implementacao minima do helper `prefAmbienteDialogoValor`.
 - Os arquivos alterados foram `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2_preferencias_configuracoes_subetapa_11_implementacao_pref_ambiente_dialogo_valor.md`.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado.
 - `frontend/app.js` preservou fallback local equivalente para o helper do dialogo.
 - `frontend/js/modules/preferencias-opcoes-sistema.js` passou a expor `prefAmbienteDialogoValor` em `window.BranaPreferenciasOpcoesSistemaModule`.
 - `Agenda principal` permanece pausada temporariamente.
@@ -1923,7 +1923,7 @@ Observacoes:
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado nesta validacao.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado nesta validacao.
 - A proxima subetapa recomendada e a reavaliacao documental da fila restante apos o dialogo de fonte.
 
 ## Atualizacao Preferencias / Configuracoes Comuns - Subetapa 13
@@ -1998,8 +1998,8 @@ Observacoes:
 - `Preferencias / Configuracoes comuns` permanece pausada/consolidada nesta rodada.
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
-- Foram comparados `Ficha pessoal`, `Conta corrente`, `Relatorios`, `Indices financeiros`, `Cadastros auxiliares`, `Convênios e Planos`, `Plano de Contas`, `Medicamentos`, `Materiais`, `Procedimentos genericos`, `Tabela de servicos de protese / Tabela de proteticos`, `Etiquetas`, `Simbolos graficos` e outras frentes core/comum registradas no roadmap.
-- A comparacao por risco concluiu que os blocos maiores e mais sensiveis permanecem acima do patamar ideal para uma nova extração minima controlada.
+- Foram comparados `Ficha pessoal`, `Conta corrente`, `Relatorios`, `Indices financeiros`, `Cadastros auxiliares`, `Conv�nios e Planos`, `Plano de Contas`, `Medicamentos`, `Materiais`, `Procedimentos genericos`, `Tabela de servicos de protese / Tabela de proteticos`, `Etiquetas`, `Simbolos graficos` e outras frentes core/comum registradas no roadmap.
+- A comparacao por risco concluiu que os blocos maiores e mais sensiveis permanecem acima do patamar ideal para uma nova extra��o minima controlada.
 - A frente recomendada como proxima e `Prestadores`, por ser o menor candidato parcial ainda plausivelmente retomavel.
 - A proxima subetapa recomendada e `Prestadores - Subetapa 0 de retomada documental / mapeamento tecnico complementar`.
 - A blindagem textual/mojibake foi respeitada.
@@ -2040,7 +2040,7 @@ Observacoes:
 - O helper agora possui contrato explicito `cache/selId`.
 - `frontend/js/modules/prestadores.js` passou a exportar `prestSelecionado(cache, selId)` no namespace passivo `window.BranaPrestadoresModule`.
 - `frontend/app.js` passou a consultar primeiro o helper do modulo passivo e manteve fallback local equivalente.
-- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permissões foi alterado.
+- Nenhum backend, banco, schema, migrations, seeds, endpoints ou permiss�es foi alterado.
 - `Prestadores` segue classificado como `core / comum` administrativo/transversal.
 - `Agenda principal` permanece pausada temporariamente.
 - `Agenda de contatos` permanece pausada/consolidada.
@@ -2101,7 +2101,7 @@ Observacoes:
 
 - A selecao documental do primeiro recorte de risco medio controlado foi concluida.
 - Nenhum codigo foi alterado nesta etapa.
-- Os candidatos comparados foram `Prestadores/prestFiltrarLista`, `Prestadores/prestRender`, `Prestadores/prestSelecionarLinha`, `Prestadores/prestAcoesPlaceholder`, blocos de `Cadastros auxiliares`, `Convênios e Planos`, `Relatorios`, `Agenda principal`, `Preferencias / Configuracoes comuns` e outros candidatos core/comum registrados no roadmap.
+- Os candidatos comparados foram `Prestadores/prestFiltrarLista`, `Prestadores/prestRender`, `Prestadores/prestSelecionarLinha`, `Prestadores/prestAcoesPlaceholder`, blocos de `Cadastros auxiliares`, `Conv�nios e Planos`, `Relatorios`, `Agenda principal`, `Preferencias / Configuracoes comuns` e outros candidatos core/comum registrados no roadmap.
 - A recomendacao escolhida foi `Prestadores / prestFiltrarLista` como primeiro recorte medio controlado, mas apenas com contrato documental anterior a qualquer implementacao futura.
 - As frentes pausadas/consolidadas permanecem mantidas.
 - A blindagem textual/mojibake foi respeitada.
@@ -2161,7 +2161,7 @@ Observacoes:
 - Nenhum codigo foi alterado nesta etapa.
 - `Prestadores` permanece consolidado apos a validacao de `prestFiltrarLista`.
 - As frentes pausadas/consolidadas permanecem mantidas: `Agenda principal`, `Agenda de contatos`, `Preferencias / Configuracoes comuns` e `Prestadores`.
-- Os candidatos comparados incluem `Prestadores/prestRender`, `Prestadores/prestSelecionarLinha`, `Prestadores/prestAcoesPlaceholder`, `Preferencias / Configuracoes comuns` remanescente, `Convênios e Planos`, `Relatorios`, `Etiquetas`, `Medicamentos`, `Plano de Contas`, `Materiais`, `Procedimentos genericos` e `Agenda principal` remanescente.
+- Os candidatos comparados incluem `Prestadores/prestRender`, `Prestadores/prestSelecionarLinha`, `Prestadores/prestAcoesPlaceholder`, `Preferencias / Configuracoes comuns` remanescente, `Conv�nios e Planos`, `Relatorios`, `Etiquetas`, `Medicamentos`, `Plano de Contas`, `Materiais`, `Procedimentos genericos` e `Agenda principal` remanescente.
 - A recomendacao escolhida foi seguir com um novo contrato documental em `Preferencias / Configuracoes comuns`.
 - A blindagem textual/mojibake foi respeitada.
 - A proxima subetapa recomendada e `Preferencias / Configuracoes comuns - Contrato funcional e fronteiras para o proximo recorte medio controlado`.
@@ -2308,8 +2308,8 @@ Observacoes:
 
 - `Plano de Contas` permaneceu consolidado/pausado por ora.
 - Foi realizada nova selecao documental de blocos leves.
-- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Etiquetas`, `Convênios e Planos`, `Relatorios` e `CID`.
-- A classificacao multiarea resumida mostrou `Cadastros auxiliares` e `Etiquetas` como comuns/core administrativos/transversais, `Medicamentos` e `CID` como especificos de area profissional e `Convênios e Planos`/`Relatorios` como mistos ou de risco maior.
+- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Etiquetas`, `Conv�nios e Planos`, `Relatorios` e `CID`.
+- A classificacao multiarea resumida mostrou `Cadastros auxiliares` e `Etiquetas` como comuns/core administrativos/transversais, `Medicamentos` e `CID` como especificos de area profissional e `Conv�nios e Planos`/`Relatorios` como mistos ou de risco maior.
 - A recomendacao escolhida foi criar primeiro um contrato documental para `CID`.
 - Nenhuma alteracao de codigo foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
@@ -2373,8 +2373,8 @@ Observacoes:
 
 - `CID` permaneceu consolidado/pausado por ora.
 - Foi realizada nova selecao documental de proximo bloco leve.
-- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Etiquetas`, `Convênios e Planos` e um eventual outro bloco leve identificado no roadmap.
-- A classificacao multiarea resumida apontou `Cadastros auxiliares` e `Etiquetas` como comuns/core administrativos/transversais, `Medicamentos` como especifico de area profissional e `Convênios e Planos` como misto/depende de contexto.
+- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Etiquetas`, `Conv�nios e Planos` e um eventual outro bloco leve identificado no roadmap.
+- A classificacao multiarea resumida apontou `Cadastros auxiliares` e `Etiquetas` como comuns/core administrativos/transversais, `Medicamentos` como especifico de area profissional e `Conv�nios e Planos` como misto/depende de contexto.
 - A recomendacao escolhida foi `Etiquetas` como proxima frente documental.
 - Nenhuma alteracao de codigo foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
@@ -2431,8 +2431,8 @@ Observacoes:
 
 - `Etiquetas` permaneceu consolidado/pausado por ora.
 - Foi realizada nova selecao documental de proximo bloco leve.
-- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Convênios e Planos` e um eventual outro bloco leve identificado no roadmap.
-- A classificacao multiarea resumida apontou `Cadastros auxiliares` como comum/core administrativo/transversal, `Medicamentos` como especifico de area profissional e `Convênios e Planos` como misto/depende de contexto.
+- Os candidatos avaliados foram `Cadastros auxiliares`, `Medicamentos`, `Conv�nios e Planos` e um eventual outro bloco leve identificado no roadmap.
+- A classificacao multiarea resumida apontou `Cadastros auxiliares` como comum/core administrativo/transversal, `Medicamentos` como especifico de area profissional e `Conv�nios e Planos` como misto/depende de contexto.
 - A recomendacao escolhida foi `Cadastros auxiliares` como proxima frente documental.
 - Nenhuma alteracao de codigo foi feita nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
@@ -2613,7 +2613,7 @@ Observacoes:
   - sem backend;
   - sem banco;
   - sem endpoints;
-  - sem permissões;
+  - sem permiss�es;
   - sem requestJson como area de alteracao;
   - sem payload efetivo;
   - sem salvamento;
@@ -2778,15 +2778,15 @@ Observacoes:
 ## Fase 2B - Nova matriz comparativa apos pausa de Ficha pessoal
 
 - A nova matriz comparativa documental foi aberta apos o contrato profundo de `Ficha pessoal` concluir que nao existe recorte medio suficientemente seguro agora.
-- A consolidacao de `Preferencias`, `Prestadores` e `Convênios e Planos` foi mantida como contexto, assim como a pausa sem implementacao de `Medicamentos` e `Ficha pessoal`.
+- A consolidacao de `Preferencias`, `Prestadores` e `Conv�nios e Planos` foi mantida como contexto, assim como a pausa sem implementacao de `Medicamentos` e `Ficha pessoal`.
 - A auditoria leve do commit `09544fc6f89c5c1a3aed5b5c2098b2c4c414a3e7` foi registrada:
   - `git status --short` mostrou apenas untracked antigos em `docs/`, sem alteracao de codigo;
   - `git log --oneline -5` confirmou `09544fc` no historico recente;
   - `git show --name-only --stat --oneline 09544fc6f89c5c1a3aed5b5c2098b2c4c414a3e7` mostrou apenas `docs/11_roadmap_desenvolvimento.md` e `docs/fase_2b_ficha_pessoal_contrato_profundo.md`;
-  - a aparente indicacao visual de “4 arquivos editados” foi tratada como duplicidade de interface/summary, nao como alteracao real adicional.
+  - a aparente indicacao visual de 4 arquivos editados foi tratada como duplicidade de interface/summary, nao como alteracao real adicional.
 - Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e exclusao; menor contato com permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
 - A frente recomendada ficou em `Conta corrente`, tratada como `comum/core transversal` e com contrato profundo obrigatorio antes de qualquer implementacao.
-- `Preferências`, `Prestadores`, `Convênios e Planos`, `Medicamentos` e `Ficha pessoal` continuaram pausados, evitando reentrada em `sysOpt*`, `Odontograma`, modal, salvar, excluir, agenda, credenciamento, comissoes, calendario, `requestJson`, payload, pacientes, financeiro, recebimentos, procedimentos, permissões ou backend.
+- `Prefer�ncias`, `Prestadores`, `Conv�nios e Planos`, `Medicamentos` e `Ficha pessoal` continuaram pausados, evitando reentrada em `sysOpt*`, `Odontograma`, modal, salvar, excluir, agenda, credenciamento, comissoes, calendario, `requestJson`, payload, pacientes, financeiro, recebimentos, procedimentos, permiss�es ou backend.
 - `Indices financeiros`, `Materiais`, `Agenda principal remanescente`, `Procedimentos genericos` e `Relatorios` ficaram em segundo plano por sensibilidade, tamanho do bloco, risco funcional ou acoplamento estrutural.
 - A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
 - Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
@@ -2830,12 +2830,12 @@ Observacoes:
 
 ## Fase 2B - Conta corrente - Correcao minima da abertura da tela
 
-- A correção mínima da abertura da tela `Financeiro > Conta corrente` foi aplicada.
-- A delegação para o módulo passivo foi temporariamente desativada em `app.js`, e `ccRenderTabela()` voltou a ser síncrona e autônoma.
-- O módulo `frontend/js/modules/conta-corrente.js` foi preservado para futura integração mais segura, sem uso no bootstrap desta rodada.
-- A correção não tocou `requestJson`, payload, salvamento, exclusão, backend, permissões, relatórios ou fluxos financeiros sensíveis.
-- A validação do commit `beee5d7` continua dependendo de novo teste manual após esta correção.
-- Nenhuma nova validação final foi registrada nesta etapa.
+- A corre��o m�nima da abertura da tela `Financeiro > Conta corrente` foi aplicada.
+- A delega��o para o m�dulo passivo foi temporariamente desativada em `app.js`, e `ccRenderTabela()` voltou a ser s�ncrona e aut�noma.
+- O m�dulo `frontend/js/modules/conta-corrente.js` foi preservado para futura integra��o mais segura, sem uso no bootstrap desta rodada.
+- A corre��o n�o tocou `requestJson`, payload, salvamento, exclus�o, backend, permiss�es, relat�rios ou fluxos financeiros sens�veis.
+- A valida��o do commit `beee5d7` continua dependendo de novo teste manual ap�s esta corre��o.
+- Nenhuma nova valida��o final foi registrada nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Ficha pessoal - Contrato profundo do primeiro recorte medio controlado
@@ -2853,7 +2853,7 @@ Observacoes:
 
 - O contrato profundo de `Medicamentos` foi criado como etapa exclusivamente documental da Fase 2B.
 - A frente foi classificada como `comum/core transversal`.
-- O contexto ficou amarrado a nova matriz comparativa pos-Convênios e Planos, que recomendou `Medicamentos` como proxima frente apenas para contrato profundo.
+- O contexto ficou amarrado a nova matriz comparativa pos-Conv�nios e Planos, que recomendou `Medicamentos` como proxima frente apenas para contrato profundo.
 - O mapa documental registrou funcoes de `app.js`, modulo existente, DOM, eventos, `requestJson`, payload, salvamento, exclusao, backend, endpoints e permissoes apenas por leitura.
 - As areas proibidas permaneceram intocadas: backend, banco, endpoints, permissoes, `requestJson`, payload efetivo, salvamento, exclusao, validacoes criticas, vinculos com Assistente de receitas, editor, documento gerado, receituario, pacientes e atendimentos, alem de correcoes textuais e mojibake.
 - Os candidatos avaliados nao liberaram recorte medio controlado realmente seguro; a recomendacao final foi nao implementar agora e abrir nova matriz ou escolher outra frente.
@@ -2864,10 +2864,10 @@ Observacoes:
 ## Fase 2B - Nova matriz comparativa apos pausa de Medicamentos
 
 - A nova matriz comparativa documental foi aberta apos o contrato profundo de `Medicamentos` concluir que nao existe recorte medio suficientemente seguro para implementacao agora.
-- A consolidacao de `Preferências`, `Prestadores`, `Convênios e Planos` e `Medicamentos` foi mantida como contexto valido para a escolha da proxima frente.
+- A consolidacao de `Prefer�ncias`, `Prestadores`, `Conv�nios e Planos` e `Medicamentos` foi mantida como contexto valido para a escolha da proxima frente.
 - Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e exclusao; menor contato com permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
 - A frente recomendada ficou em `Ficha pessoal`, tratada como `comum/core transversal` e com contrato profundo obrigatorio antes de qualquer implementacao.
-- `Preferências`, `Prestadores` e `Convênios e Planos` continuaram pausados por ja terem recortes validados e consolidados.
+- `Prefer�ncias`, `Prestadores` e `Conv�nios e Planos` continuaram pausados por ja terem recortes validados e consolidados.
 - `Medicamentos` continuou pausado porque o contrato profundo concluiu que nao ha recorte medio suficientemente seguro agora, devido ao acoplamento com Assistente de receitas, editor, documento gerado, receituario, `requestJson`, payload, salvamento, exclusao, endpoints, pacientes e atendimentos.
 - Os demais candidatos foram relegados a segundo plano por risco funcional, sensibilidade financeira, acoplamento amplo ou menor clareza de teste.
 - A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
@@ -2877,12 +2877,12 @@ Observacoes:
 
 ## Fase 2B - Convenios e Planos - Contrato profundo do primeiro recorte medio controlado
 
-- O contrato profundo de `Convênios e Planos` foi criado como etapa exclusivamente documental da Fase 2B.
+- O contrato profundo de `Conv�nios e Planos` foi criado como etapa exclusivamente documental da Fase 2B.
 - A frente foi classificada como comum/core transversal.
-- O contexto ficou amarrado a nova matriz comparativa pos-Prestadores, que recomendou `Convênios e Planos` como proxima frente apenas para contrato profundo.
+- O contexto ficou amarrado a nova matriz comparativa pos-Prestadores, que recomendou `Conv�nios e Planos` como proxima frente apenas para contrato profundo.
 - O mapa documental registrou funcoes de `app.js`, modulos existentes, DOM, eventos, `requestJson`, payload, salvamento, exclusao, backend, endpoints e permissoes apenas por leitura.
 - As areas proibidas permaneceram intocadas: backend, banco, endpoints, permissoes, `requestJson`, payload efetivo, salvamento, exclusao, validacoes criticas, vinculos com pacientes, agenda, financeiro, recebimentos, procedimentos e prestadores, alem de correcoes textuais e mojibake.
-- Foram avaliados candidatos pequenos de recorte medio controlado dentro de `Convênios e Planos`, com recomendacao futura para a renderizacao visual/local da lista principal e dos contadores.
+- Foram avaliados candidatos pequenos de recorte medio controlado dentro de `Conv�nios e Planos`, com recomendacao futura para a renderizacao visual/local da lista principal e dos contadores.
 - O teste manual previsto foi registrado para uma futura implementacao minima, sem executar nada nesta etapa.
 - Nenhuma implementacao direta foi escolhida.
 - A blindagem textual/mojibake foi respeitada.
@@ -2901,52 +2901,52 @@ Observacoes:
 
 ## Fase 2B - Convenios e Planos - Auditoria de regressao visual/textual em Telefones
 
-- O teste funcional geral do commit `81379b6d2c9901ab0e77ab4bf6bf1f4e7da0bc8e` passou, mas foi observada uma regressao visual/textual na area de `Telefones` da modal de `Convênios e Planos`.
-- O texto exibido em vermelho aparece como mojibake semelhante a `â˜...` no lugar de um simbolo/icone de telefone.
+- O teste funcional geral do commit `81379b6d2c9901ab0e77ab4bf6bf1f4e7da0bc8e` passou, mas foi observada uma regressao visual/textual na area de `Telefones` da modal de `Conv�nios e Planos`.
+- O texto exibido em vermelho aparece como mojibake semelhante a `��...` no lugar de um simbolo/icone de telefone.
 - A validacao pos-teste do commit `81379b6` continua bloqueada ate a analise conclusiva e eventual correcao futura.
-- Foi aberta auditoria documental antes de qualquer correção.
+- Foi aberta auditoria documental antes de qualquer corre��o.
 - Nao houve validacao final nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Convenios e Planos - Correcao pontual do mojibake no icone de telefones
 
-- A correção pontual foi aplicada somente no literal do ícone/símbolo de telefone da função `convPlanConvenioPhoneRowV2()` em `frontend/app.js`.
-- O mojibake identificado `â˜Ž` foi substituido por `&#9742;`, mantendo a intencao visual sem depender de encoding ambíguo.
-- A correção foi separada de qualquer refatoração ou ajuste de listas/contadores.
-- `requestJson`, payload, salvamento, exclusão, backend, permissões e fluxos transversais permaneceram fora do escopo.
-- A validação pós-teste do commit `81379b6` continua dependendo de novo teste manual após esta correção.
+- A corre��o pontual foi aplicada somente no literal do �cone/s�mbolo de telefone da fun��o `convPlanConvenioPhoneRowV2()` em `frontend/app.js`.
+- O mojibake identificado `��}` foi substituido por `&#9742;`, mantendo a intencao visual sem depender de encoding amb�guo.
+- A corre��o foi separada de qualquer refatora��o ou ajuste de listas/contadores.
+- `requestJson`, payload, salvamento, exclus�o, backend, permiss�es e fluxos transversais permaneceram fora do escopo.
+- A valida��o p�s-teste do commit `81379b6` continua dependendo de novo teste manual ap�s esta corre��o.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Convenios e Planos - Validacao pos-teste da lista principal e contadores
 
 - A validacao pos-teste do commit `81379b6d2c9901ab0e77ab4bf6bf1f4e7da0bc8e` foi registrada.
 - A auditoria documental `c7040a41b996935c01b3efdb7d90ce0d4e157299` confirmou que o mojibake da area de telefones era preexistente.
-- A correção pontual `0c64ed30f06ab929a14515ce2b207ff27a0b9d94` foi validada depois do teste.
-- O primeiro recorte medio controlado de `Convênios e Planos` foi validado com sucesso em teste manual.
-- A separacao entre implementacao, auditoria e correção ficou preservada.
-- `requestJson`, payload, salvamento, exclusão, backend, permissões e fluxos transversais permaneceram fora do escopo.
+- A corre��o pontual `0c64ed30f06ab929a14515ce2b207ff27a0b9d94` foi validada depois do teste.
+- O primeiro recorte medio controlado de `Conv�nios e Planos` foi validado com sucesso em teste manual.
+- A separacao entre implementacao, auditoria e corre��o ficou preservada.
+- `requestJson`, payload, salvamento, exclus�o, backend, permiss�es e fluxos transversais permaneceram fora do escopo.
 - Os limites da Fase 2B continuam vigentes.
 - O proximo passo ainda nao foi escolhido nesta etapa e depende de nova escolha controlada.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Convenios e Planos - Consolidacao parcial apos primeiro recorte validado
 
-- A consolidacao parcial do primeiro recorte medio validado em `Convênios e Planos` foi registrada como etapa exclusivamente documental.
+- A consolidacao parcial do primeiro recorte medio validado em `Conv�nios e Planos` foi registrada como etapa exclusivamente documental.
 - O recorte consolidado permaneceu sendo a lista principal e os contadores, com separacao clara entre `app.js` e modulo passivo.
-- O teste manual passou apos a correção pontual do mojibake na area de telefones.
-- A correção pontual foi mantida separada da refatoração da lista e dos contadores.
-- O estado atual da frente foi documentado sem ampliar escopo para calendario, modais, salvar, excluir, `requestJson`, payload, backend ou permissões.
-- Os limites da Fase 2B permanecem vigentes e a proxima subetapa recomendada é nova matriz comparativa documental.
+- O teste manual passou apos a corre��o pontual do mojibake na area de telefones.
+- A corre��o pontual foi mantida separada da refatora��o da lista e dos contadores.
+- O estado atual da frente foi documentado sem ampliar escopo para calendario, modais, salvar, excluir, `requestJson`, payload, backend ou permiss�es.
+- Os limites da Fase 2B permanecem vigentes e a proxima subetapa recomendada � nova matriz comparativa documental.
 - Nenhuma nova implementacao foi escolhida nesta etapa.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2B - Nova matriz comparativa apos pausa de Convenios e Planos
 
-- A nova matriz comparativa documental foi aberta apos a consolidacao parcial de `Convênios e Planos`.
-- A consolidacao de `Preferências`, `Prestadores` e `Convênios e Planos` foi mantida como contexto valido para a escolha da proxima frente.
+- A nova matriz comparativa documental foi aberta apos a consolidacao parcial de `Conv�nios e Planos`.
+- A consolidacao de `Prefer�ncias`, `Prestadores` e `Conv�nios e Planos` foi mantida como contexto valido para a escolha da proxima frente.
 - Os criterios adotados para a matriz foram: menor contato com backend, `requestJson`, payload, salvamento e exclusao; menor contato com permissoes; menor risco textual/mojibake; teste manual claro; rollback mental simples; ganho real de organizacao do `app.js`; contrato profundo objetivo; recorte medio pequeno.
 - A frente recomendada ficou em `Medicamentos`, tratada como `comum/core transversal` e com contrato profundo obrigatorio antes de qualquer implementacao.
-- `Preferências`, `Prestadores` e `Convênios e Planos` continuaram pausados para evitar reentrada em `sysOpt*`, `Odontograma`, modal, salvar, excluir, agenda, credenciamento, comissoes, calendario, `requestJson`, payload, pacientes, financeiro, recebimentos, procedimentos, permissões ou backend.
+- `Prefer�ncias`, `Prestadores` e `Conv�nios e Planos` continuaram pausados para evitar reentrada em `sysOpt*`, `Odontograma`, modal, salvar, excluir, agenda, credenciamento, comissoes, calendario, `requestJson`, payload, pacientes, financeiro, recebimentos, procedimentos, permiss�es ou backend.
 - Os demais candidatos foram relegados a segundo plano por risco funcional, sensibilidade financeira, acoplamento amplo ou menor clareza de teste.
 - A proxima subetapa recomendada continua sendo apenas contrato profundo, sem implementacao direta.
 - Os limites da Fase 2B continuam vigentes: sem backend, banco, endpoints, permissoes, `requestJson`, payload, salvamento, exclusao, `sysOpt*`, `Odontograma` ou correcao textual/mojibake.
@@ -2973,7 +2973,7 @@ Observacoes:
 - Subetapa executada: contrato tecnico da unidade inicial e da matriz de perfis/permissoes para novas contas.
 - A unidade de referencia do EasyDental foi consolidada no contrato como `Principal` com codigo `0001`.
 - O prestador `Mestre` foi mantido como referencia documental para o admin inicial de codigo `1`.
-- O prestador `Clínica` foi mantido como referencia documental para o prestador sistemico/reservado de codigo `255`.
+- O prestador `Cl�nica` foi mantido como referencia documental para o prestador sistemico/reservado de codigo `255`.
 - O contrato reforca que a nova conta Brana deve nascer com unidade inicial formal, sem depender do setup para completar estrutura minima.
 - O contrato reforca que `permissoes_json` sozinho nao basta e que deve existir matriz formal equivalente a `usuario_perfil_acesso` ou modelo confiavel equivalente.
 - O baseline da conta 16 segue valido com a ressalva de que nao ha unidade formal e nao ha matriz formal de acesso.
@@ -2986,7 +2986,7 @@ Observacoes:
 
 - Subetapa executada: contrato mestre das tabelas e registros que nascerao em novas contas.
 - A unidade inicial `Principal` / `0001` foi consolidada como regra contratual.
-- `Mestre` ID `1` segue como referencia documental do admin inicial e `Clínica` ID `255` segue como referencia documental do prestador/usuario sistemico.
+- `Mestre` ID `1` segue como referencia documental do admin inicial e `Cl�nica` ID `255` segue como referencia documental do prestador/usuario sistemico.
 - O contrato mestre classifica o que nasce, o que nao nasce, o que ja existe no Brana e sera mantido, o que sera melhorado, o que e pendente e o que e protegido.
 - O contrato mestre reforca que nao se deve duplicar o que ja existe no Brana e que futuras implementacoes devem respeitar modularizacao segura.
 - A regra de modularizacao futura continua sendo: frontend novo deve preferir modulo pequeno e dedicado, backend deve preferir helper/service isolado e banco/schema deve ter contrato proprio antes de qualquer alteracao.
@@ -3014,7 +3014,7 @@ Observacoes:
 - Subetapa executada: fechamento do contrato mestre revisado de novas contas.
 - A versao final revisada consolida o que ja existe no Brana e nao deve duplicar, o que deve ser melhorado, o que falta e deve entrar como equivalente futuro, o que deve existir como estrutura vazia e o que deve nascer populado como seed.
 - A revisao final reforca que seeds sao apenas de catalogos, lookups e configuracoes estruturais; dados de pacientes, agenda, financeiro, historico, logs, temporarios e respostas preenchidas ficam fora do nascimento.
-- A revisao final preserva `Principal / 0001`, `Mestre` `1`, `Clínica` `255`, a tabela Brana, os equivalentes de CID, procedimentos, anamnese, TISS tipo tabela e a matriz formal de acesso quando confirmada.
+- A revisao final preserva `Principal / 0001`, `Mestre` `1`, `Cl�nica` `255`, a tabela Brana, os equivalentes de CID, procedimentos, anamnese, TISS tipo tabela e a matriz formal de acesso quando confirmada.
 - A revisao final fecha o fluxo de nascimento de nova conta sem depender de setup para a estrutura minima.
 - A regra de modularizacao futura permanece: cada implementacao posterior deve nascer pequena, isolada e com contrato proprio, com primeira implementacao mais segura sendo a unidade `Principal / 0001`.
 - Nao houve implementacao.
@@ -3106,29 +3106,29 @@ Observacoes:
 - O teste manual apos 8J/8K confirmou que a unidade Principal / 0001 nasceu corretamente, mas as tabelas de procedimentos/precos herdadas ainda estavam recebendo o seed Brana repetido.
 - A investigacao de leitura confirmou que o EasyDental vivo acessivel nesta sessao expunha apenas 4 tabelas `TAB_PRC` populadas: `EASY - Particular` (112), `Caixa Econ. Federal` (88), `PARTICULAR` (336) e `UNIMED-ODONTO` (162).
 - O backup legado local revisado em `D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_full_20260413_130945\\data\\procedimento.csv` mostrou 9 grupos de tabela com contagens distintas, mas ainda sem um mapa verificavel fechado para os 9 nomes contratuais do Brana.
-- Por seguranca, nao foi feita correção incompleta nem inventado mapa de seeds por tabela.
-- A correção permanece bloqueada ate existir um mapa confiavel por tabela EasyDental ou uma revisao contratual que feche a relacao entre os nomes do Brana e a origem de cada seed.
+- Por seguranca, nao foi feita corre��o incompleta nem inventado mapa de seeds por tabela.
+- A corre��o permanece bloqueada ate existir um mapa confiavel por tabela EasyDental ou uma revisao contratual que feche a relacao entre os nomes do Brana e a origem de cada seed.
 - Nenhuma conta existente foi alterada e nenhum arquivo de codigo foi modificado nesta revisao documental.
 - A proxima etapa recomendada e obter o mapa verificavel antes de qualquer nova implementacao de seed por tabela.
 
 ## Subetapa 8N da frente EasyDental virgem
 
 - Subetapa executada: mapa verificavel `TAB_PRC` / `TAB_PRC_ITEM` do EasyDental virgem com acesso restaurado ao caminho `\\\\Sonyvaio\\c\\EDS70`.
-- O arquivo `TAB_PRC.raw` confirmou os 9 nomes contratuais da tabela de procedimentos/precos do EasyDental virgem: `Particular`, `Sindicato`, `Bradesco`, `Banco do Brasil`, `Caixa Econ. Federal`, `Banespa`, `Telebrás`, `Petrobrás` e `CNCC`.
+- O arquivo `TAB_PRC.raw` confirmou os 9 nomes contratuais da tabela de procedimentos/precos do EasyDental virgem: `Particular`, `Sindicato`, `Bradesco`, `Banco do Brasil`, `Caixa Econ. Federal`, `Banespa`, `Telebr�s`, `Petrobr�s` e `CNCC`.
 - As divergencias em relacao ao contrato do Brana sao apenas ortograficas / de acentuacao em `Caixa Econ Federal`, `Petrobras` e `Telebras`.
 - O arquivo `TAB_PRC_ITEM.raw` permaneceu acessivel, mas a contagem por tabela nao ficou fechada com seguranca nesta sessao.
 - Fontes secundarias continuam divergentes e nao servem como substitutas da fonte virgem: o SQL vivo acessivel nesta maquina mostrou apenas 4 tabelas ativas e o backup legado local mostra grupos de tabela do legado Brana / conta antiga.
 - Nao houve implementacao.
 - Nenhuma conta foi criada ou alterada.
-- A correção continua bloqueada ate a complementacao do mapa por tabela EasyDental.
+- A corre��o continua bloqueada ate a complementacao do mapa por tabela EasyDental.
 - A proxima subetapa recomendada ficou em `EasyDental virgem - Subetapa 8O - complementacao da fonte/mapeamento TAB_PRC antes da correcao`.
 
 ## Subetapa 8O da frente EasyDental virgem
 
 - Subetapa executada: complementacao do mapa verificavel de `TAB_PRC_ITEM` na fonte virgem `\\\\Sonyvaio\\c\\EDS70`.
 - O arquivo `TAB_PRC_ITEM.raw` foi lido em modo somente leitura e revelou um mapa por tabela agora fechavel por `NROTAB` e `NROPROCTAB`.
-- O conjunto nominal de `TAB_PRC` continuou confirmado e as nove tabelas herdadas do EasyDental ficaram assim mapeadas: `Particular`, `Sindicato`, `Bradesco`, `Banco do Brasil`, `Caixa Econ. Federal`, `Banespa`, `Telebrás`, `Petrobrás` e `CNCC`.
-- As contagens verificadas em `TAB_PRC_ITEM` ficaram fechadas por tabela: `Particular 112`, `Sindicato 238`, `Bradesco 94`, `Banco do Brasil 188`, `Caixa Econ. Federal 88`, `Banespa 32`, `Telebrás 101`, `Petrobrás 174` e `CNCC 236`.
+- O conjunto nominal de `TAB_PRC` continuou confirmado e as nove tabelas herdadas do EasyDental ficaram assim mapeadas: `Particular`, `Sindicato`, `Bradesco`, `Banco do Brasil`, `Caixa Econ. Federal`, `Banespa`, `Telebr�s`, `Petrobr�s` e `CNCC`.
+- As contagens verificadas em `TAB_PRC_ITEM` ficaram fechadas por tabela: `Particular 112`, `Sindicato 238`, `Bradesco 94`, `Banco do Brasil 188`, `Caixa Econ. Federal 88`, `Banespa 32`, `Telebr�s 101`, `Petrobr�s 174` e `CNCC 236`.
 - Foi possivel extrair amostras seguras de itens por tabela sem expor dados sensiveis nem valores comerciais reais.
 - Nao houve implementacao.
 - Nenhuma conta foi criada ou alterada.
@@ -3138,8 +3138,8 @@ Observacoes:
 ## Subetapa 8P da frente EasyDental virgem
 
 - Subetapa executada: correcao isolada dos seeds por tabela EasyDental.
-- A falha da 8J foi corrigida para que `Brana` permaneça com seed proprio e as 9 tabelas herdadas recebam seus itens EasyDental respectivos.
-- O mapa 8O foi aplicado: `Particular 112`, `Sindicato 238`, `Bradesco 94`, `Banco do Brasil 188`, `Caixa Econ. Federal 88`, `Banespa 32`, `Telebrás 101`, `Petrobrás 174` e `CNCC 236`.
+- A falha da 8J foi corrigida para que `Brana` permane�a com seed proprio e as 9 tabelas herdadas recebam seus itens EasyDental respectivos.
+- O mapa 8O foi aplicado: `Particular 112`, `Sindicato 238`, `Bradesco 94`, `Banco do Brasil 188`, `Caixa Econ. Federal 88`, `Banespa 32`, `Telebr�s 101`, `Petrobr�s 174` e `CNCC 236`.
 - Os arquivos alterados foram `backend/seeds/procedimentos_padrao.py` e o novo `backend/seeds/procedimentos_easy_tabelas.py`.
 - Os checks sintaticos foram executados com sucesso para os arquivos Python alterados.
 - O teste manual continua sendo criar nova conta e verificar que as 9 tabelas herdadas nao herdam mais os 336 itens da Brana, mantendo `Tabela Exemplo` fora do nascimento e `Brana` como padrao/privada.
@@ -3151,76 +3151,76 @@ Observacoes:
 ## Subetapa 8Q da frente EasyDental virgem
 
 - Subetapa executada: exclusao segura da conta de teste para liberar `institutobrana@gmail.com` e validar a trilha 8J/8K/8P.
-- O e-mail alvo foi confirmado no banco como `institutobrana@gmail.com`, mas o ID informado pelo usuario como `17` nao bateu com a leitura; a conta correta confirmada por leitura foi a clínica `ID 8`.
+- O e-mail alvo foi confirmado no banco como `institutobrana@gmail.com`, mas o ID informado pelo usuario como `17` nao bateu com a leitura; a conta correta confirmada por leitura foi a cl�nica `ID 8`.
 - O procedimento aprovado encontrado foi o contrato central de exclusao segura com backup/export, dry-run e runner controlado.
 - O dry-run foi executado com sucesso antes da exclusao real.
 - A exclusao real foi executada uma unica vez com `--execute` e concluiu com sucesso, removendo a clinica `ID 8` e liberando o e-mail.
 - A validacao pos-exclusao confirmou que nenhuma outra conta foi afetada.
 - Os arquivos alterados foram o novo documento de exclusao segura e este roadmap.
-- A próxima validacao manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` para conferir 8J/8K/8P.
-- Nenhum código foi alterado.
+- A pr�xima validacao manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` para conferir 8J/8K/8P.
+- Nenhum c�digo foi alterado.
 - Nenhuma conta adicional foi criada ou alterada fora da exclusao segura documentada.
 
-## Correção urgente de schema/login - `usuarios.senha_interna_hash`
+## Corre��o urgente de schema/login - `usuarios.senha_interna_hash`
 
 - Foi diagnosticado erro de login `500` em `POST /login` causado por `psycopg2.errors.UndefinedColumn` na coluna `usuarios.senha_interna_hash`.
-- O model de `Usuario` já esperava a coluna e o banco real estava sem ela.
-- A correção aplicada foi idempotente: o startup HTTP passou a garantir `senha_interna_hash` e o script manual de compatibilidade também foi alinhado.
+- O model de `Usuario` j� esperava a coluna e o banco real estava sem ela.
+- A corre��o aplicada foi idempotente: o startup HTTP passou a garantir `senha_interna_hash` e o script manual de compatibilidade tamb�m foi alinhado.
 - As demais colunas conferidas em `usuarios` permaneceram presentes.
-- Não houve alteração funcional em `setup`, senha interna, `Opções do Sistema`, frontend, seeds de procedimentos, unidade ou contas existentes.
-- O login deve ser validado manualmente após reiniciar o backend e, se estiver normal, a próxima conta limpa pode ser criada com `institutobrana@gmail.com`.
-- A próxima subetapa recomendada passa a ser a validação manual da nova conta após 8J/8K/8P.
+- N�o houve altera��o funcional em `setup`, senha interna, `Op��es do Sistema`, frontend, seeds de procedimentos, unidade ou contas existentes.
+- O login deve ser validado manualmente ap�s reiniciar o backend e, se estiver normal, a pr�xima conta limpa pode ser criada com `institutobrana@gmail.com`.
+- A pr�xima subetapa recomendada passa a ser a valida��o manual da nova conta ap�s 8J/8K/8P.
 
-## Correção urgente do signup - `PRIVATE_TABLE_NAME` ausente
+## Corre��o urgente do signup - `PRIVATE_TABLE_NAME` ausente
 
 - O `/signup/confirm` falhou com `NameError: name 'PRIVATE_TABLE_NAME' is not defined` em `backend/seeds/procedimentos_padrao.py`.
-- A causa foi uma referência à tabela privada `Brana` sem constante definida no escopo do seed.
-- A correção aplicada foi mínima: a constante local `PRIVATE_TABLE_NAME = "Brana"` foi definida no próprio arquivo do seed.
-- A consulta segura ao banco para `institutobrana@gmail.com` não encontrou conta parcial em `clinicas` nem em `usuarios`.
+- A causa foi uma refer�ncia � tabela privada `Brana` sem constante definida no escopo do seed.
+- A corre��o aplicada foi m�nima: a constante local `PRIVATE_TABLE_NAME = "Brana"` foi definida no pr�prio arquivo do seed.
+- A consulta segura ao banco para `institutobrana@gmail.com` n�o encontrou conta parcial em `clinicas` nem em `usuarios`.
 - Os seeds da 8P foram preservados.
 - Nenhuma conta foi criada automaticamente.
 - O teste manual recomendado passa a ser tentar novamente criar uma conta limpa com `institutobrana@gmail.com` e validar 8J/8K/8P.
 
 ## Subetapa 8R da frente EasyDental virgem
 
-- Execução da Subetapa 8R: o signup passou a criar, além do prestador sistêmico `Clínica`, um prestador ADM/Mestre funcional nas novas contas.
-- A regra contratual adicionada foi: nome do prestador ADM vem do cadastro da conta, o tipo é `Cirurgião dentista` e o seed usa `source_id=1` com `codigo=002`.
-- O helper de signup foi ajustado de forma idempotente para reaproveitar o prestador ADM quando a conta nova já tiver sido parcialmente construída.
-- O prestador `Clínica` sistêmico foi preservado.
-- O usuário admin inicial foi vinculado ao prestador ADM funcional.
-- Não houve alteração em unidade Principal / 0001, 8P, setup, senha interna, permissões ou frontend.
-- A consulta segura não encontrou conta parcial para `institutobrana@gmail.com` na etapa anterior, e a nova implementação não altera contas existentes.
-- A próxima validação manual recomendada passa a ser abrir nova conta limpa e confirmar que o módulo Prestadores exibe `Clínica` e o prestador ADM com o nome do cadastro.
-- Nenhuma conta foi criada automaticamente por esta correção.
+- Execu��o da Subetapa 8R: o signup passou a criar, al�m do prestador sist�mico `Cl�nica`, um prestador ADM/Mestre funcional nas novas contas.
+- A regra contratual adicionada foi: nome do prestador ADM vem do cadastro da conta, o tipo � `Cirurgi�o dentista` e o seed usa `source_id=1` com `codigo=002`.
+- O helper de signup foi ajustado de forma idempotente para reaproveitar o prestador ADM quando a conta nova j� tiver sido parcialmente constru�da.
+- O prestador `Cl�nica` sist�mico foi preservado.
+- O usu�rio admin inicial foi vinculado ao prestador ADM funcional.
+- N�o houve altera��o em unidade Principal / 0001, 8P, setup, senha interna, permiss�es ou frontend.
+- A consulta segura n�o encontrou conta parcial para `institutobrana@gmail.com` na etapa anterior, e a nova implementa��o n�o altera contas existentes.
+- A pr�xima valida��o manual recomendada passa a ser abrir nova conta limpa e confirmar que o m�dulo Prestadores exibe `Cl�nica` e o prestador ADM com o nome do cadastro.
+- Nenhuma conta foi criada automaticamente por esta corre��o.
 
 ## Exclusao segura bloqueada apos 8R
 
-- O e-mail alvo `institutobrana@gmail.com` foi confirmado no banco como clínica `ID 11`, nao `25`.
+- O e-mail alvo `institutobrana@gmail.com` foi confirmado no banco como cl�nica `ID 11`, nao `25`.
 - Foram revisados o contrato central de exclusao segura, as trilhas historicas e os documentos de exclusao anteriores.
-- O runner seguro existente no repositório está travado para `clinica_id = 8`, então nao havia ferramenta aprovada para executar a exclusao da clínica 11 sem alterar código.
-- Nao houve backup/export, dry-run ou exclusao real nesta etapa, porque a operacao ficou bloqueada por ausencia de runner seguro específico para `ID 11`.
+- O runner seguro existente no reposit�rio est� travado para `clinica_id = 8`, ent�o nao havia ferramenta aprovada para executar a exclusao da cl�nica 11 sem alterar c�digo.
+- Nao houve backup/export, dry-run ou exclusao real nesta etapa, porque a operacao ficou bloqueada por ausencia de runner seguro espec�fico para `ID 11`.
 - Nenhuma outra conta foi alterada, e 8P/8K/8R foram preservadas.
-- A próxima etapa recomendada passa a ser aprovar ou criar um runner seguro específico para a clínica 11 antes de tentar qualquer exclusao.
+- A pr�xima etapa recomendada passa a ser aprovar ou criar um runner seguro espec�fico para a cl�nica 11 antes de tentar qualquer exclusao.
 
 ## Subetapa 8S da frente EasyDental virgem
 
-- Execução da Subetapa 8S: foi criado um runner seguro específico para a clínica 11, reaproveitando a trilha de exclusão segura já validada.
-- O e-mail alvo `institutobrana@gmail.com` foi confirmado na clínica 11, e a hipótese `25` foi descartada como alvo.
-- O backup/export somente leitura foi executado com sucesso e gerou o conjunto de arquivos de pré-exclusão da clínica 11.
-- O dry-run foi executado com sucesso e confirmou alvo único, usuários vinculados, prestador, assinatura, `email_codes` e dependências.
-- A exclusão real foi executada uma única vez com `--execute` e concluiu com sucesso.
-- A clínica 11 foi removida e o e-mail foi liberado para nova conta limpa.
+- Execu��o da Subetapa 8S: foi criado um runner seguro espec�fico para a cl�nica 11, reaproveitando a trilha de exclus�o segura j� validada.
+- O e-mail alvo `institutobrana@gmail.com` foi confirmado na cl�nica 11, e a hip�tese `25` foi descartada como alvo.
+- O backup/export somente leitura foi executado com sucesso e gerou o conjunto de arquivos de pr�-exclus�o da cl�nica 11.
+- O dry-run foi executado com sucesso e confirmou alvo �nico, usu�rios vinculados, prestador, assinatura, `email_codes` e depend�ncias.
+- A exclus�o real foi executada uma �nica vez com `--execute` e concluiu com sucesso.
+- A cl�nica 11 foi removida e o e-mail foi liberado para nova conta limpa.
 - Nenhuma outra conta foi afetada, e 8P/8K/8R foram preservadas.
-- Os arquivos alterados foram o novo runner seguro da clínica 11, o backup/export da clínica 11, o novo documento da subetapa e este roadmap.
-- A próxima validação manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
+- Os arquivos alterados foram o novo runner seguro da cl�nica 11, o backup/export da cl�nica 11, o novo documento da subetapa e este roadmap.
+- A pr�xima valida��o manual recomendada passa a ser criar nova conta com `institutobrana@gmail.com` e validar 8P/8K/8R.
 - Nenhuma conta foi criada automaticamente.
 
-## Correção segura da exclusao de usuario no modulo Usuarios
+## Corre��o segura da exclusao de usuario no modulo Usuarios
 
 - Foi auditado o fluxo do botao Excluir em `frontend/app.js`, que chama `DELETE /admin/users/{id}` e mostrava o alerta generico `Falha ao excluir usuario.`.
 - O diagnostico confirmou que a rota `backend/routes/user_admin_routes.py` fazia `db.delete(usuario)` direto e quebrava quando o usuario ainda estava referenciado por `prestador_odonto.usuario_id`.
 - A falha nao era geral para qualquer usuario: usuarios sem dependencia puderam ser excluidos em transacao descartavel, enquanto o usuario `37` da clinica 15 falhava por FK, e o usuario `36` nao falhava.
-- A regra de seguranca foi reforcada para bloquear o ultimo admin, preservar a conta base `Clínica`/system user e manter o bloqueio do proprio usuario logado.
+- A regra de seguranca foi reforcada para bloquear o ultimo admin, preservar a conta base `Cl�nica`/system user e manter o bloqueio do proprio usuario logado.
 - A correcao aplicada limpa dependencias conhecidas antes do delete: `prestador_odonto.usuario_id`, `usuario_perfil_acesso`, `relatorio_config`, `controle_protetico` e os campos de `tratamento` que apontam para o usuario.
 - O frontend nao precisou ser alterado, porque agora a rota deve responder sem 500 nos casos comuns e, se houver dependencias inesperadas, retorna erro controlado.
 - Nenhuma conta foi criada ou excluida nesta etapa alem da validacao segura de leitura.
@@ -3282,30 +3282,30 @@ Observacoes:
 
 ## Contrato de Preferencias / Configuracoes
 
-- Contrato documental aberto para o recorte remanescente de `Preferências / Configurações`.
-- O módulo continua classificado como `comum/core`.
-- O recorte recomendado é a sincronização visual básica da modal, com título e alternância de abas.
-- Nenhuma implementação foi feita nesta etapa.
-- Implementação mínima do recorte contratado concluída com delegação visual ao módulo passivo.
+- Contrato documental aberto para o recorte remanescente de `Prefer�ncias / Configura��es`.
+- O m�dulo continua classificado como `comum/core`.
+- O recorte recomendado � a sincroniza��o visual b�sica da modal, com t�tulo e altern�ncia de abas.
+- Nenhuma implementa��o foi feita nesta etapa.
+- Implementa��o m�nima do recorte contratado conclu�da com delega��o visual ao m�dulo passivo.
 - Arquivos alterados: `frontend/app.js`, `frontend/js/modules/preferencias-opcoes-sistema.js`, `docs/fase_2b_preferencias_configuracoes_implementacao_sincronizacao_visual_modal.md`.
-- Sem alteração em carregamento, payload, salvamento, `sysOpt*`, backend, banco, permissões ou seeds.
-- Próxima etapa recomendada: validação manual pós-implementação.
+- Sem altera��o em carregamento, payload, salvamento, `sysOpt*`, backend, banco, permiss�es ou seeds.
+- Pr�xima etapa recomendada: valida��o manual p�s-implementa��o.
 - A blindagem textual/mojibake foi respeitada.
-- Nenhum código foi alterado nesta etapa.
+- Nenhum c�digo foi alterado nesta etapa.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_contrato_recorte_remanescente.md`.
 - A blindagem textual/mojibake foi respeitada.
-- A próxima etapa recomendada, se o contrato continuar seguro, é a implementação mínima do recorte contratado.
+- A pr�xima etapa recomendada, se o contrato continuar seguro, � a implementa��o m�nima do recorte contratado.
 
-## Validação manual da sincronização visual de Preferencias / Configuracoes
+## Valida��o manual da sincroniza��o visual de Preferencias / Configuracoes
 
-- A validação manual da sincronização visual da modal de `Preferências / Configurações` foi aprovada.
+- A valida��o manual da sincroniza��o visual da modal de `Prefer�ncias / Configura��es` foi aprovada.
 - Commit validado: `7dae8e3226cd6f4510a0094968d29a2e853b9ddc`.
-- Os testes principais foram aprovados: abertura da tela, abertura da modal, alternância de abas, atualização do título, fechamento, reabertura, reabertura sem salvar, ausência de alteração indevida e checagem rápida em `Opções do Sistema` sem regressão visual.
-- Nenhuma alteração de código foi feita nesta etapa.
-- O recorte de sincronização visual da modal fica consolidado como validado.
+- Os testes principais foram aprovados: abertura da tela, abertura da modal, altern�ncia de abas, atualiza��o do t�tulo, fechamento, reabertura, reabertura sem salvar, aus�ncia de altera��o indevida e checagem r�pida em `Op��es do Sistema` sem regress�o visual.
+- Nenhuma altera��o de c�digo foi feita nesta etapa.
+- O recorte de sincroniza��o visual da modal fica consolidado como validado.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_validacao_sincronizacao_visual_modal.md`.
 - A blindagem textual/mojibake foi respeitada.
-- A próxima etapa recomendada é uma decisão conservadora sobre novo recorte de `Preferências / Configurações` ou nova matriz comparativa.
+- A pr�xima etapa recomendada � uma decis�o conservadora sobre novo recorte de `Prefer�ncias / Configura��es` ou nova matriz comparativa.
 
 ## Decisao conservadora pos validacao visual de Preferencias / Configuracoes
 
@@ -3334,7 +3334,7 @@ Observacoes:
 - A renderizacao visual dos combos gerais foi delegada ao modulo existente.
 - `prefRenderCombos` permaneceu como orquestrador.
 - O fallback local foi preservado.
-- Nenhuma alteracao de carregamento, payload, salvamento, `sysOpt*`, backend, banco, permissões ou seeds foi feita.
+- Nenhuma alteracao de carregamento, payload, salvamento, `sysOpt*`, backend, banco, permiss�es ou seeds foi feita.
 - O documento criado foi `docs/fase_2b_preferencias_configuracoes_implementacao_pref_render_combos.md`.
 - A blindagem textual/mojibake foi respeitada.
 - A proxima etapa recomendada e validacao manual.
@@ -3535,14 +3535,14 @@ Observacoes:
 - O estado mudou em relacao ao estado-base, com `ID 13` ausente e `ID 17/18` presentes.
 - Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/auditoria_estado_pos_reinicio_id17_id18_reapareceram.md`.
-- A proxima etapa recomendada e nao reiniciar novamente até entender a troca de cluster/instancia.
+- A proxima etapa recomendada e nao reiniciar novamente at� entender a troca de cluster/instancia.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Decisao de oficializar o PostgreSQL 17
 
-- O usuário definiu o PostgreSQL 17 como cluster oficial.
+- O usu�rio definiu o PostgreSQL 17 como cluster oficial.
 - O banco `brana_saas` do PostgreSQL 17 passa a ser o banco oficial.
-- A conta `Paulo Gustavo ID 13` do PostgreSQL 18 fica preservada para migração futura.
+- A conta `Paulo Gustavo ID 13` do PostgreSQL 18 fica preservada para migra��o futura.
 - O cluster 18 nao sera excluido nesta etapa e permanece preservado temporariamente.
 - Nenhum codigo foi alterado e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/decisao_cluster17_oficial_migrar_conta13_cluster18.md`.
@@ -3730,7 +3730,7 @@ Observacoes:
 - `frontend/app.js` permaneceu como orquestrador, com delegacao visual minima para o modulo passivo `frontend/js/modules/prestadores.js`.
 - O helper `prestRenderLista` foi mantido como alvo da renderizacao visual da lista e `prestSelecionarLinhaVisual` foi adicionado para a selecao visual.
 - O fallback local foi preservado.
-- Nao houve alteracao de `prestCarregar`, `requestJson`, payload, salvamento, `prestAcoesPlaceholder`, Agenda, Convenios, Comissoes, permissões, backend ou banco.
+- Nao houve alteracao de `prestCarregar`, `requestJson`, payload, salvamento, `prestAcoesPlaceholder`, Agenda, Convenios, Comissoes, permiss�es, backend ou banco.
 - Os checks tecnicos foram executados com sucesso.
 - A proxima etapa recomendada e validacao manual pos-implementacao do recorte de lista e selecao visual.
 - O documento criado foi `docs/fase_2b_prestadores_implementacao_lista_selecao_visual.md`.
@@ -3760,139 +3760,139 @@ Observacoes:
 
 - A matriz curta pos-`Prestadores` foi registrada em risco medio controlado.
 - `Prestadores` ficou consolidado como parcialmente validado e sem novo recorte automatico.
-- Os candidatos comparados incluíram `Prestadores`, `Cadastros auxiliares`, `Etiquetas`, `Convenios e Planos`, `Plano de contas`, `Medicamentos`, `Conta corrente`, `Preferencias / Configuracoes`, `Usuarios/Admin` e `Relatorios` / `Agenda principal`.
+- Os candidatos comparados inclu�ram `Prestadores`, `Cadastros auxiliares`, `Etiquetas`, `Convenios e Planos`, `Plano de contas`, `Medicamentos`, `Conta corrente`, `Preferencias / Configuracoes`, `Usuarios/Admin` e `Relatorios` / `Agenda principal`.
 - A decisao registrada foi `MATRIZ-POS-PREST-C`.
 - A proxima frente recomendada e `Convenios e Planos`.
-- O recorte inicial sugerido e um contrato profundo do bloco restante de lista/shell/selecao visual, sem tocar em `requestJson`, payload, salvamento, exclusao, agenda/faturamento/calendario, backend, banco ou permissões.
+- O recorte inicial sugerido e um contrato profundo do bloco restante de lista/shell/selecao visual, sem tocar em `requestJson`, payload, salvamento, exclusao, agenda/faturamento/calendario, backend, banco ou permiss�es.
 - Nenhum codigo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_matriz_curta_pos_prestadores_lista_selecao.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Contrato profundo do recorte inicial
+## Fase 2B - Conv�nios e Planos - Contrato profundo do recorte inicial
 
-- O contrato profundo de `Convênios e Planos` foi aberto como etapa exclusivamente documental.
-- O bloco atual foi mapeado em `frontend/app.js`, com funções de lista, seleção, shell, carregamento, wiring e calendário/faturamento.
-- O módulo passivo [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js) foi identificado com helpers puros de normalização, validação e montagem de linhas.
-- A matriz de risco separou lista/render, seleção, filtros, shell e modais visuais das áreas sensíveis de payload, salvamento, exclusão, calendário/faturamento, permissões, backend e banco.
-- A decisão registrada foi `CONVPLAN-CONTRATO-B`.
-- O recorte recomendado é o contrato visual mínimo de lista e seleção, com contrato ainda mais específico antes de qualquer implementação.
-- Nenhum código foi alterado e nenhum dado de banco foi modificado nesta etapa.
-- A próxima etapa recomendada é manter esse contrato como base e não avançar automaticamente para requestJson, payload, salvamento ou calendário.
+- O contrato profundo de `Conv�nios e Planos` foi aberto como etapa exclusivamente documental.
+- O bloco atual foi mapeado em `frontend/app.js`, com fun��es de lista, sele��o, shell, carregamento, wiring e calend�rio/faturamento.
+- O m�dulo passivo [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js) foi identificado com helpers puros de normaliza��o, valida��o e montagem de linhas.
+- A matriz de risco separou lista/render, sele��o, filtros, shell e modais visuais das �reas sens�veis de payload, salvamento, exclus�o, calend�rio/faturamento, permiss�es, backend e banco.
+- A decis�o registrada foi `CONVPLAN-CONTRATO-B`.
+- O recorte recomendado � o contrato visual m�nimo de lista e sele��o, com contrato ainda mais espec�fico antes de qualquer implementa��o.
+- Nenhum c�digo foi alterado e nenhum dado de banco foi modificado nesta etapa.
+- A pr�xima etapa recomendada � manter esse contrato como base e n�o avan�ar automaticamente para requestJson, payload, salvamento ou calend�rio.
 - O documento criado foi `docs/fase_2b_convenios_planos_contrato_profundo_recorte_inicial.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Contrato específico de lista e seleção visual
+## Fase 2B - Conv�nios e Planos - Contrato espec�fico de lista e sele��o visual
 
-- O contrato específico de `Convênios e Planos` reduziu o recorte ao menor núcleo seguro.
-- O mapeamento técnico confirmou o bloco principal em `frontend/app.js` e o módulo passivo [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js).
-- Os sub-recortes foram comparados e a decisão específica foi `CONVPLAN-ESPEC-A`.
-- O recorte futuro permitido ficou restrito apenas à renderização visual das listas.
-- Seleção, shell, wiring, requestJson, payload, salvamento, exclusão e calendário/faturamento ficaram fora do recorte imediato.
-- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O contrato espec�fico de `Conv�nios e Planos` reduziu o recorte ao menor n�cleo seguro.
+- O mapeamento t�cnico confirmou o bloco principal em `frontend/app.js` e o m�dulo passivo [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js).
+- Os sub-recortes foram comparados e a decis�o espec�fica foi `CONVPLAN-ESPEC-A`.
+- O recorte futuro permitido ficou restrito apenas � renderiza��o visual das listas.
+- Sele��o, shell, wiring, requestJson, payload, salvamento, exclus�o e calend�rio/faturamento ficaram fora do recorte imediato.
+- Nenhum c�digo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_contrato_especifico_lista_selecao.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Microcontrato de renderização de listas
+## Fase 2B - Conv�nios e Planos - Microcontrato de renderiza��o de listas
 
-- O microcontrato de `Convênios e Planos` fechou o recorte futuro mínimo para a renderização visual das listas.
-- O mapeamento técnico confirmou que `convPlanRenderConvenios` e `convPlanRenderPlanos` são simétricas e podem avançar juntas com helpers passivos equivalentes.
+- O microcontrato de `Conv�nios e Planos` fechou o recorte futuro m�nimo para a renderiza��o visual das listas.
+- O mapeamento t�cnico confirmou que `convPlanRenderConvenios` e `convPlanRenderPlanos` s�o sim�tricas e podem avan�ar juntas com helpers passivos equivalentes.
 - Os micro-recortes avaliados foram `MICRO 1`, `MICRO 2`, `MICRO 3` e `MICRO 4`.
-- A decisão registrada foi `CONVPLAN-MICRO-C`.
+- A decis�o registrada foi `CONVPLAN-MICRO-C`.
 - A fronteira futura permitida ficou restrita a `convPlanRenderConvenios`, `convPlanRenderPlanos`, `montarLinhasConvenios` e `montarLinhasPlanos`.
-- Seleção, shell, wiring, `requestJson`, payload, salvamento, exclusão, calendário/faturamento, backend, banco e permissões ficaram fora do recorte imediato.
-- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- Sele��o, shell, wiring, `requestJson`, payload, salvamento, exclus�o, calend�rio/faturamento, backend, banco e permiss�es ficaram fora do recorte imediato.
+- Nenhum c�digo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Implementação mínima da renderização de listas
+## Fase 2B - Conv�nios e Planos - Implementa��o m�nima da renderiza��o de listas
 
-- A renderização visual das listas de `Convênios e Planos` foi implementada com o menor diff seguro.
+- A renderiza��o visual das listas de `Conv�nios e Planos` foi implementada com o menor diff seguro.
 - `convPlanRenderConvenios` e `convPlanRenderPlanos` permaneceram como orquestradores em `frontend/app.js`.
-- Os helpers passivos `montarLinhasConvenios` e `montarLinhasPlanos` foram reutilizados quando disponíveis, com fallback local preservado.
-- O código alterado ficou restrito a `frontend/app.js`; o módulo passivo `frontend/js/modules/convenios-planos.js` permaneceu sem alterações.
-- Nenhum fluxo de seleção, shell, eventos, `requestJson`, payload, salvamento, exclusão, calendário/faturamento, backend ou banco foi alterado.
-- Os checks técnicos foram executados com sucesso.
+- Os helpers passivos `montarLinhasConvenios` e `montarLinhasPlanos` foram reutilizados quando dispon�veis, com fallback local preservado.
+- O c�digo alterado ficou restrito a `frontend/app.js`; o m�dulo passivo `frontend/js/modules/convenios-planos.js` permaneceu sem altera��es.
+- Nenhum fluxo de sele��o, shell, eventos, `requestJson`, payload, salvamento, exclus�o, calend�rio/faturamento, backend ou banco foi alterado.
+- Os checks t�cnicos foram executados com sucesso.
 - O documento criado foi `docs/fase_2b_convenios_planos_implementacao_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Validação manual da renderização de listas
+## Fase 2B - Conv�nios e Planos - Valida��o manual da renderiza��o de listas
 
-- A validação manual da renderização visual das listas de `Convênios e Planos` foi aprovada pelo usuário.
+- A valida��o manual da renderiza��o visual das listas de `Conv�nios e Planos` foi aprovada pelo usu�rio.
 - O recorte visual ficou consolidado como validado.
-- A validação cobriu tela, listas, renderização visual, recarregamento sem salvar e não-regressão visual de seleção e calendário/faturamento.
-- A lista vazia não foi explicitamente validada nesta etapa.
-- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
-- A próxima etapa recomendada é uma decisão conservadora antes de qualquer novo recorte.
+- A valida��o cobriu tela, listas, renderiza��o visual, recarregamento sem salvar e n�o-regress�o visual de sele��o e calend�rio/faturamento.
+- A lista vazia n�o foi explicitamente validada nesta etapa.
+- Nenhum c�digo foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- A pr�xima etapa recomendada � uma decis�o conservadora antes de qualquer novo recorte.
 - O documento criado foi `docs/fase_2b_convenios_planos_validacao_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Decisão pós-validação da renderização de listas
+## Fase 2B - Conv�nios e Planos - Decis�o p�s-valida��o da renderiza��o de listas
 
-- `Convênios e Planos` permanece consolidado como frente parcialmente validada.
-- Os candidatos restantes foram reavaliados e separados entre apoio visual local, eventos/wiring e áreas sensíveis.
-- A decisão conservadora registrada foi `CONVPLAN-DEC-C`.
-- A próxima ação recomendada é exigir novo microcontrato antes de qualquer avanço adicional.
-- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- `Conv�nios e Planos` permanece consolidado como frente parcialmente validada.
+- Os candidatos restantes foram reavaliados e separados entre apoio visual local, eventos/wiring e �reas sens�veis.
+- A decis�o conservadora registrada foi `CONVPLAN-DEC-C`.
+- A pr�xima a��o recomendada � exigir novo microcontrato antes de qualquer avan�o adicional.
+- Nenhum c�digo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_decisao_pos_validacao_render_listas.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Microcontrato de seleção visual
+## Fase 2B - Conv�nios e Planos - Microcontrato de sele��o visual
 
-- A seleção visual de `Convênios e Planos` foi avaliada após a renderização das listas.
+- A sele��o visual de `Conv�nios e Planos` foi avaliada ap�s a renderiza��o das listas.
 - `convPlanSelecionarConvenio` e `convPlanSelecionarPlano` foram mapeadas como acopladas ao estado funcional da frente.
-- A seleção visual ficou considerada acoplada demais para um recorte isolado seguro nesta etapa.
-- A decisão registrada foi `CONVPLAN-SEL-D`.
-- O próximo candidato recomendado é shell visual ou filtros locais, caso venha um novo contrato.
-- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- A sele��o visual ficou considerada acoplada demais para um recorte isolado seguro nesta etapa.
+- A decis�o registrada foi `CONVPLAN-SEL-D`.
+- O pr�ximo candidato recomendado � shell visual ou filtros locais, caso venha um novo contrato.
+- Nenhum c�digo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_selecao_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Microcontrato de shell visual
+## Fase 2B - Conv�nios e Planos - Microcontrato de shell visual
 
-- O shell visual de `Convênios e Planos` foi aberto como microcontrato documental.
+- O shell visual de `Conv�nios e Planos` foi aberto como microcontrato documental.
 - `convPlanAbrir`, `convPlanEnsureUI` e `convPlanVincularEventos` foram mapeadas como parte do shell atual.
-- O shell puro ainda está parcialmente misturado com carregamento de dados e wiring.
-- A decisão registrada foi `CONVPLAN-SHELL-A`.
-- A futura implementação deve limitar-se a helper visual passivo para containers, sem alterar eventos nem carregamento.
-- Nenhum código foi alterado nesta etapa e nenhum dado de banco foi modificado.
+- O shell puro ainda est� parcialmente misturado com carregamento de dados e wiring.
+- A decis�o registrada foi `CONVPLAN-SHELL-A`.
+- A futura implementa��o deve limitar-se a helper visual passivo para containers, sem alterar eventos nem carregamento.
+- Nenhum c�digo foi alterado nesta etapa e nenhum dado de banco foi modificado.
 - O documento criado foi `docs/fase_2b_convenios_planos_microcontrato_shell_visual.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Implementacao minima do shell visual de containers
+## Fase 2B - Conv�nios e Planos - Implementacao minima do shell visual de containers
 
-- A implementacao minima do helper visual/passivo de containers foi concluida para `Convênios e Planos`.
+- A implementacao minima do helper visual/passivo de containers foi concluida para `Conv�nios e Planos`.
 - A origem da decisao foi `CONVPLAN-SHELL-A`.
 - O helper passivo `resolverShellVisualContainers` foi criado em [`frontend/js/modules/convenios-planos.js`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\js\modules\convenios-planos.js).
 - `frontend/app.js` passou a consultar o helper de forma defensiva e manteve fallback local equivalente.
 - Nenhum backend, banco, [`frontend/index.html`](D:\BRANA ARQUIVOS\BRANA CLOUD\frontend\index.html), `requestJson`, payload, salvamento, exclusao, calendario/faturamento ou permissao foi alterado.
-- O proximo passo recomendado e validacao manual pelo usuario antes de qualquer novo avanço.
+- O proximo passo recomendado e validacao manual pelo usuario antes de qualquer novo avanc'o.
 - O documento criado foi `docs/fase_2b_convenios_planos_implementacao_shell_visual_containers.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Validação manual do shell visual de containers
+## Fase 2B - Conv�nios e Planos - Valida��o manual do shell visual de containers
 
-- A validação manual da implementação shell visual/containers de `Convênios e Planos` foi aprovada.
-- O relato do usuário foi: `PASSOU ESTA OK`.
+- A valida��o manual da implementa��o shell visual/containers de `Conv�nios e Planos` foi aprovada.
+- O relato do usu�rio foi: `PASSOU ESTA OK`.
 - O commit validado foi `56c188b872ac96156ff267499f1f09d9583dc663`.
-- Nenhum código ou banco foi alterado nesta etapa documental.
-- O próximo passo recomendado é criar uma decisão pós-validação antes de qualquer novo avanço.
+- Nenhum c�digo ou banco foi alterado nesta etapa documental.
+- O pr�ximo passo recomendado � criar uma decis�o p�s-valida��o antes de qualquer novo avan�o.
 - O documento criado foi `docs/fase_2b_convenios_planos_validacao_shell_visual_containers.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Convênios e Planos - Decisao pos-validacao do shell visual de containers
+## Fase 2B - Conv�nios e Planos - Decisao pos-validacao do shell visual de containers
 
-- A decisão pós-validacao do shell visual/containers de `Convênios e Planos` foi registrada.
-- A validação manual foi aprovada pelo usuário.
-- O relato do usuário foi: `PASSOU ESTA OK`.
-- A decisão final registrada foi `CONVPLAN-SHELL-DEC-C`.
-- Nenhum código ou banco foi alterado nesta etapa documental.
-- A próxima etapa recomendada é voltar para a matriz comparativa da Fase 2B antes de abrir qualquer novo recorte nesta frente.
+- A decis�o p�s-validacao do shell visual/containers de `Conv�nios e Planos` foi registrada.
+- A valida��o manual foi aprovada pelo usu�rio.
+- O relato do usu�rio foi: `PASSOU ESTA OK`.
+- A decis�o final registrada foi `CONVPLAN-SHELL-DEC-C`.
+- Nenhum c�digo ou banco foi alterado nesta etapa documental.
+- A pr�xima etapa recomendada � voltar para a matriz comparativa da Fase 2B antes de abrir qualquer novo recorte nesta frente.
 - O documento criado foi `docs/fase_2b_convenios_planos_decisao_pos_validacao_shell_visual_containers.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Matriz comparativa pos Convênios e Planos
+## Fase 2B - Matriz comparativa pos Conv�nios e Planos
 
-- A matriz comparativa da Fase 2B foi aberta apos a pausa de `Convênios e Planos`.
+- A matriz comparativa da Fase 2B foi aberta apos a pausa de `Conv�nios e Planos`.
 - A decisao anterior consolidada foi `CONVPLAN-SHELL-DEC-C`.
 - As frentes candidatas foram reavaliadas com foco em risco relativo, clareza de fronteira e possibilidade de recorte seguro.
 - A decisao final registrada foi `MATRIZ-POS-CONV-C`.
@@ -3901,13 +3901,13 @@ Observacoes:
 - O documento criado foi `docs/fase_2b_matriz_comparativa_pos_convenios_planos.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Fase 2B - Revisao documental geral pos matriz Convênios e Planos
+## Fase 2B - Revisao documental geral pos matriz Conv�nios e Planos
 
-- A revisao documental geral da Fase 2B foi criada apos a matriz comparativa pos `Convênios e Planos`.
+- A revisao documental geral da Fase 2B foi criada apos a matriz comparativa pos `Conv�nios e Planos`.
 - A origem da revisao foi `MATRIZ-POS-CONV-C`.
 - A pausa tecnica da Fase 2B foi confirmada.
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
-- A próxima decisao recomendada e manter a pausa ate nova autorizacao ou nova analise documental.
+- A pr�xima decisao recomendada e manter a pausa ate nova autorizacao ou nova analise documental.
 - O documento criado foi `docs/fase_2b_revisao_documental_geral_pos_matriz_conv_plan.md`.
 - A blindagem textual/mojibake foi respeitada.
 
@@ -3918,7 +3918,7 @@ Observacoes:
 - A matriz operacional foi registrada em `docs/fase_2c_matriz_operacional_reducao_monolitos.md`.
 - A decisao da matriz foi `F2C-MATRIZ-D`.
 - O primeiro fluxo recomendado e `Editor de Textos - separacao inicial de bootstrap/shell visual`, por ser o maior bloco concentrado e ja possuir bootstrap passivo em `frontend/js/modules/editor_textos_bootstrap.js`.
-- `Agenda principal`, `Ficha pessoal`, `Convênios e Planos` e `Prestadores` permanecem como candidatos futuros, mas nao sao a primeira escolha da Fase 2C.
+- `Agenda principal`, `Ficha pessoal`, `Conv�nios e Planos` e `Prestadores` permanecem como candidatos futuros, mas nao sao a primeira escolha da Fase 2C.
 - Nenhum codigo, banco, backend, HTML, migration, seed ou permissao foi alterado nesta etapa documental.
 - A proxima etapa recomendada e criar um documento de implementacao do primeiro fluxo real da Fase 2C e, depois, sua validacao manual.
 - A blindagem textual/mojibake foi respeitada.
@@ -3933,7 +3933,7 @@ Observacoes:
 - Um backup controlado foi criado antes da alteracao em `backups_modularizacao/fase_2c/editor_textos_bootstrap_shell_visual/`.
 - Nenhum backend, banco, `frontend/index.html`, `requestJson`, payload, salvamento, PDF, assinatura ou permissao foi alterado nesta etapa.
 - O documento criado foi `docs/fase_2c_editor_textos_implementacao_bootstrap_shell_visual.md`.
-- A próxima etapa recomendada e o teste manual do usuario antes de qualquer novo avanco.
+- A pr�xima etapa recomendada e o teste manual do usuario antes de qualquer novo avanco.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Fase 2C - Editor de Textos - Validacao bootstrap/shell visual
@@ -3961,7 +3961,7 @@ Observacoes:
 - O contrato especifico de toolbar/acoes visuais foi aberto com a decisao `F2C-TOOLBAR-A`, focando apenas a atualizacao visual da toolbar como passo futuro controlado.
 - A implementacao da atualizacao visual da toolbar foi concluida com reducao real de `frontend/app.js` e concentracao do algoritmo visual em `frontend/js/modules/editor_textos_bootstrap.js`.
 - Foi criado backup controlado em `backups_modularizacao/fase_2c/editor_textos_toolbar_visual/` antes da alteracao.
-- Nenhum codigo funcional fora do recorte foi alterado: `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, PDF, assinatura, handlers de edicao e permissões permaneceram fora.
+- Nenhum codigo funcional fora do recorte foi alterado: `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, PDF, assinatura, handlers de edicao e permiss�es permaneceram fora.
 - Nenhum codigo ou banco foi alterado nesta etapa documental.
 - O documento criado foi `docs/fase_2c_editor_textos_decisao_pos_validacao_bootstrap_shell_visual.md`.
 - O novo documento de toolbar e `docs/fase_2c_editor_textos_contrato_toolbar_acoes_visuais.md`.
@@ -4002,7 +4002,7 @@ Observacoes:
 - `frontend/app.js` passou a atuar como fachada defensiva, preservando fallback local.
 - A reducao real de `frontend/app.js` foi confirmada.
 - O backup controlado foi criado em `backups_modularizacao/fase_2c/editor_textos_painel_lateral_listagem_visual/`.
-- Nao houve alteracao em `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, exclusao, PDF, assinatura, carga remota, selecao funcional ou permissões.
+- Nao houve alteracao em `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, exclusao, PDF, assinatura, carga remota, selecao funcional ou permiss�es.
 - O novo documento e `docs/fase_2c_editor_textos_implementacao_painel_lateral_listagem_visual.md`.
 - A proxima etapa recomendada e teste manual pelo usuario antes de qualquer novo avanco.
 - A blindagem textual/mojibake foi respeitada.
@@ -4096,7 +4096,7 @@ Observacoes:
 - Os arquivos alterados foram `frontend/app.js` e `frontend/js/modules/prestadores.js`.
 - O backup controlado foi criado em `backups_modularizacao/fase_2c/prestadores_listagem_painel_filtros_locais/`.
 - A reducao real de `frontend/app.js` foi confirmada.
-- Nao houve alteracao de `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, exclusao, permissões, vinculo usuario/prestador ou protecao estrutural do prestador sistemico `Clínica`.
+- Nao houve alteracao de `frontend/index.html`, backend, banco, `requestJson`, payload, salvamento, exclusao, permiss�es, vinculo usuario/prestador ou protecao estrutural do prestador sistemico `Cl�nica`.
 - O novo documento e `docs/fase_2c_prestadores_implementacao_listagem_painel_filtros_locais.md`.
 - A proxima etapa recomendada e teste manual pelo usuario antes de qualquer novo avanco.
 - A blindagem textual/mojibake foi respeitada.
@@ -4199,75 +4199,75 @@ Observacoes:
 - Nenhum codigo ou banco foi alterado alem do escopo estritamente controlado desta implementacao.
 - A blindagem textual/mojibake foi respeitada.
 
-## Ficha pessoal - Anotacoes - Correção emergencial de regressão global
+## Ficha pessoal - Anotacoes - Corre��o emergencial de regress�o global
 
-- Foi registrada regressão global de frontend após a implementação da toolbar de `Anotações`.
-- O sintoma informado foi perda de resposta dos menus após login, inclusive do botão `Sair`.
-- A correção emergencial restaurou `frontend/app.js` a partir do backup manual controlado.
-- O módulo `frontend/js/modules/ficha_pessoal_anotacoes.js` ficou sem consumo prático após a restauração.
-- O novo documento é `docs/ficha_pessoal_anotacoes_correcao_regressao_global_frontend.md`.
-- Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado na correção.
+- Foi registrada regress�o global de frontend ap�s a implementa��o da toolbar de `Anota��es`.
+- O sintoma informado foi perda de resposta dos menus ap�s login, inclusive do bot�o `Sair`.
+- A corre��o emergencial restaurou `frontend/app.js` a partir do backup manual controlado.
+- O m�dulo `frontend/js/modules/ficha_pessoal_anotacoes.js` ficou sem consumo pr�tico ap�s a restaura��o.
+- O novo documento � `docs/ficha_pessoal_anotacoes_correcao_regressao_global_frontend.md`.
+- Nenhum backend, banco, payload, `requestJson` ou persist�ncia foi alterado na corre��o.
 - A blindagem textual/mojibake foi respeitada.
 
-## Ficha pessoal - Anotacoes - Validação da correção emergencial da regressão global
+## Ficha pessoal - Anotacoes - Valida��o da corre��o emergencial da regress�o global
 
-- Foi registrada a validação manual da correção emergencial da regressão global causada pela tentativa de integração da toolbar de `Anotações`.
+- Foi registrada a valida��o manual da corre��o emergencial da regress�o global causada pela tentativa de integra��o da toolbar de `Anota��es`.
 - O sistema voltou a funcionar como estava antes.
 - O login funcionou.
 - Os menus voltaram a responder.
-- O botão `Sair` voltou a funcionar.
-- A navegação geral voltou ao comportamento anterior.
-- A toolbar de `Anotações` deve permanecer pausada/desativada por enquanto.
-- O novo documento é `docs/ficha_pessoal_anotacoes_validacao_correcao_regressao_global.md`.
-- Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta validação.
+- O bot�o `Sair` voltou a funcionar.
+- A navega��o geral voltou ao comportamento anterior.
+- A toolbar de `Anota��es` deve permanecer pausada/desativada por enquanto.
+- O novo documento � `docs/ficha_pessoal_anotacoes_validacao_correcao_regressao_global.md`.
+- Nenhum backend, banco, payload, `requestJson` ou persist�ncia foi alterado nesta valida��o.
 - A blindagem textual/mojibake foi respeitada.
 
-## Ficha pessoal - Anamnese - Diagnóstico comparativo EasyDental x Brana Cloud
+## Ficha pessoal - Anamnese - Diagn�stico comparativo EasyDental x Brana Cloud
 
-- Foi registrada a análise documental da aba `Anamnese` da `Ficha Pessoal`.
-- O diagnóstico comparou o comportamento atual do Brana Cloud com o comportamento esperado inspirado no EasyDental virgem/legado.
-- O Brana Cloud mostrou estrutura funcional para questionários, perguntas e respostas, com `requestJson`, tabela de perguntas e textarea de resposta/observação clínica.
+- Foi registrada a an�lise documental da aba `Anamnese` da `Ficha Pessoal`.
+- O diagn�stico comparou o comportamento atual do Brana Cloud com o comportamento esperado inspirado no EasyDental virgem/legado.
+- O Brana Cloud mostrou estrutura funcional para question�rios, perguntas e respostas, com `requestJson`, tabela de perguntas e textarea de resposta/observa��o cl�nica.
 - O backend possui modelos e rotas dedicados para `anamnese_questionarios`, `anamnese_perguntas` e `anamnese_respostas`.
-- O legado disponível no workspace confirma questionários como `Principal`, `Implante`, `Ficha complementar`, `Anamnese de Saúde` e `Anamnese pessoal`.
-- Não foi localizada UI direta do EasyDental neste workspace.
-- O maior risco identificado está em salvamento, payload, acoplamento do frontend e possível regressão global.
-- O novo documento é `docs/ficha_pessoal_anamnese_diagnostico_comparativo_easydental_brana.md`.
-- Nenhum backend, banco, payload, `requestJson` ou persistência foi alterado nesta etapa documental.
+- O legado dispon�vel no workspace confirma question�rios como `Principal`, `Implante`, `Ficha complementar`, `Anamnese de Sa�de` e `Anamnese pessoal`.
+- N�o foi localizada UI direta do EasyDental neste workspace.
+- O maior risco identificado est� em salvamento, payload, acoplamento do frontend e poss�vel regress�o global.
+- O novo documento � `docs/ficha_pessoal_anamnese_diagnostico_comparativo_easydental_brana.md`.
+- Nenhum backend, banco, payload, `requestJson` ou persist�ncia foi alterado nesta etapa documental.
 - A blindagem textual/mojibake foi respeitada.
-## Ficha pessoal - Anamnese - Implementação do combo de questionários
+## Ficha pessoal - Anamnese - Implementa��o do combo de question�rios
 
-- Foi registrada a primeira implementação prática segura da aba `Anamnese` da `Ficha Pessoal`.
-- O combo visível de questionários foi adicionado na aba clínica.
-- A troca do questionário passou a recarregar perguntas/respostas usando a estrutura já existente.
-- Uma guarda simples de concorrência foi adicionada para evitar sobrescrever a tela com resposta antiga.
+- Foi registrada a primeira implementa��o pr�tica segura da aba `Anamnese` da `Ficha Pessoal`.
+- O combo vis�vel de question�rios foi adicionado na aba cl�nica.
+- A troca do question�rio passou a recarregar perguntas/respostas usando a estrutura j� existente.
+- Uma guarda simples de concorr�ncia foi adicionada para evitar sobrescrever a tela com resposta antiga.
 - O salvamento textual atual foi preservado.
 - `frontend/app.js` foi alterado apenas no trecho da aba Anamnese.
+- Backend, banco, payload, `requestJson` e formato de salvamento n�o foram alterados.
+- O backup obrigat�rio foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_combo_questionarios/`.
+- O novo documento � `docs/ficha_pessoal_anamnese_implementacao_combo_questionarios.md`.
+- A blindagem textual/mojibake foi respeitada.
+## Ficha pessoal - Anamnese - Correção da tela base e bloqueio por paciente válido
+
+- Foi registrada a correção conservadora da tela base da `Anamnese` da `Ficha Pessoal`.
+- O cabeçalho da aba passou a exibir o nome do paciente atual de forma clara.
+- A lista de perguntas recebeu rolagem própria.
+- A abertura de `Anamnese`/`Histórico` passou a ser bloqueada sem paciente válido/salvo.
+- Uma guarda simples de concorrência foi mantida para evitar sobrescrever a tela com resposta antiga.
+- A combo `Questionário` continuou usando a fonte existente da clínica.
 - Backend, banco, payload, `requestJson` e formato de salvamento não foram alterados.
-- O backup obrigatório foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_combo_questionarios/`.
-- O novo documento é `docs/ficha_pessoal_anamnese_implementacao_combo_questionarios.md`.
-- A blindagem textual/mojibake foi respeitada.
-## Ficha pessoal - Anamnese - Correcao da tela base e bloqueio por paciente valido
-
-- Foi registrada a corre??o conservadora da tela base da `Anamnese` da `Ficha Pessoal`.
-- O cabe?alho da aba passou a exibir o nome do paciente atual de forma clara.
-- A lista de perguntas recebeu rolagem pr?pria.
-- A abertura de `Anamnese`/`Hist?rico` passou a ser bloqueada sem paciente v?lido/salvo.
-- Uma guarda simples de concorr?ncia foi mantida para evitar sobrescrever a tela com resposta antiga.
-- A combo `Questionario` continuou usando a fonte existente da cl?nica.
-- Backend, banco, payload, `requestJson` e formato de salvamento n?o foram alterados.
-- O backup obrigat?rio foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_correcao_tela_base_questionarios/`.
-- O novo documento ? `docs/ficha_pessoal_anamnese_correcao_tela_base_questionarios.md`.
+- O backup obrigatório foi criado em `backups_modularizacao/fase_2c/ficha_pessoal_anamnese_correcao_tela_base_questionarios/`.
+- O novo documento é `docs/ficha_pessoal_anamnese_correcao_tela_base_questionarios.md`.
 - A blindagem textual/mojibake foi respeitada.
 
-## Ficha pessoal - Anamnese - Contrato do combo de questionários e carregamento controlado
+## Ficha pessoal - Anamnese - Contrato do combo de question�rios e carregamento controlado
 
-- Foi registrado o contrato seguro para a próxima etapa da aba `Anamnese` da `Ficha Pessoal`.
-- A base documental usada foi o diagnóstico comparativo EasyDental x Brana Cloud e a validação da correção emergencial da regressão global da aba `Anotações`.
-- A decisão recomendada ficou em `FICHA-ANAM-CONTR-A`.
-- A primeira implementação futura deve se limitar ao combo visível de questionários e ao carregamento controlado usando endpoints já existentes.
+- Foi registrado o contrato seguro para a pr�xima etapa da aba `Anamnese` da `Ficha Pessoal`.
+- A base documental usada foi o diagn�stico comparativo EasyDental x Brana Cloud e a valida��o da corre��o emergencial da regress�o global da aba `Anota��es`.
+- A decis�o recomendada ficou em `FICHA-ANAM-CONTR-A`.
+- A primeira implementa��o futura deve se limitar ao combo vis�vel de question�rios e ao carregamento controlado usando endpoints j� existentes.
 - O salvamento textual atual deve ser preservado.
-- Backend, banco, payload e `requestJson` não devem ser alterados nesta fase.
-- O novo documento é `docs/ficha_pessoal_anamnese_contrato_combo_questionarios.md`.
+- Backend, banco, payload e `requestJson` n�o devem ser alterados nesta fase.
+- O novo documento � `docs/ficha_pessoal_anamnese_contrato_combo_questionarios.md`.
 - A blindagem textual/mojibake foi respeitada.
 
 ## Ficha pessoal - Anamnese - Limpeza inicial do botao e quadros antigos
@@ -4340,7 +4340,7 @@ Observacoes:
 - Foi registrada a auditoria documental do fluxo de questionario da aba `Anamnese` da `Ficha Pessoal`.
 - A validacao do botao `Procura...` reentrante ja estava concluida e serviu como contexto de navegacao segura.
 - O Brana Cloud mostrou combo visivel de questionario, backend normalizado e persistencia textual.
-- O legado EasyDental foi acessado em modo somente leitura pela share `\\Sonyvaio\\c\\EDS70`, mas a extração direta de UI completa excedeu o tempo; a comparacao visual 1:1 permaneceu parcial.
+- O legado EasyDental foi acessado em modo somente leitura pela share `\\Sonyvaio\\c\\EDS70`, mas a extra��o direta de UI completa excedeu o tempo; a comparacao visual 1:1 permaneceu parcial.
 - A leitura comparativa aponta que o Brana Cloud ainda nao comprova equivalencia completa de lista de perguntas, resposta Sim/Nao + complemento e alertas clinicos.
 - A decisao recomendada ficou em `FICHA-ANAM-FLUXO-A`.
 - Os caminhos futuros sugeridos incluem `frontend/js/modules/ficha-pessoal-aba-anamnese.js` e, se necessario, um backend com nomes como `backend/routes/ficha_pessoal_anamnese_routes.py`, `backend/models/ficha_pessoal_anamnese.py` e `backend/schemas/ficha_pessoal_anamnese.py`.
@@ -4390,7 +4390,7 @@ Observacoes:
 
 - Foi registrado o ajuste visual pontual da lista de perguntas da aba `Anamnese`.
 - Os controles `Sim` e `Nao` passaram a ficar um abaixo do outro.
-- A caixa complementar foi reposicionada de forma compatível com o layout da pergunta.
+- A caixa complementar foi reposicionada de forma compat�vel com o layout da pergunta.
 - A rolagem vertical da area inferior foi mantida.
 - O comportamento funcional permaneceu sem salvamento.
 - O arquivo alterado foi `frontend/js/modules/ficha-pessoal-aba-anamnese.js`.
@@ -4483,7 +4483,7 @@ Observacoes:
 ## Ficha pessoal - Anamnese - Implementacao da confirmacao local sem salvamento
 
 - Foi registrada a implementacao da camada local de confirmacao de alteracoes da aba `Anamnese`.
-- A mensagem contratada e `Os dados foram alterados. Deseja gravá-los?`.
+- A mensagem contratada e `Os dados foram alterados. Deseja grav�-los?`.
 - A interface ganhou `Sim`, `Nao` e `Cancelar` em modal local isolado.
 - `Sim` apenas informa que o salvamento ainda nao foi implementado nesta etapa.
 - `Nao` descarta as alteracoes locais e segue com a acao pendente.
@@ -4591,9 +4591,9 @@ Observacoes:
 
 - Foi implementado o respeito a `tipo_resposta` na aba clinica da Anamnese.
 - Os valores reais confirmados para `tipo_resposta` foram `1`, `2` e `3`.
-- A semantica observada nos artefatos de descoberta foi `1 = Sim/Não`, `2 = Sim/Não/Texto` e `3 = Texto`.
-- Perguntas `Sim/Não` passaram a exibir apenas `Sim` e `Nao`, sem campo complementar editavel.
-- Perguntas `Sim/Não/Texto` passaram a exibir `Sim`, `Nao` e campo de texto.
+- A semantica observada nos artefatos de descoberta foi `1 = Sim/N�o`, `2 = Sim/N�o/Texto` e `3 = Texto`.
+- Perguntas `Sim/N�o` passaram a exibir apenas `Sim` e `Nao`, sem campo complementar editavel.
+- Perguntas `Sim/N�o/Texto` passaram a exibir `Sim`, `Nao` e campo de texto.
 - Perguntas `Texto` passaram a exibir apenas campo de texto, sem `Sim`/`Nao` aplicavel.
 - O envelope B2 foi preservado e continua sendo JSON stringificado no campo textual da resposta.
 - Respostas antigas continuam sendo carregadas e compatibilizadas.
@@ -4788,13 +4788,13 @@ Observacoes:
 
 - Foi aberta a nova frente Ficha Pessoal / Historico.
 - A classificacao do modulo foi registrada como comum/core.
-- A referencia funcional foi baseada no EasyDental, com foco em botões, grade, navegação por teclado, propriedades da linha e integração com `Grava`.
-- A auditoria inicial concluiu que a aba Historico hoje está montada em `frontend/app.js`, sem módulo próprio ainda, e sem persistência dedicada identificada.
-- O plano seguro de subetapas foi registrado, prevendo futura modularização em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
-- A etapa documental não alterou código nem banco.
+- A referencia funcional foi baseada no EasyDental, com foco em bot�es, grade, navega��o por teclado, propriedades da linha e integra��o com `Grava`.
+- A auditoria inicial concluiu que a aba Historico hoje est� montada em `frontend/app.js`, sem m�dulo pr�prio ainda, e sem persist�ncia dedicada identificada.
+- O plano seguro de subetapas foi registrado, prevendo futura modulariza��o em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
+- A etapa documental n�o alterou c�digo nem banco.
 - A Etapa 1 - modularizacao passiva inicial foi concluida com o novo modulo `frontend/js/modules/ficha-pessoal-aba-historico.js`.
 - O comportamento atual da aba foi preservado, sem persistencia nova e sem alteracao de banco.
-- O carregamento do modulo foi incluído no frontend e a ponte compatível foi mantida em `frontend/app.js`.
+- O carregamento do modulo foi inclu�do no frontend e a ponte compat�vel foi mantida em `frontend/app.js`.
 - Proxima etapa sugerida: ajuste visual e revisao dos botoes ou selecao/linha ativa, conforme o resultado tecnico encontrado.
 - A Etapa 2 - ajuste visual e revisao dos botoes foi iniciada com refinamento da toolbar, grade e rotulos visuais em `frontend/js/modules/ficha-pessoal-aba-historico.js`.
 - A interface da aba Historico foi aproximada ao padrao EasyDental sem persistencia nova, sem atalhos TAB/ENTER/ESC e sem propriedades funcionais ainda.
@@ -4857,15 +4857,15 @@ Observacoes:
 - O objetivo e transformar a auditoria e o comparativo em backlog conservador, sem implementar correcoes nesta etapa.
 - O documento novo e `docs/ficha_pessoal_historico_priorizacao_diferencas_backlog.md`.
 - As diferencas foram separadas em quatro categorias: microajuste imediato, ajuste funcional de medio risco, dependente de observacao pratica adicional e estrutural/futura.
-- A primeira microetapa recomendada foi definida como harmonizacao textual visual da grade, com foco no cabecalho final e nos rótulos da toolbar.
+- A primeira microetapa recomendada foi definida como harmonizacao textual visual da grade, com foco no cabecalho final e nos r�tulos da toolbar.
 - As diferencas estruturais foram mantidas fora da trilha de ajuste fino.
 - Proxima etapa sugerida: execucao da primeira microetapa de correcao real, quando autorizada.
 
 ## Ficha Pessoal - Historico - Microetapa 1 - harmonizacao textual visual
 
 - A microetapa 1 foi iniciada com ajustes textuais/visuais de baixissimo risco na aba Historico.
-- O cabeçalho final da grade foi harmonizado de `Descricao do procedimento` para `Descricao`.
-- Os rótulos da toolbar foram harmonizados de `Edita linha` para `Editar linha` e de `Elimina linha` para `Excluir linha`.
+- O cabe�alho final da grade foi harmonizado de `Descricao do procedimento` para `Descricao`.
+- Os r�tulos da toolbar foram harmonizados de `Edita linha` para `Editar linha` e de `Elimina linha` para `Excluir linha`.
 - Nao houve alteracao funcional.
 - Nao houve alteracao de backend ou banco.
 - O novo documento e `docs/ficha_pessoal_historico_microetapa_1_harmonizacao_textual_visual.md`.
@@ -4971,14 +4971,14 @@ Observacoes:
 - O novo documento e `docs/ficha_pessoal_historico_refatoracao_propriedades_da_linha_impl.md`.
 - A proxima subetapa sugerida e validacao manual completa da tela refatorada antes de qualquer nova expansao.
 
-## Ficha Pessoal - Historico - Ajuste visual exato da janela Propriedades do histórico
-- A janela `Propriedades do histórico` foi ajustada para seguir a screenshot de referência com maior fidelidade visual.
-- O titulo foi alinhado para `Propriedades do histórico`, com fechamento em botão vermelho no canto superior direito.
-- Os campos `Data`, `Cirurgião responsável`, `Região` e `Cor de fundo` passaram a compor a linha superior no estilo do legado.
-- A area central passou a exibir `Histórico` e os metadados `Data de inserção` e `Data de atualização` com destaque visual em ciano.
-- Os botões inferiores passaram a seguir a assinatura `Ok` e `Cancela`.
+## Ficha Pessoal - Historico - Ajuste visual exato da janela Propriedades do hist�rico
+- A janela `Propriedades do hist�rico` foi ajustada para seguir a screenshot de refer�ncia com maior fidelidade visual.
+- O titulo foi alinhado para `Propriedades do hist�rico`, com fechamento em bot�o vermelho no canto superior direito.
+- Os campos `Data`, `Cirurgi�o respons�vel`, `Regi�o` e `Cor de fundo` passaram a compor a linha superior no estilo do legado.
+- A area central passou a exibir `Hist�rico` e os metadados `Data de inser��o` e `Data de atualiza��o` com destaque visual em ciano.
+- Os bot�es inferiores passaram a seguir a assinatura `Ok` e `Cancela`.
 - O novo documento e `docs/ficha_pessoal_historico_refino_visual_exato_modal_propriedades.md`.
-- A proxima validação sugerida e comparar o modal diretamente com a screenshot de referencia no fluxo real da aba Historico.
+- A proxima valida��o sugerida e comparar o modal diretamente com a screenshot de referencia no fluxo real da aba Historico.
 ## Ficha Pessoal - Historico - Correcao do combo Cirurgiao responsavel
 - O campo `Cirurgiao responsavel` na janela `Propriedades do historico` passou a listar visualmente os prestadores da conta em um combo real.
 - O comportamento de default por sessao, edicao e persistencia foi mantido.
@@ -5007,7 +5007,7 @@ Observacoes:
 - A proxima subetapa sugerida e validacao manual do comportamento de clique/duplo clique e, se necessario, pequeno ajuste fino de foco ou destaque visual.
 ## Ficha Pessoal - Historico - Remocao do quadro separado de descricao
 - O quadro separado abaixo da grade, que exibia um textarea de detalhamento, foi removido da aba Historico.
-- A tela passou a manter apenas a grade unica com fundo branco, e o rodape foi ajustado para `Ficha de histórico`.
+- A tela passou a manter apenas a grade unica com fundo branco, e o rodape foi ajustado para `Ficha de hist�rico`.
 - O novo documento e `docs/ficha_pessoal_historico_remocao_quadro_descricao_procedimento.md`.
 - A proxima subetapa sugerida e conferir visualmente a equivalencia da grade e do rodape com o EasyDental antes de mexer em qualquer outra dependencia.
 ## Ficha Pessoal - Historico - Controle de linha unica e descricao obrigatoria
@@ -5015,11 +5015,11 @@ Observacoes:
 - O comando `Inserir linha` nao cria novas linhas enquanto existir uma linha rascunho ativa.
 - `Enter` e `Grava` validam a descricao obrigatoria e exibem a mensagem legada quando ela estiver vazia.
 - O novo documento e `docs/ficha_pessoal_historico_controle_linha_unica_descricao_obrigatoria.md`.
-- A proxima subetapa sugerida e validar manualmente o ciclo inserir -> editar -> Enter/Grava -> nova linha, sem acúmulo de rascunhos.
+- A proxima subetapa sugerida e validar manualmente o ciclo inserir -> editar -> Enter/Grava -> nova linha, sem ac�mulo de rascunhos.
 ## Ficha Pessoal - Historico - Trava de insercao consecutiva e alerta de descricao
 - A primeira insercao continua permitida normalmente.
 - A trava atua apenas quando ja existe uma linha rascunho ativa, bloqueando a criacao de uma nova linha consecutiva.
-- Se a descricao obrigatoria estiver vazia, a tela exibe o alerta legada `Campo descrição do procedimento não pode ser nulo.`
+- Se a descricao obrigatoria estiver vazia, a tela exibe o alerta legada `Campo descri��o do procedimento n�o pode ser nulo.`
 - O novo documento e `docs/ficha_pessoal_historico_trava_insercao_consecutiva_e_alerta_descricao.md`.
 - A proxima subetapa sugerida e validar manualmente que a primeira linha insere, a segunda consecutiva bloqueia e o `Enter`/`Grava` obedecem a mesma regra.
 ## Ficha Pessoal - Historico - Ordenacao por data com linha rascunho no final
@@ -5030,24 +5030,24 @@ Observacoes:
 - A proxima validacao sugerida e confirmar manualmente que a linha salva com data passada retorna para a posicao correta sem permitir insercao entre outras linhas.
 ## Odontograma EasyDental - Auditoria de armazenamento, estados e cores
 - Inicio da trilha de auditoria do odontograma EasyDental em uso.
-- Módulo classificado como específico de Odontologia, fora do core comum.
+- M�dulo classificado como espec�fico de Odontologia, fora do core comum.
 - Objetivo: mapear armazenamento, estados, cores e tabelas participantes.
-- Etapa somente leitura; nenhum código, banco ou arquivo do EasyDental foi alterado.
-- Documento de referência: `docs/odontograma_easydental_auditoria_armazenamento_estados_cores_tabelas.md`.
+- Etapa somente leitura; nenhum c�digo, banco ou arquivo do EasyDental foi alterado.
+- Documento de refer�ncia: `docs/odontograma_easydental_auditoria_armazenamento_estados_cores_tabelas.md`.
 ## Odontograma EasyDental - Diagrama relacional e contrato inicial de modelagem Brana
 - Consolidacao do diagrama relacional do odontograma EasyDental concluida em etapa somente documental.
 - Contrato inicial de modelagem futura para o odontograma Brana registrado sem implementacao.
 - Modulo classificado como especifico de Odontologia.
 - Nenhum codigo alterado.
 - Nenhum banco alterado.
-- Documento de referência: `docs/odontograma_easydental_diagrama_relacional_contrato_modelagem_brana.md`.
+- Documento de refer�ncia: `docs/odontograma_easydental_diagrama_relacional_contrato_modelagem_brana.md`.
 ## Odontograma EasyDental - Diagramas Mermaid revisaveis
 - Conversao do contrato relacional consolidado em diagramas Mermaid para revisao visual.
 - Etapa somente documental, sem implementacao.
 - Modulo classificado como especifico de Odontologia.
 - Nenhum codigo alterado.
 - Nenhum banco alterado.
-- Documento de referência: `docs/odontograma_easydental_diagramas_mermaid.md`.
+- Documento de refer�ncia: `docs/odontograma_easydental_diagramas_mermaid.md`.
 ## Odontograma Brana - Contrato futuro de modelagem
 - Criacao do contrato inicial de modelagem futura do odontograma Brana.
 - Base em auditoria EasyDental, diagrama relacional e diagramas Mermaid.
@@ -5138,7 +5138,7 @@ Observacoes:
 - Pesquisa reaproveita o contrato da ficha principal e nao introduz escrita.
 - `frontend/app.js` permanece fora da solucao do modulo.
 - A busca foi ajustada para reagir enquanto o usuario digita, com debounce leve, mantendo Enter e botao como alternativas.
-- O contêiner visual do paciente foi liberado para altura auto, permitindo que os resultados aparecam abaixo da linha de busca.
+- O cont�iner visual do paciente foi liberado para altura auto, permitindo que os resultados aparecam abaixo da linha de busca.
 - Proxima subetapa sugerida: contexto de tratamento em modulo proprio depois da busca de paciente.
 
 - Odontograma V1: correcao do fluxo de abertura do paciente e da tela vazia inicial, com abertura explicita do paciente selecionado na busca.
@@ -5150,7 +5150,7 @@ Observacoes:
 - A origem `workspace-principal` foi adicionada ao contrato da tela odontologica.
 - `frontend/app.js` e `frontend/index.html` permaneceram intactos.
 - Nenhum backend, banco ou asset foi alterado.
-- Documento de referência: `docs/easydental_tela_principal_odontologica_subetapa_d2a_montagem_area_principal.md`.
+- Documento de refer�ncia: `docs/easydental_tela_principal_odontologica_subetapa_d2a_montagem_area_principal.md`.
 - Proxima etapa sugerida: D2-B, se a decisao for ligar a abertura principal ao fluxo real de inicializacao do sistema.
 
 ## Odontograma Brana - Bootstrap real da area principal
@@ -5160,14 +5160,14 @@ Observacoes:
 - Menus e toolbar foram preservados.
 - O fallback antigo e a implementacao antiga foram preservados.
 - Nenhum backend, banco ou asset foi alterado.
-- Documento de referência: `docs/easydental_tela_principal_odontologica_subetapa_d2b_bootstrap_real_area_principal.md`.
+- Documento de refer�ncia: `docs/easydental_tela_principal_odontologica_subetapa_d2b_bootstrap_real_area_principal.md`.
 - Proxima etapa sugerida: D2-C, refino de encaixe/layout da tela odontologica ja no workspace principal.
 
 
 ## Toolbar principal do Brana Cloude
 
 - A primeira onda da toolbar principal foi implementada de forma isolada no frontend.
-- A toolbar nova agora expõe: Novo paciente, Menu de pacientes, Novo tratamento, Agenda e Conta corrente.
+- A toolbar nova agora exp�e: Novo paciente, Menu de pacientes, Novo tratamento, Agenda e Conta corrente.
 - O fallback da toolbar antiga foi preservado como estrategia de reversao.
 - Falta fechar a validacao funcional completa em sessao autenticada no navegador do usuario antes de expandir para a segunda onda.
 - O inventario de residuos antigos da toolbar foi registrado em `docs/inventario_remocao_toolbar_legado_brana_cloude.md` para orientar a limpeza por etapas.
@@ -5200,39 +5200,39 @@ Observacoes:
 ## Login visual experimental
 
 - A tela visual de login experimental foi criada no `frontend-react\`.
-- A autenticação real ainda não está conectada.
+- A autentica��o real ainda n�o est� conectada.
 - O frontend legado foi preservado.
-- A próxima etapa sugerida é implementar `AuthProvider` ou `SessionProvider` e `authApi.js` conforme o contrato de autenticação.
+- A pr�xima etapa sugerida � implementar `AuthProvider` ou `SessionProvider` e `authApi.js` conforme o contrato de autentica��o.
 
 ## AuthProvider inicial
 
-- A base real de autenticação do `frontend-react\` foi criada com `AuthProvider`, `authApi.js` e `authStorage.js`.
+- A base real de autentica��o do `frontend-react\` foi criada com `AuthProvider`, `authApi.js` e `authStorage.js`.
 - O frontend legado continua preservado.
 - O backend continua preservado.
-- A próxima etapa sugerida é a validação runtime do login React com usuário real em ambiente local.
+- A pr�xima etapa sugerida � a valida��o runtime do login React com usu�rio real em ambiente local.
 
-## Validação runtime do login
+## Valida��o runtime do login
 
-- A validação runtime do login React foi executada de forma parcial e controlada.
-- A página `/login` respondeu corretamente no dev server.
+- A valida��o runtime do login React foi executada de forma parcial e controlada.
+- A p�gina `/login` respondeu corretamente no dev server.
 - O backend preservou o comportamento esperado de `/login`, `/me` e `/logout`.
-- A validação completa ainda depende de credencial real disponível no ambiente.
+- A valida��o completa ainda depende de credencial real dispon�vel no ambiente.
 
-## Validação do login React com usuario real
+## Valida��o do login React com usuario real
 
-- A tentativa de validacao com usuario real permaneceu bloqueada por ausencia de credencial real disponivel para digitação manual no ambiente local.
+- A tentativa de validacao com usuario real permaneceu bloqueada por ausencia de credencial real disponivel para digita��o manual no ambiente local.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é corrigir apenas o bloqueio específico no `frontend-react` se ele reaparecer em nova tentativa, ou concluir a validação completa quando uma credencial real estiver disponível.
+- A pr�xima etapa sugerida � corrigir apenas o bloqueio espec�fico no `frontend-react` se ele reaparecer em nova tentativa, ou concluir a valida��o completa quando uma credencial real estiver dispon�vel.
 
-## Correção da validação de sessão apos login
+## Corre��o da valida��o de sess�o apos login
 
 - A validacao de sessao apos login foi ajustada no `frontend-react` para diferenciar melhor o resultado de `POST /login` e `GET /me`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é repetir o teste manual de login real.
+- A pr�xima etapa sugerida � repetir o teste manual de login real.
 
 ## Correcao do Failed to fetch no login
 
@@ -5240,7 +5240,7 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é repetir o teste manual de login real em `http://localhost:5173/login`.
+- A pr�xima etapa sugerida � repetir o teste manual de login real em `http://localhost:5173/login`.
 
 ## Correcao da URL do login auth
 
@@ -5248,7 +5248,7 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é repetir o teste manual de login real em `http://localhost:5173/login`.
+- A pr�xima etapa sugerida � repetir o teste manual de login real em `http://localhost:5173/login`.
 
 ## Correcao do CORS/preflight do `/me` via proxy Vite
 
@@ -5256,7 +5256,7 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é repetir o teste manual de login real e validar `POST /api/login` e `GET /api/me` no Network.
+- A pr�xima etapa sugerida � repetir o teste manual de login real e validar `POST /api/login` e `GET /api/me` no Network.
 
 ## Validacao final do login real
 
@@ -5265,16 +5265,16 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é criar o contrato da primeira tela piloto autenticada.
+- A pr�xima etapa sugerida � criar o contrato da primeira tela piloto autenticada.
 
 ## Contrato da primeira tela piloto autenticada
 
 - O contrato da primeira tela piloto autenticada foi criado.
-- A tela escolhida é `Início / Painel Inicial`.
+- A tela escolhida � `In�cio / Painel Inicial`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa recomendada é implementar a tela `Início` autenticada.
+- A pr�xima etapa recomendada � implementar a tela `In�cio` autenticada.
 
 ## Tokens da marca Brana
 
@@ -5283,360 +5283,360 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa recomendada é implementar a tela `Início` autenticada usando os tokens oficiais.
+- A pr�xima etapa recomendada � implementar a tela `In�cio` autenticada usando os tokens oficiais.
 
-## Primeira tela autenticada Início/Painel Inicial
+## Primeira tela autenticada In�cio/Painel Inicial
 
-- A primeira tela autenticada `Início/Painel Inicial` foi implementada no `frontend-react`.
+- A primeira tela autenticada `In�cio/Painel Inicial` foi implementada no `frontend-react`.
 - Os tokens oficiais da marca Brana foram utilizados.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar manualmente `/app` e logout; depois criar contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
+- A pr�xima etapa sugerida � validar manualmente `/app` e logout; depois criar contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
 
-## Validacao manual de Início e logout
+## Validacao manual de In�cio e logout
 
-- A validacao manual da tela `Início` e do logout foi registrada em documento proprio.
+- A validacao manual da tela `In�cio` e do logout foi registrada em documento proprio.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é criar o contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
+- A pr�xima etapa sugerida � criar o contrato da primeira tela funcional real, preferencialmente `Pacientes` em modo somente leitura.
 
-## Shell Operacional Odontológico
+## Shell Operacional Odontol�gico
 
-- O contrato do `Shell Operacional Odontológico` foi criado para orientar o refino visual do `frontend-react`.
-- A decisão visual consolidada aponta para toolbar lateral estreita + toolbar superior horizontal.
+- O contrato do `Shell Operacional Odontol�gico` foi criado para orientar o refino visual do `frontend-react`.
+- A decis�o visual consolidada aponta para toolbar lateral estreita + toolbar superior horizontal.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é implementar o refino do shell operacional sem novas APIs.
+- A pr�xima etapa sugerida � implementar o refino do shell operacional sem novas APIs.
 
 ## Implementacao do Shell Operacional Odontologico
 
-- O Shell Operacional Odontológico foi implementado no `frontend-react`.
+- O Shell Operacional Odontol�gico foi implementado no `frontend-react`.
 - A barra lateral estreita foi criada.
 - A toolbar superior horizontal foi criada.
-- A tela `Início` foi mantida como conteúdo autenticado.
-- As ações da nova barra superior seguem como placeholders.
+- A tela `In�cio` foi mantida como conte�do autenticado.
+- As a��es da nova barra superior seguem como placeholders.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar manualmente `/app`, `Sair` e o layout; depois criar contrato da tela `Pacientes` em modo somente leitura.
+- A pr�xima etapa sugerida � validar manualmente `/app`, `Sair` e o layout; depois criar contrato da tela `Pacientes` em modo somente leitura.
 
 ## Refino visual do Shell Operacional Odontologico
 
-- O refino visual do `Shell Operacional Odontológico` foi realizado no `frontend-react`.
+- O refino visual do `Shell Operacional Odontol�gico` foi realizado no `frontend-react`.
 - A toolbar superior foi compactada e refinada.
-- A barra lateral foi reforçada com a paleta Brana.
+- A barra lateral foi refor�ada com a paleta Brana.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual pelo usuário.
+- A pr�xima etapa sugerida � valida��o visual pelo usu�rio.
 
 ## Refino visual 2 do Shell Operacional Odontologico
 
-- O Shell Operacional Odontológico recebeu um segundo refino visual no `frontend-react`.
+- O Shell Operacional Odontol�gico recebeu um segundo refino visual no `frontend-react`.
 - A barra lateral ficou mais presente.
 - A toolbar superior ficou mais integrada e compacta.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual pelo usuário em `/app`.
+- A pr�xima etapa sugerida � valida��o visual pelo usu�rio em `/app`.
 
 ## Refino estrutural do Shell Operacional Odontologico
 
-- O Shell Operacional Odontológico recebeu um refino estrutural no `frontend-react`.
-- A base visual ficou mais próxima de software odontológico operacional / ERP clínico.
+- O Shell Operacional Odontol�gico recebeu um refino estrutural no `frontend-react`.
+- A base visual ficou mais pr�xima de software odontol�gico operacional / ERP cl�nico.
 - A barra lateral e a toolbar superior ficaram mais compactas e funcionais.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual do usuário em `/app`.
+- A pr�xima etapa sugerida � valida��o visual do usu�rio em `/app`.
 
 ## Recomposicao estrutural do Shell Operacional Odontologico
 
-- O Shell Operacional Odontológico recebeu uma recomposição estrutural no `frontend-react`.
-- A lateral passou a parecer menu principal de software clínico.
-- O topo passou a parecer uma toolbar desktop única.
+- O Shell Operacional Odontol�gico recebeu uma recomposi��o estrutural no `frontend-react`.
+- A lateral passou a parecer menu principal de software cl�nico.
+- O topo passou a parecer uma toolbar desktop �nica.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual do usuário em `/app`.
+- A pr�xima etapa sugerida � valida��o visual do usu�rio em `/app`.
 
 ## Ajuste de cores CMYK da lateral do shell operacional
 
-- A lateral do shell operacional recebeu ajuste de cor solicitado pelo usuário.
+- A lateral do shell operacional recebeu ajuste de cor solicitado pelo usu�rio.
 - A barra lateral foi alinhada ao tom `#0B5006`.
-- Os ícones e botões laterais foram alinhados ao tom `#666666`.
+- Os �cones e bot�es laterais foram alinhados ao tom `#666666`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual do usuário em `/app`.
+- A pr�xima etapa sugerida � valida��o visual do usu�rio em `/app`.
 
 ## Teste de paleta do shell operacional
 
-- A paleta do shell operacional foi testada com combinação mais equilibrada da marca Brana.
+- A paleta do shell operacional foi testada com combina��o mais equilibrada da marca Brana.
 - A lateral passou a usar `#006838` como base visual principal.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual do usuário em `/app`.
+- A pr�xima etapa sugerida � valida��o visual do usu�rio em `/app`.
 
 ## Rail compacta com icones e tooltips
 
-- A rail lateral do `frontend-react` foi compactada para operar como navegação por ícones.
-- Os rótulos passaram a aparecer apenas em tooltip, sem ocupar largura fixa.
-- O botão `Sair` foi mantido discreto e funcional.
+- A rail lateral do `frontend-react` foi compactada para operar como navega��o por �cones.
+- Os r�tulos passaram a aparecer apenas em tooltip, sem ocupar largura fixa.
+- O bot�o `Sair` foi mantido discreto e funcional.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validacao visual da rail compacta em `/app`.
+- A pr�xima etapa sugerida � validacao visual da rail compacta em `/app`.
 
 ## Auditoria do sistema odontologico de referencia
 
 - Foi registrada uma auditoria documental do sistema odontologico externo aberto como referencia visual e funcional.
-- O material serviu apenas para mapear shell, módulos e fluxo de alto nivel.
+- O material serviu apenas para mapear shell, m�dulos e fluxo de alto nivel.
 - Nenhum codigo, asset ou credencial do sistema externo foi copiado.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é transformar o mapa observado em contrato de `Pacientes` em modo somente leitura.
+- A pr�xima etapa sugerida � transformar o mapa observado em contrato de `Pacientes` em modo somente leitura.
 
 ## Contrato de Pacientes somente leitura
 
 - O contrato da primeira tela real do `frontend-react` foi definido para a tela `Pacientes` em modo somente leitura.
-- A leitura técnica confirmou que o backend atual já possui endpoints de pacientes.
-- O frontend legado também já consome pacientes em múltiplos pontos.
+- A leitura t�cnica confirmou que o backend atual j� possui endpoints de pacientes.
+- O frontend legado tamb�m j� consome pacientes em m�ltiplos pontos.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é implementar a tela `Pacientes` somente leitura usando apenas os endpoints já confirmados.
+- A pr�xima etapa sugerida � implementar a tela `Pacientes` somente leitura usando apenas os endpoints j� confirmados.
 
 ## Implementacao de Pacientes somente leitura
 
 - A tela `Pacientes` somente leitura foi implementada no `frontend-react`.
-- A navegação pelo ícone `Pacientes` da rail agora abre a tela dentro do shell atual.
+- A navega��o pelo �cone `Pacientes` da rail agora abre a tela dentro do shell atual.
 - A listagem usa apenas `GET /pacientes` e o resumo usa apenas `GET /pacientes/{paciente_id}`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a lista, a busca e o resumo, e só depois planejar a próxima tela funcional.
+- A pr�xima etapa sugerida � validar visualmente a lista, a busca e o resumo, e s� depois planejar a pr�xima tela funcional.
 
 ## Menu contextual lateral da shell
 
 - A rail operacional do `frontend-react` passou a usar grupos principais e painel contextual lateral.
-- O caminho `Cadastro -> Pacientes` foi preservado para a tela somente leitura já entregue.
+- O caminho `Cadastro -> Pacientes` foi preservado para a tela somente leitura j� entregue.
 - Os demais submenus permanecem como placeholders visuais.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a rail expandida/recolhida e o painel contextual.
+- A pr�xima etapa sugerida � validar visualmente a rail expandida/recolhida e o painel contextual.
 
 ## Menu lateral por grupos e submenus
 
-- O shell do `frontend-react` foi ajustado para o padrão de grupos principais e painel contextual branco.
-- O menu do usuário no topo agora oferece preferências, alteração de senha, opções da conta e logout.
-- A tela `Pacientes` continua acessível em `Cadastro -> Pacientes`.
+- O shell do `frontend-react` foi ajustado para o padr�o de grupos principais e painel contextual branco.
+- O menu do usu�rio no topo agora oferece prefer�ncias, altera��o de senha, op��es da conta e logout.
+- A tela `Pacientes` continua acess�vel em `Cadastro -> Pacientes`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validação visual final do shell contextual e, só então, seguir para a próxima frente funcional.
+- A pr�xima etapa sugerida � valida��o visual final do shell contextual e, s� ent�o, seguir para a pr�xima frente funcional.
 
 ## Toolbar horizontal operacional
 
-- A barra superior horizontal do `frontend-react` foi reorganizada em grupos de ações com ícones e separadores visuais.
-- A busca por paciente ficou posicionada após os grupos operacionais.
-- O menu do usuário permanece com ações de conta e logout.
+- A barra superior horizontal do `frontend-react` foi reorganizada em grupos de a��es com �cones e separadores visuais.
+- A busca por paciente ficou posicionada ap�s os grupos operacionais.
+- O menu do usu�rio permanece com a��es de conta e logout.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o topo compacto e só então avançar para a próxima tela funcional.
+- A pr�xima etapa sugerida � validar visualmente o topo compacto e s� ent�o avan�ar para a pr�xima tela funcional.
 
 ## Shell com topbar full-width
 
 - O shell do `frontend-react` foi reorganizado para que a topbar horizontal ocupe toda a largura no topo.
 - A rail lateral e o painel contextual passaram a iniciar abaixo da topbar.
-- O workspace foi corrigido para evitar compressão excessiva e quebra visual vertical.
+- O workspace foi corrigido para evitar compress�o excessiva e quebra visual vertical.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o shell reorganizado e ajustar apenas detalhes de densidade, se necessário.
+- A pr�xima etapa sugerida � validar visualmente o shell reorganizado e ajustar apenas detalhes de densidade, se necess�rio.
 
 ## Ajuste de logo e cor lateral
 
 - A logo oficial `assets/logo_brana.png` foi copiada para o `frontend-react` e aplicada na topbar.
 - A busca de paciente foi reduzida para equilibrar a faixa superior.
-- A lateral passou a usar cor sólida baseada na marca, em `#16AAA1`.
+- A lateral passou a usar cor s�lida baseada na marca, em `#16AAA1`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o encaixe visual da logo e, se necessário, refinar apenas espaçamentos.
+- A pr�xima etapa sugerida � validar o encaixe visual da logo e, se necess�rio, refinar apenas espa�amentos.
 
-## Ajuste de logo Brana e rail sem Início
+## Ajuste de logo Brana e rail sem In�cio
 
 - A logo da topbar passou a usar `assets/brana.png`.
 - O bloco inicial da rail foi removido.
-- O item `Início` foi removido da rail.
-- O acesso ao `Início` foi mantido pelo botão `Dashboard` da toolbar superior.
+- O item `In�cio` foi removido da rail.
+- O acesso ao `In�cio` foi mantido pelo bot�o `Dashboard` da toolbar superior.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o novo encaixe da rail e do workspace, e só depois seguir para refinamentos visuais finais.
+- A pr�xima etapa sugerida � validar o novo encaixe da rail e do workspace, e s� depois seguir para refinamentos visuais finais.
 
 ## Marca da topbar e workspace
 
-- A marca superior passou a exibir `BranaCloud` com `Sistema de Gestão Odontológica.` abaixo, usando a logo local.
-- O texto `Shell Operacional Odontológico` foi removido da topbar.
-- Os ícones da toolbar horizontal foram ampliados e receberam a cor da lateral.
+- A marca superior passou a exibir `BranaCloud` com `Sistema de Gest�o Odontol�gica.` abaixo, usando a logo local.
+- O texto `Shell Operacional Odontol�gico` foi removido da topbar.
+- Os �cones da toolbar horizontal foram ampliados e receberam a cor da lateral.
 - O workspace recebeu ajuste fino para evitar o texto quebrado verticalmente.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a nova marca e, se necessário, ajustar apenas espaçamento fino.
+- A pr�xima etapa sugerida � validar visualmente a nova marca e, se necess�rio, ajustar apenas espa�amento fino.
 
 ## Refino do submenu lateral estilo EasyDental
 
 - O submenu lateral contextual do `frontend-react` foi refinado para um estilo operacional compacto, sem cards.
 - Os itens passaram a usar hover em faixa cinza e densidade vertical menor.
-- O tooltip da rail lateral foi suprimido enquanto o painel contextual está aberto, reduzindo sobreposição visual.
+- O tooltip da rail lateral foi suprimido enquanto o painel contextual est� aberto, reduzindo sobreposi��o visual.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o submenu lateral no navegador.
+- A pr�xima etapa sugerida � validar visualmente o submenu lateral no navegador.
 
 ## Refino de contraste do submenu e remocao do logout da rail
 
-- O painel contextual do `frontend-react` recebeu contraste visual maior, com fundo branco opaco e sombra mais perceptível.
-- O botão `Sair` foi removido da rail lateral inferior esquerda.
+- O painel contextual do `frontend-react` recebeu contraste visual maior, com fundo branco opaco e sombra mais percept�vel.
+- O bot�o `Sair` foi removido da rail lateral inferior esquerda.
 - O logout da topbar foi preservado.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar no navegador a solidez visual do painel e o comportamento do menu do usuário.
+- A pr�xima etapa sugerida � validar no navegador a solidez visual do painel e o comportamento do menu do usu�rio.
 
 ## Dashboard inicial do frontend-react no estilo EasyDental
 
 - A tela inicial do `frontend-react` foi aproximada do painel inicial do EasyDental com faixa operacional, abas e miolo de avisos.
-- O `Dashboard` continua levando para `Início`.
+- O `Dashboard` continua levando para `In�cio`.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a leitura da nova tela inicial e, se necessário, ajustar densidade e responsividade.
+- A pr�xima etapa sugerida � validar visualmente a leitura da nova tela inicial e, se necess�rio, ajustar densidade e responsividade.
 
-## Correção do render do Dashboard / Quadro de avisos
+## Corre��o do render do Dashboard / Quadro de avisos
 
-- O `frontend-react` passou a renderizar um módulo próprio de `Dashboard / Quadro de avisos` no `/app`.
+- O `frontend-react` passou a renderizar um m�dulo pr�prio de `Dashboard / Quadro de avisos` no `/app`.
 - A tela deixou de depender de hover na lateral para aparecer.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o fluxo inicial e o retorno pelo botão `Dashboard` da toolbar superior.
+- A pr�xima etapa sugerida � validar o fluxo inicial e o retorno pelo bot�o `Dashboard` da toolbar superior.
 
-## Correção do Dashboard inicial sem depender de hover
+## Corre��o do Dashboard inicial sem depender de hover
 
 - O estado inicial do workspace foi fixado em `dashboard` com fallback seguro.
-- O botão `Dashboard` passou a reforçar explicitamente a mesma tela inicial.
+- O bot�o `Dashboard` passou a refor�ar explicitamente a mesma tela inicial.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar no navegador o carregamento imediato do dashboard e o retorno pelo botão.
+- A pr�xima etapa sugerida � validar no navegador o carregamento imediato do dashboard e o retorno pelo bot�o.
 
-## Correção da visibilidade do dashboard no workspace
+## Corre��o da visibilidade do dashboard no workspace
 
-- O workspace passou a ocupar explicitamente a terceira coluna do grid do shell, evitando colapsar na coluna vazia quando o painel contextual não está aberto.
+- O workspace passou a ocupar explicitamente a terceira coluna do grid do shell, evitando colapsar na coluna vazia quando o painel contextual n�o est� aberto.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o carregamento imediato do Dashboard e o comportamento do painel contextual.
+- A pr�xima etapa sugerida � validar o carregamento imediato do Dashboard e o comportamento do painel contextual.
 
 ## Refino visual do Quadro de avisos no estilo EasyDental
 
 - O Quadro de avisos foi compactado visualmente para se aproximar mais do EasyDental.
-- O título grande deixou de ocupar destaque no topo do conteúdo.
+- O t�tulo grande deixou de ocupar destaque no topo do conte�do.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a densidade da faixa operacional, abas e avisos.
+- A pr�xima etapa sugerida � validar visualmente a densidade da faixa operacional, abas e avisos.
 
 ## Barra turquesa e coluna lateral do dashboard
 
-- A área inicial do `frontend-react` recebeu uma barra operacional turquesa mais forte.
-- O dashboard passou a exibir uma coluna lateral fixa com cards de apoio e orientação.
+- A �rea inicial do `frontend-react` recebeu uma barra operacional turquesa mais forte.
+- O dashboard passou a exibir uma coluna lateral fixa com cards de apoio e orienta��o.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar no navegador o encaixe visual e manter apenas refinamentos finos.
+- A pr�xima etapa sugerida � validar no navegador o encaixe visual e manter apenas refinamentos finos.
 
-## Correção da barra turquesa e do alinhamento do dashboard
+## Corre��o da barra turquesa e do alinhamento do dashboard
 
-- A barra operacional do dashboard foi tornada sólida e mais visível logo abaixo da topbar.
-- O dashboard deixou de parecer centralizado e passou a iniciar alinhado à esquerda da área útil.
+- A barra operacional do dashboard foi tornada s�lida e mais vis�vel logo abaixo da topbar.
+- O dashboard deixou de parecer centralizado e passou a iniciar alinhado � esquerda da �rea �til.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar no navegador a leitura final da faixa e do encaixe lateral.
+- A pr�xima etapa sugerida � validar no navegador a leitura final da faixa e do encaixe lateral.
 
 ## Refino do miolo do Quadro de avisos
 
-- A saudação do `frontend-react` foi compactada para ficar mais próxima do EasyDental.
+- A sauda��o do `frontend-react` foi compactada para ficar mais pr�xima do EasyDental.
 - Os avisos passaram a aparecer como barras brancas separadas e mais densas.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a nova densidade do miolo esquerdo no navegador.
+- A pr�xima etapa sugerida � validar a nova densidade do miolo esquerdo no navegador.
 
-## Remoção da coluna direita do Quadro de avisos
+## Remo��o da coluna direita do Quadro de avisos
 
 - Os cards informativos da direita foram removidos do dashboard.
-- O miolo principal ficou em uma única coluna ampla e alinhada à esquerda.
+- O miolo principal ficou em uma �nica coluna ampla e alinhada � esquerda.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o encaixe operacional final do quadro de avisos.
+- A pr�xima etapa sugerida � validar o encaixe operacional final do quadro de avisos.
 
-## Ampliação do miolo sem coluna direita
+## Amplia��o do miolo sem coluna direita
 
 - O badge da barra turquesa foi removido.
 - O bloco principal do quadro de avisos ficou mais largo e compacto.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a leitura final do quadro com as barras de aviso mais amplas.
+- A pr�xima etapa sugerida � validar a leitura final do quadro com as barras de aviso mais amplas.
 
 ## Largura do miolo e barra integrada
 
-- O quadro de avisos passou a ocupar mais da área útil do workspace.
+- O quadro de avisos passou a ocupar mais da �rea �til do workspace.
 - A barra turquesa ficou mais reta e integrada ao shell operacional.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a leitura da barra e do miolo em telas largas.
+- A pr�xima etapa sugerida � validar a leitura da barra e do miolo em telas largas.
 
-## Refino de proporção do quadro de avisos
+## Refino de propor��o do quadro de avisos
 
-- O miolo do quadro de avisos ganhou mais largura útil.
-- As barras de aviso ficaram mais próximas do padrão visual do EasyDental.
+- O miolo do quadro de avisos ganhou mais largura �til.
+- As barras de aviso ficaram mais pr�ximas do padr�o visual do EasyDental.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o balanceamento final da faixa e das barras em desktop largo.
+- A pr�xima etapa sugerida � validar o balanceamento final da faixa e das barras em desktop largo.
 
 ## Alinhamento final da barra turquesa
 
-- A barra turquesa foi alinhada como faixa estrutural contínua do shell.
-- O quadro de avisos recebeu um refinamento final de proporção e densidade.
+- A barra turquesa foi alinhada como faixa estrutural cont�nua do shell.
+- O quadro de avisos recebeu um refinamento final de propor��o e densidade.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a leitura final da faixa e do miolo em tela larga.
+- A pr�xima etapa sugerida � validar a leitura final da faixa e do miolo em tela larga.
 
-## Conexão da barra turquesa com a rail lateral
+## Conex�o da barra turquesa com a rail lateral
 
 - A faixa horizontal ganhou uma continuidade visual na borda esquerda para eliminar a emenda com a rail.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o canto de junção entre rail e faixa em reload completo.
+- A pr�xima etapa sugerida � validar o canto de jun��o entre rail e faixa em reload completo.
 
 ## Faixa operacional no shell
 
@@ -5644,86 +5644,86 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a união visual com a rail em tela larga.
+- A pr�xima etapa sugerida � validar a uni�o visual com a rail em tela larga.
 
-## Faixa operacional e rail no mesmo nível
+## Faixa operacional e rail no mesmo n�vel
 
 - A rail lateral e a faixa operacional passaram a iniciar na mesma linha logo abaixo da topbar.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a quina visual em reload completo do `/app`.
+- A pr�xima etapa sugerida � validar a quina visual em reload completo do `/app`.
 
 ## Refino da quina entre rail e faixa operacional
 
 - A quina entre a rail lateral e a faixa turquesa foi refinada no `frontend-react`.
-- A junção passou a parecer uma estrutura visual única em "L", sem degrau aparente.
+- A jun��o passou a parecer uma estrutura visual �nica em "L", sem degrau aparente.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar novamente o `/app` em reload completo.
+- A pr�xima etapa sugerida � validar novamente o `/app` em reload completo.
 
 ## Quina real entre rail e faixa operacional
 
-- A quina do shell ganhou uma célula turquesa real na coluna da rail.
+- A quina do shell ganhou uma c�lula turquesa real na coluna da rail.
 - A faixa operacional passou a continuar estruturalmente a partir desse canto.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o canto em reload completo do `/app`.
+- A pr�xima etapa sugerida � validar visualmente o canto em reload completo do `/app`.
 
-## Ajuste do miolo e fechamento automático do submenu
+## Ajuste do miolo e fechamento autom�tico do submenu
 
 - O miolo do Quadro de avisos foi aproximado das abas no `frontend-react`.
-- O submenu lateral/contextual passou a fechar sozinho ao sair da região combinada.
+- O submenu lateral/contextual passou a fechar sozinho ao sair da regi�o combinada.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o comportamento do mouse em `/app`.
+- A pr�xima etapa sugerida � validar o comportamento do mouse em `/app`.
 
-## Remoção do texto MENU CONTEXTUAL
+## Remo��o do texto MENU CONTEXTUAL
 
 - O texto `MENU CONTEXTUAL` foi removido do topo do painel contextual no `frontend-react`.
-- O título do grupo e o fechamento automático foram preservados.
+- O t�tulo do grupo e o fechamento autom�tico foram preservados.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o submenu lateral em `/app`.
+- A pr�xima etapa sugerida � validar visualmente o submenu lateral em `/app`.
 
-## Refino dos ícones da rail no estilo EasyDental
+## Refino dos �cones da rail no estilo EasyDental
 
-- Os ícones da rail lateral foram aproximados do EasyDental no `frontend-react`.
-- O visual de cards/botões modernos foi reduzido.
+- Os �cones da rail lateral foram aproximados do EasyDental no `frontend-react`.
+- O visual de cards/bot�es modernos foi reduzido.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar a rail lateral em `/app`.
+- A pr�xima etapa sugerida � validar a rail lateral em `/app`.
 
-## Troca do desenho dos ícones da rail
+## Troca do desenho dos �cones da rail
 
-- Os ícones da rail lateral passaram a usar desenhos semanticamente mais próximos da referência EasyDental.
+- Os �cones da rail lateral passaram a usar desenhos semanticamente mais pr�ximos da refer�ncia EasyDental.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente os glyphs da rail em `/app`.
+- A pr�xima etapa sugerida � validar visualmente os glyphs da rail em `/app`.
 
-## Ícones SVG locais para a rail
+## �cones SVG locais para a rail
 
-- A rail lateral passou a usar ícones SVG/React locais próprios no `frontend-react`.
-- Os desenhos ficaram mais robustos e próximos da leitura visual do EasyDental.
+- A rail lateral passou a usar �cones SVG/React locais pr�prios no `frontend-react`.
+- Os desenhos ficaram mais robustos e pr�ximos da leitura visual do EasyDental.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente os novos ícones em `/app`.
+- A pr�xima etapa sugerida � validar visualmente os novos �cones em `/app`.
 
-## Refino da presença dos ícones da rail
+## Refino da presen�a dos �cones da rail
 
-- Os SVGs locais da rail foram aumentados e ganharam mais presença visual no `frontend-react`.
-- A leitura dos ícones ficou mais próxima da referência EasyDental.
+- Os SVGs locais da rail foram aumentados e ganharam mais presen�a visual no `frontend-react`.
+- A leitura dos �cones ficou mais pr�xima da refer�ncia EasyDental.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a rail em `/app`.
+- A pr�xima etapa sugerida � validar visualmente a rail em `/app`.
 
 ## Rail com icones semanticos prontos
 
@@ -5733,131 +5733,140 @@ Observacoes:
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a rail em `/app` e seguir apenas com ajustes finos, se necessários.
+- A pr�xima etapa sugerida � validar visualmente a rail em `/app` e seguir apenas com ajustes finos, se necess�rios.
 
 ## Topbar com icones semanticos prontos
 
 - A barra horizontal superior do `frontend-react` passou a usar icones prontos e semanticos do `@ant-design/icons`.
-- Os desenhos ficaram mais claros para cada ação e mais próximos da referencia visual enviada pelo usuário.
-- A ordem dos botões, os grupos e os separadores foram preservados.
+- Os desenhos ficaram mais claros para cada a��o e mais pr�ximos da referencia visual enviada pelo usu�rio.
+- A ordem dos bot�es, os grupos e os separadores foram preservados.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a topbar em `/app`.
+- A pr�xima etapa sugerida � validar visualmente a topbar em `/app`.
 
 ## Refino dos desenhos dos icones da topbar
 
 - A barra horizontal superior do `frontend-react` recebeu um segundo refinamento de desenho dos icones.
-- Alguns símbolos foram aproximados ainda mais da leitura semântica da referência visual enviada.
-- A ordem dos botões, os grupos e os separadores foram preservados.
+- Alguns s�mbolos foram aproximados ainda mais da leitura sem�ntica da refer�ncia visual enviada.
+- A ordem dos bot�es, os grupos e os separadores foram preservados.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a topbar em `/app`.
+- A pr�xima etapa sugerida � validar visualmente a topbar em `/app`.
 
-## Contrato funcional da tela Preferências
+## Contrato funcional da tela Prefer�ncias
 
-- Foi criado o contrato funcional inicial da tela Preferências com base no vídeo do EasyDental.
-- A documentação registrou estrutura visual, abas, campos observados e pendências de mapeamento.
-- Nenhum código foi alterado nesta etapa.
+- Foi criado o contrato funcional inicial da tela Prefer�ncias com base no v�deo do EasyDental.
+- A documenta��o registrou estrutura visual, abas, campos observados e pend�ncias de mapeamento.
+- Nenhum c�digo foi alterado nesta etapa.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é mapear a tela em mais detalhe antes de qualquer implementação.
+- A pr�xima etapa sugerida � mapear a tela em mais detalhe antes de qualquer implementa��o.
 
-## Modal visual de Preferências
+## Modal visual de Prefer�ncias
 
-- O modal visual da tela Preferências foi implementado no `frontend-react` sem persistência.
-- A abertura foi ligada ao item `Preferências` do menu do usuário na topbar.
-- A aba NFS-e foi mantida como pendência visual segura.
+- O modal visual da tela Prefer�ncias foi implementado no `frontend-react` sem persist�ncia.
+- A abertura foi ligada ao item `Prefer�ncias` do menu do usu�rio na topbar.
+- A aba NFS-e foi mantida como pend�ncia visual segura.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o modal em `/app` e só depois pensar em persistência.
+- A pr�xima etapa sugerida � validar o modal em `/app` e s� depois pensar em persist�ncia.
 
-## Refino visual do modal de Preferências
+## Refino visual do modal de Prefer�ncias
 
-- O modal Preferências foi compactado para ficar mais denso e operacional.
-- A aba Geral ficou menos espaçada e a área de avatar foi reduzida.
-- As abas Ficha clínica e Orçamento ganharam leitura mais próxima de formulário desktop.
-- A aba NFS-e permaneceu apenas como pendência visual.
+- O modal Prefer�ncias foi compactado para ficar mais denso e operacional.
+- A aba Geral ficou menos espa�ada e a �rea de avatar foi reduzida.
+- As abas Ficha cl�nica e Or�amento ganharam leitura mais pr�xima de formul�rio desktop.
+- A aba NFS-e permaneceu apenas como pend�ncia visual.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o modal compactado em `/app`.
+- A pr�xima etapa sugerida � validar visualmente o modal compactado em `/app`.
 
-## Refino de estilo desktop do modal de Preferências
+## Refino de estilo desktop do modal de Prefer�ncias
 
-- O modal Preferências recebeu um novo ajuste para ficar mais parecido com uma janela desktop clássica.
+- O modal Prefer�ncias recebeu um novo ajuste para ficar mais parecido com uma janela desktop cl�ssica.
 - As abas ficaram mais simples e densas.
-- A aba Geral, Ficha clínica e Orçamento foram aproximadas ainda mais da referência operacional.
-- A aba NFS-e permaneceu somente como pendência compacta.
+- A aba Geral, Ficha cl�nica e Or�amento foram aproximadas ainda mais da refer�ncia operacional.
+- A aba NFS-e permaneceu somente como pend�ncia compacta.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é revalidar visualmente o modal em `/app`.
+- A pr�xima etapa sugerida � revalidar visualmente o modal em `/app`.
 
-## Refino adicional de estilo desktop do modal de Preferências
+## Refino adicional de estilo desktop do modal de Prefer�ncias
 
-- O modal Preferências recebeu um novo aperto visual para se aproximar ainda mais de uma janela desktop clássica.
-- A largura, os campos, os botões e as abas foram compactados novamente.
-- A aba NFS-e continuou apenas como pendência visual.
+- O modal Prefer�ncias recebeu um novo aperto visual para se aproximar ainda mais de uma janela desktop cl�ssica.
+- A largura, os campos, os bot�es e as abas foram compactados novamente.
+- A aba NFS-e continuou apenas como pend�ncia visual.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente o novo aperto em `/app`.
+- A pr�xima etapa sugerida � validar visualmente o novo aperto em `/app`.
 
-## Redesenho campo a campo do modal de Preferências
+## Redesenho campo a campo do modal de Prefer�ncias
 
-- O modal Preferências foi redesenhado campo a campo com base nos prints do EasyDental.
-- A aba NFS-e passou a exibir campos visuais reais da referência.
+- O modal Prefer�ncias foi redesenhado campo a campo com base nos prints do EasyDental.
+- A aba NFS-e passou a exibir campos visuais reais da refer�ncia.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar o modal redesenhado em `/app`.
+- A pr�xima etapa sugerida � validar o modal redesenhado em `/app`.
 
-## Refino visual do modal de Preferências por print de referência
+## Refino visual do modal de Prefer�ncias por print de refer�ncia
 
-- O modal Preferências recebeu um novo ajuste fino com base direta nos prints do EasyDental.
+- O modal Prefer�ncias recebeu um novo ajuste fino com base direta nos prints do EasyDental.
 - A aba Geral passou a aproximar melhor o bloco de identidade, o avatar e os campos centrais.
-- A aba Ficha clínica ganhou listbox mais centralizada e leitura mais parecida com o layout legado.
-- A aba Orçamento e a aba NFS-e foram compactadas para reforçar o estilo de janela desktop clássica.
+- A aba Ficha cl�nica ganhou listbox mais centralizada e leitura mais parecida com o layout legado.
+- A aba Or�amento e a aba NFS-e foram compactadas para refor�ar o estilo de janela desktop cl�ssica.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é revalidar o modal em `/app` e seguir apenas com acabamento fino, se necessário.
+- A pr�xima etapa sugerida � revalidar o modal em `/app` e seguir apenas com acabamento fino, se necess�rio.
 
-## Modal Preferências com tamanho estático
+## Modal Prefer�ncias com tamanho est�tico
 
-- O modal Preferências passou a ter tamanho fixo e estrutura em flex column.
-- As abas ficaram com geometria estável e o conteúdo passou a rolar internamente quando necessário.
+- O modal Prefer�ncias passou a ter tamanho fixo e estrutura em flex column.
+- As abas ficaram com geometria est�vel e o conte�do passou a rolar internamente quando necess�rio.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a troca de abas e, se necessário, ajustar apenas microdetalhes de densidade.
+- A pr�xima etapa sugerida � validar visualmente a troca de abas e, se necess�rio, ajustar apenas microdetalhes de densidade.
 
-## Refino interno da aba Geral das Preferências
+## Refino interno da aba Geral das Prefer�ncias
 
-- A aba Geral do modal Preferências foi aproximada do print do EasyDental sem alterar a geometria estável já conquistada.
-- A composição da identidade, do avatar e dos campos centrais foi ajustada.
+- A aba Geral do modal Prefer�ncias foi aproximada do print do EasyDental sem alterar a geometria est�vel j� conquistada.
+- A composi��o da identidade, do avatar e dos campos centrais foi ajustada.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é comparar novamente com o print e repetir o mesmo padrão de refinamento nas demais abas, se necessário.
+- A pr�xima etapa sugerida � comparar novamente com o print e repetir o mesmo padr�o de refinamento nas demais abas, se necess�rio.
 
-## Refino da faixa inferior e grade do modal Preferências
+## Refino da faixa inferior e grade do modal Prefer�ncias
 
-- O modal Preferências recebeu faixa inferior fixa cinza e ajustes na grade clássica da aba Geral.
+- O modal Prefer�ncias recebeu faixa inferior fixa cinza e ajustes na grade cl�ssica da aba Geral.
 - As tabs ficaram menos arredondadas e o avatar ganhou encaixe visual melhor.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é validar visualmente a nova faixa inferior e comparar os campos da aba Geral com os prints de referência.
+- A pr�xima etapa sugerida � validar visualmente a nova faixa inferior e comparar os campos da aba Geral com os prints de refer�ncia.
 
-## Correção textual do modal Preferências
+## Corre��o textual do modal Prefer�ncias
 
-- Os textos quebrados/mojibake do modal Preferências e dos documentos da frente foram corrigidos para português UTF-8.
+- Os textos quebrados/mojibake do modal Prefer�ncias e dos documentos da frente foram corrigidos para portugu�s UTF-8.
 - O `frontend-react` segue isolado.
 - O backend segue preservado.
 - O frontend legado segue preservado.
-- A próxima etapa sugerida é seguir apenas com ajustes visuais ou funcionais, se houver nova validação do usuário.
+- A pr�xima etapa sugerida � seguir apenas com ajustes visuais ou funcionais, se houver nova valida��o do usu�rio.
+
+## Grade e foto da aba Geral das Prefer�ncias
+
+- A aba Geral recebeu nova separa��o entre formul�rio e coluna da foto.
+- Os campos passaram a respeitar largura controlada e a foto ficou totalmente encaixada.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A pr�xima etapa sugerida � validar visualmente a nova composi��o da aba Geral.
