@@ -5887,3 +5887,11 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é apenas validar visualmente o alinhamento final em `/app`.
+
+## NFS-e compacta no modal Preferências
+
+- A aba NFS-e foi compactada verticalmente sem mudar campos nem comportamento.
+- O `frontend-react` segue isolado.
+- O backend segue preservado.
+- O frontend legado segue preservado.
+- A próxima etapa sugerida é validar visualmente a aba NFS-e em `/app`.

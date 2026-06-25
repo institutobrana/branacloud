@@ -409,17 +409,21 @@
 
 .preferencias-nfse-form .preferencias-form-row {
   grid-template-columns: 225px minmax(0, 1fr);
+  margin-bottom: 3px;
 }
 
 .preferencias-nfse-help {
   display: block;
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 11px;
   text-align: center;
 }
 
 .preferencias-nfse-form {
-  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 4px;
 }
 
 .preferencias-nfse-form .preferencias-form-field .ant-input {
@@ -431,6 +435,17 @@
 .preferencias-nfse-form .preferencias-form-field .ant-input-affix-wrapper {
   max-width: 160px;
   width: 100%;
+}
+
+.preferencias-nfse-form .preferencias-form-field .ant-input,
+.preferencias-nfse-form .preferencias-form-field .ant-input-number,
+.preferencias-nfse-form .preferencias-form-field .ant-input-affix-wrapper {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.preferencias-nfse-form .preferencias-form-field .ant-input-number {
+  height: 25px;
 }
 
 .preferencias-nfse-form .preferencias-form-field .ant-input-number .ant-input-number-input {
