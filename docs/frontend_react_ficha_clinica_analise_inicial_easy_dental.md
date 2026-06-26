@@ -286,3 +286,218 @@ O modulo raiz observado no EasyDental e a `Ficha clinica`.
 `Tratamento` e `Novo tratamento` devem ser tratados como subfluxos conectados a esse prontuario.
 
 Esta frente permanece documental, sem autorizacao para implementacao.
+
+## Validacao direta EasyDental autenticado - Ficha clinica com paciente em uso
+
+### 1. Selecao de paciente de teste
+
+- EasyDental acessado autenticado: sim.
+- Navegador usado: Edge no ambiente local do Codex.
+- Paciente de teste usado: sim, tratado nesta documentacao como `[paciente de teste]`.
+- Como abrir/localizar paciente: pela pesquisa de pacientes na parte inferior da Ficha clinica, a partir do painel principal.
+- Como a Ficha clinica identifica o paciente em uso: pelo cabecalho superior do prontuario e pela area central de tratamento.
+- O paciente em uso aparece no cabecalho: sim, com nome e informacoes resumidas do registro; os dados sensiveis nao foram reproduzidos aqui.
+- A selecao do paciente altera automaticamente a Ficha clinica: sim, ao confirmar a selecao a tela carrega o prontuario do paciente.
+
+### 2. Entrada na Ficha clinica com paciente em uso
+
+- Caminho exato observado: painel principal -> `Ficha clinica`/`Prontuario` -> pesquisa de pacientes -> selecao do registro -> confirmacao.
+- A Ficha clinica abre como: area/tela principal integrada ao shell.
+- Mantem barra horizontal superior: sim.
+- Mantem barra lateral: sim.
+- Mostra dados do paciente: sim, no cabecalho.
+- Areas preenchidas: cabecalho do paciente, aba Tratamento ativa, grade de procedimentos e resumo do tratamento.
+- Areas vazias ou pendentes: Financeiro, Timeline, Documentos e Anotacoes mostram areas proprias, mas o conteudo de detalhe ainda depende do contexto selecionado.
+- Carregamento automatico: a aba Tratamento carrega imediatamente com o contexto do paciente; as demais abas ficam visiveis como parte do prontuario.
+
+### 3. Abas da Ficha clinica
+
+#### 3.1 Tratamento
+
+- nome exato: `Tratamento`;
+- posicao: primeira aba do bloco principal;
+- conteudo visivel: grade de procedimentos e resumo do tratamento;
+- estado vazio: sem tratamento, mostra mensagem de nenhum tratamento selecionado;
+- estado preenchido: lista de procedimentos do tratamento selecionado;
+- botoes disponiveis: `Novo...`, filtro de procedimentos, toggles e acoes do bloco;
+- menus disponiveis: botoes de acao do tratamento e atalhos da area;
+- depende de tratamento: sim;
+- depende de procedimento: sim, para a grade ganhar registros reais;
+- depende de orcamento: parcialmente, para visoes financeiras relacionadas;
+- status de validacao: Confirmado no EasyDental autenticado.
+
+#### 3.2 Financeiro
+
+- nome exato: `Financeiro`;
+- posicao: segunda aba;
+- conteudo visivel: resumo financeiro e indicador de lancamentos/recebimentos;
+- estado vazio: mostra contagem zerada quando nao ha itens financeiros;
+- estado preenchido: exibiria lancamentos do paciente/tratamento;
+- botoes disponiveis: aacao de visualizacao/financeiro do painel;
+- menus disponiveis: ainda pendentes de detalhamento fino;
+- depende de tratamento: sim;
+- depende de orcamento: sim, de forma aparente;
+- status de validacao: Parcialmente confirmado.
+
+#### 3.3 Timeline
+
+- nome exato: `Timeline`;
+- posicao: terceira aba;
+- conteudo visivel: historico cronologico de eventos do paciente/tratamento;
+- estado vazio: sem eventos detalhados nesta rodada;
+- estado preenchido: mostra entradas datadas e descricoes resumidas;
+- botoes disponiveis: nao detalhados nesta rodada;
+- menus disponiveis: pendente de validacao;
+- depende de tratamento: sim;
+- depende de procedimento: possivelmente sim;
+- depende de orcamento: nao confirmado;
+- status de validacao: Parcialmente confirmado.
+
+#### 3.4 Documentos
+
+- nome exato: `Documentos`;
+- posicao: quarta aba;
+- conteudo visivel: area de documentos do prontuario;
+- estado vazio: indica zero documentos quando nao ha anexos;
+- estado preenchido: pendente de validacao em outro caso;
+- botoes disponiveis: nao detalhados nesta rodada;
+- menus disponiveis: pendente de validacao;
+- depende de tratamento: nao obrigatoriamente;
+- depende de procedimento: nao confirmado;
+- depende de orcamento: nao;
+- status de validacao: Parcialmente confirmado.
+
+#### 3.5 Anotacoes
+
+- nome exato: `Anotacoes`;
+- posicao: quinta aba;
+- conteudo visivel: area de anotacoes do prontuario;
+- estado vazio: area sem texto detalhado nesta rodada;
+- estado preenchido: pendente de validacao;
+- botoes disponiveis: nao detalhados nesta rodada;
+- menus disponiveis: pendente de validacao;
+- depende de tratamento: nao obrigatoriamente;
+- depende de procedimento: nao confirmado;
+- depende de orcamento: nao;
+- status de validacao: Parcialmente confirmado.
+
+### 4. Tratamento dentro da Ficha clinica
+
+- A aba Tratamento e a primeira area operacional do prontuario.
+- Existe grade/lista de procedimentos.
+- A grade pode aparecer vazia ou com procedimentos, dependendo do paciente.
+- As colunas visiveis incluem `Procedimento`, `Ações` e, no contexto observado, linhas com identificacao/regiao/pac.
+- Ha icones/status de procedimento, incluindo indicacao de procedimento finalizado.
+- O bloco de acoes do tratamento fica na parte superior da area de tratamento.
+- Ha botao/acao para criar novo tratamento: sim, `Novo...`.
+- Ha selecao de tratamento atual: sim, com tratamentos listados em abas/seletores.
+- O tratamento possui codigo/status visivel no titulo das abas de tratamento.
+- Quando nao existe tratamento selecionado, a tela mostra mensagem orientando a selecionar o tratamento no odontograma.
+
+### 5. Menu de acoes do Tratamento
+
+Os botoes observados na area do tratamento foram:
+
+- `Novo procedimento`;
+- `Orçamento`;
+- `Finalizar tratamento`;
+- `Interromper tratamento`;
+- `Reabrir tratamento`;
+- `Excluir tratamento`;
+- `Gerenciar guia OdontoPrev`.
+
+Status resumido:
+
+- `Novo procedimento`: confirmado como acao da ficha;
+- `Orçamento`: confirmado como acao da ficha;
+- `Finalizar tratamento`: confirmado como acao da ficha;
+- `Interromper tratamento`: confirmado como acao da ficha;
+- `Reabrir tratamento`: confirmado como acao da ficha;
+- `Excluir tratamento`: confirmado como acao da ficha;
+- `Gerenciar guia OdontoPrev`: visivel, mas fora do foco principal desta frente.
+
+### 6. Novo tratamento como subfluxo da Ficha clinica
+
+- O botao `Novo...` aparece dentro da Ficha clinica.
+- Ao clicar, abre o modal `Novo tratamento`.
+- Titulo exato: `Novo tratamento`.
+- Abas existentes: `Dados principais` e `Dados de convenio`.
+- Campos visiveis: data de abertura, prestador responsavel, unidade de atendimento, paciente, beneficio, tabela/moeda, tipo de faturamento, tipo de atendimento, observacoes, idade do paciente, arcada predominante e checkbox de copia.
+- Botoes visiveis: `Gravar tratamento` e `Cancelar`.
+- O paciente vem preenchido automaticamente: sim, no contexto observado.
+- Cancela sem salvar: sim.
+- Ha alerta de alteracao nao salva: nao confirmado nesta rodada.
+- Ha campos obrigatorios visuais: visualmente ha campos com estrutura de formulario, mas a obrigatoriedade exata ainda requer validacao fina.
+
+### 7. Procedimentos dentro da Ficha clinica
+
+- Onde aparecem: na grade central da aba Tratamento.
+- Existe botao/icone especifico para novo procedimento: sim, `Novo procedimento`.
+- Depende de tratamento aberto: sim, pelo comportamento observado da area.
+- Abre pesquisa de procedimento: nao foi aberto nesta rodada, mas o botao de novo procedimento existe.
+- Exige dente/regiao/faces: pendente de validacao.
+
+### 8. Financeiro / Orcamento
+
+- A aba `Financeiro` existe e mostra informacao financeira resumida.
+- O botao/acao `Orçamento` aparece na area do tratamento.
+- O fluxo de orcamento depende do tratamento: sim, de forma aparente.
+- Status como pendente/aprovado/desaprovado: nao confirmados nesta rodada.
+
+### 9. Timeline, Documentos e Anotacoes
+
+- As abas existem como parte interna da Ficha clinica.
+- `Timeline` mostra historico datado.
+- `Documentos` mostra area de documentos.
+- `Anotacoes` mostra area de anotacoes.
+- Todas parecem pertencer ao prontuario clinico integrado, nao a modulos independentes.
+
+### 10. Dependencias e regras confirmadas
+
+- A Ficha clinica exige paciente em uso: sim.
+- O clique em Ficha clinica sem paciente leva a area inicial sem tratamento selecionado e com orientacao de selecao: parcialmente confirmado.
+- O paciente em uso aparece no cabecalho: sim.
+- Tratamento e a primeira aba operacional: sim.
+- Existe tratamento ativo selecionado: sim, no paciente observado.
+- Novo tratamento depende da Ficha clinica aberta: sim.
+- Procedimentos dependem de tratamento aberto: sim, pelo comportamento observado da grade e das acoes.
+- Orcamento depende de tratamento aberto: sim, de forma aparente.
+- Financeiro depende de orcamento: parcialmente confirmado.
+- Timeline registra acoes clinicas: sim, de forma aparente.
+- Documentos e Anotacoes sao abas internas da Ficha clinica: sim.
+
+### 11. Atualizacao das tabelas
+
+As tabelas de componentes e fluxos devem considerar os novos itens confirmados nesta validacao, especialmente:
+
+- `Novo procedimento`;
+- `Orçamento`;
+- `Finalizar tratamento`;
+- `Interromper tratamento`;
+- `Reabrir tratamento`;
+- `Excluir tratamento`;
+- `Gerenciar guia OdontoPrev`;
+- a selecao efetiva do paciente em uso;
+- a grade de procedimentos preenchida;
+- o modal `Novo tratamento` como subfluxo.
+
+### 12. Pendencias remanescentes
+
+- confirmar o menu completo de acoes em estados diferentes de tratamento;
+- confirmar a busca de procedimentos em detalhe;
+- confirmar o fluxo de inclusao de procedimento;
+- confirmar o comportamento financeiro e o status de orcamento;
+- confirmar o modal de execucao/finalizacao;
+- confirmar documentos e anotacoes em estado preenchido.
+
+### 13. Conclusao desta validacao
+
+A Ficha clinica abriu com paciente em uso e mostrou claramente:
+
+- paciente no cabecalho;
+- abas `Tratamento`, `Financeiro`, `Timeline`, `Documentos`, `Anotacoes`;
+- grade de procedimentos;
+- botoes de acao do tratamento;
+- subfluxo `Novo tratamento`.
+
+Isso confirma a Ficha clinica como o shell raiz do prontuario clinico odontologico, com Tratamento e Novo tratamento como fluxos internos.

@@ -4,6 +4,8 @@
 
 Observacao de escopo: esta analise de Tratamento foi derivada de subfluxos observados dentro da `Ficha clinica`, que e o modulo raiz acessado pelo icone da barra horizontal. `Novo tratamento` e fluxos relacionados devem ser tratados como submodulos ou fluxos dependentes da `Ficha clinica`.
 
+Na validacao posterior com paciente em uso, a `Ficha clinica` confirmou esse encadeamento: a aba `Tratamento` passou a exibir a grade de procedimentos do paciente, os botoes de acao do tratamento e o subfluxo `Novo...` para abrir o modal `Novo tratamento`.
+
 O objetivo desta frente e reproduzir no Brana Cloude o modulo Tratamento do EasyDental, comecando por documentacao e contrato funcional antes de qualquer implementacao.
 
 Esta etapa e somente documental.
