@@ -287,6 +287,58 @@ O modulo raiz observado no EasyDental e a `Ficha clinica`.
 
 Esta frente permanece documental, sem autorizacao para implementacao.
 
+## 17. Inventario local de assets com potencial para o shell odontologico
+
+A leitura dos ativos locais do Brana Cloud mostra que o repositorio ja possui um conjunto util de imagens odontologicas para apoiar a reproducao visual da Ficha clinica, sem depender de backend, banco ou copia direta do EasyDental.
+
+### 17.1 Grupo arcada e dentes
+
+- `assets/easy/arc_superior_perm.bmp` - `512x96`
+- `assets/easy/arc_inferior_perm.bmp` - `512x96`
+- `assets/easy/arc_faces.bmp` - `32x25`
+- `assets/easy/arc_superior_perm_test.png` - `512x96`
+- `assets/easy/dentes/arc_dente11.bmp` a `assets/easy/dentes/arc_dente85.bmp`
+
+Leitura objetiva:
+
+- as duas arcadas completas sao boas candidatas para guiar proporcao, largura e ritmo horizontal do odontograma;
+- os dentes isolados formam uma familia consistente para a leitura anatomica por quadrante;
+- `arc_faces.bmp` e muito pequeno e funciona melhor como marcador auxiliar do que como elemento principal.
+
+### 17.2 Grupo de simbolos e intervencoes
+
+- `assets/easy/sim_face.bmp`
+- `assets/easy/sim_face_40.bmp`
+- `assets/easy/sim_simb*.bmp`
+- `assets/easy/int_cirur.bmp`
+- `assets/easy/int_canal.bmp`
+- `assets/easy/int_implante.bmp`
+- demais `assets/easy/int_*.bmp`
+
+Leitura objetiva:
+
+- os simbolos `sim_*` sao pequenos e servem melhor como referencia semantica ou marcador de estado;
+- os icones `int_*` sao uteis para linguagem visual de procedimentos e categorias, mas nao devem virar base literal da V1.
+
+### 17.3 Grupo de atalhos e comandos
+
+- `assets/easy/cmd_odontograma.bmp`
+- `assets/easy/cmd_fichapes.bmp`
+- `assets/easy/cmd_novotra.bmp`
+- demais `assets/easy/cmd_*.bmp`
+
+Leitura objetiva:
+
+- os `cmd_*` sao bons para toolbar/atalhos;
+- nao devem ser tratados como referencia principal de arcada ou odontograma.
+
+### 17.4 Conclusao do inventario local
+
+- ha material visual suficiente para orientar a composicao da Ficha clinica;
+- a melhor base para a arcada continua sendo o grupo `arc_superior_perm.bmp`, `arc_inferior_perm.bmp` e a familia `arc_denteXX.bmp`;
+- a familia `sim_*` e os `int_*` podem entrar depois como refinamento de linguagem visual;
+- a implementacao continua somente documental nesta rodada.
+
 ## Validacao direta EasyDental autenticado - Ficha clinica com paciente em uso
 
 ### 1. Selecao de paciente de teste
