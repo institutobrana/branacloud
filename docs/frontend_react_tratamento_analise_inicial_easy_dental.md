@@ -2,6 +2,8 @@
 
 ## 1. Objetivo da frente
 
+Observacao de escopo: esta analise de Tratamento foi derivada de subfluxos observados dentro da `Ficha clinica`, que e o modulo raiz acessado pelo icone da barra horizontal. `Novo tratamento` e fluxos relacionados devem ser tratados como submodulos ou fluxos dependentes da `Ficha clinica`.
+
 O objetivo desta frente e reproduzir no Brana Cloude o modulo Tratamento do EasyDental, comecando por documentacao e contrato funcional antes de qualquer implementacao.
 
 Esta etapa e somente documental.
