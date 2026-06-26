@@ -5926,3 +5926,10 @@ Observacoes:
 - A frente FC2C-3 do `frontend-react` substituiu o odontograma CSS por composicao com assets locais do repositorio em `frontend-react/public/assets/fichaClinica/odontograma/`, preservando o shell da Ficha clinica e sem tocar em backend, banco ou regras operacionais.
 - O refino fino posterior da FC2C-3 trocou a composicao para dentes isolados com faces repetidas e numeracao central, aproximando melhor o quadro do EasyDental Cloud sem introduzir logica clinica real.
 - Proxima etapa recomendada: apenas comparacao visual fina e ajuste de proporcao, sem backend, banco, migration ou fluxo funcional novo.
+
+## Medicao DOM do odontograma EasyDental Cloud
+
+- Medicao estrutural concluida a partir do print de referencia e da sessao autenticada do EasyDental Cloud.
+- Base de proporcao consolidada: quadro compacto, dentes em duas arcadas, duas linhas de faces, paleta logo abaixo e mensagem inferior ampla.
+- O Brana Cloud atual ainda precisa reproduzir essa densidade visual no shell da `Ficha clinica`.
+- Proxima etapa recomendada: ajuste visual do shell odontologico sem frontend, backend, banco ou migration nova.

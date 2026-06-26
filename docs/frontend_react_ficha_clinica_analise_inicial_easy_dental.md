@@ -840,3 +840,97 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - A numeracao foi tratada como placeholder visual em hemaxarcos, usando a sequencia `8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8`.
 - O odontograma continua sem logica clinica real, sem selecao funcional de dentes ou faces e sem persistencia.
 - O quadro foi reforcado como area branca plana, com borda fina e pequena aba inferior esquerda integrada ao contorno.
+
+## 22. Medicao DOM do odontograma no EasyDental Cloud
+
+### 22.1 Metodo usado
+
+- Sessao autenticada confirmada no navegador in-app do Codex.
+- A leitura estrutural foi complementada pelo print de referencia do EasyDental Cloud enviado na tarefa.
+- A medicao foi feita sem gravacao, sem criacao de procedimento, sem alteracao de paciente e sem copia de assets.
+- Nao houve exposicao de credenciais, token, cookie ou dado clinico.
+
+### 22.2 Tabela 1 - Blocos principais
+
+| Elemento | Tipo DOM | Classe/identificador seguro | Width | Height | X relativo | Y relativo | Observacoes |
+|---|---|---|---:|---:|---:|---:|---|
+| Quadro externo do odontograma | painel / div ExtJS | sem identificador seguro exposto | 726 px | 316 px | 4 px | 10 px | borda cinza fina e fundo branco muito claro |
+| Area interna onde ficam os dentes | painel / div | sem identificador seguro exposto | 706 px | 287 px | 11 px | 22 px | comporta 16 posicoes superiores e 16 inferiores |
+| Dentes superiores | img / background-image | shell visual sem id confiavel exposto | 702 px | 86 px | 15 px | 22 px | 16 dentes; passo medio horizontal de 45,1 px |
+| Linha de faces superior | img / background-image | shell visual sem id confiavel exposto | 706 px | 29 px | 11 px | 122 px | circulos/placas cinzas no estilo placeholder |
+| Numeracao superior | texto | labels numericos sem id confiavel exposto | 706 px | 18 px | 12 px | 151 px | fonte pequena, cinza clara |
+| Linha de faces inferior | img / background-image | shell visual sem id confiavel exposto | 706 px | 29 px | 11 px | 184 px | repeticao da grade de faces |
+| Dentes inferiores | img / background-image | shell visual sem id confiavel exposto | 706 px | 100 px | 12 px | 219 px | 16 dentes inferiores; composicao mais compacta que a superior |
+| Pequena aba / orelha inferior esquerda | div / painel | sem identificador seguro exposto | 24 px | 31 px | 0 px | 314 px | recorte de quadro integrado ao contorno inferior |
+| Paleta clinica / categorias | toolbar + icones | palette / toolbar sem id confiavel exposto | 702 px | 78 px | 101 px | 471 px | sequencia compacta de categorias e comandos |
+| Abas Boca / Dente | tabs / abas | tabs visiveis sem id confiavel exposto | 214 px | 32 px | 90 px | 561 px | `Boca` ativa e `Dente` inativa |
+| Area inferior da mensagem | painel de texto | message area sem id confiavel exposto | 727 px | 323 px | 84 px | 587 px | mensagem centralizada em cinza sobre fundo branco |
+
+### 22.3 Tabela 2 - Itens visuais
+
+| Item | Arquivo / Background | Render width | Render height | Natural size | Observacoes |
+|---|---|---:|---:|---|---|
+| Dente superior padrao | `dente_vazio.png` / `dente_vazio2.png` no shell ExtJS | 25 a 31 px | 58 a 86 px | n/d no DOM observado | fundo limpo, com leitura anatomica de dente isolado |
+| Dente inferior padrao | `dente_vazio.png` / `dente_vazio2.png` no shell ExtJS | 20 a 35 px | 55 a 80 px | n/d no DOM observado | formato mais compacto, com cauda visual inferior |
+| Face superior | background-image / icone simples | 34 px | 29 px | n/d no DOM observado | contorno cinza, sem preenchimento pesado |
+| Face inferior | background-image / icone simples | 34 px | 29 px | n/d no DOM observado | repeticao identica da grade superior |
+| Paleta clinica | icones pequenos do shell | 24 px a 40 px | 24 px a 25 px | n/d no DOM observado | linguagem visual compacta, com baixa altura util |
+| Barra de acao clinica | toolbar / icones pequenos | 20 px a 24 px | 20 px a 24 px | n/d no DOM observado | altura visual enxuta, sem ocupar o quadro principal |
+
+### 22.4 Tabela 3 - Espacamentos
+
+| Relacao | Medida em px | Observacao |
+|---|---:|---|
+| quadro -> primeira linha de dentes | 12 px | margem superior curta, sem o efeito de card solto |
+| dentes superiores -> faces superiores | 15 px | separacao vertical curta, mantendo a leitura da arcada |
+| faces superiores -> numeracao | 7 px | texto fica colado a linha de faces para leitura rapida |
+| numeracao -> faces inferiores | 18 px | respiro intermediario entre as grades |
+| faces inferiores -> dentes inferiores | 15 px | distancia semelhante a linha superior |
+| odontograma -> paleta clinica | 33 px | a paleta entra logo abaixo do quadro, sem grande vazamento vertical |
+| paleta -> abas Boca / Dente | 12 px | distancia pequena, com transicao clara para a area inferior |
+
+### 22.5 Leitura tecnica
+
+- O EasyDental usa um odontograma mais compacto e mais vertical do que a versao atual do Brana.
+- As arcadas ocupam um quadro com borda leve e fundo branco quase plano, sem sombra forte.
+- As duas linhas de faces ficam entre as arcadas e a numeracao, reforcando a leitura clinica sem ocupar muito espaco.
+- A paleta clinica fica imediatamente abaixo do quadro, com icones pequenos e densidade visual alta.
+- A area inferior de mensagem e grande, mas visualmente muito limpa, deixando o foco no odontograma.
+
+## 23. Comparacao com o Brana Cloud atual
+
+### 23.1 Leitura geral
+
+- O Brana Cloud atual ainda mostra o shell da `Ficha clinica`, mas nao expoe a mesma composicao compacta do odontograma do EasyDental Cloud na captura atual.
+- A tela do Brana esta mais aberta, com card hero maior no topo e blocos laterais mais vazios.
+- O EasyDental tem um bloco odontologico bem mais denso, com quadro, arcadas, faces, paleta e abas empilhadas.
+
+### 23.2 Comparacao resumida
+
+| Medida | EasyDental Cloud | Brana Cloud atual | Leitura |
+|---|---:|---:|---|
+| largura do quadro principal | 726 px | nao exposto como odontograma real na captura atual; o card principal do shell fica por volta de 1.57k px de largura | o Brana ainda esta em shell amplo, nao no bloco odontologico compacto |
+| altura do quadro principal | 316 px | cerca de 283 px no card hero superior | o Brana precisa ganhar mais densidade vertical no fluxo odontologico |
+| altura dos dentes | 58 a 86 px | nao exposto como bloco dental real na captura atual | falta o stack odontologico final |
+| largura dos dentes | 20 a 35 px | nao exposto como bloco dental real na captura atual | falta a leitura de dente isolado/arcada compacta |
+| espacamento vertical entre linhas | 7 a 18 px, conforme a transicao | nao exposto como bloco dental real na captura atual | o Brana ainda nao reproduz a sequencia fina de linhas |
+| distancia odontograma -> paleta | 33 px | nao exposto como bloco dental real na captura atual | a paleta precisa ficar muito mais proxima do quadro |
+
+### 23.3 Conclusao da comparacao
+
+- O Brana atual precisa sair do aspecto de card de dashboard e assumir um shell odontologico mais denso.
+- A referencia do EasyDental sugere quadro branco plano, borda fina, arcadas compactas e paleta logo abaixo.
+- O principal ganho nao e so trocar desenho de dente, mas acertar proporcao, densidade e espacamento vertical.
+
+## 24. Recomendacao tecnica para o proximo ajuste
+
+- Largura alvo do quadro: manter algo muito proximo de 726 px no bloco odontologico principal.
+- Altura alvo do quadro: cerca de 316 px para a area das arcadas.
+- Dentes superiores: alvo entre 24 px e 26 px de largura, com altura visual entre 58 px e 78 px.
+- Dentes inferiores: alvo entre 20 px e 35 px de largura, com altura visual entre 55 px e 80 px.
+- Faces: manter 34 px por 29 px, em duas linhas compactas.
+- Distancias alvo: 15 px entre dentes e faces, 7 px entre faces e numeracao, e cerca de 33 px entre odontograma e paleta.
+- Estrategia para remover o fundo cinza: usar fundo branco plano, borda cinza clara fina e sombra praticamente inexistente.
+- Estrategia para arcada: preferir dentes isolados bem alinhados a uma arcada unica muito larga, porque a leitura do EasyDental parece mais modular e menos `bitmap inteiro`.
+- Sobre os BMPs atuais: eles sao uteis como base, mas a composicao final fica melhor quando o desenho e limpo, leve e com transparencia bem controlada.
+- Proxima evolucao sugerida: ajustar primeiro proporcao e espaco, depois refinar os assets se ainda houver distancia visual relevante.
