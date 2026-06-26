@@ -110,6 +110,19 @@ function buildCalendarDays(referenceDate = new Date()) {
   return cells;
 }
 
+const clinicCategories = [
+  { key: 'cirur', label: 'Cirur' },
+  { key: 'dent', label: 'Dent' },
+  { key: 'diag', label: 'Diag' },
+  { key: 'emer', label: 'Emer' },
+  { key: 'endo', label: 'Endo' },
+  { key: 'espec', label: 'Espec' },
+  { key: 'estet', label: 'Estét' },
+  { key: 'estom', label: 'Estom' },
+  { key: 'geral', label: 'Geral' },
+  { key: 'hof', label: 'HOF' },
+];
+
 function PlaceholderBlock({ title, description }) {
   return (
     <div className="ficha-clinica-placeholder">
@@ -132,7 +145,7 @@ function ToothGrid() {
     <div className="ficha-clinica-tooth-grid">
       <div className="ficha-clinica-tooth-row">
         {upperTeeth.map((tooth) => (
-          <div key={`up-${tooth}`} className="ficha-clinica-tooth">
+          <div key={`up-${tooth}`} className={`ficha-clinica-tooth is-upper is-${((tooth - 1) % 4) + 1}`}>
             <span className="ficha-clinica-tooth-shape ficha-clinica-tooth-shape-top" />
             <span className="ficha-clinica-tooth-label">{tooth}</span>
           </div>
@@ -153,7 +166,7 @@ function ToothGrid() {
 
       <div className="ficha-clinica-tooth-row ficha-clinica-tooth-row-bottom">
         {lowerTeeth.map((tooth) => (
-          <div key={`low-${tooth}`} className="ficha-clinica-tooth">
+          <div key={`low-${tooth}`} className={`ficha-clinica-tooth is-lower is-${((tooth - 17) % 4) + 1}`}>
             <span className="ficha-clinica-tooth-shape ficha-clinica-tooth-shape-bottom" />
             <span className="ficha-clinica-tooth-label">{tooth}</span>
           </div>
@@ -328,6 +341,25 @@ export function FichaClinicaPage({ onBackHome }) {
             <ToothGrid />
           </div>
 
+          <div className="ficha-clinica-clinic-categories" aria-label="Categorias clinicas">
+            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias anteriores">
+              ‹
+            </Button>
+            {clinicCategories.map((category, index) => (
+              <button
+                key={category.key}
+                type="button"
+                className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
+              >
+                <span className="ficha-clinica-clinic-category-icon" aria-hidden="true" />
+                <span className="ficha-clinica-clinic-category-label">{category.label}</span>
+              </button>
+            ))}
+            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias seguintes">
+              ›
+            </Button>
+          </div>
+
           <div className="ficha-clinica-odontogram-footer">
             <Tabs
               activeKey="boca"
@@ -337,10 +369,9 @@ export function FichaClinicaPage({ onBackHome }) {
                   label: 'Boca',
                   children: (
                     <div className="ficha-clinica-boca-empty">
-                      <Typography.Text className="ficha-clinica-boca-empty-title">
+                      <Typography.Text className="ficha-clinica-boca-empty-copy">
                         Nenhum tratamento selecionado no odontograma.
-                      </Typography.Text>
-                      <Typography.Text type="secondary" className="ficha-clinica-boca-empty-copy">
+                        <br />
                         Selecione o tratamento desejado para visualizar os detalhes.
                       </Typography.Text>
                     </div>

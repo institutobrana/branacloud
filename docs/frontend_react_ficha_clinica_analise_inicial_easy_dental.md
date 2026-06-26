@@ -519,3 +519,13 @@ Isso confirma a Ficha clinica como o shell raiz do prontuario clinico odontologi
 - O painel central de Tratamento continua com abas, toolbar e grade vazia, sem persistencia, sem backend e sem acao clinica real.
 - O painel lateral direito continua apenas visual, com calendario, estado do paciente em uso e acoes placeholder.
 - Pendencias para FC2C: refino do odontograma/arcada visual, densidade do painel Tratamento e ajuste fino do painel lateral direito.
+
+## Fase FC2C - Refino visual do odontograma/arcada
+
+- Arquivos alterados nesta etapa: `frontend-react/src/features/fichaClinica/FichaClinicaPage.jsx`, `frontend-react/src/features/fichaClinica/fichaClinica.css`, `docs/frontend_react_ficha_clinica_analise_inicial_easy_dental.md` e `docs/11_roadmap_desenvolvimento.md`.
+- O odontograma recebeu arcada superior e inferior com dentes placeholder mais anatomicos, numeração visivel, duas linhas de faces/circulos entre as arcadas e area branca plana mais proxima da referencia EasyDental.
+- A barra de categorias clinicas foi adicionada abaixo da arcada, com itens compactos e primeira categoria ativa apenas de forma visual.
+- As abas inferiores `Boca` e `Dente` foram preservadas com estilo mais simples, e a mensagem inferior passou a ficar mais discreta e centralizada.
+- Nao houve implementacao de logica clinica real, clique em dente, selecao de face, persistencia ou backend.
+- O que ficou placeholder: dentes, faces, categorias, toolbar superior do odontograma e area de vazio informativa.
+- Pendencia para a proxima fase: refino do painel Tratamento e, depois, ajuste fino do painel lateral direito.

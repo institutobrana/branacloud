@@ -53,16 +53,16 @@
 
 .ficha-clinica-odontogram-frame {
   flex: 1;
-  min-height: 500px;
-  padding: 8px 8px 0;
-  border-radius: 2px;
+  min-height: 520px;
+  padding: 10px 10px 0;
+  border-radius: 0;
   display: flex;
 }
 
 .ficha-clinica-tooth-grid {
   display: grid;
-  grid-template-rows: auto auto auto auto;
-  gap: 10px;
+  grid-template-rows: auto 38px 38px auto;
+  gap: 6px;
   width: 100%;
   align-content: start;
 }
@@ -70,27 +70,42 @@
 .ficha-clinica-tooth-row {
   display: grid;
   grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 4px;
+  gap: 2px;
   align-items: center;
 }
 
 .ficha-clinica-tooth {
   display: grid;
   justify-items: center;
-  gap: 4px;
+  gap: 2px;
+  align-self: end;
 }
 
 .ficha-clinica-tooth-shape {
-  width: 16px;
+  width: 14px;
   height: 48px;
-  background: linear-gradient(180deg, #faf6e8, #d5c28a);
-  border: 1px solid rgba(163, 125, 43, 0.22);
-  border-radius: 46% 46% 38% 38%;
-  box-shadow: inset 0 -2px 4px rgba(140, 107, 31, 0.15);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 244, 0.96), rgba(221, 200, 142, 0.96));
+  border: 1px solid rgba(152, 122, 57, 0.26);
+  border-radius: 48% 48% 36% 36%;
+  box-shadow:
+    inset 0 -3px 5px rgba(140, 107, 31, 0.15),
+    0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+}
+
+.ficha-clinica-tooth-shape::before {
+  content: '';
+  position: absolute;
+  inset: 2px 3px auto;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.76), transparent);
+  opacity: 0.9;
 }
 
 .ficha-clinica-tooth-shape-top {
-  border-radius: 52% 52% 38% 38%;
+  border-radius: 50% 50% 38% 38%;
 }
 
 .ficha-clinica-tooth-shape-bottom {
@@ -98,27 +113,80 @@
 }
 
 .ficha-clinica-tooth-label {
-  font-size: 11px;
-  color: #9097a4;
+  font-size: 10px;
+  color: #9aa0a6;
+  line-height: 1;
 }
 
 .ficha-clinica-tooth-glyph-row {
   display: grid;
   grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 4px;
+  gap: 2px;
   align-items: center;
   justify-items: center;
-  min-height: 44px;
+  min-height: 34px;
 }
 
 .ficha-clinica-tooth-glyph {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  border: 1px solid rgba(180, 180, 180, 0.65);
+  border: 1px solid rgba(187, 187, 187, 0.78);
   background:
-    linear-gradient(180deg, #fafafa, #f2f2f2);
-  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.82);
+    linear-gradient(180deg, #fbfbfb, #f1f1f1);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.84);
+}
+
+.ficha-clinica-clinic-categories {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 6px 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  min-height: 40px;
+}
+
+.ficha-clinica-clinic-arrow {
+  color: #8f959d !important;
+  font-size: 16px;
+  width: 20px;
+  min-width: 20px;
+  padding: 0;
+}
+
+.ficha-clinica-clinic-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: #626972;
+  padding: 4px 6px;
+  border-radius: 3px;
+  cursor: default;
+}
+
+.ficha-clinica-clinic-category.is-active {
+  color: var(--brana-deep-green);
+  background: rgba(22, 170, 161, 0.08);
+  font-weight: 700;
+}
+
+.ficha-clinica-clinic-category-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, rgba(22, 170, 161, 0.7), rgba(22, 170, 161, 0.95));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+}
+
+.ficha-clinica-clinic-category-label {
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
 
 .ficha-clinica-odontogram-footer {
@@ -127,29 +195,30 @@
 }
 
 .ficha-clinica-odontogram-footer .ant-tabs-nav {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .ficha-clinica-boca-empty {
-  min-height: 280px;
+  min-height: 244px;
   display: grid;
   place-items: center;
   align-content: center;
-  gap: 4px;
-  color: #6b7280;
+  gap: 2px;
+  color: #8a8f96;
+  background: #ffffff;
 }
 
 .ficha-clinica-boca-empty-title {
-  font-size: 19px;
-  font-weight: 500;
-  color: #767676;
+  font-size: 14px;
+  font-weight: 600;
+  color: #787878;
 }
 
 .ficha-clinica-boca-empty-copy {
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
-  line-height: 1.35;
-  max-width: 460px;
+  line-height: 1.4;
+  max-width: 500px;
 }
 
 .ficha-clinica-treatment-shell {
@@ -367,7 +436,7 @@
 }
 
 .ficha-clinica-tabs .ant-tabs-tab {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 @media (max-width: 1400px) {
@@ -397,5 +466,9 @@
   .ficha-clinica-tooth-shape {
     width: 12px;
     height: 38px;
+  }
+
+  .ficha-clinica-clinic-categories {
+    flex-wrap: wrap;
   }
 }
