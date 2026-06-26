@@ -709,3 +709,118 @@ Leitura objetiva:
 **Opcao A**: foram encontrados assets bons de dentes/arcada.
 
 Proxima etapa recomendada: `FC2C-3` substituir os dentes CSS por assets existentes do projeto, mantendo o fallback visual atual ate a validacao final.
+
+## 19. Auditoria da origem visual do odontograma no EasyDental Cloud
+
+### 19.1 Metodo de inspecao usado
+
+- acesso autenticado ao EasyDental Cloud Web;
+- abertura da `Ficha clínica` pelo botao do topo com `data-qtip="Ficha clínica"`;
+- leitura do DOM com `Elements`/seletores do navegador;
+- verificacao de `img`, `canvas`, `svg` e elementos com `background-image` via `getComputedStyle`;
+- leitura de recursos carregados por `performance.getEntriesByType('resource')`.
+
+### 19.2 Tela inspecionada
+
+- painel principal autenticado do EasyDental Cloud;
+- `Ficha clínica` aberta com painel de odontograma visivel;
+- paciente de teste selecionado apenas para liberar o shell odontologico;
+- nenhum dado sensivel de paciente foi registrado.
+
+### 19.3 Mecanismo visual encontrado
+
+O odontograma Cloud não apareceu como `canvas` nem como `svg` na inspeção feita.
+
+O mecanismo observado foi uma combinação de:
+
+- elementos `img` para ícones e marcadores;
+- `background-image` em `div` e `span` do shell ExtJS;
+- arquivos carregados individualmente, sem evidência de sprite único para o odontograma inteiro.
+
+### 19.4 Recursos visuais encontrados
+
+Recursos relevantes observados na Ficha clínica:
+
+- `images/dente_vazio.png`
+- `images/dente_vazio2.png`
+- `images/ico_menu_odontograma.png`
+- `images/ico_odontograma_toolbar_prc_pesquisa.png`
+- `images/ico_odontograma_toolbar_prc_favorito.png`
+- `images/int_cirur.bmp`
+- `images/int_implante.bmp`
+- `images/int_canal.bmp`
+- `images/int_boticao.bmp`
+- `images/int_fluor.bmp`
+- `images/int_apicecto.bmp`
+- `images/int_aprof_vestib.png`
+- `images/int_biop_labio.png`
+- `images/int_biop_ling.png`
+- `images/int_biop_mand.png`
+- `images/int_biop_maxila.png`
+- `images/int_exostose_max.png`
+- `images/int_torus_mand.png`
+- `images/int_torus_palat.png`
+- `images/int_consulta.bmp`
+- `images/int_enxerto.bmp`
+- `images/int_frenec.bmp`
+- `images/int_generico01.bmp`
+- `images/int_generico02.bmp`
+- `images/int_generico03.bmp`
+- `images/int_generico04.bmp`
+- `images/int_hemi.bmp`
+- `images/int_mordida.bmp`
+- `images/int_raspagem.bmp`
+- `images/int_retalho.bmp`
+- `images/int_rizec.bmp`
+- `images/int_ulecto.bmp`
+- `images/ico_ficha_clinica_tratamento_orcamento.svg`
+- `images/ico_ficha_clinica_tratamento_finaliza.svg`
+- `images/ico_ficha_clinica_tratamento_interrompe.svg`
+- `images/ico_ficha_clinica_tratamento_reabre.svg`
+- `images/ico_ficha_clinica_tratamento_exclui.svg`
+- `images/ico_ficha_clinica_desafixar_painel.svg`
+- `images/ico_ficha_clinica_painel_calendario.svg`
+- `images/ico_ficha_clinica_painel_search.svg`
+- `images/ico_ficha_clinica_painel_novo.svg`
+
+Leitura objetiva:
+
+- o Cloud usa imagens individuais e backgrounds CSS;
+- o odontograma observado usa `dente_vazio.png` e `dente_vazio2.png` como base visual do shell;
+- os marcadores `int_*` existem em formato compatível com a biblioteca local do Brana;
+- não houve evidência de canvas, SVG puro ou sprite único para todo o odontograma.
+
+### 19.5 Comparação com assets locais
+
+Comparando com os assets já auditados no Brana Cloud:
+
+- `assets/Bitmaps/Dentes2d/arc_superior_perm.bmp`
+- `assets/Bitmaps/Dentes2d/arc_inferior_perm.bmp`
+- `assets/Bitmaps/Dentes2d/arc_faces.bmp`
+- `assets/Bitmaps/Dentes2d/arc_dente11.bmp`
+- `assets/easy/arc_superior_perm.bmp`
+- `assets/easy/arc_inferior_perm.bmp`
+- `assets/easy/arc_faces.bmp`
+- `assets/easy/dentes/arc_dente11.bmp` até `arc_dente85.bmp`
+- `assets/easy/sim_face.bmp`
+- `assets/easy/sim_face_40.bmp`
+
+Conclusão da comparação:
+
+- o Cloud não mostrou nomes idênticos para arcada e dente isolado;
+- ainda assim, o padrão visual é compatível com a mesma família semântica;
+- os `int_*` do Cloud e os `int_*` locais parecem altamente compatíveis para paleta clínica;
+- os assets locais seguem sendo bons candidatos para a V1, mesmo sem correspondência literal de nome em todos os casos.
+
+### 19.6 Avaliação final e recomendação
+
+- parece usar imagens: sim;
+- parece usar CSS `background-image`: sim;
+- parece usar canvas: não apareceu evidência;
+- parece usar SVG: apareceu apenas em alguns ícones do shell, não como motor principal do odontograma;
+- parece usar sprite: não apareceu evidência clara;
+- os assets locais provavelmente são compatíveis visualmente: sim.
+
+**Opcao A**: EasyDental Cloud usa imagens/arquivos semelhantes aos assets locais.
+
+Próxima etapa recomendada: substituir o CSS do Brana por assets locais já existentes, começando pelos dentes/arcada e mantendo o fallback atual.
