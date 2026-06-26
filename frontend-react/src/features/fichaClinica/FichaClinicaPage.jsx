@@ -111,17 +111,54 @@ function buildCalendarDays(referenceDate = new Date()) {
 }
 
 const clinicCategories = [
-  { key: 'cirur', label: 'Cirur' },
-  { key: 'dent', label: 'Dent' },
-  { key: 'diag', label: 'Diag' },
-  { key: 'emer', label: 'Emer' },
-  { key: 'endo', label: 'Endo' },
-  { key: 'espec', label: 'Espec' },
-  { key: 'estet', label: 'Estét' },
-  { key: 'estom', label: 'Estom' },
-  { key: 'geral', label: 'Geral' },
-  { key: 'hof', label: 'HOF' },
+  { key: 'cirur', label: 'Cirur', icon: 'scalpel' },
+  { key: 'dent', label: 'Dent', icon: 'tooth' },
+  { key: 'diag', label: 'Diag', icon: 'search' },
+  { key: 'emer', label: 'Emer', icon: 'alert' },
+  { key: 'endo', label: 'Endo', icon: 'root' },
+  { key: 'espec', label: 'Espec', icon: 'star' },
+  { key: 'estet', label: 'Estét', icon: 'spark' },
+  { key: 'estom', label: 'Estom', icon: 'mouth' },
+  { key: 'geral', label: 'Geral', icon: 'grid' },
+  { key: 'hof', label: 'HOF', icon: 'face' },
 ];
+
+function buildToothDescriptors() {
+  return [
+    { number: 1, role: 'incisor' },
+    { number: 2, role: 'incisor' },
+    { number: 3, role: 'canine' },
+    { number: 4, role: 'premolar' },
+    { number: 5, role: 'premolar' },
+    { number: 6, role: 'molar' },
+    { number: 7, role: 'molar' },
+    { number: 8, role: 'molar' },
+    { number: 9, role: 'molar' },
+    { number: 10, role: 'molar' },
+    { number: 11, role: 'premolar' },
+    { number: 12, role: 'premolar' },
+    { number: 13, role: 'canine' },
+    { number: 14, role: 'incisor' },
+    { number: 15, role: 'incisor' },
+    { number: 16, role: 'incisor' },
+  ];
+}
+
+function ToothFace() {
+  return (
+    <span className="ficha-clinica-tooth-face" aria-hidden="true">
+      <span className="ficha-clinica-tooth-face-segment is-left-top" />
+      <span className="ficha-clinica-tooth-face-segment is-right-top" />
+      <span className="ficha-clinica-tooth-face-segment is-left-bottom" />
+      <span className="ficha-clinica-tooth-face-segment is-right-bottom" />
+      <span className="ficha-clinica-tooth-face-core" />
+    </span>
+  );
+}
+
+function ClinicCategoryIcon({ icon }) {
+  return <span className={`ficha-clinica-clinic-category-icon is-${icon}`} aria-hidden="true" />;
+}
 
 function PlaceholderBlock({ title, description }) {
   return (
@@ -138,37 +175,42 @@ function PlaceholderBlock({ title, description }) {
 }
 
 function ToothGrid() {
-  const upperTeeth = useMemo(() => Array.from({ length: 16 }, (_, index) => index + 1), []);
-  const lowerTeeth = useMemo(() => Array.from({ length: 16 }, (_, index) => index + 17), []);
+  const upperTeeth = useMemo(() => buildToothDescriptors(), []);
+  const lowerTeeth = useMemo(
+    () => buildToothDescriptors().map((tooth, index) => ({ ...tooth, number: index + 17 })),
+    [],
+  );
 
   return (
     <div className="ficha-clinica-tooth-grid">
       <div className="ficha-clinica-tooth-row">
         {upperTeeth.map((tooth) => (
-          <div key={`up-${tooth}`} className={`ficha-clinica-tooth is-upper is-${((tooth - 1) % 4) + 1}`}>
-            <span className="ficha-clinica-tooth-shape ficha-clinica-tooth-shape-top" />
-            <span className="ficha-clinica-tooth-label">{tooth}</span>
+          <div key={`up-${tooth.number}`} className={`ficha-clinica-tooth is-upper is-${((tooth.number - 1) % 4) + 1}`}>
+            <span className={`ficha-clinica-tooth-shape ficha-clinica-tooth-shape-top is-${tooth.role}`} />
+            <span className="ficha-clinica-tooth-root" />
+            <span className="ficha-clinica-tooth-label">{tooth.number}</span>
           </div>
         ))}
       </div>
 
       <div className="ficha-clinica-tooth-glyph-row">
-        {upperTeeth.map((tooth) => (
-          <span key={`mid-up-${tooth}`} className="ficha-clinica-tooth-glyph" aria-hidden="true" />
+        {upperTeeth.map((tooth, index) => (
+          <ToothFace key={`mid-up-${index}`} />
         ))}
       </div>
 
       <div className="ficha-clinica-tooth-glyph-row">
-        {lowerTeeth.map((tooth) => (
-          <span key={`mid-low-${tooth}`} className="ficha-clinica-tooth-glyph" aria-hidden="true" />
+        {lowerTeeth.map((tooth, index) => (
+          <ToothFace key={`mid-low-${index}`} />
         ))}
       </div>
 
       <div className="ficha-clinica-tooth-row ficha-clinica-tooth-row-bottom">
         {lowerTeeth.map((tooth) => (
-          <div key={`low-${tooth}`} className={`ficha-clinica-tooth is-lower is-${((tooth - 17) % 4) + 1}`}>
-            <span className="ficha-clinica-tooth-shape ficha-clinica-tooth-shape-bottom" />
-            <span className="ficha-clinica-tooth-label">{tooth}</span>
+          <div key={`low-${tooth.number}`} className={`ficha-clinica-tooth is-lower is-${((tooth.number - 17) % 4) + 1}`}>
+            <span className={`ficha-clinica-tooth-shape ficha-clinica-tooth-shape-bottom is-${tooth.role}`} />
+            <span className="ficha-clinica-tooth-root" />
+            <span className="ficha-clinica-tooth-label">{tooth.number}</span>
           </div>
         ))}
       </div>
@@ -351,7 +393,7 @@ export function FichaClinicaPage({ onBackHome }) {
                 type="button"
                 className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
               >
-                <span className="ficha-clinica-clinic-category-icon" aria-hidden="true" />
+                <ClinicCategoryIcon icon={category.icon} />
                 <span className="ficha-clinica-clinic-category-label">{category.label}</span>
               </button>
             ))}

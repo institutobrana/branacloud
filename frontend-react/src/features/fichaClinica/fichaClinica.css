@@ -79,13 +79,14 @@
   justify-items: center;
   gap: 2px;
   align-self: end;
+  position: relative;
 }
 
 .ficha-clinica-tooth-shape {
   width: 14px;
-  height: 48px;
+  height: 50px;
   background:
-    linear-gradient(180deg, rgba(255, 252, 244, 0.96), rgba(221, 200, 142, 0.96));
+    linear-gradient(180deg, rgba(255, 251, 241, 0.98), rgba(225, 207, 152, 0.98));
   border: 1px solid rgba(152, 122, 57, 0.26);
   border-radius: 48% 48% 36% 36%;
   box-shadow:
@@ -97,19 +98,57 @@
 .ficha-clinica-tooth-shape::before {
   content: '';
   position: absolute;
-  inset: 2px 3px auto;
+  inset: 3px 4px auto;
   height: 18px;
   border-radius: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.76), transparent);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), transparent);
   opacity: 0.9;
 }
 
+.ficha-clinica-tooth-shape.is-incisor {
+  width: 10px;
+  height: 44px;
+  clip-path: polygon(50% 0, 72% 6%, 84% 24%, 70% 100%, 30% 100%, 16% 24%, 28% 6%);
+}
+
+.ficha-clinica-tooth-shape.is-canine {
+  width: 12px;
+  height: 47px;
+  clip-path: polygon(50% 0, 72% 10%, 86% 28%, 73% 100%, 27% 100%, 14% 28%, 28% 10%);
+}
+
+.ficha-clinica-tooth-shape.is-premolar {
+  width: 16px;
+  height: 48px;
+  clip-path: polygon(50% 0, 80% 8%, 94% 32%, 80% 100%, 20% 100%, 6% 32%, 20% 8%);
+}
+
+.ficha-clinica-tooth-shape.is-molar {
+  width: 20px;
+  height: 49px;
+  clip-path: polygon(50% 0, 84% 7%, 98% 30%, 85% 100%, 15% 100%, 2% 30%, 16% 7%);
+}
+
 .ficha-clinica-tooth-shape-top {
-  border-radius: 50% 50% 38% 38%;
+  transform: translateY(0);
 }
 
 .ficha-clinica-tooth-shape-bottom {
   transform: scaleY(-1);
+}
+
+.ficha-clinica-tooth-root {
+  width: 6px;
+  height: 18px;
+  margin-top: -8px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg, rgba(225, 207, 152, 0.95), rgba(181, 154, 89, 0.85));
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.52);
+}
+
+.ficha-clinica-tooth.is-lower .ficha-clinica-tooth-root {
+  transform: scaleY(-1);
+  margin-top: -2px;
 }
 
 .ficha-clinica-tooth-label {
@@ -127,14 +166,75 @@
   min-height: 34px;
 }
 
-.ficha-clinica-tooth-glyph {
-  width: 26px;
-  height: 26px;
+.ficha-clinica-tooth-face {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  border: 1px solid rgba(187, 187, 187, 0.78);
+  border: 1px solid rgba(190, 190, 190, 0.82);
   background:
-    linear-gradient(180deg, #fbfbfb, #f1f1f1);
-  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.84);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.98) 0 15%, rgba(239, 239, 239, 0.92) 15% 36%, rgba(247, 247, 247, 0.96) 36% 58%, rgba(228, 228, 228, 0.96) 58% 100%);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.88);
+  position: relative;
+}
+
+.ficha-clinica-tooth-face::before,
+.ficha-clinica-tooth-face::after {
+  content: '';
+  position: absolute;
+  background: rgba(198, 198, 198, 0.9);
+}
+
+.ficha-clinica-tooth-face::before {
+  width: 1px;
+  inset: 3px 50% 3px auto;
+  transform: translateX(-0.5px);
+}
+
+.ficha-clinica-tooth-face::after {
+  height: 1px;
+  inset: 50% 3px auto 3px;
+  transform: translateY(-0.5px);
+}
+
+.ficha-clinica-tooth-face-core {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(245, 245, 245, 0.94));
+  box-shadow: inset 0 0 0 1px rgba(216, 216, 216, 0.9);
+}
+
+.ficha-clinica-tooth-face-segment {
+  position: absolute;
+  background: rgba(215, 215, 215, 0.92);
+}
+
+.ficha-clinica-tooth-face-segment.is-left-top {
+  inset: 4px auto auto 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 100% 0 0 0;
+}
+
+.ficha-clinica-tooth-face-segment.is-right-top {
+  inset: 4px 4px auto auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 0 100% 0 0;
+}
+
+.ficha-clinica-tooth-face-segment.is-left-bottom {
+  inset: auto auto 4px 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 0 0 0 100%;
+}
+
+.ficha-clinica-tooth-face-segment.is-right-bottom {
+  inset: auto 4px 4px auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 0 0 100% 0;
 }
 
 .ficha-clinica-clinic-categories {
@@ -177,10 +277,117 @@
 .ficha-clinica-clinic-category-icon {
   width: 14px;
   height: 14px;
+  position: relative;
   border-radius: 3px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ficha-clinica-clinic-category-icon::before,
+.ficha-clinica-clinic-category-icon::after {
+  content: '';
+  position: absolute;
+}
+
+.ficha-clinica-clinic-category-icon.is-tooth {
+  border: 1px solid rgba(22, 170, 161, 0.6);
+  border-radius: 45% 45% 34% 34%;
+  background: linear-gradient(180deg, rgba(255, 252, 244, 0.98), rgba(224, 206, 154, 0.92));
+}
+
+.ficha-clinica-clinic-category-icon.is-scalpel::before {
+  inset: 2px 2px 2px 2px;
+  border-radius: 0 100% 100% 0;
+  background: linear-gradient(180deg, rgba(22, 170, 161, 0.82), rgba(22, 170, 161, 1));
+  transform: skewX(-20deg);
+}
+
+.ficha-clinica-clinic-category-icon.is-search::before {
+  inset: 1px 1px 1px 1px;
+  border: 1px solid rgba(22, 170, 161, 0.88);
+  border-radius: 50%;
+}
+
+.ficha-clinica-clinic-category-icon.is-search::after {
+  width: 6px;
+  height: 1px;
+  right: -1px;
+  bottom: 0;
+  background: rgba(22, 170, 161, 0.92);
+  transform: rotate(45deg);
+  transform-origin: right center;
+}
+
+.ficha-clinica-clinic-category-icon.is-alert::before {
+  inset: 1px 2px 1px 2px;
+  clip-path: polygon(50% 0, 100% 88%, 0 88%);
+  background: rgba(22, 170, 161, 0.88);
+}
+
+.ficha-clinica-clinic-category-icon.is-alert::after {
+  width: 1px;
+  height: 6px;
+  left: 50%;
+  top: 4px;
+  transform: translateX(-0.5px);
+  background: #ffffff;
+}
+
+.ficha-clinica-clinic-category-icon.is-root::before {
+  inset: 1px 3px 3px;
+  border: 1px solid rgba(22, 170, 161, 0.82);
+  border-radius: 55% 55% 35% 35%;
+}
+
+.ficha-clinica-clinic-category-icon.is-root::after {
+  inset: 6px 6px 1px;
+  border-radius: 0 0 50% 50%;
+  background: rgba(22, 170, 161, 0.72);
+}
+
+.ficha-clinica-clinic-category-icon.is-star::before,
+.ficha-clinica-clinic-category-icon.is-spark::before {
+  inset: 1px;
+  background: rgba(22, 170, 161, 0.88);
+  clip-path: polygon(50% 0, 62% 34%, 98% 34%, 69% 55%, 80% 92%, 50% 70%, 20% 92%, 31% 55%, 2% 34%, 38% 34%);
+}
+
+.ficha-clinica-clinic-category-icon.is-mouth::before {
+  inset: 3px 2px 3px;
+  border-radius: 40% 40% 50% 50%;
+  border: 1px solid rgba(22, 170, 161, 0.8);
+}
+
+.ficha-clinica-clinic-category-icon.is-mouth::after {
+  inset: 7px 3px auto;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(22, 170, 161, 0.8);
+}
+
+.ficha-clinica-clinic-category-icon.is-grid::before {
+  inset: 2px;
+  border-radius: 2px;
   background:
-    linear-gradient(180deg, rgba(22, 170, 161, 0.7), rgba(22, 170, 161, 0.95));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+    linear-gradient(90deg, rgba(22, 170, 161, 0.85) 0 1px, transparent 1px 50%, rgba(22, 170, 161, 0.85) 50% 51%, transparent 51% 100%),
+    linear-gradient(180deg, rgba(22, 170, 161, 0.85) 0 1px, transparent 1px 50%, rgba(22, 170, 161, 0.85) 50% 51%, transparent 51% 100%);
+}
+
+.ficha-clinica-clinic-category-icon.is-face {
+  border: 1px solid rgba(22, 170, 161, 0.72);
+  border-radius: 50%;
+}
+
+.ficha-clinica-clinic-category-icon.is-face::before {
+  inset: 3px 4px 5px;
+  border-radius: 50%;
+  background: rgba(22, 170, 161, 0.16);
+}
+
+.ficha-clinica-clinic-category-icon.is-face::after {
+  inset: 9px 3px auto;
+  height: 1px;
+  background: rgba(22, 170, 161, 0.82);
 }
 
 .ficha-clinica-clinic-category-label {
@@ -192,33 +399,48 @@
 .ficha-clinica-odontogram-footer {
   border-top: 1px solid rgba(15, 23, 42, 0.08);
   padding-top: 8px;
+  background: #ffffff;
 }
 
 .ficha-clinica-odontogram-footer .ant-tabs-nav {
   margin-bottom: 8px;
 }
 
-.ficha-clinica-boca-empty {
-  min-height: 244px;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 2px;
-  color: #8a8f96;
+.ficha-clinica-odontogram-footer .ant-tabs {
   background: #ffffff;
 }
 
-.ficha-clinica-boca-empty-title {
+.ficha-clinica-odontogram-footer .ant-tabs-tab {
+  padding: 10px 14px 9px;
   font-size: 14px;
-  font-weight: 600;
+  border-radius: 0;
+}
+
+.ficha-clinica-odontogram-footer .ant-tabs-tab-btn {
   color: #787878;
+}
+
+.ficha-clinica-odontogram-footer .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #111111;
+  font-weight: 700;
+}
+
+.ficha-clinica-boca-empty {
+  min-height: 250px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0;
+  color: #8a8f96;
+  background: #ffffff;
 }
 
 .ficha-clinica-boca-empty-copy {
   font-size: 15px;
   text-align: center;
   line-height: 1.4;
-  max-width: 500px;
+  max-width: 520px;
+  color: #7b7b7b !important;
 }
 
 .ficha-clinica-treatment-shell {
@@ -432,7 +654,7 @@
 }
 
 .ficha-clinica-tabs .ant-tabs-nav {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 .ficha-clinica-tabs .ant-tabs-tab {
