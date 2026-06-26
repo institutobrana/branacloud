@@ -592,3 +592,120 @@ Isso confirma a Ficha clinica como o shell raiz do prontuario clinico odontologi
 - Nao houve implementacao de logica clinica real, clique funcional, selecao de face, persistencia ou backend.
 - O que ficou placeholder: dentes, faces, categorias, toolbar superior do odontograma e a area de vazio informativa.
 - Pendencias para a proxima fase: refino do painel Tratamento, seguido do ajuste fino do painel lateral direito.
+
+## 18. Auditoria de assets odontologicos para odontograma
+
+### 18.1 Diretórios inspecionados
+
+Foram inspecionados os caminhos:
+
+- `frontend-react/src/assets/`
+- `frontend/assets/`
+- `frontend/img/`
+- `frontend/images/`
+- `frontend/public/`
+- `public/`
+- `assets/`
+- `backend/static/`
+
+No resultado bruto desta varredura, apareceram `1414` arquivos de imagem nos formatos `png`, `jpg`, `jpeg`, `svg`, `webp`, `gif`, `ico` e `bmp`, concentrados quase integralmente em `assets/`. Dentro do filtro por nomes odontologicos, `493` arquivos bateram com termos como `dente`, `arcada`, `odont`, `face`, `implante`, `canal` e `procedimento`.
+
+### 18.2 Quantidade e distribuicao
+
+- `frontend-react/src/assets/`: `2` imagens, ambas de marca (`brana.png` e `logo_brana.png`), sem valor direto para o odontograma.
+- `assets/`: `1412` imagens, incluindo praticamente todo o acervo visual util para odontologia.
+
+### 18.3 Assets candidatos para dentes e arcada
+
+Os melhores candidatos encontrados foram:
+
+- `assets/Bitmaps/Dentes2d/arc_superior_perm.bmp` - `512x96` - `192,1 KB`
+- `assets/Bitmaps/Dentes2d/arc_inferior_perm.bmp` - `512x96` - `192,1 KB`
+- `assets/Bitmaps/Dentes2d/arc_dente11.bmp` - `32x70` - `3,2 KB`
+- `assets/Bitmaps/Dentes2d/arc_faces.bmp` - `32x25` - `1,8 KB`
+- `assets/Bitmaps/Dentes3d/arc_dente11.bmp` - `32x70` - `4,4 KB`
+- `assets/easy/arc_superior_perm.bmp` - `512x96` - `192,1 KB`
+- `assets/easy/arc_inferior_perm.bmp` - `512x96` - `192,1 KB`
+- `assets/easy/dentes/arc_dente11.bmp` a `assets/easy/dentes/arc_dente85.bmp`
+- `assets/easy/arc_faces.bmp` - `32x25` - `1,8 KB`
+
+Leitura objetiva:
+
+- ha arcadas completas prontas para guiar proporcao e ritmo horizontal;
+- ha familias completas de dentes isolados em `32x70`, com boa leitura anatomica por quadrante;
+- `arc_faces.bmp` serve melhor como referencia auxiliar do que como elemento principal.
+
+### 18.4 Assets candidatos para faces odontologicas
+
+Os candidatos mais proximos de faces e marcadores de face foram:
+
+- `assets/easy/sim_face.bmp` - `15x15` - `0,1 KB`
+- `assets/easy/sim_face_40.bmp` - `12x12` - `0,1 KB`
+- `assets/Bitmaps/arc_faces.bmp` - `32x25` - `1,8 KB`
+- `assets/easy/arc_faces.bmp` - `32x25` - `1,8 KB`
+
+Leitura objetiva:
+
+- os `sim_face*` sao muito pequenos, úteis como marcador ou legenda;
+- `arc_faces.bmp` parece ser o melhor candidato de face auxiliar, mas ainda nao substitui o desenho principal do odontograma.
+
+### 18.5 Assets candidatos para paleta clinica e categorias
+
+Foram encontrados os seguintes candidatos:
+
+- `assets/easy/esp_Cirurgia.bmp` - `40x25` - `3 KB`
+- `assets/easy/esp_Endodontia.bmp` - `40x25` - `3 KB`
+- `assets/easy/esp_Implantodontia.bmp` - `40x25` - `3 KB`
+- `assets/easy/esp_Odontopediatria.bmp` - `40x25` - `3 KB`
+- `assets/easy/esp_Ortodontia.bmp` - `40x25` - `3 KB`
+- `assets/easy/esp_Periodontia.bmp` - `100x25` - `7,4 KB`
+- `assets/ciruriga.png` - `124x124` - `20,3 KB`
+- `assets/dentistica.png` - `124x124` - `21,2 KB`
+- `assets/diagnostico.png` - `124x124` - `21,2 KB`
+- `assets/endodontia.png` - `124x124` - `19,7 KB`
+- `assets/estetica.png` - `124x124` - `19,9 KB`
+- `assets/gerais.png` - `124x124` - `20,8 KB`
+- `assets/procedimentos.png` - `124x124` - `17,4 KB`
+
+Leitura objetiva:
+
+- os BMPs `esp_*` parecem adequados como paleta clinica ou categoria visual;
+- os PNGs do raiz `assets/` parecem utilitarios de interface e podem apoiar categorias/atalhos, mas nao parecem ser o desenho principal do odontograma;
+- `assets/procedimentos.png` ja esta usado pelo frontend legado no botao de odontograma.
+
+### 18.6 Outros assets odontologicos relevantes
+
+- `assets/easy/int_canal.bmp` - `24x24` - `1,7 KB`
+- `assets/easy/int_cirur.bmp` - `24x24` - `1,7 KB`
+- `assets/easy/int_implante.bmp` - `24x24` - `1,7 KB`
+- `assets/easy/int_faceta.bmp` - `24x24` - `1,7 KB`
+- `assets/Bitmaps/arc_facet_11.bmp` a `assets/Bitmaps/arc_facet_48.bmp`
+- `assets/Bitmaps/arc_implante_i.bmp`
+- `assets/Bitmaps/arc_implante_s.bmp`
+- `assets/Bitmaps/ger_cirurgia.bmp` - `24x24` - `1,7 KB`
+
+Leitura objetiva:
+
+- esses ativos reforcam a existencia de uma biblioteca odontologica legada consistente;
+- podem ajudar em refinamento de procedimentos, estados e categorias futuras;
+- nao sao essenciais para substituir os dentes CSS imediatos.
+
+### 18.7 Verificacao de origem provavel
+
+- `assets/easy/arc_faces.bmp`, `assets/easy/arc_superior_perm.bmp`, `assets/easy/arc_inferior_perm.bmp`, `assets/easy/dentes/arc_dente11.bmp`, `assets/easy/sim_face.bmp`, `assets/easy/int_canal.bmp` e `assets/easy/int_implante.bmp` ja aparecem referenciados em documentos do proprio projeto, indicando reaproveitamento interno do acervo local.
+- `assets/procedimentos.png` e usado no frontend legado em `frontend/app.js` como icone do botao `Odontograma`.
+- `assets/Bitmaps/Dentes2d/*` e `assets/Bitmaps/Dentes3d/*` parecem acervo legado local de alta aderencia ao odontograma, mas nao foram encontrados referencias diretas no codigo durante esta auditoria.
+- `frontend-react/src/assets/brana.png` e `frontend-react/src/assets/logo_brana.png` sao apenas brand assets e nao entram na camada odontologica.
+
+### 18.8 Avaliacao final
+
+- existe asset adequado para dentes: sim;
+- existe asset adequado para faces: sim, mas como marcador auxiliar;
+- existe asset adequado para paleta clinica: sim;
+- existe material suficiente para substituir o CSS atual do odontograma por assets do proprio projeto: sim.
+
+### 18.9 Recomendacao para a proxima etapa
+
+**Opcao A**: foram encontrados assets bons de dentes/arcada.
+
+Proxima etapa recomendada: `FC2C-3` substituir os dentes CSS por assets existentes do projeto, mantendo o fallback visual atual ate a validacao final.
