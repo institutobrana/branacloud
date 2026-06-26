@@ -54,7 +54,7 @@
 .ficha-clinica-odontogram-frame {
   flex: 1;
   min-height: 500px;
-  padding: 12px 12px 18px;
+  padding: 10px 10px 18px;
   border-radius: 0;
   display: flex;
   position: relative;
@@ -69,8 +69,8 @@
   position: absolute;
   left: -1px;
   bottom: -16px;
-  width: 18px;
-  height: 16px;
+  width: 20px;
+  height: 18px;
   background: #ffffff;
   border: 1px solid #d8dde2;
   border-top: 0;
@@ -830,7 +830,7 @@
 .ficha-clinica-odontogram-canvas {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   min-width: 0;
 }
@@ -838,15 +838,16 @@
 .ficha-clinica-odontogram-teeth-row {
   display: grid;
   grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 2px;
+  gap: 3px;
   align-items: end;
   justify-items: center;
+  padding-inline: 2px;
 }
 
 .ficha-clinica-odontogram-tooth {
   display: block;
-  width: clamp(24px, 4.25vw, 52px);
-  max-height: 74px;
+  width: clamp(28px, 3.9vw, 44px);
+  max-height: 70px;
   object-fit: contain;
 }
 
@@ -861,10 +862,10 @@
 .ficha-clinica-odontogram-number-row {
   display: grid;
   grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 2px;
-  padding: 0 4px;
-  color: #8d9399;
-  font-size: 10px;
+  gap: 3px;
+  padding: 0 2px;
+  color: #98a0a6;
+  font-size: 9px;
   line-height: 1;
   letter-spacing: 0.02em;
   text-align: center;
@@ -877,25 +878,18 @@
 .ficha-clinica-odontogram-face-row {
   display: grid;
   grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 2px;
+  gap: 3px;
   align-items: center;
   justify-items: center;
-  min-height: 20px;
+  min-height: 26px;
 }
 
 .ficha-clinica-odontogram-face {
-  width: clamp(10px, 1.35vw, 14px);
-  height: clamp(10px, 1.35vw, 14px);
+  width: clamp(16px, 1.9vw, 22px);
+  height: clamp(16px, 1.9vw, 22px);
   object-fit: contain;
-  opacity: 0.8;
+  opacity: 0.95;
   filter: none;
-}
-
-.ficha-clinica-clinic-category-icon-image {
-  width: 15px;
-  height: 15px;
-  object-fit: contain;
-  display: block;
 }
 
 @media (max-width: 1400px) {
@@ -920,7 +914,7 @@
   }
 
   .ficha-clinica-odontogram-tooth {
-    width: clamp(18px, 5vw, 36px);
+    width: clamp(22px, 4.8vw, 36px);
     max-height: 58px;
   }
 
@@ -930,12 +924,12 @@
   }
 
   .ficha-clinica-odontogram-face-row {
-    gap: 1px;
-    min-height: 18px;
+    gap: 2px;
+    min-height: 20px;
   }
 
   .ficha-clinica-odontogram-face {
-    width: clamp(9px, 1.6vw, 12px);
-    height: clamp(9px, 1.6vw, 12px);
+    width: clamp(13px, 2vw, 18px);
+    height: clamp(13px, 2vw, 18px);
   }
 }
