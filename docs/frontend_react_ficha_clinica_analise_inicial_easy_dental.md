@@ -934,3 +934,44 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - Estrategia para arcada: preferir dentes isolados bem alinhados a uma arcada unica muito larga, porque a leitura do EasyDental parece mais modular e menos `bitmap inteiro`.
 - Sobre os BMPs atuais: eles sao uteis como base, mas a composicao final fica melhor quando o desenho e limpo, leve e com transparencia bem controlada.
 - Proxima evolucao sugerida: ajustar primeiro proporcao e espaco, depois refinar os assets se ainda houver distancia visual relevante.
+
+## 25. Fase FC2C-6 - Aplicacao das proporcoes medidas do EasyDental Cloud
+
+### 25.1 Referencia usada
+
+- Quadro externo: aproximadamente `726 x 316 px`.
+- Area interna: aproximadamente `706 x 287 px`.
+- Passo horizontal medio entre dentes: aproximadamente `45,1 px`.
+- Faces: aproximadamente `34 x 29 px`.
+- Dentes superiores: aproximadamente `25-31 px` de largura e `58-86 px` de altura.
+- Dentes inferiores: aproximadamente `20-35 px` de largura e `55-80 px` de altura.
+- Paleta clinica: aproximadamente `702 x 78 px`.
+- Abas Boca/Dente: aproximadamente `214 x 32 px`.
+- Distancia odontograma -> paleta: aproximadamente `33 px`.
+
+### 25.2 Ajustes aplicados no Brana
+
+- O quadro do odontograma foi compactado visualmente e perdeu a sensacao de card alto demais.
+- A coluna esquerda ficou mais alinhada ao topo e passou a ocupar menos altura inutil.
+- O odontograma interno recebeu linhas mais proximas da referencia e espaco vertical reduzido.
+- Os dentes foram aumentados um pouco e passaram a ocupar shells com recorte mais limpo.
+- As faces foram ampliadas e ganharam leitura mais proxima da referencia EasyDental.
+- A numeracao ficou menor, mais leve e mais colada as faces.
+- A paleta clinica foi apertada para ficar mais proxima do bloco odontologico.
+- As abas `Boca` e `Dente` ficaram mais planas, compactas e com menor margem.
+- A area inferior de mensagem ficou menos alta e mais limpa.
+
+### 25.3 Limitacoes de asset
+
+- Os BMPs de dente continuam sendo assets legados RGB sem alpha.
+- Se algum fundo cinza persistir, a causa mais provavel e a propria arte do arquivo, nao a geometria do shell.
+- Foi aplicado recorte/encaixe visual no CSS para reduzir o impacto do quadrado aparente.
+- Nao houve tentativa de criar novo asset, nem de baixar imagem do EasyDental Cloud.
+
+### 25.4 O que continua placeholder
+
+- O odontograma continua sem clique funcional em dente.
+- A selecao de faces continua sem efeito clinico real.
+- Nao existe persistencia operacional.
+- Nao existe backend novo, banco novo ou fluxo de tratamento novo.
+- O painel de Tratamento central nao recebeu comportamento funcional adicional.

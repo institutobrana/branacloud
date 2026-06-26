@@ -5933,3 +5933,6 @@ Observacoes:
 - Base de proporcao consolidada: quadro compacto, dentes em duas arcadas, duas linhas de faces, paleta logo abaixo e mensagem inferior ampla.
 - O Brana Cloud atual ainda precisa reproduzir essa densidade visual no shell da `Ficha clinica`.
 - Proxima etapa recomendada: ajuste visual do shell odontologico sem frontend, backend, banco ou migration nova.
+- FC2C-6 aplicou as proporcoes medidas do EasyDental Cloud no odontograma do `frontend-react`.
+- O shell visual ficou mais compacto, com densidade maior e sem backend/banco/migration.
+- Proxima etapa recomendada: revisao visual fina do bloco odontologico e avaliacao do eventual fundo cinza dos BMPs.

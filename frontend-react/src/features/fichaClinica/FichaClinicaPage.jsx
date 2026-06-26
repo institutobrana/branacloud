@@ -260,14 +260,15 @@ function OdontogramTeethRow({ numbers, className }) {
   return (
     <div className={`ficha-clinica-odontogram-teeth-row ${className || ''}`.trim()} aria-hidden="true">
       {numbers.map((number) => (
-        <img
-          key={number}
-          className="ficha-clinica-odontogram-tooth"
-          src={`${odontogramTeethAssetBase}/arc_dente${number}.bmp`}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
+        <span key={number} className="ficha-clinica-odontogram-tooth-shell">
+          <img
+            className="ficha-clinica-odontogram-tooth"
+            src={`${odontogramTeethAssetBase}/arc_dente${number}.bmp`}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
       ))}
     </div>
   );
