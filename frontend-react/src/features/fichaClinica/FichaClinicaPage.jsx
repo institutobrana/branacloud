@@ -218,6 +218,96 @@ function ToothGrid() {
   );
 }
 
+const odontogramAssetBase = '/assets/fichaClinica/odontograma';
+const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes`;
+const odontogramFaceImage = `${odontogramAssetBase}/arc_faces.bmp`;
+const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2', '3', '4', '5', '6', '7', '8'];
+const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+
+const clinicCategoryImageByKey = {
+  cirur: 'ciruriga.png',
+  dent: 'dentistica.png',
+  diag: 'diagnostico.png',
+  emer: 'procedimentos.png',
+  endo: 'endodontia.png',
+  espec: 'procedimentos.png',
+  estet: 'estetica.png',
+  estom: 'procedimentos.png',
+  geral: 'gerais.png',
+  hof: 'procedimentos.png',
+};
+
+function ClinicCategoryIconImage({ icon }) {
+  const asset = clinicCategoryImageByKey[icon];
+  if (asset) {
+    return (
+      <img
+        className="ficha-clinica-clinic-category-icon-image"
+        src={`${odontogramAssetBase}/${asset}`}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+
+  return <ClinicCategoryIcon icon={icon} />;
+}
+
+function OdontogramTeethRow({ numbers, className }) {
+  return (
+    <div className={`ficha-clinica-odontogram-teeth-row ${className || ''}`.trim()} aria-hidden="true">
+      {numbers.map((number) => (
+        <img
+          key={number}
+          className="ficha-clinica-odontogram-tooth"
+          src={`${odontogramTeethAssetBase}/arc_dente${number}.bmp`}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      ))}
+    </div>
+  );
+}
+
+function OdontogramFaceRow() {
+  return (
+    <div className="ficha-clinica-odontogram-face-row" aria-hidden="true">
+      {Array.from({ length: 16 }).map((_, index) => (
+        <img
+          key={`face-${index}`}
+          className="ficha-clinica-odontogram-face"
+          src={odontogramFaceImage}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      ))}
+    </div>
+  );
+}
+
+function ToothGridImage() {
+  return (
+    <div className="ficha-clinica-odontogram-canvas">
+      <OdontogramTeethRow numbers={odontogramUpperTeeth} className="is-upper" />
+      <OdontogramFaceRow />
+      <div className="ficha-clinica-odontogram-number-row" aria-hidden="true">
+        {odontogramNumberLabels.map((label, index) => (
+          <span key={`${label}-${index}`} className="ficha-clinica-odontogram-number">
+            {label}
+          </span>
+        ))}
+      </div>
+      <OdontogramFaceRow />
+      <OdontogramTeethRow numbers={odontogramLowerTeeth} className="is-lower" />
+    </div>
+  );
+}
+
 export function FichaClinicaPage({ onBackHome }) {
   const [selectedPatient, setSelectedPatient] = useState(() => readStoredPatient());
   const [activeTab, setActiveTab] = useState('tratamento');
@@ -380,7 +470,7 @@ export function FichaClinicaPage({ onBackHome }) {
           </div>
 
           <div className="ficha-clinica-odontogram-frame">
-            <ToothGrid />
+            <ToothGridImage />
           </div>
 
           <div className="ficha-clinica-clinic-categories" aria-label="Categorias clinicas">
@@ -393,7 +483,7 @@ export function FichaClinicaPage({ onBackHome }) {
                 type="button"
                 className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
               >
-                <ClinicCategoryIcon icon={category.icon} />
+                <ClinicCategoryIconImage icon={category.key} />
                 <span className="ficha-clinica-clinic-category-label">{category.label}</span>
               </button>
             ))}

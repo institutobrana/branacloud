@@ -5922,3 +5922,7 @@ Observacoes:
 - O backend segue preservado.
 - O frontend legado segue preservado.
 - A próxima etapa sugerida é validar os combos em `/app`.
+
+- A frente FC2C-3 do `frontend-react` substituiu o odontograma CSS por composicao com assets locais do repositorio em `frontend-react/public/assets/fichaClinica/odontograma/`, preservando o shell da Ficha clinica e sem tocar em backend, banco ou regras operacionais.
+- O refino fino posterior da FC2C-3 trocou a composicao para dentes isolados com faces repetidas e numeracao central, aproximando melhor o quadro do EasyDental Cloud sem introduzir logica clinica real.
+- Proxima etapa recomendada: apenas comparacao visual fina e ajuste de proporcao, sem backend, banco, migration ou fluxo funcional novo.

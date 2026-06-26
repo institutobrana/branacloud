@@ -53,10 +53,29 @@
 
 .ficha-clinica-odontogram-frame {
   flex: 1;
-  min-height: 520px;
-  padding: 10px 10px 0;
+  min-height: 500px;
+  padding: 12px 12px 18px;
   border-radius: 0;
   display: flex;
+  position: relative;
+  overflow: visible;
+  background: #ffffff;
+  border: 1px solid #d8dde2;
+  box-shadow: none;
+}
+
+.ficha-clinica-odontogram-frame::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  bottom: -16px;
+  width: 18px;
+  height: 16px;
+  background: #ffffff;
+  border: 1px solid #d8dde2;
+  border-top: 0;
+  border-right: 0;
+  border-radius: 0 0 0 8px;
 }
 
 .ficha-clinica-tooth-grid {
@@ -692,5 +711,231 @@
 
   .ficha-clinica-clinic-categories {
     flex-wrap: wrap;
+  }
+}
+
+.ficha-clinica-tooth-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.ficha-clinica-odontogram-arch {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 7px 10px 8px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 252, 251, 0.98));
+}
+
+.ficha-clinica-odontogram-arch.is-lower {
+  padding-top: 6px;
+}
+
+.ficha-clinica-odontogram-arch-image {
+  display: block;
+  width: 100%;
+  height: 96px;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+.ficha-clinica-odontogram-label-row {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 2px;
+  padding: 0 4px;
+  color: #8c9198;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.ficha-clinica-odontogram-label-row.is-lower {
+  margin-bottom: 1px;
+}
+
+.ficha-clinica-odontogram-label {
+  line-height: 1;
+  min-width: 0;
+}
+
+.ficha-clinica-odontogram-face-row {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 2px;
+  align-items: center;
+  justify-items: center;
+  min-height: 22px;
+  padding: 0 6px;
+}
+
+.ficha-clinica-odontogram-face {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  opacity: 0.72;
+  filter: grayscale(1) brightness(1.06);
+}
+
+.ficha-clinica-odontogram-face.is-legend {
+  width: 14px;
+  height: 14px;
+  opacity: 0.58;
+}
+
+.ficha-clinica-clinic-category-icon-image {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 1400px) {
+  .ficha-clinica-odontogram-arch-image {
+    height: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ficha-clinica-odontogram-arch {
+    padding-inline: 8px;
+  }
+
+  .ficha-clinica-odontogram-arch-image {
+    height: 72px;
+  }
+
+  .ficha-clinica-odontogram-label-row {
+    font-size: 9px;
+    gap: 1px;
+  }
+
+  .ficha-clinica-odontogram-face-row {
+    gap: 1px;
+    min-height: 18px;
+  }
+
+.ficha-clinica-odontogram-face,
+.ficha-clinica-odontogram-face.is-legend {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.ficha-clinica-odontogram-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.ficha-clinica-odontogram-teeth-row {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 2px;
+  align-items: end;
+  justify-items: center;
+}
+
+.ficha-clinica-odontogram-tooth {
+  display: block;
+  width: clamp(24px, 4.25vw, 52px);
+  max-height: 74px;
+  object-fit: contain;
+}
+
+.ficha-clinica-odontogram-teeth-row.is-upper .ficha-clinica-odontogram-tooth {
+  transform: translateY(1px);
+}
+
+.ficha-clinica-odontogram-teeth-row.is-lower .ficha-clinica-odontogram-tooth {
+  transform: translateY(-1px);
+}
+
+.ficha-clinica-odontogram-number-row {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 2px;
+  padding: 0 4px;
+  color: #8d9399;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.ficha-clinica-odontogram-number {
+  min-width: 0;
+}
+
+.ficha-clinica-odontogram-face-row {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 2px;
+  align-items: center;
+  justify-items: center;
+  min-height: 20px;
+}
+
+.ficha-clinica-odontogram-face {
+  width: clamp(10px, 1.35vw, 14px);
+  height: clamp(10px, 1.35vw, 14px);
+  object-fit: contain;
+  opacity: 0.8;
+  filter: none;
+}
+
+.ficha-clinica-clinic-category-icon-image {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 1400px) {
+  .ficha-clinica-odontogram-tooth {
+    max-height: 68px;
+  }
+
+  .ficha-clinica-odontogram-frame {
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ficha-clinica-odontogram-frame {
+    min-height: 420px;
+    padding-inline: 8px;
+    padding-bottom: 16px;
+  }
+
+  .ficha-clinica-odontogram-canvas {
+    gap: 6px;
+  }
+
+  .ficha-clinica-odontogram-tooth {
+    width: clamp(18px, 5vw, 36px);
+    max-height: 58px;
+  }
+
+  .ficha-clinica-odontogram-number-row {
+    font-size: 9px;
+    gap: 1px;
+  }
+
+  .ficha-clinica-odontogram-face-row {
+    gap: 1px;
+    min-height: 18px;
+  }
+
+  .ficha-clinica-odontogram-face {
+    width: clamp(9px, 1.6vw, 12px);
+    height: clamp(9px, 1.6vw, 12px);
   }
 }

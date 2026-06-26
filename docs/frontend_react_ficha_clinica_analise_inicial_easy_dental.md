@@ -824,3 +824,19 @@ Conclusão da comparação:
 **Opcao A**: EasyDental Cloud usa imagens/arquivos semelhantes aos assets locais.
 
 Próxima etapa recomendada: substituir o CSS do Brana por assets locais já existentes, começando pelos dentes/arcada e mantendo o fallback atual.
+
+## 20. FC2C-3 - Odontograma com assets locais no frontend-react
+
+- Escopo executado: somente frontend visual da `Ficha clinica`, sem backend, banco, migration ou alteracao operacional.
+- Implementacao aplicada: o odontograma do `frontend-react` passou a compor arcadas com `arc_superior_perm.bmp` e `arc_inferior_perm.bmp`, com fileiras auxiliares usando `sim_face_40.bmp` e `arc_faces.bmp`, todos copiados para `frontend-react/public/assets/fichaClinica/odontograma/`.
+- As categorias clinicas do shell passaram a consumir imagens locais quando disponiveis, preservando o fallback visual ja existente no codigo.
+- O comportamento clinico continua placeholder; nao houve alteracao de persistencia, selecao de paciente ou regras de tratamento.
+- Validacao prevista: build do `frontend-react` e comparacao visual fina com o print de referencia da Ficha clinica.
+
+## 21. FC2C-3 - Refino fino do odontograma apos comparacao visual
+
+- A estrategia final passou a usar dentes isolados em 32 posicoes, em vez de arcadas completas, porque a composicao ficou mais ampla e mais proxima do EasyDental Cloud.
+- As faces ficaram em duas linhas repetidas com `arc_faces.bmp`, mantendo apenas a presenca visual de separadores odontologicos sem criar miniaturas centrais estranhas.
+- A numeracao foi tratada como placeholder visual em hemaxarcos, usando a sequencia `8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8`.
+- O odontograma continua sem logica clinica real, sem selecao funcional de dentes ou faces e sem persistencia.
+- O quadro foi reforcado como area branca plana, com borda fina e pequena aba inferior esquerda integrada ao contorno.
