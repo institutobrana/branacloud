@@ -501,3 +501,21 @@ A Ficha clinica abriu com paciente em uso e mostrou claramente:
 - subfluxo `Novo tratamento`.
 
 Isso confirma a Ficha clinica como o shell raiz do prontuario clinico odontologico, com Tratamento e Novo tratamento como fluxos internos.
+
+## 14. Implementacao FC2 no frontend-react
+
+- A entrada visual `Ficha clinica` foi conectada na barra superior do `frontend-react` e roteada em `frontend-react/src/app/App.jsx` para `/app/ficha-clinica`.
+- O shell inicial da Ficha clinica foi criado em `frontend-react/src/features/fichaClinica/FichaClinicaPage.jsx`, com card hero, estado de paciente em uso, pesquisa visual de pacientes e abas `Tratamento`, `Financeiro`, `Timeline`, `Documentos` e `Anotacoes`.
+- A tela respeita o paciente em uso por estado local de sessao, sem alterar backend, banco ou o frontend legado.
+- A area de Tratamento recebeu grade vazia, botoes visuais de acao e mensagem de fluxo em implantacao, como passo seguro e reversivel.
+- A validacao de build do `frontend-react` foi concluida com sucesso em `cmd /c npm run build`.
+
+## Fase FC2B - Refino de geometria do shell Ficha clinica
+
+- A tela foi refinada para ficar menos com cara de dashboard e mais com cara de software operacional clinico, mantendo o shell em 3 areas.
+- A geometria geral passou a usar uma composicao mais compacta, com area esquerda odontograma mais larga, area central Tratamento/grade e painel lateral direito teal mais contido.
+- O topo do odontograma, o topo do Tratamento e o inicio do painel lateral direito permanecem alinhados como bloco unico da Ficha clinica.
+- O odontograma visual continua apenas como placeholder geometrico, sem refinamento fino de dentes ou integracao com o modulo real.
+- O painel central de Tratamento continua com abas, toolbar e grade vazia, sem persistencia, sem backend e sem acao clinica real.
+- O painel lateral direito continua apenas visual, com calendario, estado do paciente em uso e acoes placeholder.
+- Pendencias para FC2C: refino do odontograma/arcada visual, densidade do painel Tratamento e ajuste fino do painel lateral direito.

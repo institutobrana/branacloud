@@ -8,6 +8,7 @@ import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
+import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
 
@@ -92,24 +93,25 @@ function isLoginRoute() {
 
 function isAppRoute() {
   const path = window.location.pathname || '/';
-  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '';
+  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '/app/ficha-clinica' || path === '';
 }
 
 function resolveScreenFromPath() {
   const path = window.location.pathname || '/';
   if (path === '/app/pacientes') return 'pacientes';
+  if (path === '/app/ficha-clinica') return 'ficha-clinica';
   return 'dashboard';
 }
 
 function syncAppPath(screen) {
-  const nextPath = screen === 'pacientes' ? '/app/pacientes' : '/app';
+  const nextPath = screen === 'pacientes' ? '/app/pacientes' : screen === 'ficha-clinica' ? '/app/ficha-clinica' : '/app';
   if ((window.location.pathname || '/') === nextPath) return;
   window.history.pushState({ screen }, '', nextPath);
 }
 
 function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
-  const initialScreen = resolveScreenFromPath() === 'pacientes' ? 'pacientes' : 'dashboard';
+  const initialScreen = resolveScreenFromPath();
   const [screen, setScreen] = useState(initialScreen);
   const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
@@ -125,7 +127,7 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
-    if (screen !== 'pacientes' && screen !== 'dashboard') {
+    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -147,6 +149,10 @@ function AppContent() {
     if (nextScreen === 'pacientes') {
       setActiveGroupKey('cadastro');
       setPanelGroupKey('cadastro');
+      return;
+    }
+    if (nextScreen === 'ficha-clinica') {
+      setActiveGroupKey('atendimento');
     }
   };
 
@@ -182,6 +188,10 @@ function AppContent() {
       handleNavigate('pacientes');
       return;
     }
+    if (groupKey === 'atendimento' && item?.key === 'ficha-clinica' && !item?.disabled) {
+      handleNavigate('ficha-clinica');
+      return;
+    }
     message.info('Funcionalidade em breve.');
   };
 
@@ -192,6 +202,10 @@ function AppContent() {
     }
     if (actionKey === 'cadastro-pacientes') {
       handleNavigate('pacientes');
+      return;
+    }
+    if (actionKey === 'ficha-clinica') {
+      handleNavigate('ficha-clinica');
       return;
     }
     message.info('Funcionalidade em breve.');
@@ -212,6 +226,9 @@ function AppContent() {
   const activePage = useMemo(() => {
     if (screen === 'pacientes') {
       return <PacientesPage onBackHome={() => handleNavigate('dashboard')} />;
+    }
+    if (screen === 'ficha-clinica') {
+      return <FichaClinicaPage onBackHome={() => handleNavigate('dashboard')} />;
     }
     return <DashboardPage key={dashboardVersion} />;
   }, [dashboardVersion, screen]);

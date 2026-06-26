@@ -728,6 +728,8 @@ Observacoes:
 * A validacao direta do EasyDental nesta rodada ficou limitada a tela de login; o modal `Novo tratamento` continua pendente de sessao autenticada, entao os campos e regras nao puderam ser confirmados ao vivo.
 * A correcao de escopo identificou `Ficha clinica` como modulo raiz acessado pelo icone da barra horizontal; foi criado o contrato documental inicial em `docs/frontend_react_ficha_clinica_analise_inicial_easy_dental.md`, com `Tratamento` e `Novo tratamento` registrados como subfluxos dependentes do prontuario.
 * A validacao autenticada posterior com paciente em uso confirmou a `Ficha clinica` como shell raiz, com abas `Tratamento`, `Financeiro`, `Timeline`, `Documentos` e `Anotacoes`, grade de procedimentos e botao `Novo...` para o fluxo `Novo tratamento`; nenhuma implementacao foi feita.
+* A entrada visual `Ficha clinica` e o shell inicial agora existem no `frontend-react`, com rota `/app/ficha-clinica`, paciente em uso por estado local de sessao, pesquisa visual de pacientes, abas operacionais e grade vazia de procedimentos; o build do frontend-react foi validado com sucesso e a continuidade recomendada e ligar este shell ao contexto real de paciente em uso.
+* A fase FC2B refinou a geometria geral da Ficha clinica, aproximando o desktop operacional do EasyDental sem backend, banco ou migration; a proxima etapa recomendada e FC2C, focada em odontograma/arcada visual.
 * Modulo depende de paciente, procedimentos e usuarios/prestadores.
 * Usa permissao `procedimentos`.
 * Deve manter filtro por `clinica_id` em todos os acessos.
