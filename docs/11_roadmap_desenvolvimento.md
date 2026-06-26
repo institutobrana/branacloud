@@ -725,6 +725,7 @@ Observacoes:
 * O contrato de layout/comportamento da tela `Novo tratamento` ja existe em `docs/contrato_layout_comportamento_tela_novo_tratamento.md`.
 * A janela `Novo tratamento` passou a consumir o endpoint `GET /tratamentos/novo/combos` ao abrir com paciente em uso, sem persistencia e sem alterar `frontend/app.js`.
 * A frente Tratamento entrou em nova etapa documental com o contrato `docs/frontend_react_tratamento_analise_inicial_easy_dental.md`; o video EasyDental foi a referencia usada, nenhuma implementacao foi iniciada e a proxima validacao recomendada continua sendo a conferencia de combos e regras do Novo tratamento.
+* A validacao direta do EasyDental nesta rodada ficou limitada a tela de login; o modal `Novo tratamento` continua pendente de sessao autenticada, entao os campos e regras nao puderam ser confirmados ao vivo.
 * Modulo depende de paciente, procedimentos e usuarios/prestadores.
 * Usa permissao `procedimentos`.
 * Deve manter filtro por `clinica_id` em todos os acessos.

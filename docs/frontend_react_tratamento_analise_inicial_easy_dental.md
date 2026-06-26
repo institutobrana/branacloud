@@ -601,3 +601,77 @@ Este documento registra o contrato funcional inicial da frente Tratamento no Bra
 A etapa atual e apenas documental.
 
 A proxima validacao recomendada e confirmar combos, obrigatoriedade e regras do Novo tratamento antes de qualquer codigo.
+
+## Validacao direta EasyDental - Novo tratamento
+
+### A. Ambiente de validacao
+
+- EasyDental foi acessado diretamente: sim, a URL `https://app.easydentalcloud.com.br/` abriu no navegador.
+- Base usada: ambiente do EasyDental com tela inicial de login exibida.
+- Paciente de teste usado: nao, porque nao houve acesso autenticado ao sistema nesta rodada.
+- Limitacao encontrada: a validacao completa do modal ficou impedida pela ausencia de credenciais/sessao autenticada; a tela aberta foi apenas a pagina de login.
+
+### B. Fluxo de abertura do modal
+
+- De onde o Novo tratamento e aberto: pendente de validacao direta, pois nao foi possivel entrar na area autenticada.
+- Precisa haver paciente em uso: pendente de validacao, embora o contrato documental anterior trate isso como dependencia forte.
+- O que acontece sem paciente em uso: pendente de validacao.
+- Modal abre preenchido com dados do paciente: pendente de validacao.
+- Titulo exato do modal: pendente de validacao direta.
+- Botoes visiveis: pendente de validacao direta.
+
+### C. Aba Dados principais
+
+Como o modal nao pôde ser aberto nesta rodada, os campos abaixo permanecem sem confirmacao direta no EasyDental:
+
+- Data de abertura: pendente de validacao.
+- Prestador responsavel: pendente de validacao.
+- Unidade de atendimento: pendente de validacao.
+- Paciente: pendente de validacao.
+- Beneficio: pendente de validacao.
+- Tabela/moeda: pendente de validacao.
+- Tipo de faturamento: pendente de validacao.
+- Tipo de atendimento: pendente de validacao.
+- Observacoes: pendente de validacao.
+- Idade do paciente: pendente de validacao.
+- Arcada predominante: pendente de validacao.
+- Checkbox `Copiar procedimentos nao realizados do ultimo tratamento`: pendente de validacao.
+
+### D. Aba Dados de convenio
+
+Como o modal nao pôde ser aberto nesta rodada, os campos abaixo permanecem sem confirmacao direta no EasyDental:
+
+- Beneficiario: pendente de validacao.
+- Prestador credenciado: pendente de validacao.
+- Prestador solicitante: pendente de validacao.
+- Prestador executante: pendente de validacao.
+- Data da autorizacao: pendente de validacao.
+- N da guia: pendente de validacao.
+- Senha/autorizacao: pendente de validacao.
+- Validade da senha, se existir separado: pendente de validacao.
+- Sinais de doenca periodontal: pendente de validacao.
+- Alteracao dos tecidos moles: pendente de validacao.
+
+### E. Botoes do modal
+
+- Gravar tratamento: pendente de validacao direta.
+- Cancelar: pendente de validacao direta.
+
+### F. Regras importantes a validar
+
+- Pode existir mais de um tratamento aberto para o mesmo paciente: pendente de validacao.
+- O Novo tratamento abre se ja houver tratamento aberto: pendente de validacao.
+- Qual status inicial do tratamento: pendente de validacao.
+- O orcamento nasce automaticamente junto com o tratamento: pendente de validacao.
+- O tratamento aparece imediatamente na aba Tratamento: pendente de validacao.
+- O tratamento ja cria uma grade vazia de procedimentos: pendente de validacao.
+- O beneficio `Particular` muda a aba Dados de convenio: pendente de validacao.
+- Alterar beneficio muda tabela/moeda: pendente de validacao.
+- Alterar tabela/moeda muda pesquisa de procedimentos: pendente de validacao.
+- Quais campos sao realmente obrigatorios: pendente de validacao.
+
+### G. Tabela final de campos
+
+Tabela final ainda nao pode ser consolidada com status confirmados no EasyDental nesta rodada.
+
+Tudo que permaneceu sem entrada autenticada continua como `Pendente de validacao`.
