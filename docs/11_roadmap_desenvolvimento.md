@@ -5957,3 +5957,7 @@ Observacoes:
 - As setas agora controlam os dois tracks locais.
 - Sem backend/banco/migration.
 - Proxima etapa recomendada: refinamento fino da navegacao e da densidade visual.
+- FC2C-13 concluiu a compactacao visual do bloco esquerdo da Ficha clinica.
+- O odontograma, as barras e a area de mensagem ficaram mais densos e proporcionais.
+- Sem backend/banco/migration.
+- Proxima etapa recomendada: nova comparacao visual fina, se o usuario trouxer outro print.

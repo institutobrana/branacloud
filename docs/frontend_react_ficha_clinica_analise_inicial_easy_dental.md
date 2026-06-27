@@ -1067,3 +1067,17 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 
 - O usuário consegue navegar pelos itens que não cabem de uma vez na tela.
 - A estrutura continua sem persistência, sem backend e sem lógica clínica funcional.
+## 32. Fase FC2C-13 - Compactacao do bloco esquerdo
+
+### 32.1 Ajustes visuais aplicados
+
+- O quadro do odontograma foi compactado para reduzir a sensacao de bloco esticado.
+- O espaco branco abaixo da arcada foi reduzido e a altura util da area ficou mais enxuta.
+- As barras de procedimentos e especialidades passaram a acompanhar melhor a largura compacta do odontograma.
+- A densidade vertical do conjunto foi refinada com menos vazios entre quadro, barras, abas e area de mensagem.
+- A area inferior da mensagem foi elevada e compactada para ficar mais proxima do topo da zona util.
+
+### 32.2 Efeito esperado
+
+- O bloco esquerdo da Ficha clinica fica mais denso, proporcional e proximo da referencia EasyDental Cloud.
+- O ajuste continua somente visual, sem clique clinico real, sem backend, sem banco e sem persistencia.
