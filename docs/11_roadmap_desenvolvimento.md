@@ -5942,3 +5942,6 @@ Observacoes:
 - FC2C-8 realizou o polimento fino do odontograma no lado esquerdo da Ficha clinica.
 - Os dentes ficaram levemente maiores, as faces mais suaves e a area inferior mais compacta, sem backend/banco/migration.
 - Proxima etapa recomendada: validacao visual final e manutencao do escopo somente estetico.
+- FC2C-9 refinou a barra horizontal de especialidades abaixo do odontograma na Ficha clinica.
+- A faixa ficou mais compacta, rolavel visualmente e com destaque discreto para a especialidade ativa, sem backend/banco/migration.
+- Proxima etapa recomendada: seguir apenas com polimento visual de superfícies adjacentes, sem introduzir fluxo funcional novo.

@@ -475,19 +475,27 @@ export function FichaClinicaPage({ onBackHome }) {
           </div>
 
           <div className="ficha-clinica-clinic-categories" aria-label="Categorias clinicas">
+            <Button
+              type="text"
+              className="ficha-clinica-clinic-menu"
+              icon={<MoreOutlined />}
+              aria-label="Menu das especialidades"
+            />
             <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias anteriores">
               ‹
             </Button>
-            {clinicCategories.map((category, index) => (
-              <button
-                key={category.key}
-                type="button"
-                className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
-              >
-                <ClinicCategoryIconImage icon={category.key} />
-                <span className="ficha-clinica-clinic-category-label">{category.label}</span>
-              </button>
-            ))}
+            <div className="ficha-clinica-clinic-categories-track">
+              {clinicCategories.map((category, index) => (
+                <button
+                  key={category.key}
+                  type="button"
+                  className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
+                >
+                  <ClinicCategoryIconImage icon={category.key} />
+                  <span className="ficha-clinica-clinic-category-label">{category.label}</span>
+                </button>
+              ))}
+            </div>
             <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias seguintes">
               ›
             </Button>

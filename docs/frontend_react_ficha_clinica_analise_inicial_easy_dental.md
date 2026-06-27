@@ -1011,3 +1011,17 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - O lado esquerdo da Ficha clinica fica mais denso e mais proximo da referencia EasyDental Cloud.
 - A composicao continua limpa, tecnica e sem exagero de escala.
 - O escopo permanece visual, sem qualquer logica clinica real, sem clique funcional e sem persistencia.
+
+## 28. Fase FC2C-9 - Refino da barra horizontal de especialidades
+
+### 28.1 Ajustes visuais aplicados
+
+- A barra de especialidades abaixo do odontograma foi refinada para ficar mais compacta e mais proxima do EasyDental Cloud.
+- A navegação horizontal foi tratada visualmente com trilha rolavel, setas laterais discretas e bloco inicial de menu.
+- Os itens de especialidade ficaram menores, mais técnicos e com melhor alinhamento visual.
+- A especialidade ativa recebeu destaque discreto para lembrar o estado selecionado da faixa original.
+
+### 28.2 Efeito esperado
+
+- A faixa passa a parecer um controle horizontal de sistema, e nao um conjunto de chips modernos.
+- O escopo continua estritamente visual, sem clique clinico funcional, sem filtro real e sem persistencia.
