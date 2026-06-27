@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Button, Card, Empty, Space, Table, Tabs, Tag, Typography, message } from 'antd';
 import {
   DollarOutlined,
@@ -474,6 +474,14 @@ function ClinicProcedureIconImage({ asset, label }) {
 
 function ClinicProcedureRail({ category }) {
   const procedures = clinicProcedureItemsByCategory[category] ?? clinicProcedureItemsByCategory.cirur;
+  const trackRef = useRef(null);
+
+  const scrollTrack = (direction) => {
+    const node = trackRef.current;
+    if (!node) return;
+    const amount = direction === 'left' ? -160 : 160;
+    node.scrollBy({ left: amount, behavior: 'smooth' });
+  };
 
   return (
     <div className="ficha-clinica-procedure-categories" aria-label="Procedimentos da especialidade">
@@ -482,14 +490,17 @@ function ClinicProcedureRail({ category }) {
         className="ficha-clinica-procedure-menu"
         icon={<MenuOutlined />}
         aria-label="Menu de procedimentos"
+        title="Menu de procedimentos"
       />
       <Button
         type="text"
         className="ficha-clinica-procedure-arrow"
-        aria-label="Procedimentos anteriores"
+        aria-label="Rolar procedimentos para a esquerda"
+        title="Rolar procedimentos para a esquerda"
         icon={<LeftOutlined />}
+        onClick={() => scrollTrack('left')}
       />
-      <div className="ficha-clinica-procedure-categories-track">
+      <div className="ficha-clinica-procedure-categories-track" ref={trackRef}>
         {procedures.map((procedure) => (
           <button key={procedure.title} type="button" className="ficha-clinica-procedure-item" title={procedure.title} aria-label={procedure.title}>
             <ClinicProcedureIconImage asset={procedure.asset} label={procedure.title} />
@@ -499,8 +510,10 @@ function ClinicProcedureRail({ category }) {
       <Button
         type="text"
         className="ficha-clinica-procedure-arrow"
-        aria-label="Procedimentos seguintes"
+        aria-label="Rolar procedimentos para a direita"
+        title="Rolar procedimentos para a direita"
         icon={<RightOutlined />}
+        onClick={() => scrollTrack('right')}
       />
     </div>
   );
@@ -563,6 +576,7 @@ export function FichaClinicaPage({ onBackHome }) {
   const [selectedPatient, setSelectedPatient] = useState(() => readStoredPatient());
   const [activeTab, setActiveTab] = useState('tratamento');
   const [activeClinicCategory, setActiveClinicCategory] = useState('cirur');
+  const specialtyTrackRef = useRef(null);
 
   const patientLabel = useMemo(() => {
     if (!selectedPatient) return 'Nenhum paciente em uso';
@@ -572,6 +586,12 @@ export function FichaClinicaPage({ onBackHome }) {
   const calendarDays = useMemo(() => buildCalendarDays(new Date()), []);
   const currentDay = new Date().getDate();
   const activeProcedureCategory = activeClinicCategory || 'cirur';
+  const scrollSpecialties = (direction) => {
+    const node = specialtyTrackRef.current;
+    if (!node) return;
+    const amount = direction === 'left' ? -160 : 160;
+    node.scrollBy({ left: amount, behavior: 'smooth' });
+  };
 
   const handleClearPatient = () => {
     setSelectedPatient(null);
@@ -734,9 +754,17 @@ export function FichaClinicaPage({ onBackHome }) {
               className="ficha-clinica-specialty-menu"
               icon={<MenuOutlined />}
               aria-label="Menu das especialidades"
+              title="Menu das especialidades"
             />
-            <Button type="text" className="ficha-clinica-specialty-arrow" aria-label="Especialidades anteriores" icon={<LeftOutlined />} />
-            <div className="ficha-clinica-specialty-categories-track">
+            <Button
+              type="text"
+              className="ficha-clinica-specialty-arrow"
+              aria-label="Rolar especialidades para a esquerda"
+              title="Rolar especialidades para a esquerda"
+              icon={<LeftOutlined />}
+              onClick={() => scrollSpecialties('left')}
+            />
+            <div className="ficha-clinica-specialty-categories-track" ref={specialtyTrackRef}>
               {clinicSpecialties.map((category) => (
                 <button
                   key={category.key}
@@ -750,7 +778,14 @@ export function FichaClinicaPage({ onBackHome }) {
                 </button>
               ))}
             </div>
-            <Button type="text" className="ficha-clinica-specialty-arrow" aria-label="Especialidades seguintes" icon={<RightOutlined />} />
+            <Button
+              type="text"
+              className="ficha-clinica-specialty-arrow"
+              aria-label="Rolar especialidades para a direita"
+              title="Rolar especialidades para a direita"
+              icon={<RightOutlined />}
+              onClick={() => scrollSpecialties('right')}
+            />
           </div>
 
           <div className="ficha-clinica-odontogram-footer">

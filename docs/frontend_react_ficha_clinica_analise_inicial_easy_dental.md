@@ -1053,3 +1053,17 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - A leitura estrutural fica mais fiel ao EasyDental Cloud.
 - A faixa superior permanece placeholder visual e a troca clinica real continua fora de escopo.
 - O escopo segue sem backend, sem banco e sem migration.
+
+## 31. Fase FC2C-12 - Rolagem horizontal das barras de procedimentos e especialidades
+
+### 31.1 Ajustes visuais aplicados
+
+- As setas laterais passaram a controlar a rolagem horizontal local das duas barras abaixo do odontograma.
+- A barra superior rola os ícones de procedimentos da especialidade ativa.
+- A barra inferior rola as especialidades abreviadas.
+- O comportamento segue visual/local, sem filtro clínico real.
+
+### 31.2 Efeito esperado
+
+- O usuário consegue navegar pelos itens que não cabem de uma vez na tela.
+- A estrutura continua sem persistência, sem backend e sem lógica clínica funcional.

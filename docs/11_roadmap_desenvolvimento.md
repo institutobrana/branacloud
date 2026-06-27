@@ -5953,3 +5953,7 @@ Observacoes:
 - Sem backend/banco/migration.
 - Sem copiar assets do Cloud.
 - Proxima etapa recomendada: refinamento fino do alinhamento visual e do comportamento de rolagem.
+- FC2C-12 implementou rolagem horizontal visual das barras abaixo do odontograma.
+- As setas agora controlam os dois tracks locais.
+- Sem backend/banco/migration.
+- Proxima etapa recomendada: refinamento fino da navegacao e da densidade visual.
