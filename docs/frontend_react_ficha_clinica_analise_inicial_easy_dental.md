@@ -1081,3 +1081,17 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 
 - O bloco esquerdo da Ficha clinica fica mais denso, proporcional e proximo da referencia EasyDental Cloud.
 - O ajuste continua somente visual, sem clique clinico real, sem backend, sem banco e sem persistencia.
+
+## 33. Fase FC2C-14 - Reducao horizontal adicional do bloco esquerdo
+
+### 33.1 Ajustes visuais aplicados
+
+- O bloco esquerdo foi reduzido mais uma vez em largura para buscar o limite visual indicado pela linha azul do print de referencia.
+- O quadro do odontograma e as barras abaixo ficaram mais estreitos e contidos.
+- O conjunto passou a se organizar como um bloco unico mais compacto, sem espalhar tanto os elementos laterais.
+- A compactacao anterior foi preservada, com pouca folga vertical e leitura densa do conjunto.
+
+### 33.2 Efeito esperado
+
+- O bloco esquerdo fica mais proximo da referencia visual do EasyDental Cloud.
+- O ajuste continua somente visual, sem clique clinico real, sem backend, sem banco e sem persistencia.

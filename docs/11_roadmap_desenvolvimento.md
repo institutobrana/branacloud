@@ -5961,3 +5961,7 @@ Observacoes:
 - O odontograma, as barras e a area de mensagem ficaram mais densos e proporcionais.
 - Sem backend/banco/migration.
 - Proxima etapa recomendada: nova comparacao visual fina, se o usuario trouxer outro print.
+- FC2C-14 reduziu ainda mais a largura horizontal do bloco esquerdo da Ficha clinica.
+- O conjunto ficou mais estreito, compacto e alinhado a referencia visual indicada.
+- Sem backend/banco/migration.
+- Proxima etapa recomendada: nova comparacao visual fina, se necessario.
