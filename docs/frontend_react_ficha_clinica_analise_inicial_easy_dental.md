@@ -988,10 +988,26 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - A pasta nova e paralela a pasta legada de BMPs, para manter o historico intacto e facilitar comparacao futura.
 - Se houver novo refinamento de proporcao, ele deve partir dessa base limpa e nao da copia direta de referencia externa.
 
-### 25.4 O que continua placeholder
+### 26.4 O que continua placeholder
 
 - O odontograma continua sem clique funcional em dente.
 - A selecao de faces continua sem efeito clinico real.
 - Nao existe persistencia operacional.
 - Nao existe backend novo, banco novo ou fluxo de tratamento novo.
 - O painel de Tratamento central nao recebeu comportamento funcional adicional.
+
+## 27. Fase FC2C-8 - Polimento fino do odontograma
+
+### 27.1 Ajustes visuais aplicados
+
+- Os dentes foram ampliados levemente para ocupar melhor a area util do quadro.
+- O espa�o branco abaixo da arcada foi reduzido por compactacao do frame e do canvas do odontograma.
+- As faces/circulos ficaram mais leves, com menor contraste e leitura mais suave.
+- A paleta clinica recebeu polimento fino com menos espacamento, botoes mais compactos e iconografia levemente menor.
+- A area inferior de mensagem foi elevada e compactada para reduzir vazio visual entre as faixas.
+
+### 27.2 Efeito esperado
+
+- O lado esquerdo da Ficha clinica fica mais denso e mais proximo da referencia EasyDental Cloud.
+- A composicao continua limpa, tecnica e sem exagero de escala.
+- O escopo permanece visual, sem qualquer logica clinica real, sem clique funcional e sem persistencia.

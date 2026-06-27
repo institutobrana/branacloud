@@ -5939,3 +5939,6 @@ Observacoes:
 - FC2C-7 converteu os dentes locais para PNG transparente em `frontend-react/public/assets/fichaClinica/odontograma/dentes-limpos/`, sem copiar assets do EasyDental Cloud.
 - O `frontend-react` passou a consumir os PNGs limpos e o shell dos dentes foi neutralizado para eliminar a moldura cinza visivel.
 - Proxima etapa recomendada: apenas validacao visual fina e, se necessario, novo ajuste de proporcao a partir da base limpa local.
+- FC2C-8 realizou o polimento fino do odontograma no lado esquerdo da Ficha clinica.
+- Os dentes ficaram levemente maiores, as faces mais suaves e a area inferior mais compacta, sem backend/banco/migration.
+- Proxima etapa recomendada: validacao visual final e manutencao do escopo somente estetico.
