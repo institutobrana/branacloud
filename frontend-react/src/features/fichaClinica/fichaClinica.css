@@ -359,6 +359,164 @@
   text-transform: none;
 }
 
+.ficha-clinica-procedure-categories {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
+  margin-top: 4px;
+  min-height: 46px;
+  overflow: hidden;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+.ficha-clinica-procedure-categories-track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 6px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ficha-clinica-procedure-categories-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ficha-clinica-procedure-menu,
+.ficha-clinica-procedure-arrow {
+  flex: 0 0 auto;
+  width: 22px;
+  min-width: 22px;
+  height: 46px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: #8f959d !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ficha-clinica-procedure-menu {
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.ficha-clinica-procedure-arrow {
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.ficha-clinica-procedure-item {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 2px;
+}
+
+.ficha-clinica-procedure-item:hover {
+  background: rgba(22, 170, 161, 0.05);
+}
+
+.ficha-clinica-procedure-icon-image {
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.ficha-clinica-specialty-categories {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0;
+  margin-top: 2px;
+  min-height: 32px;
+  overflow: hidden;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+.ficha-clinica-specialty-categories-track {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 4px 0 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ficha-clinica-specialty-categories-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ficha-clinica-specialty-menu,
+.ficha-clinica-specialty-arrow {
+  flex: 0 0 auto;
+  width: 20px;
+  min-width: 20px;
+  height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: #8f959d !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ficha-clinica-specialty-menu {
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.ficha-clinica-specialty-arrow {
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.ficha-clinica-specialty-category {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 50px;
+  padding: 4px 8px;
+  border: 0;
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
+  background: transparent;
+  color: #6f757b;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.ficha-clinica-specialty-category:first-child {
+  border-left: 0;
+}
+
+.ficha-clinica-specialty-category.is-active {
+  color: #0f766e;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(249, 253, 252, 1));
+  box-shadow: inset 0 -2px 0 rgba(22, 170, 161, 0.55);
+  font-weight: 700;
+}
+
+.ficha-clinica-specialty-category-label {
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
 .ficha-clinica-odontogram-footer {
   border-top: 1px solid rgba(15, 23, 42, 0.08);
   padding-top: 2px;

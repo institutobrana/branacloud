@@ -236,6 +236,210 @@ const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2'
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
 
+const clinicSpecialties = [
+  { key: 'cirur', label: 'Cirur', fullLabel: 'Cirurgia' },
+  { key: 'dent', label: 'Dent', fullLabel: 'Dentística' },
+  { key: 'diag', label: 'Diag', fullLabel: 'Diagnóstico' },
+  { key: 'emer', label: 'Emer', fullLabel: 'Emergência' },
+  { key: 'endo', label: 'Endo', fullLabel: 'Endodontia' },
+  { key: 'espec', label: 'Espec', fullLabel: 'Pacientes especiais' },
+  { key: 'estet', label: 'Estét', fullLabel: 'Estética' },
+  { key: 'estom', label: 'Estom', fullLabel: 'Estomatologia' },
+  { key: 'geral', label: 'Geral', fullLabel: 'Geral' },
+  { key: 'hof', label: 'HOF', fullLabel: 'Harmonização Orofacial' },
+  { key: 'impla', label: 'Impla', fullLabel: 'Implantodontia' },
+  { key: 'odped', label: 'OdPed', fullLabel: 'Odontopediatria' },
+  { key: 'orto', label: 'Orto', fullLabel: 'Ortodôntia' },
+  { key: 'ortop', label: 'Ortop', fullLabel: 'Ortopedia Funcional dos Maxilares' },
+  { key: 'perio', label: 'Perio', fullLabel: 'Periodontia' },
+  { key: 'prev', label: 'Prev', fullLabel: 'Prevenção' },
+  { key: 'prot', label: 'Prót', fullLabel: 'Prótese' },
+  { key: 'radio', label: 'Radio', fullLabel: 'Radiologia' },
+];
+
+const clinicProcedureItemsByCategory = {
+  cirur: [
+    { title: 'Apicectomia', asset: 'int_apicecto.bmp' },
+    { title: 'Cirurgia', asset: 'int_cirur.bmp' },
+    { title: 'Enxerto', asset: 'int_enxerto.bmp' },
+    { title: 'Frenectomia', asset: 'int_frenec.bmp' },
+    { title: 'Hemisecção', asset: 'int_hemi.bmp' },
+    { title: 'Retalho', asset: 'int_retalho.bmp' },
+    { title: 'Rizectomia', asset: 'int_rizec.bmp' },
+    { title: 'Ulectomia', asset: 'int_ulecto.bmp' },
+  ],
+  dent: [
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Aplicação de flúor', asset: 'int_fluor.bmp' },
+    { title: 'Ajuste', asset: 'int_ajuste.bmp' },
+    { title: 'Escova', asset: 'int_escova.bmp' },
+    { title: 'Polimento', asset: 'int_poli.bmp' },
+    { title: 'Selante', asset: 'int_selante.bmp' },
+    { title: 'Restauração', asset: 'int_restaura.bmp' },
+    { title: 'Mordida', asset: 'int_mordida.bmp' },
+  ],
+  diag: [
+    { title: 'Raio X', asset: 'int_raiox.bmp' },
+    { title: 'Panorâmica', asset: 'int_panoram.bmp' },
+    { title: 'Periapical', asset: 'int_peric.bmp' },
+    { title: 'Lateral', asset: 'int_lateral.bmp' },
+    { title: 'Fotos', asset: 'int_fotos.bmp' },
+    { title: 'Attach', asset: 'int_attach.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+  ],
+  emer: [
+    { title: 'Emergência', asset: 'int_emerg.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Raspagem', asset: 'int_raspagem.bmp' },
+    { title: 'Retalho', asset: 'int_retalho.bmp' },
+    { title: 'Ajuste', asset: 'int_ajuste.bmp' },
+    { title: 'Byte', asset: 'int_byte.bmp' },
+    { title: 'Mordida', asset: 'int_mordida.bmp' },
+    { title: 'Faceta', asset: 'int_faceta.bmp' },
+  ],
+  endo: [
+    { title: 'Canal', asset: 'int_canal.bmp' },
+    { title: 'Pulpo', asset: 'int_pulpo.bmp' },
+    { title: 'Núcleo', asset: 'int_nucleo.bmp' },
+    { title: 'Restauração', asset: 'int_restaura.bmp' },
+    { title: 'Rest. DO', asset: 'int_RestDO.bmp' },
+    { title: 'Rest. MO', asset: 'int_RestMO.bmp' },
+    { title: 'Rest. MOD', asset: 'int_RestMOD.bmp' },
+    { title: 'Rest. O', asset: 'int_RestO.bmp' },
+  ],
+  espec: [
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Escova', asset: 'int_escova.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Fotos', asset: 'int_fotos.bmp' },
+    { title: 'Attach', asset: 'int_attach.bmp' },
+    { title: 'Prof.', asset: 'int_prof.bmp' },
+    { title: 'Byte', asset: 'int_byte.bmp' },
+    { title: 'Selante', asset: 'int_selante.bmp' },
+  ],
+  estet: [
+    { title: 'Faceta', asset: 'int_faceta.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Aumento', asset: 'int_aumen.bmp' },
+    { title: 'Desgaste', asset: 'int_desgas.bmp' },
+    { title: 'Coroa', asset: 'int_coroa.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Fotos', asset: 'int_fotos.bmp' },
+    { title: 'Núcleo', asset: 'int_nucleo.bmp' },
+  ],
+  estom: [
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Mordida', asset: 'int_mordida.bmp' },
+    { title: 'Placa', asset: 'int_placa.bmp' },
+    { title: 'Coroa', asset: 'int_coroa.bmp' },
+    { title: 'Núcleo', asset: 'int_nucleo.bmp' },
+    { title: 'Fixa', asset: 'int_fixa.bmp' },
+    { title: 'Movel', asset: 'int_movel.bmp' },
+    { title: 'Total', asset: 'int_total.bmp' },
+  ],
+  geral: [
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Adj. geral', asset: 'int_ajuste.bmp' },
+    { title: 'Prof.', asset: 'int_prof.bmp' },
+    { title: 'Fotos', asset: 'int_fotos.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Attach', asset: 'int_attach.bmp' },
+    { title: 'Byte', asset: 'int_byte.bmp' },
+    { title: 'Escova', asset: 'int_escova.bmp' },
+  ],
+  hof: [
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Mordida', asset: 'int_mordida.bmp' },
+    { title: 'Aumento', asset: 'int_aumen.bmp' },
+    { title: 'Faceta', asset: 'int_faceta.bmp' },
+    { title: 'Lateral', asset: 'int_lateral.bmp' },
+    { title: 'Modelagem', asset: 'int_modelo.bmp' },
+    { title: 'Fixa', asset: 'int_fixa.bmp' },
+    { title: 'Movel', asset: 'int_movel.bmp' },
+  ],
+  impla: [
+    { title: 'Implante', asset: 'int_implante.bmp' },
+    { title: 'Coroa', asset: 'int_coroa.bmp' },
+    { title: 'Núcleo', asset: 'int_nucleo.bmp' },
+    { title: 'Provisório', asset: 'int_provgru.bmp' },
+    { title: 'Desgaste', asset: 'int_desgas.bmp' },
+    { title: 'Braquete', asset: 'int_bracket.bmp' },
+    { title: 'Placa', asset: 'int_placa.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+  ],
+  odped: [
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Flúor', asset: 'int_fluor.bmp' },
+    { title: 'Escova', asset: 'int_escova.bmp' },
+    { title: 'Selante', asset: 'int_selante.bmp' },
+    { title: 'Prof.', asset: 'int_prof.bmp' },
+    { title: 'Mordida', asset: 'int_mordida.bmp' },
+    { title: 'Byte', asset: 'int_byte.bmp' },
+    { title: 'Consulta 2', asset: 'int_consulta.bmp' },
+  ],
+  orto: [
+    { title: 'Bracket', asset: 'int_bracket.bmp' },
+    { title: 'Banda', asset: 'int_banda.bmp' },
+    { title: 'Fixa', asset: 'int_fixa.bmp' },
+    { title: 'Movel', asset: 'int_movel.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Maopunho', asset: 'int_maopunho.bmp' },
+    { title: 'Ajuste', asset: 'int_ajuste.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+  ],
+  ortop: [
+    { title: 'Bracket', asset: 'int_bracket.bmp' },
+    { title: 'Banda', asset: 'int_banda.bmp' },
+    { title: 'Ajuste', asset: 'int_ajuste.bmp' },
+    { title: 'Maopunho', asset: 'int_maopunho.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Byte', asset: 'int_byte.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Movel', asset: 'int_movel.bmp' },
+  ],
+  perio: [
+    { title: 'Raspagem', asset: 'int_raspagem.bmp' },
+    { title: 'Raspagem geral', asset: 'int_raspger.bmp' },
+    { title: 'Gengivectomia', asset: 'int_gengivec.bmp' },
+    { title: 'Retalho', asset: 'int_retalho.bmp' },
+    { title: 'Enxerto', asset: 'int_enxerto.bmp' },
+    { title: 'Tunel', asset: 'int_tunel.bmp' },
+    { title: 'Reemb.', asset: 'int_reemb.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+  ],
+  prev: [
+    { title: 'Escova', asset: 'int_escova.bmp' },
+    { title: 'Flúor', asset: 'int_fluor.bmp' },
+    { title: 'Selante', asset: 'int_selante.bmp' },
+    { title: 'Prof.', asset: 'int_prof.bmp' },
+    { title: 'Poli', asset: 'int_poli.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+    { title: 'Consulta', asset: 'int_consulta.bmp' },
+    { title: 'Attach', asset: 'int_attach.bmp' },
+  ],
+  prot: [
+    { title: 'Prótese', asset: 'int_protese.bmp' },
+    { title: 'Provele', asset: 'int_provele.bmp' },
+    { title: 'Prov. gru', asset: 'int_provgru.bmp' },
+    { title: 'Total', asset: 'int_total.bmp' },
+    { title: 'Movel', asset: 'int_movel.bmp' },
+    { title: 'Fixa', asset: 'int_fixa.bmp' },
+    { title: 'Coroa', asset: 'int_coroa.bmp' },
+    { title: 'Núcleo', asset: 'int_nucleo.bmp' },
+  ],
+  radio: [
+    { title: 'Raio X', asset: 'int_raiox.bmp' },
+    { title: 'Panorâmica', asset: 'int_panoram.bmp' },
+    { title: 'Periapical', asset: 'int_peric.bmp' },
+    { title: 'Lateral', asset: 'int_lateral.bmp' },
+    { title: 'Fotos', asset: 'int_fotos.bmp' },
+    { title: 'Oclusal', asset: 'int_oclusal.bmp' },
+    { title: 'Attach', asset: 'int_attach.bmp' },
+    { title: 'Modelo', asset: 'int_modelo.bmp' },
+  ],
+};
+
 function ClinicCategoryIconImage({ asset, label }) {
   if (asset) {
     return (
@@ -252,6 +456,54 @@ function ClinicCategoryIconImage({ asset, label }) {
   }
 
   return <ClinicCategoryIcon icon="grid" />;
+}
+
+function ClinicProcedureIconImage({ asset, label }) {
+  return (
+    <img
+      className="ficha-clinica-procedure-icon-image"
+      src={`/assets/fichaClinica/odontograma/procedimentos/${asset}`}
+      alt=""
+      aria-hidden="true"
+      title={label}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
+function ClinicProcedureRail({ category }) {
+  const procedures = clinicProcedureItemsByCategory[category] ?? clinicProcedureItemsByCategory.cirur;
+
+  return (
+    <div className="ficha-clinica-procedure-categories" aria-label="Procedimentos da especialidade">
+      <Button
+        type="text"
+        className="ficha-clinica-procedure-menu"
+        icon={<MenuOutlined />}
+        aria-label="Menu de procedimentos"
+      />
+      <Button
+        type="text"
+        className="ficha-clinica-procedure-arrow"
+        aria-label="Procedimentos anteriores"
+        icon={<LeftOutlined />}
+      />
+      <div className="ficha-clinica-procedure-categories-track">
+        {procedures.map((procedure) => (
+          <button key={procedure.title} type="button" className="ficha-clinica-procedure-item" title={procedure.title} aria-label={procedure.title}>
+            <ClinicProcedureIconImage asset={procedure.asset} label={procedure.title} />
+          </button>
+        ))}
+      </div>
+      <Button
+        type="text"
+        className="ficha-clinica-procedure-arrow"
+        aria-label="Procedimentos seguintes"
+        icon={<RightOutlined />}
+      />
+    </div>
+  );
 }
 
 function OdontogramTeethRow({ numbers, className }) {
@@ -310,6 +562,7 @@ function ToothGridImage() {
 export function FichaClinicaPage({ onBackHome }) {
   const [selectedPatient, setSelectedPatient] = useState(() => readStoredPatient());
   const [activeTab, setActiveTab] = useState('tratamento');
+  const [activeClinicCategory, setActiveClinicCategory] = useState('cirur');
 
   const patientLabel = useMemo(() => {
     if (!selectedPatient) return 'Nenhum paciente em uso';
@@ -318,6 +571,7 @@ export function FichaClinicaPage({ onBackHome }) {
 
   const calendarDays = useMemo(() => buildCalendarDays(new Date()), []);
   const currentDay = new Date().getDate();
+  const activeProcedureCategory = activeClinicCategory || 'cirur';
 
   const handleClearPatient = () => {
     setSelectedPatient(null);
@@ -472,29 +726,31 @@ export function FichaClinicaPage({ onBackHome }) {
             <ToothGridImage />
           </div>
 
-          <div className="ficha-clinica-clinic-categories" aria-label="Categorias clinicas">
+          <ClinicProcedureRail category={activeProcedureCategory} />
+
+          <div className="ficha-clinica-specialty-categories" aria-label="Especialidades clínicas">
             <Button
               type="text"
-              className="ficha-clinica-clinic-menu"
+              className="ficha-clinica-specialty-menu"
               icon={<MenuOutlined />}
               aria-label="Menu das especialidades"
             />
-            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias anteriores" icon={<LeftOutlined />} />
-            <div className="ficha-clinica-clinic-categories-track">
-              {clinicCategories.map((category, index) => (
+            <Button type="text" className="ficha-clinica-specialty-arrow" aria-label="Especialidades anteriores" icon={<LeftOutlined />} />
+            <div className="ficha-clinica-specialty-categories-track">
+              {clinicSpecialties.map((category) => (
                 <button
                   key={category.key}
                   type="button"
-                  className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
-                  title={category.label}
-                  aria-label={category.label}
+                  className={`ficha-clinica-specialty-category${activeClinicCategory === category.key ? ' is-active' : ''}`}
+                  title={category.fullLabel}
+                  aria-label={category.fullLabel}
+                  onClick={() => setActiveClinicCategory(category.key)}
                 >
-                  <ClinicCategoryIconImage asset={category.asset} label={category.label} />
-                  <span className="ficha-clinica-clinic-category-label">{category.label}</span>
+                  <span className="ficha-clinica-specialty-category-label">{category.label}</span>
                 </button>
               ))}
             </div>
-            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias seguintes" icon={<RightOutlined />} />
+            <Button type="text" className="ficha-clinica-specialty-arrow" aria-label="Especialidades seguintes" icon={<RightOutlined />} />
           </div>
 
           <div className="ficha-clinica-odontogram-footer">

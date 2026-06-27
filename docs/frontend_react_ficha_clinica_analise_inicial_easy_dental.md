@@ -1038,3 +1038,18 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 
 - A faixa fica mais densa e mais tecnica, sem virar chip moderno.
 - O escopo segue estritamente visual, sem backend, banco, migration ou persistencia clinica.
+
+## 30. Fase FC2C-11 - Separacao entre procedimentos e especialidades
+
+### 30.1 Ajustes visuais aplicados
+
+- A area abaixo do odontograma foi corrigida para duas camadas distintas.
+- A camada superior agora mostra procedimentos visuais da especialidade ativa usando assets locais do projeto.
+- A camada inferior agora mostra apenas as 18 especialidades abreviadas, em barra horizontal rolavel.
+- O comportamento observado no EasyDental Cloud foi usado como referencia visual, sem copiar assets do Cloud.
+
+### 30.2 Efeito esperado
+
+- A leitura estrutural fica mais fiel ao EasyDental Cloud.
+- A faixa superior permanece placeholder visual e a troca clinica real continua fora de escopo.
+- O escopo segue sem backend, sem banco e sem migration.

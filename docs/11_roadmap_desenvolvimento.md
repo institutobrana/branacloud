@@ -5948,3 +5948,8 @@ Observacoes:
 - FC2C-10 reorganizou a faixa de especialidades como scroller de blocos com icone acima do rotulo, usando assets locais do repositorio e sem backend/banco/migration.
 - A barra passou a ficar mais proxima da densidade do EasyDental Cloud, com overflow horizontal e separacao visual mais tecnica.
 - Proxima etapa recomendada: apenas comparacao visual fina e pequenos ajustes de espaco, sem mudar fluxo clinico.
+- FC2C-11 corrigiu a estrutura da barra abaixo do odontograma.
+- Separou procedimentos e especialidades.
+- Sem backend/banco/migration.
+- Sem copiar assets do Cloud.
+- Proxima etapa recomendada: refinamento fino do alinhamento visual e do comportamento de rolagem.
