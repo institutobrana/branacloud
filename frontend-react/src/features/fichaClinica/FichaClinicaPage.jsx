@@ -219,7 +219,7 @@ function ToothGrid() {
 }
 
 const odontogramAssetBase = '/assets/fichaClinica/odontograma';
-const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes`;
+const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes-limpos`;
 const odontogramFaceImage = `${odontogramAssetBase}/arc_faces.bmp`;
 const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2', '3', '4', '5', '6', '7', '8'];
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
@@ -263,7 +263,7 @@ function OdontogramTeethRow({ numbers, className }) {
         <span key={number} className="ficha-clinica-odontogram-tooth-shell">
           <img
             className="ficha-clinica-odontogram-tooth"
-            src={`${odontogramTeethAssetBase}/arc_dente${number}.bmp`}
+            src={`${odontogramTeethAssetBase}/arc_dente${number}.png`}
             alt=""
             loading="lazy"
             decoding="async"

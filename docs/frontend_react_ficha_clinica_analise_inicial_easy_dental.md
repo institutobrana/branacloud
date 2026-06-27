@@ -968,6 +968,26 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - Foi aplicado recorte/encaixe visual no CSS para reduzir o impacto do quadrado aparente.
 - Nao houve tentativa de criar novo asset, nem de baixar imagem do EasyDental Cloud.
 
+## 26. Fase FC2C-7 - Limpeza dos dentes com PNGs locais transparentes
+
+### 26.1 O que foi feito
+
+- Os BMPs locais usados pelo odontograma foram convertidos para PNG transparente em `frontend-react/public/assets/fichaClinica/odontograma/dentes-limpos/`.
+- A derivacao foi feita somente a partir dos arquivos ja existentes no repositorio, sem copiar, baixar ou recriar assets do EasyDental Cloud.
+- O componente `FichaClinicaPage.jsx` passou a apontar para os PNGs limpos, preservando a mesma familia de nomes dos dentes.
+- O CSS da ficha clinica teve o shell dos dentes neutralizado para nao desenhar fundo cinza proprio por tras das imagens.
+
+### 26.2 Efeito esperado
+
+- O quadrado cinza dos BMPs deixa de aparecer como bloco visivel por tras dos dentes.
+- A silhueta do dente continua com proporcao parecida com a medida visual anterior.
+- A tela permanece baseada em assets locais do Brana Cloud e nao depende de imagem externa.
+
+### 26.3 Observacao tecnica
+
+- A pasta nova e paralela a pasta legada de BMPs, para manter o historico intacto e facilitar comparacao futura.
+- Se houver novo refinamento de proporcao, ele deve partir dessa base limpa e nao da copia direta de referencia externa.
+
 ### 25.4 O que continua placeholder
 
 - O odontograma continua sem clique funcional em dente.

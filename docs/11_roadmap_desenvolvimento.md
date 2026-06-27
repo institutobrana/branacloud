@@ -5936,3 +5936,6 @@ Observacoes:
 - FC2C-6 aplicou as proporcoes medidas do EasyDental Cloud no odontograma do `frontend-react`.
 - O shell visual ficou mais compacto, com densidade maior e sem backend/banco/migration.
 - Proxima etapa recomendada: revisao visual fina do bloco odontologico e avaliacao do eventual fundo cinza dos BMPs.
+- FC2C-7 converteu os dentes locais para PNG transparente em `frontend-react/public/assets/fichaClinica/odontograma/dentes-limpos/`, sem copiar assets do EasyDental Cloud.
+- O `frontend-react` passou a consumir os PNGs limpos e o shell dos dentes foi neutralizado para eliminar a moldura cinza visivel.
+- Proxima etapa recomendada: apenas validacao visual fina e, se necessario, novo ajuste de proporcao a partir da base limpa local.
