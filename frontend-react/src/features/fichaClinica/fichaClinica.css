@@ -260,197 +260,102 @@
 
 .ficha-clinica-clinic-categories {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
-  gap: 4px;
-  padding: 1px 3px 0;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  overflow: hidden;
-  min-height: 31px;
+  gap: 0;
   margin-top: 2px;
+  min-height: 58px;
+  overflow: hidden;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
   background: #ffffff;
 }
 
 .ficha-clinica-clinic-categories-track {
   display: flex;
-  align-items: center;
-  gap: 2px;
+  align-items: stretch;
+  gap: 0;
   flex: 1 1 auto;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
+  padding: 0 4px 0 2px;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 0 2px;
 }
 
 .ficha-clinica-clinic-categories-track::-webkit-scrollbar {
   display: none;
 }
 
-.ficha-clinica-clinic-menu {
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  padding: 0;
-  color: #7f868d !important;
+.ficha-clinica-clinic-menu,
+.ficha-clinica-clinic-arrow {
   flex: 0 0 auto;
+  width: 22px;
+  min-width: 22px;
+  height: 58px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: #8f959d !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ficha-clinica-clinic-menu {
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .ficha-clinica-clinic-arrow {
-  color: #8f959d !important;
-  font-size: 15px;
-  width: 18px;
-  min-width: 18px;
-  height: 24px;
-  padding: 0;
-  flex: 0 0 auto;
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .ficha-clinica-clinic-category {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
-  min-height: 24px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #687077;
-  padding: 2px 6px;
-  border-radius: 2px;
-  cursor: default;
+  justify-content: flex-start;
+  gap: 2px;
   flex: 0 0 auto;
+  min-width: 54px;
+  padding: 6px 5px 4px;
+  border: 0;
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
+  background: transparent;
+  color: #6f757b;
+  cursor: default;
   white-space: nowrap;
+  scroll-snap-align: start;
+}
+
+.ficha-clinica-clinic-category:first-child {
+  border-left: 0;
 }
 
 .ficha-clinica-clinic-category.is-active {
   color: #0f766e;
-  background: #ffffff;
-  border-color: rgba(22, 170, 161, 0.38);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.88), 0 1px 0 rgba(18, 63, 42, 0.04);
-  font-weight: 700;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(249, 253, 252, 1));
+  box-shadow: inset 0 -2px 0 rgba(22, 170, 161, 0.55);
 }
 
 .ficha-clinica-clinic-category-icon {
-  width: 14px;
-  height: 14px;
-  position: relative;
-  border-radius: 3px;
-  background: transparent;
-  box-shadow: none;
+  width: 36px;
+  height: 20px;
+  display: grid;
+  place-items: center;
 }
 
-.ficha-clinica-clinic-category-icon::before,
-.ficha-clinica-clinic-category-icon::after {
-  content: '';
-  position: absolute;
-}
-
-.ficha-clinica-clinic-category-icon.is-tooth {
-  border: 1px solid rgba(22, 170, 161, 0.6);
-  border-radius: 45% 45% 34% 34%;
-  background: linear-gradient(180deg, rgba(255, 252, 244, 0.98), rgba(224, 206, 154, 0.92));
-}
-
-.ficha-clinica-clinic-category-icon.is-scalpel::before {
-  inset: 2px 2px 2px 2px;
-  border-radius: 0 100% 100% 0;
-  background: linear-gradient(180deg, rgba(22, 170, 161, 0.82), rgba(22, 170, 161, 1));
-  transform: skewX(-20deg);
-}
-
-.ficha-clinica-clinic-category-icon.is-search::before {
-  inset: 1px 1px 1px 1px;
-  border: 1px solid rgba(22, 170, 161, 0.88);
-  border-radius: 50%;
-}
-
-.ficha-clinica-clinic-category-icon.is-search::after {
-  width: 6px;
-  height: 1px;
-  right: -1px;
-  bottom: 0;
-  background: rgba(22, 170, 161, 0.92);
-  transform: rotate(45deg);
-  transform-origin: right center;
-}
-
-.ficha-clinica-clinic-category-icon.is-alert::before {
-  inset: 1px 2px 1px 2px;
-  clip-path: polygon(50% 0, 100% 88%, 0 88%);
-  background: rgba(22, 170, 161, 0.88);
-}
-
-.ficha-clinica-clinic-category-icon.is-alert::after {
-  width: 1px;
-  height: 6px;
-  left: 50%;
-  top: 4px;
-  transform: translateX(-0.5px);
-  background: #ffffff;
-}
-
-.ficha-clinica-clinic-category-icon.is-root::before {
-  inset: 1px 3px 3px;
-  border: 1px solid rgba(22, 170, 161, 0.82);
-  border-radius: 55% 55% 35% 35%;
-}
-
-.ficha-clinica-clinic-category-icon.is-root::after {
-  inset: 6px 6px 1px;
-  border-radius: 0 0 50% 50%;
-  background: rgba(22, 170, 161, 0.72);
-}
-
-.ficha-clinica-clinic-category-icon.is-star::before,
-.ficha-clinica-clinic-category-icon.is-spark::before {
-  inset: 1px;
-  background: rgba(22, 170, 161, 0.88);
-  clip-path: polygon(50% 0, 62% 34%, 98% 34%, 69% 55%, 80% 92%, 50% 70%, 20% 92%, 31% 55%, 2% 34%, 38% 34%);
-}
-
-.ficha-clinica-clinic-category-icon.is-mouth::before {
-  inset: 3px 2px 3px;
-  border-radius: 40% 40% 50% 50%;
-  border: 1px solid rgba(22, 170, 161, 0.8);
-}
-
-.ficha-clinica-clinic-category-icon.is-mouth::after {
-  inset: 7px 3px auto;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(22, 170, 161, 0.8);
-}
-
-.ficha-clinica-clinic-category-icon.is-grid::before {
-  inset: 2px;
-  border-radius: 2px;
-  background:
-    linear-gradient(90deg, rgba(22, 170, 161, 0.85) 0 1px, transparent 1px 50%, rgba(22, 170, 161, 0.85) 50% 51%, transparent 51% 100%),
-    linear-gradient(180deg, rgba(22, 170, 161, 0.85) 0 1px, transparent 1px 50%, rgba(22, 170, 161, 0.85) 50% 51%, transparent 51% 100%);
-}
-
-.ficha-clinica-clinic-category-icon.is-face {
-  border: 1px solid rgba(22, 170, 161, 0.72);
-  border-radius: 50%;
-}
-
-.ficha-clinica-clinic-category-icon.is-face::before {
-  inset: 3px 4px 5px;
-  border-radius: 50%;
-  background: rgba(22, 170, 161, 0.16);
-}
-
-.ficha-clinica-clinic-category-icon.is-face::after {
-  inset: 9px 3px auto;
-  height: 1px;
-  background: rgba(22, 170, 161, 0.82);
+.ficha-clinica-clinic-category-icon-image {
+  display: block;
+  max-width: 36px;
+  max-height: 20px;
+  object-fit: contain;
+  image-rendering: auto;
 }
 
 .ficha-clinica-clinic-category-label {
   font-size: 9px;
-  letter-spacing: 0.02em;
   line-height: 1;
+  letter-spacing: 0.02em;
   text-transform: none;
 }
 
@@ -750,7 +655,7 @@
   }
 
   .ficha-clinica-clinic-categories {
-    flex-wrap: wrap;
+    min-height: 54px;
   }
 }
 

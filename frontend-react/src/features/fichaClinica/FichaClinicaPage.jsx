@@ -4,8 +4,11 @@ import {
   DollarOutlined,
   FileTextOutlined,
   FilterOutlined,
+  LeftOutlined,
   LockOutlined,
   MoreOutlined,
+  MenuOutlined,
+  RightOutlined,
   PrinterOutlined,
   PlusOutlined,
   SearchOutlined,
@@ -111,16 +114,24 @@ function buildCalendarDays(referenceDate = new Date()) {
 }
 
 const clinicCategories = [
-  { key: 'cirur', label: 'Cirur', icon: 'scalpel' },
-  { key: 'dent', label: 'Dent', icon: 'tooth' },
-  { key: 'diag', label: 'Diag', icon: 'search' },
-  { key: 'emer', label: 'Emer', icon: 'alert' },
-  { key: 'endo', label: 'Endo', icon: 'root' },
-  { key: 'espec', label: 'Espec', icon: 'star' },
-  { key: 'estet', label: 'Estét', icon: 'spark' },
-  { key: 'estom', label: 'Estom', icon: 'mouth' },
-  { key: 'geral', label: 'Geral', icon: 'grid' },
-  { key: 'hof', label: 'HOF', icon: 'face' },
+  { key: 'cirur', label: 'Cirur', asset: 'esp_Cirurgia.bmp' },
+  { key: 'dent', label: 'Dent', asset: 'esp_Dentistica.bmp' },
+  { key: 'diag', label: 'Diag', asset: 'esp_Diagnostico.bmp' },
+  { key: 'emer', label: 'Emer', asset: 'int_emerg.bmp' },
+  { key: 'endo', label: 'Endo', asset: 'esp_Endodontia.bmp' },
+  { key: 'espec', label: 'Espec', asset: 'esp_Generico.bmp' },
+  { key: 'estet', label: 'Estét', asset: 'esp_Estetica.bmp' },
+  { key: 'estom', label: 'Estom', asset: 'int_consulta.bmp' },
+  { key: 'geral', label: 'Geral', asset: 'esp_Gerais.bmp' },
+  { key: 'hof', label: 'HOF', asset: 'sim_face.bmp' },
+  { key: 'impla', label: 'Impla', asset: 'esp_Implantodontia.bmp' },
+  { key: 'odped', label: 'OdPed', asset: 'esp_Odontopediatria.bmp' },
+  { key: 'orto', label: 'Orto', asset: 'esp_Ortodontia.bmp' },
+  { key: 'ortop', label: 'Ortop', asset: 'int_bracket.bmp' },
+  { key: 'perio', label: 'Perio', asset: 'esp_Periodontia.bmp' },
+  { key: 'prev', label: 'Prev', asset: 'esp_Prevencao.bmp' },
+  { key: 'prot', label: 'Prót', asset: 'esp_Protese.bmp' },
+  { key: 'radio', label: 'Radio', asset: 'esp_Radiologia.bmp' },
 ];
 
 function buildToothDescriptors() {
@@ -225,35 +236,22 @@ const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2'
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
 
-const clinicCategoryImageByKey = {
-  cirur: 'ciruriga.png',
-  dent: 'dentistica.png',
-  diag: 'diagnostico.png',
-  emer: 'procedimentos.png',
-  endo: 'endodontia.png',
-  espec: 'procedimentos.png',
-  estet: 'estetica.png',
-  estom: 'procedimentos.png',
-  geral: 'gerais.png',
-  hof: 'procedimentos.png',
-};
-
-function ClinicCategoryIconImage({ icon }) {
-  const asset = clinicCategoryImageByKey[icon];
+function ClinicCategoryIconImage({ asset, label }) {
   if (asset) {
     return (
       <img
         className="ficha-clinica-clinic-category-icon-image"
-        src={`${odontogramAssetBase}/${asset}`}
+        src={`${odontogramAssetBase}/especialidades/${asset}`}
         alt=""
         aria-hidden="true"
+        title={label}
         loading="lazy"
         decoding="async"
       />
     );
   }
 
-  return <ClinicCategoryIcon icon={icon} />;
+  return <ClinicCategoryIcon icon="grid" />;
 }
 
 function OdontogramTeethRow({ numbers, className }) {
@@ -478,27 +476,25 @@ export function FichaClinicaPage({ onBackHome }) {
             <Button
               type="text"
               className="ficha-clinica-clinic-menu"
-              icon={<MoreOutlined />}
+              icon={<MenuOutlined />}
               aria-label="Menu das especialidades"
             />
-            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias anteriores">
-              ‹
-            </Button>
+            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias anteriores" icon={<LeftOutlined />} />
             <div className="ficha-clinica-clinic-categories-track">
               {clinicCategories.map((category, index) => (
                 <button
                   key={category.key}
                   type="button"
                   className={`ficha-clinica-clinic-category${index === 0 ? ' is-active' : ''}`}
+                  title={category.label}
+                  aria-label={category.label}
                 >
-                  <ClinicCategoryIconImage icon={category.key} />
+                  <ClinicCategoryIconImage asset={category.asset} label={category.label} />
                   <span className="ficha-clinica-clinic-category-label">{category.label}</span>
                 </button>
               ))}
             </div>
-            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias seguintes">
-              ›
-            </Button>
+            <Button type="text" className="ficha-clinica-clinic-arrow" aria-label="Categorias seguintes" icon={<RightOutlined />} />
           </div>
 
           <div className="ficha-clinica-odontogram-footer">

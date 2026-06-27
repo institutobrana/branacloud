@@ -1025,3 +1025,16 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 
 - A faixa passa a parecer um controle horizontal de sistema, e nao um conjunto de chips modernos.
 - O escopo continua estritamente visual, sem clique clinico funcional, sem filtro real e sem persistencia.
+
+## 29. Fase FC2C-10 - Varredura e refino da barra horizontal de especialidades
+
+### 29.1 Ajustes visuais aplicados
+
+- A barra de especialidades foi reorganizada como um scroller de blocos com icone acima do rotulo.
+- O bloco passou a usar assets locais do acervo do projeto, preservando o shell da Ficha clinica.
+- O comportamento de overflow horizontal ficou mais proximo da leitura vista no EasyDental Cloud.
+
+### 29.2 Efeito esperado
+
+- A faixa fica mais densa e mais tecnica, sem virar chip moderno.
+- O escopo segue estritamente visual, sem backend, banco, migration ou persistencia clinica.
