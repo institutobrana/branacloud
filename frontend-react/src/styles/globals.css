@@ -417,6 +417,13 @@ body {
   line-height: 1;
 }
 
+.brana-action-button .brana-topbar-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
 .brana-action-button:hover {
   color: #16aaa1;
   background: rgba(22, 170, 161, 0.06);

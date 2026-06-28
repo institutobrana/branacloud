@@ -128,3 +128,37 @@ Proxima etapa recomendada: ajustar visualmente apenas os atalhos `Paciente`, `Pr
 
 - O atalho `Paciente` ainda compartilha o mesmo destino funcional geral da area de pacientes, sem um fluxo novo exclusivo.
 - O atalho `Controle de estoque` continua sendo um refinamento visual, sem novo modulo operacional.
+
+## Correção efetiva dos ícones próprios da barra superior
+
+### Diagnóstico da rodada anterior
+
+- A rodada anterior melhorou a presença dos atalhos, mas ainda dependia de ícones genéricos do `@ant-design/icons`.
+- O componente real renderizado pela aplicação é `frontend-react/src/layout/BranaActionTopbar.jsx`, integrado em `frontend-react/src/app/App.jsx`.
+- A validação visual local continuou bloqueada pela autenticação, então a fidelidade ficou dependente apenas da leitura de código.
+- O problema não era a ausência dos botões em si, e sim a falta de ícones próprios da Brana no padrão visual esperado.
+
+### Ícones criados
+
+- Arquivo novo: `frontend-react/src/layout/branaTopbarIcons.jsx`
+- `Paciente`: silhueta com cartão/ficha lateral.
+- `Ficha clínica / Prontuário`: folha/prontuário com detalhe clínico discreto.
+- `Controle de estoque`: caixa/estoque com leitura de empilhamento.
+
+### Aplicação na barra real
+
+- `Paciente` passou a usar `BranaPacienteIcon`.
+- `Ficha clínica` passou a usar `BranaFichaClinicaIcon`.
+- `Controle de estoque` passou a usar `BranaEstoqueIcon`.
+- A rota e a ação de cada atalho foram preservadas.
+
+### Confirmações
+
+- EasyDental foi usado apenas como referência visual/conceitual.
+- Nenhum asset do EasyDental foi copiado.
+- Nenhum backend, banco ou migration foi alterado.
+
+### Pendências remanescentes
+
+- Validação visual final no navegador local continua dependente de uma sessão autenticada válida.
+- A barra superior ainda pode receber microajustes de desenho, se a revisão visual posterior mostrar necessidade.

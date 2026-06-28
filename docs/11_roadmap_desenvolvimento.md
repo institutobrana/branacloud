@@ -5974,3 +5974,6 @@ Observacoes:
 - Ajuste visual dos atalhos Paciente, Ficha clinica/Prontuario e Estoque aplicado no frontend-react.
 - Sem backend/banco/migration.
 - Proxima etapa recomendada: comparacao visual fina e, se necessario, microajustes de icone.
+- Criacao e aplicacao de icones proprios da barra superior para Paciente, Ficha clinica/Prontuario e Estoque.
+- Sem backend/banco/migration.
+- Proxima etapa recomendada: validar visualmente a barra superior no navegador e seguir apenas com microajustes, se necessario.

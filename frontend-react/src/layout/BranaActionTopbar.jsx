@@ -1,13 +1,11 @@
 import { Button, Dropdown, Input, Space, Typography, Tooltip } from 'antd';
 import {
   CalendarOutlined,
-  ClockCircleOutlined,
   DollarOutlined,
   DollarCircleFilled,
   FieldTimeOutlined,
   FileTextOutlined,
   HomeOutlined,
-  InboxOutlined,
   MailOutlined,
   MoreOutlined,
   MoneyCollectOutlined,
@@ -21,6 +19,7 @@ import {
   RocketOutlined,
 } from '@ant-design/icons';
 import branaLogo from '../assets/brana.png';
+import { BranaEstoqueIcon, BranaFichaClinicaIcon, BranaPacienteIcon } from './branaTopbarIcons.jsx';
 
 const toolbarGroups = [
   {
@@ -30,10 +29,10 @@ const toolbarGroups = [
       { key: 'agenda', label: 'Agenda', icon: <CalendarOutlined /> },
       { key: 'proximo-agendado', label: 'Próximo agendado', icon: <FieldTimeOutlined /> },
       { key: 'cadastro-pacientes', label: 'Cadastro de pacientes', icon: <UsergroupAddOutlined /> },
-      { key: 'paciente', label: 'Paciente', icon: <UserOutlined /> },
+      { key: 'paciente', label: 'Paciente', icon: <BranaPacienteIcon /> },
       { key: 'novo-paciente', label: 'Novo paciente', icon: <UserAddOutlined /> },
       { key: 'anamnese', label: 'Anamnese', icon: <SnippetsOutlined /> },
-      { key: 'ficha-clinica', label: 'Ficha clínica', icon: <FileTextOutlined /> },
+      { key: 'ficha-clinica', label: 'Ficha clínica', icon: <BranaFichaClinicaIcon /> },
     ],
   },
   {
@@ -42,7 +41,7 @@ const toolbarGroups = [
       { key: 'contas-pagar', label: 'Contas a pagar', icon: <DollarCircleFilled /> },
       { key: 'contas-receber', label: 'Contas a receber', icon: <MoneyCollectOutlined /> },
       { key: 'fluxo-caixa', label: 'Fluxo de caixa', icon: <TransactionOutlined /> },
-      { key: 'controle-estoque', label: 'Controle de estoque', icon: <InboxOutlined /> },
+      { key: 'controle-estoque', label: 'Controle de estoque', icon: <BranaEstoqueIcon /> },
     ],
   },
   {
