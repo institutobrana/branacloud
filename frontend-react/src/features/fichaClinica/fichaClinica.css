@@ -6,7 +6,7 @@
 
 .ficha-clinica-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1.24fr) minmax(0, 1fr) 244px;
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr) 244px;
   gap: 8px;
   align-items: stretch;
   width: 100%;
@@ -23,7 +23,7 @@
   gap: 6px;
   align-self: start;
   width: 100%;
-  max-width: 648px;
+  max-width: 632px;
 }
 
 .ficha-clinica-board-toolbar {

@@ -1090,6 +1090,7 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 - O quadro do odontograma e as barras abaixo ficaram mais estreitos e contidos.
 - O conjunto passou a se organizar como um bloco unico mais compacto, sem espalhar tanto os elementos laterais.
 - A compactacao anterior foi preservada, com pouca folga vertical e leitura densa do conjunto.
+- Na comparacao final, o shell foi estreitado ainda um pouco mais para eliminar a ultima folga horizontal perceptivel no lado esquerdo.
 
 ### 33.2 Efeito esperado
 

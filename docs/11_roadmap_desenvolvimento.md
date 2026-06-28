@@ -5965,6 +5965,9 @@ Observacoes:
 - O conjunto ficou mais estreito, compacto e alinhado a referencia visual indicada.
 - Sem backend/banco/migration.
 - Proxima etapa recomendada: nova comparacao visual fina, se necessario.
+- Refinamento adicional da FC2C-14 estreitou ainda mais o shell esquerdo para remover a ultima folga horizontal perceptivel.
+- Sem backend/banco/migration.
+- Proxima etapa recomendada: apenas comparacao visual fina com o print de referencia.
 - Matriz de equivalencia da barra superior EasyDental x Brana criada em documento proprio.
 - Sem implementacao.
 - Proxima etapa recomendada: ajustar visualmente apenas os atalhos Paciente, Prontuario/Ficha clinica e Estoque, sem alterar rotas nem backend.
