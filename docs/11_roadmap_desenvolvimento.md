@@ -5977,3 +5977,7 @@ Observacoes:
 - Criacao e aplicacao de icones proprios da barra superior para Paciente, Ficha clinica/Prontuario e Estoque.
 - Sem backend/banco/migration.
 - Proxima etapa recomendada: validar visualmente a barra superior no navegador e seguir apenas com microajustes, se necessario.
+- FC2C-15 criou icones vetoriais locais para a linha Cirur da barra interna da Ficha clinica.
+- A categoria Cirur passou a renderizar Apicectomia, Cirurgia, Enxerto, Frenectomia, Hemisecção, Retalho, Rizectomia e Ulectomia com componentes SVG internos.
+- Sem backend, banco, migration, Tratamento ou painel lateral direito alterados.
+- Proxima etapa recomendada: mapear as demais linhas da barra interna, se o inventario visual indicar lacunas.

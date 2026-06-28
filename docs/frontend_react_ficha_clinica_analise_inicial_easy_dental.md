@@ -1096,3 +1096,19 @@ Próxima etapa recomendada: substituir o CSS do Brana por assets locais já exis
 
 - O bloco esquerdo fica mais proximo da referencia visual do EasyDental Cloud.
 - O ajuste continua somente visual, sem clique clinico real, sem backend, sem banco e sem persistencia.
+
+## 34. Fase FC2C-15 - Icones vetoriais da linha Cirur na barra interna da Ficha clinica
+
+### 34.1 Ajustes visuais aplicados
+
+- A linha superior da barra interna da Ficha clinica, logo abaixo do odontograma, passou a usar iconografia vetorial local para a categoria `Cirur`.
+- Os itens `Apicectomia`, `Cirurgia`, `Enxerto`, `Frenectomia`, `Hemisecção`, `Retalho`, `Rizectomia` e `Ulectomia` foram reprojetados como componentes SVG internos do `frontend-react`.
+- O menu lateral, as setas de rolagem e o track horizontal da barra foram preservados.
+- A faixa de especialidades inferior, as abas `Boca` e `Dente` e o restante do shell da Ficha clinica permaneceram inalterados.
+- Nenhum asset do EasyDental Cloud foi copiado para este ajuste; a reproduçao foi local e vetorial.
+
+### 34.2 Efeito esperado
+
+- A barra interna ganha leitura mais clara e fica mais proxima da referencia visual da Ficha clinica.
+- A implementacao continua somente visual, sem backend, sem banco, sem migration e sem alterar o painel Tratamento ou o painel lateral direito.
+- As demais categorias da barra interna permanecem como proximo passo de mapeamento visual, se necessario.

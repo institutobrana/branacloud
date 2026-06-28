@@ -17,6 +17,16 @@ import {
   DeleteOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import {
+  FichaClinicaProcedureIconApicectomia,
+  FichaClinicaProcedureIconCirurgia,
+  FichaClinicaProcedureIconEnxerto,
+  FichaClinicaProcedureIconFrenectomia,
+  FichaClinicaProcedureIconHemisecao,
+  FichaClinicaProcedureIconRetalho,
+  FichaClinicaProcedureIconRizectomia,
+  FichaClinicaProcedureIconUlectomia,
+} from './fichaClinicaProcedureIcons';
 import './fichaClinica.css';
 
 const SELECTED_PATIENT_KEY = 'brana.fichaClinica.pacienteEmUso';
@@ -259,14 +269,14 @@ const clinicSpecialties = [
 
 const clinicProcedureItemsByCategory = {
   cirur: [
-    { title: 'Apicectomia', asset: 'int_apicecto.bmp' },
-    { title: 'Cirurgia', asset: 'int_cirur.bmp' },
-    { title: 'Enxerto', asset: 'int_enxerto.bmp' },
-    { title: 'Frenectomia', asset: 'int_frenec.bmp' },
-    { title: 'Hemisecção', asset: 'int_hemi.bmp' },
-    { title: 'Retalho', asset: 'int_retalho.bmp' },
-    { title: 'Rizectomia', asset: 'int_rizec.bmp' },
-    { title: 'Ulectomia', asset: 'int_ulecto.bmp' },
+    { title: 'Apicectomia', Icon: FichaClinicaProcedureIconApicectomia },
+    { title: 'Cirurgia', Icon: FichaClinicaProcedureIconCirurgia },
+    { title: 'Enxerto', Icon: FichaClinicaProcedureIconEnxerto },
+    { title: 'Frenectomia', Icon: FichaClinicaProcedureIconFrenectomia },
+    { title: 'Hemisecção', Icon: FichaClinicaProcedureIconHemisecao },
+    { title: 'Retalho', Icon: FichaClinicaProcedureIconRetalho },
+    { title: 'Rizectomia', Icon: FichaClinicaProcedureIconRizectomia },
+    { title: 'Ulectomia', Icon: FichaClinicaProcedureIconUlectomia },
   ],
   dent: [
     { title: 'Consulta', asset: 'int_consulta.bmp' },
@@ -458,7 +468,11 @@ function ClinicCategoryIconImage({ asset, label }) {
   return <ClinicCategoryIcon icon="grid" />;
 }
 
-function ClinicProcedureIconImage({ asset, label }) {
+function ClinicProcedureIconImage({ asset, label, Icon }) {
+  if (Icon) {
+    return <Icon />;
+  }
+
   return (
     <img
       className="ficha-clinica-procedure-icon-image"
@@ -503,7 +517,7 @@ function ClinicProcedureRail({ category }) {
       <div className="ficha-clinica-procedure-categories-track" ref={trackRef}>
         {procedures.map((procedure) => (
           <button key={procedure.title} type="button" className="ficha-clinica-procedure-item" title={procedure.title} aria-label={procedure.title}>
-            <ClinicProcedureIconImage asset={procedure.asset} label={procedure.title} />
+            <ClinicProcedureIconImage asset={procedure.asset} Icon={procedure.Icon} label={procedure.title} />
           </button>
         ))}
       </div>
