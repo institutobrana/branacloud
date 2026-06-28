@@ -5965,3 +5965,6 @@ Observacoes:
 - O conjunto ficou mais estreito, compacto e alinhado a referencia visual indicada.
 - Sem backend/banco/migration.
 - Proxima etapa recomendada: nova comparacao visual fina, se necessario.
+- Matriz de equivalencia da barra superior EasyDental x Brana criada em documento proprio.
+- Sem implementacao.
+- Proxima etapa recomendada: ajustar visualmente apenas os atalhos Paciente, Prontuario/Ficha clinica e Estoque, sem alterar rotas nem backend.
