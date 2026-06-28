@@ -96,3 +96,35 @@ Nao ha alteracao de frontend, backend, banco, migrations ou assets nesta rodada.
 ## 7. Recomendacao de proxima etapa
 
 Proxima etapa recomendada: ajustar visualmente apenas os atalhos `Paciente`, `Prontuario / Ficha clinica` e `Estoque`, sem alterar rotas nem backend.
+
+## Ajuste visual dos atalhos parciais da barra superior
+
+### Paciente
+
+- Foi adicionado um atalho dedicado `Paciente` na barra superior do `frontend-react`.
+- O atalho usa um icone de usuario e segue o padrao visual dos demais botoes da barra.
+- A acao aproveita a rota ja existente de pacientes.
+- O tooltip e o aria-label seguem o texto `Paciente`.
+
+### Prontuario / Ficha clinica
+
+- O atalho de `Ficha clinica` foi mantido como entrada principal do prontuario no `frontend-react`.
+- A navegacao continua apontando para `/app/ficha-clinica`.
+- O rótulo permanece coerente com o padrao ja adotado no Brana.
+
+### Estoque
+
+- O atalho `Controle de estoque` recebeu ajuste visual no icone, para ficar mais coerente com a leitura de estoque do EasyDental e do Brana.
+- A acao existente foi preservada.
+- Nao houve alteracao do modulo de estoque em si.
+
+### Confirmacoes
+
+- Rotas nao foram alteradas fora do que ja existia.
+- Backend nao foi alterado.
+- Banco e migrations nao foram alterados.
+
+### Pendencias remanescentes
+
+- O atalho `Paciente` ainda compartilha o mesmo destino funcional geral da area de pacientes, sem um fluxo novo exclusivo.
+- O atalho `Controle de estoque` continua sendo um refinamento visual, sem novo modulo operacional.

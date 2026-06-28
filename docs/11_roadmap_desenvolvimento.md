@@ -5968,3 +5968,6 @@ Observacoes:
 - Matriz de equivalencia da barra superior EasyDental x Brana criada em documento proprio.
 - Sem implementacao.
 - Proxima etapa recomendada: ajustar visualmente apenas os atalhos Paciente, Prontuario/Ficha clinica e Estoque, sem alterar rotas nem backend.
+- Ajuste visual dos atalhos Paciente, Ficha clinica/Prontuario e Estoque aplicado no frontend-react.
+- Sem backend/banco/migration.
+- Proxima etapa recomendada: comparacao visual fina e, se necessario, microajustes de icone.

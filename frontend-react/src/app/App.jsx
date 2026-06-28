@@ -204,6 +204,10 @@ function AppContent() {
       handleNavigate('pacientes');
       return;
     }
+    if (actionKey === 'paciente') {
+      handleNavigate('pacientes');
+      return;
+    }
     if (actionKey === 'ficha-clinica') {
       handleNavigate('ficha-clinica');
       return;
