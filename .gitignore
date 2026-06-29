@@ -57,6 +57,7 @@ tmp_front_debug*/
 stdout
 *.log
 *.tmp
+*.har
 ~$*
 relatorio_repo.txt
 relatorio_repo.json
@@ -110,3 +111,4 @@ local_bridge/.env
 
 # Temporario do Google Drive / upload
 .tmp.driveupload/
+_referencias_privadas/
