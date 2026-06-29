@@ -265,7 +265,7 @@ const clinicSpecialties = [
   { key: 'radio', label: 'Radio', fullLabel: 'Radiologia' },
 ];
 
-const clinicProcedureItemsByCategory = {
+/* const clinicProcedureItemsByCategoryLegacy = {
   cirur: [
     { title: 'Apicectomia', Icon: FichaClinicaProcedureIconApicectomia },
     { title: 'Cirurgia', Icon: FichaClinicaProcedureIconCirurgia },
@@ -446,7 +446,7 @@ const clinicProcedureItemsByCategory = {
     { title: 'Attach', asset: 'int_attach.bmp' },
     { title: 'Modelo', asset: 'int_modelo.bmp' },
   ],
-};
+}; */
 
 const odontogramProcedureAssetBase = `${odontogramAssetBase}/procedimentos`;
 
@@ -499,6 +499,7 @@ function buildAuditedProcedureItems(category) {
   ];
 }
 
+// A barra superior usa somente o subconjunto auditado; a barra inferior e textual.
 const safeClinicProcedureItemsByCategory = Object.fromEntries(
   clinicSpecialties.map((category) => [category.key, buildAuditedProcedureItems(category.key)]),
 );

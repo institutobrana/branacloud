@@ -370,21 +370,6 @@
   box-shadow: inset 0 -2px 0 rgba(22, 170, 161, 0.55);
 }
 
-.ficha-clinica-clinic-category-icon {
-  width: 36px;
-  height: 20px;
-  display: grid;
-  place-items: center;
-}
-
-.ficha-clinica-clinic-category-icon-image {
-  display: block;
-  max-width: 36px;
-  max-height: 20px;
-  object-fit: contain;
-  image-rendering: auto;
-}
-
 .ficha-clinica-clinic-category-label {
   font-size: 9px;
   line-height: 1;
@@ -535,6 +520,7 @@
   border: 0;
   border-left: 1px solid rgba(15, 23, 42, 0.08);
   background: transparent;
+  background-image: none;
   color: #6f757b;
   cursor: pointer;
   white-space: nowrap;
@@ -550,20 +536,6 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(249, 253, 252, 1));
   box-shadow: inset 0 -2px 0 rgba(22, 170, 161, 0.55);
   font-weight: 700;
-}
-
-.ficha-clinica-specialty-category-icon-wrap {
-  width: 26px;
-  height: 22px;
-  display: grid;
-  place-items: center;
-}
-
-.ficha-clinica-specialty-category .ficha-clinica-clinic-category-icon-image {
-  width: 20px;
-  height: 20px;
-  max-width: 20px;
-  max-height: 20px;
 }
 
 .ficha-clinica-specialty-category-label {
@@ -979,13 +951,6 @@
   width: 14px;
   height: 14px;
   opacity: 0.58;
-}
-
-.ficha-clinica-clinic-category-icon-image {
-  width: 13px;
-  height: 13px;
-  object-fit: contain;
-  display: block;
 }
 
 @media (max-width: 1400px) {

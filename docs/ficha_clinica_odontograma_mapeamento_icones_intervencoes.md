@@ -60,6 +60,16 @@ Registrar o mapeamento seguro dos icones da barra superior da Ficha Clinica/Odon
 - Correspondencias seguras em `assets/images`: `26`
 - Correspondencias publicadas na tela: `26`
 
+## Estrutura das barras
+
+- Barra superior de intervencoes: usa somente `safeClinicProcedureItemsByCategory` no `FichaClinicaPage.jsx`.
+- Barra inferior de especialidades: renderiza somente `category.label` em `ClinicSpecialtyButton`.
+- Foram removidos da barra inferior os estilos residuais ligados a:
+  - `.ficha-clinica-specialty-category-icon-wrap`
+  - `.ficha-clinica-clinic-category-icon-image`
+  - `.ficha-clinica-clinic-category-icon`
+- A barra inferior tambem ficou com `background-image: none`, sem miniatura, sem pseudo-elemento grafico e sem renderer de imagem.
+
 ## Pendencias
 
 - O XML extraido de `simbolo_odonto.xml` cobre somente icones das especialidades `Cirur`, `Dent`, `Geral`, `Orto`, `Perio` e `Prev`.
