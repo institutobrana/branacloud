@@ -242,9 +242,21 @@ function ToothGrid() {
 const odontogramAssetBase = '/assets/fichaClinica/odontograma';
 const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes-limpos`;
 const odontogramFaceImage = `${odontogramAssetBase}/arc_faces.bmp`;
+const odontogramToolbarAssetBase = '/assets/fichaClinica/toolbar';
 const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2', '3', '4', '5', '6', '7', '8'];
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+
+const odontogramToolbarItems = [
+  { key: 'novo', label: 'Novo', image: `${odontogramToolbarAssetBase}/ico_dashboard_novo.png` },
+  { key: 'pesquisa', label: 'Pesquisa', image: `${odontogramToolbarAssetBase}/ico_odontograma_toolbar_prc_pesquisa.png` },
+  { key: 'filtro', label: 'Filtro', image: `${odontogramToolbarAssetBase}/ico_filter.png` },
+  { key: 'selecao', label: 'Selecao', image: `${odontogramToolbarAssetBase}/ico_select.png` },
+  { key: 'trocar', label: 'Trocar', image: `${odontogramToolbarAssetBase}/ico_trocar.png` },
+  { key: 'menu', label: 'Menu', image: `${odontogramToolbarAssetBase}/ico_menu_odontograma.png` },
+  { key: 'financeiro', label: 'Financeiro', image: `${odontogramToolbarAssetBase}/ico_orcamento.png` },
+  { key: 'imprimir', label: 'Imprimir', image: `${odontogramToolbarAssetBase}/ico_odonto_imprime.png` },
+];
 
 const clinicSpecialties = [
   { key: 'cirur', label: 'Cirur', fullLabel: 'Cirurgia' },
@@ -764,19 +776,13 @@ export function FichaClinicaPage({ onBackHome }) {
     <div className="ficha-clinica-page">
       <div className="ficha-clinica-stage">
         <section className="ficha-clinica-board ficha-clinica-odontogram-board">
-          <div className="ficha-clinica-board-toolbar">
-            <Button type="text" icon={<PlusOutlined />} />
-            <Button type="text" icon={<SearchOutlined />} />
-            <Button type="text" icon={<FilterOutlined />} />
-            <span className="ficha-clinica-board-divider" />
-            <Button type="text" icon={<FileTextOutlined />} />
-            <Button type="text" icon={<DollarOutlined />} />
-            <Button type="text" icon={<PrinterOutlined />} />
-          </div>
+          <OdontogramToolbar onAction={handlePlaceholderAction} />
 
           <div className="ficha-clinica-odontogram-frame">
             <ToothGridImage />
           </div>
+
+          <ClinicProcedureRail category={activeProcedureCategory} />
 
           <div className="ficha-clinica-specialty-categories" aria-label="Especialidades clínicas">
             <Button
@@ -823,7 +829,6 @@ export function FichaClinicaPage({ onBackHome }) {
                   label: 'Boca',
                   children: (
                     <div className="ficha-clinica-boca-panel">
-                      <ClinicProcedureRail category={activeProcedureCategory} />
                       <div className="ficha-clinica-boca-empty">
                         <Typography.Text className="ficha-clinica-boca-empty-copy">
                           Nenhum tratamento selecionado no odontograma.
@@ -927,6 +932,25 @@ export function FichaClinicaPage({ onBackHome }) {
           </div>
         </aside>
       </div>
+    </div>
+  );
+}
+
+function OdontogramToolbar({ onAction }) {
+  return (
+    <div className="ficha-clinica-odontogram-toolbar" role="toolbar" aria-label="Ferramentas do odontograma">
+      {odontogramToolbarItems.map((item) => (
+        <button
+          key={item.key}
+          type="button"
+          className="ficha-clinica-odontogram-toolbar-button"
+          title={item.label}
+          aria-label={item.label}
+          onClick={() => onAction?.(item.label)}
+        >
+          <img className="ficha-clinica-odontogram-toolbar-icon" src={item.image} alt="" aria-hidden="true" />
+        </button>
+      ))}
     </div>
   );
 }
