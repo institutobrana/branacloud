@@ -468,6 +468,24 @@ function ClinicCategoryIconImage({ asset, label }) {
   return <ClinicCategoryIcon icon="grid" />;
 }
 
+function ClinicSpecialtyButton({ category, active, onClick }) {
+  const assetMeta = clinicCategories.find((item) => item.key === category.key) || null;
+  return (
+    <button
+      type="button"
+      className={`ficha-clinica-specialty-category${active ? ' is-active' : ''}`}
+      title={category.fullLabel}
+      aria-label={category.fullLabel}
+      onClick={onClick}
+    >
+      <span className="ficha-clinica-specialty-category-icon-wrap">
+        <ClinicCategoryIconImage asset={assetMeta?.asset || ''} label={category.fullLabel} />
+      </span>
+      <span className="ficha-clinica-specialty-category-label">{category.label}</span>
+    </button>
+  );
+}
+
 function ClinicProcedureIconImage({ asset, label, Icon }) {
   if (Icon) {
     return <Icon />;
@@ -760,8 +778,6 @@ export function FichaClinicaPage({ onBackHome }) {
             <ToothGridImage />
           </div>
 
-          <ClinicProcedureRail category={activeProcedureCategory} />
-
           <div className="ficha-clinica-specialty-categories" aria-label="Especialidades clínicas">
             <Button
               type="text"
@@ -780,16 +796,12 @@ export function FichaClinicaPage({ onBackHome }) {
             />
             <div className="ficha-clinica-specialty-categories-track" ref={specialtyTrackRef}>
               {clinicSpecialties.map((category) => (
-                <button
+                <ClinicSpecialtyButton
                   key={category.key}
-                  type="button"
-                  className={`ficha-clinica-specialty-category${activeClinicCategory === category.key ? ' is-active' : ''}`}
-                  title={category.fullLabel}
-                  aria-label={category.fullLabel}
+                  category={category}
+                  active={activeClinicCategory === category.key}
                   onClick={() => setActiveClinicCategory(category.key)}
-                >
-                  <span className="ficha-clinica-specialty-category-label">{category.label}</span>
-                </button>
+                />
               ))}
             </div>
             <Button
@@ -810,12 +822,15 @@ export function FichaClinicaPage({ onBackHome }) {
                   key: 'boca',
                   label: 'Boca',
                   children: (
-                    <div className="ficha-clinica-boca-empty">
-                      <Typography.Text className="ficha-clinica-boca-empty-copy">
-                        Nenhum tratamento selecionado no odontograma.
-                        <br />
-                        Selecione o tratamento desejado para visualizar os detalhes.
-                      </Typography.Text>
+                    <div className="ficha-clinica-boca-panel">
+                      <ClinicProcedureRail category={activeProcedureCategory} />
+                      <div className="ficha-clinica-boca-empty">
+                        <Typography.Text className="ficha-clinica-boca-empty-copy">
+                          Nenhum tratamento selecionado no odontograma.
+                          <br />
+                          Selecione o tratamento desejado para visualizar os detalhes.
+                        </Typography.Text>
+                      </div>
                     </div>
                   ),
                 },

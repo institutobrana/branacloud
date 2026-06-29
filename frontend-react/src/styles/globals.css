@@ -42,7 +42,7 @@ body {
   grid-row: 1;
   width: 100%;
   min-width: 0;
-  min-height: 42px;
+  min-height: 36px;
   background: #16aaa1;
 }
 
@@ -68,13 +68,13 @@ body {
 .brana-icon-rail {
   grid-column: 1;
   grid-row: 2;
-  height: calc(100vh - 66px);
+  height: calc(100vh - 54px);
   position: sticky;
-  top: 66px;
+  top: 54px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 0 12px;
+  padding: 10px 0 10px;
   background: #16aaa1;
   border-right: 0;
   box-shadow: none;
@@ -90,7 +90,7 @@ body {
 .brana-icon-rail-footer {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
   align-items: center;
   width: 100%;
 }
@@ -124,7 +124,7 @@ body {
 .brana-icon-rail-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   align-items: center;
 }
@@ -140,9 +140,9 @@ body {
 .brana-icon-rail-button {
   position: relative;
   width: 100%;
-  min-height: 44px;
+  min-height: 38px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 0;
   background: transparent;
   color: rgba(255, 255, 255, 0.95);
   display: flex;
@@ -170,7 +170,7 @@ body {
 }
 
 .brana-icon-rail-icon {
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   color: inherit;
 }
@@ -186,9 +186,9 @@ body {
 
 .brana-icon-rail-toggle {
   width: 100%;
-  min-height: 40px;
+  min-height: 34px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   cursor: pointer;
@@ -201,9 +201,9 @@ body {
 .brana-context-panel {
   grid-column: 2;
   grid-row: 2;
-  height: calc(100vh - 66px);
+  height: calc(100vh - 54px);
   position: sticky;
-  top: 66px;
+  top: 54px;
   background: #ffffff;
   border-right: 1px solid rgba(15, 23, 42, 0.14);
   box-shadow: 10px 0 22px rgba(15, 23, 42, 0.12);
@@ -307,10 +307,10 @@ body {
 .brana-action-topbar {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 14px;
+  gap: 10px;
   align-items: center;
-  padding: 8px 14px;
-  border-bottom: 4px solid var(--brana-support-teal);
+  padding: 5px 10px;
+  border-bottom: 3px solid var(--brana-support-teal);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.985), rgba(240, 247, 245, 0.985));
   box-shadow: 0 8px 18px rgba(0, 75, 37, 0.06);
@@ -318,18 +318,18 @@ body {
 
 .brana-action-topbar-brand {
   display: grid;
-  grid-template-columns: 50px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 8px;
   align-items: center;
   min-width: 0;
-  width: 260px;
+  width: 172px;
 }
 
 .brana-action-topbar-logo {
   display: block;
   width: auto;
-  height: 44px;
-  max-width: 50px;
+  height: 32px;
+  max-width: 36px;
   object-fit: contain;
 }
 
@@ -343,25 +343,17 @@ body {
 
 .brana-action-topbar-brand-name {
   display: block;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   letter-spacing: 0.01em;
   color: var(--brana-deep-green);
   white-space: nowrap;
 }
 
-.brana-action-topbar-brand-subtitle {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--brana-gray);
-  white-space: nowrap;
-}
-
 .brana-action-topbar-center {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   min-width: 0;
   flex: 1;
 }
@@ -369,7 +361,7 @@ body {
 .brana-action-topbar-toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 7px;
   min-width: 0;
   flex-wrap: nowrap;
 }
@@ -377,14 +369,14 @@ body {
 .brana-action-topbar-group {
   display: inline-flex;
   align-items: center;
-  gap: 6px !important;
+  gap: 3px !important;
   flex-wrap: nowrap;
 }
 
 .brana-action-topbar-divider {
   width: 1px;
-  height: 30px;
-  margin: 0 4px 0 2px;
+  height: 22px;
+  margin: 0 2px 0 1px;
   background: rgba(0, 75, 37, 0.16);
   flex: 0 0 auto;
 }
@@ -392,35 +384,35 @@ body {
 .brana-action-topbar-search-wrap {
   display: flex;
   align-items: center;
-  min-width: 260px;
-  max-width: 420px;
-  width: 340px;
+  min-width: 220px;
+  max-width: 320px;
+  width: 280px;
   flex: 1;
 }
 
 .brana-action-button {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border: 0;
   color: #16aaa1;
   background: transparent;
   box-shadow: none;
   display: inline-grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 0;
 }
 
 .brana-action-button .ant-btn-icon {
   color: #16aaa1;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1;
 }
 
 .brana-action-button .brana-topbar-icon {
   display: block;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   flex: 0 0 auto;
 }
 
@@ -445,7 +437,7 @@ body {
   gap: 10px;
   justify-content: flex-end;
   white-space: nowrap;
-  min-width: 220px;
+  min-width: 178px;
   border: 0;
   background: transparent;
   padding: 0;
@@ -460,12 +452,12 @@ body {
 }
 
 .brana-action-topbar-user {
-  max-width: 190px;
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--brana-deep-green);
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .brana-action-topbar-user-more {
@@ -476,8 +468,8 @@ body {
   border-color: rgba(0, 104, 56, 0.22);
   box-shadow: none;
   background: #ffffff;
-  height: 34px;
-  border-radius: 10px;
+  height: 28px;
+  border-radius: 6px;
 }
 
 .brana-action-topbar .ant-input-affix-wrapper:focus,
@@ -495,7 +487,7 @@ body {
 }
 
 .brana-content {
-  padding: 14px 16px 18px;
+  padding: 8px 10px 12px;
   max-width: 1700px;
   width: 100%;
   min-width: 0;
@@ -549,8 +541,8 @@ body {
 
   .brana-icon-rail,
   .brana-context-panel {
-    top: 66px;
-    height: calc(100vh - 66px);
+    top: 54px;
+    height: calc(100vh - 54px);
   }
 
   .brana-action-topbar-center {

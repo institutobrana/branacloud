@@ -85,7 +85,6 @@ export function BranaActionTopbar({ user, onSignOut, loading, onPlaceholderActio
         <img className="brana-action-topbar-logo" src={branaLogo} alt="Instituto Brana Odontologia" />
         <div className="brana-action-topbar-brand-copy">
           <Typography.Text className="brana-action-topbar-brand-name">BranaCloud</Typography.Text>
-          <Typography.Text className="brana-action-topbar-brand-subtitle">Sistema de Gestão Odontológica.</Typography.Text>
         </div>
       </div>
 
