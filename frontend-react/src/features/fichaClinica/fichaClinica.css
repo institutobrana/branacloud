@@ -526,19 +526,19 @@
 
 .ficha-clinica-specialty-category {
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   flex: 0 0 auto;
-  min-width: 48px;
-  padding: 5px 4px 3px;
+  min-width: 54px;
+  padding: 6px 8px 5px;
   border: 0;
   border-left: 1px solid rgba(15, 23, 42, 0.08);
   background: transparent;
   color: #6f757b;
   cursor: pointer;
   white-space: nowrap;
-  gap: 3px;
+  gap: 0;
 }
 
 .ficha-clinica-specialty-category:first-child {
@@ -567,7 +567,7 @@
 }
 
 .ficha-clinica-specialty-category-label {
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: none;

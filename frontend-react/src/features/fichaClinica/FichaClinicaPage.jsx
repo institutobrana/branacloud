@@ -17,16 +17,6 @@ import {
   DeleteOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import {
-  FichaClinicaProcedureIconApicectomia,
-  FichaClinicaProcedureIconCirurgia,
-  FichaClinicaProcedureIconEnxerto,
-  FichaClinicaProcedureIconFrenectomia,
-  FichaClinicaProcedureIconHemisecao,
-  FichaClinicaProcedureIconRetalho,
-  FichaClinicaProcedureIconRizectomia,
-  FichaClinicaProcedureIconUlectomia,
-} from './fichaClinicaProcedureIcons';
 import './fichaClinica.css';
 
 const SELECTED_PATIENT_KEY = 'brana.fichaClinica.pacienteEmUso';
@@ -175,10 +165,6 @@ function ToothFace() {
       <span className="ficha-clinica-tooth-face-core" />
     </span>
   );
-}
-
-function ClinicCategoryIcon({ icon }) {
-  return <span className={`ficha-clinica-clinic-category-icon is-${icon}`} aria-hidden="true" />;
 }
 
 function PlaceholderBlock({ title, description }) {
@@ -462,26 +448,62 @@ const clinicProcedureItemsByCategory = {
   ],
 };
 
-function ClinicCategoryIconImage({ asset, label }) {
-  if (asset) {
-    return (
-      <img
-        className="ficha-clinica-clinic-category-icon-image"
-        src={`${odontogramAssetBase}/especialidades/${asset}`}
-        alt=""
-        aria-hidden="true"
-        title={label}
-        loading="lazy"
-        decoding="async"
-      />
-    );
-  }
+const odontogramProcedureAssetBase = `${odontogramAssetBase}/procedimentos`;
 
-  return <ClinicCategoryIcon icon="grid" />;
+const auditedProcedureItemsByCategory = {
+  cirur: [
+    { title: 'Apicectomia', id: 15, asset: 'int_apicecto.bmp' },
+    { title: 'Aprf./Aum. de vestÃ­bulo', id: 94, asset: 'int_aprof_vestib.png' },
+    { title: 'BiÃ³psia de lÃ¡bio', id: 95, asset: 'int_biop_labio.png' },
+    { title: 'BiÃ³psia de lÃ­ngua', id: 96, asset: 'int_biop_ling.png' },
+    { title: 'BiÃ³psia de mandÃ­bula', id: 97, asset: 'int_biop_mand.png' },
+    { title: 'BiÃ³psia de maxila', id: 98, asset: 'int_biop_maxila.png' },
+    { title: 'Cirurgia', id: 45, asset: 'int_cirur.bmp' },
+    { title: 'Cirurgia para exostose maxilar', id: 99, asset: 'int_exostose_max.png' },
+    { title: 'Cirurgia para torus mandibular', id: 100, asset: 'int_torus_mand.png' },
+    { title: 'Cirurgia para torus palatino', id: 101, asset: 'int_torus_palat.png' },
+    { title: 'Exodontia', id: 13, asset: 'int_boticao.bmp' },
+    { title: 'HemisecÃ§Ã£o', id: 46, asset: 'int_hemi.bmp' },
+    { title: 'Implante', id: 9, asset: 'int_implante.bmp' },
+    { title: 'Rizectomia', id: 47, asset: 'int_rizec.bmp' },
+  ],
+  dent: [
+    { title: 'GenÃ©rico 1', id: 82, asset: 'int_generico01.bmp' },
+    { title: 'GenÃ©rico 2', id: 83, asset: 'int_generico02.bmp' },
+    { title: 'GenÃ©rico 3', id: 84, asset: 'int_generico03.bmp' },
+    { title: 'GenÃ©rico 4', id: 85, asset: 'int_generico04.bmp' },
+  ],
+  geral: [{ title: 'Consulta', id: 10, asset: 'int_consulta.bmp' }],
+  orto: [{ title: 'Placa de mordida', id: 37, asset: 'int_mordida.bmp' }],
+  perio: [
+    { title: 'Enxerto', id: 25, asset: 'int_enxerto.bmp' },
+    { title: 'Frenectomia', id: 26, asset: 'int_frenec.bmp' },
+    { title: 'Raspagem para arcada', id: 81, asset: 'int_raspagem.bmp' },
+    { title: 'Retalho', id: 17, asset: 'int_retalho.bmp' },
+    { title: 'Ulectomia', id: 51, asset: 'int_ulecto.bmp' },
+  ],
+  prev: [{ title: 'AplicaÃ§Ã£o de flÃºor', id: 20, asset: 'int_fluor.bmp' }],
+};
+
+function buildAuditedProcedureItems(category) {
+  const specialty = clinicSpecialties.find((item) => item.key === category) ?? clinicSpecialties[0];
+  const auditedItems = auditedProcedureItemsByCategory[category] ?? [];
+
+  return [
+    {
+      title: `Pesquisar em ${specialty.fullLabel}`,
+      id: 'search',
+      image: `${odontogramToolbarAssetBase}/ico_odontograma_toolbar_prc_pesquisa.png`,
+    },
+    ...auditedItems,
+  ];
 }
 
+const safeClinicProcedureItemsByCategory = Object.fromEntries(
+  clinicSpecialties.map((category) => [category.key, buildAuditedProcedureItems(category.key)]),
+);
+
 function ClinicSpecialtyButton({ category, active, onClick }) {
-  const assetMeta = clinicCategories.find((item) => item.key === category.key) || null;
   return (
     <button
       type="button"
@@ -490,23 +512,16 @@ function ClinicSpecialtyButton({ category, active, onClick }) {
       aria-label={category.fullLabel}
       onClick={onClick}
     >
-      <span className="ficha-clinica-specialty-category-icon-wrap">
-        <ClinicCategoryIconImage asset={assetMeta?.asset || ''} label={category.fullLabel} />
-      </span>
       <span className="ficha-clinica-specialty-category-label">{category.label}</span>
     </button>
   );
 }
 
-function ClinicProcedureIconImage({ asset, label, Icon }) {
-  if (Icon) {
-    return <Icon />;
-  }
-
+function ClinicProcedureIconImage({ asset, image, label }) {
   return (
     <img
       className="ficha-clinica-procedure-icon-image"
-      src={`/assets/fichaClinica/odontograma/procedimentos/${asset}`}
+      src={image || `${odontogramProcedureAssetBase}/${asset}`}
       alt=""
       aria-hidden="true"
       title={label}
@@ -517,7 +532,7 @@ function ClinicProcedureIconImage({ asset, label, Icon }) {
 }
 
 function ClinicProcedureRail({ category }) {
-  const procedures = clinicProcedureItemsByCategory[category] ?? clinicProcedureItemsByCategory.cirur;
+  const procedures = safeClinicProcedureItemsByCategory[category] ?? safeClinicProcedureItemsByCategory.cirur;
   const trackRef = useRef(null);
 
   const scrollTrack = (direction) => {
@@ -547,7 +562,7 @@ function ClinicProcedureRail({ category }) {
       <div className="ficha-clinica-procedure-categories-track" ref={trackRef}>
         {procedures.map((procedure) => (
           <button key={procedure.title} type="button" className="ficha-clinica-procedure-item" title={procedure.title} aria-label={procedure.title}>
-            <ClinicProcedureIconImage asset={procedure.asset} Icon={procedure.Icon} label={procedure.title} />
+            <ClinicProcedureIconImage asset={procedure.asset} image={procedure.image} label={procedure.title} />
           </button>
         ))}
       </div>
