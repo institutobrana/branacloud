@@ -53,7 +53,9 @@
   align-self: flex-start;
   justify-content: flex-start;
   padding: 0 8px 1px;
-  margin: 0 0 1px clamp(214px, 31.5%, 236px);
+  margin: 0 0 1px clamp(496px, 73%, 516px);
+  position: relative;
+  z-index: 1;
 }
 
 .ficha-clinica-odontogram-toolbar-button {
@@ -879,7 +881,7 @@
   }
 
   .ficha-clinica-odontogram-toolbar {
-    margin-left: clamp(186px, 30%, 210px);
+    margin-left: clamp(452px, 71%, 476px);
   }
 }
 
