@@ -26,10 +26,12 @@ Ajuste realizado na barra superior de acoes do odontograma da Ficha Clinica no `
 ## Comportamento retratil da lateral direita
 
 - A lateral direita passou a ter estado expandido/recolhido.
+- Antes desta correcao final, a lateral ja estava visualmente aproximada, mas a seta percebida no cabecalho ainda estava estatica e nao alternava o painel de verdade.
 - Uma seta persistente fica acessivel no proprio painel para recolher e expandir.
 - Quando recolhida, a coluna direita nao vira apenas uma alca minima: ela permanece como uma faixa turquesa estreita, com atalhos verticais visiveis, mais proxima do comportamento mostrado no video correto.
 - Quando expandida, o calendario, status do paciente em uso, busca e acoes reaparecem no mesmo painel.
 - O video correto usado como referencia foi `C:\\Users\\Tel\\Videos\\2026-06-30 06-01-19.mp4`, que mostrou a tela odontologica com a lateral recolhida em formato de trilho vertical.
+- O controle funcional passou a usar o estado React `isPatientRailCollapsed` com o handler `togglePatientRail`, ligado tanto a seta do cabecalho expandido quanto a alca do trilho recolhido.
 
 ## O que mudou
 
@@ -87,3 +89,5 @@ Todos foram usados a partir da base de assets do projeto e publicados em `fronte
 9. Conferir que a seta da lateral direita recolhe e expande o painel sem perder o acesso ao controle.
 10. Conferir que o calendario continua visivel quando expandido.
 11. Conferir que, quando recolhida, a lateral continua aparecendo como trilho turquesa estreito com atalhos verticais visiveis.
+12. Clicar na seta do canto superior direito no estado expandido e confirmar que o atributo visual e o layout mudam para o estado recolhido.
+13. Clicar novamente na alca/seta do trilho recolhido e confirmar retorno ao estado expandido.

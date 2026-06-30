@@ -659,6 +659,10 @@ export function FichaClinicaPage({ onBackHome }) {
     node.scrollBy({ left: amount, behavior: 'smooth' });
   };
 
+  const togglePatientRail = () => {
+    setIsPatientRailCollapsed((current) => !current);
+  };
+
   const handleClearPatient = () => {
     setSelectedPatient(null);
     storeSelectedPatient(null);
@@ -879,13 +883,17 @@ export function FichaClinicaPage({ onBackHome }) {
           </Card>
         </section>
 
-        <aside className={`ficha-clinica-patient-rail${isPatientRailCollapsed ? ' is-collapsed' : ''}`}>
+        <aside
+          className={`ficha-clinica-patient-rail${isPatientRailCollapsed ? ' is-collapsed' : ''}`}
+          data-state={isPatientRailCollapsed ? 'collapsed' : 'expanded'}
+        >
           <button
             type="button"
             className="ficha-clinica-patient-rail-toggle"
             aria-label={isPatientRailCollapsed ? 'Expandir painel lateral' : 'Recolher painel lateral'}
+            aria-expanded={!isPatientRailCollapsed}
             title={isPatientRailCollapsed ? 'Expandir painel lateral' : 'Recolher painel lateral'}
-            onClick={() => setIsPatientRailCollapsed((current) => !current)}
+            onClick={togglePatientRail}
           >
             <img
               className={`ficha-clinica-patient-rail-toggle-icon${isPatientRailCollapsed ? ' is-collapsed' : ''}`}
@@ -898,7 +906,7 @@ export function FichaClinicaPage({ onBackHome }) {
             <button
               type="button"
               className="ficha-clinica-patient-rail-mini-action"
-              onClick={() => setIsPatientRailCollapsed(false)}
+              onClick={togglePatientRail}
               title="Expandir lateral e visualizar calendario"
             >
               <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_calendario.svg`} alt="" aria-hidden="true" />
@@ -933,7 +941,15 @@ export function FichaClinicaPage({ onBackHome }) {
             <div className="ficha-clinica-patient-header-top">
               <Button type="text" icon={<span className="ficha-clinica-patient-arrow">↙</span>} />
               <Typography.Text className="ficha-clinica-patient-name">{patientLabel}</Typography.Text>
-              <Button type="text" icon={<span className="ficha-clinica-patient-arrow">›</span>} />
+              <Button
+                type="text"
+                className="ficha-clinica-patient-collapse-trigger"
+                aria-label="Recolher painel lateral"
+                aria-expanded={!isPatientRailCollapsed}
+                title="Recolher painel lateral"
+                icon={<span className="ficha-clinica-patient-arrow">›</span>}
+                onClick={togglePatientRail}
+              />
             </div>
           </div>
 

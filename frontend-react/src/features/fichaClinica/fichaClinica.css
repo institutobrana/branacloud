@@ -703,6 +703,11 @@
   z-index: 2;
 }
 
+.ficha-clinica-patient-rail[data-state='expanded'] .ficha-clinica-patient-rail-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .ficha-clinica-patient-rail-toggle-icon {
   width: 16px;
   height: 16px;
@@ -783,6 +788,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+}
+
+.ficha-clinica-patient-collapse-trigger {
+  color: #ffffff;
 }
 
 .ficha-clinica-patient-name {
