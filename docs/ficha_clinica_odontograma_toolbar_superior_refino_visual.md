@@ -1,8 +1,13 @@
-# Refinamento visual da barra superior do odontograma
+# Refinamento visual da barra superior do odontograma e lateral direita
 
 ## Barra ajustada
 
 Ajuste realizado na barra superior de acoes do odontograma da Ficha Clinica no `frontend-react`.
+
+## Escopo desta etapa combinada
+
+- reposicionamento mais fiel da barra superior de icones;
+- comportamento retratil da lateral direita com calendario.
 
 ## Segunda correcao de posicionamento
 
@@ -17,6 +22,14 @@ Ajuste realizado na barra superior de acoes do odontograma da Ficha Clinica no `
 - A referencia principal passou a ser o print anotado em rosa.
 - O criterio de posicionamento deixou de ser o miolo do odontograma e passou a mirar a faixa superior entre o fim visual do odontograma e o inicio do painel de Tratamento.
 - Em desktop, o inicio da barra agora avanca para a direita ate a area indicada em rosa, sem invadir as abas do painel de Tratamento.
+
+## Comportamento retratil da lateral direita
+
+- A lateral direita passou a ter estado expandido/recolhido.
+- Uma seta persistente fica acessivel no proprio painel para recolher e expandir.
+- Quando recolhida, a coluna direita encolhe para uma faixa estreita e o painel central permanece integro.
+- Quando expandida, o calendario, status do paciente em uso, busca e acoes reaparecem no mesmo painel.
+- O video disponivel em `C:\\Users\\Tel\\Videos\\2026-06-29 12-56-10.mp4` nao mostrou a tela odontologica em si; ele exibiu uma tela de grade com interacao lateral. Por isso, a interpretacao adotada foi a de um painel lateral recolhivel com seta sempre acessivel e conteudo restaurado ao expandir.
 
 ## O que mudou
 
@@ -56,6 +69,7 @@ Todos foram usados a partir da base de assets do projeto e publicados em `fronte
 - `frontend-react/src/features/fichaClinica/FichaClinicaPage.jsx`
 - `frontend-react/src/features/fichaClinica/fichaClinica.css`
 - `frontend-react/public/assets/fichaClinica/toolbar/ico_odontograma_toolbar_prc_lupa.png`
+- `assets/images/ico_seta_painel_lateral.png` foi reutilizado como referencia visual da seta
 
 ## Como validar visualmente
 
@@ -67,3 +81,5 @@ Todos foram usados a partir da base de assets do projeto e publicados em `fronte
 6. Conferir que a barra continua fora do conteudo das abas de Tratamento.
 7. Conferir a ordem visual: novo, pesquisa, separador, filtro, acoes centrais, separador, menu, financeiro, imprimir.
 8. Conferir que odontograma, barras inferiores e painel de tratamento continuam alinhados.
+9. Conferir que a seta da lateral direita recolhe e expande o painel sem perder o acesso ao controle.
+10. Conferir que o calendario continua visivel quando expandido.

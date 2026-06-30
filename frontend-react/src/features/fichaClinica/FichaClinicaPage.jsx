@@ -229,6 +229,7 @@ const odontogramAssetBase = '/assets/fichaClinica/odontograma';
 const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes-limpos`;
 const odontogramFaceImage = `${odontogramAssetBase}/arc_faces.bmp`;
 const odontogramToolbarAssetBase = '/assets/fichaClinica/toolbar';
+const fichaClinicaUiAssetBase = '/assets/images';
 const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2', '3', '4', '5', '6', '7', '8'];
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
@@ -638,6 +639,7 @@ export function FichaClinicaPage({ onBackHome }) {
   const [selectedPatient, setSelectedPatient] = useState(() => readStoredPatient());
   const [activeTab, setActiveTab] = useState('tratamento');
   const [activeClinicCategory, setActiveClinicCategory] = useState('cirur');
+  const [isPatientRailCollapsed, setIsPatientRailCollapsed] = useState(false);
   const specialtyTrackRef = useRef(null);
 
   const patientLabel = useMemo(() => {
@@ -792,7 +794,7 @@ export function FichaClinicaPage({ onBackHome }) {
 
   return (
     <div className="ficha-clinica-page">
-      <div className="ficha-clinica-stage">
+      <div className={`ficha-clinica-stage${isPatientRailCollapsed ? ' is-patient-rail-collapsed' : ''}`}>
         <section className="ficha-clinica-board ficha-clinica-odontogram-board">
           <OdontogramToolbar onAction={handlePlaceholderAction} />
 
@@ -875,7 +877,22 @@ export function FichaClinicaPage({ onBackHome }) {
           </Card>
         </section>
 
-        <aside className="ficha-clinica-patient-rail">
+        <aside className={`ficha-clinica-patient-rail${isPatientRailCollapsed ? ' is-collapsed' : ''}`}>
+          <button
+            type="button"
+            className="ficha-clinica-patient-rail-toggle"
+            aria-label={isPatientRailCollapsed ? 'Expandir painel lateral' : 'Recolher painel lateral'}
+            title={isPatientRailCollapsed ? 'Expandir painel lateral' : 'Recolher painel lateral'}
+            onClick={() => setIsPatientRailCollapsed((current) => !current)}
+          >
+            <img
+              className={`ficha-clinica-patient-rail-toggle-icon${isPatientRailCollapsed ? ' is-collapsed' : ''}`}
+              src={`${fichaClinicaUiAssetBase}/ico_seta_painel_lateral.png`}
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
+          <div className="ficha-clinica-patient-rail-body">
           <div className="ficha-clinica-patient-header">
             <div className="ficha-clinica-patient-header-top">
               <Button type="text" icon={<span className="ficha-clinica-patient-arrow">↙</span>} />
@@ -947,6 +964,7 @@ export function FichaClinicaPage({ onBackHome }) {
             <Button block onClick={onBackHome}>
               Voltar para Início
             </Button>
+          </div>
           </div>
         </aside>
       </div>
