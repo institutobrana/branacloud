@@ -235,10 +235,12 @@ const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35
 
 const odontogramToolbarItems = [
   { key: 'novo', label: 'Novo', image: `${odontogramToolbarAssetBase}/ico_dashboard_novo.png` },
-  { key: 'pesquisa', label: 'Pesquisa', image: `${odontogramToolbarAssetBase}/ico_odontograma_toolbar_prc_pesquisa.png` },
+  { key: 'pesquisa', label: 'Pesquisa', image: `${odontogramToolbarAssetBase}/ico_odontograma_toolbar_prc_lupa.png` },
+  { key: 'divisor-busca', type: 'divider' },
   { key: 'filtro', label: 'Filtro', image: `${odontogramToolbarAssetBase}/ico_filter.png` },
   { key: 'selecao', label: 'Selecao', image: `${odontogramToolbarAssetBase}/ico_select.png` },
   { key: 'trocar', label: 'Trocar', image: `${odontogramToolbarAssetBase}/ico_trocar.png` },
+  { key: 'divisor-acoes', type: 'divider' },
   { key: 'menu', label: 'Menu', image: `${odontogramToolbarAssetBase}/ico_menu_odontograma.png` },
   { key: 'financeiro', label: 'Financeiro', image: `${odontogramToolbarAssetBase}/ico_orcamento.png` },
   { key: 'imprimir', label: 'Imprimir', image: `${odontogramToolbarAssetBase}/ico_odonto_imprime.png` },
@@ -955,18 +957,22 @@ export function FichaClinicaPage({ onBackHome }) {
 function OdontogramToolbar({ onAction }) {
   return (
     <div className="ficha-clinica-odontogram-toolbar" role="toolbar" aria-label="Ferramentas do odontograma">
-      {odontogramToolbarItems.map((item) => (
-        <button
-          key={item.key}
-          type="button"
-          className="ficha-clinica-odontogram-toolbar-button"
-          title={item.label}
-          aria-label={item.label}
-          onClick={() => onAction?.(item.label)}
-        >
-          <img className="ficha-clinica-odontogram-toolbar-icon" src={item.image} alt="" aria-hidden="true" />
-        </button>
-      ))}
+      {odontogramToolbarItems.map((item) =>
+        item.type === 'divider' ? (
+          <span key={item.key} className="ficha-clinica-odontogram-toolbar-divider" aria-hidden="true" />
+        ) : (
+          <button
+            key={item.key}
+            type="button"
+            className="ficha-clinica-odontogram-toolbar-button"
+            title={item.label}
+            aria-label={item.label}
+            onClick={() => onAction?.(item.label)}
+          >
+            <img className="ficha-clinica-odontogram-toolbar-icon" src={item.image} alt="" aria-hidden="true" />
+          </button>
+        ),
+      )}
     </div>
   );
 }
