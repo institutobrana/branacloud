@@ -14,7 +14,7 @@
 }
 
 .ficha-clinica-stage.is-patient-rail-collapsed {
-  grid-template-columns: minmax(620px, 688px) minmax(0, 1fr) 34px;
+  grid-template-columns: minmax(620px, 688px) minmax(0, 1fr) 44px;
 }
 
 .ficha-clinica-board {
@@ -685,13 +685,13 @@
 }
 
 .ficha-clinica-patient-rail.is-collapsed {
-  min-width: 34px;
+  min-width: 44px;
 }
 
 .ficha-clinica-patient-rail-toggle {
   position: absolute;
   top: 10px;
-  left: 5px;
+  left: 10px;
   width: 24px;
   height: 24px;
   display: inline-grid;
@@ -725,6 +725,52 @@
 .ficha-clinica-patient-rail.is-collapsed .ficha-clinica-patient-rail-body {
   opacity: 0;
   pointer-events: none;
+}
+
+.ficha-clinica-patient-rail-collapsed-strip {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 52px 6px 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.ficha-clinica-patient-rail.is-collapsed .ficha-clinica-patient-rail-collapsed-strip {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ficha-clinica-patient-rail-mini-action {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.ficha-clinica-patient-rail-mini-action + .ficha-clinica-patient-rail-mini-action {
+  margin-top: 12px;
+}
+
+.ficha-clinica-patient-rail-mini-action img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.ficha-clinica-patient-rail-mini-action-bottom {
+  margin-top: auto;
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .ficha-clinica-patient-header {
@@ -968,7 +1014,7 @@
 
   .ficha-clinica-patient-rail-toggle {
     top: 8px;
-    left: 4px;
+    left: 9px;
   }
 }
 

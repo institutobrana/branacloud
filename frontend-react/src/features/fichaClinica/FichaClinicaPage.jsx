@@ -6,6 +6,7 @@ import {
   FilterOutlined,
   LeftOutlined,
   LockOutlined,
+  MessageOutlined,
   MoreOutlined,
   MenuOutlined,
   RightOutlined,
@@ -230,6 +231,7 @@ const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes-limpos`;
 const odontogramFaceImage = `${odontogramAssetBase}/arc_faces.bmp`;
 const odontogramToolbarAssetBase = '/assets/fichaClinica/toolbar';
 const fichaClinicaUiAssetBase = '/assets/images';
+const fichaClinicaPanelAssetBase = `${fichaClinicaUiAssetBase}`;
 const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2', '3', '4', '5', '6', '7', '8'];
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
@@ -892,6 +894,40 @@ export function FichaClinicaPage({ onBackHome }) {
               aria-hidden="true"
             />
           </button>
+          <div className="ficha-clinica-patient-rail-collapsed-strip" aria-hidden={!isPatientRailCollapsed}>
+            <button
+              type="button"
+              className="ficha-clinica-patient-rail-mini-action"
+              onClick={() => setIsPatientRailCollapsed(false)}
+              title="Expandir lateral e visualizar calendario"
+            >
+              <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_calendario.svg`} alt="" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="ficha-clinica-patient-rail-mini-action"
+              onClick={() => handlePlaceholderAction('Buscar paciente')}
+              title="Buscar paciente"
+            >
+              <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_search.svg`} alt="" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="ficha-clinica-patient-rail-mini-action"
+              onClick={() => handlePlaceholderAction('Novo atendimento lateral')}
+              title="Novo atendimento"
+            >
+              <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_novo.svg`} alt="" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="ficha-clinica-patient-rail-mini-action ficha-clinica-patient-rail-mini-action-bottom"
+              onClick={() => handlePlaceholderAction('Abrir atalho inferior da lateral')}
+              title="Atalho inferior"
+            >
+              <MessageOutlined />
+            </button>
+          </div>
           <div className="ficha-clinica-patient-rail-body">
           <div className="ficha-clinica-patient-header">
             <div className="ficha-clinica-patient-header-top">

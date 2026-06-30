@@ -27,9 +27,9 @@ Ajuste realizado na barra superior de acoes do odontograma da Ficha Clinica no `
 
 - A lateral direita passou a ter estado expandido/recolhido.
 - Uma seta persistente fica acessivel no proprio painel para recolher e expandir.
-- Quando recolhida, a coluna direita encolhe para uma faixa estreita e o painel central permanece integro.
+- Quando recolhida, a coluna direita nao vira apenas uma alca minima: ela permanece como uma faixa turquesa estreita, com atalhos verticais visiveis, mais proxima do comportamento mostrado no video correto.
 - Quando expandida, o calendario, status do paciente em uso, busca e acoes reaparecem no mesmo painel.
-- O video disponivel em `C:\\Users\\Tel\\Videos\\2026-06-29 12-56-10.mp4` nao mostrou a tela odontologica em si; ele exibiu uma tela de grade com interacao lateral. Por isso, a interpretacao adotada foi a de um painel lateral recolhivel com seta sempre acessivel e conteudo restaurado ao expandir.
+- O video correto usado como referencia foi `C:\\Users\\Tel\\Videos\\2026-06-30 06-01-19.mp4`, que mostrou a tela odontologica com a lateral recolhida em formato de trilho vertical.
 
 ## O que mudou
 
@@ -70,6 +70,9 @@ Todos foram usados a partir da base de assets do projeto e publicados em `fronte
 - `frontend-react/src/features/fichaClinica/fichaClinica.css`
 - `frontend-react/public/assets/fichaClinica/toolbar/ico_odontograma_toolbar_prc_lupa.png`
 - `assets/images/ico_seta_painel_lateral.png` foi reutilizado como referencia visual da seta
+- `assets/images/ico_ficha_clinica_painel_calendario.svg`
+- `assets/images/ico_ficha_clinica_painel_search.svg`
+- `assets/images/ico_ficha_clinica_painel_novo.svg`
 
 ## Como validar visualmente
 
@@ -83,3 +86,4 @@ Todos foram usados a partir da base de assets do projeto e publicados em `fronte
 8. Conferir que odontograma, barras inferiores e painel de tratamento continuam alinhados.
 9. Conferir que a seta da lateral direita recolhe e expande o painel sem perder o acesso ao controle.
 10. Conferir que o calendario continua visivel quando expandido.
+11. Conferir que, quando recolhida, a lateral continua aparecendo como trilho turquesa estreito com atalhos verticais visiveis.
