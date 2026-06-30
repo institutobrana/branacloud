@@ -50,10 +50,10 @@
 .ficha-clinica-odontogram-toolbar {
   width: fit-content;
   max-width: 100%;
-  align-self: center;
+  align-self: flex-start;
   justify-content: flex-start;
   padding: 0 8px 1px;
-  margin: 0 auto 1px;
+  margin: 0 0 1px clamp(214px, 31.5%, 236px);
 }
 
 .ficha-clinica-odontogram-toolbar-button {
@@ -877,6 +877,10 @@
   .ficha-clinica-odontogram-board {
     max-width: 640px;
   }
+
+  .ficha-clinica-odontogram-toolbar {
+    margin-left: clamp(186px, 30%, 210px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -900,6 +904,11 @@
 
   .ficha-clinica-clinic-categories {
     min-height: 54px;
+  }
+
+  .ficha-clinica-odontogram-toolbar {
+    margin-left: 0;
+    align-self: center;
   }
 }
 

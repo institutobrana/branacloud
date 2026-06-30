@@ -4,6 +4,13 @@
 
 Ajuste realizado na barra superior de acoes do odontograma da Ficha Clinica no `frontend-react`.
 
+## Segunda correcao de posicionamento
+
+- Esta etapa registra a segunda correcao do posicionamento da barra superior.
+- O ajuste anterior ainda deixava a barra deslocada demais para a esquerda.
+- A nova regra de alinhamento deixou de usar o centro do board inteiro e passou a usar um deslocamento horizontal ancorado no miolo visual do odontograma.
+- Em telas desktop, o primeiro icone passa a iniciar mais para a direita, evitando sobreposicao visual sobre os primeiros dentes da esquerda.
+
 ## O que mudou
 
 - A barra deixou de comecar no canto esquerdo absoluto do bloco.
@@ -46,7 +53,9 @@ Todos foram usados a partir da base de assets do projeto e publicados em `fronte
 ## Como validar visualmente
 
 1. Abrir a Ficha Clinica/Odontograma.
-2. Conferir que a barra superior nao comeca mais no canto esquerdo do bloco.
-3. Conferir que a barra fica sobre a regiao central do odontograma, sem invadir a area de Tratamento.
-4. Conferir a ordem visual: novo, pesquisa, separador, filtro, acoes centrais, separador, menu, financeiro, imprimir.
-5. Conferir que odontograma, barras inferiores e painel de tratamento continuam alinhados.
+2. Comparar com o print atual do Brana Cloud e com o print de referencia do EasyDental usados nesta etapa.
+3. Conferir que a barra superior nao comeca mais no canto esquerdo do bloco.
+4. Conferir que o primeiro icone verde fica mais a direita do que antes, mais proximo do miolo superior do odontograma.
+5. Conferir que a barra fica sobre a regiao central do odontograma, sem invadir a area de Tratamento.
+6. Conferir a ordem visual: novo, pesquisa, separador, filtro, acoes centrais, separador, menu, financeiro, imprimir.
+7. Conferir que odontograma, barras inferiores e painel de tratamento continuam alinhados.
