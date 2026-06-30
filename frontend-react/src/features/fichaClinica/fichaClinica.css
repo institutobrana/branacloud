@@ -6,8 +6,8 @@
 
 .ficha-clinica-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1.28fr) minmax(0, 1.01fr) 198px;
-  gap: 4px;
+  grid-template-columns: minmax(620px, 688px) minmax(0, 1fr) 198px;
+  gap: 10px;
   align-items: stretch;
   width: 100%;
   min-width: 0;
@@ -23,7 +23,8 @@
   gap: 3px;
   align-self: start;
   width: 100%;
-  max-width: none;
+  max-width: 688px;
+  justify-self: start;
 }
 
 .ficha-clinica-board-toolbar,
@@ -852,6 +853,16 @@
 
   .ficha-clinica-patient-rail {
     min-height: 420px;
+  }
+}
+
+@media (max-width: 1700px) and (min-width: 1401px) {
+  .ficha-clinica-stage {
+    grid-template-columns: minmax(580px, 640px) minmax(0, 1fr) 198px;
+  }
+
+  .ficha-clinica-odontogram-board {
+    max-width: 640px;
   }
 }
 
