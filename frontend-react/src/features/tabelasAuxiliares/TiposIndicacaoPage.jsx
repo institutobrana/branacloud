@@ -163,6 +163,7 @@ export function TiposIndicacaoPage() {
   const isSpeciality = activeTable.tipo === 'Especialidade';
   const selectedReasonType = Form.useWatch('tipo', form);
   const selectedReasonColor = Form.useWatch('cor', form);
+  const selectedReasonInactive = Form.useWatch('inativo', form);
   const selectedAppointmentColor = Form.useWatch('cor_apresentacao', form);
   const selectedSpecialtyImage = Form.useWatch('imagem_indice', form);
 
@@ -642,7 +643,7 @@ export function TiposIndicacaoPage() {
       ];
   const columns = allColumns.filter((column) => visibleColumns[column.key] !== false);
 
-  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? 560 : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
+  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? (editingItem ? 580 : 520) : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
   const resolvedModalWidth = isSpeciality ? 376 : modalWidth;
   const modalClassName = [
     'terra-password-modal',
@@ -913,7 +914,16 @@ export function TiposIndicacaoPage() {
             </>
           ) : null}
 
-          {editingItem && !isGrupoMedicamento && !isAppointmentStatus && !isPatientStatus ? (
+          {editingItem && isAppointmentReason ? (
+            <div className="auxiliary-status-check auxiliary-reason-active-check">
+              <Checkbox
+                checked={!Boolean(selectedReasonInactive)}
+                onChange={(event) => form.setFieldValue('inativo', !event.target.checked)}
+              >
+                Motivo de agendamento ativo
+              </Checkbox>
+            </div>
+          ) : editingItem && !isGrupoMedicamento && !isAppointmentStatus && !isPatientStatus ? (
             <Form.Item name="inativo" valuePropName="checked">
               <Checkbox>Inativo</Checkbox>
             </Form.Item>

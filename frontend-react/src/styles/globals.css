@@ -1244,6 +1244,14 @@ body {
   padding-left: 124px;
 }
 
+.auxiliary-reason-active-check {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  padding-left: 124px;
+  margin-top: 2px;
+}
+
 .auxiliary-patient-modal .ant-modal-content {
   padding-bottom: 12px;
 }
