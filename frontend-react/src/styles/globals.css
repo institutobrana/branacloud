@@ -1180,6 +1180,70 @@ body {
   padding-left: 124px;
 }
 
+.auxiliary-reason-modal .ant-modal-content {
+  padding-bottom: 10px;
+}
+
+.auxiliary-reason-modal .terra-password-modal-header {
+  padding: 12px 20px 6px;
+}
+
+.auxiliary-reason-modal .terra-password-modal-title.ant-typography {
+  font-size: 16px;
+}
+
+.auxiliary-reason-form {
+  padding: 10px 18px 0;
+}
+
+.auxiliary-reason-form .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.auxiliary-reason-form .ant-form-item-label > label {
+  width: 118px;
+}
+
+.auxiliary-reason-form .ant-input-affix-wrapper,
+.auxiliary-reason-form .ant-input,
+.auxiliary-reason-form .ant-select-selector {
+  height: 32px;
+}
+
+.auxiliary-reason-form .ant-input,
+.auxiliary-reason-form .ant-input-affix-wrapper,
+.auxiliary-reason-form .ant-select-selector {
+  border-radius: 9px;
+}
+
+.auxiliary-reason-form .ant-input-textarea textarea.ant-input {
+  min-height: 46px !important;
+}
+
+.auxiliary-reason-form .auxiliary-color-picker {
+  gap: 3px;
+  padding-top: 2px;
+  padding-bottom: 0;
+}
+
+.auxiliary-reason-form .auxiliary-color-swatch {
+  min-width: 15px;
+  min-height: 15px;
+}
+
+.auxiliary-reason-form .terra-password-modal-actions {
+  padding-top: 4px;
+}
+
+.auxiliary-reason-modal .terra-password-modal-actions .ant-btn {
+  min-width: 100px;
+  height: 32px;
+}
+
+.auxiliary-reason-check .ant-form-item-control {
+  padding-left: 124px;
+}
+
 .auxiliary-patient-modal .ant-modal-content {
   padding-bottom: 12px;
 }
