@@ -65,6 +65,25 @@ body {
   min-width: 0;
 }
 
+.auxiliary-shell-band {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0 7px 10px;
+  border-radius: 0;
+  background: #16aaa1;
+  color: #ffffff;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  margin-left: 0;
+  margin-right: 0;
+  position: relative;
+}
+
+.auxiliary-shell-corner {
+  min-height: 41px;
+  background: #16aaa1;
+}
+
 .brana-icon-rail {
   grid-column: 1;
   grid-row: 2;
@@ -504,6 +523,767 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+}
+
+.auxiliary-action-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 0;
+}
+
+.auxiliary-shell-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.auxiliary-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.auxiliary-layout.is-collapsed {
+  grid-template-columns: 68px minmax(0, 1fr);
+}
+
+.auxiliary-sidebar {
+  border: 1px solid #e4d8c8;
+  border-radius: 22px;
+  background: rgba(255, 252, 247, 0.98);
+  box-shadow: 0 12px 24px rgba(85, 73, 43, 0.05);
+  overflow: hidden;
+}
+
+.auxiliary-sidebar-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(171, 157, 130, 0.22);
+}
+
+.auxiliary-sidebar-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.auxiliary-sidebar-kicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6f7c68;
+}
+
+.auxiliary-sidebar-collapse {
+  color: #546251;
+}
+
+.auxiliary-sidebar-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 720px;
+  overflow: auto;
+}
+
+.auxiliary-sidebar-item {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(171, 157, 130, 0.16);
+  background: rgba(255, 252, 247, 0.98);
+  padding: 11px 16px;
+  text-align: left;
+  color: #435341;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auxiliary-sidebar-item:hover {
+  background: rgba(229, 237, 224, 0.5);
+}
+
+.auxiliary-sidebar-item.is-active {
+  background: linear-gradient(180deg, rgba(229, 237, 224, 0.9), rgba(239, 244, 235, 0.96));
+  color: #304032;
+}
+
+.auxiliary-layout.is-collapsed .auxiliary-sidebar {
+  width: 68px;
+}
+
+.auxiliary-layout.is-collapsed .auxiliary-sidebar-header {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.auxiliary-layout.is-collapsed .auxiliary-sidebar-kicker {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.14em;
+  margin-inline: auto;
+}
+
+.auxiliary-layout.is-collapsed .auxiliary-sidebar-collapse {
+  align-self: flex-start;
+}
+
+.auxiliary-layout.is-collapsed .auxiliary-sidebar-item {
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+
+.auxiliary-layout.is-collapsed .auxiliary-sidebar-item-label {
+  display: none;
+}
+
+.auxiliary-main-card {
+  min-width: 0;
+}
+
+.auxiliary-shell-button {
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.auxiliary-shell-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.auxiliary-shell-button.primary {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.auxiliary-shell-button.danger {
+  color: #ffffff;
+}
+
+.auxiliary-filter-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.auxiliary-filter-header.is-icon-only {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 0;
+}
+
+.auxiliary-filter-trigger {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--brana-deep-green);
+  cursor: pointer;
+  padding: 0;
+}
+
+.auxiliary-filter-trigger.is-active,
+.auxiliary-filter-trigger:hover {
+  background: rgba(22, 170, 161, 0.12);
+  color: var(--brana-deep-green);
+}
+
+.auxiliary-filter-menu {
+  width: 196px;
+  padding: 6px 0;
+  border-radius: 8px;
+  background: rgba(255, 253, 248, 0.98);
+  box-shadow: 0 12px 28px rgba(56, 53, 41, 0.14);
+}
+
+.auxiliary-filter-menu-title {
+  display: block;
+  padding: 2px 12px 8px;
+  color: #36513d;
+}
+
+.auxiliary-filter-menu-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #334137;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.auxiliary-filter-menu-item:hover {
+  background: rgba(229, 237, 224, 0.56);
+}
+
+.auxiliary-filter-menu-separator {
+  height: 1px;
+  margin: 4px 0;
+  background: rgba(171, 157, 130, 0.2);
+}
+
+.auxiliary-filter-menu-subtitle {
+  padding: 4px 12px 6px;
+  color: #6d7965;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.auxiliary-filter-menu-columns {
+  display: grid;
+  gap: 2px;
+}
+
+.auxiliary-filter-menu-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  color: #334137;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.auxiliary-filter-menu-checkbox:hover {
+  background: rgba(229, 237, 224, 0.42);
+}
+
+.auxiliary-filter-menu-checkbox.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auxiliary-filter-menu-checkbox input {
+  margin: 0;
+}
+
+.auxiliary-table-row-selected td {
+  background: rgba(22, 170, 161, 0.08) !important;
+}
+
+.auxiliary-main-card .ant-card-body {
+  padding: 0;
+}
+
+.auxiliary-main-card {
+  overflow: hidden;
+}
+
+.module-table-shell {
+  padding: 18px;
+}
+
+.users-grid-shell {
+  border: 1px solid rgba(171, 157, 130, 0.34);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(247, 242, 234, 0.9), rgba(255, 252, 247, 0.98));
+}
+
+.users-grid-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auxiliary-compact-table .ant-table {
+  font-size: 0.84rem;
+}
+
+.auxiliary-compact-table .ant-table-container {
+  border-radius: 16px;
+}
+
+.auxiliary-compact-table .ant-table-thead > tr > th,
+.auxiliary-compact-table .ant-table-tbody > tr > td,
+.auxiliary-compact-table .ant-table-selection-column {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+.auxiliary-compact-table .ant-table-thead > tr > th {
+  height: 34px;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  background: rgba(235, 229, 218, 0.9);
+  color: #4d5b45;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.auxiliary-compact-table .ant-table-tbody > tr > td {
+  min-height: 32px;
+  color: #314038;
+  background: rgba(255, 252, 247, 0.98);
+  border-bottom-color: rgba(171, 157, 130, 0.14);
+}
+
+.auxiliary-compact-table .ant-table-tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+.auxiliary-compact-table .ant-table-selection-column {
+  width: 38px !important;
+  min-width: 38px !important;
+  padding-inline: 10px 6px !important;
+}
+
+.auxiliary-compact-table .ant-radio-wrapper {
+  align-items: center;
+}
+
+.auxiliary-compact-table .ant-table-tbody > tr.users-table-row-selected > td,
+.auxiliary-compact-table .ant-table-tbody > tr:hover > td {
+  background: rgba(229, 237, 224, 0.62);
+}
+
+.auxiliary-compact-table .auxiliary-table-code {
+  display: inline-block;
+  font-weight: 700;
+  color: #36513d;
+  letter-spacing: 0.02em;
+}
+
+.auxiliary-compact-table .auxiliary-table-name-text.ant-typography {
+  margin-bottom: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #2f3e36;
+}
+
+.auxiliary-table-color-chip {
+  display: inline-block;
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(75, 85, 64, 0.38);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.auxiliary-table-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #7b7b7b;
+  font-size: 15px;
+}
+
+.auxiliary-table-lock.is-locked {
+  color: #a46a10;
+}
+
+.auxiliary-table-status-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(55, 68, 53, 0.24);
+}
+
+.auxiliary-table-status-dot.is-active {
+  background: #27b05a;
+}
+
+.auxiliary-table-status-dot.is-inactive {
+  background: #d44343;
+}
+
+.terra-password-modal .ant-modal-content {
+  padding: 0 0 18px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(171, 157, 130, 0.34);
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.99), rgba(247, 242, 234, 0.98));
+  box-shadow: 0 20px 48px rgba(56, 53, 41, 0.18);
+}
+
+.terra-password-modal .ant-modal-close {
+  top: 14px;
+  right: 14px;
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(54, 81, 61, 0.96), rgba(42, 63, 47, 0.98));
+  border-radius: 999px;
+  width: 26px;
+  height: 26px;
+  box-shadow: 0 6px 14px rgba(67, 98, 69, 0.2);
+}
+
+.terra-password-modal .ant-modal-close:hover {
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(42, 63, 47, 0.98), rgba(36, 54, 40, 1));
+}
+
+.terra-password-modal .ant-modal-close-x {
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.terra-password-modal-header {
+  padding: 18px 24px 14px;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.terra-password-modal-title.ant-typography {
+  margin: 0;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 800;
+  color: #36513d;
+  letter-spacing: 0.01em;
+}
+
+.terra-password-form {
+  padding: 18px 26px 0;
+}
+
+.terra-password-form .ant-form-item {
+  margin-bottom: 14px;
+}
+
+.terra-password-form .ant-form-item-row {
+  flex-direction: row;
+  align-items: center;
+}
+
+.terra-password-form .ant-form-item-label {
+  padding: 0 10px 0 0;
+  text-align: right;
+}
+
+.terra-password-form .ant-form-item-label > label {
+  width: 128px;
+  justify-content: flex-end;
+  font-weight: 700;
+  color: #36513d;
+}
+
+.terra-password-form .ant-form-item-control {
+  flex: 1;
+}
+
+.terra-password-form .ant-form-item-required::before {
+  color: var(--brana-deep-green) !important;
+}
+
+.terra-password-form .ant-input-affix-wrapper,
+.terra-password-form .ant-input,
+.terra-password-form .ant-select-selector {
+  height: 38px;
+  border-radius: 10px;
+  border-color: rgba(162, 178, 151, 0.72);
+  background: rgba(255, 253, 248, 0.98);
+  box-shadow: none;
+}
+
+.terra-password-form .ant-input-affix-wrapper:focus,
+.terra-password-form .ant-input-affix-wrapper-focused,
+.terra-password-form .ant-input:focus,
+.terra-password-form .ant-select-focused .ant-select-selector,
+.terra-password-form .ant-select-selector:focus {
+  border-color: var(--brana-deep-green) !important;
+  box-shadow: 0 0 0 3px rgba(22, 170, 161, 0.12) !important;
+}
+
+.auxiliary-color-field .ant-form-item-control-input-content {
+  display: flex;
+  align-items: center;
+}
+
+.auxiliary-color-picker {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 5px;
+  width: 100%;
+  padding: 6px 0 2px;
+}
+
+.auxiliary-color-swatch {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-width: 18px;
+  min-height: 18px;
+  border-radius: 2px;
+  border: 1px solid rgba(60, 79, 69, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, outline-color 0.12s ease;
+}
+
+.auxiliary-color-swatch::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 1px;
+  border: 0 solid transparent;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.auxiliary-color-swatch.is-light {
+  border-color: rgba(73, 88, 76, 0.5);
+}
+
+.auxiliary-color-swatch:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(22, 170, 161, 0.18), 0 4px 8px rgba(36, 54, 40, 0.12);
+}
+
+.auxiliary-color-swatch.is-selected {
+  box-shadow: 0 0 0 2px #0f8a83, 0 0 0 4px rgba(15, 138, 131, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.34);
+  transform: translateY(-1px);
+}
+
+.auxiliary-color-swatch.is-selected::after {
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(31, 44, 34, 0.18);
+}
+
+.terra-password-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.terra-password-modal-actions .ant-btn {
+  min-width: 116px;
+  height: 38px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.terra-password-modal-actions .ant-btn-primary {
+  background: linear-gradient(180deg, #0f8a83, #16aaa1) !important;
+  border-color: #0f8a83 !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 22px rgba(22, 170, 161, 0.24) !important;
+}
+
+.terra-password-modal-actions .ant-btn-primary:hover,
+.terra-password-modal-actions .ant-btn-primary:focus {
+  background: linear-gradient(180deg, #16aaa1, #0f8a83) !important;
+  border-color: #0f8a83 !important;
+  color: #ffffff !important;
+}
+
+.terra-password-modal-actions .ant-btn-default {
+  border-color: rgba(171, 157, 130, 0.34);
+  color: #36513d;
+  background: linear-gradient(180deg, rgba(255, 254, 251, 0.98), rgba(240, 235, 227, 0.96));
+}
+
+.terra-password-modal-actions .ant-btn-default:hover,
+.terra-password-modal-actions .ant-btn-default:focus {
+  border-color: rgba(110, 135, 95, 0.7) !important;
+  color: var(--brana-deep-green) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 252, 1), rgba(232, 240, 224, 0.9)) !important;
+}
+
+.auxiliary-status-modal .ant-modal-content {
+  padding-bottom: 10px;
+}
+
+.auxiliary-status-modal .terra-password-modal-header {
+  padding: 12px 20px 6px;
+}
+
+.auxiliary-status-modal .terra-password-modal-title.ant-typography {
+  font-size: 16px;
+}
+
+.auxiliary-status-form {
+  padding: 10px 18px 0;
+}
+
+.auxiliary-status-form .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.auxiliary-status-form .ant-form-item-label > label {
+  width: 106px;
+}
+
+.auxiliary-status-form .ant-input-affix-wrapper,
+.auxiliary-status-form .ant-input,
+.auxiliary-status-form .ant-select-selector {
+  height: 32px;
+}
+
+.auxiliary-status-form .ant-input,
+.auxiliary-status-form .ant-input-affix-wrapper,
+.auxiliary-status-form .ant-select-selector {
+  border-radius: 9px;
+}
+
+.auxiliary-status-form .ant-input-textarea {
+  border-radius: 9px;
+}
+
+.auxiliary-status-form .ant-input-textarea textarea.ant-input {
+  min-height: 48px !important;
+}
+
+.auxiliary-status-form .ant-form-item-control-input-content {
+  min-height: 32px;
+}
+
+.auxiliary-status-form .auxiliary-color-picker {
+  gap: 3px;
+  padding-top: 2px;
+  padding-bottom: 0;
+}
+
+.auxiliary-status-form .auxiliary-color-swatch {
+  min-width: 15px;
+  min-height: 15px;
+}
+
+.auxiliary-status-form .terra-password-modal-actions {
+  padding-top: 4px;
+}
+
+.auxiliary-status-modal .terra-password-modal-actions .ant-btn {
+  min-width: 100px;
+  height: 32px;
+}
+
+.auxiliary-status-check .ant-form-item-control {
+  padding-left: 124px;
+}
+
+.auxiliary-patient-modal .ant-modal-content {
+  padding-bottom: 12px;
+}
+
+.auxiliary-patient-modal .terra-password-modal-header {
+  padding: 12px 20px 6px;
+}
+
+.auxiliary-patient-modal .terra-password-modal-title.ant-typography {
+  font-size: 17px;
+}
+
+.auxiliary-patient-status-form {
+  padding: 10px 18px 0;
+}
+
+.auxiliary-patient-status-form .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.auxiliary-patient-status-form .ant-form-item-label > label {
+  width: 112px;
+}
+
+.auxiliary-patient-status-form .ant-input-affix-wrapper,
+.auxiliary-patient-status-form .ant-input,
+.auxiliary-patient-status-form .ant-select-selector {
+  height: 32px;
+}
+
+.auxiliary-patient-status-form .ant-input,
+.auxiliary-patient-status-form .ant-input-affix-wrapper,
+.auxiliary-patient-status-form .ant-select-selector {
+  border-radius: 9px;
+}
+
+.auxiliary-patient-status-form .ant-input-textarea textarea.ant-input {
+  min-height: 48px !important;
+}
+
+.auxiliary-patient-status-form .terra-password-modal-actions {
+  padding-top: 4px;
+}
+
+.auxiliary-patient-modal .terra-password-modal-actions .ant-btn {
+  min-width: 100px;
+  height: 32px;
+}
+
+.auxiliary-patient-check .ant-form-item-control {
+  padding-left: 118px;
+}
+
+.auxiliary-speciality-modal .ant-modal-content {
+  padding-bottom: 10px;
+}
+
+.auxiliary-speciality-modal .terra-password-modal-header {
+  padding: 12px 18px 6px;
+}
+
+.auxiliary-speciality-modal .terra-password-modal-title.ant-typography {
+  font-size: 17px;
+}
+
+.auxiliary-speciality-form {
+  padding: 8px 16px 0;
+}
+
+.auxiliary-speciality-form .ant-form-item {
+  margin-bottom: 7px;
+}
+
+.auxiliary-speciality-form .ant-form-item-label > label {
+  width: 88px;
+}
+
+.auxiliary-speciality-form .ant-input-affix-wrapper,
+.auxiliary-speciality-form .ant-input,
+.auxiliary-speciality-form .ant-select-selector {
+  height: 30px;
+}
+
+.auxiliary-speciality-form .ant-input,
+.auxiliary-speciality-form .ant-input-affix-wrapper,
+.auxiliary-speciality-form .ant-select-selector {
+  border-radius: 9px;
+}
+
+.auxiliary-speciality-form .ant-input-textarea textarea.ant-input {
+  min-height: 42px !important;
+}
+
+.auxiliary-speciality-form .terra-password-modal-actions {
+  padding-top: 4px;
+}
+
+.auxiliary-speciality-modal .terra-password-modal-actions .ant-btn {
+  min-width: 96px;
+  height: 32px;
+}
+
+.auxiliary-speciality-check .ant-form-item-control {
+  padding-left: 118px;
 }
 
 .brana-card {
