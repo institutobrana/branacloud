@@ -5981,3 +5981,36 @@ Observacoes:
 - A categoria Cirur passou a renderizar Apicectomia, Cirurgia, Enxerto, Frenectomia, Hemisecção, Retalho, Rizectomia e Ulectomia com componentes SVG internos.
 - Sem backend, banco, migration, Tratamento ou painel lateral direito alterados.
 - Proxima etapa recomendada: mapear as demais linhas da barra interna, se o inventario visual indicar lacunas.
+
+## Frente validada: Tabelas Auxiliares no novo frontend React
+
+- A frente de `Configuração > Tabelas auxiliares` no novo frontend React do Brana Cloude foi validada e considerada fechada após comparação visual com o Terra Relva.
+- O fechamento documental está registrado em `docs/validacao_final_tabelas_auxiliares_frontend_react_brana_cloude.md`.
+- Foram alinhados shell, submenu lateral interno, grid, cabeçalho compartilhado, menu de filtro, modal e o botão `Salvar`, mantendo a paleta do Brana Cloude.
+- Não houve mudança de backend, banco, migrations, regras de negócio ou novos endpoints.
+- `Grupo de medicamento` foi auditado em frente separada e recebeu contrato próprio em `docs/contrato_implementacao_grupo_medicamento_frontend_react.md`; ele permanece fora do lote padrão de tabelas simples.
+
+## Frente implementada: Situacao do paciente no novo frontend React
+
+- Situacao do paciente foi implementada no novo frontend React como frente excepcional propria, seguindo o contrato de implementacao ja documentado.
+- A validacao visual foi concluida no navegador com a frente aberta, modal especifico, campos corretos e sem regressao nas tabelas auxiliares consolidadas.
+- Permanecem fora de escopo: Cor, Exibir anotacao no historico, qualquer campo herdado de Situacao do agendamento e qualquer regra nao confirmada.
+
+## Frente auditada: Especialidades
+
+- Especialidades foi auditada como frente excepcional propria no Brana Cloud.
+- A referencia principal de modelagem foi o EDS70, com apoio do legado Brana Cloud.
+- O contrato de implementacao devera tratar o combo Imagem como catalogo fixo por indice, salvo nova descoberta funcional.
+
+## Frente auditada: Especialidades
+
+- Especialidades foi auditada como frente excepcional propria e recebeu contrato proprio em `docs/contrato_implementacao_especialidades_frontend_react.md`.
+- A implementacao futura deve respeitar o modal proprio, o campo Ordem, o combo Imagem e o checkbox Inativar especialidade.
+- O combo Imagem deve permanecer como catalogo fixo por indice, salvo nova confirmacao funcional.
+
+## Frente estrutural nova: Motivos de agendamento
+
+- Motivos de agendamento foi auditado como frente especial propria no Brana Cloud.
+- A tabela nao existia como frente propria no novo frontend React e nao pode ser tratada como tabela simples.
+- O contrato tecnico-funcional ficou registrado em `docs/contrato_implementacao_motivos_agendamento_frontend_react.md`.
+- A implementacao precisa preservar a regra de tipo, a paleta, o campo de compromisso produtivo e a persistencia propria.

@@ -67,6 +67,7 @@ from routes.financeiro_routes import router as financeiro_router
 from routes.indices_financeiros_routes import router as indices_financeiros_router
 from routes.licenca_routes import router as licenca_router
 from routes.materiais_routes import router as materiais_router
+from routes.motivos_agendamento_routes import router as motivos_agendamento_router
 from routes.odontograma_routes import router as odontograma_router
 from routes.orcamento_routes import router as orcamento_router
 from routes.medicamentos_routes import router as medicamentos_router
@@ -414,6 +415,7 @@ app.include_router(indices_financeiros_router)
 app.include_router(relatorios_router)
 app.include_router(licenca_router)
 app.include_router(materiais_router)
+app.include_router(motivos_agendamento_router)
 app.include_router(odontograma_router)
 app.include_router(orcamento_router)
 app.include_router(medicamentos_router)

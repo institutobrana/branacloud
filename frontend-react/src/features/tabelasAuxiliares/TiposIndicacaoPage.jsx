@@ -1,11 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Button, Checkbox, Form, Input, Modal, Space, Typography, message } from 'antd';
+import { Alert, Button, Checkbox, Form, Input, Modal, Select, Space, Typography, message } from 'antd';
 import { LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
 import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
 import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
-import { atualizarAuxiliar, criarAuxiliar, excluirAuxiliar, listarAuxiliares } from './auxiliaresApi.js';
+import {
+  atualizarAuxiliar,
+  atualizarMotivoAgendamento,
+  atualizarStatusMotivoAgendamento,
+  criarAuxiliar,
+  criarMotivoAgendamento,
+  excluirAuxiliar,
+  excluirMotivoAgendamento,
+  listarAuxiliares,
+  listarMotivosAgendamento,
+  substituirEExcluirMotivoAgendamento,
+  verificarExclusaoMotivoAgendamento,
+} from './auxiliaresApi.js';
 
 const AUXILIARY_TABLES = [
   { key: 'bairro', label: 'Bairro', tipo: 'Bairro' },
@@ -16,6 +28,7 @@ const AUXILIARY_TABLES = [
   { key: 'fase-procedimento', label: 'Fase procedimento', tipo: 'Fase procedimento' },
   { key: 'fabricantes', label: 'Fabricantes', tipo: 'Fabricantes' },
   { key: 'grupo-medicamento', label: 'Grupo de medicamento', tipo: 'Grupo de medicamento' },
+  { key: 'motivos-agendamento', label: 'Motivos de agendamento', tipo: 'Motivos de agendamento' },
   { key: 'motivo-atestado', label: 'Motivo de atestado', tipo: 'Motivo de atestado' },
   { key: 'motivo-retorno', label: 'Motivo de retorno', tipo: 'Motivo de retorno' },
   { key: 'palavra-chave', label: 'Palavra chave', tipo: 'Palavra chave' },
@@ -60,6 +73,9 @@ const APPOINTMENT_STATUS_LIGHT_COLORS = new Set([
   '#FFFFFF', '#FFFF99', '#CCFFFF', '#CC99FF', '#C0C0C0', '#FFCC99', '#FF99CC', '#99CCFF', '#FFCC00', '#33CCCC',
 ]);
 
+const APPOINTMENT_REASON_COLOR_OPTIONS = APPOINTMENT_STATUS_COLOR_OPTIONS;
+const APPOINTMENT_REASON_LIGHT_COLORS = APPOINTMENT_STATUS_LIGHT_COLORS;
+
 function emptyFormValues() {
   return {
     codigo: '',
@@ -73,6 +89,22 @@ function emptyFormValues() {
   };
 }
 
+function buildEmptyFormValues(table, items = []) {
+  if (table?.tipo === 'Motivos de agendamento') {
+    return {
+      codigo: generateNextReasonCode(items),
+      nome: '',
+      descricao: '',
+      tipo: 'agendamento',
+      cor: '',
+      compromisso_produtivo: false,
+      inativo: false,
+    };
+  }
+
+  return emptyFormValues();
+}
+
 function generateNextNumericCode(items) {
   let maxValue = 0;
   let width = 2;
@@ -83,6 +115,17 @@ function generateNextNumericCode(items) {
     width = Math.max(width, code.length);
   }
   return String(maxValue + 1).padStart(width, '0');
+}
+
+function generateNextReasonCode(items) {
+  let maxValue = 0;
+  for (const item of Array.isArray(items) ? items : []) {
+    const code = String(item?.codigo ?? '').trim().toUpperCase();
+    const match = code.match(/^MA-(\d+)$/);
+    if (!match) continue;
+    maxValue = Math.max(maxValue, Number(match[1]));
+  }
+  return `MA-${String(maxValue + 1).padStart(3, '0')}`;
 }
 
 function normalizeSpecialtyImageIndex(value) {
@@ -114,9 +157,12 @@ export function TiposIndicacaoPage() {
     [activeTableKey],
   );
   const isGrupoMedicamento = activeTable.tipo === 'Grupo de medicamento';
+  const isAppointmentReason = activeTable.tipo === 'Motivos de agendamento';
   const isAppointmentStatus = activeTable.tipo === 'Situação do agendamento';
   const isPatientStatus = activeTable.tipo === 'Situação do paciente';
   const isSpeciality = activeTable.tipo === 'Especialidade';
+  const selectedReasonType = Form.useWatch('tipo', form);
+  const selectedReasonColor = Form.useWatch('cor', form);
   const selectedAppointmentColor = Form.useWatch('cor_apresentacao', form);
   const selectedSpecialtyImage = Form.useWatch('imagem_indice', form);
 
@@ -140,7 +186,9 @@ export function TiposIndicacaoPage() {
     setLoading(true);
     setError('');
     try {
-      const data = await listarAuxiliares(table.tipo);
+      const data = table.tipo === 'Motivos de agendamento'
+        ? await listarMotivosAgendamento()
+        : await listarAuxiliares(table.tipo);
       setItems(data);
       setSelectedId((current) => (data.some((item) => item.id === current) ? current : data[0]?.id ?? null));
     } catch (err) {
@@ -165,21 +213,31 @@ export function TiposIndicacaoPage() {
 
     form.setFieldsValue(
       editingItem
-        ? {
-            codigo: editingItem.codigo,
-            nome: editingItem.descricao,
-            descricao: editingItem.descricao,
-            inativo: editingItem.inativo,
-            ordem: editingItem.ordem,
-            imagem_indice: editingItem.imagem_indice,
-            cor_apresentacao: editingItem.cor_apresentacao,
-            exibir_anotacao_historico: editingItem.exibir_anotacao_historico,
-            mensagem_alerta: editingItem.mensagem_alerta,
-            desativar_paciente_sistema: editingItem.desativar_paciente_sistema,
-          }
-        : emptyFormValues(),
+        ? isAppointmentReason
+          ? {
+              codigo: editingItem.codigo,
+              nome: editingItem.nome || editingItem.descricao,
+              descricao: editingItem.descricao,
+              tipo: editingItem.tipo || 'agendamento',
+              cor: editingItem.cor || '',
+              compromisso_produtivo: Boolean(editingItem.compromisso_produtivo),
+              inativo: editingItem.inativo,
+            }
+          : {
+              codigo: editingItem.codigo,
+              nome: editingItem.descricao,
+              descricao: editingItem.descricao,
+              inativo: editingItem.inativo,
+              ordem: editingItem.ordem,
+              imagem_indice: editingItem.imagem_indice,
+              cor_apresentacao: editingItem.cor_apresentacao,
+              exibir_anotacao_historico: editingItem.exibir_anotacao_historico,
+              mensagem_alerta: editingItem.mensagem_alerta,
+              desativar_paciente_sistema: editingItem.desativar_paciente_sistema,
+            }
+        : buildEmptyFormValues(activeTable, items),
     );
-  }, [editingItem, form, modalOpen]);
+  }, [activeTable, editingItem, form, isAppointmentReason, items, modalOpen]);
 
   const openNewModal = () => {
     setEditingItem(null);
@@ -205,6 +263,8 @@ export function TiposIndicacaoPage() {
     setVisibleColumns(
       tableKey === 'especialidades'
         ? { codigo: true, descricao: true, ordem: true, imagem: true, status: true }
+        : tableKey === 'motivos-agendamento'
+          ? { codigo: true, name: true, descricao: true, color: true, lock: true, status: true }
         : { codigo: true, descricao: true, status: true },
     );
   };
@@ -212,25 +272,65 @@ export function TiposIndicacaoPage() {
   const handleFinish = async (values) => {
     setSaving(true);
     try {
-      const codigo = isGrupoMedicamento ? (editingItem?.codigo || generateNextNumericCode(items)) : String(values.codigo || '').trim();
-      const payload = {
-        tipo: activeTable.tipo,
-        codigo,
-        descricao: String(values.descricao || values.nome || '').trim(),
-        inativo: isGrupoMedicamento ? Boolean(editingItem?.inativo) : Boolean(values.inativo),
-        ordem: isSpeciality ? (String(values.ordem || '').trim() === '' ? null : Number(values.ordem)) : null,
-        imagem_indice: isSpeciality ? normalizeSpecialtyImageIndex(values.imagem_indice) : null,
-        cor_apresentacao: isAppointmentStatus ? String(values.cor_apresentacao || '').trim() : '',
-        exibir_anotacao_historico: isAppointmentStatus ? Boolean(values.exibir_anotacao_historico) : false,
-        mensagem_alerta: isAppointmentStatus || isPatientStatus ? String(values.mensagem_alerta || '').trim() : '',
-        desativar_paciente_sistema: isAppointmentStatus || isPatientStatus ? Boolean(values.desativar_paciente_sistema) : false,
-      };
+      const codigo = isGrupoMedicamento
+        ? (editingItem?.codigo || generateNextNumericCode(items))
+        : isAppointmentReason
+          ? String(values.codigo || '').trim() || generateNextReasonCode(items)
+          : String(values.codigo || '').trim();
 
       if (editingItem) {
-        await atualizarAuxiliar(editingItem.id, payload);
+        if (isAppointmentReason) {
+          await atualizarMotivoAgendamento(editingItem.id, {
+            codigo,
+            nome: String(values.nome || '').trim(),
+            descricao: String(values.descricao || '').trim(),
+            tipo: String(values.tipo || 'agendamento').trim(),
+            cor: String(values.cor || '').trim(),
+            compromisso_produtivo: Boolean(values.compromisso_produtivo),
+            inativo: Boolean(values.inativo),
+          });
+        } else {
+          const payload = {
+            tipo: activeTable.tipo,
+            codigo,
+            descricao: String(values.descricao || values.nome || '').trim(),
+            inativo: isGrupoMedicamento ? Boolean(editingItem?.inativo) : Boolean(values.inativo),
+            ordem: isSpeciality ? (String(values.ordem || '').trim() === '' ? null : Number(values.ordem)) : null,
+            imagem_indice: isSpeciality ? normalizeSpecialtyImageIndex(values.imagem_indice) : null,
+            cor_apresentacao: isAppointmentStatus ? String(values.cor_apresentacao || '').trim() : '',
+            exibir_anotacao_historico: isAppointmentStatus ? Boolean(values.exibir_anotacao_historico) : false,
+            mensagem_alerta: isAppointmentStatus || isPatientStatus ? String(values.mensagem_alerta || '').trim() : '',
+            desativar_paciente_sistema: isAppointmentStatus || isPatientStatus ? Boolean(values.desativar_paciente_sistema) : false,
+          };
+          await atualizarAuxiliar(editingItem.id, payload);
+        }
         message.success(`${activeTable.label} atualizado.`);
       } else {
-        await criarAuxiliar(payload);
+        if (isAppointmentReason) {
+          await criarMotivoAgendamento({
+            codigo,
+            nome: String(values.nome || '').trim(),
+            descricao: String(values.descricao || '').trim(),
+            tipo: String(values.tipo || 'agendamento').trim(),
+            cor: String(values.cor || '').trim(),
+            compromisso_produtivo: Boolean(values.compromisso_produtivo),
+            inativo: Boolean(values.inativo),
+          });
+        } else {
+          const payload = {
+            tipo: activeTable.tipo,
+            codigo,
+            descricao: String(values.descricao || values.nome || '').trim(),
+            inativo: isGrupoMedicamento ? Boolean(editingItem?.inativo) : Boolean(values.inativo),
+            ordem: isSpeciality ? (String(values.ordem || '').trim() === '' ? null : Number(values.ordem)) : null,
+            imagem_indice: isSpeciality ? normalizeSpecialtyImageIndex(values.imagem_indice) : null,
+            cor_apresentacao: isAppointmentStatus ? String(values.cor_apresentacao || '').trim() : '',
+            exibir_anotacao_historico: isAppointmentStatus ? Boolean(values.exibir_anotacao_historico) : false,
+            mensagem_alerta: isAppointmentStatus || isPatientStatus ? String(values.mensagem_alerta || '').trim() : '',
+            desativar_paciente_sistema: isAppointmentStatus || isPatientStatus ? Boolean(values.desativar_paciente_sistema) : false,
+          };
+          await criarAuxiliar(payload);
+        }
         message.success(`${activeTable.label} criado.`);
       }
 
@@ -247,7 +347,11 @@ export function TiposIndicacaoPage() {
     if (!selectedItem) return;
     setSaving(true);
     try {
-      await excluirAuxiliar(selectedItem.id);
+      if (isAppointmentReason) {
+        await excluirMotivoAgendamento(selectedItem.id);
+      } else {
+        await excluirAuxiliar(selectedItem.id);
+      }
       message.success(`${activeTable.label} excluído.`);
       setSelectedId(null);
       await loadItems(activeTable);
@@ -257,6 +361,24 @@ export function TiposIndicacaoPage() {
       setSaving(false);
     }
   };
+
+  useEffect(() => {
+    if (!isAppointmentReason || !modalOpen) {
+      return;
+    }
+
+    if (String(selectedReasonType || '').trim() !== 'compromisso') {
+      form.setFieldsValue({
+        cor: '',
+        compromisso_produtivo: false,
+      });
+      return;
+    }
+
+    if (!form.getFieldValue('compromisso_produtivo')) {
+      form.setFieldValue('compromisso_produtivo', true);
+    }
+  }, [form, isAppointmentReason, modalOpen, selectedReasonType]);
 
   useEffect(() => {
     const onToolbarAction = (event) => {
@@ -274,7 +396,16 @@ export function TiposIndicacaoPage() {
     return () => window.removeEventListener('brana-auxiliar-toolbar-action', onToolbarAction);
   }, [selectedItem]);
 
-  const filterColumns = isPatientStatus
+  const filterColumns = isAppointmentReason
+    ? [
+        { key: 'codigo', label: 'Código', visible: true },
+        { key: 'name', label: 'Nome', visible: true },
+        { key: 'descricao', label: 'Descrição', visible: true },
+        { key: 'color', label: 'Cor', visible: true, locked: true },
+        { key: 'lock', label: 'Bloqueio', visible: true, locked: true },
+        { key: 'status', label: 'Status', visible: true, locked: true },
+      ]
+    : isPatientStatus
     ? [
         { key: 'codigo', label: 'Código', visible: true },
         { key: 'descricao', label: 'Descrição', visible: true },
@@ -309,7 +440,74 @@ export function TiposIndicacaoPage() {
     />
   );
 
-  const allColumns = isPatientStatus
+  const allColumns = isAppointmentReason
+    ? [
+        {
+          key: 'codigo',
+          title: renderFilterTitle('codigo', 'Código'),
+          dataIndex: 'codigo',
+          width: 120,
+          render: (value) => <Typography.Text strong>{value || '-'}</Typography.Text>,
+        },
+        {
+          key: 'name',
+          title: renderFilterTitle('name', 'Nome'),
+          dataIndex: 'nome',
+          width: 200,
+          render: (value, record) => (
+            <Typography.Text className="auxiliary-table-name-text" strong>
+              {value || record.descricao || '-'}
+            </Typography.Text>
+          ),
+        },
+        {
+          key: 'descricao',
+          title: renderFilterTitle('descricao', 'Descrição'),
+          dataIndex: 'descricao',
+          render: (value) => value || '-',
+        },
+        {
+          key: 'color',
+          title: renderFilterTitle('color', 'Cor', true),
+          dataIndex: 'cor',
+          width: 78,
+          align: 'center',
+          render: (value) => {
+            const color = String(value || '').trim();
+            return (
+              <span
+                className="auxiliary-table-color-chip"
+                title={color || 'Sem cor'}
+                style={{ backgroundColor: color || 'transparent' }}
+                aria-hidden="true"
+              />
+            );
+          },
+        },
+        {
+          key: 'lock',
+          title: renderFilterTitle('lock', 'Bloqueio', true),
+          dataIndex: 'compromisso_produtivo',
+          width: 72,
+          align: 'center',
+          render: (value) => (
+            <span className={`auxiliary-table-lock${value ? ' is-locked' : ''}`} title={value ? 'Bloqueado' : 'Livre'}>
+              <LockOutlined />
+            </span>
+          ),
+        },
+        {
+          key: 'status',
+          title: renderFilterTitle('status', 'Status', true),
+          dataIndex: 'inativo',
+          width: 72,
+          align: 'center',
+          render: (_, record) => (
+            <span className={`auxiliary-table-status-dot${record.inativo ? ' is-inactive' : ' is-active'}`} title={record.inativo ? 'Inativo' : 'Ativo'} aria-hidden="true" />
+          ),
+        },
+      ]
+    : isPatientStatus
     ? [
         {
           key: 'codigo',
@@ -444,12 +642,13 @@ export function TiposIndicacaoPage() {
       ];
   const columns = allColumns.filter((column) => visibleColumns[column.key] !== false);
 
-  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
+  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? 760 : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
   const resolvedModalWidth = isSpeciality ? 376 : modalWidth;
   const modalClassName = [
     'terra-password-modal',
     'client-modal',
     'auxiliary-modal',
+    isAppointmentReason ? 'auxiliary-reason-modal' : '',
     isAppointmentStatus ? 'auxiliary-status-modal' : '',
     isPatientStatus ? 'auxiliary-patient-modal' : '',
     isSpeciality ? 'auxiliary-speciality-modal' : '',
@@ -460,6 +659,7 @@ export function TiposIndicacaoPage() {
     'terra-password-form',
     'client-modal-form',
     'auxiliary-modal-form',
+    isAppointmentReason ? 'auxiliary-reason-form' : '',
     isAppointmentStatus ? 'auxiliary-status-form' : '',
     isPatientStatus ? 'auxiliary-patient-status-form' : '',
     isSpeciality ? 'auxiliary-speciality-form' : '',
@@ -551,22 +751,92 @@ export function TiposIndicacaoPage() {
           </Typography.Title>
         </div>
 
-        <Form form={form} layout="vertical" onFinish={handleFinish} initialValues={emptyFormValues()} className={formClassName}>
+        <Form form={form} layout="vertical" onFinish={handleFinish} initialValues={buildEmptyFormValues(activeTable, items)} className={formClassName}>
           {!isGrupoMedicamento ? (
             <Form.Item name="codigo" label="Código" rules={[{ required: true, message: 'Informe o código.' }]}>
-              <Input placeholder="Ex.: TI-001" />
+              <Input placeholder={isAppointmentReason ? 'Ex.: MA-001' : 'Ex.: TI-001'} />
             </Form.Item>
           ) : null}
 
-          {isAppointmentStatus ? (
+          {isAppointmentReason || isAppointmentStatus ? (
             <Form.Item name="nome" label="Nome" rules={[{ required: true, message: 'Informe o nome.' }]}>
-              <Input placeholder="Ex.: Situação de agendamento" />
+              <Input placeholder={isAppointmentReason ? 'Ex.: Exame clínico' : 'Ex.: Situação de agendamento'} />
             </Form.Item>
           ) : null}
 
-          <Form.Item name="descricao" label="Descrição" rules={[{ required: true, message: 'Informe a descrição.' }]}>
-            <Input placeholder={isGrupoMedicamento ? 'Ex.: Analgésicos' : `Ex.: ${activeTable.label}`} />
+          <Form.Item
+            name="descricao"
+            label="Descrição"
+            rules={isAppointmentReason ? [] : [{ required: true, message: 'Informe a descrição.' }]}
+          >
+            <Input placeholder={isGrupoMedicamento ? 'Ex.: Analgésicos' : isAppointmentReason ? 'Ex.: Classificação usada na agenda' : `Ex.: ${activeTable.label}`} />
           </Form.Item>
+
+          {isAppointmentReason ? (
+            <>
+              <Form.Item
+                name="tipo"
+                label="Tipo"
+                rules={[{ required: true, message: 'Selecione o tipo do motivo.' }]}
+              >
+                <Select
+                  options={[
+                    { label: 'Agendamento', value: 'agendamento' },
+                    { label: 'Compromisso', value: 'compromisso' },
+                  ]}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="cor"
+                label="Cor"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (String(selectedReasonType || '').trim() !== 'compromisso' || value) {
+                        return Promise.resolve();
+                      }
+
+                      return Promise.reject(new Error('Selecione uma cor para o motivo do tipo compromisso.'));
+                    },
+                  },
+                ]}
+              >
+                <div
+                  className={`auxiliary-color-picker${String(selectedReasonType || '').trim() !== 'compromisso' ? ' is-disabled' : ''}`}
+                  role="radiogroup"
+                  aria-label="Cores do motivo de agendamento"
+                  aria-disabled={String(selectedReasonType || '').trim() !== 'compromisso'}
+                >
+                  {APPOINTMENT_REASON_COLOR_OPTIONS.map((color) => {
+                    const isSelected = String(selectedReasonColor || '').toUpperCase() === color.toUpperCase();
+                    const isCommitmentType = String(selectedReasonType || '').trim() === 'compromisso';
+                    return (
+                      <button
+                        key={color}
+                        type="button"
+                        className={`auxiliary-color-swatch${isSelected ? ' is-selected' : ''}${APPOINTMENT_REASON_LIGHT_COLORS.has(color.toUpperCase()) ? ' is-light' : ''}`}
+                        aria-pressed={isSelected}
+                        title={color}
+                        aria-label={color}
+                        style={{ backgroundColor: color }}
+                        disabled={!isCommitmentType}
+                        onClick={() => form.setFieldValue('cor', color)}
+                      />
+                    );
+                  })}
+                </div>
+              </Form.Item>
+
+              <Form.Item
+                name="compromisso_produtivo"
+                valuePropName="checked"
+                className="auxiliary-status-check auxiliary-reason-check"
+              >
+                <Checkbox disabled={String(selectedReasonType || '').trim() !== 'compromisso'}>Compromisso produtivo</Checkbox>
+              </Form.Item>
+            </>
+          ) : null}
 
           {isSpeciality ? (
             <>

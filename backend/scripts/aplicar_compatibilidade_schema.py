@@ -1087,6 +1087,34 @@ def aplicar_compatibilidade_schema() -> None:
         conn.execute(text("ALTER TABLE item_auxiliar ADD COLUMN IF NOT EXISTS exibir_anotacao_historico BOOLEAN NOT NULL DEFAULT FALSE"))
         conn.execute(text("ALTER TABLE item_auxiliar ADD COLUMN IF NOT EXISTS mensagem_alerta VARCHAR(255)"))
         conn.execute(text("ALTER TABLE item_auxiliar ADD COLUMN IF NOT EXISTS desativar_paciente_sistema BOOLEAN NOT NULL DEFAULT FALSE"))
+        conn.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS motivo_agendamento (
+                    id SERIAL PRIMARY KEY,
+                    clinica_id INTEGER NOT NULL REFERENCES clinicas(id) ON DELETE CASCADE,
+                    codigo VARCHAR(20) NOT NULL,
+                    nome VARCHAR(180) NOT NULL,
+                    descricao TEXT,
+                    tipo VARCHAR(20) NOT NULL,
+                    cor VARCHAR(20),
+                    compromisso_produtivo BOOLEAN NOT NULL DEFAULT FALSE,
+                    inativo BOOLEAN NOT NULL DEFAULT FALSE,
+                    criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+                    atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+                )
+                """
+            )
+        )
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS codigo VARCHAR(20) NOT NULL DEFAULT 'MA-001'"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS nome VARCHAR(180)"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS descricao TEXT"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS tipo VARCHAR(20) NOT NULL DEFAULT 'agendamento'"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS cor VARCHAR(20)"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS compromisso_produtivo BOOLEAN NOT NULL DEFAULT FALSE"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS inativo BOOLEAN NOT NULL DEFAULT FALSE"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS criado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()"))
+        conn.execute(text("ALTER TABLE motivo_agendamento ADD COLUMN IF NOT EXISTS atualizado_em TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()"))
         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ADD COLUMN IF NOT EXISTS tipo_pergunta INTEGER"))
         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ADD COLUMN IF NOT EXISTS tipo_resposta INTEGER"))
         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ADD COLUMN IF NOT EXISTS mensagem_alerta VARCHAR(255)"))
