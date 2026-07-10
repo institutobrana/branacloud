@@ -1026,6 +1026,18 @@ body {
   padding: 6px 0 2px;
 }
 
+.auxiliary-color-picker.is-disabled {
+  opacity: 0.48;
+  filter: grayscale(0.25) saturate(0.65);
+  pointer-events: none;
+  user-select: none;
+}
+
+.auxiliary-color-picker.is-disabled .auxiliary-color-swatch {
+  cursor: not-allowed;
+  box-shadow: inset 0 0 0 1px rgba(83, 94, 88, 0.18);
+}
+
 .auxiliary-color-swatch {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -1062,9 +1074,18 @@ body {
   transform: translateY(-1px);
 }
 
+.auxiliary-color-picker.is-disabled .auxiliary-color-swatch.is-selected {
+  box-shadow: 0 0 0 2px rgba(15, 138, 131, 0.38), 0 0 0 4px rgba(15, 138, 131, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transform: none;
+}
+
 .auxiliary-color-swatch.is-selected::after {
   border-color: rgba(255, 255, 255, 0.92);
   box-shadow: 0 0 0 1px rgba(31, 44, 34, 0.18);
+}
+
+.auxiliary-color-picker.is-disabled .auxiliary-color-swatch::after {
+  box-shadow: none;
 }
 
 .terra-password-modal-actions {
