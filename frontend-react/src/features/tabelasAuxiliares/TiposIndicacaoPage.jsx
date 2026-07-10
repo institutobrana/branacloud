@@ -643,7 +643,7 @@ export function TiposIndicacaoPage() {
       ];
   const columns = allColumns.filter((column) => visibleColumns[column.key] !== false);
 
-  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? (editingItem ? 580 : 520) : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
+  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? 520 : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
   const resolvedModalWidth = isSpeciality ? 376 : modalWidth;
   const modalClassName = [
     'terra-password-modal',
