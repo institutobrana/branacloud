@@ -753,6 +753,9 @@ export function TiposIndicacaoPage() {
                     className={`auxiliary-sidebar-item${isActive ? ' is-active' : ''}`}
                     onClick={() => handleTableChange(table.key)}
                     title={table.label}
+                    role="option"
+                    aria-selected={isActive}
+                    tabIndex={isActive ? 0 : -1}
                     ref={(node) => {
                       const index = AUXILIARY_TABLES.findIndex((item) => item.key === table.key);
                       if (index >= 0) {
@@ -788,7 +791,7 @@ export function TiposIndicacaoPage() {
 
             <BranaCard className="auxiliary-main-card">
               <div className="module-table-shell">
-                <div className="users-grid-shell">
+                <div className="users-grid-shell" role="grid" aria-label={`Listagem de ${activeTable.label.toLowerCase()}`}>
                   <BranaTable
                     rowKey="id"
                     className="module-table auxiliary-compact-table"
@@ -817,6 +820,8 @@ export function TiposIndicacaoPage() {
                       ]
                         .filter(Boolean)
                         .join(' '),
+                      role: 'row',
+                      'aria-selected': selectedItem?.id === record.id,
                       onClick: () => setSelectedId(record.id),
                       tabIndex: selectedItem?.id === record.id || (!selectedItem && index === 0) ? 0 : -1,
                       onFocus: () => setFocusedRowId(record.id),
