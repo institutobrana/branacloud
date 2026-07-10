@@ -842,15 +842,15 @@ body {
 }
 
 .procedimento-generico-modal.is-tab-principal .procedimento-generico-modal-tabs .ant-tabs-content-holder {
-  min-height: 314px;
+  min-height: 306px;
 }
 
 .procedimento-generico-modal.is-tab-custos .procedimento-generico-modal-tabs .ant-tabs-content-holder {
-  min-height: 314px;
+  min-height: 306px;
 }
 
 .procedimento-generico-modal.is-tab-vinculos .procedimento-generico-modal-tabs .ant-tabs-content-holder {
-  min-height: 314px;
+  min-height: 306px;
 }
 
 .procedimento-generico-modal-form {
@@ -858,7 +858,7 @@ body {
 }
 
 .procedimento-generico-modal-form .ant-form-item {
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .procedimento-generico-modal-form .ant-form-item-label > label {
@@ -869,13 +869,13 @@ body {
 .procedimento-generico-principal-grid {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
-  gap: 0 7px;
+  gap: 0 6px;
   align-items: start;
 }
 
 .procedimento-generico-symbol-box {
   width: 52px;
-  height: 34px;
+  height: 32px;
   border: 1px solid #d4dce6;
   background: #fff;
   display: grid;
@@ -891,7 +891,7 @@ body {
 .procedimento-generico-principal-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 220px);
-  gap: 1px;
+  gap: 0;
   grid-column: 2;
 }
 
@@ -916,12 +916,12 @@ body {
 }
 
 .procedimento-generico-date-field > span {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: #44515c;
 }
 
 .procedimento-generico-date-box {
-  min-height: 16px;
+  min-height: 15px;
   border: 1px solid #9db0c5;
   background: #39d8e8;
   padding: 0 10px;
@@ -930,13 +930,13 @@ body {
 
 .procedimento-generico-costs {
   display: grid;
-  gap: 8px;
+  gap: 9px;
 }
 
 .procedimento-generico-cost-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 28px minmax(160px, 190px) 28px;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
 }
 
@@ -951,7 +951,7 @@ body {
 }
 
 .procedimento-generico-cost-value {
-  min-height: 30px;
+  min-height: 32px;
   border: 1px solid #9db0c5;
   background: #f5f5f5;
   padding: 4px 12px;
@@ -967,7 +967,7 @@ body {
 
 .procedimento-generico-cost-value .ant-input,
 .procedimento-generico-modal .procedimento-generico-cost-value .ant-select-selector {
-  min-height: 30px;
+  min-height: 32px;
   border-radius: 12px;
 }
 

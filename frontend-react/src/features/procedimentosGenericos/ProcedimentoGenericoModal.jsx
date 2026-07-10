@@ -202,8 +202,9 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
     const codigo = String(state.simbolo_grafico || '').trim();
     if (!codigo) return null;
     const item = simbolos.find((entry) => String(entry?.codigo || '').trim() === codigo) || null;
-    if (!item?.imagem_url) return null;
-    return <img src={item.imagem_url} alt="" className="procedimento-generico-symbol-preview-img" />;
+    const src = String(item?.imagem_url || '').trim() || (codigo ? `/desktop-assets/easy/${codigo}` : '');
+    if (!src) return null;
+    return <img src={src} alt="" className="procedimento-generico-symbol-preview-img" />;
   }, [simbolos, state.simbolo_grafico]);
 
   const vinculos = Array.isArray(state.vinculos) ? state.vinculos : [];
