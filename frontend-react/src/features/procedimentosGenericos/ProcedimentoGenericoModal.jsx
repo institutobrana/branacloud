@@ -337,7 +337,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                         allowClear
                         placeholder="<<Todas>>"
                         options={specialidades.map((item) => ({
-                          label: `${String(item?.codigo || '').trim()} - ${String(item?.nome || '').trim()}`,
+                          label: String(item?.nome || '').trim() || String(item?.codigo || '').trim(),
                           value: String(item?.codigo || '').trim(),
                         }))}
                         value={state.especialidade || undefined}

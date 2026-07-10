@@ -4,7 +4,7 @@ import { Space, Typography, message } from 'antd';
 import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
 import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
-import { listarProcedimentosGenericos } from './procedimentosGenericosApi.js';
+import { listarProcedimentosGenericos, listarProcedimentosGenericosEspecialidades } from './procedimentosGenericosApi.js';
 import { ProcedimentoGenericoModal } from './ProcedimentoGenericoModal.jsx';
 
 function statusDot(inativo) {
@@ -13,6 +13,7 @@ function statusDot(inativo) {
 
 export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoToken }) {
   const [items, setItems] = useState([]);
+  const [specialidades, setSpecialidades] = useState([]);
   const [sortState, setSortState] = useState({ key: null, order: null });
   const [visibleColumns, setVisibleColumns] = useState({
     codigo: true,
@@ -29,38 +30,41 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
   const [modalFocusToken, setModalFocusToken] = useState(0);
 
   const selectedItem = useMemo(() => items.find((item) => item.id === selectedId) || null, [items, selectedId]);
-  const especialidades = useMemo(() => {
-    const seen = new Set();
-    return items
-      .map((item) => item.especialidade)
-      .filter(Boolean)
-      .filter((item) => {
-        if (seen.has(item)) return false;
-        seen.add(item);
-        return true;
-      })
-      .sort((left, right) => left.localeCompare(right, 'pt-BR', { sensitivity: 'base' }));
-  }, [items]);
+
+  const especialidadeNomePorCodigo = useMemo(() => {
+    const map = new Map();
+    specialidades.forEach((item) => {
+      const codigo = String(item?.codigo || '').trim();
+      const nome = String(item?.nome || '').trim();
+      if (codigo) map.set(codigo, nome || codigo);
+    });
+    return map;
+  }, [specialidades]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(
         new CustomEvent('brana-procedimentos-genericos-especialidades', {
-          detail: { especialidades },
+          detail: { especialidades: specialidades },
         }),
       );
     }
-  }, [especialidades]);
+  }, [specialidades]);
 
   const loadItems = async () => {
     setLoading(true);
     setError('');
     try {
-      const data = await listarProcedimentosGenericos({ q, especialidade });
-      setItems(data);
-      setSelectedId((current) => (data.some((item) => item.id === current) ? current : data[0]?.id ?? null));
+      const [listaProcedimentos, listaEspecialidades] = await Promise.all([
+        listarProcedimentosGenericos({ q, especialidade }),
+        listarProcedimentosGenericosEspecialidades(),
+      ]);
+      setItems(listaProcedimentos);
+      setSpecialidades(Array.isArray(listaEspecialidades) ? listaEspecialidades : []);
+      setSelectedId((current) => (listaProcedimentos.some((item) => item.id === current) ? current : listaProcedimentos[0]?.id ?? null));
     } catch (err) {
       setItems([]);
+      setSpecialidades([]);
       setSelectedId(null);
       setError(err?.message || 'Falha ao carregar procedimentos genéricos.');
       message.error(err?.message || 'Falha ao carregar procedimentos genéricos.');
@@ -134,7 +138,7 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
       title: renderFilterTitle('especialidade', 'Especialidade'),
       dataIndex: 'especialidade',
       width: 180,
-      render: (value) => value || '-',
+      render: (value) => especialidadeNomePorCodigo.get(String(value || '').trim()) || value || '-',
     },
     {
       key: 'status',

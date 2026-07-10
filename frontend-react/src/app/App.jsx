@@ -327,6 +327,18 @@ function AppContent() {
 
   const procedimentosGenericosTopBar = useMemo(() => {
     if (screen !== 'procedimentos-genericos') return null;
+    const especialidadeOptions = procedimentosGenericosEspecialidades.map((item) => {
+      if (typeof item === 'string') {
+        return { label: item, value: item };
+      }
+
+      const codigo = String(item?.codigo || '').trim();
+      const nome = String(item?.nome || '').trim();
+      return {
+        label: nome || codigo,
+        value: codigo,
+      };
+    }).filter((item) => item.value);
 
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genéricos">
@@ -355,7 +367,7 @@ function AppContent() {
               <Select
                 value={procedimentosGenericosEspecialidade || undefined}
                 placeholder="<<Todas>>"
-                options={procedimentosGenericosEspecialidades.map((item) => ({ label: item, value: item }))}
+                options={especialidadeOptions}
                 onChange={(value) => setProcedimentosGenericosEspecialidade(value || '')}
                 allowClear
               />
@@ -474,4 +486,3 @@ export default function App() {
     </ConfigProvider>
   );
 }
-
