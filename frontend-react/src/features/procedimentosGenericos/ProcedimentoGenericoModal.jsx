@@ -180,6 +180,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
   }, [focusToken, open]);
 
   const totals = useMemo(() => buildCustoTotals(state, cenario), [cenario, state]);
+  const modalWidth = activeKey === 'principal' ? 472 : 438;
 
   useEffect(() => {
     if (!open) return;
@@ -297,11 +298,11 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
     <Modal
       open={open}
       centered
-      width={472}
+      width={modalWidth}
       destroyOnClose
       onCancel={onClose}
       footer={null}
-      className="procedimento-generico-modal"
+      className={`procedimento-generico-modal is-tab-${activeKey}`}
       confirmLoading={saving}
     >
       <div className="procedimento-generico-modal-header">
