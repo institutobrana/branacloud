@@ -5984,11 +5984,13 @@ Observacoes:
 
 ## Frente validada: Tabelas Auxiliares no novo frontend React
 
-- A frente de `Configuração > Tabelas auxiliares` no novo frontend React do Brana Cloude foi validada e considerada fechada após comparação visual com o Terra Relva.
-- O fechamento documental está registrado em `docs/validacao_final_tabelas_auxiliares_frontend_react_brana_cloude.md`.
-- Foram alinhados shell, submenu lateral interno, grid, cabeçalho compartilhado, menu de filtro, modal e o botão `Salvar`, mantendo a paleta do Brana Cloude.
-- Não houve mudança de backend, banco, migrations, regras de negócio ou novos endpoints.
-- `Grupo de medicamento` foi auditado em frente separada e recebeu contrato próprio em `docs/contrato_implementacao_grupo_medicamento_frontend_react.md`; ele permanece fora do lote padrão de tabelas simples.
+- A frente de `Configuracao > Tabelas auxiliares` no novo frontend React do Brana Cloude foi validada e considerada fechada apos comparacao visual com o Terra Relva.
+- O fechamento documental esta registrado em `docs/validacao_final_tabelas_auxiliares_frontend_react_brana_cloude.md`.
+- O encerramento formal consolidado do modulo esta registrado em `docs/encerramento_formal_tabelas_auxiliares_brana_cloude.md`.
+- Foram alinhados shell, submenu lateral interno, grid, cabecalho compartilhado, menu de filtro, modal e o botao `Salvar`, mantendo a paleta do Brana Cloude.
+- A navegacao por teclado e o foco visivel foram tratados como ajuste final de usabilidade da mesma frente, sem abrir nova implementacao.
+- Nao houve mudanca de backend, banco, migrations, regras de negocio ou novos endpoints.
+- `Grupo de medicamento` foi auditado em frente separada e recebeu contrato proprio em `docs/contrato_implementacao_grupo_medicamento_frontend_react.md`; ele permanece fora do lote padrao de tabelas simples.
 
 ## Frente implementada: Situacao do paciente no novo frontend React
 
