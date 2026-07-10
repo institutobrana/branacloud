@@ -1,4 +1,4 @@
-import { ConfigProvider, Typography, message } from 'antd';
+import { ConfigProvider, Input, Select, Typography, message } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { branaTheme } from '../theme/branaTheme.js';
 import { BranaIconRail, branaMainGroups } from '../layout/BranaIconRail.jsx';
@@ -128,6 +128,9 @@ function AppContent() {
   const [screen, setScreen] = useState(initialScreen);
   const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
+  const [procedimentosGenericosSearch, setProcedimentosGenericosSearch] = useState('');
+  const [procedimentosGenericosEspecialidade, setProcedimentosGenericosEspecialidade] = useState('');
+  const [procedimentosGenericosEspecialidades, setProcedimentosGenericosEspecialidades] = useState([]);
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'pacientes') return 'cadastro';
     if (initialScreen === 'procedimentos-genericos') return 'tabelas';
@@ -141,6 +144,15 @@ function AppContent() {
     const onPopState = () => setScreen(resolveScreenFromPath());
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  useEffect(() => {
+    const onEspecialidades = (event) => {
+      const next = Array.isArray(event?.detail?.especialidades) ? event.detail.especialidades : [];
+      setProcedimentosGenericosEspecialidades(next);
+    };
+    window.addEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
+    return () => window.removeEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
   }, []);
 
   useEffect(() => {
@@ -276,10 +288,19 @@ function AppContent() {
       return <TiposIndicacaoPage />;
     }
     if (screen === 'procedimentos-genericos') {
-      return <ProcedimentosGenericosPage />;
+      return (
+        <ProcedimentosGenericosPage
+          q={procedimentosGenericosSearch}
+          especialidade={procedimentosGenericosEspecialidade}
+          onResetFilters={() => {
+            setProcedimentosGenericosSearch('');
+            setProcedimentosGenericosEspecialidade('');
+          }}
+        />
+      );
     }
     return <DashboardPage key={dashboardVersion} />;
-  }, [dashboardVersion, screen]);
+  }, [dashboardVersion, procedimentosGenericosEspecialidade, procedimentosGenericosSearch, screen]);
 
   const auxiliaryTopBar = useMemo(() => {
     if (screen !== 'tabelas-auxiliares') return null;
@@ -306,26 +327,49 @@ function AppContent() {
 
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genéricos">
-        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
-          <button type="button" className="auxiliary-shell-button primary" onClick={() => message.info('Novo procedimento ainda será definido nesta etapa.')}>
-            Novo procedimento
-          </button>
-          <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Alteração pendente nesta etapa.')}>
-            Altera...
-          </button>
-          <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('Exclusão pendente nesta etapa.')}>
-            Elimina...
-          </button>
-          <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficará na próxima etapa.')}>
-            Fases
-          </button>
-          <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficará na próxima etapa.')}>
-            Materiais
-          </button>
+        <div className="procedimentos-genericos-toolbar-row" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
+          <div className="auxiliary-action-toolbar procedimentos-genericos-toolbar-actions">
+            <button type="button" className="auxiliary-shell-button primary" onClick={() => message.info('Novo procedimento ainda será definido nesta etapa.')}>
+              Novo procedimento
+            </button>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Alteração pendente nesta etapa.')}>
+              Altera...
+            </button>
+            <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('Exclusão pendente nesta etapa.')}>
+              Elimina...
+            </button>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficará na próxima etapa.')}>
+              Fases
+            </button>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficará na próxima etapa.')}>
+              Materiais
+            </button>
+          </div>
+
+          <div className="procedimentos-genericos-toolbar-filters">
+            <label className="procedimentos-genericos-field is-inline">
+              <span>Especialidades</span>
+              <Select
+                value={procedimentosGenericosEspecialidade || undefined}
+                placeholder="<<Todas>>"
+                options={procedimentosGenericosEspecialidades.map((item) => ({ label: item, value: item }))}
+                onChange={(value) => setProcedimentosGenericosEspecialidade(value || '')}
+                allowClear
+              />
+            </label>
+            <label className="procedimentos-genericos-field is-inline">
+              <span>Procedimentos</span>
+              <Input
+                value={procedimentosGenericosSearch}
+                onChange={(event) => setProcedimentosGenericosSearch(event.target.value)}
+                placeholder="Buscar por código ou descrição"
+              />
+            </label>
+          </div>
         </div>
       </div>
     );
-  }, [screen]);
+  }, [procedimentosGenericosEspecialidade, procedimentosGenericosSearch, screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',

@@ -530,6 +530,30 @@ body {
   min-width: 0;
 }
 
+.procedimentos-genericos-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding-right: 10px;
+}
+
+.procedimentos-genericos-toolbar-actions {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.procedimentos-genericos-toolbar-filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .auxiliary-shell-frame {
   display: flex;
   flex-direction: column;
@@ -683,9 +707,35 @@ body {
   min-width: 0;
 }
 
+.procedimentos-genericos-field.is-inline {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
 .procedimentos-genericos-field > span {
   font-size: 0.8rem;
   color: #4f5f58;
+}
+
+.procedimentos-genericos-field.is-inline > span {
+  white-space: nowrap;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.procedimentos-genericos-field.is-inline .ant-select,
+.procedimentos-genericos-field.is-inline .ant-input {
+  min-width: 0;
+}
+
+.procedimentos-genericos-toolbar-filters .ant-select {
+  width: 160px;
+}
+
+.procedimentos-genericos-toolbar-filters .ant-input {
+  width: 260px;
 }
 
 .procedimentos-genericos-grid {

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Input, Select, Space, Typography, message } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Space, Typography, message } from 'antd';
 
 import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
@@ -10,12 +9,10 @@ function statusDot(inativo) {
   return <span className={`auxiliary-table-status-dot${inativo ? ' is-inactive' : ' is-active'}`} aria-hidden="true" />;
 }
 
-export function ProcedimentosGenericosPage() {
+export function ProcedimentosGenericosPage({ q, especialidade }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
-  const [q, setQ] = useState('');
-  const [especialidade, setEspecialidade] = useState('');
   const [error, setError] = useState('');
 
   const selectedItem = useMemo(() => items.find((item) => item.id === selectedId) || null, [items, selectedId]);
@@ -31,6 +28,16 @@ export function ProcedimentosGenericosPage() {
       })
       .sort((left, right) => left.localeCompare(right, 'pt-BR', { sensitivity: 'base' }));
   }, [items]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('brana-procedimentos-genericos-especialidades', {
+          detail: { especialidades },
+        }),
+      );
+    }
+  }, [especialidades]);
 
   const loadItems = async () => {
     setLoading(true);
@@ -91,29 +98,6 @@ export function ProcedimentosGenericosPage() {
 
         <BranaCard className="auxiliary-main-card procedimentos-genericos-card">
           <div className="module-table-shell procedimentos-genericos-shell">
-            <div className="procedimentos-genericos-filters" aria-label="Filtros de procedimentos genéricos">
-              <label className="procedimentos-genericos-field">
-                <span>Especialidades</span>
-                <Select
-                  value={especialidade || undefined}
-                  placeholder="<<Todas>>"
-                  options={especialidades.map((item) => ({ label: item, value: item }))}
-                  onChange={(value) => setEspecialidade(value || '')}
-                  allowClear
-                />
-              </label>
-              <label className="procedimentos-genericos-field">
-                <span>Procedimentos</span>
-                <Input
-                  value={q}
-                  onChange={(event) => setQ(event.target.value)}
-                  placeholder="Buscar por código ou descrição"
-                  prefix={<SearchOutlined />}
-                  allowClear
-                />
-              </label>
-            </div>
-
             <div className="users-grid-shell procedimentos-genericos-grid" role="grid" aria-label="Listagem de procedimentos genéricos">
               <BranaTable
                 rowKey="id"
