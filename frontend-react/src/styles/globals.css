@@ -38,12 +38,7 @@ body {
 }
 
 .brana-shell-corner {
-  grid-column: 1;
-  grid-row: 1;
-  width: 100%;
-  min-width: 0;
-  min-height: 36px;
-  background: #16aaa1;
+  display: none;
 }
 
 .brana-shell-body {
@@ -60,9 +55,10 @@ body {
 }
 
 .brana-shell-body > .brana-shell-band {
-  grid-column: 2 / -1;
+  grid-column: 1 / -1;
   grid-row: 1;
   min-width: 0;
+  padding-left: var(--brana-rail-width, 72px);
 }
 
 .auxiliary-shell-band {
@@ -80,8 +76,7 @@ body {
 }
 
 .auxiliary-shell-corner {
-  min-height: 41px;
-  background: #16aaa1;
+  display: none;
 }
 
 .brana-icon-rail {
