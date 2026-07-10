@@ -31,6 +31,7 @@ Brana Cloud is a web system for dental clinic management with a FastAPI backend 
 - Setup: `docs/08_setup_execucao.md`
 - Continuity: `docs/10_continuidade.md`
 - Roadmap: `docs/11_roadmap_desenvolvimento.md`
+- Administrative shell standard: `docs/frontend_react_padrao_shell_modulos_administrativos.md`
 
 ## Notes
 - Do not mix mojibake work with functional fixes.
@@ -38,6 +39,7 @@ Brana Cloud is a web system for dental clinic management with a FastAPI backend 
 - Do not use destructive git commands without explicit authorization.
 - Keep commits separated by track.
 - Historical material such as anamnese, SQLServer, and restoration stays in its own track.
+- New administrative React modules must follow `docs/frontend_react_padrao_shell_modulos_administrativos.md`.
 
 ## Basic layout
 ```text
