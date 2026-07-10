@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
+import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 import { TiposIndicacaoPage } from '../features/tabelasAuxiliares/TiposIndicacaoPage.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
@@ -131,6 +132,7 @@ function AppContent() {
   const [procedimentosGenericosSearch, setProcedimentosGenericosSearch] = useState('');
   const [procedimentosGenericosEspecialidade, setProcedimentosGenericosEspecialidade] = useState('');
   const [procedimentosGenericosEspecialidades, setProcedimentosGenericosEspecialidades] = useState([]);
+  const [procedimentosGenericosEspecialidadesLoading, setProcedimentosGenericosEspecialidadesLoading] = useState(false);
   const [procedimentosGenericosNovoToken, setProcedimentosGenericosNovoToken] = useState(0);
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'pacientes') return 'cadastro';
@@ -150,11 +152,38 @@ function AppContent() {
   useEffect(() => {
     const onEspecialidades = (event) => {
       const next = Array.isArray(event?.detail?.especialidades) ? event.detail.especialidades : [];
-      setProcedimentosGenericosEspecialidades(next);
+      if (next.length > 0) {
+        setProcedimentosGenericosEspecialidades(next);
+      }
     };
     window.addEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
     return () => window.removeEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
   }, []);
+
+  useEffect(() => {
+    if (screen !== 'procedimentos-genericos') return;
+    let cancelled = false;
+
+    const loadEspecialidades = async () => {
+      setProcedimentosGenericosEspecialidadesLoading(true);
+      try {
+        const lista = await listarProcedimentosGenericosEspecialidades();
+        if (cancelled) return;
+        setProcedimentosGenericosEspecialidades(Array.isArray(lista) ? lista : []);
+      } catch {
+        if (cancelled) return;
+        setProcedimentosGenericosEspecialidades([]);
+      } finally {
+        if (!cancelled) setProcedimentosGenericosEspecialidadesLoading(false);
+      }
+    };
+
+    void loadEspecialidades();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [screen]);
 
   useEffect(() => {
     if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos-genericos') {
@@ -367,6 +396,7 @@ function AppContent() {
               <Select
                 value={procedimentosGenericosEspecialidade || undefined}
                 placeholder="<<Todas>>"
+                loading={procedimentosGenericosEspecialidadesLoading}
                 options={especialidadeOptions}
                 onChange={(value) => setProcedimentosGenericosEspecialidade(value || '')}
                 allowClear
@@ -384,7 +414,7 @@ function AppContent() {
         </div>
       </div>
     );
-  }, [procedimentosGenericosEspecialidade, procedimentosGenericosSearch, screen]);
+  }, [procedimentosGenericosEspecialidade, procedimentosGenericosEspecialidades, procedimentosGenericosEspecialidadesLoading, procedimentosGenericosSearch, screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
