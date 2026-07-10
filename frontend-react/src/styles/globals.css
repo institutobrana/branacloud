@@ -655,6 +655,68 @@ body {
   min-width: 0;
 }
 
+.procedimentos-genericos-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.procedimentos-genericos-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.procedimentos-genericos-shell {
+  width: 100%;
+  min-width: 0;
+}
+
+.procedimentos-genericos-toolbar {
+  padding-inline: 10px;
+  border-radius: 16px 16px 0 0;
+}
+
+.procedimentos-genericos-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(320px, 1fr);
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #cfd8e3;
+  border-top: none;
+  background: #fff;
+  padding: 6px 8px;
+}
+
+.procedimentos-genericos-field {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.procedimentos-genericos-field > span {
+  font-size: 0.8rem;
+  color: #4f5f58;
+}
+
+.procedimentos-genericos-grid {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.procedimentos-genericos-table .ant-table {
+  width: 100%;
+}
+
+.procedimentos-genericos-table .ant-table-container {
+  width: 100%;
+}
+
+.procedimentos-genericos-table .ant-table-thead > tr > th,
+.procedimentos-genericos-table .ant-table-tbody > tr > td {
+  white-space: nowrap;
+}
+
 .auxiliary-shell-button {
   border: 0;
   background: transparent;
