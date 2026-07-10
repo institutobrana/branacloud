@@ -9,7 +9,9 @@ import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
+import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
+import { TiposIndicacaoPage } from '../features/tabelasAuxiliares/TiposIndicacaoPage.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
 
 const contextualMenus = {
@@ -41,7 +43,7 @@ const contextualMenus = {
   ],
   tabelas: [
     { key: 'procedimentos', label: 'Procedimentos', disabled: true },
-    { key: 'procedimentos-genericos', label: 'Procedimentos genéricos', disabled: true },
+    { key: 'procedimentos-genericos', label: 'Procedimentos genéricos' },
     { key: 'materiais-estoque', label: 'Materiais de estoque', disabled: true },
     { key: 'medicamentos', label: 'Medicamentos', disabled: true },
     { key: 'servicos-protese', label: 'Serviços de prótese', disabled: true },
@@ -59,7 +61,7 @@ const contextualMenus = {
   configuracao: [
     { key: 'usuarios', label: 'Usuários do sistema', disabled: true },
     { key: 'perfis-usuario', label: 'Perfis de usuário', disabled: true },
-    { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares', disabled: true },
+    { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares' },
     { key: 'plano-contas', label: 'Plano de contas', disabled: true },
     { key: 'agendas', label: 'Agendas', disabled: true },
     { key: 'questionarios-anamnese', label: 'Questionários de anamnese', disabled: true },
@@ -93,18 +95,29 @@ function isLoginRoute() {
 
 function isAppRoute() {
   const path = window.location.pathname || '/';
-  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '/app/ficha-clinica' || path === '';
+  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '/app/ficha-clinica' || path === '/app/tabelas-auxiliares' || path === '/app/tabelas/procedimentos-genericos' || path === '';
 }
 
 function resolveScreenFromPath() {
   const path = window.location.pathname || '/';
   if (path === '/app/pacientes') return 'pacientes';
   if (path === '/app/ficha-clinica') return 'ficha-clinica';
+  if (path === '/app/tabelas-auxiliares') return 'tabelas-auxiliares';
+  if (path === '/app/tabelas/procedimentos-genericos') return 'procedimentos-genericos';
   return 'dashboard';
 }
 
 function syncAppPath(screen) {
-  const nextPath = screen === 'pacientes' ? '/app/pacientes' : screen === 'ficha-clinica' ? '/app/ficha-clinica' : '/app';
+  const nextPath =
+    screen === 'pacientes'
+      ? '/app/pacientes'
+      : screen === 'ficha-clinica'
+        ? '/app/ficha-clinica'
+        : screen === 'tabelas-auxiliares'
+          ? '/app/tabelas-auxiliares'
+          : screen === 'procedimentos-genericos'
+            ? '/app/tabelas/procedimentos-genericos'
+            : '/app';
   if ((window.location.pathname || '/') === nextPath) return;
   window.history.pushState({ screen }, '', nextPath);
 }
@@ -115,7 +128,11 @@ function AppContent() {
   const [screen, setScreen] = useState(initialScreen);
   const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
-  const [activeGroupKey, setActiveGroupKey] = useState(() => (initialScreen === 'pacientes' ? 'cadastro' : 'atendimento'));
+  const [activeGroupKey, setActiveGroupKey] = useState(() => {
+    if (initialScreen === 'pacientes') return 'cadastro';
+    if (initialScreen === 'procedimentos-genericos') return 'tabelas';
+    return 'atendimento';
+  });
   const [panelGroupKey, setPanelGroupKey] = useState('');
   const [preferenciasOpen, setPreferenciasOpen] = useState(false);
   const panelCloseTimerRef = useRef(null);
@@ -127,7 +144,7 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
-    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica') {
+    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos-genericos') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -149,6 +166,11 @@ function AppContent() {
     if (nextScreen === 'pacientes') {
       setActiveGroupKey('cadastro');
       setPanelGroupKey('cadastro');
+      return;
+    }
+    if (nextScreen === 'procedimentos-genericos') {
+      setActiveGroupKey('tabelas');
+      setPanelGroupKey('');
       return;
     }
     if (nextScreen === 'ficha-clinica') {
@@ -188,6 +210,14 @@ function AppContent() {
       handleNavigate('pacientes');
       return;
     }
+    if (groupKey === 'configuracao' && item?.key === 'tabelas-auxiliares' && !item?.disabled) {
+      handleNavigate('tabelas-auxiliares');
+      return;
+    }
+    if (groupKey === 'tabelas' && item?.key === 'procedimentos-genericos' && !item?.disabled) {
+      handleNavigate('procedimentos-genericos');
+      return;
+    }
     if (groupKey === 'atendimento' && item?.key === 'ficha-clinica' && !item?.disabled) {
       handleNavigate('ficha-clinica');
       return;
@@ -212,6 +242,14 @@ function AppContent() {
       handleNavigate('ficha-clinica');
       return;
     }
+    if (actionKey === 'tabelas-auxiliares') {
+      handleNavigate('tabelas-auxiliares');
+      return;
+    }
+    if (actionKey === 'procedimentos-genericos') {
+      handleNavigate('procedimentos-genericos');
+      return;
+    }
     message.info('Funcionalidade em breve.');
   };
 
@@ -234,8 +272,34 @@ function AppContent() {
     if (screen === 'ficha-clinica') {
       return <FichaClinicaPage onBackHome={() => handleNavigate('dashboard')} />;
     }
+    if (screen === 'tabelas-auxiliares') {
+      return <TiposIndicacaoPage />;
+    }
+    if (screen === 'procedimentos-genericos') {
+      return <ProcedimentosGenericosPage />;
+    }
     return <DashboardPage key={dashboardVersion} />;
   }, [dashboardVersion, screen]);
+
+  const auxiliaryTopBar = useMemo(() => {
+    if (screen !== 'tabelas-auxiliares') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de tabelas auxiliares">
+        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo tabelas auxiliares">
+          <button type="button" className="auxiliary-shell-button primary" onClick={() => window.dispatchEvent(new CustomEvent('brana-auxiliar-toolbar-action', { detail: { action: 'novo' } }))}>
+            Novo
+          </button>
+          <button type="button" className="auxiliary-shell-button" onClick={() => window.dispatchEvent(new CustomEvent('brana-auxiliar-toolbar-action', { detail: { action: 'alterar' } }))}>
+            Alterar
+          </button>
+          <button type="button" className="auxiliary-shell-button danger" onClick={() => window.dispatchEvent(new CustomEvent('brana-auxiliar-toolbar-action', { detail: { action: 'excluir' } }))}>
+            Excluir
+          </button>
+        </div>
+      </div>
+    );
+  }, [screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
@@ -281,11 +345,15 @@ function AppContent() {
         >
           {screen === 'dashboard' ? (
             <div className="brana-shell-corner" aria-hidden="true" />
+          ) : screen === 'tabelas-auxiliares' ? (
+            <div className="brana-shell-corner auxiliary-shell-corner" aria-hidden="true" />
           ) : null}
           {screen === 'dashboard' ? (
             <div className="brana-shell-band">
               <DashboardOperationalStrip />
             </div>
+          ) : screen === 'tabelas-auxiliares' ? (
+            auxiliaryTopBar
           ) : null}
           <BranaIconRail
             activeKey={activeKey}

@@ -6016,3 +6016,11 @@ Observacoes:
 - A tabela nao existia como frente propria no novo frontend React e nao pode ser tratada como tabela simples.
 - O contrato tecnico-funcional ficou registrado em `docs/contrato_implementacao_motivos_agendamento_frontend_react.md`.
 - A implementacao precisa preservar a regra de tipo, a paleta, o campo de compromisso produtivo e a persistencia propria.
+
+## Frente nova consolidada: Procedimentos genéricos
+
+- A auditoria consolidada da frente de Procedimentos genéricos foi registrada em `docs/contrato_implementacao_procedimentos_genericos_frontend_react.md`.
+- O backend existente foi preservado nesta etapa.
+- O novo frontend React já recebeu rota, listagem inicial, filtros de `Especialidades` e `Procedimentos`, barra de ações e status visual por bolinha.
+- Os botões `Fases` e `Materiais` ficaram em comportamento mínimo controlado, sem editor completo nesta etapa.
+- A próxima etapa recomendada é o detalhamento dos fluxos de edição quando o contrato visual exigir.
