@@ -5,12 +5,13 @@ import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
 import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
 import { listarProcedimentosGenericos } from './procedimentosGenericosApi.js';
+import { ProcedimentoGenericoModal } from './ProcedimentoGenericoModal.jsx';
 
 function statusDot(inativo) {
   return <span className={`auxiliary-table-status-dot${inativo ? ' is-inactive' : ' is-active'}`} aria-hidden="true" />;
 }
 
-export function ProcedimentosGenericosPage({ q, especialidade }) {
+export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoToken }) {
   const [items, setItems] = useState([]);
   const [sortState, setSortState] = useState({ key: null, order: null });
   const [visibleColumns, setVisibleColumns] = useState({
@@ -23,6 +24,10 @@ export function ProcedimentosGenericosPage({ q, especialidade }) {
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('novo');
+  const [modalItemId, setModalItemId] = useState(null);
+  const [modalFocusToken, setModalFocusToken] = useState(0);
 
   const selectedItem = useMemo(() => items.find((item) => item.id === selectedId) || null, [items, selectedId]);
   const especialidades = useMemo(() => {
@@ -68,6 +73,14 @@ export function ProcedimentosGenericosPage({ q, especialidade }) {
   useEffect(() => {
     void loadItems();
   }, [q, especialidade]);
+
+  useEffect(() => {
+    if (!novoProcedimentoToken) return;
+    setModalMode('novo');
+    setModalItemId(null);
+    setModalOpen(true);
+    setModalFocusToken((current) => current + 1);
+  }, [novoProcedimentoToken]);
 
   const sortedItems = useMemo(() => {
     const nextItems = [...items];
@@ -175,6 +188,17 @@ export function ProcedimentosGenericosPage({ q, especialidade }) {
           </div>
         </BranaCard>
       </div>
+
+      <ProcedimentoGenericoModal
+        open={modalOpen}
+        mode={modalMode}
+        itemId={modalItemId}
+        focusToken={modalFocusToken}
+        onClose={() => setModalOpen(false)}
+        onSaved={() => {
+          void loadItems();
+        }}
+      />
     </Space>
   );
 }

@@ -48,6 +48,47 @@ function normalizeProcedimentoGenerico(item) {
   };
 }
 
+function normalizeProcedimentoGenericoDetalhe(item) {
+  const normalizado = normalizeProcedimentoGenerico(item);
+  return {
+    ...normalizado,
+    peso: Number(item?.peso || 0) || 0,
+    simbolo_grafico: String(item?.simbolo_grafico || '').trim(),
+    mostrar_simbolo: Boolean(item?.mostrar_simbolo),
+    observacoes: String(item?.observacoes || '').trim(),
+    data_inclusao: String(item?.data_inclusao || '').trim(),
+    data_alteracao: String(item?.data_alteracao || '').trim(),
+    tempo: Number(item?.tempo || 0) || 0,
+    custo_lab: Number(item?.custo_lab || 0) || 0,
+    fases: Array.isArray(item?.fases)
+      ? item.fases.map((fase, index) => ({
+          codigo: String(fase?.codigo || '').trim(),
+          descricao: String(fase?.descricao || '').trim(),
+          sequencia: Number(fase?.sequencia || index + 1) || index + 1,
+          tempo: Number(fase?.tempo || 0) || 0,
+        }))
+      : [],
+    materiais: Array.isArray(item?.materiais)
+      ? item.materiais.map((material) => ({
+          material_id: Number(material?.material_id || 0) || 0,
+          codigo: String(material?.codigo || '').trim(),
+          nome: String(material?.nome || '').trim(),
+          quantidade: Number(material?.quantidade || 0) || 0,
+          custo_und: Number(material?.custo_und || 0) || 0,
+        }))
+      : [],
+    vinculos: Array.isArray(item?.vinculos)
+      ? item.vinculos.map((vinculo) => ({
+          id: Number(vinculo?.id || 0) || 0,
+          tabela_id: Number(vinculo?.tabela_id || 0) || 0,
+          tabela_nome: String(vinculo?.tabela_nome || '').trim(),
+          codigo: String(vinculo?.codigo || '').trim(),
+          nome: String(vinculo?.nome || '').trim(),
+        }))
+      : [],
+  };
+}
+
 export async function listarProcedimentosGenericos(params = {}) {
   const search = new URLSearchParams();
   if (params.q) search.set('q', params.q);
@@ -57,4 +98,53 @@ export async function listarProcedimentosGenericos(params = {}) {
     headers: getAuthHeaders(),
   });
   return Array.isArray(data) ? data.map(normalizeProcedimentoGenerico) : [];
+}
+
+export async function obterProcedimentoGenericoDetalhe(id) {
+  const data = await requestJson(`/cadastros/procedimentos-genericos/detalhe/${id}`, {
+    headers: getAuthHeaders(),
+  });
+  return normalizeProcedimentoGenericoDetalhe(data);
+}
+
+export async function obterProximoCodigoProcedimentoGenerico() {
+  const data = await requestJson('/cadastros/procedimentos-genericos/proximo-codigo', {
+    headers: getAuthHeaders(),
+  });
+  return String(data?.codigo || '').trim();
+}
+
+export async function salvarProcedimentoGenerico({ id, payload }) {
+  const method = id ? 'PUT' : 'POST';
+  const path = id ? `/cadastros/procedimentos-genericos/${id}` : '/cadastros/procedimentos-genericos';
+  const data = await requestJson(path, {
+    method,
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  });
+  return normalizeProcedimentoGenericoDetalhe(data);
+}
+
+export async function carregarCenarioProcedimentoGenerico() {
+  const data = await requestJson('/cenario', {
+    headers: getAuthHeaders(),
+  });
+  return {
+    cfph: Number(data?.cfph || 0) || 0,
+    cfpm: Number(data?.cfpm || 0) || 0,
+  };
+}
+
+export async function listarProcedimentosGenericosEspecialidades() {
+  const data = await requestJson('/procedimentos/filtros', {
+    headers: getAuthHeaders(),
+  });
+  return Array.isArray(data?.especialidades) ? data.especialidades : [];
+}
+
+export async function listarSimbolosGraficoGenericos() {
+  const data = await requestJson('/cadastros/simbolos-graficos?scope=genericos', {
+    headers: getAuthHeaders(),
+  });
+  return Array.isArray(data) ? data : [];
 }
