@@ -180,7 +180,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
   }, [focusToken, open]);
 
   const totals = useMemo(() => buildCustoTotals(state, cenario), [cenario, state]);
-  const modalWidth = activeKey === 'principal' ? 472 : 438;
+  const modalWidth = 472;
 
   useEffect(() => {
     if (!open) return;
