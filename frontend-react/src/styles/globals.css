@@ -610,6 +610,12 @@ body {
   background: rgba(229, 237, 224, 0.5);
 }
 
+.auxiliary-sidebar-item:focus-visible {
+  outline: 2px solid rgba(15, 138, 131, 0.92);
+  outline-offset: -2px;
+  background: rgba(229, 237, 224, 0.78);
+}
+
 .auxiliary-sidebar-item.is-active {
   background: linear-gradient(180deg, rgba(229, 237, 224, 0.9), rgba(239, 244, 235, 0.96));
   color: #304032;
@@ -862,6 +868,10 @@ body {
   background: rgba(229, 237, 224, 0.62);
 }
 
+.auxiliary-compact-table .ant-table-tbody > tr.auxiliary-table-row-focused > td {
+  box-shadow: inset 0 0 0 2px rgba(15, 138, 131, 0.42);
+}
+
 .auxiliary-compact-table .auxiliary-table-code {
   display: inline-block;
   font-weight: 700;
@@ -1056,6 +1066,24 @@ body {
 .terra-password-form .ant-select-selector:focus {
   border-color: var(--brana-deep-green) !important;
   box-shadow: 0 0 0 3px rgba(22, 170, 161, 0.12) !important;
+}
+
+.terra-password-form .ant-input:focus-visible,
+.terra-password-form .ant-input-affix-wrapper:focus-visible,
+.terra-password-form .ant-select-selector:focus-visible,
+.terra-password-form .ant-btn:focus-visible,
+.terra-password-form .ant-checkbox-wrapper:focus-visible,
+.terra-password-form .ant-checkbox-input:focus-visible + .ant-checkbox-inner,
+.terra-password-form .ant-radio-wrapper:focus-visible {
+  outline: 2px solid rgba(15, 138, 131, 0.92);
+  outline-offset: 2px;
+}
+
+.auxiliary-sidebar-collapse:focus-visible,
+.auxiliary-action-toolbar .ant-btn:focus-visible,
+.auxiliary-action-toolbar button:focus-visible {
+  outline: 2px solid rgba(15, 138, 131, 0.92);
+  outline-offset: 2px;
 }
 
 .auxiliary-color-field .ant-form-item-control-input-content {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Button, Checkbox, Form, Input, Modal, Select, Space, Typography, message } from 'antd';
 import { LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 
@@ -150,7 +150,11 @@ export function TiposIndicacaoPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [focusedRowId, setFocusedRowId] = useState(null);
   const [form] = Form.useForm();
+  const sidebarItemRefs = useRef([]);
+  const rowRefs = useRef(new Map());
+  const modalReturnFocusRef = useRef(null);
 
   const activeTable = useMemo(
     () => AUXILIARY_TABLES.find((table) => table.key === activeTableKey) || AUXILIARY_TABLES[0],
@@ -168,6 +172,26 @@ export function TiposIndicacaoPage() {
   const selectedSpecialtyImage = Form.useWatch('imagem_indice', form);
 
   const selectedItem = useMemo(() => items.find((item) => item.id === selectedId) || null, [items, selectedId]);
+
+  const rememberModalFocus = () => {
+    const activeElement = document.activeElement;
+    modalReturnFocusRef.current = activeElement instanceof HTMLElement ? activeElement : null;
+  };
+
+  const focusSidebarItem = (index) => {
+    const nextIndex = Math.max(0, Math.min(AUXILIARY_TABLES.length - 1, index));
+    const target = sidebarItemRefs.current[nextIndex];
+    target?.focus?.();
+    target?.click?.();
+  };
+
+  const focusTableRow = (index) => {
+    const target = sortedItems[index];
+    if (!target) return;
+    setSelectedId(target.id);
+    setFocusedRowId(target.id);
+    rowRefs.current.get(target.id)?.focus?.();
+  };
 
   const sortedItems = useMemo(() => {
     const nextItems = [...items];
@@ -241,6 +265,7 @@ export function TiposIndicacaoPage() {
   }, [activeTable, editingItem, form, isAppointmentReason, items, modalOpen]);
 
   const openNewModal = () => {
+    rememberModalFocus();
     setEditingItem(null);
     setModalOpen(true);
   };
@@ -250,6 +275,7 @@ export function TiposIndicacaoPage() {
       message.warning('Selecione um registro para alterar.');
       return;
     }
+    rememberModalFocus();
     setEditingItem(selectedItem);
     setModalOpen(true);
   };
@@ -380,6 +406,34 @@ export function TiposIndicacaoPage() {
       form.setFieldValue('compromisso_produtivo', true);
     }
   }, [form, isAppointmentReason, modalOpen, selectedReasonType]);
+
+  useEffect(() => {
+    if (modalOpen) {
+      window.setTimeout(() => {
+        const formElement = document.querySelector('.auxiliary-modal .terra-password-form');
+        const focusTarget =
+          formElement?.querySelector(
+            '.ant-input:not([disabled]), .ant-select-selection-search-input:not([disabled]), textarea:not([disabled])',
+          ) || null;
+        if (focusTarget && typeof focusTarget.focus === 'function') {
+          focusTarget.focus();
+        }
+      }, 0);
+      return;
+    }
+
+    const returnTarget = modalReturnFocusRef.current;
+    modalReturnFocusRef.current = null;
+    if (returnTarget && typeof returnTarget.focus === 'function') {
+      window.setTimeout(() => {
+        try {
+          returnTarget.focus();
+        } catch {
+          // Ignore when the trigger disappears.
+        }
+      }, 0);
+    }
+  }, [modalOpen]);
 
   useEffect(() => {
     const onToolbarAction = (event) => {
@@ -699,6 +753,28 @@ export function TiposIndicacaoPage() {
                     className={`auxiliary-sidebar-item${isActive ? ' is-active' : ''}`}
                     onClick={() => handleTableChange(table.key)}
                     title={table.label}
+                    ref={(node) => {
+                      const index = AUXILIARY_TABLES.findIndex((item) => item.key === table.key);
+                      if (index >= 0) {
+                        sidebarItemRefs.current[index] = node;
+                      }
+                    }}
+                    onKeyDown={(event) => {
+                      if (!['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' '].includes(event.key)) return;
+                      event.preventDefault();
+                      const index = AUXILIARY_TABLES.findIndex((item) => item.key === table.key);
+                      if (event.key === 'ArrowDown') {
+                        focusSidebarItem(index + 1);
+                      } else if (event.key === 'ArrowUp') {
+                        focusSidebarItem(index - 1);
+                      } else if (event.key === 'Home') {
+                        focusSidebarItem(0);
+                      } else if (event.key === 'End') {
+                        focusSidebarItem(AUXILIARY_TABLES.length - 1);
+                      } else if (event.key === 'Enter' || event.key === ' ') {
+                        handleTableChange(table.key);
+                      }
+                    }}
                   >
                     <span className="auxiliary-sidebar-item-label">{table.label}</span>
                   </button>
@@ -727,8 +803,40 @@ export function TiposIndicacaoPage() {
                       selectedRowKeys: selectedItem ? [selectedItem.id] : [],
                       onChange: (keys) => setSelectedId(keys[0] ?? null),
                     }}
-                    onRow={(record) => ({
+                    onRow={(record, index) => ({
+                      ref: (node) => {
+                        if (node) {
+                          rowRefs.current.set(record.id, node);
+                        } else {
+                          rowRefs.current.delete(record.id);
+                        }
+                      },
+                      className: [
+                        selectedItem?.id === record.id ? 'users-table-row-selected' : '',
+                        focusedRowId === record.id ? 'auxiliary-table-row-focused' : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' '),
                       onClick: () => setSelectedId(record.id),
+                      tabIndex: selectedItem?.id === record.id || (!selectedItem && index === 0) ? 0 : -1,
+                      onFocus: () => setFocusedRowId(record.id),
+                      onBlur: () => setFocusedRowId((current) => (current === record.id ? null : current)),
+                      onKeyDown: (event) => {
+                        if (!['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' '].includes(event.key)) return;
+                        event.preventDefault();
+                        const currentIndex = sortedItems.findIndex((item) => item.id === record.id);
+                        if (event.key === 'ArrowDown') {
+                          focusTableRow(Math.min(sortedItems.length - 1, currentIndex + 1));
+                        } else if (event.key === 'ArrowUp') {
+                          focusTableRow(Math.max(0, currentIndex - 1));
+                        } else if (event.key === 'Home') {
+                          focusTableRow(0);
+                        } else if (event.key === 'End') {
+                          focusTableRow(sortedItems.length - 1);
+                        } else if (event.key === 'Enter' || event.key === ' ') {
+                          setSelectedId(record.id);
+                        }
+                      },
                     })}
                     locale={{ emptyText: `Nenhum registro de ${activeTable.label.toLowerCase()} cadastrado.` }}
                   />
