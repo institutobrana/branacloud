@@ -301,6 +301,32 @@ function AppContent() {
     );
   }, [screen]);
 
+  const procedimentosGenericosTopBar = useMemo(() => {
+    if (screen !== 'procedimentos-genericos') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genéricos">
+        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
+          <button type="button" className="auxiliary-shell-button primary" onClick={() => message.info('Novo procedimento ainda será definido nesta etapa.')}>
+            Novo procedimento
+          </button>
+          <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Alteração pendente nesta etapa.')}>
+            Altera...
+          </button>
+          <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('Exclusão pendente nesta etapa.')}>
+            Elimina...
+          </button>
+          <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficará na próxima etapa.')}>
+            Fases
+          </button>
+          <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficará na próxima etapa.')}>
+            Materiais
+          </button>
+        </div>
+      </div>
+    );
+  }, [screen]);
+
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
     '--brana-panel-width': panelGroup ? '272px' : '0px',
@@ -354,6 +380,8 @@ function AppContent() {
             </div>
           ) : screen === 'tabelas-auxiliares' ? (
             auxiliaryTopBar
+          ) : screen === 'procedimentos-genericos' ? (
+            procedimentosGenericosTopBar
           ) : null}
           <BranaIconRail
             activeKey={activeKey}

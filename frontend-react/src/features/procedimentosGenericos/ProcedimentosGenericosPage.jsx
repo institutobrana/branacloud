@@ -91,26 +91,6 @@ export function ProcedimentosGenericosPage() {
 
         <BranaCard className="auxiliary-main-card procedimentos-genericos-card">
           <div className="module-table-shell procedimentos-genericos-shell">
-            <div className="auxiliary-shell-band procedimentos-genericos-toolbar" aria-label="Barra operacional de procedimentos genéricos">
-              <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
-                <button type="button" className="auxiliary-shell-button primary" onClick={() => message.info('Novo procedimento ainda será definido nesta etapa.')}>
-                  Novo procedimento
-                </button>
-                <button type="button" className="auxiliary-shell-button" onClick={() => (selectedItem ? message.info(`Alteração pendente para ${selectedItem.descricao}.`) : message.warning('Selecione um procedimento genérico.'))}>
-                  Altera...
-                </button>
-                <button type="button" className="auxiliary-shell-button danger" onClick={() => (selectedItem ? message.info(`Exclusão pendente para ${selectedItem.descricao}.`) : message.warning('Selecione um procedimento genérico.'))}>
-                  Elimina...
-                </button>
-                <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficará na próxima etapa.')}>
-                  Fases
-                </button>
-                <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficará na próxima etapa.')}>
-                  Materiais
-                </button>
-              </div>
-            </div>
-
             <div className="procedimentos-genericos-filters" aria-label="Filtros de procedimentos genéricos">
               <label className="procedimentos-genericos-field">
                 <span>Especialidades</span>
