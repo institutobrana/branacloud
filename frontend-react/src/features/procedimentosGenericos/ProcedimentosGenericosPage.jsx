@@ -3,6 +3,7 @@ import { Space, Typography, message } from 'antd';
 
 import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
+import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
 import { listarProcedimentosGenericos } from './procedimentosGenericosApi.js';
 
 function statusDot(inativo) {
@@ -11,6 +12,14 @@ function statusDot(inativo) {
 
 export function ProcedimentosGenericosPage({ q, especialidade }) {
   const [items, setItems] = useState([]);
+  const [sortState, setSortState] = useState({ key: null, order: null });
+  const [visibleColumns, setVisibleColumns] = useState({
+    codigo: true,
+    descricao: true,
+    especialidade: true,
+    status: true,
+    instrucao_direta: true,
+  });
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState('');
@@ -60,36 +69,79 @@ export function ProcedimentosGenericosPage({ q, especialidade }) {
     void loadItems();
   }, [q, especialidade]);
 
-  const columns = [
+  const sortedItems = useMemo(() => {
+    const nextItems = [...items];
+    if (!sortState.key || !sortState.order) return nextItems;
+
+    nextItems.sort((left, right) => {
+      const leftValue = String(left?.[sortState.key] ?? '').toLowerCase();
+      const rightValue = String(right?.[sortState.key] ?? '').toLowerCase();
+      const comparison = leftValue.localeCompare(rightValue, 'pt-BR', { sensitivity: 'base' });
+      return sortState.order === 'asc' ? comparison : -comparison;
+    });
+
+    return nextItems;
+  }, [items, sortState.key, sortState.order]);
+
+  const filterColumns = [
+    { key: 'codigo', label: 'Código', visible: true },
+    { key: 'descricao', label: 'Procedimento genérico', visible: true },
+    { key: 'especialidade', label: 'Especialidade', visible: true },
+    { key: 'status', label: 'Status', visible: true, locked: true },
+    { key: 'instrucao_direta', label: 'Instrução direta', visible: true },
+  ];
+
+  const renderFilterTitle = (columnKey, label, hideLabel = false) => (
+    <TableColumnFilterHeader
+      label={label}
+      activeSort={sortState.key === columnKey ? sortState.order : null}
+      onSortAsc={columnKey === 'status' ? undefined : () => setSortState({ key: columnKey, order: 'asc' })}
+      onSortDesc={columnKey === 'status' ? undefined : () => setSortState({ key: columnKey, order: 'desc' })}
+      columns={filterColumns}
+      onToggleColumn={(key) => setVisibleColumns((current) => ({ ...current, [key]: !current[key] }))}
+      hideLabel={hideLabel}
+    />
+  );
+
+  const allColumns = [
     {
       key: 'codigo',
-      title: 'Código',
+      title: renderFilterTitle('codigo', 'Código'),
       dataIndex: 'codigo',
       width: 110,
       render: (value) => <Typography.Text strong>{value || '-'}</Typography.Text>,
     },
     {
       key: 'descricao',
-      title: 'Procedimento genérico',
+      title: renderFilterTitle('descricao', 'Procedimento genérico'),
       dataIndex: 'descricao',
+      width: 240,
       render: (value) => value || '-',
     },
     {
       key: 'especialidade',
-      title: 'Especialidade',
+      title: renderFilterTitle('especialidade', 'Especialidade'),
       dataIndex: 'especialidade',
-      width: 200,
+      width: 180,
       render: (value) => value || '-',
     },
     {
       key: 'status',
-      title: 'Status',
+      title: renderFilterTitle('status', 'Status', true),
       dataIndex: 'inativo',
       width: 72,
       align: 'center',
       render: (_, record) => statusDot(record.inativo),
     },
+    {
+      key: 'instrucao_direta',
+      title: renderFilterTitle('instrucao_direta', 'Instrução direta'),
+      dataIndex: 'instrucao_direta',
+      render: (value) => value || '-',
+    },
   ];
+
+  const columns = allColumns.filter((column) => visibleColumns[column.key] !== false);
 
   return (
     <Space direction="vertical" size={10} style={{ width: '100%', marginTop: 8 }}>
@@ -106,7 +158,7 @@ export function ProcedimentosGenericosPage({ q, especialidade }) {
                 pagination={false}
                 size="small"
                 tableLayout="fixed"
-                dataSource={items}
+                dataSource={sortedItems}
                 columns={columns}
                 rowSelection={{
                   type: 'radio',

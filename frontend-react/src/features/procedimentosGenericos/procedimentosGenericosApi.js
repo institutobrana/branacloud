@@ -42,6 +42,7 @@ function normalizeProcedimentoGenerico(item) {
     especialidade: String(item?.especialidade || '').trim(),
     status: String(item?.status || (item?.inativo ? 'Inativo' : 'Ativo')).trim(),
     inativo: Boolean(item?.inativo),
+    instrucao_direta: String(item?.instrucao_direta || item?.observacoes || '').trim(),
     total_fases: Number(item?.total_fases || 0) || 0,
     total_materiais: Number(item?.total_materiais || 0) || 0,
   };
@@ -57,4 +58,3 @@ export async function listarProcedimentosGenericos(params = {}) {
   });
   return Array.isArray(data) ? data.map(normalizeProcedimentoGenerico) : [];
 }
-
