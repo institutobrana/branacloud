@@ -30,6 +30,7 @@ function buildEmptyState(codigo = '') {
     custo_lab: 0,
     peso: 0,
     simbolo_grafico: '',
+    simbolo_grafico_legacy_id: null,
     mostrar_simbolo: false,
     inativo: false,
     observacoes: '',
@@ -58,6 +59,7 @@ function buildPayload(state) {
     custo_lab: Number(state?.custo_lab || 0),
     peso: Number(state?.peso || 0),
     simbolo_grafico: String(state?.simbolo_grafico || '').trim(),
+    simbolo_grafico_legacy_id: Number(state?.simbolo_grafico_legacy_id || 0) || null,
     mostrar_simbolo: !!String(state?.simbolo_grafico || '').trim(),
     inativo: !!state?.inativo,
     observacoes: String(state?.observacoes || '').trim(),
@@ -97,6 +99,22 @@ function buildCustoTotals(state, cenario) {
     custoFixo,
     custoTotal,
   };
+}
+
+function resolveSimboloValue(item) {
+  const legacyId = Number(item?.legacy_id || 0);
+  if (legacyId > 0) return String(legacyId);
+  return String(item?.codigo || '').trim();
+}
+
+function findSimboloByValue(items, valor) {
+  const alvo = String(valor ?? '').trim().toLowerCase();
+  if (!alvo) return null;
+  return (Array.isArray(items) ? items : []).find((item) => {
+    const legacyId = Number(item?.legacy_id || 0);
+    if (legacyId > 0 && String(legacyId) === alvo) return true;
+    return String(item?.codigo || '').trim().toLowerCase() === alvo;
+  }) || null;
 }
 
 export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, onClose, onSaved, focusToken }) {
@@ -139,6 +157,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             especialidade: nextState.especialidade || undefined,
             peso: nextState.peso,
             simbolo_grafico: nextState.simbolo_grafico || undefined,
+            simbolo_grafico_legacy_id: nextState.simbolo_grafico_legacy_id || undefined,
             observacoes: nextState.observacoes,
             inativo: nextState.inativo,
           });
@@ -154,6 +173,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             especialidade: undefined,
             peso: 0,
             simbolo_grafico: undefined,
+            simbolo_grafico_legacy_id: undefined,
             observacoes: '',
             inativo: false,
           });
@@ -190,6 +210,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       especialidade: state.especialidade || undefined,
       peso: state.peso,
       simbolo_grafico: state.simbolo_grafico || undefined,
+      simbolo_grafico_legacy_id: state.simbolo_grafico_legacy_id || undefined,
       observacoes: state.observacoes,
       inativo: state.inativo,
       tempo: state.tempo,
@@ -199,13 +220,14 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
   }, [form, open, state]);
 
   const symbolPreview = useMemo(() => {
-    const codigo = String(state.simbolo_grafico || '').trim();
-    if (!codigo) return null;
-    const item = simbolos.find((entry) => String(entry?.codigo || '').trim() === codigo) || null;
+    const value = String(state.simbolo_grafico_legacy_id || state.simbolo_grafico || '').trim();
+    if (!value) return null;
+    const item = findSimboloByValue(simbolos, value);
+    const codigo = String(item?.codigo || value).trim();
     const src = String(item?.imagem_url || '').trim() || (codigo ? `/desktop-assets/easy/${codigo}` : '');
     if (!src) return null;
     return <img src={src} alt="" className="procedimento-generico-symbol-preview-img" />;
-  }, [simbolos, state.simbolo_grafico]);
+  }, [simbolos, state.simbolo_grafico, state.simbolo_grafico_legacy_id]);
 
   const vinculos = Array.isArray(state.vinculos) ? state.vinculos : [];
 
@@ -355,10 +377,14 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                         placeholder="Selecione..."
                         options={simbolos.map((item) => ({
                           label: String(item?.descricao || item?.nome || '').trim() || String(item?.codigo || '').trim(),
-                          value: String(item?.codigo || '').trim(),
+                          value: resolveSimboloValue(item),
                         }))}
                         value={state.simbolo_grafico || undefined}
-                        onChange={(value) => updateField('simbolo_grafico', value || '')}
+                        onChange={(value) => {
+                          const selected = findSimboloByValue(simbolos, value);
+                          updateField('simbolo_grafico', value || '');
+                          updateField('simbolo_grafico_legacy_id', Number(selected?.legacy_id || 0) || null);
+                        }}
                       />
                     </Form.Item>
 
