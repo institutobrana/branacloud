@@ -19,7 +19,6 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
     descricao: true,
     especialidade: true,
     status: true,
-    instrucao_direta: true,
   });
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
@@ -101,7 +100,6 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
     { key: 'descricao', label: 'Procedimento genérico', visible: true },
     { key: 'especialidade', label: 'Especialidade', visible: true },
     { key: 'status', label: 'Status', visible: true, locked: true },
-    { key: 'instrucao_direta', label: 'Instrução direta', visible: true },
   ];
 
   const renderFilterTitle = (columnKey, label, hideLabel = false) => (
@@ -145,12 +143,6 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
       width: 72,
       align: 'center',
       render: (_, record) => statusDot(record.inativo),
-    },
-    {
-      key: 'instrucao_direta',
-      title: renderFilterTitle('instrucao_direta', 'Instrução direta'),
-      dataIndex: 'instrucao_direta',
-      render: (value) => value || '-',
     },
   ];
 
