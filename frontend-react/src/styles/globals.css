@@ -655,11 +655,6 @@ body {
   min-width: 0;
 }
 
-.procedimentos-genericos-page {
-  width: 100%;
-  min-width: 0;
-}
-
 .procedimentos-genericos-card {
   width: 100%;
   min-width: 0;
@@ -702,6 +697,14 @@ body {
   width: 100%;
   min-width: 0;
   overflow: hidden;
+}
+
+.procedimentos-genericos-grid .ant-table {
+  width: 100%;
+}
+
+.procedimentos-genericos-grid .ant-table-container {
+  width: 100%;
 }
 
 .procedimentos-genericos-table .ant-table {

@@ -86,12 +86,12 @@ export function ProcedimentosGenericosPage() {
 
   return (
     <Space direction="vertical" size={10} style={{ width: '100%', marginTop: 8 }}>
-      <div className="procedimentos-genericos-page">
+      <div className="auxiliary-shell-frame procedimentos-genericos-frame">
         {error ? <Typography.Text type="danger">{error}</Typography.Text> : null}
 
-        <BranaCard className="procedimentos-genericos-card">
+        <BranaCard className="auxiliary-main-card procedimentos-genericos-card">
           <div className="module-table-shell procedimentos-genericos-shell">
-            <div className="brana-shell-band procedimentos-genericos-toolbar" aria-label="Barra operacional de procedimentos genéricos">
+            <div className="auxiliary-shell-band procedimentos-genericos-toolbar" aria-label="Barra operacional de procedimentos genéricos">
               <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
                 <button type="button" className="auxiliary-shell-button primary" onClick={() => message.info('Novo procedimento ainda será definido nesta etapa.')}>
                   Novo procedimento
@@ -134,10 +134,10 @@ export function ProcedimentosGenericosPage() {
               </label>
             </div>
 
-            <div className="procedimentos-genericos-grid" role="grid" aria-label="Listagem de procedimentos genéricos">
+            <div className="users-grid-shell procedimentos-genericos-grid" role="grid" aria-label="Listagem de procedimentos genéricos">
               <BranaTable
                 rowKey="id"
-                className="module-table procedimentos-genericos-table"
+                className="module-table auxiliary-compact-table procedimentos-genericos-table"
                 loading={loading}
                 pagination={false}
                 size="small"
