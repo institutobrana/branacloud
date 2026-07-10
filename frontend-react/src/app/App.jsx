@@ -17,18 +17,18 @@ import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasU
 const contextualMenus = {
   atendimento: [
     { key: 'agenda-semanal', label: 'Agenda semanal', disabled: true },
-    { key: 'agenda-diaria', label: 'Agenda diÃ¡ria', disabled: true },
+    { key: 'agenda-diaria', label: 'Agenda diária', disabled: true },
     { key: 'timeline-paciente', label: 'Timeline do paciente', disabled: true },
     { key: 'retornos', label: 'Controle de retornos', disabled: true },
     { key: 'gerenciar-tratamentos', label: 'Gerenciar tratamentos', disabled: true },
-    { key: 'ficha-clinica', label: 'Ficha clÃ­nica', disabled: true },
+    { key: 'ficha-clinica', label: 'Ficha clínica', disabled: true },
     { key: 'ficha-anamnese', label: 'Ficha de anamnese', disabled: true },
     { key: 'documentos', label: 'Documentos', disabled: true },
   ],
   cadastro: [
     { key: 'pacientes', label: 'Pacientes' },
-    { key: 'convenios', label: 'ConvÃªnios atendidos', disabled: true },
-    { key: 'corpo-clinico', label: 'Corpo clÃ­nico', disabled: true },
+    { key: 'convenios', label: 'Convênios atendidos', disabled: true },
+    { key: 'corpo-clinico', label: 'Corpo clínico', disabled: true },
     { key: 'fornecedores', label: 'Fornecedores', disabled: true },
   ],
   financeiro: [
@@ -37,17 +37,17 @@ const contextualMenus = {
     { key: 'gerenciar-recibos', label: 'Gerenciar recibos', disabled: true },
     { key: 'controle-estoque', label: 'Controle de estoque', disabled: true },
     { key: 'fluxo-caixa', label: 'Fluxo de caixa', disabled: true },
-    { key: 'recebiveis-digitais', label: 'RecebÃ­veis digitais', disabled: true },
-    { key: 'faturamento-convenio', label: 'Faturamento de convÃªnio', disabled: true },
-    { key: 'servicos-proteticos', label: 'ServiÃ§os protÃ©ticos', disabled: true },
+    { key: 'recebiveis-digitais', label: 'Recebíveis digitais', disabled: true },
+    { key: 'faturamento-convenio', label: 'Faturamento de convênio', disabled: true },
+    { key: 'servicos-proteticos', label: 'Serviços protéticos', disabled: true },
   ],
   tabelas: [
     { key: 'procedimentos', label: 'Procedimentos', disabled: true },
-    { key: 'procedimentos-genericos', label: 'Procedimentos genÃ©ricos' },
+    { key: 'procedimentos-genericos', label: 'Procedimentos genéricos' },
     { key: 'materiais-estoque', label: 'Materiais de estoque', disabled: true },
     { key: 'medicamentos', label: 'Medicamentos', disabled: true },
-    { key: 'servicos-protese', label: 'ServiÃ§os de prÃ³tese', disabled: true },
-    { key: 'doencas-cid', label: 'DoenÃ§as (CID)', disabled: true },
+    { key: 'servicos-protese', label: 'Serviços de prótese', disabled: true },
+    { key: 'doencas-cid', label: 'Doenças (CID)', disabled: true },
   ],
   relatorios: [
     { key: 'favoritos', label: 'Favoritos', disabled: true },
@@ -59,31 +59,31 @@ const contextualMenus = {
     { key: 'relatorios-gerenciais', label: 'Gerenciais', disabled: true },
   ],
   configuracao: [
-    { key: 'usuarios', label: 'UsuÃ¡rios do sistema', disabled: true },
-    { key: 'perfis-usuario', label: 'Perfis de usuÃ¡rio', disabled: true },
+    { key: 'usuarios', label: 'Usuários do sistema', disabled: true },
+    { key: 'perfis-usuario', label: 'Perfis de usuário', disabled: true },
     { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares' },
     { key: 'plano-contas', label: 'Plano de contas', disabled: true },
     { key: 'agendas', label: 'Agendas', disabled: true },
-    { key: 'questionarios-anamnese', label: 'QuestionÃ¡rios de anamnese', disabled: true },
+    { key: 'questionarios-anamnese', label: 'Questionários de anamnese', disabled: true },
     { key: 'unidades-atendimento', label: 'Unidades de atendimento', disabled: true },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
-    { key: 'taxas-cobranca', label: 'Taxas de cobranÃ§a', disabled: true },
-    { key: 'contas-bancarias', label: 'Contas bancÃ¡rias', disabled: true },
+    { key: 'taxas-cobranca', label: 'Taxas de cobrança', disabled: true },
+    { key: 'contas-bancarias', label: 'Contas bancárias', disabled: true },
   ],
   ferramentas: [
     { key: 'dashboard', label: 'Dashboard', disabled: true },
     { key: 'editor-textos', label: 'Editor de textos', disabled: true },
     { key: 'mala-direta', label: 'Mala direta', disabled: true },
     { key: 'mensagens-enviadas', label: 'Mensagens enviadas', disabled: true },
-    { key: 'assinatura-eletronica', label: 'Assinatura eletrÃ´nica', disabled: true },
+    { key: 'assinatura-eletronica', label: 'Assinatura eletrônica', disabled: true },
     { key: 'gerenciar-avisos', label: 'Gerenciar avisos', disabled: true },
-    { key: 'orientacao-paciente', label: 'OrientaÃ§Ã£o ao paciente', disabled: true },
-    { key: 'exportacao-dados', label: 'ExportaÃ§Ã£o de dados', disabled: true },
+    { key: 'orientacao-paciente', label: 'Orientação ao paciente', disabled: true },
+    { key: 'exportacao-dados', label: 'Exportação de dados', disabled: true },
     { key: 'trilha-auditoria', label: 'Trilha de auditoria', disabled: true },
     { key: 'crm-vendas', label: 'CRM de vendas', disabled: true },
   ],
   ajuda: [
-    { key: 'videos-tutoriais', label: 'VÃ­deos tutoriais', disabled: true },
+    { key: 'videos-tutoriais', label: 'Vídeos tutoriais', disabled: true },
     { key: 'treinamentos-online', label: 'Treinamentos on-line', disabled: true },
   ],
   inicio: [],
@@ -310,7 +310,7 @@ function AppContent() {
 
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de tabelas auxiliares">
-        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="AÃ§Ãµes do mÃ³dulo tabelas auxiliares">
+        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo tabelas auxiliares">
           <button type="button" className="auxiliary-shell-button primary" onClick={() => window.dispatchEvent(new CustomEvent('brana-auxiliar-toolbar-action', { detail: { action: 'novo' } }))}>
             Novo
           </button>
@@ -329,22 +329,22 @@ function AppContent() {
     if (screen !== 'procedimentos-genericos') return null;
 
     return (
-      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genÃ©ricos">
-        <div className="procedimentos-genericos-toolbar-row" role="toolbar" aria-label="AÃ§Ãµes do mÃ³dulo procedimentos genÃ©ricos">
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genéricos">
+        <div className="procedimentos-genericos-toolbar-row" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
           <div className="auxiliary-action-toolbar procedimentos-genericos-toolbar-actions">
             <button type="button" className="auxiliary-shell-button primary" onClick={() => setProcedimentosGenericosNovoToken((current) => current + 1)}>
               Novo procedimento
             </button>
-            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('AlteraÃ§Ã£o pendente nesta etapa.')}>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Alteração pendente nesta etapa.')}>
               Altera...
             </button>
-            <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('ExclusÃ£o pendente nesta etapa.')}>
+            <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('Exclusão pendente nesta etapa.')}>
               Elimina...
             </button>
-            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficarÃ¡ na prÃ³xima etapa.')}>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficará na próxima etapa.')}>
               Fases
             </button>
-            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficarÃ¡ na prÃ³xima etapa.')}>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficará na próxima etapa.')}>
               Materiais
             </button>
           </div>
@@ -365,7 +365,7 @@ function AppContent() {
               <Input
                 value={procedimentosGenericosSearch}
                 onChange={(event) => setProcedimentosGenericosSearch(event.target.value)}
-                placeholder="Buscar por cÃ³digo ou descriÃ§Ã£o"
+                placeholder="Buscar por código ou descrição"
               />
             </label>
           </div>
@@ -382,7 +382,7 @@ function AppContent() {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
-        <Typography.Text type="secondary">Validando sessÃ£o...</Typography.Text>
+        <Typography.Text type="secondary">Validando sessão...</Typography.Text>
       </div>
     );
   }
