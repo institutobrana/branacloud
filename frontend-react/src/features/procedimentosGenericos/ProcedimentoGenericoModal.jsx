@@ -297,7 +297,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
     <Modal
       open={open}
       centered
-      width={620}
+      width={560}
       destroyOnClose
       onCancel={onClose}
       footer={null}
@@ -335,7 +335,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                     <Form.Item name="especialidade" label="Especialidade:">
                       <Select
                         allowClear
-                        placeholder="<<Todas>>"
+                        placeholder="Selecione..."
                         options={specialidades.map((item) => ({
                           label: String(item?.nome || '').trim() || String(item?.codigo || '').trim(),
                           value: String(item?.codigo || '').trim(),
