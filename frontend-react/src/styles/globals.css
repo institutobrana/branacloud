@@ -927,6 +927,12 @@ body {
   box-shadow: 0 20px 48px rgba(56, 53, 41, 0.18);
 }
 
+.auxiliary-simple-modal .ant-modal-content {
+  padding: 0 0 10px;
+  border-radius: 14px;
+  box-shadow: 0 14px 32px rgba(56, 53, 41, 0.15);
+}
+
 .terra-password-modal .ant-modal-close {
   top: 14px;
   right: 14px;
@@ -964,12 +970,24 @@ body {
   letter-spacing: 0.01em;
 }
 
+.auxiliary-simple-modal .terra-password-modal-title.ant-typography {
+  font-size: 16px;
+}
+
 .terra-password-form {
   padding: 18px 26px 0;
 }
 
+.auxiliary-simple-form {
+  padding: 10px 18px 0;
+}
+
 .terra-password-form .ant-form-item {
   margin-bottom: 14px;
+}
+
+.auxiliary-simple-form .ant-form-item {
+  margin-bottom: 8px;
 }
 
 .terra-password-form .ant-form-item-row {
@@ -989,6 +1007,11 @@ body {
   color: #36513d;
 }
 
+.auxiliary-simple-form .ant-form-item-label > label {
+  width: 96px;
+  font-size: 0.92rem;
+}
+
 .terra-password-form .ant-form-item-control {
   flex: 1;
 }
@@ -1005,6 +1028,25 @@ body {
   border-color: rgba(162, 178, 151, 0.72);
   background: rgba(255, 253, 248, 0.98);
   box-shadow: none;
+}
+
+.auxiliary-simple-form .ant-input-affix-wrapper,
+.auxiliary-simple-form .ant-input,
+.auxiliary-simple-form .ant-select-selector {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.auxiliary-simple-form .ant-input-textarea .ant-input {
+  height: auto;
+}
+
+.auxiliary-simple-form .ant-form-item-control-input {
+  min-height: 32px;
+}
+
+.auxiliary-simple-form .ant-form-item-control-input-content {
+  min-height: 32px;
 }
 
 .terra-password-form .ant-input-affix-wrapper:focus,
@@ -1098,11 +1140,20 @@ body {
   padding-top: 10px;
 }
 
+.auxiliary-simple-form .terra-password-modal-actions {
+  padding-top: 6px;
+}
+
 .terra-password-modal-actions .ant-btn {
   min-width: 116px;
   height: 38px;
   border-radius: 10px;
   font-weight: 700;
+}
+
+.auxiliary-simple-form .terra-password-modal-actions .ant-btn {
+  min-width: 104px;
+  height: 34px;
 }
 
 .terra-password-modal-actions .ant-btn-primary {

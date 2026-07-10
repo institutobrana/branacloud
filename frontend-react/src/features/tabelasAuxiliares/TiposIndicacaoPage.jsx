@@ -643,12 +643,13 @@ export function TiposIndicacaoPage() {
       ];
   const columns = allColumns.filter((column) => visibleColumns[column.key] !== false);
 
-  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? 520 : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 760;
+  const modalWidth = isGrupoMedicamento ? 520 : isAppointmentReason ? 520 : isAppointmentStatus ? 520 : isPatientStatus ? 500 : 420;
   const resolvedModalWidth = isSpeciality ? 376 : modalWidth;
   const modalClassName = [
     'terra-password-modal',
     'client-modal',
     'auxiliary-modal',
+    !isAppointmentReason && !isAppointmentStatus && !isPatientStatus && !isSpeciality ? 'auxiliary-simple-modal' : '',
     isAppointmentReason ? 'auxiliary-reason-modal' : '',
     isAppointmentStatus ? 'auxiliary-status-modal' : '',
     isPatientStatus ? 'auxiliary-patient-modal' : '',
@@ -660,6 +661,7 @@ export function TiposIndicacaoPage() {
     'terra-password-form',
     'client-modal-form',
     'auxiliary-modal-form',
+    !isAppointmentReason && !isAppointmentStatus && !isPatientStatus && !isSpeciality ? 'auxiliary-simple-form' : '',
     isAppointmentReason ? 'auxiliary-reason-form' : '',
     isAppointmentStatus ? 'auxiliary-status-form' : '',
     isPatientStatus ? 'auxiliary-patient-status-form' : '',
