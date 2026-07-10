@@ -6024,3 +6024,9 @@ Observacoes:
 - O novo frontend React já recebeu rota, listagem inicial, filtros de `Especialidades` e `Procedimentos`, barra de ações e status visual por bolinha.
 - Os botões `Fases` e `Materiais` ficaram em comportamento mínimo controlado, sem editor completo nesta etapa.
 - A próxima etapa recomendada é o detalhamento dos fluxos de edição quando o contrato visual exigir.
+## Padr�o visual compartilhado dos modulos administrativos do frontend React
+
+- O padr�o visual/estrutural dos modulos administrativos do novo frontend React foi formalizado em `docs/frontend_react_padrao_shell_modulos_administrativos.md`.
+- O documento consolida o shell base com lateral + barra horizontal formando um `L`, a barra superior com acoes e filtros principais, o grid ocupando a largura util e o uso do `TableColumnFilterHeader` no padrao de `Tabelas Auxiliares`.
+- A documentacao aponta `Tabelas Auxiliares` e `Procedimentos gen�ricos` como modulos de referencia atuais.
+- O objetivo e evitar novos layouts paralelos, toolbars isoladas por pagina e filtros paralelos fora do shell compartilhado.
