@@ -368,6 +368,7 @@ function AppContent() {
         value: codigo,
       };
     }).filter((item) => item.value);
+    especialidadeOptions.unshift({ label: '<<Todas>>', value: '' });
 
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genéricos">
