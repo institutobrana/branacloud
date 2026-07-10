@@ -374,7 +374,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
 
                   <Form.Item name="observacoes" label="Observações:" className="procedimento-generico-wide">
                     <Input.TextArea
-                      rows={2}
+                      rows={1}
                       value={state.observacoes}
                       onChange={(event) => updateField('observacoes', event.target.value)}
                     />
