@@ -297,7 +297,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
     <Modal
       open={open}
       centered
-      width={540}
+      width={520}
       destroyOnClose
       onCancel={onClose}
       footer={null}
@@ -352,7 +352,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                         allowClear
                         placeholder="Selecione..."
                         options={simbolos.map((item) => ({
-                          label: `${String(item?.codigo || '').trim()} - ${String(item?.descricao || '').trim()}`,
+                          label: String(item?.descricao || item?.nome || '').trim() || String(item?.codigo || '').trim(),
                           value: String(item?.codigo || '').trim(),
                         }))}
                         value={state.simbolo_grafico || undefined}
