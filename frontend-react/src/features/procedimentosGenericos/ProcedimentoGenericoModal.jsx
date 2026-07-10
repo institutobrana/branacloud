@@ -297,7 +297,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
     <Modal
       open={open}
       centered
-      width={520}
+      width={500}
       destroyOnClose
       onCancel={onClose}
       footer={null}

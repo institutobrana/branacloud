@@ -778,29 +778,45 @@ body {
 .procedimento-generico-modal-header {
   background: #007d7f;
   color: #fff;
-  padding: 7px 12px 5px;
+  padding: 12px 18px 6px;
+  border-bottom: 0;
 }
 
 .procedimento-generico-modal-title.ant-typography {
   margin: 0;
   color: #fff;
-  font-size: 0.93rem;
-  line-height: 1.2;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
 }
 
 .procedimento-generico-modal .ant-modal-close {
-  top: 6px;
-  inset-inline-end: 7px;
+  top: 10px;
+  inset-inline-end: 10px;
   color: #0d5e60;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(54, 81, 61, 0.96), rgba(42, 63, 47, 0.98));
+  box-shadow: 0 6px 14px rgba(67, 98, 69, 0.2);
 }
 
 .procedimento-generico-modal .ant-modal-close-x {
-  width: 26px;
-  height: 26px;
+  width: 100%;
+  height: 100%;
   line-height: 26px;
-  border-radius: 6px;
-  background: #edf8f8;
-  box-shadow: inset 0 0 0 1px rgba(6, 76, 77, 0.15);
+  border-radius: inherit;
+  background: transparent;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+}
+
+.procedimento-generico-modal .ant-modal-close:hover {
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(42, 63, 47, 0.98), rgba(36, 54, 40, 1));
 }
 
 .procedimento-generico-modal-tabs {
@@ -809,6 +825,11 @@ body {
 
 .procedimento-generico-modal-tabs .ant-tabs-nav {
   margin: 0;
+}
+
+.procedimento-generico-modal-tabs .ant-tabs-tab {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .procedimento-generico-modal-tabs .ant-tabs-content-holder {
@@ -823,7 +844,7 @@ body {
 }
 
 .procedimento-generico-modal-form .ant-form-item {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .procedimento-generico-modal-form .ant-form-item-label > label {
@@ -834,13 +855,13 @@ body {
 .procedimento-generico-principal-grid {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
-  gap: 5px 8px;
+  gap: 4px 8px;
   align-items: start;
 }
 
 .procedimento-generico-symbol-box {
   width: 52px;
-  height: 46px;
+  height: 42px;
   border: 1px solid #d4dce6;
   background: #fff;
   display: grid;
@@ -856,7 +877,7 @@ body {
 .procedimento-generico-principal-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 220px);
-  gap: 5px;
+  gap: 4px;
   grid-column: 2;
 }
 
@@ -872,36 +893,36 @@ body {
 .procedimento-generico-dates {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5px;
+  gap: 4px;
 }
 
 .procedimento-generico-date-field {
   display: grid;
-  gap: 3px;
+  gap: 2px;
 }
 
 .procedimento-generico-date-field > span {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #44515c;
 }
 
 .procedimento-generico-date-box {
-  min-height: 24px;
+  min-height: 22px;
   border: 1px solid #9db0c5;
   background: #39d8e8;
-  padding: 3px 10px;
+  padding: 2px 10px;
   color: #000;
 }
 
 .procedimento-generico-costs {
   display: grid;
-  gap: 5px;
+  gap: 4px;
 }
 
 .procedimento-generico-cost-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 28px minmax(160px, 190px) 28px;
-  gap: 3px;
+  gap: 2px;
   align-items: center;
 }
 
@@ -916,10 +937,10 @@ body {
 }
 
 .procedimento-generico-cost-value {
-  min-height: 26px;
+  min-height: 24px;
   border: 1px solid #9db0c5;
   background: #f5f5f5;
-  padding: 3px 10px;
+  padding: 2px 10px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -939,7 +960,7 @@ body {
 
 .procedimento-generico-links {
   display: grid;
-  gap: 3px;
+  gap: 2px;
 }
 
 .procedimento-generico-links-table {
@@ -952,16 +973,30 @@ body {
 
 .procedimento-generico-links-footer {
   color: #404b57;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
 }
 
 .procedimento-generico-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 5px 10px 7px;
+  padding: 4px 10px 6px;
   border-top: 1px solid #d4dce6;
   background: #f7f9fb;
+}
+
+.procedimento-generico-modal .ant-input,
+.procedimento-generico-modal .ant-select-selector {
+  min-height: 30px;
+  border-radius: 9px;
+}
+
+.procedimento-generico-modal .ant-select-selector {
+  align-items: center;
+}
+
+.procedimento-generico-modal .ant-input-textarea {
+  border-radius: 9px;
 }
 
 .auxiliary-shell-button {
