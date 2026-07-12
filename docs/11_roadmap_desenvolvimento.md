@@ -6024,6 +6024,13 @@ Observacoes:
 - O novo frontend React já recebeu rota, listagem inicial, filtros de `Especialidades` e `Procedimentos`, barra de ações e status visual por bolinha.
 - Os botões `Fases` e `Materiais` ficaram em comportamento mínimo controlado, sem editor completo nesta etapa.
 - A próxima etapa recomendada é o detalhamento dos fluxos de edição quando o contrato visual exigir.
+## Frente pausada temporariamente: Procedimentos genericos
+
+- O fechamento temporario da frente foi registrado em `docs/encerramento_temporario_procedimentos_genericos_frontend_react.md`.
+- A frente ficou consolidada o suficiente para pausa controlada, com listagem, shell, filtros, modal principal, fases e materiais ja integrados no novo frontend React.
+- O escopo atual nao abre nova funcionalidade e nao deve ser reativado sem nova prioridade ou novo contrato funcional.
+- Retomadas futuras devem respeitar o shell compartilhado, o contrato auditado do EasyDental Desktop e os documentos ja produzidos nesta frente.
+
 ## Padr�o visual compartilhado dos modulos administrativos do frontend React
 
 - O padr�o visual/estrutural dos modulos administrativos do novo frontend React foi formalizado em `docs/frontend_react_padrao_shell_modulos_administrativos.md`.
