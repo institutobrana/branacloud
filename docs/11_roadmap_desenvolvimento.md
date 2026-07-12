@@ -794,10 +794,10 @@ Status: EM DESENVOLVIMENTO
 
 Fases:
 
-[â�⬝] Fase 1 - Modelos `ListaMaterial` e `Material` existem.
-[â�⬝] Fase 2 - Rotas CRUD existem em `materiais_routes.py`.
-[â�⬝] Fase 3 - Frontend possui chamadas para listas, materiais e indices.
-[â�⬝] Fase 4 - Materiais vinculam com procedimentos.
+[â�??⬝] Fase 1 - Modelos `ListaMaterial` e `Material` existem.
+[â�??⬝] Fase 2 - Rotas CRUD existem em `materiais_routes.py`.
+[â�??⬝] Fase 3 - Frontend possui chamadas para listas, materiais e indices.
+[â�??⬝] Fase 4 - Materiais vinculam com procedimentos.
 [ ] Fase 5 - Testar vinculos antes de excluir materiais/listas.
 
 Proximo passo:
@@ -808,9 +808,12 @@ Observacoes:
 
 * Modulo usa permissao `materiais`.
 * Relaciona-se diretamente com procedimentos.
+* O fechamento temporario da frente foi consolidado em `docs/encerramento_temporario_materiais_frontend_react.md`.
+* O shell visual, a listagem principal, os modais de tabela/material, os modais proprios de confirmacao/aviso e a correcao textual de `Apresenta��o` ficaram registrados como estado atual validado.
+* O ajuste visual recente de largura/centralizacao da tabela de `Procedimentos genericos` foi incorporado ao mesmo padrao visual compartilhado, sem reabrir a frente.
+* Proximo passo: manter a frente em pausa controlada ate haver nova prioridade ou novo contrato funcional.
 
 ---
-
 ## Modulo: Medicamentos e Restricoes Terapeuticas
 
 Status: EM DESENVOLVIMENTO
