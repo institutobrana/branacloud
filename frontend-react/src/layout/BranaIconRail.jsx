@@ -11,6 +11,7 @@ import {
   ToolOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { ThemeToggleButton } from './ThemeToggleButton.jsx';
 
 export function BranaIconRail({
   activeKey,
@@ -59,6 +60,7 @@ export function BranaIconRail({
       </nav>
 
       <div className="brana-icon-rail-footer">
+        <ThemeToggleButton />
         <Tooltip title={expanded ? 'Recolher barra' : 'Expandir barra'} placement="right">
           <button type="button" className="brana-icon-rail-toggle" onClick={onToggleExpand} aria-label="Recolher ou expandir a barra">
             {expanded ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}

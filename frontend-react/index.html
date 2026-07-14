@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Brana Cloud</title>
+    <script>
+      (() => {
+        try {
+          const stored = window.localStorage.getItem('brana_theme_mode');
+          const mode = stored === 'dark' ? 'dark' : 'light';
+          document.documentElement.dataset.branaTheme = mode;
+          document.documentElement.style.colorScheme = mode;
+        } catch {
+          document.documentElement.dataset.branaTheme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
