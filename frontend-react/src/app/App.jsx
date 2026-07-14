@@ -12,6 +12,8 @@ import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/
 import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
+import { DoencasCidPage } from '../features/doencasCid/DoencasCidPage.jsx';
+import { DoencaCidToolbar } from '../features/doencasCid/components/DoencaCidToolbar.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 import { TiposIndicacaoPage } from '../features/tabelasAuxiliares/TiposIndicacaoPage.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
@@ -46,6 +48,7 @@ const contextualMenus = {
   tabelas: [
     { key: 'procedimentos', label: 'Procedimentos', disabled: true },
     { key: 'procedimentos-genericos', label: 'Procedimentos genéricos' },
+    { key: 'doencas-cid', label: 'DoenÃ§as (CID)' },
     { key: 'materiais-estoque', label: 'Materiais de estoque', disabled: true },
     { key: 'medicamentos', label: 'Medicamentos', disabled: true },
     { key: 'servicos-protese', label: 'Serviços de prótese', disabled: true },
@@ -97,7 +100,7 @@ function isLoginRoute() {
 
 function isAppRoute() {
   const path = window.location.pathname || '/';
-  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '/app/ficha-clinica' || path === '/app/tabelas-auxiliares' || path === '/app/tabelas/procedimentos-genericos' || path === '';
+  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '/app/ficha-clinica' || path === '/app/tabelas-auxiliares' || path === '/app/tabelas/procedimentos-genericos' || path === '/app/tabelas/doencas-cid' || path === '';
 }
 
 function resolveScreenFromPath() {
@@ -106,6 +109,7 @@ function resolveScreenFromPath() {
   if (path === '/app/ficha-clinica') return 'ficha-clinica';
   if (path === '/app/tabelas-auxiliares') return 'tabelas-auxiliares';
   if (path === '/app/tabelas/procedimentos-genericos') return 'procedimentos-genericos';
+  if (path === '/app/tabelas/doencas-cid') return 'doencas-cid';
   return 'dashboard';
 }
 
@@ -119,7 +123,9 @@ function syncAppPath(screen) {
           ? '/app/tabelas-auxiliares'
           : screen === 'procedimentos-genericos'
             ? '/app/tabelas/procedimentos-genericos'
-            : '/app';
+            : screen === 'doencas-cid'
+              ? '/app/tabelas/doencas-cid'
+              : '/app';
   if ((window.location.pathname || '/') === nextPath) return;
   window.history.pushState({ screen }, '', nextPath);
 }
@@ -135,9 +141,16 @@ function AppContent() {
   const [procedimentosGenericosEspecialidades, setProcedimentosGenericosEspecialidades] = useState([]);
   const [procedimentosGenericosEspecialidadesLoading, setProcedimentosGenericosEspecialidadesLoading] = useState(false);
   const [procedimentosGenericosNovoToken, setProcedimentosGenericosNovoToken] = useState(0);
+  const [doencasCidToolbarState, setDoencasCidToolbarState] = useState({
+    selectedId: null,
+    loading: false,
+    deleting: false,
+    globalSearch: '',
+  });
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'pacientes') return 'cadastro';
     if (initialScreen === 'procedimentos-genericos') return 'tabelas';
+    if (initialScreen === 'doencas-cid') return 'tabelas';
     return 'atendimento';
   });
   const [panelGroupKey, setPanelGroupKey] = useState('');
@@ -159,6 +172,19 @@ function AppContent() {
     };
     window.addEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
     return () => window.removeEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
+  }, []);
+
+  useEffect(() => {
+    const onDoencasCidState = (event) => {
+      const detail = event?.detail || {};
+      setDoencasCidToolbarState((current) => ({
+        ...current,
+        ...detail,
+      }));
+    };
+
+    window.addEventListener('brana-doencas-cid-state', onDoencasCidState);
+    return () => window.removeEventListener('brana-doencas-cid-state', onDoencasCidState);
   }, []);
 
   useEffect(() => {
@@ -187,7 +213,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos-genericos') {
+    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos-genericos' && screen !== 'doencas-cid') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -261,6 +287,10 @@ function AppContent() {
       handleNavigate('procedimentos-genericos');
       return;
     }
+    if (groupKey === 'tabelas' && item?.key === 'doencas-cid' && !item?.disabled) {
+      handleNavigate('doencas-cid');
+      return;
+    }
     if (groupKey === 'atendimento' && item?.key === 'ficha-clinica' && !item?.disabled) {
       handleNavigate('ficha-clinica');
       return;
@@ -292,6 +322,10 @@ function AppContent() {
     if (actionKey === 'procedimentos-genericos') {
       setProcedimentosGenericosNovoToken((current) => current + 1);
       handleNavigate('procedimentos-genericos');
+      return;
+    }
+    if (actionKey === 'doencas-cid') {
+      handleNavigate('doencas-cid');
       return;
     }
     message.info('Funcionalidade em breve.');
@@ -331,6 +365,9 @@ function AppContent() {
           }}
         />
       );
+    }
+    if (screen === 'doencas-cid') {
+      return <DoencasCidPage onClose={() => handleNavigate('dashboard')} />;
     }
     return <DashboardPage key={dashboardVersion} />;
   }, [dashboardVersion, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen]);
@@ -418,6 +455,24 @@ function AppContent() {
     );
   }, [procedimentosGenericosEspecialidade, procedimentosGenericosEspecialidades, procedimentosGenericosEspecialidadesLoading, procedimentosGenericosSearch, screen]);
 
+  const doencasCidTopBar = useMemo(() => {
+    if (screen !== 'doencas-cid') return null;
+
+    return (
+      <DoencaCidToolbar
+        hasSelection={Boolean(doencasCidToolbarState.selectedId)}
+        loading={doencasCidToolbarState.loading}
+        deleting={doencasCidToolbarState.deleting}
+        globalSearch={doencasCidToolbarState.globalSearch}
+        onGlobalSearchChange={(value) => window.dispatchEvent(new CustomEvent('brana-doencas-cid-toolbar-filter', { detail: { field: 'search', value } }))}
+        onCreate={() => window.dispatchEvent(new CustomEvent('brana-doencas-cid-toolbar-action', { detail: { action: 'novo' } }))}
+        onEdit={() => window.dispatchEvent(new CustomEvent('brana-doencas-cid-toolbar-action', { detail: { action: 'alterar' } }))}
+        onDelete={() => window.dispatchEvent(new CustomEvent('brana-doencas-cid-toolbar-action', { detail: { action: 'eliminar' } }))}
+        onClose={() => handleNavigate('dashboard')}
+      />
+    );
+  }, [doencasCidToolbarState, screen]);
+
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
     '--brana-panel-width': panelGroup ? '272px' : '0px',
@@ -473,6 +528,8 @@ function AppContent() {
             auxiliaryTopBar
           ) : screen === 'procedimentos-genericos' ? (
             procedimentosGenericosTopBar
+          ) : screen === 'doencas-cid' ? (
+            doencasCidTopBar
           ) : null}
           <BranaIconRail
             activeKey={activeKey}

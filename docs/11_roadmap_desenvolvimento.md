@@ -29,6 +29,19 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 ## Estado validado recente
 
+- A frente `Tabelas -> Doencas (CID)` teve sua primeira fatia React de leitura iniciada, com rota, menu e listagem basal em andamento; CRUD de escrita, modal e validacao autenticada completa ainda permanecem pendentes.
+- A primeira validacao autenticada da fatia somente leitura do CID foi concluida no novo frontend React, com login real, rota `/app/tabelas/doencas-cid` ativa e `GET /cid` observado; a etapa de CRUD segue pendente.
+- A listagem do CID passou por pagina??o local para reduzir o DOM de milhares de linhas para cerca de 50 por p?gina, preservando filtros, selecao e modal sem alterar backend ou banco.
+- A validacao runtime posterior confirmou a pagina??o local no navegador, com pagina principal carregando cerca de 50 linhas visiveis, troca de pagina sem nova chamada HTTP e modal abrindo/fechando sem congelamento perceptivel.
+- A etapa seguinte validou inclusao e alteracao reais com registro de teste unico `CID-ZZ-20260714`, incluindo validacao frontend, `POST /cid`, `PUT /cid/{id}`, recarga da lista, selecao coerente e modal retornando ao estado limpo apos cancelar.
+- O CRUD de CID permanece em desenvolvimento, mas agora com fluxo de inclusao e edicao autenticado validado em navegador local, sem backend, banco ou migration nova.
+- A barra horizontal do CID foi compactada nesta etapa, com remocao dos campos duplicados de busca da toolbar e preservacao dos filtros apenas nos cabecalhos de coluna.
+- A exclusao segura do CID foi implementada e validada com o registro de teste `CID-ZZ-20260714` / `15638756`, usando confirmacao React e `DELETE /cid/{id}` sem regressao aparente em filtros, selecao ou pagina??o.
+- O modal `Nova doen?a` do CID foi compactado visualmente, com C?digo e Doen?a na mesma linha, Observa??es abaixo e checkbox em sequ?ncia, sem alterar payload, valida??es ou API.
+- A etapa visual seguinte do CID ajustou o modal `Nova doen?a` para ficar mais legivel no layout real, com titulo/espacamento refinados e o shell lateral/topbar mantido em encaixe continuo de canto, sem tocar em backend, filtros, pagina??o ou permiss?es.
+- Na validacao posterior de continuidade da exclusao, o registro tecnico `CID-ZZ-20260714` / `15638756` nao foi mais localizado na listagem autenticada do CID; por isso nenhuma exclusao adicional foi executada nesta passagem e a frente permanece com a exclusao tecnica ja concluida em rodada anterior.
+- Em nova rodada controlada de teste, um registro tecnico temporario foi criado pelo fluxo real de inclusao, recebeu validacao de Cancelar, X e Escape no modal de exclusao e foi removido com um unico `DELETE`, deixando a listagem sem residuos tecnicos ao final da passagem.
+- A validacao integrada final do CID foi consolidada em `docs/validacao_final_doencas_cid_frontend_react.md`, com shell, tabela, pagina??o, busca, filtros, selecao, duplo clique, modais, desempenho, responsividade e inventario da frente revisados para preparacao de commit seletivo.
 - Login, senha interna e perfis: validado manualmente.
 - Validacao runtime do backend de Orcamento concluida com login real em `POST /login` usando `gleissontel@gmail.com` e validacao dos endpoints principais `GET /orcamento/pacientes/1/tratamentos`, `GET /orcamento/tratamentos/1` e `POST /orcamento/tratamentos/1/impressao`.
 - Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
@@ -809,7 +822,7 @@ Observacoes:
 * Modulo usa permissao `materiais`.
 * Relaciona-se diretamente com procedimentos.
 * O fechamento temporario da frente foi consolidado em `docs/encerramento_temporario_materiais_frontend_react.md`.
-* O shell visual, a listagem principal, os modais de tabela/material, os modais proprios de confirmacao/aviso e a correcao textual de `Apresentação` ficaram registrados como estado atual validado.
+* O shell visual, a listagem principal, os modais de tabela/material, os modais proprios de confirmacao/aviso e a correcao textual de `Apresentaï¿½ï¿½o` ficaram registrados como estado atual validado.
 * O ajuste visual recente de largura/centralizacao da tabela de `Procedimentos genericos` foi incorporado ao mesmo padrao visual compartilhado, sem reabrir a frente.
 * Proximo passo: manter a frente em pausa controlada ate haver nova prioridade ou novo contrato funcional.
 
@@ -6034,9 +6047,9 @@ Observacoes:
 - O escopo atual nao abre nova funcionalidade e nao deve ser reativado sem nova prioridade ou novo contrato funcional.
 - Retomadas futuras devem respeitar o shell compartilhado, o contrato auditado do EasyDental Desktop e os documentos ja produzidos nesta frente.
 
-## Padrão visual compartilhado dos modulos administrativos do frontend React
+## Padrï¿½o visual compartilhado dos modulos administrativos do frontend React
 
-- O padrão visual/estrutural dos modulos administrativos do novo frontend React foi formalizado em `docs/frontend_react_padrao_shell_modulos_administrativos.md`.
+- O padrï¿½o visual/estrutural dos modulos administrativos do novo frontend React foi formalizado em `docs/frontend_react_padrao_shell_modulos_administrativos.md`.
 - O documento consolida o shell base com lateral + barra horizontal formando um `L`, a barra superior com acoes e filtros principais, o grid ocupando a largura util e o uso do `TableColumnFilterHeader` no padrao de `Tabelas Auxiliares`.
-- A documentacao aponta `Tabelas Auxiliares` e `Procedimentos genéricos` como modulos de referencia atuais.
+- A documentacao aponta `Tabelas Auxiliares` e `Procedimentos genï¿½ricos` como modulos de referencia atuais.
 - O objetivo e evitar novos layouts paralelos, toolbars isoladas por pagina e filtros paralelos fora do shell compartilhado.
