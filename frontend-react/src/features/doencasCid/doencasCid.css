@@ -1,0 +1,281 @@
+.doencas-cid-toolbar-band {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.doencas-cid-shell-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+  gap: 12px;
+}
+
+.doencas-cid-shell-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.doencas-cid-shell-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.doencas-cid-page {
+  display: grid;
+  gap: 10px;
+}
+
+.doencas-cid-table-shell {
+  width: min(50vw, 900px);
+  max-width: 100%;
+  min-width: 620px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .doencas-cid-table-shell {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.doencas-cid-shell-search {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  min-width: 220px;
+  max-width: min(380px, 42vw);
+  padding-right: 28px;
+}
+
+.doencas-cid-shell-search-input {
+  width: 100%;
+}
+
+.doencas-cid-shell-search-input.ant-input-affix-wrapper {
+  height: 30px;
+  border-radius: 6px;
+  border-color: var(--brana-border-default);
+  background: var(--brana-surface-topbar);
+  box-shadow: none;
+}
+
+.doencas-cid-shell-search-input .ant-input {
+  font-size: 12px;
+  background: transparent;
+}
+
+.doencas-cid-modal .ant-modal-header {
+  padding: 12px 18px 8px;
+}
+
+.doencas-cid-modal .ant-modal-content {
+  width: 100%;
+}
+
+.doencas-cid-modal .ant-modal-body {
+  padding: 8px 16px 10px;
+}
+
+.doencas-cid-modal-form--compact {
+  padding-top: 0;
+}
+
+.doencas-cid-modal-grid {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.8fr) minmax(230px, 2.2fr);
+  gap: 6px 10px;
+  align-items: start;
+}
+
+.doencas-cid-modal-field {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.doencas-cid-modal-field-code {
+  grid-column: 1;
+}
+
+.doencas-cid-modal-field-description {
+  grid-column: 2;
+}
+
+.doencas-cid-modal-field-observacoes,
+.doencas-cid-modal-field-preferido,
+.doencas-cid-modal-actions {
+  grid-column: 1 / -1;
+}
+
+.doencas-cid-modal-field .ant-form-item-label {
+  padding-bottom: 2px;
+}
+
+.doencas-cid-modal-field .ant-form-item-label > label {
+  font-weight: 700;
+  color: #36513d;
+  font-size: 13px;
+  height: auto;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.doencas-cid-modal-field .ant-form-item-control {
+  min-width: 0;
+}
+
+.doencas-cid-modal-field .ant-input,
+.doencas-cid-modal-field .ant-input-affix-wrapper {
+  width: 100%;
+  min-width: 0;
+}
+
+.doencas-cid-modal-field-code .ant-input,
+.doencas-cid-modal-field-description .ant-input {
+  height: 34px;
+  border-radius: 8px;
+  font-size: 13px;
+  padding-inline: 10px;
+}
+
+.doencas-cid-modal-field-code .ant-input::placeholder {
+  opacity: 1;
+}
+
+.doencas-cid-modal-field-observacoes .ant-input-textarea {
+  width: 100%;
+}
+
+.doencas-cid-modal-field-observacoes textarea.ant-input {
+  min-height: 54px;
+  font-size: 13px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.doencas-cid-modal-field-preferido {
+  margin-top: 0;
+}
+
+.doencas-cid-modal-field-preferido .ant-form-item-control-input {
+  min-height: 20px;
+}
+
+.doencas-cid-modal-field-preferido .ant-checkbox + span {
+  font-size: 13px;
+}
+
+.doencas-cid-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+  padding-top: 4px;
+}
+
+.doencas-cid-modal-actions .ant-btn {
+  min-width: 92px;
+  height: 34px;
+  font-size: 13px;
+  padding-inline: 16px;
+}
+
+.doencas-cid-delete-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.doencas-cid-delete-modal .ant-modal-header {
+  padding: 14px 18px 10px;
+}
+
+.doencas-cid-delete-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #36513d;
+}
+
+.doencas-cid-delete-modal .ant-modal-body {
+  padding: 12px 18px 16px;
+}
+
+.doencas-cid-delete-content {
+  display: grid;
+  gap: 14px;
+}
+
+.doencas-cid-delete-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 176, 32, 0.14);
+  color: #c97c00;
+  font-size: 22px;
+}
+
+.doencas-cid-delete-message {
+  color: #36513d;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.doencas-cid-delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.doencas-cid-delete-actions .ant-btn {
+  min-width: 92px;
+  height: 34px;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .doencas-cid-table-shell {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .doencas-cid-shell-toolbar {
+    gap: 8px;
+  }
+
+  .doencas-cid-shell-search {
+    min-width: 180px;
+    padding-right: 16px;
+  }
+
+  .doencas-cid-delete-modal .ant-modal-body {
+    padding: 10px 16px 14px;
+  }
+
+  .doencas-cid-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doencas-cid-modal-field-code,
+  .doencas-cid-modal-field-description {
+    grid-column: 1;
+  }
+
+  .doencas-cid-modal .ant-modal-header {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .doencas-cid-modal-actions {
+    justify-content: space-between;
+  }
+}
