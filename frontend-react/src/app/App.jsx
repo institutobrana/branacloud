@@ -17,22 +17,24 @@ import { DoencaCidToolbar } from '../features/doencasCid/components/DoencaCidToo
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 import { TiposIndicacaoPage } from '../features/tabelasAuxiliares/TiposIndicacaoPage.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
+import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
+import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
 
 const contextualMenus = {
   atendimento: [
     { key: 'agenda-semanal', label: 'Agenda semanal', disabled: true },
-    { key: 'agenda-diaria', label: 'Agenda diária', disabled: true },
+    { key: 'agenda-diaria', label: 'Agenda diï¿½ria', disabled: true },
     { key: 'timeline-paciente', label: 'Timeline do paciente', disabled: true },
     { key: 'retornos', label: 'Controle de retornos', disabled: true },
     { key: 'gerenciar-tratamentos', label: 'Gerenciar tratamentos', disabled: true },
-    { key: 'ficha-clinica', label: 'Ficha clínica', disabled: true },
+    { key: 'ficha-clinica', label: 'Ficha clï¿½nica', disabled: true },
     { key: 'ficha-anamnese', label: 'Ficha de anamnese', disabled: true },
     { key: 'documentos', label: 'Documentos', disabled: true },
   ],
   cadastro: [
     { key: 'pacientes', label: 'Pacientes' },
-    { key: 'convenios', label: 'Convênios atendidos', disabled: true },
-    { key: 'corpo-clinico', label: 'Corpo clínico', disabled: true },
+    { key: 'convenios', label: 'Convï¿½nios atendidos', disabled: true },
+    { key: 'corpo-clinico', label: 'Corpo clï¿½nico', disabled: true },
     { key: 'fornecedores', label: 'Fornecedores', disabled: true },
   ],
   financeiro: [
@@ -41,18 +43,18 @@ const contextualMenus = {
     { key: 'gerenciar-recibos', label: 'Gerenciar recibos', disabled: true },
     { key: 'controle-estoque', label: 'Controle de estoque', disabled: true },
     { key: 'fluxo-caixa', label: 'Fluxo de caixa', disabled: true },
-    { key: 'recebiveis-digitais', label: 'Recebíveis digitais', disabled: true },
-    { key: 'faturamento-convenio', label: 'Faturamento de convênio', disabled: true },
-    { key: 'servicos-proteticos', label: 'Serviços protéticos', disabled: true },
+    { key: 'recebiveis-digitais', label: 'Recebï¿½veis digitais', disabled: true },
+    { key: 'faturamento-convenio', label: 'Faturamento de convï¿½nio', disabled: true },
+    { key: 'servicos-proteticos', label: 'Serviï¿½os protï¿½ticos', disabled: true },
   ],
   tabelas: [
     { key: 'procedimentos', label: 'Procedimentos', disabled: true },
-    { key: 'procedimentos-genericos', label: 'Procedimentos genéricos' },
+    { key: 'procedimentos-genericos', label: 'Procedimentos genï¿½ricos' },
     { key: 'doencas-cid', label: 'DoenÃ§as (CID)' },
     { key: 'materiais-estoque', label: 'Materiais de estoque', disabled: true },
     { key: 'medicamentos', label: 'Medicamentos', disabled: true },
-    { key: 'servicos-protese', label: 'Serviços de prótese', disabled: true },
-    { key: 'doencas-cid', label: 'Doenças (CID)', disabled: true },
+    { key: 'servicos-protese', label: 'Serviï¿½os de prï¿½tese', disabled: true },
+    { key: 'doencas-cid', label: 'Doenï¿½as (CID)', disabled: true },
   ],
   relatorios: [
     { key: 'favoritos', label: 'Favoritos', disabled: true },
@@ -64,31 +66,31 @@ const contextualMenus = {
     { key: 'relatorios-gerenciais', label: 'Gerenciais', disabled: true },
   ],
   configuracao: [
-    { key: 'usuarios', label: 'Usuários do sistema', disabled: true },
-    { key: 'perfis-usuario', label: 'Perfis de usuário', disabled: true },
+    { key: 'usuarios', label: 'Usuï¿½rios do sistema', disabled: true },
+    { key: 'perfis-usuario', label: 'Perfis de usuï¿½rio', disabled: true },
     { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares' },
-    { key: 'plano-contas', label: 'Plano de contas', disabled: true },
+    { key: 'plano-contas', label: 'Plano de contas' },
     { key: 'agendas', label: 'Agendas', disabled: true },
-    { key: 'questionarios-anamnese', label: 'Questionários de anamnese', disabled: true },
+    { key: 'questionarios-anamnese', label: 'Questionï¿½rios de anamnese', disabled: true },
     { key: 'unidades-atendimento', label: 'Unidades de atendimento', disabled: true },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
-    { key: 'taxas-cobranca', label: 'Taxas de cobrança', disabled: true },
-    { key: 'contas-bancarias', label: 'Contas bancárias', disabled: true },
+    { key: 'taxas-cobranca', label: 'Taxas de cobranï¿½a', disabled: true },
+    { key: 'contas-bancarias', label: 'Contas bancï¿½rias', disabled: true },
   ],
   ferramentas: [
     { key: 'dashboard', label: 'Dashboard', disabled: true },
     { key: 'editor-textos', label: 'Editor de textos', disabled: true },
     { key: 'mala-direta', label: 'Mala direta', disabled: true },
     { key: 'mensagens-enviadas', label: 'Mensagens enviadas', disabled: true },
-    { key: 'assinatura-eletronica', label: 'Assinatura eletrônica', disabled: true },
+    { key: 'assinatura-eletronica', label: 'Assinatura eletrï¿½nica', disabled: true },
     { key: 'gerenciar-avisos', label: 'Gerenciar avisos', disabled: true },
-    { key: 'orientacao-paciente', label: 'Orientação ao paciente', disabled: true },
-    { key: 'exportacao-dados', label: 'Exportação de dados', disabled: true },
+    { key: 'orientacao-paciente', label: 'Orientaï¿½ï¿½o ao paciente', disabled: true },
+    { key: 'exportacao-dados', label: 'Exportaï¿½ï¿½o de dados', disabled: true },
     { key: 'trilha-auditoria', label: 'Trilha de auditoria', disabled: true },
     { key: 'crm-vendas', label: 'CRM de vendas', disabled: true },
   ],
   ajuda: [
-    { key: 'videos-tutoriais', label: 'Vídeos tutoriais', disabled: true },
+    { key: 'videos-tutoriais', label: 'Vï¿½deos tutoriais', disabled: true },
     { key: 'treinamentos-online', label: 'Treinamentos on-line', disabled: true },
   ],
   inicio: [],
@@ -147,10 +149,25 @@ function AppContent() {
     deleting: false,
     globalSearch: '',
   });
+  const [planoContasToolbarState, setPlanoContasToolbarState] = useState({
+    selectedGroupId: null,
+    selectedCategoryId: null,
+    context: 'none',
+    canEditGroup: false,
+    canCreateCategory: false,
+    canEditCategory: false,
+    canDelete: false,
+    loading: false,
+    saving: false,
+    deleting: false,
+    migrating: false,
+    migrationModalOpen: false,
+  });
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'pacientes') return 'cadastro';
     if (initialScreen === 'procedimentos-genericos') return 'tabelas';
     if (initialScreen === 'doencas-cid') return 'tabelas';
+    if (initialScreen === 'plano-contas') return 'configuracao';
     return 'atendimento';
   });
   const [panelGroupKey, setPanelGroupKey] = useState('');
@@ -188,6 +205,19 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
+    const onPlanoContasState = (event) => {
+      const detail = event?.detail || {};
+      setPlanoContasToolbarState((current) => ({
+        ...current,
+        ...detail,
+      }));
+    };
+
+    window.addEventListener('brana-plano-contas-toolbar-state', onPlanoContasState);
+    return () => window.removeEventListener('brana-plano-contas-toolbar-state', onPlanoContasState);
+  }, []);
+
+  useEffect(() => {
     if (screen !== 'procedimentos-genericos') return;
     let cancelled = false;
 
@@ -213,7 +243,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos-genericos' && screen !== 'doencas-cid') {
+    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos-genericos' && screen !== 'doencas-cid' && screen !== 'plano-contas') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -377,7 +407,7 @@ function AppContent() {
 
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de tabelas auxiliares">
-        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Ações do módulo tabelas auxiliares">
+        <div className="auxiliary-action-toolbar" role="toolbar" aria-label="Aï¿½ï¿½es do mï¿½dulo tabelas auxiliares">
           <button type="button" className="auxiliary-shell-button primary" onClick={() => window.dispatchEvent(new CustomEvent('brana-auxiliar-toolbar-action', { detail: { action: 'novo' } }))}>
             Novo
           </button>
@@ -409,22 +439,22 @@ function AppContent() {
     especialidadeOptions.unshift({ label: '<<Todas>>', value: '' });
 
     return (
-      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genéricos">
-        <div className="procedimentos-genericos-toolbar-row" role="toolbar" aria-label="Ações do módulo procedimentos genéricos">
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de procedimentos genï¿½ricos">
+        <div className="procedimentos-genericos-toolbar-row" role="toolbar" aria-label="Aï¿½ï¿½es do mï¿½dulo procedimentos genï¿½ricos">
           <div className="auxiliary-action-toolbar procedimentos-genericos-toolbar-actions">
             <button type="button" className="auxiliary-shell-button primary" onClick={() => setProcedimentosGenericosNovoToken((current) => current + 1)}>
               Novo procedimento
             </button>
-            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Alteração pendente nesta etapa.')}>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Alteraï¿½ï¿½o pendente nesta etapa.')}>
               Altera...
             </button>
-            <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('Exclusão pendente nesta etapa.')}>
+            <button type="button" className="auxiliary-shell-button danger" onClick={() => message.info('Exclusï¿½o pendente nesta etapa.')}>
               Elimina...
             </button>
-            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficará na próxima etapa.')}>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de fases ficarï¿½ na prï¿½xima etapa.')}>
               Fases
             </button>
-            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficará na próxima etapa.')}>
+            <button type="button" className="auxiliary-shell-button" onClick={() => message.info('Abertura de materiais ficarï¿½ na prï¿½xima etapa.')}>
               Materiais
             </button>
           </div>
@@ -446,7 +476,7 @@ function AppContent() {
               <Input
                 value={procedimentosGenericosSearch}
                 onChange={(event) => setProcedimentosGenericosSearch(event.target.value)}
-                placeholder="Buscar por código ou descrição"
+                placeholder="Buscar por cï¿½digo ou descriï¿½ï¿½o"
               />
             </label>
           </div>
@@ -473,6 +503,29 @@ function AppContent() {
     );
   }, [doencasCidToolbarState, screen]);
 
+  const planoContasTopBar = useMemo(() => {
+    if (screen !== 'plano-contas') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band plano-contas-shell-band" aria-label="Barra operacional do plano de contas">
+        <PlanoContasToolbar
+          onClose={() => handleNavigate('dashboard')}
+          canEditGroup={planoContasToolbarState.canEditGroup}
+          canCreateCategory={planoContasToolbarState.canCreateCategory}
+          canEditCategory={planoContasToolbarState.canEditCategory}
+          canDelete={planoContasToolbarState.canDelete}
+          deleting={planoContasToolbarState.deleting || planoContasToolbarState.migrating || planoContasToolbarState.migrationModalOpen}
+          saving={planoContasToolbarState.loading || planoContasToolbarState.saving || planoContasToolbarState.migrating || planoContasToolbarState.migrationModalOpen}
+          onNewGroup={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'novo-grupo' } }))}
+          onEditGroup={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'alterar-grupo' } }))}
+          onNewCategory={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'nova-categoria' } }))}
+          onEditCategory={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'alterar-categoria' } }))}
+          onDeleteCategory={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'eliminar-categoria' } }))}
+        />
+      </div>
+    );
+  }, [handleNavigate, planoContasToolbarState.canCreateCategory, planoContasToolbarState.canDelete, planoContasToolbarState.canEditCategory, planoContasToolbarState.canEditGroup, planoContasToolbarState.deleting, planoContasToolbarState.loading, planoContasToolbarState.migrating, planoContasToolbarState.migrationModalOpen, planoContasToolbarState.saving, screen]);
+
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
     '--brana-panel-width': panelGroup ? '272px' : '0px',
@@ -481,7 +534,7 @@ function AppContent() {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
-        <Typography.Text type="secondary">Validando sessão...</Typography.Text>
+        <Typography.Text type="secondary">Validando sessï¿½o...</Typography.Text>
       </div>
     );
   }
