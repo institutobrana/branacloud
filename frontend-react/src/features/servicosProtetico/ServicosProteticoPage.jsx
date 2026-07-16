@@ -7,6 +7,7 @@ import { useServicoProteticoCreate } from './hooks/useServicoProteticoCreate.js'
 import { useServicoProteticoDelete } from './hooks/useServicoProteticoDelete.js';
 import { useServicoProteticoUpdate } from './hooks/useServicoProteticoUpdate.js';
 import { useServicosProtetico } from './hooks/useServicosProtetico.js';
+import { formatMoney } from './utils/servicosProteticoFormatters.js';
 import './servicosProtetico.css';
 
 const EMPTY_FILTERS = {
@@ -114,6 +115,146 @@ export function ServicosProteticoPage() {
     resetDeleteState();
   };
 
+  const openPrintView = () => {
+    if (!selectedProteticoId || !selectedProtetico) return;
+
+    const printableItems = servicos.filter((item) =>
+      Object.entries(filters).every(([key, value]) => {
+        const expected = String(value || '').trim();
+        if (!expected) return true;
+        const current = String(item?.[key] ?? '').toLowerCase();
+        return current.includes(expected.toLowerCase());
+      }),
+    );
+
+    const activeColumns = [
+      { key: 'codigo', label: 'Código' },
+      { key: 'nome', label: 'Serviço' },
+      { key: 'indice', label: 'Índice' },
+      { key: 'preco', label: 'Preço' },
+      { key: 'prazo', label: 'Prazo' },
+    ].filter((column) => visibleColumns?.[column.key] !== false);
+
+    const columnHeaders = activeColumns.map((column) => `<th>${column.label}</th>`).join('');
+    const tableRows = printableItems
+      .map((item) => {
+        const cells = activeColumns
+          .map((column) => {
+            if (column.key === 'preco') return `<td>${formatMoney(item.preco)}</td>`;
+            if (column.key === 'prazo') return `<td>${item.prazo ?? '-'}</td>`;
+            return `<td>${item?.[column.key] || '-'}</td>`;
+          })
+          .join('');
+        return `<tr>${cells}</tr>`;
+      })
+      .join('');
+    const filterSummary = Object.entries(filters)
+      .filter(([, value]) => String(value || '').trim())
+      .map(([key, value]) => `<li><strong>${key}</strong>: ${String(value)}</li>`)
+      .join('');
+
+    const printWindow = window.open('', '_blank', 'noopener,noreferrer,width=980,height=720');
+    if (!printWindow) {
+      Modal.warning({
+        title: 'Impressão indisponível',
+        content: 'O navegador bloqueou a abertura da janela de impressão.',
+        centered: true,
+      });
+      return;
+    }
+
+    const html = `<!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="utf-8" />
+          <title>Serviços de protético - ${selectedProtetico.nome || 'Protético'}</title>
+          <style>
+            :root { color-scheme: light; }
+            body {
+              margin: 24px;
+              font-family: Arial, Helvetica, sans-serif;
+              color: #1f2937;
+              background: #fff;
+            }
+            h1 {
+              margin: 0 0 6px;
+              font-size: 20px;
+            }
+            .meta {
+              margin: 0 0 16px;
+              font-size: 12px;
+              color: #4b5563;
+            }
+            .filters {
+              margin: 0 0 16px;
+              padding: 10px 12px;
+              border: 1px solid #d1d5db;
+              border-radius: 8px;
+              background: #f9fafb;
+            }
+            .filters strong {
+              display: inline-block;
+              margin-bottom: 6px;
+            }
+            .filters ul {
+              margin: 0;
+              padding-left: 18px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 12px;
+            }
+            th, td {
+              border: 1px solid #d1d5db;
+              padding: 8px 10px;
+              text-align: left;
+            }
+            th {
+              background: #f3f4f6;
+            }
+            td:nth-child(1),
+            td:nth-child(3),
+            td:nth-child(5) {
+              text-align: center;
+            }
+            td:nth-child(4) {
+              text-align: right;
+            }
+            .footer {
+              margin-top: 14px;
+              font-size: 12px;
+              color: #4b5563;
+            }
+            @media print {
+              body { margin: 14mm; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Serviços de protético</h1>
+          <p class="meta">Protético: ${selectedProtetico.nome || '-'} · ${printableItems.length} serviço${printableItems.length === 1 ? '' : 's'}</p>
+          <div class="filters">
+            <strong>Filtros aplicados</strong>
+            <ul>${filterSummary || '<li>Nenhum filtro aplicado</li>'}</ul>
+          </div>
+          <table>
+            <thead><tr>${columnHeaders}</tr></thead>
+            <tbody>${tableRows || `<tr><td colspan="${activeColumns.length || 1}">Nenhum serviço encontrado.</td></tr>`}</tbody>
+          </table>
+          <div class="footer">Gerado em ${new Date().toLocaleString('pt-BR')}</div>
+        </body>
+      </html>`;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.onload = () => {
+      printWindow.print();
+    };
+  };
+
   useEffect(() => {
     const onToolbarFilter = (event) => {
       const field = String(event?.detail?.field || '').trim();
@@ -149,6 +290,11 @@ export function ServicosProteticoPage() {
             refreshServicos();
           },
         });
+        return;
+      }
+      if (action === 'imprime-servico') {
+        openPrintView();
+        return;
       }
     };
 
@@ -158,7 +304,7 @@ export function ServicosProteticoPage() {
       window.removeEventListener('brana-servicos-protetico-toolbar-filter', onToolbarFilter);
       window.removeEventListener('brana-servicos-protetico-toolbar-action', onToolbarAction);
     };
-  }, [deleteServico, selectedItem, selectedProtetico, selectedProteticoId, setSelectedProteticoId, setSelectedId, refreshServicos, setFilters]);
+  }, [deleteServico, openPrintView, selectedItem, selectedProtetico, selectedProteticoId, setSelectedProteticoId, setSelectedId, refreshServicos, setFilters]);
 
   const handleCloseModal = () => {
     if (modalSaving) return;

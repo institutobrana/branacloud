@@ -307,6 +307,9 @@ test('ServicosProteticoPage remove shell externo residual', () => {
   assert.ok(source.includes('onRowDoubleClick={openEditModal}'));
   assert.ok(source.includes("action === 'altera-servico'"));
   assert.ok(source.includes("action === 'elimina-servico'"));
+  assert.ok(source.includes("action === 'imprime-servico'"));
+  assert.ok(source.includes('openPrintView'));
+  assert.ok(source.includes('printWindow.print()'));
   assert.ok(source.includes('Modal.confirm'));
   assert.ok(source.includes('deleteServico(item.id)'));
   assert.ok(source.includes('updateServico(service.id, payload)'));
@@ -338,6 +341,14 @@ test('ServicoProteticoModal preserva contrato e reduz altura visual', () => {
   assert.ok(css.includes('.servicos-protetico-form-row'));
   assert.ok(css.includes('.servicos-protetico-form-item'));
   assert.ok(css.includes('.servicos-protetico-modal-actions'));
+});
+
+test('ServicosProteticoToolbar expõe a ação de impressão no contrato', () => {
+  const source = readFileSync(new URL('../src/features/servicosProtetico/components/ServicosProteticoToolbar.jsx', import.meta.url), 'utf8');
+
+  assert.ok(source.includes('onImprimeServico'));
+  assert.ok(source.includes("action: 'imprime-servico'"));
+  assert.ok(source.includes('canPrint'));
 });
 
 test('ServicosProteticoCSS integra moldura e footer', () => {

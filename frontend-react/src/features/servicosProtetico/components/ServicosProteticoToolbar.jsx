@@ -12,6 +12,7 @@ export function ServicosProteticoToolbar({
   onNovoServico,
   onAlteraServico,
   onEliminaServico,
+  onImprimeServico,
 }) {
   const [localHasSelection, setLocalHasSelection] = useState(Boolean(hasSelection));
   const [localModalOpen, setLocalModalOpen] = useState(false);
@@ -49,6 +50,7 @@ export function ServicosProteticoToolbar({
   const canCreate = Boolean(proteticoId) && !loading;
   const canEdit = Boolean(proteticoId) && resolvedHasSelection && !loading;
   const canDelete = Boolean(proteticoId) && resolvedHasSelection && !loading;
+  const canPrint = Boolean(proteticoId) && !loading;
 
   return (
     <div className="servicos-protetico-toolbar-row" role="toolbar" aria-label="Ações do módulo serviços de protético">
@@ -89,7 +91,16 @@ export function ServicosProteticoToolbar({
         >
           Elimina
         </button>
-        <button type="button" className="auxiliary-shell-button" disabled>
+        <button
+          type="button"
+          className="auxiliary-shell-button"
+          disabled={!canPrint}
+          onClick={() => {
+            if (!canPrint) return;
+            window.dispatchEvent(new CustomEvent('brana-servicos-protetico-toolbar-action', { detail: { action: 'imprime-servico' } }));
+            onImprimeServico?.();
+          }}
+        >
           Imprime...
         </button>
       </div>
