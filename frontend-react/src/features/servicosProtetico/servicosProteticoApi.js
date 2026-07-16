@@ -72,3 +72,22 @@ export async function criarServicoProtetico(proteticoId, payload) {
 
   return data ? normalizeServico(data) : null;
 }
+
+export async function alterarServicoProtetico(servicoId, payload) {
+  const id = Number(servicoId || 0) || 0;
+  if (!id) {
+    const error = new Error('Selecione um servico valido.');
+    error.status = 400;
+    throw error;
+  }
+
+  const data = await requestJson(`/proteticos/servicos/${encodeURIComponent(String(id))}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload || {}),
+  });
+
+  return data ? normalizeServico(data) : null;
+}

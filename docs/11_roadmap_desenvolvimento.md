@@ -43,7 +43,11 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 ## Estado validado recente
 
-- A frente `Tabelas -> Servicos de protetico` concluiu a listagem e o fluxo `Novo servico` no novo frontend React, com rota, shell, toolbar, combo de protetico, leitura de proteticos e servicos, filtros por coluna, ordenacao, visibilidade de colunas, selecao, rodape integrado, contador, modal compacto e salvamento validado em runtime; `Altera`, `Elimina` e `Imprime` permanecem pendentes.
+- A protecao backend minima dos seis grupos nativos do Plano de contas foi concluida, com regra centralizada, bloqueio por nome normalizado e testes backend dedicados; o reforco visual no React e no legado continua pendente.
+- A solucao estrutural com chave estavel e migration segue como trabalho futuro separado.
+- A frente de blindagem dos seis grupos nativos do Plano de contas foi aberta para auditoria documental e tecnica focada; o trabalho atual ficou restrito a leitura, comparacao de evidencias e proposta de contrato, sem implementacao.
+- A blindagem ainda nao foi implementada e permanece pendente de decisao estrutural.
+- A frente `Tabelas -> Servicos de protetico` concluiu a listagem, o fluxo `Novo servico` e a etapa funcional `Altera` no novo frontend React, com rota, shell, toolbar, combo de protetico, leitura de proteticos e servicos, filtros por coluna, ordenacao, visibilidade de colunas, selecao, duplo clique, rodape integrado, contador, modal compacto e salvamento validado em runtime; `Elimina` e `Imprime` permanecem pendentes.
 - A etapa de backend/banco de `Tabelas -> Servicos de protetico` foi fechada com `codigo` e `descricao` no modelo, na rota e no script aditivo; o backfill local de `codigo` foi aplicado com sucesso e o contrato React de `Novo servico` foi validado.
 - Login, senha interna e perfis: validado manualmente.
 - Validacao runtime do backend de Orcamento concluida com login real em `POST /login` usando `gleissontel@gmail.com` e validacao dos endpoints principais `GET /orcamento/pacientes/1/tratamentos`, `GET /orcamento/tratamentos/1` e `POST /orcamento/tratamentos/1/impressao`.
@@ -6327,3 +6331,6 @@ Observacoes:
 - A Etapa 4C.16 foi validada com guarda de salvamento concorrente no hook do Cenário anual, testes automatizados e smoke normal autenticado.
 - O duplo clique em Gravar passou a gerar um unico POST, sem sucesso duplicado, e a restauracao final voltou ao baseline `ir = 10`.
 - O fluxo permaneceu sem alteracao de backend, banco ou Procedimentos.
+
+- A Etapa 4C.17 foi validada com bloqueio de persistencia para campos invalidos, exibindo mensagem para `horas_atendimento_dia = 0`, sem `POST /api/cenario` e com restauracao do baseline apos correcao para `8`.
+- A frente permaneceu com 17 testes aprovados e build aprovado, sem alteracao de backend, banco ou Procedimentos.

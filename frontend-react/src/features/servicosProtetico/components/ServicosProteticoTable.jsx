@@ -14,6 +14,7 @@ export function ServicosProteticoTable({
   sortState,
   onSort,
   onSelect,
+  onRowDoubleClick,
   filters,
   onFilterChange,
   visibleColumns,
@@ -130,6 +131,7 @@ export function ServicosProteticoTable({
               'data-row-id': record.id,
               'data-selected': Number(record.id) === Number(selectedId) ? 'true' : 'false',
               onClick: () => onSelect?.(Number(record.id) || null),
+              onDoubleClick: () => onRowDoubleClick?.(record),
             })}
             locale={{ emptyText: 'Nenhum serviço de protético cadastrado.' }}
           />

@@ -19,19 +19,25 @@ export function ServicoProteticoModal({
   open,
   saving = false,
   protetico,
+  mode = 'create',
+  initialValues = null,
   error = '',
   onCancel,
   onSubmit,
 }) {
   const [form] = Form.useForm();
+  const isEditMode = mode === 'edit';
 
   useEffect(() => {
     if (!open) {
       form.resetFields();
       return;
     }
-    form.setFieldsValue(EMPTY_VALUES);
-  }, [form, open]);
+    form.setFieldsValue({
+      ...EMPTY_VALUES,
+      ...(initialValues || {}),
+    });
+  }, [form, initialValues, open]);
 
   const handleFinish = async (values) => {
     const validation = validateServicoProteticoValues(values);
@@ -52,7 +58,7 @@ export function ServicoProteticoModal({
   return (
     <BranaModal
       open={open}
-      title="Novo serviço de protético"
+      title={isEditMode ? 'Altera serviço de protético' : 'Novo serviço de protético'}
       centered
       width={420}
       destroyOnClose
@@ -69,14 +75,14 @@ export function ServicoProteticoModal({
       {error ? <Alert className="servicos-protetico-modal-error" type="error" showIcon message={error} /> : null}
 
       <Form form={form} layout="vertical" requiredMark={false} disabled={saving} onFinish={handleFinish}>
-        <ServicoProteticoForm loading={saving} />
+        <ServicoProteticoForm loading={saving} mode={mode} />
 
         <div className="servicos-protetico-modal-actions">
           <Button onClick={onCancel} disabled={saving}>
             Cancelar
           </Button>
           <Button type="primary" htmlType="submit" loading={saving}>
-            Salvar
+            {isEditMode ? 'Salvar alteração' : 'Salvar'}
           </Button>
         </div>
       </Form>
