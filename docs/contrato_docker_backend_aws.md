@@ -471,3 +471,94 @@ docker tag brana-backend:aws-foundation-scan1 810204249111.dkr.ecr.sa-east-1.ama
 - nenhuma interacao com AWS foi feita por este ambiente;
 - nenhum commit foi criado;
 - nenhum push Git foi feito.
+
+## 28. Investigacao de remocao de Perl
+
+### Resultado da auditoria
+
+A remocao de Perl **nao e segura** nesta imagem Bookworm atual.
+
+Evidencias coletadas:
+
+- a imagem `brana-backend:aws-security-candidate1` contem `perl-base 5.36.0-7+deb12u3`;
+- `command -v perl` retorna `/usr/bin/perl`;
+- `dpkg-query -W 'perl*'` mostra `perl`, `perl-base`, `perl-modules` e `perlapi-5.36.0`;
+- `apt-mark showmanual` nao indica Perl como dependÃªncia Python manual, mas o APT trata `perl-base` como pacote essencial;
+- a simulacao `apt-get -s purge perl perl-base perl-modules-5.36` indica remocao de `perl-base` e alerta de pacotes essenciais;
+- a tentativa de purge simulada mostra que o sistema ficaria em zona de risco por envolver `perl-base`, pacote essencial do sistema Debian.
+
+### Dependencias reversas observadas
+
+- `apt-cache depends perl-base` mostra `libc6`, `libcrypt1` e `dpkg` como pre-dependencias;
+- `apt-cache rdepends --installed perl-base` nao lista dependentes instalados relevantes para o runtime do Brana Cloud;
+- isso confirma que o problema nao e uma dependencia do projeto em si, mas a natureza essencial do pacote no sistema base.
+
+### Uso no projeto
+
+- a busca no codigo de backend e frontend nao mostrou uso operacional real de `perl` pelo Brana Cloud;
+- os resultados encontrados com `perl` estao concentrados em docs, estruturas geradas, assets e arquivos legados nao executados pelo runtime do backend;
+- nao foi encontrado fluxo do Brana Cloud chamando `/usr/bin/perl`, script `.pl` ou dependencia direta de Perl para PDF, assinatura, relatorios ou migracoes.
+
+### Decisao final
+
+Opcao escolhida: **B. Perl nao pode ser removido**.
+
+Motivo objetivo:
+
+- mesmo sem uso funcional claro pelo Brana Cloud, a remocao exigiria purgar `perl-base`, e o APT sinaliza esse pacote como essencial;
+- a mudanca introduziria risco sistÃªmico desnecessario na imagem final, sem ganho operacional comprovado;
+- a frente atual deve manter Bookworm com Perl instalado, documentando o risco do scan ECR e pedindo novo scan apenas para registrar a situacao final.
+
+### Consequencia pratica
+
+- nao houve criacao de `brana-backend:security-bookworm-noperl1`;
+- nao houve alteracao do `Dockerfile` principal;
+- nao houve tag local nova baseada em variante sem Perl;
+- a imagem final permanece como `brana-backend:aws-security-candidate1`;
+- a tag local candidata de ECR permanece como `810204249111.dkr.ecr.sa-east-1.amazonaws.com/brana-cloud/backend:aws-security-3c0a8946-bookworm1`.
+
+### Risco remanescente
+
+- o scan ECR continua apontando 3 CRITICAL, 5 HIGH e 5 MEDIUM no pacote Perl;
+- sem uma correÃ§Ã£o upstream do pacote Debian ou uma mudanÃ§a maior de base/runtime, esse alerta permanece;
+- a remocao local nÃ£o e recomendada porque trocaria um achado de seguranca por um risco de quebra estrutural do sistema base.
+
+## 29. Bloqueio central de schema-compatibilidade no startup
+
+### Motivo do novo ajuste
+
+O startup ainda podia tentar aplicar DDL/DML de compatibilidade em caminhos automáticos de importação e inicialização quando o banco estava vazio ou quando flags de bootstrap estavam ligadas por engano. Isso era indesejado para a imagem base de publicacao e para o scan local orientado ao ECR.
+
+### Ajuste aplicado
+
+- a decisao de liberar compatibilidade passou a ser centralizada em `backend/services/runtime_profile_service.py`;
+- o backend agora consulta `schema_compat_apply_allowed(...)` antes de executar qualquer rotina aditiva automatica de schema;
+- quando a politica bloqueia, o startup registra a mensagem de bloqueio e sai sem emitir `ALTER TABLE`, `CREATE TABLE` ou escrita aditiva de compatibilidade;
+- o script manual versionado `backend/scripts/aplicar_compatibilidade_schema.py` continua sendo o caminho de manutencao para aplicacao explicita, com a flag de compatibilidade disponivel apenas quando o operador decidir habilita-la.
+
+### Resultado validado
+
+- o build local seguiu usando `--platform linux/amd64`, `--provenance=false` e `--sbom=false`;
+- a imagem local criada permaneceu `brana-backend:aws-foundation-scan1`;
+- o smoke test confirmou `/health`, `/app` e `/frontend/` em HTTP 200;
+- o processo permaneceu como usuario nao root `brana`;
+- o banco usado no teste foi temporario e descartavel;
+- nenhum banco real foi acessado;
+- nenhuma migration foi executada;
+- nenhum `Base.metadata.create_all` foi executado no cenario de validacao do startup bloqueado;
+- a tag local do ECR foi criada apenas localmente, sem `push`.
+
+### Status para o proprietario
+
+A imagem esta pronta para a etapa manual do proprietario de publicar e escanear no ECR, desde que ele queira seguir com a mesma base local validada aqui. A execucao seguinte continua fora deste ambiente: `docker push` e qualquer interacao com AWS devem ser feitos apenas no ambiente do proprietario.
+
+### Inventario das rotinas automaticas
+
+- `backend/main.py` -> `Base.metadata.create_all(bind=engine)` e `seed_tiss_tipo_atendimento(conn)`; momento: import do modulo; bloqueio: `RUN_SCHEMA_BOOTSTRAP` e, em producao, a politica geral de startup impede o caminho quando o bootstrap estiver desativado;
+- `backend/main.py` -> `_garantir_colunas_criticas_usuarios()`; momento: startup HTTP; bloqueio: `_garantir_schema_compatibilidade_startup()` + `schema_compat_apply_allowed(...)`;
+- `backend/main.py` -> `_garantir_colunas_criticas_simbolos()`; momento: startup HTTP; bloqueio: `_garantir_schema_compatibilidade_startup()` + `schema_compat_apply_allowed(...)`;
+- `backend/main.py` -> `_garantir_colunas_criticas_anamnese()`; momento: startup HTTP; bloqueio: `_garantir_schema_compatibilidade_startup()` + `schema_compat_apply_allowed(...)`;
+- `backend/main.py` -> `_garantir_tabela_quadro_avisos()`; momento: startup HTTP; bloqueio: `_garantir_schema_compatibilidade_startup()` + `schema_compat_apply_allowed(...)`;
+- `backend/database.py` -> `ensure_user_auth_schema()`; momento: chamada explicita por fluxo de startup/hotfix; bloqueio: nao e chamada quando a rotina central de compatibilidade esta bloqueada;
+- `backend/services/runtime_bootstrap_service.py` -> `run_runtime_bootstrap_global()`; momento: thread de bootstrap runtime; bloqueio: `BRANA_ENABLE_RUNTIME_BOOTSTRAP`, `BRANA_SKIP_BOOTSTRAP`, `BRANA_ALLOW_HTTP_RUNTIME_BOOTSTRAP`;
+- `backend/scripts/aplicar_compatibilidade_schema.py` -> `aplicar_compatibilidade_schema()`; momento: execucao manual; bloqueio: `BRANA_ALLOW_SCHEMA_COMPAT_APPLY=false` em producao.

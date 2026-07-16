@@ -84,7 +84,7 @@ from routes.user_admin_routes import router as user_admin_router
 from routes.unidades_atendimento_routes import router as unidades_atendimento_router
 from security.tenant import TenantMiddleware
 from security.trial_middleware import TrialMiddleware
-from services.runtime_profile_service import resolve_runtime_policy
+from services.runtime_profile_service import resolve_runtime_policy, schema_compat_apply_allowed
 from services.runtime_bootstrap_service import (
     is_http_runtime_bootstrap_allowed,
     run_runtime_bootstrap_global,
@@ -358,6 +358,26 @@ def _garantir_tabela_quadro_avisos() -> None:
         print(f"[startup] aviso: nao foi possivel garantir tabela quadro_avisos: {exc}")
 
 
+def _garantir_schema_compatibilidade_startup() -> None:
+    """Aplica compatibilidade de schema apenas quando a politica central libera.
+
+    Em producao, a aplicacao automatica deve permanecer bloqueada a menos que
+    a flag explicita de compatibilidade esteja habilitada.
+    """
+
+    if not schema_compat_apply_allowed(RUNTIME_POLICY):
+        print(
+            "[startup] schema compatibility apply bloqueado por politica. "
+            "DDL automatico de compatibilidade nao sera executado."
+        )
+        return
+
+    _garantir_colunas_criticas_usuarios()
+    _garantir_colunas_criticas_simbolos()
+    _garantir_colunas_criticas_anamnese()
+    _garantir_tabela_quadro_avisos()
+
+
 def _carregar_router_dinamico(nome: str, arquivo: str):
     caminho = Path(__file__).resolve().parent / "routes" / arquivo
     spec = spec_from_file_location(nome, caminho)
@@ -375,10 +395,7 @@ quadro_avisos_router = _carregar_router_dinamico("routes.quadro_de_avisos", "qua
 def _iniciar_bootstrap():
     import threading
 
-    _garantir_colunas_criticas_usuarios()
-    _garantir_colunas_criticas_simbolos()
-    _garantir_colunas_criticas_anamnese()
-    _garantir_tabela_quadro_avisos()
+    _garantir_schema_compatibilidade_startup()
 
     if str(os.getenv("BRANA_SKIP_BOOTSTRAP", "")).strip().lower() in {"1", "true", "yes", "sim"}:
         return

@@ -1043,3 +1043,43 @@ Resumo objetivo:
 - nenhuma interacao com AWS foi feita por este ambiente
 - nenhum commit foi criado
 - nenhum push Git foi feito
+
+## 28. Bloqueio central de schema-compatibilidade no startup
+
+A etapa atual fechou uma pendencia operacional importante: o backend agora bloqueia automaticamente o DDL/DML de compatibilidade quando `BRANA_ALLOW_SCHEMA_COMPAT_APPLY` nao esta explicitamente habilitada.
+
+### O que mudou
+
+- a decisao foi centralizada em `backend/services/runtime_profile_service.py`;
+- `backend/main.py` consulta essa politica antes de executar qualquer rotina aditiva de schema no startup;
+- quando bloqueado, o startup registra o aviso e nao executa `ALTER TABLE`, `CREATE TABLE` ou outra escrita automatica de compatibilidade;
+- o caminho manual continua sendo o script versionado `backend/scripts/aplicar_compatibilidade_schema.py`.
+
+### Validacoes feitas
+
+- build local com `--platform linux/amd64`;
+- `--provenance=false` ativo;
+- `--sbom=false` ativo;
+- imagem local criada como `brana-backend:aws-foundation-scan1`;
+- tag local do ECR criada apenas localmente, sem `push`;
+- `/health`, `/app` e `/frontend/` responderam HTTP 200;
+- processo executando como usuario nao root `brana`;
+- banco temporario e descartavel usado apenas no smoke test;
+- nenhum banco real foi acessado;
+- nenhuma migration foi executada;
+- nenhum `Base.metadata.create_all` foi executado no cenario bloqueado.
+
+### Conclusao operacional
+
+A imagem local ficou pronta para a etapa manual do proprietario. A publicacao no ECR e o scan continuam pendentes e devem ser feitos apenas pelo proprietario no ambiente dele.
+
+### Inventario das rotinas automaticas
+
+- `backend/main.py` -> `Base.metadata.create_all(bind=engine)` e `seed_tiss_tipo_atendimento(conn)`; momento: import do modulo; bloqueio: `RUN_SCHEMA_BOOTSTRAP`;
+- `backend/main.py` -> `_garantir_colunas_criticas_usuarios()`;
+- `backend/main.py` -> `_garantir_colunas_criticas_simbolos()`;
+- `backend/main.py` -> `_garantir_colunas_criticas_anamnese()`;
+- `backend/main.py` -> `_garantir_tabela_quadro_avisos()`; todas no startup HTTP e agora bloqueadas por `_garantir_schema_compatibilidade_startup()` + `schema_compat_apply_allowed(...)`;
+- `backend/database.py` -> `ensure_user_auth_schema()`; chamada explicita, nao executada quando a protecao central bloqueia;
+- `backend/services/runtime_bootstrap_service.py` -> `run_runtime_bootstrap_global()`; thread de bootstrap runtime bloqueada por `BRANA_ENABLE_RUNTIME_BOOTSTRAP`, `BRANA_SKIP_BOOTSTRAP`, `BRANA_ALLOW_HTTP_RUNTIME_BOOTSTRAP`;
+- `backend/scripts/aplicar_compatibilidade_schema.py` -> `aplicar_compatibilidade_schema()`; execucao manual, bloqueada em producao sem `BRANA_ALLOW_SCHEMA_COMPAT_APPLY`.

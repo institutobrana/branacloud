@@ -35,3 +35,14 @@ def resolve_runtime_policy() -> RuntimePolicy:
         allow_http_runtime_bootstrap=env_flag("BRANA_ALLOW_HTTP_RUNTIME_BOOTSTRAP", False),
         allow_schema_compat_apply=env_flag("BRANA_ALLOW_SCHEMA_COMPAT_APPLY", False),
     )
+
+
+def schema_compat_apply_allowed(policy: RuntimePolicy | None = None) -> bool:
+    """Centraliza a decisao de liberar DDL/DML automatico de compatibilidade.
+
+    A aplicacao automatica so acontece quando a flag explicita esta ligada.
+    Qualquer valor ausente ou invalido continua negando a aplicacao.
+    """
+
+    runtime_policy = policy or resolve_runtime_policy()
+    return bool(runtime_policy.allow_schema_compat_apply)
