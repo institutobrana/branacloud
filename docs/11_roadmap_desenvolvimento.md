@@ -894,6 +894,7 @@ Atualizacao da rodada:
 * Auditoria funcional de Medicamentos completada com validacao em runtime do Brana Cloud legado em `8000` e confirmacao de dependencias reais no backend e banco.
 * O contrato funcional foi formalizado em `docs/contrato_funcional_medicamentos_frontend_react.md`.
 * O plano modular foi formalizado em `docs/plano_implementacao_medicamentos_frontend_react.md`.
+* O teste E2E real de Medicamentos foi estabilizado e passou a reprovar o cenario de restauracao quando necessario, antes da correcao final da composicao de colunas; depois da correcao minima, a mesma sequencia passou em runtime.
 * A implementacao ainda nao foi iniciada.
 
 ---

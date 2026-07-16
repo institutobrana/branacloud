@@ -363,9 +363,10 @@ test('ServicosProteticoPage confirma exclusao por estado controlado', () => {
   assert.ok(source.includes('confirmDeleteService'));
   assert.ok(source.includes('maskClosable={!deleteConfirmState.loading}'));
   assert.ok(source.includes('keyboard={!deleteConfirmState.loading}'));
-  assert.ok(source.includes('Excluindo...'));
-  assert.ok(source.includes('Cancelar'));
-  assert.ok(source.includes('Excluir'));
+  assert.ok(source.includes("import { Alert, Button, Modal, Typography } from 'antd';"));
+  assert.ok(source.includes('loading={deleteConfirmState.loading}'));
+  assert.ok(source.includes('Não'));
+  assert.ok(source.includes('Sim'));
 });
 
 test('ServicosProteticoCSS integra moldura e footer', () => {

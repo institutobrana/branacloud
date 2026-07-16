@@ -1,4 +1,4 @@
-import { Alert, Modal, Typography } from 'antd';
+import { Alert, Button, Modal, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { ServicoProteticoModal } from './components/ServicoProteticoModal.jsx';
@@ -418,24 +418,24 @@ export function ServicosProteticoPage() {
         keyboard={!deleteConfirmState.loading}
         onCancel={closeDeleteConfirm}
         footer={[
-          <button
+          <Button
             key="cancel"
-            type="button"
-            className="auxiliary-shell-button"
+            type="default"
             onClick={closeDeleteConfirm}
             disabled={deleteConfirmState.loading}
           >
-            Cancelar
-          </button>,
-          <button
+            Não
+          </Button>,
+          <Button
             key="delete"
-            type="button"
-            className="auxiliary-shell-button danger"
+            type="primary"
+            danger
             onClick={() => void confirmDeleteService()}
             disabled={deleteConfirmState.loading}
+            loading={deleteConfirmState.loading}
           >
-            {deleteConfirmState.loading ? 'Excluindo...' : 'Excluir'}
-          </button>,
+            Sim
+          </Button>,
         ]}
       >
         <Typography.Paragraph>
