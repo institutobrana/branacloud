@@ -1,0 +1,215 @@
+.servicos-protetico-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.servicos-protetico-table-shell {
+  width: min(82vw, 1040px);
+  max-width: calc(100% - 120px);
+  min-width: 860px;
+  margin-inline: auto;
+}
+
+.servicos-protetico-table-frame {
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 100%;
+  border: 1px solid var(--brana-border-subtle);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--brana-surface-card);
+}
+
+.servicos-protetico-table-grid {
+  width: 100%;
+  min-width: 0;
+}
+
+.servicos-protetico-table-shell .ant-table-wrapper {
+  width: 100%;
+}
+
+.servicos-protetico-table .ant-table {
+  width: 100%;
+}
+
+.servicos-protetico-table .ant-table-container {
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.servicos-protetico-table .ant-table-cell {
+  vertical-align: middle;
+}
+
+.servicos-protetico-table .ant-table-thead > tr > th,
+.servicos-protetico-table .ant-table-tbody > tr > td,
+.servicos-protetico-table .ant-table-selection-column {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.servicos-protetico-table .ant-table-thead > tr > th {
+  height: 32px;
+  min-height: 32px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.servicos-protetico-table .ant-table-tbody > tr > td {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.servicos-protetico-table .ant-table-tbody > tr > td:nth-child(2) {
+  text-overflow: ellipsis;
+}
+
+.servicos-protetico-table .auxiliary-table-name-text,
+.servicos-protetico-table .ant-typography {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.servicos-protetico-table .ant-table-selection-column {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+}
+
+.servicos-protetico-table .ant-table-cell-scrollbar {
+  box-shadow: none;
+}
+
+.servicos-protetico-table .ant-table-content,
+.servicos-protetico-table .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.servicos-protetico-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 24px;
+  padding: 2px 10px 0;
+  border-top: 1px solid var(--brana-border-subtle);
+  background: var(--brana-surface-card);
+  color: var(--brana-text-secondary);
+}
+
+.servicos-protetico-table-footer .ant-typography {
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.servicos-protetico-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.servicos-protetico-toolbar-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.servicos-protetico-toolbar-filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.servicos-protetico-shell-band {
+  padding-left: 0;
+}
+
+.servicos-protetico-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.servicos-protetico-field > span {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.servicos-protetico-field .ant-select {
+  width: clamp(300px, 26vw, 360px) !important;
+  min-width: 300px;
+  max-width: min(360px, 100%);
+}
+
+.servicos-protetico-toolbar-filters .ant-select,
+.servicos-protetico-toolbar-filters .ant-input-search {
+  width: 100%;
+}
+
+.servicos-protetico-toolbar-filters .ant-select-selector {
+  border-radius: 8px !important;
+}
+
+.servicos-protetico-toolbar-filters .ant-select-selector,
+.servicos-protetico-toolbar-filters .ant-input,
+.servicos-protetico-toolbar-filters .ant-input-affix-wrapper {
+  min-height: 30px !important;
+  height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 12px;
+}
+
+@media (max-width: 1280px) {
+  .servicos-protetico-table-shell {
+    width: min(84vw, 960px);
+    min-width: 780px;
+  }
+
+  .servicos-protetico-toolbar-row {
+    gap: 10px;
+  }
+
+  .servicos-protetico-toolbar-filters {
+    flex: 0 1 auto;
+  }
+
+  .servicos-protetico-field .ant-select {
+    width: clamp(280px, 24vw, 320px) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .servicos-protetico-table-shell {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .servicos-protetico-field .ant-select {
+    width: min(100%, 280px) !important;
+  }
+}

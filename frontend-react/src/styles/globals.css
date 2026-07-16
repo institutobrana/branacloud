@@ -710,7 +710,7 @@ body {
   border-radius: 0;
   background: var(--brana-surface-commandbar);
   color: var(--brana-text-inverse);
-  box-shadow: inset 0 -1px 0 var(--brana-divider);
+  box-shadow: none;
   margin-left: 0;
   margin-right: 0;
   position: relative;
@@ -2533,6 +2533,29 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.auxiliary-filter-menu-filter {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 6px;
+}
+
+.auxiliary-filter-menu-filter .ant-input {
+  height: 28px;
+  font-size: 12px;
+}
+
+.auxiliary-filter-menu-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auxiliary-filter-menu-actions .ant-btn {
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11px;
+  border-radius: 6px;
 }
 
 .auxiliary-filter-menu-columns {
