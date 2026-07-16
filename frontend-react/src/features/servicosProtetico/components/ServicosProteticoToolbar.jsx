@@ -49,7 +49,7 @@ export function ServicosProteticoToolbar({
 
   const canCreate = Boolean(proteticoId) && !loading;
   const canEdit = Boolean(proteticoId) && resolvedHasSelection && !loading;
-  const canDelete = Boolean(proteticoId) && resolvedHasSelection && !loading;
+  const canDelete = Boolean(proteticoId) && resolvedHasSelection && !loading && !resolvedSelectionDisabled;
   const canPrint = Boolean(proteticoId) && !loading;
 
   return (

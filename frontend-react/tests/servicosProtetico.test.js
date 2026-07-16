@@ -349,6 +349,7 @@ test('ServicosProteticoToolbar expõe a ação de impressão no contrato', () =>
   assert.ok(source.includes('onImprimeServico'));
   assert.ok(source.includes("action: 'imprime-servico'"));
   assert.ok(source.includes('canPrint'));
+  assert.ok(source.includes('!resolvedSelectionDisabled'));
 });
 
 test('ServicosProteticoCSS integra moldura e footer', () => {
