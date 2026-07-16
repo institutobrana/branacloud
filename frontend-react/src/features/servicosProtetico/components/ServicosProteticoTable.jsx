@@ -81,8 +81,8 @@ export function ServicosProteticoTable({
       title: renderHeader('indice', 'Índice'),
       dataIndex: 'indice',
       width: 104,
-      align: 'right',
-      render: (value) => formatMoney(value),
+      align: 'center',
+      render: (value) => <span title={value || ''}>{value || '-'}</span>,
     },
     {
       key: 'preco',

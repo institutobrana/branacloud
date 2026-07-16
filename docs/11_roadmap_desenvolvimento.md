@@ -43,7 +43,8 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 ## Estado validado recente
 
-- A frente `Tabelas -> Servicos de protetico` teve a fundacao visual e funcional da listagem concluida no novo frontend React, com rota, shell, toolbar, combo de protetico, leitura de proteticos e servicos, filtros por coluna, ordenacao, visibilidade de colunas, selecao, rodape integrado e contador validados; Novo servico, Altera, Elimina e Imprime permanecem pendentes.
+- A frente `Tabelas -> Servicos de protetico` concluiu a listagem e o fluxo `Novo servico` no novo frontend React, com rota, shell, toolbar, combo de protetico, leitura de proteticos e servicos, filtros por coluna, ordenacao, visibilidade de colunas, selecao, rodape integrado, contador, modal compacto e salvamento validado em runtime; `Altera`, `Elimina` e `Imprime` permanecem pendentes.
+- A etapa de backend/banco de `Tabelas -> Servicos de protetico` foi fechada com `codigo` e `descricao` no modelo, na rota e no script aditivo; o backfill local de `codigo` foi aplicado com sucesso e o contrato React de `Novo servico` foi validado.
 - Login, senha interna e perfis: validado manualmente.
 - Validacao runtime do backend de Orcamento concluida com login real em `POST /login` usando `gleissontel@gmail.com` e validacao dos endpoints principais `GET /orcamento/pacientes/1/tratamentos`, `GET /orcamento/tratamentos/1` e `POST /orcamento/tratamentos/1/impressao`.
 - Hotfix de acesso do usuario `gleissontel@gmail.com` executado e validado com login real; o login global do sistema continuou funcional e a trilha de Tratamento permanece pausada ate o aceite final desta restauracao.
@@ -6285,3 +6286,44 @@ Observacoes:
 - Como o perfil ativo permaneceu `Perfil Flexivel`, `horas_ano`, `cfph`, `cfpm` e o `dashboard-preview` de Procedimentos permaneceram no baseline.
 - A restauracao `2 -> 1` tambem foi feita pela UI, com um unico `POST /cenario`, e o `GET /cenario` voltou ao baseline completo.
 - O Perfil Flexivel e a matriz flexivel permaneceram intactos.
+
+## Etapa 4C.13E do Cenario anual
+
+- Foi identificada uma mutacao local transitoria apos `Gravar` no frontend React do Cenário anual.
+- O POST de salvamento retornava apenas `{ detail: "Cenario salvo com sucesso." }`, e a resposta nao podia ser tratada como cenário completo.
+- A correcao aplicada no hook preserva o estado atual quando a resposta nao contem campos do cenário.
+- O baseline persistido comprovado permanece `10,5 / 20 / 210 / 8 / 1` com `1680 / 100800 / 420`.
+- A comparacao de Procedimentos continua pendente.
+
+## 2026-07-16 - Cenario anual: consolidacao da propagacao comparativa em Procedimentos
+
+- A propagacao comparativa em `Procedimentos` foi comprovada com o procedimento `1065 - ABERTURA IMPLANTE`, usando um request idempotente em cinco estados consecutivos do Cenario anual.
+- Os estados A, B e C acompanharam corretamente as mudancas de `cfpm` do Cenario persistido, e as leituras D/B e E/A voltaram exatamente aos valores esperados.
+- O backend de Procedimentos usa `custo_fph = cfpm * tempo`, `custo_proc = custo_fph + custo_material + custo_laboratorial` e recalcula `valor_minimo` a partir dos custos e percentuais aplicaveis.
+- O baseline final do Cenario anual foi restaurado para `modo_horas = Perfil Flexivel`, `horas_ano = 1449`, `cfph = 138.88888888888889` e `cfpm = 2.314814814814815`.
+- A Etapa 4C.13 foi consolidada como funcionalmente concluida do ponto de vista de integracao e documentacao; fechamento Git e commit seletivo seguem como pendencias operacionais.
+
+## 2026-07-16 - Cenario anual: validacao dos fluxos de fechamento sem salvar
+
+- A validacao autenticada real confirmou `Cancelar`, botao `X`, tecla `Esc` e clique fora do modal como caminhos de fechamento sem persistencia.
+- O modal permanece configurado com `keyboard = true` e `maskClosable = true`, e `onCancel` encerra a pagina sem disparar `POST /api/cenario`.
+- A alteracao temporaria de `ir` de `10` para `11` foi descartada em todos os quatro fluxos; a reabertura e o F5 retornaram ao baseline `ir = 10`.
+- Nenhum caminho de fechamento contaminou outras abas, nao houve defaults `12 / 22 / 264`, e o preview de Procedimentos permaneceu coerente com o baseline.
+- A Etapa 4C.14 fica documentada como validada funcionalmente, sem alteracao de codigo.
+
+## 2026-07-16 - Cenario anual: validacao de erro no GET e no POST
+
+- A validacao autenticada real confirmou erro controlado de GET em `GET /api/cenario` e erro controlado de POST em `POST /api/cenario`.
+- No GET falho, o loading terminou, a UI apresentou erro sem cair em defaults, e a recuperacao posterior por remoção da interceptacao voltou ao baseline integral.
+- No POST falho, o saving terminou, a UI exibiu erro sem sucesso falso, a alteracao `ir = 11` nao foi persistida, e a nova tentativa sem interceptacao salvou e restaurou corretamente o baseline.
+- O preview de Procedimentos permaneceu coerente com o baseline final e nenhuma interceptacao persistiu apos o teste.
+- A Etapa 4C.15 fica documentada como validada funcionalmente, sem alteracao de codigo.
+
+- A Etapa 4C.15B foi validada por testes automatizados controlados do hook/API do Cenário anual, sem depender de interceptacao instavel no navegador.
+- O GET falho terminou com loading encerrado, erro controlado e sem mutacao para defaults; a recuperacao posterior voltou ao baseline completo.
+- O POST falho terminou com saving encerrado, sem sucesso falso e com preservacao do estado atual; a nova tentativa concluiu com sucesso.
+- A API passou a registrar de forma reprodutivel os erros estruturados com detail, e o smoke normal no navegador permaneceu estavel após os testes.
+
+- A Etapa 4C.16 foi validada com guarda de salvamento concorrente no hook do Cenário anual, testes automatizados e smoke normal autenticado.
+- O duplo clique em Gravar passou a gerar um unico POST, sem sucesso duplicado, e a restauracao final voltou ao baseline `ir = 10`.
+- O fluxo permaneceu sem alteracao de backend, banco ou Procedimentos.

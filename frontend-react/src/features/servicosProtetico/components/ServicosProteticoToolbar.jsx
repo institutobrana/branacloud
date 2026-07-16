@@ -4,17 +4,30 @@ export function ServicosProteticoToolbar({
   proteticoId,
   proteticos,
   loading,
+  selectionDisabled = false,
   onProteticoChange,
+  onNovoServico,
 }) {
   const options = proteticos.map((item) => ({
     value: item.id,
     label: item.nome || `Protético ${item.id}`,
   }));
 
+  const canCreate = Boolean(proteticoId) && !loading;
+
   return (
     <div className="servicos-protetico-toolbar-row" role="toolbar" aria-label="Ações do módulo serviços de protético">
       <div className="materiais-estoque-toolbar-actions servicos-protetico-toolbar-actions">
-        <button type="button" className="auxiliary-shell-button primary" disabled>
+        <button
+          type="button"
+          className="auxiliary-shell-button primary"
+          disabled={!canCreate}
+          onClick={() => {
+            if (!canCreate) return;
+            window.dispatchEvent(new CustomEvent('brana-servicos-protetico-toolbar-action', { detail: { action: 'novo-servico' } }));
+            onNovoServico?.();
+          }}
+        >
           Novo serviço...
         </button>
         <button type="button" className="auxiliary-shell-button" disabled>
@@ -33,6 +46,7 @@ export function ServicosProteticoToolbar({
           value={proteticoId}
           options={options}
           loading={loading}
+          disabled={selectionDisabled}
           onChange={onProteticoChange}
         />
       </div>

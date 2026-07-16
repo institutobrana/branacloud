@@ -13,6 +13,14 @@ export const INITIAL_VISIBLE_COLUMNS = {
   prazo: true,
 };
 
+export const EMPTY_FILTERS = {
+  codigo: '',
+  nome: '',
+  indice: '',
+  preco: '',
+  prazo: '',
+};
+
 export function toggleVisibleColumnMap(current, key) {
   const next = { ...(current || INITIAL_VISIBLE_COLUMNS) };
   const activeKeys = Object.entries(next).filter(([, value]) => value !== false);
@@ -33,14 +41,9 @@ export function useServicosProtetico() {
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const [sortState, setSortState] = useState({ key: 'nome', order: 'asc' });
-  const [filters, setFilters] = useState({
-    codigo: '',
-    nome: '',
-    indice: '',
-    preco: '',
-    prazo: '',
-  });
+  const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [visibleColumns, setVisibleColumns] = useState(INITIAL_VISIBLE_COLUMNS);
+  const [reloadToken, setReloadToken] = useState(0);
   const loadSeqRef = useRef(createRequestSequenceGate());
 
   const loadProteticos = async () => {
@@ -98,16 +101,10 @@ export function useServicosProtetico() {
 
   useEffect(() => {
     setSelectedId(null);
-    setFilters({
-      codigo: '',
-      nome: '',
-      indice: '',
-      preco: '',
-      prazo: '',
-    });
+    setFilters(EMPTY_FILTERS);
     void loadServicos(selectedProteticoId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProteticoId]);
+  }, [selectedProteticoId, reloadToken]);
 
   const filteredServicos = useMemo(() => filterServicos(servicos, filters), [filters, servicos]);
   const sortedServicos = useMemo(() => sortServicos(filteredServicos, sortState), [filteredServicos, sortState]);
@@ -132,14 +129,12 @@ export function useServicosProtetico() {
     loadSeqRef.current.bump();
     setSelectedId(null);
     setServicos([]);
-    setFilters({
-      codigo: '',
-      nome: '',
-      indice: '',
-      preco: '',
-      prazo: '',
-    });
+    setFilters(EMPTY_FILTERS);
     setSelectedProteticoId(Number(value || 0) || null);
+  };
+
+  const refreshServicos = () => {
+    setReloadToken((current) => current + 1);
   };
 
   const handleToggleVisibleColumn = (key) => {
@@ -165,6 +160,7 @@ export function useServicosProtetico() {
     setSortState,
     filters,
     setFilters,
+    refreshServicos,
     visibleColumns,
     handleToggleVisibleColumn,
   };

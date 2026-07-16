@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 
-export function ProteticoSelect({ value, options, loading, onChange }) {
+export function ProteticoSelect({ value, options, loading, disabled = false, onChange }) {
   return (
     <label className="servicos-protetico-field">
       <span>Protético</span>
@@ -8,6 +8,7 @@ export function ProteticoSelect({ value, options, loading, onChange }) {
         value={value ?? undefined}
         options={options}
         loading={loading}
+        disabled={disabled}
         onChange={onChange}
         placeholder="Selecione"
         allowClear={false}

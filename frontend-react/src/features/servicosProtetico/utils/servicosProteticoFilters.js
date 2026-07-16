@@ -10,14 +10,15 @@ export function filterServicos(items, filters = {}) {
   return (Array.isArray(items) ? items : []).filter((item) => {
     const codigo = normalizeText(item?.codigo);
     const nome = normalizeText(item?.nome);
-    const indice = normalizeText(formatMoney(item?.indice));
+    const indiceText = normalizeText(String(item?.indice ?? ''));
+    const indiceMoney = normalizeText(formatMoney(item?.indice));
     const preco = normalizeText(formatMoney(item?.preco));
     const prazo = normalizeText(String(item?.prazo ?? ''));
 
     return (
       (!codigoTermo || codigo.includes(codigoTermo)) &&
       (!nomeTermo || nome.includes(nomeTermo)) &&
-      (!indiceTermo || indice.includes(indiceTermo)) &&
+      (!indiceTermo || indiceText.includes(indiceTermo) || indiceMoney.includes(indiceTermo)) &&
       (!precoTermo || preco.includes(precoTermo)) &&
       (!prazoTermo || prazo.includes(prazoTermo))
     );
@@ -30,8 +31,8 @@ export function sortServicos(items, sortState = {}) {
   if (!key || !order) return next;
 
   next.sort((left, right) => {
-    const leftValue = key === 'preco' || key === 'indice' ? Number(left?.[key] || 0) : normalizeText(left?.[key] ?? '');
-    const rightValue = key === 'preco' || key === 'indice' ? Number(right?.[key] || 0) : normalizeText(right?.[key] ?? '');
+    const leftValue = key === 'preco' ? Number(left?.[key] || 0) : normalizeText(left?.[key] ?? '');
+    const rightValue = key === 'preco' ? Number(right?.[key] || 0) : normalizeText(right?.[key] ?? '');
     const comparison =
       typeof leftValue === 'number' && typeof rightValue === 'number'
         ? leftValue - rightValue

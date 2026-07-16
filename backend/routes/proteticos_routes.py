@@ -1,7 +1,8 @@
 import unicodedata
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -25,6 +26,8 @@ class ServicoPayload(BaseModel):
     indice: str = "R$"
     preco: float = 0
     prazo: int = 0
+    codigo: str | None = Field(default=None, max_length=30)
+    descricao: str | None = None
 
 
 def _sort_key(texto: str) -> str:
@@ -43,11 +46,89 @@ def _protetico_to_dict(item: Protetico) -> dict:
 def _servico_to_dict(item: ServicoProtetico) -> dict:
     return {
         "id": int(item.id),
+        "codigo": str(item.codigo).strip() if item.codigo is not None else None,
         "nome": str(item.nome or "").strip(),
         "indice": str(item.indice or "R$").strip() or "R$",
         "preco": float(item.preco or 0),
         "prazo": int(item.prazo or 0),
+        "descricao": str(item.descricao).strip() if item.descricao is not None else None,
         "protetico_id": int(item.protetico_id),
+    }
+
+
+def _normalize_codigo(value: str | None) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    if len(text) > 30:
+        raise HTTPException(status_code=400, detail="Informe um codigo com ate 30 caracteres.")
+    return text
+
+
+def _normalize_descricao(value: str | None) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _load_servico_codigo_duplicado(
+    db: Session,
+    clinica_id: int,
+    protetico_id: int,
+    codigo: str,
+    servico_id: int | None = None,
+) -> ServicoProtetico | None:
+    query = (
+        db.query(ServicoProtetico)
+        .filter(
+            ServicoProtetico.clinica_id == clinica_id,
+            ServicoProtetico.protetico_id == protetico_id,
+            ServicoProtetico.codigo == codigo,
+        )
+    )
+    if servico_id is not None:
+        query = query.filter(ServicoProtetico.id != servico_id)
+    return query.first()
+
+
+def _normalizar_servico_payload(
+    payload: ServicoPayload,
+    db: Session,
+    current_user: Usuario,
+    protetico_id: int,
+    servico_id: int | None = None,
+) -> dict:
+    codigo = _normalize_codigo(payload.codigo)
+    descricao = _normalize_descricao(payload.descricao)
+    nome = str(payload.nome or "").strip()
+    indice = str(payload.indice or "R$").strip() or "R$"
+    prazo = max(0, int(payload.prazo or 0))
+
+    if not nome:
+        raise HTTPException(status_code=400, detail="Informe o nome do servico.")
+    if codigo:
+        duplicado = _load_servico_codigo_duplicado(
+            db,
+            current_user.clinica_id,
+            protetico_id,
+            codigo,
+            servico_id=servico_id,
+        )
+        if duplicado:
+            raise HTTPException(
+                status_code=409,
+                detail="Ja existe um servico com este codigo para o protetico selecionado.",
+            )
+    return {
+        "codigo": codigo,
+        "descricao": descricao,
+        "nome": nome,
+        "indice": indice,
+        "preco": float(payload.preco or 0),
+        "prazo": prazo,
     }
 
 
@@ -187,8 +268,6 @@ def criar_servico(
 ):
     _load_protetico_or_404(db, current_user.clinica_id, protetico_id)
     nome = str(payload.nome or "").strip()
-    indice = str(payload.indice or "R$").strip() or "R$"
-    prazo = max(0, int(payload.prazo or 0))
     if not nome:
         raise HTTPException(status_code=400, detail="Informe o nome do servico.")
     existe = (
@@ -201,16 +280,21 @@ def criar_servico(
     )
     if existe:
         raise HTTPException(status_code=400, detail="Ja existe um servico com esse nome para este protetico.")
+    normalized = _normalizar_servico_payload(payload, db, current_user, protetico_id)
     item = ServicoProtetico(
         protetico_id=protetico_id,
         clinica_id=current_user.clinica_id,
-        nome=nome,
-        indice=indice,
-        preco=float(payload.preco or 0),
-        prazo=prazo,
+        **normalized,
     )
     db.add(item)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Ja existe um servico com este codigo para o protetico selecionado.",
+        ) from exc
     db.refresh(item)
     return _servico_to_dict(item)
 
@@ -224,8 +308,6 @@ def alterar_servico(
 ):
     item = _load_servico_or_404(db, current_user.clinica_id, servico_id)
     nome = str(payload.nome or "").strip()
-    indice = str(payload.indice or "R$").strip() or "R$"
-    prazo = max(0, int(payload.prazo or 0))
     if not nome:
         raise HTTPException(status_code=400, detail="Informe o nome do servico.")
     existe = (
@@ -239,11 +321,17 @@ def alterar_servico(
     )
     if existe:
         raise HTTPException(status_code=400, detail="Ja existe um servico com esse nome para este protetico.")
-    item.nome = nome
-    item.indice = indice
-    item.preco = float(payload.preco or 0)
-    item.prazo = prazo
-    db.commit()
+    normalized = _normalizar_servico_payload(payload, db, current_user, item.protetico_id, servico_id=int(item.id))
+    for key, value in normalized.items():
+        setattr(item, key, value)
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Ja existe um servico com este codigo para o protetico selecionado.",
+        ) from exc
     db.refresh(item)
     return _servico_to_dict(item)
 

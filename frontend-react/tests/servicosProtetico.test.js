@@ -2,9 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { listarProteticos, listarServicosProtetico } from '../src/features/servicosProtetico/servicosProteticoApi.js';
+import { listarProteticos, listarServicosProtetico, criarServicoProtetico } from '../src/features/servicosProtetico/servicosProteticoApi.js';
 import { filterServicos, sortServicos } from '../src/features/servicosProtetico/utils/servicosProteticoFilters.js';
 import { formatMoney } from '../src/features/servicosProtetico/utils/servicosProteticoFormatters.js';
+import { buildServicoProteticoCreatePayload } from '../src/features/servicosProtetico/utils/servicosProteticoCreatePayload.js';
+import { validateServicoProteticoValues } from '../src/features/servicosProtetico/utils/servicosProteticoValidators.js';
 import { normalizeProtetico, normalizeServico } from '../src/features/servicosProtetico/utils/servicosProteticoMappers.js';
 import { createRequestSequenceGate } from '../src/features/servicosProtetico/utils/servicosProteticoRace.js';
 import { INITIAL_VISIBLE_COLUMNS, toggleVisibleColumnMap } from '../src/features/servicosProtetico/hooks/useServicosProtetico.js';
@@ -13,16 +15,29 @@ test('normalizeProtetico preserva id e nome', () => {
   assert.deepEqual(normalizeProtetico({ id: '7', nome: '  Laboratório A  ' }), { id: 7, nome: 'Laboratório A' });
 });
 
-test('normalizeServico preserva id, zero e campos principais', () => {
-  assert.deepEqual(normalizeServico({ id: '12', protetico_id: '3', nome: '  Acrilização  ', indice: '0', preco: '0', prazo: '0' }), {
-    id: 12,
-    protetico_id: 3,
-    codigo: 12,
-    nome: 'Acrilização',
-    indice: 0,
-    preco: 0,
-    prazo: 0,
-  });
+test('normalizeServico preserva id e campos do contrato', () => {
+  assert.deepEqual(
+    normalizeServico({
+      id: '12',
+      protetico_id: '3',
+      nome: '  Acrilização  ',
+      codigo: '  PRT-001  ',
+      descricao: '  Linha 1  ',
+      indice: 'R$',
+      preco: '0',
+      prazo: '0',
+    }),
+    {
+      id: 12,
+      protetico_id: 3,
+      codigo: 'PRT-001',
+      descricao: 'Linha 1',
+      nome: 'Acrilização',
+      indice: 'R$',
+      preco: 0,
+      prazo: 0,
+    },
+  );
 });
 
 test('formatMoney usa pt-BR e preserva zero', () => {
@@ -32,17 +47,17 @@ test('formatMoney usa pt-BR e preserva zero', () => {
 
 test('filterServicos combina filtros em AND', () => {
   const items = [
-    { codigo: 10, nome: 'Acrilização total', indice: 1.5, preco: 20, prazo: 3 },
-    { codigo: 11, nome: 'Acrilização parcial', indice: 1.5, preco: 25, prazo: 3 },
+    { codigo: '10', nome: 'Acrilização total', indice: '1.5', preco: 20, prazo: 3 },
+    { codigo: '11', nome: 'Acrilização parcial', indice: '1.5', preco: 25, prazo: 3 },
   ];
 
-  assert.deepEqual(filterServicos(items, { nome: 'acrilização', preco: '25,00' }).map((item) => item.codigo), [11]);
+  assert.deepEqual(filterServicos(items, { nome: 'acrilização', preco: '25,00' }).map((item) => item.codigo), ['11']);
 });
 
 test('filterServicos encontra serviço por codigo, nome, indice, preco e prazo', () => {
   const items = [
-    { codigo: 10, nome: 'Acrilização total', indice: 1.5, preco: 20, prazo: 3 },
-    { codigo: 11, nome: 'Prótese parcial', indice: 2.25, preco: 30, prazo: 7 },
+    { codigo: '10', nome: 'Acrilização total', indice: '1.5', preco: 20, prazo: 3 },
+    { codigo: '11', nome: 'Prótese parcial', indice: '2.25', preco: 30, prazo: 7 },
   ];
 
   assert.equal(filterServicos(items, { codigo: '10' }).length, 1);
@@ -52,18 +67,18 @@ test('filterServicos encontra serviço por codigo, nome, indice, preco e prazo',
   assert.equal(filterServicos(items, { prazo: '7' }).length, 1);
 });
 
-test('filterServicos ignora maiusculas e acentos no nome', () => {
-  const items = [{ codigo: 10, nome: 'Acrilização', indice: 1, preco: 1, prazo: 1 }];
+test('filterServicos ignora maiúsculas e acentos no nome', () => {
+  const items = [{ codigo: '10', nome: 'Acrilização', indice: '1', preco: 1, prazo: 1 }];
   assert.equal(filterServicos(items, { nome: 'ACRILIZACAO' }).length, 1);
 });
 
 test('sortServicos ordena por nome e por valor numerico', () => {
   const items = [
-    { codigo: 2, nome: 'B', indice: 3, preco: 20, prazo: 2 },
-    { codigo: 1, nome: 'A', indice: 1, preco: 10, prazo: 1 },
+    { codigo: '2', nome: 'B', indice: '3', preco: 20, prazo: 2 },
+    { codigo: '1', nome: 'A', indice: '1', preco: 10, prazo: 1 },
   ];
-  assert.deepEqual(sortServicos(items, { key: 'nome', order: 'asc' }).map((item) => item.codigo), [1, 2]);
-  assert.deepEqual(sortServicos(items, { key: 'preco', order: 'desc' }).map((item) => item.codigo), [2, 1]);
+  assert.deepEqual(sortServicos(items, { key: 'nome', order: 'asc' }).map((item) => item.codigo), ['1', '2']);
+  assert.deepEqual(sortServicos(items, { key: 'preco', order: 'desc' }).map((item) => item.codigo), ['2', '1']);
 });
 
 test('toggleVisibleColumnMap alterna visibilidade e preserva pelo menos uma coluna', () => {
@@ -126,14 +141,71 @@ test('listarServicosProtetico normaliza payload real', async () => {
     calls.push({ url, options });
     return {
       ok: true,
-      json: async () => ([{ id: 21, protetico_id: 7, nome: 'Serviço 1', indice: '1.25', preco: '10', prazo: '4' }]),
+      json: async () => ([{ id: 21, protetico_id: 7, nome: 'Serviço 1', codigo: 'PRT-021', descricao: 'Obs', indice: 'R$', preco: '10', prazo: '4' }]),
     };
   };
 
   try {
     const result = await listarServicosProtetico(7);
-    assert.deepEqual(result, [{ id: 21, protetico_id: 7, codigo: 21, nome: 'Serviço 1', indice: 1.25, preco: 10, prazo: 4 }]);
+    assert.deepEqual(result, [{ id: 21, protetico_id: 7, codigo: 'PRT-021', descricao: 'Obs', nome: 'Serviço 1', indice: 'R$', preco: 10, prazo: 4 }]);
     assert.equal(calls[0].url, '/api/proteticos/7/servicos');
+  } finally {
+    globalThis.fetch = originalFetch;
+    globalThis.window = originalWindow;
+  }
+});
+
+test('buildServicoProteticoCreatePayload normaliza valores pt-BR', () => {
+  assert.deepEqual(
+    buildServicoProteticoCreatePayload({
+      codigo: '  PRT-001  ',
+      nome: '  Acrilização  ',
+      indice: ' R$ ',
+      preco: '1.234,50',
+      prazo: ' 07 ',
+      descricao: '  Texto\nlinha 2  ',
+    }),
+    {
+      codigo: 'PRT-001',
+      nome: 'Acrilização',
+      indice: 'R$',
+      preco: 1234.5,
+      prazo: 7,
+      descricao: 'Texto\nlinha 2',
+    },
+  );
+});
+
+test('validateServicoProteticoValues acusa campos obrigatorios e formatos invalidos', () => {
+  const invalid = validateServicoProteticoValues({ codigo: '', nome: '', indice: '', preco: 'abc', prazo: 'x' });
+  assert.equal(invalid.valid, false);
+  assert.equal(Boolean(invalid.errors.codigo), true);
+  assert.equal(Boolean(invalid.errors.nome), true);
+  assert.equal(Boolean(invalid.errors.indice), true);
+  assert.equal(Boolean(invalid.errors.preco), true);
+  assert.equal(Boolean(invalid.errors.prazo), true);
+});
+
+test('criarServicoProtetico envia POST com payload normalizado', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalWindow = globalThis.window;
+  const calls = [];
+  globalThis.window = { localStorage: { getItem: () => 'token-z' } };
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, options });
+    return {
+      ok: true,
+      json: async () => ({ id: 31, protetico_id: 7, nome: 'Servico 1', codigo: 'PRT-031', descricao: 'Obs', indice: 'R$', preco: 10, prazo: 5 }),
+    };
+  };
+
+  try {
+    const result = await criarServicoProtetico(7, { codigo: 'PRT-031', nome: 'Servico 1', indice: 'R$', preco: 10, prazo: 5, descricao: 'Obs' });
+    assert.deepEqual(result, { id: 31, protetico_id: 7, codigo: 'PRT-031', descricao: 'Obs', nome: 'Servico 1', indice: 'R$', preco: 10, prazo: 5 });
+    assert.equal(calls[0].url, '/api/proteticos/7/servicos');
+    assert.equal(calls[0].options.method, 'POST');
+    assert.equal(calls[0].options.headers.Authorization, 'Bearer token-z');
+    assert.equal(JSON.parse(calls[0].options.body).codigo, 'PRT-031');
   } finally {
     globalThis.fetch = originalFetch;
     globalThis.window = originalWindow;
@@ -177,8 +249,33 @@ test('ServicosProteticoPage remove shell externo residual', () => {
   assert.ok(source.includes('onFilterChange={(key, value) => setFilters((current) => ({ ...current, [key]: value }))}'));
   assert.ok(source.includes('visibleColumns={visibleColumns}'));
   assert.ok(source.includes('onToggleVisibleColumn={handleToggleVisibleColumn}'));
+  assert.ok(source.includes('error={createError}'));
   assert.ok(!source.includes('BranaCard'));
   assert.ok(!source.includes('servicos-protetico-page-footer'));
+});
+
+test('ServicoProteticoForm compacta Indice e Preco na mesma linha', () => {
+  const source = readFileSync(new URL('../src/features/servicosProtetico/components/ServicoProteticoForm.jsx', import.meta.url), 'utf8');
+
+  assert.ok(source.includes('servicos-protetico-form-row'));
+  assert.ok(source.includes('servicos-protetico-form-item-half'));
+  assert.ok(source.includes('name="indice"'));
+  assert.ok(source.includes('name="preco"'));
+  assert.ok(source.indexOf('name="indice"') < source.indexOf('name="preco"'));
+  assert.ok(source.includes('autoSize={{ minRows: 2, maxRows: 4 }}'));
+});
+
+test('ServicoProteticoModal preserva contrato e reduz altura visual', () => {
+  const source = readFileSync(new URL('../src/features/servicosProtetico/components/ServicoProteticoModal.jsx', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../src/features/servicosProtetico/servicosProtetico.css', import.meta.url), 'utf8');
+
+  assert.ok(source.includes('width={420}'));
+  assert.ok(source.includes('className="servicos-protetico-modal"'));
+  assert.ok(source.includes('message={error}'));
+  assert.ok(css.includes('.servicos-protetico-modal .ant-modal-body'));
+  assert.ok(css.includes('.servicos-protetico-form-row'));
+  assert.ok(css.includes('.servicos-protetico-form-item'));
+  assert.ok(css.includes('.servicos-protetico-modal-actions'));
 });
 
 test('ServicosProteticoCSS integra moldura e footer', () => {

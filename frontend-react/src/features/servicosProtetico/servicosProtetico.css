@@ -113,6 +113,98 @@
   line-height: 1.2;
 }
 
+.servicos-protetico-modal .ant-modal-body {
+  padding-top: 14px;
+  padding-bottom: 12px;
+}
+
+.servicos-protetico-modal .ant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.servicos-protetico-modal-protetico {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+.servicos-protetico-modal-error {
+  margin-bottom: 0;
+}
+
+.servicos-protetico-form-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.servicos-protetico-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.servicos-protetico-form-item {
+  margin-bottom: 10px;
+}
+
+.servicos-protetico-form-item .ant-form-item-label {
+  padding-bottom: 3px;
+}
+
+.servicos-protetico-form-item .ant-form-item-label > label {
+  height: auto;
+  line-height: 1.05;
+  font-size: 12px;
+}
+
+.servicos-protetico-form-item .ant-form-item-control-input {
+  min-height: 30px;
+}
+
+.servicos-protetico-form-item-half {
+  min-width: 0;
+}
+
+.servicos-protetico-form-item .ant-input,
+.servicos-protetico-form-item .ant-input-number,
+.servicos-protetico-form-item .ant-select-selector,
+.servicos-protetico-form-item .ant-input-affix-wrapper {
+  min-height: 30px;
+}
+
+.servicos-protetico-form-item .ant-input-number-input,
+.servicos-protetico-form-item .ant-input,
+.servicos-protetico-form-item .ant-select-selection-item,
+.servicos-protetico-form-item .ant-select-selection-search-input {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.servicos-protetico-form-item .ant-input-textarea {
+  min-height: 70px;
+}
+
+.servicos-protetico-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+@media (max-width: 760px) {
+  .servicos-protetico-form-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
 .servicos-protetico-toolbar-row {
   display: flex;
   align-items: center;

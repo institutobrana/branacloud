@@ -53,3 +53,22 @@ export async function listarServicosProtetico(proteticoId) {
   });
   return Array.isArray(data) ? data.map(normalizeServico) : [];
 }
+
+export async function criarServicoProtetico(proteticoId, payload) {
+  const id = Number(proteticoId || 0) || 0;
+  if (!id) {
+    const error = new Error('Selecione um protetico valido.');
+    error.status = 400;
+    throw error;
+  }
+
+  const data = await requestJson(`/proteticos/${encodeURIComponent(String(id))}/servicos`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload || {}),
+  });
+
+  return data ? normalizeServico(data) : null;
+}
