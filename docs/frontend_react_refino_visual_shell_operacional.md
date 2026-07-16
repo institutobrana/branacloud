@@ -20,6 +20,13 @@ O usuário confirmou que a barra lateral estreita apareceu e que `/app` abriu, m
 - As ações rápidas ficaram com aparência de barra de ferramentas, e não de cards soltos.
 - O usuário logado e o botão `Sair` permaneceram alinhados à direita.
 
+## Ajuste global da emenda do shell
+
+- A medição no navegador mostrou que a linha horizontal no verde era desenhada pela `box-shadow: inset 0 -1px 0 var(--brana-divider)` de `.auxiliary-shell-band`.
+- O problema aparecia exatamente na emenda entre a faixa auxiliar e o workspace, em módulos operacionais como Plano de contas e Materiais.
+- Dashboard não usa essa faixa auxiliar, então permaneceu visualmente correto.
+- A correção mínima aplicada foi remover apenas essa sombra interna da faixa auxiliar compartilhada.
+
 ## Como a paleta Brana foi aplicada
 
 - `#00A79D` foi usado como destaque principal e referência visual da barra.
@@ -54,4 +61,3 @@ O usuário confirmou que a barra lateral estreita apareceu e que `/app` abriu, m
 - Validar visualmente o shell em `/app` com sessão real.
 - Confirmar se a rail e a toolbar agora transmitem melhor a sensação de software odontológico operacional.
 - Só depois considerar novas telas ou contratos de módulos reais.
-
