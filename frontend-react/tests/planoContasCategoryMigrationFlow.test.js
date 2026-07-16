@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const hookSource = fs.readFileSync(path.resolve('src/features/planoContas/hooks/usePlanoContas.js'), 'utf8');
-const pageSource = fs.readFileSync(path.resolve('src/features/planoContas/PlanoContasPage.jsx'), 'utf8');
+const hookSource = fs.readFileSync(path.resolve('frontend-react/src/features/planoContas/hooks/usePlanoContas.js'), 'utf8');
+const pageSource = fs.readFileSync(path.resolve('frontend-react/src/features/planoContas/PlanoContasPage.jsx'), 'utf8');
 
 test('409 abre modal de migracao e preserva selecao', () => {
   assert.match(hookSource, /kind === 'category-in-use'/);

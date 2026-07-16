@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session, object_session
@@ -25,6 +26,7 @@ from models.prestador_odonto import PrestadorOdonto
 from models.simbolo_grafico import SimboloGrafico
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
+from services.plano_contas_system_groups import is_system_protected_group_name
 from services.procedimentos_legado_service import carregar_metadados_genericos_legado
 from services.signup_service import garantir_auxiliares_raw_clinica
 from services.simbolos_service import (
@@ -1373,6 +1375,14 @@ def excluir_grupo(
     db: Session = Depends(get_db),
 ):
     grupo = _grupo_or_404(db, current_user.clinica_id, grupo_id)
+    if is_system_protected_group_name(grupo.nome):
+        return JSONResponse(
+            status_code=409,
+            content={
+                "detail": "GRUPO BLINDADO DO SISTEMA, NÃO PODE SER EXCLUIDO!",
+                "code": "SYSTEM_GROUP_PROTECTED",
+            },
+        )
     qtd_cat = (
         db.query(CategoriaFinanceira.id)
         .filter(

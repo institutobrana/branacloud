@@ -513,18 +513,19 @@ function AppContent() {
           canEditGroup={planoContasToolbarState.canEditGroup}
           canCreateCategory={planoContasToolbarState.canCreateCategory}
           canEditCategory={planoContasToolbarState.canEditCategory}
-          canDelete={planoContasToolbarState.canDelete}
+          canDelete={planoContasToolbarState.canDeleteSelection}
+          deleteDisabledReason={planoContasToolbarState.deleteDisabledReason}
           deleting={planoContasToolbarState.deleting || planoContasToolbarState.migrating || planoContasToolbarState.migrationModalOpen}
           saving={planoContasToolbarState.loading || planoContasToolbarState.saving || planoContasToolbarState.migrating || planoContasToolbarState.migrationModalOpen}
           onNewGroup={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'novo-grupo' } }))}
           onEditGroup={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'alterar-grupo' } }))}
           onNewCategory={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'nova-categoria' } }))}
           onEditCategory={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'alterar-categoria' } }))}
-          onDeleteCategory={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'eliminar-categoria' } }))}
+          onDelete={() => window.dispatchEvent(new CustomEvent('brana-plano-contas-toolbar-action', { detail: { action: 'eliminar' } }))}
         />
       </div>
     );
-  }, [handleNavigate, planoContasToolbarState.canCreateCategory, planoContasToolbarState.canDelete, planoContasToolbarState.canEditCategory, planoContasToolbarState.canEditGroup, planoContasToolbarState.deleting, planoContasToolbarState.loading, planoContasToolbarState.migrating, planoContasToolbarState.migrationModalOpen, planoContasToolbarState.saving, screen]);
+  }, [handleNavigate, planoContasToolbarState.canCreateCategory, planoContasToolbarState.canDeleteSelection, planoContasToolbarState.deleteDisabledReason, planoContasToolbarState.canEditCategory, planoContasToolbarState.canEditGroup, planoContasToolbarState.deleting, planoContasToolbarState.loading, planoContasToolbarState.migrating, planoContasToolbarState.migrationModalOpen, planoContasToolbarState.saving, screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',

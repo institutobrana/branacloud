@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   atualizarPlanoContasGrupo,
+  excluirPlanoContasGrupo,
   criarPlanoContasGrupo,
   excluirPlanoContasCategoria,
   migrarEExcluirPlanoContasCategoria,
@@ -17,10 +18,16 @@ import {
   selectPlanoContasCategory,
   selectPlanoContasGroup,
   updatePlanoContasSelectionAfterCategoryDelete,
+  updatePlanoContasSelectionAfterGroupDelete,
   updatePlanoContasSelectionAfterGroupSave,
 } from './usePlanoContasSelection.js';
-import { classifyPlanoContasCategoryError, toPlanoContasPositiveInteger } from '../planoContasCategoryDeletion.js';
+import {
+  classifyPlanoContasCategoryError,
+  toPlanoContasPositiveInteger,
+} from '../planoContasCategoryDeletion.js';
 import { buildPlanoContasCategoryMigrationState, reconcilePlanoContasCategoryMigrationSelection } from './usePlanoContasCategoryMigration.js';
+import { isPlanoContasSystemProtectedGroup } from '../planoContasSystemGroups.js';
+import { classifyPlanoContasGroupError } from '../planoContasGroupDeletion.js';
 
 function getUniqueGroupTypes(groups) {
   const values = new Set();
@@ -45,9 +52,11 @@ export function usePlanoContas() {
   const [migrationDestinations, setMigrationDestinations] = useState([]);
   const [migrationDestinationId, setMigrationDestinationId] = useState(null);
   const [migrationError, setMigrationError] = useState('');
+  const [groupDeleteError, setGroupDeleteError] = useState('');
   const savingRef = useRef(false);
   const deletingRef = useRef(false);
   const migratingRef = useRef(false);
+  const groupDeletingRef = useRef(false);
 
   const reload = async (nextSelection = null) => {
     setLoading(true);
@@ -81,6 +90,11 @@ export function usePlanoContas() {
   const selectedGroup = useMemo(
     () => getPlanoContasSelectedGroup(groups, selectedGroupId),
     [groups, selectedGroupId],
+  );
+
+  const selectedGroupIsSystemProtected = useMemo(
+    () => isPlanoContasSystemProtectedGroup(selectedGroup),
+    [selectedGroup],
   );
 
   const categories = useMemo(
@@ -249,6 +263,56 @@ export function usePlanoContas() {
     }
   };
 
+  const handleDeleteGroup = async ({ groupId = null } = {}) => {
+    if (groupDeletingRef.current) {
+      return { ok: false, skipped: true };
+    }
+
+    const targetGroupId = groupId ?? selectedGroupId ?? null;
+    if (targetGroupId == null) {
+      return { ok: false, error: new Error('Selecione um grupo para excluir.') };
+    }
+
+    const targetGroup = getPlanoContasSelectedGroup(groups, targetGroupId);
+    if (isPlanoContasSystemProtectedGroup(targetGroup)) {
+      const protectedError = new Error('Grupo nativo do sistema. Nao pode ser excluido.');
+      protectedError.status = 409;
+      protectedError.code = 'SYSTEM_GROUP_PROTECTED';
+      protectedError.data = {
+        detail: 'GRUPO BLINDADO DO SISTEMA, NAO PODE SER EXCLUIDO!',
+        code: 'SYSTEM_GROUP_PROTECTED',
+      };
+      message.warning(protectedError.message);
+      return { ok: false, error: protectedError, kind: 'system-group-protected' };
+    }
+
+    groupDeletingRef.current = true;
+    setDeleting(true);
+    try {
+      const result = await excluirPlanoContasGrupo(targetGroupId);
+      const nextGroups = await listarPlanoContasGrupos();
+      const normalizedGroups = Array.isArray(nextGroups) ? nextGroups : [];
+      setGroups(normalizedGroups);
+      const nextSelection = updatePlanoContasSelectionAfterGroupDelete(normalizedGroups, {
+        selectedGroupId: targetGroupId,
+      });
+      setSelectedGroupId(nextSelection.selectedGroupId);
+      setSelectedCategoryId(nextSelection.selectedCategoryId);
+      setGroupDeleteError('');
+      message.success('Grupo excluído com sucesso.');
+      return { ok: true, refreshed: true, result };
+    } catch (err) {
+      const classified = classifyPlanoContasGroupError(err);
+      const nextMessage = classified.message || err?.message || 'Falha ao excluir o grupo.';
+      setGroupDeleteError(nextMessage);
+      message.error(nextMessage);
+      return { ok: false, error: classified, message: nextMessage };
+    } finally {
+      groupDeletingRef.current = false;
+      setDeleting(false);
+    }
+  };
+
   const handleCancelMigration = () => {
     if (migratingRef.current) return;
     setMigrationModalOpen(false);
@@ -299,6 +363,7 @@ export function usePlanoContas() {
   const groupsEmpty = !loading && !error && groups.length === 0;
   const noSelectedGroup = !loading && !error && !selectedGroup;
   const selectedGroupWithoutCategories = Boolean(selectedGroup) && categories.length === 0;
+  const selectedGroupCanBeDeleted = Boolean(selectedGroup && selectionState.context === 'group' && !selectedGroupIsSystemProtected && selectedGroupWithoutCategories && !loading && !error && !saving && !deleting && !migrating && !migrationModalOpen);
 
   return {
     groups,
@@ -310,6 +375,8 @@ export function usePlanoContas() {
     groupsEmpty,
     noSelectedGroup,
     selectedGroupWithoutCategories,
+    selectedGroupIsSystemProtected,
+    selectedGroupCanBeDeleted,
     groupTypes: getUniqueGroupTypes(groups),
     saving,
     deleting,
@@ -319,12 +386,14 @@ export function usePlanoContas() {
     migrationDestinations,
     migrationDestinationId,
     migrationError,
+    groupDeleteError,
     selectionState,
     handleSelectGroup,
     handleSelectCategory,
     handleSaveGroup,
     handleSaveCategory,
     handleDeleteCategory,
+    handleDeleteGroup,
     handleCancelMigration,
     handleConfirmMigration,
     setMigrationDestinationId,

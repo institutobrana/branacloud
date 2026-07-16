@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const modalSource = fs.readFileSync(path.resolve('src/features/planoContas/components/PlanoContasCategoryMigrationModal.jsx'), 'utf8');
+const modalSource = fs.readFileSync(path.resolve('frontend-react/src/features/planoContas/components/PlanoContasCategoryMigrationModal.jsx'), 'utf8');
 
 test('PlanoContasCategoryMigrationModal exibe origem, destino e acoes', () => {
   assert.match(modalSource, /Migrar e eliminar categoria/);

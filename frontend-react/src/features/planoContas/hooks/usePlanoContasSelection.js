@@ -102,3 +102,11 @@ export function updatePlanoContasSelectionAfterCategoryDelete(groups, currentSta
     selectedGroupKey: hasSelectedGroup ? getPlanoContasGroupKey(selectedGroup) : '',
   };
 }
+
+export function updatePlanoContasSelectionAfterGroupDelete(groups, currentState = {}) {
+  const normalizedGroups = Array.isArray(groups) ? groups : [];
+  return createPlanoContasSelectionState(normalizedGroups, {
+    selectedGroupId: currentState.selectedGroupId ?? null,
+    selectedCategoryId: null,
+  });
+}

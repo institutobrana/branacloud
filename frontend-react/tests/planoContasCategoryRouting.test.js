@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const pagePath = path.resolve('src/features/planoContas/PlanoContasPage.jsx');
-const appPath = path.resolve('src/app/App.jsx');
+const pagePath = path.resolve('frontend-react/src/features/planoContas/PlanoContasPage.jsx');
+const appPath = path.resolve('frontend-react/src/app/App.jsx');
 const pageSource = fs.readFileSync(pagePath, 'utf8');
 const appSource = fs.readFileSync(appPath, 'utf8');
 

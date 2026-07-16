@@ -1,7 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { atualizarPlanoContasGrupo, criarPlanoContasGrupo, listarPlanoContasGrupos } from '../src/features/planoContas/planoContasApi.js';
+import {
+  atualizarPlanoContasGrupo,
+  criarPlanoContasGrupo,
+  excluirPlanoContasGrupo,
+  listarPlanoContasGrupos,
+} from '../src/features/planoContas/planoContasApi.js';
 
 test('criarPlanoContasGrupo envia POST com payload enxuto', async () => {
   const originalFetch = globalThis.fetch;
@@ -58,6 +63,27 @@ test('listarPlanoContasGrupos normaliza lista vazia quando resposta inesperada',
   try {
     const result = await listarPlanoContasGrupos();
     assert.deepEqual(result, []);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('excluirPlanoContasGrupo envia DELETE com id valido', async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, options });
+    return {
+      ok: true,
+      json: async () => ({ ok: true }),
+    };
+  };
+
+  try {
+    const result = await excluirPlanoContasGrupo(33);
+    assert.equal(result.ok, true);
+    assert.equal(calls[0].url, '/api/cadastros/grupos/33');
+    assert.equal(calls[0].options.method, 'DELETE');
   } finally {
     globalThis.fetch = originalFetch;
   }

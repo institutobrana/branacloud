@@ -3,6 +3,7 @@ import { getToken } from '../auth/authStorage.js';
 import { normalizePlanoContasResponse } from './planoContasMappers.js';
 import { sanitizePlanoContasGroupPayload } from './planoContasValidators.js';
 import { sanitizePlanoContasCategoryPayload } from './planoContasCategoryValidators.js';
+import { classifyPlanoContasGroupError } from './planoContasGroupDeletion.js';
 import {
   buildPlanoContasCategoryMigrationPayload,
   classifyPlanoContasCategoryError,
@@ -124,6 +125,29 @@ export async function atualizarPlanoContasCategoria(categoriaId, payload) {
     },
     body: JSON.stringify(body),
   });
+}
+
+export async function excluirPlanoContasGrupo(grupoId) {
+  const id = toPlanoContasPositiveInteger(grupoId);
+  if (id == null) {
+    throw new Error('Informe um ID válido para o grupo.');
+  }
+
+  const { response, data } = await requestJsonWithResponse(`/cadastros/grupos/${encodeURIComponent(String(id))}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const error = new Error(data?.detail || data?.message || 'Falha ao excluir o grupo.');
+    error.status = response.status;
+    error.data = data;
+    throw classifyPlanoContasGroupError(error);
+  }
+
+  return {
+    ok: true,
+    data,
+  };
 }
 
 export async function excluirPlanoContasCategoria(categoriaId) {

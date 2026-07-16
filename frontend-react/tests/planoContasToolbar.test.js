@@ -3,12 +3,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const toolbarPath = path.resolve('src/features/planoContas/components/PlanoContasToolbar.jsx');
+const toolbarPath = path.resolve('frontend-react/src/features/planoContas/components/PlanoContasToolbar.jsx');
 const toolbarSource = fs.readFileSync(toolbarPath, 'utf8');
 
 test('PlanoContasToolbar desabilita Eliminar sem categoria, em loading, saving ou deleting', () => {
   assert.match(toolbarSource, /disabled=\{!canDelete \|\| saving \|\| deleting\}/);
-  assert.match(toolbarSource, /onDeleteCategory/);
+  assert.match(toolbarSource, /deleteDisabledReason = ''/);
+  assert.match(toolbarSource, /Tooltip title=\{deleteDisabledReason\}/);
+  assert.match(toolbarSource, /onDelete/);
   assert.match(toolbarSource, /canDelete = false/);
 });
 

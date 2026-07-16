@@ -9,6 +9,7 @@ import { PlanoContasGroupModal } from './components/PlanoContasGroupModal.jsx';
 import { PlanoContasGroupsTable } from './components/PlanoContasGroupsTable.jsx';
 import { PlanoContasCategoriesTable } from './components/PlanoContasCategoriesTable.jsx';
 import { usePlanoContas } from './hooks/usePlanoContas.js';
+import { isPlanoContasSystemProtectedGroup } from './planoContasSystemGroups.js';
 import './planoContas.css';
 
 function EmptyState({ title, description }) {
@@ -31,6 +32,8 @@ export function PlanoContasPage() {
     groupsEmpty,
     noSelectedGroup,
     selectedGroupWithoutCategories,
+    selectedGroupIsSystemProtected,
+    selectedGroupCanBeDeleted,
     saving,
     deleting,
     groupTypes,
@@ -39,6 +42,7 @@ export function PlanoContasPage() {
     handleSaveGroup,
     handleSaveCategory,
     handleDeleteCategory,
+    handleDeleteGroup,
     handleCancelMigration,
     handleConfirmMigration,
     migrating,
@@ -54,6 +58,8 @@ export function PlanoContasPage() {
   const [categoryModalState, setCategoryModalState] = useState({ open: false, mode: 'create' });
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [groupDeleteConfirmOpen, setGroupDeleteConfirmOpen] = useState(false);
+  const [groupDeleteTarget, setGroupDeleteTarget] = useState(null);
   const toolbarStateRef = useRef({});
 
   const categoriesTitle = useMemo(
@@ -125,6 +131,27 @@ export function PlanoContasPage() {
   const canCreateCategory = Boolean(selectedGroup && !loading && !error);
   const canEditCategory = Boolean(selectedCategory && !loading && !error);
   const canDelete = Boolean(selectedCategory && selectionState.context === 'category' && !loading && !error && !saving && !deleting && !migrating && !migrationModalOpen);
+  const canDeleteGroup = Boolean(selectedGroupCanBeDeleted);
+  const canDeleteSelection = selectionState.context === 'category' ? canDelete : canDeleteGroup;
+  const deleteDisabledReason = selectedGroupIsSystemProtected && selectionState.context === 'group'
+    ? 'Grupo nativo do sistema. Não pode ser excluído.'
+    : selectionState.context === 'group' && selectedGroup && !selectedGroupWithoutCategories
+      ? 'Este grupo possui categorias vinculadas.'
+    : '';
+
+  const openDeleteGroupConfirm = () => {
+    if (!selectedGroup || selectionState.context !== 'group') return;
+    setGroupDeleteTarget(selectedGroup);
+    setGroupDeleteConfirmOpen(true);
+  };
+
+  const confirmDeleteGroup = async () => {
+    const groupId = groupDeleteTarget?.id ?? selectedGroup?.id ?? null;
+    setGroupDeleteConfirmOpen(false);
+    if (groupId == null) return;
+    await handleDeleteGroup({ groupId });
+    setGroupDeleteTarget(null);
+  };
 
   useEffect(() => {
     toolbarStateRef.current = {
@@ -147,6 +174,10 @@ export function PlanoContasPage() {
           canCreateCategory,
           canEditCategory,
           canDelete,
+          canDeleteGroup,
+          canDeleteSelection,
+          deleteDisabledReason,
+          selectedGroupIsSystemProtected,
           loading,
           saving,
           deleting,
@@ -156,7 +187,7 @@ export function PlanoContasPage() {
         },
       }),
     );
-  }, [canCreateCategory, canDelete, canEditCategory, canEditGroup, deleting, loading, migrating, migrationModalOpen, saving, selectedCategory?.id, selectedGroup?.id, selectionState.context]);
+  }, [canCreateCategory, canDelete, canDeleteGroup, canDeleteSelection, canEditCategory, canEditGroup, deleteDisabledReason, deleting, loading, migrating, migrationModalOpen, saving, selectedCategory?.id, selectedGroup?.id, selectedGroupIsSystemProtected, selectedGroupWithoutCategories, selectionState.context]);
 
   useEffect(() => {
     const handleToolbarAction = (event) => {
@@ -177,10 +208,25 @@ export function PlanoContasPage() {
         if (!current.selectedCategory) return;
         setCategoryModalState({ open: true, mode: 'edit', category: current.selectedCategory });
       }
-      if (action === 'eliminar-categoria') {
-        if (!current.selectedCategory || current.selectionState?.context !== 'category') return;
-        setDeleteTarget(current.selectedCategory);
-        setDeleteConfirmOpen(true);
+      if (action === 'eliminar' || action === 'eliminar-categoria' || action === 'eliminar-grupo') {
+        if (current.selectionState?.context === 'category') {
+          if (!current.selectedCategory) return;
+          setDeleteTarget(current.selectedCategory);
+          setDeleteConfirmOpen(true);
+          return;
+        }
+        if (current.selectionState?.context === 'group') {
+          if (!current.selectedGroup) return;
+          if (isPlanoContasSystemProtectedGroup(current.selectedGroup)) {
+            message.warning('Grupo nativo do sistema. Nao pode ser excluido.');
+            return;
+          }
+          if (Array.isArray(current.selectedGroup?.categorias) && current.selectedGroup.categorias.length > 0) {
+            message.warning('Este grupo possui categorias vinculadas.');
+            return;
+          }
+          openDeleteGroupConfirm();
+        }
       }
     };
 
@@ -312,6 +358,45 @@ export function PlanoContasPage() {
         onConfirm={() => void handleConfirmMigration()}
         onChangeDestination={setMigrationDestinationId}
       />
+
+      <BranaModal
+        open={groupDeleteConfirmOpen}
+        title="Eliminar grupo"
+        onCancel={() => {
+          if (deleting) return;
+          setGroupDeleteConfirmOpen(false);
+          setGroupDeleteTarget(null);
+        }}
+        footer={null}
+        destroyOnClose
+        width={420}
+        maskClosable={!deleting}
+        keyboard={!deleting}
+      >
+        <Typography.Paragraph>
+          Confirma a exclusão do grupo "{groupDeleteTarget?.nome || selectedGroup?.nome || 'selecionado'}"?
+        </Typography.Paragraph>
+        <div className="plano-contas-modal-actions">
+          <Button
+            danger
+            type="primary"
+            onClick={() => void confirmDeleteGroup()}
+            loading={deleting}
+          >
+            Eliminar
+          </Button>
+          <Button
+            onClick={() => {
+              if (deleting) return;
+              setGroupDeleteConfirmOpen(false);
+              setGroupDeleteTarget(null);
+            }}
+            disabled={deleting}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </BranaModal>
     </div>
   );
 }

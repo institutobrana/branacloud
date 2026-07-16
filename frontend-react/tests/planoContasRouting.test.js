@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const appPath = path.resolve('src/app/App.jsx');
+const appPath = path.resolve('frontend-react/src/app/App.jsx');
 const appSource = fs.readFileSync(appPath, 'utf8');
 
 test('App.jsx reconhece a rota de Plano de contas no resolvedor', () => {
@@ -22,5 +22,7 @@ test('App.jsx renderiza a barra do Plano de contas no shell', () => {
   assert.match(appSource, /planoContasTopBar/);
   assert.match(appSource, /brana-shell-band auxiliary-shell-band plano-contas-shell-band/);
   assert.match(appSource, /canDelete=/);
-  assert.match(appSource, /onDeleteCategory=\{\(\) => window\.dispatchEvent/);
+  assert.match(appSource, /canDeleteSelection/);
+  assert.match(appSource, /deleteDisabledReason/);
+  assert.match(appSource, /onDelete=\{\(\) => window\.dispatchEvent/);
 });
