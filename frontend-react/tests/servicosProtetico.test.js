@@ -310,8 +310,11 @@ test('ServicosProteticoPage remove shell externo residual', () => {
   assert.ok(source.includes("action === 'imprime-servico'"));
   assert.ok(source.includes('openPrintView'));
   assert.ok(source.includes('printWindow.print()'));
-  assert.ok(source.includes('Modal.confirm'));
-  assert.ok(source.includes('deleteServico(item.id)'));
+  assert.ok(source.includes('deleteConfirmState'));
+  assert.ok(source.includes('Excluir serviço'));
+  assert.ok(source.includes('Tem certeza que deseja excluir este serviço'));
+  assert.ok(source.includes('confirmDeleteService'));
+  assert.ok(source.includes('deleteServico(target.id)'));
   assert.ok(source.includes('updateServico(service.id, payload)'));
   assert.ok(!source.includes('BranaCard'));
   assert.ok(!source.includes('servicos-protetico-page-footer'));
@@ -350,6 +353,19 @@ test('ServicosProteticoToolbar expõe a ação de impressão no contrato', () =>
   assert.ok(source.includes("action: 'imprime-servico'"));
   assert.ok(source.includes('canPrint'));
   assert.ok(source.includes('!resolvedSelectionDisabled'));
+});
+
+test('ServicosProteticoPage confirma exclusao por estado controlado', () => {
+  const source = readFileSync(new URL('../src/features/servicosProtetico/ServicosProteticoPage.jsx', import.meta.url), 'utf8');
+
+  assert.ok(source.includes('openDeleteConfirm'));
+  assert.ok(source.includes('closeDeleteConfirm'));
+  assert.ok(source.includes('confirmDeleteService'));
+  assert.ok(source.includes('maskClosable={!deleteConfirmState.loading}'));
+  assert.ok(source.includes('keyboard={!deleteConfirmState.loading}'));
+  assert.ok(source.includes('Excluindo...'));
+  assert.ok(source.includes('Cancelar'));
+  assert.ok(source.includes('Excluir'));
 });
 
 test('ServicosProteticoCSS integra moldura e footer', () => {

@@ -44,6 +44,11 @@ export function ServicosProteticoPage() {
   const { deleting, error: deleteError, deleteServico, reset: resetDeleteState } = useServicoProteticoDelete();
   const { saving: updating, error: updateError, updateServico, reset: resetUpdateState } = useServicoProteticoUpdate();
   const [modalState, setModalState] = useState({ open: false, mode: 'create', service: null });
+  const [deleteConfirmState, setDeleteConfirmState] = useState({
+    open: false,
+    service: null,
+    loading: false,
+  });
 
   const modalSaving = creating || updating || deleting;
   const modalError = createError || updateError || deleteError;
@@ -255,6 +260,49 @@ export function ServicosProteticoPage() {
     };
   };
 
+  const openDeleteConfirm = (item) => {
+    if (!item?.id) return;
+    setDeleteConfirmState({
+      open: true,
+      service: {
+        id: item.id,
+        nome: item.nome || '',
+        codigo: item.codigo || '',
+      },
+      loading: false,
+    });
+  };
+
+  const closeDeleteConfirm = () => {
+    if (deleteConfirmState.loading) return;
+    setDeleteConfirmState({
+      open: false,
+      service: null,
+      loading: false,
+    });
+  };
+
+  const confirmDeleteService = async () => {
+    const target = deleteConfirmState.service;
+    if (!target?.id || deleteConfirmState.loading) return;
+    setDeleteConfirmState((current) => ({ ...current, loading: true }));
+    try {
+      const deleted = await deleteServico(target.id);
+      if (!deleted) return;
+      setSelectedId(null);
+      setFilters(EMPTY_FILTERS);
+      refreshServicos();
+      setDeleteConfirmState({
+        open: false,
+        service: null,
+        loading: false,
+      });
+    } catch (err) {
+      setDeleteConfirmState((current) => ({ ...current, loading: false }));
+      throw err;
+    }
+  };
+
   useEffect(() => {
     const onToolbarFilter = (event) => {
       const field = String(event?.detail?.field || '').trim();
@@ -275,21 +323,7 @@ export function ServicosProteticoPage() {
       if (action === 'elimina-servico') {
         const item = selectedItem;
         if (!item) return;
-        Modal.confirm({
-          title: 'Eliminar serviço de protético',
-          content: `Confirma a exclusão do serviço "${item.nome}"?`,
-          okText: 'Eliminar',
-          okButtonProps: { danger: true },
-          cancelText: 'Cancelar',
-          centered: true,
-          async onOk() {
-            const deleted = await deleteServico(item.id);
-            if (!deleted) return;
-            setSelectedId(null);
-            setFilters(EMPTY_FILTERS);
-            refreshServicos();
-          },
-        });
+        openDeleteConfirm(item);
         return;
       }
       if (action === 'imprime-servico') {
@@ -374,6 +408,40 @@ export function ServicosProteticoPage() {
         onCancel={handleCloseModal}
         onSubmit={handleSubmitModal}
       />
+
+      <Modal
+        open={deleteConfirmState.open}
+        title="Excluir serviço"
+        centered
+        destroyOnClose
+        maskClosable={!deleteConfirmState.loading}
+        keyboard={!deleteConfirmState.loading}
+        onCancel={closeDeleteConfirm}
+        footer={[
+          <button
+            key="cancel"
+            type="button"
+            className="auxiliary-shell-button"
+            onClick={closeDeleteConfirm}
+            disabled={deleteConfirmState.loading}
+          >
+            Cancelar
+          </button>,
+          <button
+            key="delete"
+            type="button"
+            className="auxiliary-shell-button danger"
+            onClick={() => void confirmDeleteService()}
+            disabled={deleteConfirmState.loading}
+          >
+            {deleteConfirmState.loading ? 'Excluindo...' : 'Excluir'}
+          </button>,
+        ]}
+      >
+        <Typography.Paragraph>
+          Tem certeza que deseja excluir este serviço &ldquo;{deleteConfirmState.service?.nome || 'selecionado'}&rdquo;?
+        </Typography.Paragraph>
+      </Modal>
 
       {!loading && !error && servicos.length === 0 ? (
         <Typography.Text type="secondary">Nenhum serviço disponível para o protético selecionado.</Typography.Text>
