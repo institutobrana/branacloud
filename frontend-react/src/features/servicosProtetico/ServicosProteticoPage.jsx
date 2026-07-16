@@ -1,9 +1,10 @@
-import { Alert, Typography } from 'antd';
+import { Alert, Modal, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { ServicoProteticoModal } from './components/ServicoProteticoModal.jsx';
 import { ServicosProteticoTable } from './components/ServicosProteticoTable.jsx';
 import { useServicoProteticoCreate } from './hooks/useServicoProteticoCreate.js';
+import { useServicoProteticoDelete } from './hooks/useServicoProteticoDelete.js';
 import { useServicoProteticoUpdate } from './hooks/useServicoProteticoUpdate.js';
 import { useServicosProtetico } from './hooks/useServicosProtetico.js';
 import './servicosProtetico.css';
@@ -39,11 +40,12 @@ export function ServicosProteticoPage() {
     hasSelection,
   } = useServicosProtetico();
   const { saving: creating, error: createError, createServico, reset: resetCreateState } = useServicoProteticoCreate();
+  const { deleting, error: deleteError, deleteServico, reset: resetDeleteState } = useServicoProteticoDelete();
   const { saving: updating, error: updateError, updateServico, reset: resetUpdateState } = useServicoProteticoUpdate();
   const [modalState, setModalState] = useState({ open: false, mode: 'create', service: null });
 
-  const modalSaving = creating || updating;
-  const modalError = createError || updateError;
+  const modalSaving = creating || updating || deleting;
+  const modalError = createError || updateError || deleteError;
   const modalTitleService = modalState.service;
   const modalMode = modalState.mode;
 
@@ -85,6 +87,7 @@ export function ServicosProteticoPage() {
     });
     resetCreateState();
     resetUpdateState();
+    resetDeleteState();
   };
 
   const openEditModal = () => {
@@ -108,6 +111,7 @@ export function ServicosProteticoPage() {
     });
     resetCreateState();
     resetUpdateState();
+    resetDeleteState();
   };
 
   useEffect(() => {
@@ -125,6 +129,26 @@ export function ServicosProteticoPage() {
       }
       if (action === 'altera-servico') {
         openEditModal();
+        return;
+      }
+      if (action === 'elimina-servico') {
+        const item = selectedItem;
+        if (!item) return;
+        Modal.confirm({
+          title: 'Eliminar serviço de protético',
+          content: `Confirma a exclusão do serviço "${item.nome}"?`,
+          okText: 'Eliminar',
+          okButtonProps: { danger: true },
+          cancelText: 'Cancelar',
+          centered: true,
+          async onOk() {
+            const deleted = await deleteServico(item.id);
+            if (!deleted) return;
+            setSelectedId(null);
+            setFilters(EMPTY_FILTERS);
+            refreshServicos();
+          },
+        });
       }
     };
 
@@ -134,7 +158,7 @@ export function ServicosProteticoPage() {
       window.removeEventListener('brana-servicos-protetico-toolbar-filter', onToolbarFilter);
       window.removeEventListener('brana-servicos-protetico-toolbar-action', onToolbarAction);
     };
-  }, [selectedItem, selectedProtetico, selectedProteticoId, setSelectedProteticoId]);
+  }, [deleteServico, selectedItem, selectedProtetico, selectedProteticoId, setSelectedProteticoId, setSelectedId, refreshServicos, setFilters]);
 
   const handleCloseModal = () => {
     if (modalSaving) return;
@@ -167,6 +191,7 @@ export function ServicosProteticoPage() {
     setFilters(EMPTY_FILTERS);
     refreshServicos();
     setModalState({ open: false, mode: 'create', service: null });
+    resetDeleteState();
   };
 
   const serviceCountLabel = `${totalItems} ${totalItems === 1 ? 'serviço' : 'serviços'}`;

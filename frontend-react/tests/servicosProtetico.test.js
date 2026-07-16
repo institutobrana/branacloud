@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { listarProteticos, listarServicosProtetico, criarServicoProtetico, alterarServicoProtetico } from '../src/features/servicosProtetico/servicosProteticoApi.js';
+import { listarProteticos, listarServicosProtetico, criarServicoProtetico, alterarServicoProtetico, excluirServicoProtetico } from '../src/features/servicosProtetico/servicosProteticoApi.js';
 import { filterServicos, sortServicos } from '../src/features/servicosProtetico/utils/servicosProteticoFilters.js';
 import { formatMoney } from '../src/features/servicosProtetico/utils/servicosProteticoFormatters.js';
 import { buildServicoProteticoCreatePayload } from '../src/features/servicosProtetico/utils/servicosProteticoCreatePayload.js';
@@ -238,6 +238,32 @@ test('alterarServicoProtetico envia PUT com payload normalizado', async () => {
   }
 });
 
+
+test('excluirServicoProtetico envia DELETE com id valido', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalWindow = globalThis.window;
+  const calls = [];
+  globalThis.window = { localStorage: { getItem: () => 'token-q' } };
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, options });
+    return {
+      ok: true,
+      json: async () => ({ detail: 'ok' }),
+    };
+  };
+
+  try {
+    const result = await excluirServicoProtetico(88);
+    assert.equal(result, true);
+    assert.equal(calls[0].url, '/api/proteticos/servicos/88');
+    assert.equal(calls[0].options.method, 'DELETE');
+    assert.equal(calls[0].options.headers.Authorization, 'Bearer token-q');
+  } finally {
+    globalThis.fetch = originalFetch;
+    globalThis.window = originalWindow;
+  }
+});
+
 test('listarProteticos falha sem token', async () => {
   const originalWindow = globalThis.window;
   globalThis.window = { localStorage: { getItem: () => '' } };
@@ -280,6 +306,9 @@ test('ServicosProteticoPage remove shell externo residual', () => {
   assert.ok(source.includes("mode: 'edit'"));
   assert.ok(source.includes('onRowDoubleClick={openEditModal}'));
   assert.ok(source.includes("action === 'altera-servico'"));
+  assert.ok(source.includes("action === 'elimina-servico'"));
+  assert.ok(source.includes('Modal.confirm'));
+  assert.ok(source.includes('deleteServico(item.id)'));
   assert.ok(source.includes('updateServico(service.id, payload)'));
   assert.ok(!source.includes('BranaCard'));
   assert.ok(!source.includes('servicos-protetico-page-footer'));
