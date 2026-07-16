@@ -1,0 +1,726 @@
+.cenario-anual-page {
+  width: 100%;
+}
+
+.cenario-anual-state {
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+}
+
+.cenario-anual-modal .ant-modal-content {
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.28);
+  background: var(--brana-surface-modal);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 24px);
+}
+
+.cenario-anual-modal .ant-modal-header {
+  padding: 7px 10px 4px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  flex: 0 0 auto;
+}
+
+.cenario-anual-modal .ant-modal-title {
+  text-align: center;
+}
+
+.cenario-anual-modal-title {
+  display: block;
+  color: var(--brana-teal, #16aaa1);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cenario-anual-modal .ant-modal-body {
+  padding: 7px 8px 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.cenario-anual-modal-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.cenario-anual-modal-alert {
+  margin-bottom: 0;
+}
+
+.cenario-anual-modal-tabs.ant-tabs {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-nav {
+  margin: 0 0 3px;
+  min-height: 42px;
+  flex: 0 0 auto;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-nav-list {
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-tab {
+  min-width: 110px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 2px 2px 0 0;
+  background: var(--brana-surface-panel);
+  margin: 0 2px 0 0;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  background: var(--brana-surface-modal);
+  border-color: var(--brana-border-subtle);
+  border-bottom-color: var(--brana-surface-modal);
+}
+
+.cenario-anual-modal-tabs .ant-tabs-tab-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-ink-bar {
+  background: var(--brana-teal);
+  height: 2px;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-content-holder {
+  padding-top: 1px;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.cenario-anual-modal-tabs .ant-tabs-content,
+.cenario-anual-modal-tabs .ant-tabs-tabpane {
+  min-height: 0;
+  height: 100%;
+}
+
+.cenario-tab-form,
+.cenario-placeholder-tab {
+  width: 100%;
+}
+
+.cenario-fixed-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 2px 0 4px;
+}
+
+.cenario-help-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(0, 128, 128, 0.08), rgba(0, 128, 128, 0.03));
+  border: 1px solid rgba(0, 128, 128, 0.14);
+  box-sizing: border-box;
+}
+
+.cenario-help-box--compact {
+  width: min(620px, 100%);
+  text-align: center;
+}
+
+.cenario-help-box-title {
+  margin: 0 !important;
+}
+
+.cenario-help-box-body {
+  color: #385063;
+}
+
+.cenario-fixed-grid {
+  display: grid;
+  grid-template-columns: 220px 92px;
+  column-gap: 10px;
+  row-gap: 10px;
+  justify-content: center;
+  align-items: center;
+  width: min(322px, 100%);
+  box-sizing: border-box;
+}
+
+.cenario-fixed-row {
+  display: contents;
+}
+
+.cenario-fixed-label {
+  font-size: 12px;
+  color: #102032;
+  white-space: nowrap;
+  line-height: 1.1;
+  font-weight: 700;
+  text-align: right;
+  justify-self: end;
+}
+
+.cenario-fixed-control {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+  box-sizing: border-box;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+}
+
+.cenario-fixed-control .ant-form-item {
+  margin-bottom: 0;
+}
+
+.cenario-fixed-control .ant-form-item,
+.cenario-fixed-control .ant-form-item-row,
+.cenario-fixed-control .ant-form-item-control,
+.cenario-fixed-control .ant-form-item-control-input,
+.cenario-fixed-control .ant-form-item-control-input-content {
+  width: 100%;
+}
+
+.cenario-fixed-control .ant-form-item-row {
+  align-items: center;
+}
+
+.cenario-fixed-control .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-fixed-control .ant-input-number,
+.cenario-fixed-control .ant-input {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+  box-sizing: border-box;
+}
+
+.cenario-fixed-control .ant-input-number-input {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.cenario-fixed-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.1);
+  width: 100%;
+  margin: 4px 0 2px;
+}
+
+.cenario-metric-field {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-metric-value {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 9px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: rgba(237, 252, 252, 0.95);
+  box-sizing: border-box;
+}
+
+.cenario-metric-value-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: #102032;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.cenario-placeholder-tab {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cenario-financeiro-tab {
+  --cenario-financial-label-width: 220px;
+  --cenario-financial-control-width: 122px;
+  --cenario-financial-help-width: 226px;
+  --cenario-financial-gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 2px;
+}
+
+.cenario-financeiro-alert {
+  width: min(720px, 100%);
+}
+
+.cenario-financial-section {
+  display: grid;
+  grid-template-columns: var(--cenario-financial-label-width) var(--cenario-financial-control-width) minmax(var(--cenario-financial-help-width), 1fr);
+  column-gap: var(--cenario-financial-gap);
+  align-items: start;
+  width: min(calc(var(--cenario-financial-label-width) + var(--cenario-financial-control-width) + var(--cenario-financial-help-width) + (var(--cenario-financial-gap) * 2)), 100%);
+  box-sizing: border-box;
+}
+
+.cenario-financial-section--year {
+  grid-template-columns: 200px 122px minmax(280px, 1fr);
+}
+
+.cenario-financial-fields {
+  grid-column: 1 / 3;
+  display: grid;
+  grid-template-columns: var(--cenario-financial-label-width) var(--cenario-financial-control-width);
+  column-gap: var(--cenario-financial-gap);
+  row-gap: 4px;
+  align-items: center;
+  width: 100%;
+}
+
+.cenario-financial-help {
+  grid-column: 3;
+  width: 100%;
+  align-self: start;
+}
+
+.cenario-financial-section--year .cenario-financial-fields {
+  grid-template-columns: 200px 122px;
+}
+
+.cenario-financial-section--year .cenario-financial-help {
+  width: 100%;
+}
+
+.cenario-financial-section--year-wide .cenario-help-box {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.cenario-financeiro-section .cenario-help-box {
+  margin-top: 0;
+}
+
+.cenario-financial-row-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #102032;
+  white-space: nowrap;
+  line-height: 1.05;
+  text-align: right;
+  justify-self: end;
+}
+
+.cenario-financial-row-control {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cenario-financial-row-control--compact {
+  justify-self: center;
+}
+
+.cenario-financeiro-control {
+  margin-bottom: 0 !important;
+  width: var(--cenario-financial-control-width);
+  min-width: var(--cenario-financial-control-width);
+  max-width: var(--cenario-financial-control-width);
+}
+
+.cenario-financeiro-control--year {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+}
+
+.cenario-financeiro-control .ant-form-item-explain {
+  display: none;
+}
+
+.cenario-financeiro-control .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-financeiro-control .ant-input,
+.cenario-financeiro-control .ant-input-number,
+.cenario-financeiro-control .ant-select-selector {
+  min-height: 30px;
+  font-size: 12px;
+}
+
+.cenario-financeiro-control .ant-input-number-input {
+  font-size: 12px;
+  line-height: 28px;
+}
+
+.cenario-financeiro-control .ant-select-selection-item,
+.cenario-financeiro-control .ant-select-selection-placeholder {
+  font-size: 12px;
+  line-height: 28px;
+}
+
+.cenario-financeiro-year-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.cenario-financeiro-year-group .cenario-financeiro-control {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+}
+
+.cenario-financeiro-year-button-wrap .ant-btn {
+  height: 30px;
+  padding: 0 10px;
+  font-size: 12px;
+  line-height: 1;
+  width: 92px;
+}
+
+.cenario-financeiro-money .ant-input-number-input,
+.cenario-financeiro-percent .ant-input-number-input,
+.cenario-financeiro-year-stack .ant-input-number-input,
+.cenario-financeiro-control .ant-select-selection-item,
+.cenario-financeiro-control .ant-select-selector {
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.cenario-financeiro-metric {
+  justify-self: center;
+}
+
+.cenario-financeiro-metric .cenario-metric-value {
+  width: var(--cenario-financial-control-width);
+  min-width: var(--cenario-financial-control-width);
+  max-width: var(--cenario-financial-control-width);
+  min-height: 32px;
+  padding: 4px 6px;
+}
+
+.cenario-financeiro-metric .cenario-metric-value-text {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.cenario-financeiro-separator {
+  height: 1px;
+  width: min(calc(var(--cenario-financial-label-width) + var(--cenario-financial-control-width) + var(--cenario-financial-help-width) + (var(--cenario-financial-gap) * 2)), 100%);
+  background: rgba(15, 23, 42, 0.1);
+  margin: 1px 0;
+}
+
+.cenario-help-box--financial {
+  width: 100%;
+}
+
+.cenario-financeiro-section .cenario-help-box {
+  padding: 7px 8px;
+  font-size: 10px;
+  line-height: 1.22;
+  border-radius: 10px;
+}
+
+.cenario-financeiro-section .cenario-help-box-body {
+  font-size: 10px;
+  line-height: 1.22;
+}
+
+.cenario-financeiro-section .cenario-help-box-title {
+  font-size: 10px;
+  line-height: 1.1;
+  margin-bottom: 2px !important;
+}
+
+.cenario-flex-tab {
+  --cenario-flex-cell-width: 62px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 2px 0 4px;
+}
+
+.cenario-help-box--flex {
+  width: min(892px, 100%);
+}
+
+.cenario-flex-grid {
+  display: grid;
+  grid-template-columns: 170px repeat(6, var(--cenario-flex-cell-width));
+  column-gap: 8px;
+  row-gap: 8px;
+  justify-content: center;
+  align-items: center;
+  width: min(582px, 100%);
+  box-sizing: border-box;
+}
+
+.cenario-flex-header,
+.cenario-flex-row-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #102032;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+.cenario-flex-header {
+  text-align: center;
+}
+
+.cenario-flex-header--label {
+  text-align: left;
+}
+
+.cenario-flex-row {
+  display: contents;
+}
+
+.cenario-flex-row-label {
+  text-align: right;
+  justify-self: end;
+}
+
+.cenario-flex-cell {
+  width: var(--cenario-flex-cell-width);
+  min-width: var(--cenario-flex-cell-width);
+  max-width: var(--cenario-flex-cell-width);
+  box-sizing: border-box;
+  justify-self: center;
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-flex-cell .cenario-metric-field,
+.cenario-flex-cell .ant-form-item {
+  width: var(--cenario-flex-cell-width);
+}
+
+.cenario-flex-cell .cenario-metric-field {
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-flex-cell .cenario-metric-value {
+  width: var(--cenario-flex-cell-width);
+  min-width: var(--cenario-flex-cell-width);
+  max-width: var(--cenario-flex-cell-width);
+}
+
+.cenario-flex-cell .ant-form-item {
+  margin-bottom: 0;
+}
+
+.cenario-flex-number-input.ant-input-number,
+.cenario-flex-number-input.ant-input {
+  width: var(--cenario-flex-cell-width);
+  min-width: var(--cenario-flex-cell-width);
+  max-width: var(--cenario-flex-cell-width);
+  box-sizing: border-box;
+}
+
+.cenario-flex-number-input.ant-input-number .ant-input-number-input-wrap {
+  width: 100%;
+}
+
+.cenario-flex-number-input.ant-input-number .ant-input-number-input {
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.cenario-flex-cell .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-flex-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(582px, 100%);
+}
+
+.cenario-flex-bottom-row {
+  display: grid;
+  grid-template-columns: 160px 92px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.cenario-flex-bottom-label {
+  text-align: right;
+  justify-self: end;
+}
+
+.cenario-flex-bottom-control {
+  width: 92px;
+  min-width: 92px;
+  max-width: 92px;
+  margin-bottom: 0 !important;
+}
+
+.cenario-flex-bottom-control .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: center;
+}
+
+.cenario-flex-bottom-grid {
+  display: grid;
+  grid-template-columns: 160px 92px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.cenario-anual-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 2px 0 8px;
+}
+
+[data-brana-theme='dark'] .cenario-anual-modal .ant-modal-content,
+[data-brana-theme='dark'] .cenario-anual-modal .ant-modal-body,
+[data-brana-theme='dark'] .cenario-anual-modal .ant-modal-header {
+  background: var(--brana-surface-modal);
+  color: var(--brana-text-primary);
+}
+
+[data-brana-theme='dark'] .cenario-anual-modal .ant-modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-brana-theme='dark'] .cenario-anual-modal-title {
+  color: var(--brana-teal, #16aaa1);
+}
+
+[data-brana-theme='dark'] .cenario-help-box {
+  background: rgba(0, 128, 128, 0.08);
+  border-color: rgba(0, 128, 128, 0.22);
+}
+
+[data-brana-theme='dark'] .cenario-help-box-body {
+  color: var(--brana-text-secondary);
+}
+
+[data-brana-theme='dark'] .cenario-financial-row-label {
+  color: var(--brana-text-secondary);
+}
+
+[data-brana-theme='dark'] .cenario-financeiro-separator {
+  background: rgba(124, 145, 148, 0.22);
+}
+
+[data-brana-theme='dark'] .cenario-fixed-divider {
+  background: rgba(124, 145, 148, 0.22);
+}
+
+[data-brana-theme='dark'] .cenario-fixed-label {
+  color: var(--brana-text-secondary);
+}
+
+[data-brana-theme='dark'] .cenario-metric-value {
+  background: rgba(20, 34, 37, 0.94);
+  border-color: rgba(124, 145, 148, 0.18);
+}
+
+[data-brana-theme='dark'] .cenario-metric-value-text {
+  color: var(--brana-text-primary);
+}
+
+@media (max-width: 1120px) {
+  .cenario-anual-modal {
+    width: min(760px, calc(100vw - 16px)) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .cenario-anual-modal {
+    width: min(720px, calc(100vw - 12px)) !important;
+  }
+
+  .cenario-anual-modal-tabs .ant-tabs-tab {
+    min-width: 96px;
+    padding: 0 10px;
+  }
+
+  .cenario-fixed-grid {
+    width: min(322px, 100%);
+  }
+}
+
+@media (max-width: 600px) {
+  .cenario-anual-modal .ant-modal-header {
+    padding-inline: 8px;
+  }
+
+  .cenario-anual-modal .ant-modal-body {
+    padding-inline: 6px;
+  }
+
+  .cenario-help-box {
+    padding: 10px 11px;
+  }
+
+  .cenario-fixed-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) 92px;
+    column-gap: 8px;
+  }
+
+  .cenario-fixed-label {
+    white-space: normal;
+  }
+
+  .cenario-fixed-divider {
+    margin: 2px 0 0;
+  }
+}
