@@ -472,6 +472,11 @@ async def enforce_utf8_charset(request: Request, call_next):
         response.headers["Content-Type"] = "application/json; charset=utf-8"
     return response
 
+@app.get("/frontend", include_in_schema=False)
+@app.get("/frontend/", include_in_schema=False)
+def frontend_legacy_index():
+    return FileResponse(FRONTEND_DIR / "index.html")
+
 if FRONTEND_DIR.exists():
     app.mount("/frontend", StaticFiles(directory=str(FRONTEND_DIR)), name="frontend")
 

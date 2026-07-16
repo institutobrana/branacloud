@@ -18,6 +18,7 @@ class TrialMiddleware(BaseHTTPMiddleware):
         public_routes = {
             "/",
             "/app",
+            "/health",
             "/docs",
             "/docs/oauth2-redirect",
             "/openapi.json",
