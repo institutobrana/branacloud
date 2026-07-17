@@ -1,0 +1,209 @@
+.unidades-atendimento-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.unidades-atendimento-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.unidades-atendimento-toolbar-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.unidades-atendimento-toolbar-note {
+  color: var(--brana-color-text-secondary, #6b7280);
+  font-size: 12px;
+  max-width: 360px;
+  text-align: right;
+}
+
+.unidades-atendimento-table-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.unidades-atendimento-table-footer {
+  padding: 0 4px;
+}
+
+.unidades-atendimento-modal {
+  width: min(584px, calc(100vw - 24px));
+}
+
+.unidades-atendimento-modal .ant-modal-content {
+  border-radius: 12px;
+}
+
+.unidades-atendimento-modal .ant-modal-header {
+  padding: 8px 16px 4px;
+}
+
+.unidades-atendimento-modal .ant-modal-body {
+  max-height: calc(100vh - 142px);
+  overflow: auto;
+  padding: 6px 12px 8px;
+}
+
+.unidades-atendimento-modal .unidades-atendimento-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.unidades-atendimento-block {
+  margin: 0;
+}
+
+.unidades-atendimento-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.unidades-atendimento-grid-identificacao {
+  grid-template-columns: 92px minmax(0, 1fr);
+  align-items: end;
+}
+
+.unidades-atendimento-grid-endereco-primary {
+  grid-template-columns: 64px minmax(0, 1fr) 72px 108px;
+  align-items: end;
+}
+
+.unidades-atendimento-grid-endereco-secondary {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 80px 56px;
+  align-items: end;
+  margin-top: 2px;
+}
+
+.unidades-atendimento-grid-metadata {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin-top: 2px;
+}
+
+.unidades-atendimento-field {
+  margin-bottom: 0 !important;
+}
+
+.unidades-atendimento-modal .ant-form-item {
+  margin-bottom: 0;
+}
+
+.unidades-atendimento-modal .ant-form-item-label {
+  padding-bottom: 2px;
+}
+
+.unidades-atendimento-modal .ant-form-item-label > label {
+  height: auto;
+  line-height: 1;
+  font-size: 11px;
+}
+
+.unidades-atendimento-modal .ant-form-item-control-input {
+  min-height: 26px;
+}
+
+.unidades-atendimento-modal .ant-input,
+.unidades-atendimento-modal .ant-input-number,
+.unidades-atendimento-modal .ant-select-selector,
+.unidades-atendimento-modal .ant-input-affix-wrapper {
+  min-height: 26px;
+  font-size: 11px;
+  border-radius: 10px;
+}
+
+.unidades-atendimento-modal .ant-input-number-input,
+.unidades-atendimento-modal .ant-select-selection-item,
+.unidades-atendimento-modal .ant-select-selection-search-input,
+.unidades-atendimento-modal .ant-input {
+  line-height: 1.1;
+}
+
+.unidades-atendimento-field-status {
+  margin-top: 2px;
+  padding-top: 0;
+}
+
+.unidades-atendimento-field-status .ant-checkbox-wrapper {
+  font-size: 12px;
+}
+
+.unidades-atendimento-field-codigo .ant-form-item-control {
+  max-width: 92px;
+}
+
+.unidades-atendimento-phone-header {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) minmax(0, 1fr) 34px;
+  gap: 6px;
+  margin: 2px 0 2px;
+  padding-left: 2px;
+  color: var(--brana-color-text-secondary, #6b7280);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.unidades-atendimento-phone-stack {
+  display: grid;
+  gap: 4px;
+}
+
+.unidades-atendimento-phone-row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) minmax(0, 1fr) 34px;
+  gap: 6px;
+  align-items: end;
+}
+
+.unidades-atendimento-phone-col {
+  margin-bottom: 0 !important;
+}
+
+.unidades-atendimento-phone-type .ant-select {
+  width: 100%;
+}
+
+.unidades-atendimento-wa-button {
+  width: 34px;
+  min-width: 34px;
+  height: 26px;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.unidades-atendimento-divider {
+  height: 1px;
+  margin: 2px 0 3px;
+  background: var(--brana-border-subtle, #d6dee8);
+}
+
+.unidades-atendimento-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 1px;
+}
+
+@media (max-width: 900px) {
+  .unidades-atendimento-grid-identificacao,
+  .unidades-atendimento-grid-endereco-primary,
+  .unidades-atendimento-grid-endereco-secondary,
+  .unidades-atendimento-grid-metadata,
+  .unidades-atendimento-phone-header,
+  .unidades-atendimento-phone-row {
+    grid-template-columns: 1fr;
+  }
+
+  .unidades-atendimento-field-status {
+    padding-top: 0;
+  }
+}
