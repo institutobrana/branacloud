@@ -6,9 +6,11 @@ import os
 import threading
 from dotenv import load_dotenv
 
+from services.database_url_service import resolve_database_url
+
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = resolve_database_url(os.environ)
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

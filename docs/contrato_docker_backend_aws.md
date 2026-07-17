@@ -527,7 +527,7 @@ Motivo objetivo:
 
 ### Motivo do novo ajuste
 
-O startup ainda podia tentar aplicar DDL/DML de compatibilidade em caminhos automáticos de importação e inicialização quando o banco estava vazio ou quando flags de bootstrap estavam ligadas por engano. Isso era indesejado para a imagem base de publicacao e para o scan local orientado ao ECR.
+O startup ainda podia tentar aplicar DDL/DML de compatibilidade em caminhos automï¿½ticos de importaï¿½ï¿½o e inicializaï¿½ï¿½o quando o banco estava vazio ou quando flags de bootstrap estavam ligadas por engano. Isso era indesejado para a imagem base de publicacao e para o scan local orientado ao ECR.
 
 ### Ajuste aplicado
 
@@ -562,3 +562,57 @@ A imagem esta pronta para a etapa manual do proprietario de publicar e escanear 
 - `backend/database.py` -> `ensure_user_auth_schema()`; momento: chamada explicita por fluxo de startup/hotfix; bloqueio: nao e chamada quando a rotina central de compatibilidade esta bloqueada;
 - `backend/services/runtime_bootstrap_service.py` -> `run_runtime_bootstrap_global()`; momento: thread de bootstrap runtime; bloqueio: `BRANA_ENABLE_RUNTIME_BOOTSTRAP`, `BRANA_SKIP_BOOTSTRAP`, `BRANA_ALLOW_HTTP_RUNTIME_BOOTSTRAP`;
 - `backend/scripts/aplicar_compatibilidade_schema.py` -> `aplicar_compatibilidade_schema()`; momento: execucao manual; bloqueio: `BRANA_ALLOW_SCHEMA_COMPAT_APPLY=false` em producao.
+
+## 30. Auditoria de remocao de Perl na imagem Bookworm
+
+Auditoria local executada para avaliar se o pacote Perl completo poderia ser removido sem quebrar o Brana Cloud.
+
+### Resultado do inventario
+
+- `perl` esta presente como binario em `/usr/bin/perl`;
+- `perl-base` esta instalado como `5.36.0-7+deb12u3`;
+- `perl-modules` e `perlapi-5.36.0` tambem estao presentes;
+- o binario `/usr/bin/perl` pertence ao pacote `perl-base`;
+- a imagem permanece `linux/amd64`, com `USER brana`, `WORKDIR=/app/backend` e `CMD` de Uvicorn sem `--reload`.
+
+### Dependencias e simulacao
+
+- `apt-cache rdepends --installed perl` nao mostrou consumidores relevantes no runtime do projeto;
+- `apt-cache rdepends --installed perl-base` mostrou apenas dependencias de sistema da propria base Debian;
+- `apt-get -s purge perl perl-base perl-modules-5.36` sinalizou remocao de `perl-base` e avisou que ele e pacote essencial;
+- por esse motivo, a remocao completa foi considerada insegura e nao foi aplicada.
+
+### Uso no repositorio
+
+- a busca no repositorio nao encontrou chamada operacional direta a `/usr/bin/perl`;
+- os usos de `subprocess` e comandos shell estao concentrados em scripts e servicos legados, sem dependencia confirmada de Perl para o fluxo do backend.
+
+### Decisao
+
+Opcao comprovada: **B. Remocao insegura; manter os pacotes**.
+
+Consequencia pratica:
+
+- nao foi criada a imagem `brana-backend:aws-no-perl-candidate1`;
+- o `Dockerfile` principal nao foi alterado;
+- nao houve nova tag local do ECR baseada em uma variante sem Perl;
+- o proprietario pode manter o plano de push/scan manual da imagem atual sem a expectativa de eliminacao dos CVEs via purge local.
+
+## 31. Referencia ao aceite temporario
+
+- consultar `docs/aceite_temporario_risco_imagem_base_aws.md` para o aceite temporario de risco da imagem-base AWS.
+
+## 32. Compatibilidade DATABASE_URL e DB_*
+
+- o backend preserva `DATABASE_URL` como prioridade absoluta quando ela esta definida;
+- quando `DATABASE_URL` nao existe, a conexao pode ser montada internamente com `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD`;
+- a montagem usa o helper `services.database_url_service.resolve_database_url` para codificar usuario e senha com seguranca;
+- a senha e a URL completa nao sao impressas em logs;
+- a configuracao prevista para ECS usa variaveis individuais vindas de um segredo JSON, sem expor a URL completa no console.
+
+## 33. Compatibilidade de banco para ECS
+
+- o backend agora preserva `DATABASE_URL` como prioridade quando a variavel existe;
+- quando `DATABASE_URL` nao estiver definida, o backend pode montar a URL interna com `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD`;
+- o comportamento foi pensado para ECS com segredo JSON particionado em chaves individuais;
+- a documentacao do aceite temporario de risco continua valida e nao foi alterada nesta etapa.

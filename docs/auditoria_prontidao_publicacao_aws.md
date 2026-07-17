@@ -1083,3 +1083,41 @@ A imagem local ficou pronta para a etapa manual do proprietario. A publicacao no
 - `backend/database.py` -> `ensure_user_auth_schema()`; chamada explicita, nao executada quando a protecao central bloqueia;
 - `backend/services/runtime_bootstrap_service.py` -> `run_runtime_bootstrap_global()`; thread de bootstrap runtime bloqueada por `BRANA_ENABLE_RUNTIME_BOOTSTRAP`, `BRANA_SKIP_BOOTSTRAP`, `BRANA_ALLOW_HTTP_RUNTIME_BOOTSTRAP`;
 - `backend/scripts/aplicar_compatibilidade_schema.py` -> `aplicar_compatibilidade_schema()`; execucao manual, bloqueada em producao sem `BRANA_ALLOW_SCHEMA_COMPAT_APPLY`.
+
+## 29. Auditoria de remocao de Perl
+
+Avaliacao local executada para verificar se o pacote Perl completo poderia ser removido da imagem Bookworm sem quebrar o Brana Cloud.
+
+### Inventario confirmado
+
+- `perl` esta presente e aponta para `/usr/bin/perl`;
+- `perl-base` esta presente como `5.36.0-7+deb12u3`;
+- `perl-modules` e `perlapi-5.36.0` tambem estao presentes;
+- o binario `/usr/bin/perl` vem de `perl-base`.
+
+### Dependencias e simulacao
+
+- `apt-cache rdepends --installed perl` nao trouxe consumidores relevantes para o runtime do projeto;
+- `apt-cache rdepends --installed perl-base` mostrou dependencias de sistema da base Debian;
+- `apt-get -s purge perl perl-base perl-modules-5.36` indicou remocao de `perl-base` e avisou que se trata de pacote essencial.
+
+### Conclusao operacional
+
+- a remocao completa foi considerada insegura;
+- nenhuma imagem `aws-no-perl` foi criada;
+- o Dockerfile principal nao foi alterado;
+- a publicacao e o scan continuam pendentes para acao manual do proprietario, mantendo a base atual validada.
+## 30. Aceite temporario de risco
+
+- o resultado final da auditoria Perl confirmou que `perl-base` e pacote essencial e nao deve ser removido localmente;
+- a decisao final foi manter os pacotes Perl na imagem atual;
+- o aceite temporario da imagem-base foi formalizado em `docs/aceite_temporario_risco_imagem_base_aws.md`;
+- a liberacao desta imagem e apenas para homologacao controlada, nao para producao.
+
+## 31. Compatibilidade DATABASE_URL e fallback DB_*
+
+- a auditoria confirmou que `DATABASE_URL` segue com prioridade absoluta quando presente;
+- o fallback via `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD` foi implementado sem expor senha nos logs;
+- a codificacao segura do usuario e da senha ficou isolada em `services.database_url_service`;
+- a configuracao do ECS pode passar as chaves do segredo JSON individualmente sem publicar a URL completa no console;
+- a publicacao continua pendente para a etapa operacional seguinte.
