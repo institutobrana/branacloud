@@ -69,6 +69,19 @@ Foi criado um executor separado para inicializar bancos PostgreSQL vazios ou des
 
 O executor registra a versao aplicada em `brana_schema_versions`, usa advisory lock e exige ACK explicito por variavel de ambiente.
 
+## Provisionamento do tenant inicial
+
+O provisionamento do primeiro tenant de homologacao foi separado do executor de schema e ficou documentado em `docs/contrato_provisionamento_tenant_inicial_aws.md`.
+
+O fluxo inicial usa o schema ja aplicado e cria somente:
+
+- clinica;
+- unidade principal;
+- prestador principal;
+- usuario administrador;
+- perfil administrativo nativo;
+- vinculos obrigatorios entre usuario, prestador, unidade e perfil.
+
 ## Regras importantes
 
 - Nunca commitar banco, dump ou backup.

@@ -34,6 +34,7 @@ Excluido:
 - `docs/08_setup_execucao.md`
 - `docs/10_continuidade.md`
 - `docs/11_roadmap_desenvolvimento.md`
+- `docs/contrato_provisionamento_tenant_inicial_aws.md`
 
 ## Arquitetura considerada
 

@@ -94,6 +94,18 @@ O comando exige:
 
 O backend permanente continua com bootstrap e compatibilidade automáticos desativados.
 
+## Provisionamento do tenant inicial
+
+Depois da baseline de schema, o primeiro tenant de homologacao deve ser criado por comando separado:
+
+```powershell
+python -m backend.scripts.provision_initial_tenant --plan
+python -m backend.scripts.provision_initial_tenant --apply
+python -m backend.scripts.provision_initial_tenant --validate
+```
+
+O contrato do fluxo esta em `docs/contrato_provisionamento_tenant_inicial_aws.md`.
+
 ## Dependencias principais
 
 `backend/requirements.txt` inclui FastAPI, Uvicorn, SQLAlchemy, psycopg2, python-dotenv, Pydantic, python-jose, Passlib, bcrypt, python-multipart, requests, pyHanko, ReportLab, Pillow e pypdf.

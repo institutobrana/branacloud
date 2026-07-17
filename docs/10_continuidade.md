@@ -141,6 +141,8 @@ O caminho recomendado para evolucao do banco passa a ser:
 4. startup permanente sem DDL;
 5. revisao antes da publicacao definitiva.
 
+O contrato operacional do passo 3 esta em `docs/contrato_provisionamento_tenant_inicial_aws.md`.
+
 ## Padrao de entrega para futuras IAs
 
 Ao concluir uma tarefa, informe:
