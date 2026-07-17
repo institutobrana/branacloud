@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass
 
 TRUE_VALUES = {"1", "true", "yes", "sim", "on"}
+LOCAL_PROFILES = {"", "local", "dev", "development"}
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,15 @@ def resolve_runtime_policy() -> RuntimePolicy:
         allow_http_runtime_bootstrap=env_flag("BRANA_ALLOW_HTTP_RUNTIME_BOOTSTRAP", False),
         allow_schema_compat_apply=env_flag("BRANA_ALLOW_SCHEMA_COMPAT_APPLY", False),
     )
+
+
+def should_load_local_env() -> bool:
+    """Carrega .env apenas em perfis locais explicitamente permitidos.
+
+    Em producao, o ambiente do orquestrador precisa permanecer soberano.
+    """
+
+    return _profile() in LOCAL_PROFILES
 
 
 def schema_compat_apply_allowed(policy: RuntimePolicy | None = None) -> bool:

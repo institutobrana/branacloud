@@ -4,11 +4,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 import threading
-from dotenv import load_dotenv
 
 from services.database_url_service import resolve_database_url
+from services.env_loading_service import load_backend_env
 
-load_dotenv()
+load_backend_env()
 
 DATABASE_URL = resolve_database_url(os.environ)
 

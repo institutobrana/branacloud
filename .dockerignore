@@ -2,6 +2,9 @@
 .github
 .env
 .env.*
+backend/.env
+backend/.env.*
+*.env.local
 !.env.example
 !.env.production.example
 .venv

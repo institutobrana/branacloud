@@ -2,10 +2,12 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
-from dotenv import load_dotenv
+from services.env_loading_service import load_backend_env
 
 env_path = Path(__file__).resolve().parent / ".env"
-load_dotenv(dotenv_path=env_path)
+
+if not load_backend_env(env_path):
+    print("[startup] .env local ignorado em producao; ambiente do orquestrador prevalece")
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
