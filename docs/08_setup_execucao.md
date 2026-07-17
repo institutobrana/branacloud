@@ -75,6 +75,25 @@ Depois teste no navegador:
 4. Abra uma tela operacional, como pacientes ou agenda.
 5. Confirme que nao ha erro 500 em login, `/me` e chamadas basicas.
 
+## Implantacao one-shot de schema
+
+Para banco vazio ou descartavel, o fluxo oficial agora e separado do startup:
+
+```powershell
+python backend\scripts\apply_schema_baseline.py --plan
+python backend\scripts\apply_schema_baseline.py --apply
+python backend\scripts\apply_schema_baseline.py --validate
+```
+
+O comando exige:
+
+- `BRANA_RUNTIME_PROFILE` em perfil permitido;
+- `BRANA_SCHEMA_DEPLOYMENT_ACK=BRANA_SCHEMA_DEPLOYMENT_ACKNOWLEDGED`;
+- autorizacao explicita para localhost quando aplicavel;
+- banco vazio ou reconhecido.
+
+O backend permanente continua com bootstrap e compatibilidade automáticos desativados.
+
 ## Dependencias principais
 
 `backend/requirements.txt` inclui FastAPI, Uvicorn, SQLAlchemy, psycopg2, python-dotenv, Pydantic, python-jose, Passlib, bcrypt, python-multipart, requests, pyHanko, ReportLab, Pillow e pypdf.

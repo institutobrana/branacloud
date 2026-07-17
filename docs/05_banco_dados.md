@@ -59,6 +59,16 @@ O startup contem hotfixes aditivos para:
 
 Isso reduz falhas em bancos antigos, mas e divida tecnica. O plano correto e criar migrations formais.
 
+## Executor one-shot de schema
+
+Foi criado um executor separado para inicializar bancos PostgreSQL vazios ou descartaveis sem mexer no startup permanente:
+
+- `backend/scripts/apply_schema_baseline.py --plan`
+- `backend/scripts/apply_schema_baseline.py --apply`
+- `backend/scripts/apply_schema_baseline.py --validate`
+
+O executor registra a versao aplicada em `brana_schema_versions`, usa advisory lock e exige ACK explicito por variavel de ambiente.
+
 ## Regras importantes
 
 - Nunca commitar banco, dump ou backup.

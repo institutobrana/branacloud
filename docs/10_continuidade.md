@@ -131,6 +131,16 @@ Evite como primeira tarefa:
 - Bootstrap de schema/dados ainda mistura inicializacao e compatibilidade.
 - Cobertura automatizada insuficiente.
 
+### Continuidade de schema
+
+O caminho recomendado para evolucao do banco passa a ser:
+
+1. baseline one-shot versionado;
+2. validacao em banco descartavel;
+3. provisionamento inicial de tenant em comando separado, se necessario;
+4. startup permanente sem DDL;
+5. revisao antes da publicacao definitiva.
+
 ## Padrao de entrega para futuras IAs
 
 Ao concluir uma tarefa, informe:
