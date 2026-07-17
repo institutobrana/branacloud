@@ -27,6 +27,9 @@ Este documento registra o estado atual dos modulos do Brana Cloude com base no c
 
 Observacao: pela ausencia de migrations formais e testes automatizados amplos, a maioria dos modulos deve ser tratada como `EM DESENVOLVIMENTO`, mesmo quando ja possui backend e frontend operantes.
 
+- A frente `Unidades de atendimento` teve a Etapa 1 do frontend React concluida com fundacao modular, rota, shell, listagem, inclusao e alteracao; a exclusao funcional permanece pendente de contrato de protecao, e os documentos de base seguem em `docs/auditoria_unidades_atendimento_brana_easydental.md` e `docs/contrato_implementacao_unidades_atendimento_frontend_react.md`.
+- A auditoria corretiva da Etapa 1.1 fechou o contrato de `ativo`/`inativo`, confirmou a preservacao de `qtd_sala` no PUT, identificou os registros de teste locais e isolou o `404` de `favicon.ico` como recurso global, sem alterar backend, banco ou exclusao funcional.
+- A auditoria da Etapa 2 concluiu que o `DELETE /cadastros/unidades-atendimento/{row_id}` e fisico e sem protecao suficiente; a recomendacao passou a ser bloquear unidade principal, ultima unidade, usuarios, agenda, bloqueios e tratamentos antes de qualquer futura liberacao.
 - A frente `Tabelas -> Doencas (CID)` teve sua primeira fatia React de leitura iniciada, com rota, menu e listagem basal em andamento; CRUD de escrita, modal e validacao autenticada completa ainda permanecem pendentes.
 - A primeira validacao autenticada da fatia somente leitura do CID foi concluida no novo frontend React, com login real, rota `/app/tabelas/doencas-cid` ativa e `GET /cid` observado; a etapa de CRUD segue pendente.
 - A listagem do CID passou por paginação local para reduzir o DOM de milhares de linhas para cerca de 50 por página, preservando filtros, selecao e modal sem alterar backend ou banco.
@@ -44,10 +47,11 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 ## Estado validado recente
 
 - A protecao backend minima dos seis grupos nativos do Plano de contas foi concluida, com regra centralizada, bloqueio por nome normalizado e testes backend dedicados; o reforco visual no React e no legado continua pendente.
+- O reforco defensivo no frontend React do Plano de contas foi aplicado nesta etapa, com reconhecimento dos seis grupos protegidos no hook, bloqueio do evento de exclusao de grupo protegido no shell, tooltip explicativa e confirmacao separada para exclusao de grupo comum, sem alterar o fluxo de categorias; a validacao autenticada em navegador confirmou o bloqueio dos seis grupos nativos e a alternancia de tema sem regressao visivel.
 - A solucao estrutural com chave estavel e migration segue como trabalho futuro separado.
 - A frente de blindagem dos seis grupos nativos do Plano de contas foi aberta para auditoria documental e tecnica focada; o trabalho atual ficou restrito a leitura, comparacao de evidencias e proposta de contrato, sem implementacao.
 - A blindagem ainda nao foi implementada e permanece pendente de decisao estrutural.
-- A frente `Tabelas -> Servicos de protetico` concluiu a listagem, o fluxo `Novo servico` e a etapa funcional `Altera` no novo frontend React, com rota, shell, toolbar, combo de protetico, leitura de proteticos e servicos, filtros por coluna, ordenacao, visibilidade de colunas, selecao, duplo clique, rodape integrado, contador, modal compacto e salvamento validado em runtime; `Elimina` e `Imprime` permanecem pendentes.
+- A frente `Tabelas -> Servicos de protetico` concluiu a listagem, o fluxo `Novo servico`, a etapa funcional `Altera`, a confirmacao `Elimina` com botões `Nao` e `Sim`, e `Imprime` no novo frontend React, com rota, shell, toolbar, combo de protetico, leitura de proteticos e servicos, filtros por coluna, ordenacao, visibilidade de colunas, selecao, duplo clique, rodape integrado, contador, modal compacto, salvamento e runtime validados; a frente passou para estado de encerramento e consolidacao final.
 - A etapa de backend/banco de `Tabelas -> Servicos de protetico` foi fechada com `codigo` e `descricao` no modelo, na rota e no script aditivo; o backfill local de `codigo` foi aplicado com sucesso e o contrato React de `Novo servico` foi validado.
 - Login, senha interna e perfis: validado manualmente.
 - Validacao runtime do backend de Orcamento concluida com login real em `POST /login` usando `gleissontel@gmail.com` e validacao dos endpoints principais `GET /orcamento/pacientes/1/tratamentos`, `GET /orcamento/tratamentos/1` e `POST /orcamento/tratamentos/1/impressao`.
@@ -1319,6 +1323,18 @@ Observacoes:
 - A Subetapa 1 foi criada sem alteracao de codigo.
 - Nenhum backend, banco, endpoint ou permissao foi alterado.
 - Proxima subetapa recomendada: `Agenda de contatos - Subetapa 2 - Mapa documental de dependencias com agenda principal, agenda legado e tenant`.
+
+## Prestadores - Nova frente React
+
+- Auditoria funcional e tecnica da nova frente `Prestadores` concluida para o caminho `Cadastro -> Corpo clinico`.
+- A etapa atual e exclusivamente documental e de encerramento formal.
+- A implementacao React ainda nao foi iniciada.
+- A documentacao base desta nova frente foi registrada em:
+  - `docs/auditoria_prestadores_frontend_legado_backend_easydental.md`
+  - `docs/contrato_implementacao_prestadores_frontend_react.md`
+- O contrato da nova frente preserva a separacao entre listagem principal, modal de cadastro e os fluxos isolados de `Agenda`, `Convênios` e `Comissões`.
+- Dependencias e riscos principais ainda estao em analise documental.
+- Nenhum backend, banco, payload ou tela funcional foi alterado nesta etapa.
 
 ## Atualizacao Agenda de Contatos - Subetapa 2
 
