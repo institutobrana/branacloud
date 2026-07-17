@@ -42,4 +42,3 @@ class TenantProvisioningGuardTests(unittest.TestCase):
             result = run_tenant_command(["--apply"], provisioning_env(pg))
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("baseline", (result.stdout + result.stderr).lower())
-

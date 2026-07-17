@@ -34,4 +34,3 @@ class TenantProvisioningApplyTests(unittest.TestCase):
         self.assertEqual(first.returncode, 0, msg=(first.stdout or "") + (first.stderr or ""))
         self.assertNotEqual(second.returncode, 0)
         self.assertIn("conflito", (second.stdout + second.stderr).lower())
-

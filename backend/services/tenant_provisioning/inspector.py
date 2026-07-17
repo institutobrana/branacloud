@@ -67,4 +67,3 @@ def inspect_tenant_state(session: Session, spec) -> dict:
         "expected_tables": len(existing_tables),
         "existing_tables": sorted(existing_tables),
     }
-

@@ -62,4 +62,3 @@ def validate_tenant_state(session: Session, spec) -> dict:
         "email_unique": _count(session, Usuario) == len({u.email for u in session.query(Usuario).all()}),
         "patient_count": 0,
     }
-

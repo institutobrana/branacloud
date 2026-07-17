@@ -50,4 +50,3 @@ def format_plan(plan: dict[str, Any]) -> str:
     if plan["blockers"]:
         lines.append("Bloqueios: " + ", ".join(plan["blockers"]))
     return "\n".join(lines)
-
