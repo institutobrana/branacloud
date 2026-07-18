@@ -143,6 +143,17 @@ O caminho recomendado para evolucao do banco passa a ser:
 
 O contrato operacional do passo 3 esta em `docs/contrato_provisionamento_tenant_inicial_aws.md`.
 
+## Corte real da migracao integral
+
+- O corte real da migracao integral foi concluido em `2026-07-18`.
+- O snapshot pre-corte foi criado com o identificador `brana-hml-postgres-pre-cut-20260718-073104`.
+- O dump final foi transportado temporariamente por S3 criptografado e removido apos o uso.
+- A restauracao no RDS foi executada por task ECS one-shot separada, sem alterar o servico permanente.
+- O endpoint publico do backend permaneceu ativo e respondeu `200` em `/health`, `/app` e `/frontend/`.
+- O login funcional conhecido respondeu `200` em `/login` e `/me` com contexto coerente.
+- A validacao read-only posterior encontrou `65` tabelas publicas e conteudo real carregado; `brana_schema_versions` foi restabelecido para `1` apos o ajuste idempotente do marcador.
+- O armazenamento local `storage/modelos/clinicas/` foi confirmado com 260 arquivos, ainda tratado como persistencia externa em frente separada.
+
 ## Contrato do tenant inicial
 
 - `--plan`: somente leitura, com seis identificadores obrigatorios, sem senha e sem ACK.

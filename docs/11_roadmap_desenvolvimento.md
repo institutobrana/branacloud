@@ -46,6 +46,10 @@ Observacao: pela ausencia de migrations formais e testes automatizados amplos, a
 
 ## Estado validado recente
 
+- Em `2026-07-18`, a migracao integral do banco local para o RDS de homologacao foi concluida com snapshot pre-corte, dump `pg_dump -Fc`, restore por task ECS one-shot e smoke funcional no backend publico.
+- A validacao read-only posterior registrou `65` tabelas publicas, `tiss_tipo_atendimento = 5`, `clinicas = 4`, `usuarios = 14`, `pacientes = 1629` e `brana_schema_versions = 1`.
+- O diretorio local `storage/modelos/clinicas/` permanece com 260 arquivos e segue para a frente separada de persistencia externa.
+- O endpoint publico respondeu `GET /health = 200`, `GET /app = 200`, `GET /frontend/ = 200`, `POST /auth/renew = 401`, `POST /login = 200` e `GET /me = 200` para a credencial funcional conhecida `gleissontel@gmail.com`.
 - A protecao backend minima dos seis grupos nativos do Plano de contas foi concluida, com regra centralizada, bloqueio por nome normalizado e testes backend dedicados; o reforco visual no React e no legado continua pendente.
 - O reforco defensivo no frontend React do Plano de contas foi aplicado nesta etapa, com reconhecimento dos seis grupos protegidos no hook, bloqueio do evento de exclusao de grupo protegido no shell, tooltip explicativa e confirmacao separada para exclusao de grupo comum, sem alterar o fluxo de categorias; a validacao autenticada em navegador confirmou o bloqueio dos seis grupos nativos e a alternancia de tema sem regressao visivel.
 - A solucao estrutural com chave estavel e migration segue como trabalho futuro separado.

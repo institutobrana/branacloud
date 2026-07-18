@@ -45,6 +45,19 @@ Motivos:
 - o contexto retornado confere com a origem para os campos expostos pelo endpoint;
 - o isolamento multiclincia foi aprovado com vazamentos zero.
 
+## Corte real concluido
+
+- Snapshot manual pre-corte: `brana-hml-postgres-pre-cut-20260718-073104`.
+- Dump final local gerado em `pg_dump -Fc` e transportado em S3 temporario criptografado.
+- Restore real executado em task ECS one-shot separada, com limpeza previa do `public` e `pg_restore`.
+- Validacao read-only confirmou `65` tabelas publicas no RDS restaurado.
+- Validacao read-only confirmou `tiss_tipo_atendimento = 5`, `clinicas = 4`, `usuarios = 14` e `pacientes = 1629`.
+- Validacao read-only posterior consolidada indicou `brana_schema_versions = 1` no banco restaurado apos o ajuste idempotente do marcador.
+- Smoke funcional confirmou `GET /health = 200`, `GET /app = 200`, `GET /frontend/ = 200` e `POST /auth/renew = 401`.
+- Login funcional conhecido foi validado no endpoint publico com `POST /login = 200` e `GET /me = 200` usando `gleissontel@gmail.com`.
+- O artefato temporario S3 foi removido apos o uso.
+- O armazenamento local `storage/modelos/clinicas/` segue como frente separada de persistencia externa e nao foi consolidado no RDS.
+
 ## Rollback
 
 Rollback previsto:
