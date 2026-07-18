@@ -101,6 +101,8 @@ BASE_DIR = Path(__file__).resolve().parent
 SAAS_DIR = BASE_DIR.parent
 PROJECT_DIR = SAAS_DIR.parent
 FRONTEND_DIR = SAAS_DIR / "frontend"
+LEGACY_FRONTEND_DIR = FRONTEND_DIR
+REACT_FRONTEND_DIST_DIR = SAAS_DIR / "frontend-react" / "dist"
 DESKTOP_ASSETS_DIR = SAAS_DIR / "assets"
 MODEL_STORAGE_DIR = SAAS_DIR / "storage" / "modelos"
 
@@ -393,6 +395,20 @@ def _carregar_router_dinamico(nome: str, arquivo: str):
 quadro_avisos_router = _carregar_router_dinamico("routes.quadro_de_avisos", "quadro-de-avisos.py")
 
 
+def _serve_spa_directory(base_dir: Path, request_path: str = ""):
+    normalized = str(request_path or "").lstrip("/")
+    if normalized:
+        candidate = base_dir / normalized
+        if candidate.is_file():
+            return FileResponse(candidate)
+        if Path(normalized).suffix:
+            return Response(status_code=404)
+    index_file = base_dir / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return Response(status_code=404)
+
+
 @app.on_event("startup")
 def _iniciar_bootstrap():
     import threading
@@ -471,11 +487,20 @@ app.add_middleware(TrialMiddleware)
 async def disable_frontend_cache(request: Request, call_next):
     response = await call_next(request)
     path = request.url.path or ""
-    if path == "/app" or path.startswith("/frontend"):
+    if path.startswith(("/app", "/frontend", "/react", "/legado")):
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
     return response
+
+
+@app.middleware("http")
+async def api_prefix_alias(request: Request, call_next):
+    path = request.scope.get("path", "")
+    if path == "/api" or path.startswith("/api/"):
+        request.scope["path"] = path[4:] or "/"
+        request.scope["root_path"] = f"{request.scope.get('root_path', '')}/api"
+    return await call_next(request)
 
 
 @app.middleware("http")
@@ -494,7 +519,29 @@ async def enforce_utf8_charset(request: Request, call_next):
 @app.get("/frontend", include_in_schema=False)
 @app.get("/frontend/", include_in_schema=False)
 def frontend_legacy_index():
-    return FileResponse(FRONTEND_DIR / "index.html")
+    return _serve_spa_directory(LEGACY_FRONTEND_DIR)
+
+
+@app.get("/legado", include_in_schema=False)
+@app.get("/legado/", include_in_schema=False)
+def frontend_legacy_alias_index():
+    return _serve_spa_directory(LEGACY_FRONTEND_DIR)
+
+
+@app.get("/react", include_in_schema=False)
+@app.get("/react/", include_in_schema=False)
+def frontend_react_index():
+    return _serve_spa_directory(REACT_FRONTEND_DIST_DIR)
+
+
+@app.get("/legado/{path:path}", include_in_schema=False)
+def frontend_legacy_alias_spa(path: str):
+    return _serve_spa_directory(LEGACY_FRONTEND_DIR, path)
+
+
+@app.get("/react/{path:path}", include_in_schema=False)
+def frontend_react_spa(path: str):
+    return _serve_spa_directory(REACT_FRONTEND_DIST_DIR, path)
 
 if FRONTEND_DIR.exists():
     app.mount("/frontend", StaticFiles(directory=str(FRONTEND_DIR)), name="frontend")

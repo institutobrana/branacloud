@@ -8,6 +8,7 @@ import { BranaContextPanel } from '../layout/BranaContextPanel.jsx';
 import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
+import { appPath, getAppBasePath, isUnderAppBase, loginPath } from './basePath.js';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
@@ -106,61 +107,63 @@ const contextualMenus = {
 };
 
 function isLoginRoute() {
-  return (window.location.pathname || '/') === '/login';
+  const path = window.location.pathname || '/';
+  return path === `${getAppBasePath()}/login`;
 }
 
 function isAppRoute() {
   const path = window.location.pathname || '/';
-  return path === '/' || path === '/app' || path === '/app/inicio' || path === '/app/pacientes' || path === '/app/ficha-clinica' || path === '/app/cenario-anual' || path === '/app/configuracoes/plano-de-contas' || path === '/app/configuracoes/unidades-atendimento' || path === '/app/cadastro/corpo-clinico' || path === '/app/tabelas-auxiliares' || path === '/app/tabelas/procedimentos' || path === '/app/tabelas/procedimentos-genericos' || path === '/app/tabelas/materiais-estoque' || path === '/app/tabelas/doencas-cid' || path === '/app/tabelas/medicamentos' || path === '/app/tabelas/servicos-protetico' || path === '';
+  return isUnderAppBase(path) || path === '/' || path === '';
 }
 
 function resolveScreenFromPath() {
   const path = window.location.pathname || '/';
-  if (path === '/app/pacientes') return 'pacientes';
-  if (path === '/app/ficha-clinica') return 'ficha-clinica';
-  if (path === '/app/cenario-anual') return 'cenario-anual';
-  if (path === '/app/configuracoes/plano-de-contas') return 'plano-contas';
-  if (path === '/app/configuracoes/unidades-atendimento') return 'unidades-atendimento';
-  if (path === '/app/cadastro/corpo-clinico') return 'prestadores';
-  if (path === '/app/tabelas-auxiliares') return 'tabelas-auxiliares';
-  if (path === '/app/tabelas/procedimentos') return 'procedimentos';
-  if (path === '/app/tabelas/procedimentos-genericos') return 'procedimentos-genericos';
-  if (path === '/app/tabelas/materiais-estoque') return 'materiais-estoque';
-  if (path === '/app/tabelas/doencas-cid') return 'doencas-cid';
-  if (path === '/app/tabelas/medicamentos') return 'medicamentos';
-  if (path === '/app/tabelas/servicos-protetico') return 'servicos-protetico';
+  const base = getAppBasePath();
+  if (path === `${base}/pacientes`) return 'pacientes';
+  if (path === `${base}/ficha-clinica`) return 'ficha-clinica';
+  if (path === `${base}/cenario-anual`) return 'cenario-anual';
+  if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
+  if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
+  if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
+  if (path === `${base}/tabelas-auxiliares`) return 'tabelas-auxiliares';
+  if (path === `${base}/tabelas/procedimentos`) return 'procedimentos';
+  if (path === `${base}/tabelas/procedimentos-genericos`) return 'procedimentos-genericos';
+  if (path === `${base}/tabelas/materiais-estoque`) return 'materiais-estoque';
+  if (path === `${base}/tabelas/doencas-cid`) return 'doencas-cid';
+  if (path === `${base}/tabelas/medicamentos`) return 'medicamentos';
+  if (path === `${base}/tabelas/servicos-protetico`) return 'servicos-protetico';
   return 'dashboard';
 }
 
 function syncAppPath(screen) {
   const nextPath =
-    screen === 'pacientes'
-      ? '/app/pacientes'
+      screen === 'pacientes'
+      ? appPath('pacientes')
       : screen === 'ficha-clinica'
-        ? '/app/ficha-clinica'
+        ? appPath('ficha-clinica')
       : screen === 'cenario-anual'
-          ? '/app/cenario-anual'
+          ? appPath('cenario-anual')
           : screen === 'plano-contas'
-            ? '/app/configuracoes/plano-de-contas'
+            ? appPath('configuracoes/plano-de-contas')
           : screen === 'unidades-atendimento'
-            ? '/app/configuracoes/unidades-atendimento'
+            ? appPath('configuracoes/unidades-atendimento')
           : screen === 'prestadores'
-            ? '/app/cadastro/corpo-clinico'
+            ? appPath('cadastro/corpo-clinico')
         : screen === 'tabelas-auxiliares'
-          ? '/app/tabelas-auxiliares'
+          ? appPath('tabelas-auxiliares')
           : screen === 'procedimentos'
-            ? '/app/tabelas/procedimentos'
+            ? appPath('tabelas/procedimentos')
           : screen === 'procedimentos-genericos'
-            ? '/app/tabelas/procedimentos-genericos'
+            ? appPath('tabelas/procedimentos-genericos')
             : screen === 'materiais-estoque'
-              ? '/app/tabelas/materiais-estoque'
+              ? appPath('tabelas/materiais-estoque')
             : screen === 'doencas-cid'
-              ? '/app/tabelas/doencas-cid'
+              ? appPath('tabelas/doencas-cid')
             : screen === 'medicamentos'
-              ? '/app/tabelas/medicamentos'
+              ? appPath('tabelas/medicamentos')
             : screen === 'servicos-protetico'
-              ? '/app/tabelas/servicos-protetico'
-            : '/app';
+              ? appPath('tabelas/servicos-protetico')
+            : appPath();
   if ((window.location.pathname || '/') === nextPath) return;
   window.history.pushState({ screen }, '', nextPath);
 }
@@ -1007,14 +1010,14 @@ function AppContent() {
 
   if (isLoginRoute()) {
     if (isAuthenticated) {
-      window.location.replace('/app');
+      window.location.replace(appPath());
       return null;
     }
     return <LoginPage />;
   }
 
   if (!isAuthenticated) {
-    window.location.replace('/login');
+    window.location.replace(loginPath());
     return null;
   }
 
@@ -1091,7 +1094,7 @@ function AppContent() {
     );
   }
 
-  window.location.replace('/app');
+  window.location.replace(appPath());
   return null;
 }
 

@@ -38,6 +38,7 @@ class TrialMiddleware(BaseHTTPMiddleware):
         if (
             path in public_routes
             or path.startswith("/frontend")
+            or path.startswith("/react")
             or path.startswith("/desktop-assets")
             or path.startswith("/licenca/mercadopago/webhook")
         ):

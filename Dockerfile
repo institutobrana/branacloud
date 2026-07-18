@@ -1,3 +1,13 @@
+FROM node:20-bookworm-slim AS frontend-build
+
+WORKDIR /app/frontend-react
+
+COPY frontend-react/package*.json ./
+RUN npm ci
+
+COPY frontend-react/ ./
+RUN npm run build
+
 FROM python:3.10-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -12,12 +22,13 @@ COPY backend/requirements.txt /app/backend/requirements.txt
 RUN python -m pip install --upgrade pip \
     && pip install -r /app/backend/requirements.txt
 
-# Runtime do backend depende do frontend legado, assets e arquivos de apoio.
+# Runtime do backend depende do frontend legado, do build React e dos assets.
 COPY backend /app/backend
 COPY frontend /app/frontend
 COPY assets /app/assets
 COPY storage/modelos/base /app/storage/modelos/base
 COPY backend/scripts /app/scripts
+COPY --from=frontend-build /app/frontend-react/dist /app/frontend-react/dist
 
 # Diretórios efêmeros necessários para execuções locais em Linux.
 RUN mkdir -p /app/backend/tmp/editor_textos \
