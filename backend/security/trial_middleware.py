@@ -35,12 +35,17 @@ class TrialMiddleware(BaseHTTPMiddleware):
 
         path = request.url.path
 
+        def is_public_prefix(base_path: str) -> bool:
+            return path == base_path or path.startswith(f"{base_path}/")
+
         if (
             path in public_routes
-            or path.startswith("/frontend")
-            or path.startswith("/react")
-            or path.startswith("/desktop-assets")
-            or path.startswith("/licenca/mercadopago/webhook")
+            or is_public_prefix("/app")
+            or is_public_prefix("/legado")
+            or is_public_prefix("/frontend")
+            or is_public_prefix("/react")
+            or is_public_prefix("/desktop-assets")
+            or is_public_prefix("/licenca/mercadopago/webhook")
         ):
             return await call_next(request)
 

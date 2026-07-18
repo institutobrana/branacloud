@@ -409,6 +409,12 @@ def _serve_spa_directory(base_dir: Path, request_path: str = ""):
     return Response(status_code=404)
 
 
+def _redirect_preserving_query(request: Request, target_path: str):
+    query = request.url.query
+    location = f"{target_path}?{query}" if query else target_path
+    return RedirectResponse(url=location, status_code=307)
+
+
 @app.on_event("startup")
 def _iniciar_bootstrap():
     import threading
@@ -530,8 +536,8 @@ def frontend_legacy_alias_index():
 
 @app.get("/react", include_in_schema=False)
 @app.get("/react/", include_in_schema=False)
-def frontend_react_index():
-    return _serve_spa_directory(REACT_FRONTEND_DIST_DIR)
+def frontend_react_redirect(request: Request):
+    return _redirect_preserving_query(request, "/app")
 
 
 @app.get("/legado/{path:path}", include_in_schema=False)
@@ -540,8 +546,10 @@ def frontend_legacy_alias_spa(path: str):
 
 
 @app.get("/react/{path:path}", include_in_schema=False)
-def frontend_react_spa(path: str):
-    return _serve_spa_directory(REACT_FRONTEND_DIST_DIR, path)
+def frontend_react_spa_redirect(path: str, request: Request):
+    normalized = str(path or "").lstrip("/")
+    target = f"/app/{normalized}" if normalized else "/app"
+    return _redirect_preserving_query(request, target)
 
 if FRONTEND_DIR.exists():
     app.mount("/frontend", StaticFiles(directory=str(FRONTEND_DIR)), name="frontend")
@@ -551,8 +559,14 @@ if DESKTOP_ASSETS_DIR.exists():
 
 
 @app.get("/app", include_in_schema=False)
+@app.get("/app/", include_in_schema=False)
 def frontend_app():
-    return FileResponse(FRONTEND_DIR / "index.html")
+    return _serve_spa_directory(REACT_FRONTEND_DIST_DIR)
+
+
+@app.get("/app/{path:path}", include_in_schema=False)
+def frontend_app_spa(path: str):
+    return _serve_spa_directory(REACT_FRONTEND_DIST_DIR, path)
 
 
 @app.get("/favicon.ico", include_in_schema=False)

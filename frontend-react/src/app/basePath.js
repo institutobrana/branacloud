@@ -23,9 +23,6 @@ export function getFrontendBasePath(pathname) {
     return '/app';
   }
 
-  if (path === '/react' || path.startsWith('/react/')) {
-    return '/react';
-  }
   if (path === '/legado' || path.startsWith('/legado/')) {
     return '/legado';
   }
