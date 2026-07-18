@@ -143,6 +143,12 @@ O caminho recomendado para evolucao do banco passa a ser:
 
 O contrato operacional do passo 3 esta em `docs/contrato_provisionamento_tenant_inicial_aws.md`.
 
+## Contrato do tenant inicial
+
+- `--plan`: somente leitura, com seis identificadores obrigatorios, sem senha e sem ACK.
+- `--apply`: exige os seis identificadores, senha inicial via secret ou prompt autorizado e ACK explicito.
+- `--validate`: somente leitura, sem senha original e sem ACK.
+
 ## Padrao de entrega para futuras IAs
 
 Ao concluir uma tarefa, informe:

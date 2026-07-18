@@ -24,6 +24,7 @@ from services.tenant_provisioning import (
     ensure_baseline_applied,
     format_plan,
     load_tenant_provisioning_input,
+    load_apply_tenant_password,
     lock_tenant_provisioning,
     apply_tenant_provisioning,
     validate_tenant_state,
@@ -73,6 +74,7 @@ def cmd_apply():
     ensure_ack()
     _require_localhost_ack()
     spec = load_tenant_provisioning_input()
+    admin_password = load_apply_tenant_password()
     with engine.begin() as conn:
         if not lock_tenant_provisioning(conn):
             raise SystemExit("Execucao concorrente bloqueada.")
@@ -85,7 +87,7 @@ def cmd_apply():
             plan = build_plan(session, spec)
             if plan["blockers"]:
                 raise SystemExit("Estado atual indica tenant ja provisionado ou conflito de dados.")
-            result = apply_tenant_provisioning(session, spec)
+            result = apply_tenant_provisioning(session, spec, admin_password)
             validation = validate_tenant_state(session, spec)
             if not validation["ok"]:
                 raise RuntimeError(f"Validacao falhou: {validation}")

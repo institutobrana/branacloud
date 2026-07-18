@@ -106,6 +106,12 @@ python -m backend.scripts.provision_initial_tenant --validate
 
 O contrato do fluxo esta em `docs/contrato_provisionamento_tenant_inicial_aws.md`.
 
+### Contrato por modo
+
+- `--plan`: exige somente os seis identificadores do tenant inicial, nao le senha e nao exige ACK.
+- `--apply`: exige os seis identificadores, senha inicial via variavel/secret e ACK explicito.
+- `--validate`: exige os seis identificadores, mas nao exige senha original nem ACK.
+
 ## Dependencias principais
 
 `backend/requirements.txt` inclui FastAPI, Uvicorn, SQLAlchemy, psycopg2, python-dotenv, Pydantic, python-jose, Passlib, bcrypt, python-multipart, requests, pyHanko, ReportLab, Pillow e pypdf.

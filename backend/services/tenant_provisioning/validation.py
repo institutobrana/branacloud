@@ -9,7 +9,6 @@ from models.prestador_odonto import PrestadorOdonto
 from models.unidade_atendimento import UnidadeAtendimento
 from models.usuario import Usuario
 from models.usuario_perfil_acesso import UsuarioPerfilAcesso
-from security.hash import verify_password
 
 
 def _count(session: Session, model) -> int:
@@ -43,7 +42,6 @@ def validate_tenant_state(session: Session, spec) -> dict:
         ok = ok and bool(user.unidade_atendimento_id == unit.id)
         ok = ok and bool(provider.usuario_id == user.id)
         ok = ok and bool(profile.reservado)
-        ok = ok and verify_password(spec.admin_password, user.senha_hash)
 
     return {
         "ok": ok,

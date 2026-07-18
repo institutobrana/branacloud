@@ -48,6 +48,12 @@ Excluido:
 - `BRANA_INITIAL_ADMIN_EMAIL`
 - `BRANA_INITIAL_ADMIN_PASSWORD`
 
+### Por modo
+
+- `--plan`: exige somente os seis identificadores do tenant inicial; nao usa senha e nao usa ACK.
+- `--apply`: exige os seis identificadores, `BRANA_INITIAL_ADMIN_PASSWORD` e `BRANA_INITIAL_TENANT_ACK`.
+- `--validate`: exige os seis identificadores; nao usa senha original e nao usa ACK.
+
 ## ACK obrigatorio
 
 - `BRANA_INITIAL_TENANT_ACK=BRANA_INITIAL_TENANT_PROVISIONING_ACKNOWLEDGED`

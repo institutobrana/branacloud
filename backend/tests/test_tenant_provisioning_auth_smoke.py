@@ -17,10 +17,10 @@ if str(BACKEND_DIR) not in sys.path:
 
 
 def _load_main():
-    module = sys.modules.get("main")
-    if module is None:
-        return importlib.import_module("main")
-    return importlib.reload(module)
+    for name in list(sys.modules):
+        if name == "main" or name.startswith(("database", "models", "routes", "schemas", "security", "services")):
+            sys.modules.pop(name, None)
+    return importlib.import_module("main")
 
 
 class TenantProvisioningAuthSmokeTests(unittest.TestCase):

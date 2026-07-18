@@ -109,7 +109,7 @@ def _ensure_clinic(session, clinic_name: str, clinic_email: str) -> Clinica:
     return clinic
 
 
-def apply_tenant_provisioning(session, spec) -> dict:
+def apply_tenant_provisioning(session, spec, admin_password: str) -> dict:
     clinic = _ensure_clinic(session, spec.clinic_name, spec.clinic_email)
     _test_fail("clinic")
     unit = _ensure_unit(session, clinic.id, spec.unit_name)
@@ -162,7 +162,7 @@ def apply_tenant_provisioning(session, spec) -> dict:
             apelido=_apelido(spec.admin_name),
             tipo_usuario=TIPO_USUARIO_DENTISTA,
             email=spec.admin_email,
-            senha_hash=hash_password(spec.admin_password),
+            senha_hash=hash_password(admin_password),
             senha_interna_hash=None,
             clinica_id=clinic.id,
             prestador_id=provider.id,
@@ -181,7 +181,7 @@ def apply_tenant_provisioning(session, spec) -> dict:
         usuario.nome = spec.admin_name
         usuario.apelido = _apelido(spec.admin_name)
         usuario.tipo_usuario = TIPO_USUARIO_DENTISTA
-        usuario.senha_hash = hash_password(spec.admin_password)
+        usuario.senha_hash = hash_password(admin_password)
         usuario.senha_interna_hash = None
         usuario.clinica_id = clinic.id
         usuario.prestador_id = provider.id
