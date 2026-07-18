@@ -1327,14 +1327,14 @@ Observacoes:
 ## Prestadores - Nova frente React
 
 - Auditoria funcional e tecnica da nova frente `Prestadores` concluida para o caminho `Cadastro -> Corpo clinico`.
-- A etapa atual e exclusivamente documental e de encerramento formal.
-- A implementacao React ainda nao foi iniciada.
+- A frente ganhou a rota autenticada `Cadastro -> Corpo clinico` no frontend React com shell inicial em L.
+- A implementacao atual cobre apenas a estrutura visual e de navegacao inicial.
 - A documentacao base desta nova frente foi registrada em:
   - `docs/auditoria_prestadores_frontend_legado_backend_easydental.md`
   - `docs/contrato_implementacao_prestadores_frontend_react.md`
 - O contrato da nova frente preserva a separacao entre listagem principal, modal de cadastro e os fluxos isolados de `Agenda`, `Convênios` e `Comissões`.
-- Dependencias e riscos principais ainda estao em analise documental.
-- Nenhum backend, banco, payload ou tela funcional foi alterado nesta etapa.
+- Dependencias e riscos principais continuam restritos ao frontend desta etapa.
+- Nenhum backend, banco, payload ou CRUD foi alterado nesta etapa.
 
 ## Atualizacao Agenda de Contatos - Subetapa 2
 
