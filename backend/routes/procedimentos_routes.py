@@ -1,12 +1,13 @@
 import json
 import unicodedata
 from datetime import datetime
+from types import SimpleNamespace
 from collections import defaultdict
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import case, func, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -15,7 +16,7 @@ from database import get_db
 from models.cenario import Cenario
 from models.clinica import Clinica
 from models.financeiro import ItemAuxiliar
-from models.material import Material
+from models.material import ListaMaterial, Material
 from models.procedimento import Procedimento, ProcedimentoFase, ProcedimentoMaterial
 from models.procedimento_generico import (
     ProcedimentoGenerico,
@@ -137,6 +138,23 @@ class VinculoPayload(BaseModel):
 
 class VinculoUpdatePayload(BaseModel):
     quantidade: float
+
+
+class DashboardPreviewMaterialPayload(BaseModel):
+    material_id: int
+    quantidade: float
+    custo_und: float | None = None
+
+
+class DashboardPreviewPayload(BaseModel):
+    procedimento_id: int | None = None
+    tabela_id: int | str | None = None
+    procedimento_generico_id: int | None = None
+    preco: float = 0
+    tempo: int = 0
+    custo_lab: float = 0
+    custo: float = 0
+    materiais: list[DashboardPreviewMaterialPayload] = Field(default_factory=list)
 
 
 def _chave_ordenacao(texto: str) -> str:
@@ -734,6 +752,48 @@ def _compor_materiais_vinculados_procedimento(db: Session, proc: Procedimento) -
     return compor_materiais_vinculados_procedimento_service(db, proc)
 
 
+def _resumo_materiais_preview_por_payload(db: Session, clinica_id: int, materiais: list[DashboardPreviewMaterialPayload] | None) -> dict:
+    itens: list[dict] = []
+    for item in materiais or []:
+        material_id = int(getattr(item, "material_id", 0) or 0)
+        quantidade = float(getattr(item, "quantidade", 0) or 0)
+        if material_id <= 0 or quantidade <= 0:
+            continue
+        material = (
+            db.query(Material)
+            .join(ListaMaterial, ListaMaterial.id == Material.lista_id)
+            .filter(
+                Material.id == material_id,
+                ListaMaterial.clinica_id == clinica_id,
+            )
+            .first()
+        )
+        if material is None:
+            raise HTTPException(status_code=404, detail="Material nao encontrado.")
+        custo_und = float(getattr(material, "custo", 0) or 0)
+        itens.append(
+            {
+                "vinculo_id": 0,
+                "material_id": int(material.id or 0),
+                "codigo": str(material.codigo or "").strip(),
+                "nome": str(material.nome or "").strip(),
+                "relacao": float(material.relacao or 0),
+                "preco": float(material.preco or 0),
+                "custo_und": custo_und,
+                "quantidade": quantidade,
+                "custo_total": float(custo_und * quantidade or 0),
+                "origem": "proprio",
+                "herdado": False,
+            }
+        )
+    return {
+        "itens": itens,
+        "total_materiais": len(itens),
+        "total_custo_und": sum(float(item.get("custo_und") or 0) for item in itens),
+        "total_custo": sum(float(item.get("custo_total") or 0) for item in itens),
+    }
+
+
 def _calcular_financeiro_dashboard(proc: Procedimento, cenario: Cenario | None, custo_material: float) -> dict:
     preco = float(proc.preco or 0)
     tempo = float(proc.tempo or 0)
@@ -759,7 +819,7 @@ def _calcular_financeiro_dashboard(proc: Procedimento, cenario: Cenario | None, 
     rendimento_1020 = (lucro_liquido * 100 / preco) if preco > 0 else 0.0
 
     lucro_hora = (lucro_liquido * 60 / tempo) if tempo > 0 else 0.0
-    valor_minimo = custo_proc + valor_ir + valor_cd + valor_cartao + (custo_proc * 10 / 100)
+    valor_minimo = custo_proc + (custo_proc * ir_pct / 100) + (custo_proc * cd_pct / 100) + (custo_proc * cartao_pct / 100) + (custo_proc * 10 / 100)
 
     return {
         "id": proc.id,
@@ -1535,6 +1595,63 @@ def dashboard_lucratividade(
     return {
         "itens": itens,
         "grafico": grafico,
+    }
+
+
+@router.post("/dashboard-preview")
+def dashboard_preview_lucratividade(
+    payload: DashboardPreviewPayload,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = current_user.clinica_id
+    cenario = db.query(Cenario).filter(Cenario.clinica_id == clinica_id).first()
+
+    proc_base = None
+    if int(payload.procedimento_id or 0) > 0:
+        proc_base = _load_proc_or_404(db, clinica_id, int(payload.procedimento_id or 0))
+
+    generico_id = int(payload.procedimento_generico_id or 0)
+    if proc_base is not None and generico_id <= 0:
+        generico_id = int(proc_base.procedimento_generico_id or 0)
+
+    if payload.materiais:
+        materiais_compostos = _resumo_materiais_preview_por_payload(db, clinica_id, payload.materiais)
+    elif proc_base is not None:
+        materiais_compostos = _compor_materiais_vinculados_procedimento(db, proc_base)
+    elif generico_id > 0:
+        materiais_compostos = listar_materiais_herdados_generico_service(db, int(clinica_id), generico_id)
+    else:
+        materiais_compostos = {"itens": [], "total_materiais": 0, "total_custo_und": 0.0, "total_custo": 0.0}
+
+    proc_preview = SimpleNamespace(
+        id=int(proc_base.id if proc_base else payload.procedimento_id or 0) or 0,
+        codigo=int(proc_base.codigo if proc_base else 0) if proc_base else 0,
+        nome=str(proc_base.nome if proc_base else "").strip() if proc_base else "",
+        preco=float(payload.preco if payload.preco is not None else getattr(proc_base, "preco", 0) or 0),
+        tempo=float(payload.tempo if payload.tempo is not None else getattr(proc_base, "tempo", 0) or 0),
+        custo_lab=float(payload.custo_lab if payload.custo_lab is not None else getattr(proc_base, "custo_lab", 0) or 0),
+    )
+
+    item = _calcular_financeiro_dashboard(
+        proc_preview,
+        cenario,
+        float(materiais_compostos.get("total_custo") or 0),
+    )
+
+    item["materiais"] = materiais_compostos.get("itens") or []
+
+    return {
+        "itens": [item],
+        "grafico": [item],
+        "cenario": {
+            "cfph": float(cenario.cfph or 0) if cenario else 0.0,
+            "cfpm": float(cenario.cfpm or 0) if cenario else 0.0,
+            "ir": float(cenario.ir or 0) if cenario else 0.0,
+            "cd": float(cenario.cd or 0) if cenario else 0.0,
+            "cartao": float(cenario.cartao or 0) if cenario else 0.0,
+        },
+        "materiais": materiais_compostos,
     }
 
 
