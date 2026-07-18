@@ -15,6 +15,8 @@ const pageSource = fs.readFileSync(pagePath, 'utf8');
 const toolbarSource = fs.readFileSync(toolbarPath, 'utf8');
 const tableSource = fs.readFileSync(tablePath, 'utf8');
 const constantsSource = fs.readFileSync(constantsPath, 'utf8');
+const refToolbarSource = fs.readFileSync(path.resolve('src/features/servicosProtetico/components/ServicosProteticoToolbar.jsx'), 'utf8');
+const refTableSource = fs.readFileSync(path.resolve('src/features/servicosProtetico/components/ServicosProteticoTable.jsx'), 'utf8');
 
 test('Corpo clinico aparece no menu de Cadastro', () => {
   assert.match(appSource, /key:\s*'corpo-clinico',\s*label:\s*'Corpo clínico'/);
@@ -32,8 +34,9 @@ test('App reconhece a tela prestadores na navegacao autenticada', () => {
 });
 
 test('Pagina de prestadores usa shell em L e nao chama API', () => {
-  assert.match(pageSource, /prestadores-shell-l/);
-  assert.match(pageSource, /prestadores-shell-band/);
+  assert.match(pageSource, /servicos-protetico-page/);
+  assert.match(pageSource, /PrestadoresToolbar/);
+  assert.match(pageSource, /PrestadoresTable/);
   assert.doesNotMatch(pageSource, /fetch\(|axios|api\//);
 });
 
@@ -47,6 +50,11 @@ test('Toolbar de prestadores expõe os controles pedidos e bloqueia ações depe
   assert.match(toolbarSource, /placeholder="Especialidade"/);
   assert.match(toolbarSource, /Buscar por nome ou código/);
   assert.match(toolbarSource, /disabled=\{!canRunSelectionActions\}/);
+  assert.match(toolbarSource, /servicos-protetico-toolbar-row/);
+  assert.match(toolbarSource, /materiais-estoque-toolbar-actions servicos-protetico-toolbar-actions prestadores-toolbar-actions/);
+  assert.match(toolbarSource, /materiais-estoque-toolbar-filters servicos-protetico-toolbar-filters prestadores-toolbar-filters/);
+  assert.match(toolbarSource, /prestadores-toolbar-field/);
+  assert.match(refToolbarSource, /servicos-protetico-toolbar-row/);
 });
 
 test('Tabela de prestadores preserva as cinco colunas do contrato', () => {
@@ -54,7 +62,15 @@ test('Tabela de prestadores preserva as cinco colunas do contrato', () => {
   assert.match(constantsSource, /Fone 1/);
   assert.match(constantsSource, /Fone 2/);
   assert.match(constantsSource, /Status/);
-  assert.match(tableSource, /Lista de corpo clínico/);
-  assert.match(tableSource, /Nenhum prestador cadastrado\./);
+  assert.match(tableSource, /servicos-protetico-table-shell prestadores-table-shell/);
+  assert.match(tableSource, /servicos-protetico-table-frame prestadores-table-frame/);
+  assert.match(tableSource, /servicos-protetico-table-grid prestadores-table-grid/);
+  assert.match(tableSource, /rowSelection=\{\{/);
+  assert.match(tableSource, /type: 'radio'/);
+  assert.match(tableSource, /TableColumnFilterHeader/);
+  assert.match(tableSource, /columnsConfig/);
+  assert.doesNotMatch(tableSource, /Nenhum prestador cadastrado\./);
   assert.match(tableSource, /0 prestadores/);
+  assert.match(tableSource, /TABLE_SCROLL_Y = 480/);
+  assert.match(refTableSource, /servicos-protetico-table-shell/);
 });

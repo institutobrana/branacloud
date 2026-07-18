@@ -27,9 +27,9 @@ Este documento registra o estado atual dos modulos do Brana Cloude com base no c
 
 Observacao: pela ausencia de migrations formais e testes automatizados amplos, a maioria dos modulos deve ser tratada como `EM DESENVOLVIMENTO`, mesmo quando ja possui backend e frontend operantes.
 
-- A frente `Unidades de atendimento` teve a Etapa 1 do frontend React concluida com fundacao modular, rota, shell, listagem, inclusao e alteracao; a exclusao funcional permanece pendente de contrato de protecao, e os documentos de base seguem em `docs/auditoria_unidades_atendimento_brana_easydental.md` e `docs/contrato_implementacao_unidades_atendimento_frontend_react.md`.
-- A auditoria corretiva da Etapa 1.1 fechou o contrato de `ativo`/`inativo`, confirmou a preservacao de `qtd_sala` no PUT, identificou os registros de teste locais e isolou o `404` de `favicon.ico` como recurso global, sem alterar backend, banco ou exclusao funcional.
-- A auditoria da Etapa 2 concluiu que o `DELETE /cadastros/unidades-atendimento/{row_id}` e fisico e sem protecao suficiente; a recomendacao passou a ser bloquear unidade principal, ultima unidade, usuarios, agenda, bloqueios e tratamentos antes de qualquer futura liberacao.
+- A frente `Unidades de atendimento` teve a Etapa 1 do frontend React concluida com fundacao modular, rota, shell, listagem, inclusao e alteracao; a exclusao funcional passou a existir apenas de forma protegida, com contrato e testes dedicados, e os documentos de base seguem em `docs/auditoria_unidades_atendimento_brana_easydental.md` e `docs/contrato_implementacao_unidades_atendimento_frontend_react.md`.
+- A auditoria corretiva da Etapa 1.1 fechou o contrato de `ativo`/`inativo`, confirmou a preservacao de `qtd_sala` no PUT, identificou os registros de teste locais e isolou o `404` de `favicon.ico` como recurso global, sem alterar backend, banco ou regras de exclusao.
+- A auditoria da Etapa 2 concluiu que o `DELETE /cadastros/unidades-atendimento/{row_id}` era fisico e sem protecao suficiente; a etapa seguinte consolidou a protecao por unidade principal, ultima unidade, usuarios, agenda, bloqueios e tratamentos antes da liberacao no frontend.
 - A frente `Tabelas -> Doencas (CID)` teve sua primeira fatia React de leitura iniciada, com rota, menu e listagem basal em andamento; CRUD de escrita, modal e validacao autenticada completa ainda permanecem pendentes.
 - A primeira validacao autenticada da fatia somente leitura do CID foi concluida no novo frontend React, com login real, rota `/app/tabelas/doencas-cid` ativa e `GET /cid` observado; a etapa de CRUD segue pendente.
 - A listagem do CID passou por paginação local para reduzir o DOM de milhares de linhas para cerca de 50 por página, preservando filtros, selecao e modal sem alterar backend ou banco.
@@ -1329,12 +1329,14 @@ Observacoes:
 - Auditoria funcional e tecnica da nova frente `Prestadores` concluida para o caminho `Cadastro -> Corpo clinico`.
 - A frente ganhou a rota autenticada `Cadastro -> Corpo clinico` no frontend React com shell inicial em L.
 - A implementacao atual cobre apenas a estrutura visual e de navegacao inicial.
+- A correção visual desta etapa alinhou barra, tabela, seleção, filtros e contador ao padrão de `Tabelas -> ServiÃ§os de ProtÃ©tico`.
 - A documentacao base desta nova frente foi registrada em:
   - `docs/auditoria_prestadores_frontend_legado_backend_easydental.md`
   - `docs/contrato_implementacao_prestadores_frontend_react.md`
 - O contrato da nova frente preserva a separacao entre listagem principal, modal de cadastro e os fluxos isolados de `Agenda`, `Convênios` e `Comissões`.
 - Dependencias e riscos principais continuam restritos ao frontend desta etapa.
 - Nenhum backend, banco, payload ou CRUD foi alterado nesta etapa.
+- Listagem real, especialidades reais, pesquisa real e demais acoes continuam pendentes.
 
 ## Atualizacao Agenda de Contatos - Subetapa 2
 
