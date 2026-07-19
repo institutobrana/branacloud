@@ -85,17 +85,102 @@ Teste frontend adicionado em `frontend-react/tests/procedimentosDashboardPreview
 - Confirma payload serializado.
 - Confirma normalizacao da resposta para o hook/painel.
 
-## Deploy futuro
+## Publicacao AWS em 2026-07-18
 
-Esta correcao e local e documental nesta etapa. Nao houve publicacao AWS.
+Commit funcional publicado:
 
-Em uma proxima rodada de publicacao, o plano e gerar nova imagem, registrar nova task definition e atualizar o servico ECS.
+```text
+4e3ed24371cd081d132f8982fe33e291810868fe
+fix(procedimentos): adiciona preview do painel financeiro
+```
 
-Rollback futuro permanece disponivel retornando para:
+Imagem criada e enviada ao ECR:
+
+```text
+810204249111.dkr.ecr.sa-east-1.amazonaws.com/brana-cloud/backend:procedimentos-preview-4e3ed243
+sha256:9b75c0d1b936d850fb2e070572715fcfa8fa55b430c762c4caf59244d9ad39f9
+```
+
+Task definition anterior, usada como rollback:
+
+```text
+default-brana-hml-backend:8
+810204249111.dkr.ecr.sa-east-1.amazonaws.com/brana-cloud/backend@sha256:cc95c985a3b368a8edfff3d954564be46aa1902e31d91d5cc40bc139db63b5d4
+```
+
+Task definition nova registrada:
+
+```text
+default-brana-hml-backend:9
+```
+
+A comparacao entre `:8` e `:9` confirmou preservacao de family, execution role, network mode, CPU, memoria, runtime platform, container name, portas, environment variable names, secret names, logs, command e entrypoint. A unica mudanca funcional foi a imagem do container principal.
+
+## Resultado do deploy AWS
+
+O servico ECS foi atualizado temporariamente para `default-brana-hml-backend:9` e ficou estavel:
+
+```text
+desired = 1
+running = 1
+pending = 0
+rollout = COMPLETED
+```
+
+Validacao no endpoint tecnico:
+
+```text
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/health = 200
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/app = 200
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/legado = 200
+POST /api/procedimentos/dashboard-preview sem token = 401 JSON
+```
+
+Validacao no dominio principal durante `:9`:
+
+```text
+https://app.institutobrana.com.br/health = 503 awselb/2.0
+https://app.institutobrana.com.br/app = 503 awselb/2.0
+https://app.institutobrana.com.br/legado = 503 awselb/2.0
+```
+
+A investigacao mostrou que a regra ALB do host `app.institutobrana.com.br` ainda apontava para o target group antigo em `draining`, enquanto o host tecnico apontava para o target group novo saudavel. Como esta rodada proibia alteracao de load balancer e exigia rollback em falha de validacao, o servico foi revertido para `default-brana-hml-backend:8`.
+
+## Resultado apos rollback
+
+Rollback executado:
 
 ```text
 default-brana-hml-backend:8
 ```
+
+Estado apos rollback:
+
+```text
+desired = 1
+running = 1
+pending = 0
+rollout = COMPLETED
+```
+
+Validacao apos rollback:
+
+```text
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/health = 200
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/app = 200
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/legado = 200
+https://app.institutobrana.com.br/health = 200
+https://app.institutobrana.com.br/app = 200
+https://app.institutobrana.com.br/legado = 200
+```
+
+## Validacao funcional autenticada
+
+Nao foi executada nesta rodada porque o deploy foi revertido antes da etapa de login e navegacao funcional no dominio principal. A rota continua validada localmente por testes automatizados e por smoke sem token na imagem, mas ainda precisa de nova publicacao coordenada com a regra ALB correta para validacao manual de `Novo` e `Alterar` no ambiente AWS.
+
+## CloudWatch
+
+No periodo do deploy e rollback, os logs registraram startup normal da task, politica de producao com schema bootstrap desativado e health checks `GET /health 200`. Nao foram observados `Traceback`, `Exception`, `500`, `CORS`, `localhost` ou falha de banco relacionados a esta correcao no filtro consultado.
 
 ## Banco e migrations
 
