@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Checkbox, Input, Select } from 'antd';
 import {
   resolveProcedimentoSymbolPreviewCandidates,
@@ -8,12 +9,46 @@ import {
 } from '../procedimentosEditorMappers.js';
 import { PROCEDIMENTO_FORMA_COBRANCA_OPTIONS } from '../procedimentosEditorConstants.js';
 
-function ProcedimentoEditorSymbolPreview({ src }) {
+const symbolPreviewPlaceholderStyle = {
+  display: 'grid',
+  placeItems: 'center',
+  color: 'rgba(75, 85, 99, 0.78)',
+  fontSize: 10,
+  fontWeight: 700,
+  lineHeight: 1.1,
+  textAlign: 'center',
+};
+
+function ProcedimentoEditorSymbolPreview({ candidates, label }) {
+  const sources = Array.isArray(candidates) ? candidates.filter(Boolean) : [];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [sources.join('|')]);
+
+  const src = sources[index] || '';
   if (src) {
-    return <img className="procedimento-editor-symbol-preview" src={src} alt="" />;
+    return (
+      <img
+        className="procedimento-editor-symbol-preview"
+        src={src}
+        alt={label ? `Símbolo gráfico: ${label}` : 'Símbolo gráfico'}
+        onError={() => setIndex((current) => (current < sources.length - 1 ? current + 1 : sources.length))}
+      />
+    );
   }
 
-  return <div className="procedimento-editor-symbol-preview" aria-hidden="true" />;
+  return (
+    <div
+      className="procedimento-editor-symbol-preview"
+      role="img"
+      aria-label="Símbolo gráfico sem imagem"
+      style={symbolPreviewPlaceholderStyle}
+    >
+      <span>Sem imagem</span>
+    </div>
+  );
 }
 
 export function ProcedimentoCadastroPanel({
@@ -27,7 +62,7 @@ export function ProcedimentoCadastroPanel({
 }) {
   const values = form || {};
   const symbolValue = resolveProcedimentoSymbolSelectValue(simboloOptions, values) || undefined;
-  const { ambiguous } = resolveProcedimentoSymbolSelection(simboloOptions, values);
+  const { option: selectedSymbol, ambiguous } = resolveProcedimentoSymbolSelection(simboloOptions, values);
   const previewCandidates = resolveProcedimentoSymbolPreviewCandidates(simboloOptions, values);
 
   const update = (field, value) => {
@@ -52,7 +87,7 @@ export function ProcedimentoCadastroPanel({
       <div className="procedimento-editor-panel-title">Painel de Cadastro</div>
       <div className="procedimento-editor-grid">
         <div className="procedimento-editor-cadastro-top">
-          <ProcedimentoEditorSymbolPreview src={previewCandidates[0]} />
+          <ProcedimentoEditorSymbolPreview candidates={previewCandidates} label={selectedSymbol?.descricao || selectedSymbol?.codigo || values?.simbolo_grafico || ''} />
           <label className="procedimento-editor-field procedimento-editor-name-block">
             <span>Nome da intervenção / procedimento</span>
             <Input value={values.nome || ''} disabled={disabled || loading} onChange={(event) => update('nome', event.target.value)} />

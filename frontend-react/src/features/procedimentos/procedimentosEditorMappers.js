@@ -271,19 +271,32 @@ export function resolveProcedimentoSymbolPreviewCandidates(simbolos, state) {
   const fallback = String(option.icone || option.raw?.bitmap1 || option.raw?.bitmap2 || option.raw?.bitmap3 || '').trim();
   const codigo = String(option.codigo || '').trim();
   const fileName = resolvePreviewFileName(nomeArquivo || fallback || codigo);
-  if (!fileName) return [];
 
   const next = [];
-  if (rawSrc && !rawSrc.includes('/desktop-assets/easy/')) next.push(rawSrc);
-  if (/^sim_/i.test(fileName)) {
-    next.push(`/assets/easy/${fileName}`);
-  } else if (/^esp_/i.test(fileName)) {
-    next.push(`/assets/fichaClinica/odontograma/especialidades/${fileName}`);
-  } else {
-    next.push(`/assets/easy/${fileName}`);
-    next.push(`/assets/fichaClinica/odontograma/procedimentos/${fileName}`);
+  if (isPublicPreviewUrl(rawSrc)) next.push(rawSrc);
+  if (fileName) {
+    next.push(`/desktop-assets/easy/${fileName}`);
+    if (/^sim_/i.test(fileName)) {
+      next.push(`/app/assets/easy/${fileName}`);
+    } else if (/^esp_/i.test(fileName)) {
+      next.push(`/app/assets/fichaClinica/odontograma/especialidades/${fileName}`);
+    } else {
+      next.push(`/app/assets/easy/${fileName}`);
+      next.push(`/app/assets/fichaClinica/odontograma/procedimentos/${fileName}`);
+    }
   }
   return Array.from(new Set(next.filter(Boolean)));
+}
+
+export function isPublicPreviewUrl(value) {
+  const normalized = String(value || '').trim();
+  if (!normalized) return false;
+  return (
+    normalized.startsWith('/') ||
+    /^https?:\/\//i.test(normalized) ||
+    /^data:image\//i.test(normalized) ||
+    /^blob:/i.test(normalized)
+  );
 }
 
 export function hydrateProcedimentoSymbolState(simbolos, item = {}) {
