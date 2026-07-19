@@ -185,3 +185,155 @@ No periodo do deploy e rollback, os logs registraram startup normal da task, pol
 ## Banco e migrations
 
 Nao ha alteracao de schema, banco, RDS ou migrations.
+
+## Publicacao AWS conjunta em 2026-07-19
+
+O commit funcional com a correcao do Painel Financeiro e a correcao posterior do preview do simbolo grafico foi publicado e sincronizado:
+
+```text
+021cab6143c54c860a219a87f6deecbdd96370e0
+fix(procedimentos): corrige preview do simbolo grafico
+```
+
+Antes do novo deploy, foi auditado o ALB `ecs-express-gateway-alb-cc2efd45`, listener HTTPS e regra do host:
+
+```text
+host-header = app.institutobrana.com.br
+priority = 20
+rule = arn:aws:elasticloadbalancing:sa-east-1:810204249111:listener-rule/app/ecs-express-gateway-alb-cc2efd45/bf1c5b416fb4e6fd/08036ee6fda55e38/da864f476e9f5b28
+```
+
+No inicio da rodada, a regra do dominio e o target group efetivo do ECS apontavam para o mesmo target group saudavel:
+
+```text
+ecs-gateway-tg-e9a92e7d6f31c7aaa
+10.20.5.91:8080 = healthy
+```
+
+Por isso, nenhuma alteracao de ALB foi feita antes do deploy. A task efetiva observada antes do deploy era `default-brana-hml-backend:9`, apesar de o rollback de aplicacao da rodada permanecer definido como `default-brana-hml-backend:8`.
+
+Validacao publica antes do deploy:
+
+```text
+https://app.institutobrana.com.br/health = 200
+https://app.institutobrana.com.br/app = 200 React
+https://app.institutobrana.com.br/legado = 200 legado
+https://app.institutobrana.com.br/desktop-assets/easy/int_cirur.bmp = 200 image/x-ms-bmp
+POST /api/procedimentos/dashboard-preview sem token = 401 JSON
+```
+
+Imagem publicada no ECR com tag unica:
+
+```text
+810204249111.dkr.ecr.sa-east-1.amazonaws.com/brana-cloud/backend:procedimentos-fixes-021cab61
+sha256:4a38b9bb1ee665073e2348580e11cb0c339d51900e025b999cbcfa4ae273c119
+```
+
+A nova task definition foi registrada a partir da configuracao efetiva `default-brana-hml-backend:9`, alterando exclusivamente a imagem do container principal:
+
+```text
+default-brana-hml-backend:10
+Main = 810204249111.dkr.ecr.sa-east-1.amazonaws.com/brana-cloud/backend@sha256:4a38b9bb1ee665073e2348580e11cb0c339d51900e025b999cbcfa4ae273c119
+```
+
+Foram preservados family, execution role, network mode, CPU, memoria, runtime platform, container name, porta `8080`, environment, secrets, logs, command, entrypoint, volumes e mount points.
+
+Durante o deploy para `:10`, o ECS registrou a nova task no target group alternado:
+
+```text
+ecs-gateway-tg-755fef69195f7dbe3
+10.20.21.97:8080 = healthy
+```
+
+A regra do dominio ainda apontava para:
+
+```text
+ecs-gateway-tg-e9a92e7d6f31c7aaa
+10.20.5.91:8080 = draining
+```
+
+Essa foi a causa confirmada do risco de `503`: a regra do host poderia encaminhar trafego para target group em draining enquanto a task saudavel estava registrada no outro target group.
+
+Foi feito backup temporario do JSON da regra e alterada somente a action da regra `app.institutobrana.com.br`, preservando host, prioridade, listener e certificado:
+
+```text
+antes = ecs-gateway-tg-e9a92e7d6f31c7aaa
+depois = ecs-gateway-tg-755fef69195f7dbe3
+```
+
+Estado final do ECS:
+
+```text
+task definition = default-brana-hml-backend:10
+desired = 1
+running = 1
+pending = 0
+rollout = COMPLETED
+target health = healthy
+```
+
+Validacao publica apos deploy:
+
+```text
+https://app.institutobrana.com.br/health = 200
+https://app.institutobrana.com.br/app = 200 React
+https://app.institutobrana.com.br/legado = 200 legado
+https://app.institutobrana.com.br/desktop-assets/easy/int_cirur.bmp = 200 image/x-ms-bmp
+POST /api/procedimentos/dashboard-preview sem token = 401 JSON
+
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/health = 200
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/app = 200 React
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/legado = 200 legado
+https://br-5c882cb2d9e6485f9cfbbac844ac550a.ecs.sa-east-1.on.aws/desktop-assets/easy/int_cirur.bmp = 200 image/x-ms-bmp
+POST /api/procedimentos/dashboard-preview sem token = 401 JSON
+```
+
+Nao houve `405`, `503` ou retorno de HTML React para o endpoint de API nas validacoes HTTP.
+
+## Validacao autenticada em AWS
+
+A validacao autenticada do Painel Financeiro em `Novo` e `Alterar` nao foi automatizada nesta rodada porque a ferramenta nao possui sessao autenticada compartilhada do navegador do usuario. Nao foram solicitadas ou capturadas credenciais, tokens, cookies, localStorage, headers de autorizacao ou payloads sensiveis.
+
+O endpoint autenticado permanece protegido: sem token, `POST /api/procedimentos/dashboard-preview` retorna `401 JSON`.
+
+## CloudWatch em 2026-07-19
+
+Log group:
+
+```text
+/aws/ecs/default/brana-hml-backend-f5f1
+```
+
+Foram consultados os termos `dashboard-preview`, `405`, `503`, `ERROR`, `Exception`, `Traceback`, `500`, `CORS`, `localhost`, `int_cirur.bmp` e equivalentes seguros para assets.
+
+Resultado:
+
+```text
+GET /desktop-assets/easy/int_cirur.bmp = 200 OK
+405 = nao observado
+500 = nao observado
+ERROR = nao observado
+Exception = nao observado
+Traceback = nao observado
+CORS = nao observado
+localhost = nao observado
+```
+
+As ocorrencias filtradas por `503` correspondiam a portas de origem `503xx` em linhas `GET /health 200 OK`, nao a status HTTP 503.
+
+## Rollback
+
+Rollback da aplicacao:
+
+```text
+aws ecs update-service --cluster default --service brana-hml-backend --task-definition default-brana-hml-backend:8
+```
+
+Rollback da regra ALB:
+
+```text
+modify-rule da regra app.institutobrana.com.br para o target group anterior registrado no backup temporario:
+ecs-gateway-tg-e9a92e7d6f31c7aaa
+```
+
+Nao houve alteracao de banco, RDS, schema ou migrations nesta publicacao.
