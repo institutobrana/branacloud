@@ -1158,6 +1158,44 @@ Observacoes:
 
 ---
 
+## Frente: Integracao e migracao modular do Painel ADM para o frontend React
+
+Status: EM DESENVOLVIMENTO
+
+Fases:
+
+[Ã¢ï¿½â¬] Auditoria tecnica inicial - concluida.
+[Ã¢ï¿½â¬] Inventario funcional do legado - concluido.
+[Ã¢ï¿½â¬] Contrato de arquitetura modular - concluido.
+[Ã¢ï¿½â¬] Fundacao do modulo ADM React - concluida.
+[Ã¢ï¿½â¬] Item ADM no menu superior - concluido.
+[Ã¢ï¿½â¬] Rota protegida e autorizacao - concluida.
+[Ã¢ï¿½â¬] Layout e navegacao administrativa - concluida.
+[Ã¢ï¿½â¬] Mapeamento exaustivo de campos e funcoes - concluido.
+[Ã¢ï¿½â¬] Matriz de paridade legado -> React - concluida.
+[Ã¢ï¿½â¬] Plano funcional de migracao modular - concluido.
+[Ã¢ï¿½â¬] Refinamento visual da fundacao - concluido.
+[ ] Migracao do primeiro modulo administrativo - pendente.
+[ ] Migracao incremental dos demais modulos - pendente.
+[Ã¢ï¿½â¬] Testes locais - concluidos.
+[Ã¢ï¿½â¬] Encerramento documental - concluido.
+[ ] Commit seletivo - pendente.
+[ ] Push para GitHub - pendente.
+[ ] Publicacao e validacao AWS - pendente.
+[ ] Desativacao futura do painel ADM legado - somente apos paridade comprovada.
+
+Proximo passo:
+
+* Iniciar a migracao funcional do dashboard/visao geral ou da frente de Clinicas, conforme a priorizacao operacional da proxima frente.
+
+Observacoes:
+
+* O painel ADM novo e uma feature propria do React.
+* O legado permanece apenas como referencia de auditoria e comportamento.
+* A migracao futura deve seguir modularidade e teste por area.
+
+---
+
 ## Modulo: Frontend Web
 
 Status: EM DESENVOLVIMENTO
@@ -6357,3 +6395,196 @@ Observacoes:
 
 - A Etapa 4C.17 foi validada com bloqueio de persistencia para campos invalidos, exibindo mensagem para `horas_atendimento_dia = 0`, sem `POST /api/cenario` e com restauracao do baseline apos correcao para `8`.
 - A frente permaneceu com 17 testes aprovados e build aprovado, sem alteracao de backend, banco ou Procedimentos.
+
+## 2026-07-20 - ADM React: navegacao lateral MASTER
+
+- O Painel ADM passou a usar um agrupador proprio no rail lateral principal do frontend React.
+- A regra de acesso foi centralizada em `is_master` vindo da sessao `/me`.
+- O submenu ADM ficou restrito a Visão geral, Clínicas, Usuários, Cobranças e Auditoria.
+- A navegação horizontal interna em pills deixou de ser a camada ativa do ADM.
+- Dashboard funcional, tabelas, acoes administrativas, commit e push permanecem pendentes.
+
+## 2026-07-20 - ADM React: correção da emenda visual em L
+
+- A faixa superior do shell ADM passou a considerar a largura do submenu lateral aberto no cálculo de alinhamento.
+- A correção foi aplicada no shell global, sem tocar em Materiais.
+- A frente permanece pendente de validação visual manual no navegador.
+
+## 2026-07-20 - ADM React: visão geral funcional inicial
+
+- A visão geral funcional inicial foi criada em `frontend-react/src/features/admin/overview/OverviewPage.jsx`.
+- O endpoint real usado é `GET /superadmin/overview`.
+- A toolbar da visão geral ganhou o botão `Atualizar` com loading.
+- Os KPIs e o resumo online são de leitura, sem cálculo duplicado no frontend.
+- Clínicas, usuários, cobranças e auditoria seguem como próximas etapas.
+
+## 2026-07-20 - ADM React: visão geral com barra global e tabela-resumo
+
+- O botão `Atualizar` foi movido para a faixa horizontal global do ADM.
+- O texto `Visão geral` deixou de ocupar a barra.
+- A visão geral passou a exibir uma tabela-resumo com dez colunas abaixo dos cards.
+- Os textos técnicos da interface foram removidos da experiência final.
+
+## Atualizacao - ADM Visao geral - ultimo acesso
+
+- Auditoria de ultimo acesso concluida: classificacao `D`, sem campo real previo em modelo, banco, sessao ou auditoria.
+- Campo de ultimo acesso concluido: `usuarios.ultimo_login_em`, nullable, `TIMESTAMP WITH TIME ZONE`, sem default e sem backfill.
+- Exibicao na tabela concluida: `GET /superadmin/overview` retorna `ultimo_acesso` para o usuario responsavel da clinica.
+- Nao regressao de login coberta por testes automatizados: login valido, login invalido, renew e logout.
+- Validacao runtime no navegador ainda deve ser repetida com credencial operacional, console e network.
+
+## Atualizacao - ADM Visao geral - correcao UTF-8 e secoes provisorias
+
+- Correcao UTF-8 da Visao geral concluida nos textos dos cards, tabela e fallbacks.
+- Titulo da tabela removido.
+- Secao provisoria `Atividade recente` removida da composicao ativa.
+- Backend, banco e migration nao foram alterados nesta etapa.
+
+## 2026-07-20 - ADM React: Clinicas fase 1 leitura
+
+- `ADM -> Clinicas` ganhou a primeira implementacao modular somente leitura no frontend React.
+- O modulo usa `GET /superadmin/clinicas` com Bearer token e sem operacoes de escrita.
+- A toolbar global do ADM passou a aceitar controles da secao ativa e, em Clinicas, exibe a superficie administrativa visual à esquerda e a busca textual à direita.
+- A tabela exibe `ID`, `Clinica`, `Usuarios`, `Plano`, `Trial ate` e `Status`, com selecao unica de linha.
+- A limpeza posterior removeu da implementacao ativa os combos `Status`, `Ativo`, `Plano`, o botao `Limpar filtros`, estados, handlers, opcoes e CSS exclusivos; o service React envia somente `q` e `limit`, preservando o backend sem alteracao.
+- Os controles `+Teste`, `Suspender`, `Demo`, `Mensal`, `Anual`, `Super Admin`, `Novo usuário` e `Excluir` foram adicionados apenas como botoes desabilitados, sem conectar escrita.
+- A tabela de Clinicas foi padronizada pelo modelo de `Tabelas -> Servicos de Protetico`, usando `BranaTable`, `TableColumnFilterHeader`, ordenacao/filtro/visibilidade por coluna, linhas compactas, rolagem `480`, rodape integrado e botoes da toolbar com `auxiliary-shell-button`.
+- O botao `Atualizar` foi removido da toolbar; o refetch interno permanece para carregamento, busca e mutacoes.
+- `+Teste` passou a executar a acao real `PATCH /superadmin/clinicas/{id}/trial-extra` com Spin inicial `10`, limites `1..3650`, confirmacao, loading proprio, auditoria backend e recarga da listagem apos sucesso.
+- Permanecem pendentes: suspensao/ativacao, Demo, Mensal, Anual, Super Admin, Novo usuario, exclusao, exportacao, validacao runtime autenticada, commit, push e AWS.
+## Atualizacao recente - ADM Clinicas Suspender / Ativar
+
+- `ADM -> Clinicas` agora possui a acao real `Suspender`/`Ativar` no frontend React, reutilizando `PATCH /superadmin/clinicas/{id}/status`.
+- O fluxo usa modal controlado, motivo opcional, hook `useUpdateClinicStatus`, service `updateAdminClinicStatus`, loading separado e refetch apos sucesso.
+- `+Teste` permanece funcional e separado.
+- Demo, Mensal, Anual, Super Admin, Novo usuario e Excluir seguem pendentes.
+- Sem backend novo, banco, migration, login, renew, logout, commit, push ou AWS.
+- Correcao textual posterior removeu mojibake do modal `Suspender`/`Ativar` na fonte JSX e adicionou teste negativo de regressao.
+- Nao marcar `Suspender`/`Ativar` como concluido ate validacao runtime funcional de suspensao e ativacao em sessao MASTER local segura.
+## Atualizacao recente - ADM Clinicas Demo
+
+- `Demo` foi implementado no React com endpoint legado `PATCH /superadmin/clinicas/{id}/plano`.
+- Payload React: `{ plano: "DEMO", manter_ativo: true }`.
+- Semantica documentada: altera plano/tipo de conta para Demo, reinicia trial padrao de 7 dias via backend, mantem/reativa a clinica e sincroniza assinatura.
+- `+Teste` e `Suspender/Ativar` permanecem preservados.
+- `Mensal`, `Anual`, `Super Admin`, `Novo usuario`, `Excluir`, commit, push e AWS permanecem pendentes.
+- Nao marcar Demo como concluido operacionalmente ate validar runtime autenticado em ambiente local com clinica descartavel/local.
+
+## Atualizacao recente - ADM Clinicas Mensal
+
+- `Mensal` foi implementado no React com endpoint legado `PATCH /superadmin/clinicas/{id}/plano`.
+- Payload React: `{ plano: "MENSAL", manter_ativo: true }`.
+- Semantica documentada: altera plano/tipo de conta para Mensal, reinicia validade padrao de 30 dias via backend, mantem/reativa a clinica, atualiza `data_ativacao` e sincroniza assinatura.
+- O endpoint nao cria boleto, Pix, checkout ou cobranca.
+- `+Teste`, `Suspender/Ativar` e `Demo` permanecem preservados.
+- `Anual`, `Super Admin`, `Novo usuario`, `Excluir`, commit, push e AWS permanecem pendentes.
+- Nao marcar Mensal como concluido operacionalmente ate validar runtime autenticado em ambiente local com clinica descartavel/local.
+
+## Atualizacao recente - ADM Clinicas Anual
+
+- `Anual` foi implementado no React com endpoint legado `PATCH /superadmin/clinicas/{id}/plano`.
+- Payload React: `{ plano: "ANUAL", manter_ativo: true }`.
+- Semantica documentada: altera plano/tipo de conta para Anual, reinicia validade padrao de 365 dias via backend, mantem/reativa a clinica, atualiza `data_ativacao` e sincroniza assinatura.
+- O endpoint nao cria boleto, Pix, checkout ou cobranca; apenas sincroniza assinatura derivada e `proxima_cobranca_em`.
+- `+Teste`, `Suspender/Ativar`, `Demo` e `Mensal` permanecem preservados.
+- `Super Admin`, `Novo usuario`, `Excluir`, commit, push e AWS permanecem pendentes.
+- Nao marcar Anual como concluido operacionalmente ate validar runtime autenticado em ambiente local com clinica descartavel/local.
+
+## Atualizacao recente - ADM Clinicas Super Admin
+
+- `Super Admin` foi implementado no React com endpoint legado `PATCH /superadmin/clinicas/{id}/plano`.
+- Classificacao: mudanca apenas de plano da clinica, nao promocao de usuario.
+- Payload React: `{ plano: "SUPERADMIN", manter_ativo: true }`.
+- Semantica documentada: altera plano/tipo de conta para Super Admin, reinicia validade padrao de 365 dias via backend, mantem/reativa a clinica, atualiza `data_ativacao` e sincroniza assinatura.
+- O endpoint nao cria boleto, Pix, checkout ou cobranca e nao altera `is_admin`, `is_master` ou `is_superadmin` de usuario.
+- `+Teste`, `Suspender/Ativar`, `Demo`, `Mensal` e `Anual` permanecem preservados.
+- `Novo usuario`, `Excluir`, commit, push e AWS permanecem pendentes.
+- Nao marcar Super Admin como concluido operacionalmente ate validar runtime autenticado em ambiente local com clinica descartavel/local.
+
+## Atualizacao recente - Primeiro acesso React
+
+- O primeiro acesso no frontend React foi implementado em feature modular `frontend-react/src/features/firstAccess/`.
+- A rota dedicada e `/app/primeiro-acesso`.
+- O guard global em `App.jsx` redireciona usuarios autenticados com `setup_completed === false` para a pagina de primeiro acesso antes de renderizar o shell.
+- Usuarios com setup concluido nao permanecem na rota de setup e entram normalmente no sistema.
+- A pagina reutiliza o endpoint existente `POST /auth/setup/complete`, enviando apenas `{ senha, confirma_senha }`.
+- Apos sucesso, o fluxo chama `refreshSession()` e so libera entrada quando `/me` retorna `setup_completed === true`.
+- Backend produtivo, banco, migration, signup publico, login, logout e renew foram preservados.
+- `ADM -> Clinicas -> Nova conta` foi implementado no React/FastAPI em 2026-07-21, com endpoint Owner-only `POST /superadmin/clinicas/nova-conta` e reutilizacao do provisionamento completo do signup.
+- O primeiro acesso React recebeu correcao incremental de orientacao em 2026-07-21 para explicitar que a senha interna nao substitui a senha de login.
+
+## Atualizacao recente - ADM Usuarios Fase 1 leitura
+
+- `ADM -> Usuarios` foi liberado no submenu React em 2026-07-21.
+- A rota `/app/adm/usuarios` usa feature modular `frontend-react/src/features/admin/users/`.
+- A tela consome somente `GET /superadmin/usuarios`.
+- A entrega inclui toolbar de leitura, busca, tabela compacta, selecao unica, filtros, ordenacao, colunas visiveis, rodape e estados de loading/erro/vazio.
+- Acoes mutaveis de usuarios permanecem pendentes e devem ser contratadas em fase propria: criar, editar, ativar/inativar, alternar admin, resetar senha e excluir.
+- Nao houve alteracao de backend, banco, migration, AWS, primeiro acesso ou ADM Clinicas nesta fase.
+
+## Atualizacao recente - ADM Usuarios contrato de toolbar
+
+- A toolbar historica de `ADM -> Usuarios` foi auditada em 2026-07-21 sem alteracao funcional.
+- O painel local da clinica (`/admin/users`) foi separado do painel global ADM (`/superadmin/usuarios`).
+- A toolbar futura recomendada foi documentada em `docs/contrato_toolbar_adm_usuarios_react.md`.
+- `Exportar CSV` ficou recomendado antes das mutacoes por ser read-only.
+
+## Atualizacao recente - ADM Usuarios Exportar CSV
+
+- Subetapa implementada em 2026-07-21: `Exportar CSV` na toolbar global de `/app/adm/usuarios`.
+- A acao usa `GET /superadmin/usuarios/export.csv` com token Bearer no header e download por blob.
+- O nome do arquivo vem do `Content-Disposition`, com fallback sanitizado `usuarios-adm-YYYY-MM-DD.csv`.
+- A exportacao aplica a busca server-side atual (`q`) e nao altera selecao, filtros locais, ordenacao ou dados da tabela.
+- Permanecem fora desta subetapa: novo administrador, alterar, ativar/inativar, alternar admin, redefinir senha, perfis e excluir.
+- Primeira mutacao recontratada: `Novo usuario`, com modal minimo, conta ativa alvo, tipo oficial e backend derivando privilegios.
+- `Excluir`, `Perfis` e `Alterar` amplo permanecem fora da proxima fase ate contrato especifico.
+
+## Atualizacao recente - ADM Usuarios Novo usuario auditoria
+
+- Auditoria tecnica e funcional concluida em 2026-07-21 para preparar `ADM -> Usuarios -> Novo usuario`.
+- Documentos criados: `docs/auditoria_novo_usuario_adm_tipos_contas.md` e `docs/contrato_novo_usuario_adm_react.md`.
+- O endpoint atual `POST /superadmin/usuarios` foi classificado como B: reutilizavel apenas com alteracao minima contratual.
+- Pontos obrigatorios antes da implementacao: bloquear conta suspensa no backend, remover `ativar_clinica`, aceitar tipo oficial, derivar `is_admin`, criar com `setup_completed=False`, validar confirmacao de senha e generalizar o texto do primeiro acesso.
+- Nenhum botao, modal, endpoint, schema, usuario, banco, commit ou push foi criado nesta auditoria.
+
+## Atualizacao recente - ADM Usuarios Ver detalhes
+
+- Subetapa read-only implementada em codigo em 2026-07-21: `Ver detalhes` na toolbar global de `/app/adm/usuarios`.
+- A acao usa exclusivamente o usuario selecionado ja retornado por `GET /superadmin/usuarios`.
+- Nao foi criado endpoint de detalhe e nao houve metodo mutavel.
+- O modal `Detalhes do usuario` possui somente `Fechar`, exibe campos ausentes como `Nao disponivel` e mostra badge `Protegido` quando houver indicador confiavel.
+- `Ver conta`, `Novo usuario`, editar, ativar/inativar, alternar perfil, resetar senha e excluir permanecem pendentes.
+- Nao marcar como concluido operacionalmente ate validar runtime autenticado em `/app/adm/usuarios` nos temas claro e escuro.
+
+## Atualizacao recente - ADM Usuarios Presenca online
+
+- Auditoria tecnica concluida em 2026-07-22 para a futura coluna `Online` em `/app/adm/usuarios`.
+- Documentos criados: `docs/auditoria_presenca_online_usuarios.md` e `docs/contrato_coluna_online_adm_usuarios.md`.
+- Decisao: nao usar `Status`, token valido, `usuarios.online`, `usuarios.ultimo_login_em` nem `updated_at` cadastral como prova de online.
+- Arquitetura recomendada para implementacao futura: `usuarios.last_seen_at`, janela de 3 minutos, throttle de 60 segundos por usuario e `is_online` calculado no backend.
+- Fase 1 backend concluida em codigo em 2026-07-22: migration/manual schema aditivo para `usuarios.last_seen_at`, model, helper central com throttle de 60 segundos, integracao com login, Google OAuth, setup complete e requests autenticadas.
+- A estrategia transacional usa sessao curta propria nas requests autenticadas para evitar commit da transacao funcional; login/setup usam a sessao atual ja com commit proprio.
+- Fase 2 concluida em codigo em 2026-07-22: `GET /superadmin/usuarios` retorna `last_seen_at`/`is_online`, a tabela React exibe `Online` imediatamente apos `Status`, remove a coluna visual independente `Protecao`, preserva protecao no subtitulo/modal/badge/regras e adiciona filtro, ordenacao e tooltip.
+- Runtime visual autenticado, commit, push e AWS permanecem pendentes ate validacao final operacional.
+
+## Atualizacao recente - ADM Usuarios toolbar visual
+
+- Correcao pontual em 2026-07-22: a toolbar de `/app/adm/usuarios` deixou de usar `Button` do Ant Design com icones nos controles de acao.
+- `Atualizar`, `Exportar CSV` e `Ver detalhes` agora usam `auxiliary-shell-button` e o agrupador `materiais-estoque-toolbar-actions`, seguindo o padrao visual Brana dos modulos de tabelas.
+- A busca permanece no grupo direito.
+- `Ver detalhes` foi ajustado para resolver a selecao a partir da lista normalizada carregada e continuar abrindo o modal read-only sem endpoint novo.
+- Backend, banco, presenca online, coluna `Online`, ADM Clinicas, Materiais, Medicamentos, commit, push e AWS nao foram alterados nesta correcao.
+
+## Atualizacao recente - ADM Usuarios modal Ver detalhes compacto
+
+- Correcao visual pontual em 2026-07-22: o modal `Detalhes do usuario` foi redimensionado de `760` para `660` e recebeu compactacao interna.
+- Header, body, aviso `Protegido`, secoes, grade, linhas, labels, valores, badges, footer e botao `Fechar` foram reduzidos proporcionalmente.
+- O body passou a ser rolavel internamente com `max-height` baseado em viewport e sem scroll horizontal.
+- As secoes `Identificacao`, `Conta`, `Vinculos` e `Sistema`, a presenca online, a ultima atividade e a protecao foram preservadas.
+- Backend, banco, endpoint, normalizador, toolbar, tabela, Exportar CSV, commit, push e AWS nao foram alterados nesta correcao.
+- Segunda compactacao aplicada na mesma data: largura `660 -> 580`, `max-height 74vh -> 66vh`, celulas `5px 7px -> 3px 5px` e breakpoint especifico do modal em `760px`.
+- Terceira correcao visual aplicada: largura `580 -> 680`, remocao do `66vh` baixo no desktop, body sem scroll forçado em desktop normal e ellipsis com tooltip para campos longos.
+- Ajuste horizontal final aplicado: largura `680 -> 800`, proporcao `label 14% / valor 36%`, mantendo altura natural, `max-height`, overflow, header, body e footer inalterados.
+- Correcao estrutural final aplicada: a grade visual do modal deixou de depender de `Descriptions` e passou a usar seis trilhas comuns, alinhando `Identificacao`, `Conta`, `Vinculos`, `Sistema`, `Ultimo acesso` e `Protecao` sem alterar o tamanho geral aprovado.
+- Refinamento visual final aplicado: respiro uniforme de `8px` entre blocos e aumento controlado de 1px em labels/valores internos, preservando largura `800`, altura natural, grade de seis trilhas, responsividade, presenca online e protecao.
+- Acao read-only `Ver conta` implementada: a toolbar de `/app/adm/usuarios` navega para `/app/adm/clinicas` com `clinica_id` via estado transitorio do `App.jsx`, e Clinicas seleciona a conta vinculada por ID exato sem mutacoes.

@@ -4,7 +4,7 @@ import logging
 import os
 import random
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -37,6 +37,7 @@ from services.google_calendar_service import (
     token_expires_at_utc,
 )
 from services.signup_service import criar_conta_saas
+from services.user_presence_service import mark_user_activity_fail_open
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -53,6 +54,7 @@ DISPOSABLE_DOMAINS = {
 SIGNUP_CODE_EXP_MINUTES = max(1, int(os.getenv("SIGNUP_CODE_EXP_MINUTES", "10")))
 RESET_CODE_EXP_MINUTES = max(1, int(os.getenv("RESET_CODE_EXP_MINUTES", "10")))
 PROTECTED_GRANT_EXPIRE_MINUTES = max(1, int(os.getenv("PROTECTED_GRANT_EXPIRE_MINUTES", "20")))
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
@@ -210,6 +212,14 @@ def _load_user_prefs(usuario: Usuario) -> dict:
     return parsed if isinstance(parsed, dict) else {}
 
 
+def _build_access_token_claims(usuario: Usuario) -> dict:
+    return {
+        "user_id": usuario.id,
+        "clinica_id": usuario.clinica_id,
+        "is_admin": bool(usuario.is_admin),
+    }
+
+
 def _popup_google_calendar_response(status: str, message: str) -> Response:
     payload = json.dumps(
         {
@@ -278,6 +288,17 @@ def login(
 
     if not password_ok:
         raise HTTPException(status_code=400, detail="Senha incorreta")
+
+    login_at = datetime.now(timezone.utc)
+    usuario.ultimo_login_em = login_at
+    mark_user_activity_fail_open(
+        usuario,
+        db,
+        force=True,
+        isolated_session=False,
+        now=login_at,
+    )
+    changed = True
 
     if owner and (not usuario.is_admin or not usuario.ativo):
         usuario.is_admin = True
@@ -449,6 +470,15 @@ def google_callback(
             return RedirectResponse(url=redirect_url)
 
         changed = False
+        oauth_seen_at = datetime.now(timezone.utc)
+        mark_user_activity_fail_open(
+            usuario,
+            db,
+            force=True,
+            isolated_session=False,
+            now=oauth_seen_at,
+        )
+        changed = True
         if owner and (not usuario.is_admin or not usuario.ativo):
             usuario.is_admin = True
             usuario.ativo = True
@@ -680,9 +710,67 @@ def setup_complete(
     usuario.forcar_troca_senha = False
     usuario.setup_completed = True
     usuario.online = True
+    mark_user_activity_fail_open(
+        usuario,
+        db,
+        force=True,
+        isolated_session=False,
+    )
     db.commit()
 
     return {"detail": "Configuracao inicial concluida com sucesso."}
+
+
+@router.post("/auth/renew")
+def renew_auth_token(
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    usuario = (
+        db.query(Usuario)
+        .filter(Usuario.id == current_user.id, Usuario.clinica_id == current_user.clinica_id)
+        .first()
+    )
+    if not usuario:
+        logger.warning(
+            "Auth renew denied: user not found user_id=%s clinica_id=%s",
+            getattr(current_user, "id", None),
+            getattr(current_user, "clinica_id", None),
+        )
+        raise HTTPException(status_code=401, detail="Usuario nao encontrado")
+
+    clinica = db.query(Clinica).filter(Clinica.id == int(current_user.clinica_id or 0)).first()
+    if not clinica:
+        logger.warning(
+            "Auth renew denied: clinic not found user_id=%s clinica_id=%s",
+            usuario.id,
+            usuario.clinica_id,
+        )
+        raise HTTPException(status_code=403, detail="Clínica invalida.")
+
+    if not clinica.ativo:
+        logger.warning(
+            "Auth renew denied: clinic inactive user_id=%s clinica_id=%s",
+            usuario.id,
+            usuario.clinica_id,
+        )
+        raise HTTPException(status_code=403, detail="Conta suspensa.")
+
+    if not usuario.ativo and not is_owner_email(usuario.email):
+        logger.warning(
+            "Auth renew denied: user inactive user_id=%s clinica_id=%s",
+            usuario.id,
+            usuario.clinica_id,
+        )
+        raise HTTPException(status_code=403, detail="Usuario inativo")
+
+    token = create_access_token(_build_access_token_claims(usuario), expires_minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    logger.info("Auth renew success user_id=%s clinica_id=%s", usuario.id, usuario.clinica_id)
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    }
 
 
 @router.post("/logout")

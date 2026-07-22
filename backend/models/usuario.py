@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -19,6 +19,8 @@ class Usuario(Base):
     senha_interna_hash = Column(String, nullable=True)
     ativo = Column(Boolean, default=True, nullable=False)
     online = Column(Boolean, default=False, nullable=False)
+    ultimo_login_em = Column(DateTime(timezone=True), nullable=True)
+    last_seen_at = Column(DateTime(timezone=True), nullable=True)
     forcar_troca_senha = Column(Boolean, default=False, nullable=False)
     setup_completed = Column(Boolean, default=False, nullable=False)
     is_system_user = Column(Boolean, default=False, nullable=False)

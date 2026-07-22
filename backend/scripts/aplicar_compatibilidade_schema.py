@@ -572,6 +572,7 @@ def aplicar_compatibilidade_schema() -> None:
         conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS apelido VARCHAR(60)"))
         conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS tipo_usuario VARCHAR(80)"))
         conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS online BOOLEAN NOT NULL DEFAULT FALSE"))
+        conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_seen_at TIMESTAMP WITH TIME ZONE"))
         conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS forcar_troca_senha BOOLEAN NOT NULL DEFAULT FALSE"))
         conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS senha_interna_hash TEXT"))
         conn.execute(text("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS setup_completed BOOLEAN NOT NULL DEFAULT FALSE"))

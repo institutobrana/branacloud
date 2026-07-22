@@ -6,7 +6,9 @@ Codigo: `backend/routes/auth_routes.py`, `backend/security/jwt_handler.py`, `bac
 
 Inclui login, logout, `/me`, Google OAuth, cadastro com codigo, recuperacao de senha e conclusao de setup. O login normaliza email, bloqueia usuario inexistente/inativo, impede login de conta sistemica, valida senha e gera JWT com `user_id`, `clinica_id` e `is_admin`.
 
-Regras: `JWT_SECRET_KEY` e obrigatoria; usuario sem `setup_completed` acessa apenas caminhos permitidos; token invalido retorna 401.
+Regras: `JWT_SECRET_KEY` e obrigatoria; usuario sem `setup_completed` acessa apenas caminhos permitidos; token invalido retorna 401. No frontend React, usuario autenticado com `setup_completed === false` e direcionado para `/app/primeiro-acesso`, onde define a senha interna por `POST /auth/setup/complete` antes de acessar o shell. A tela informa que esta senha interna nao substitui a senha de login; a senha de login continua sendo usada para acessar a conta.
+
+Presenca online: a fundacao backend registra atividade autenticada em `usuarios.last_seen_at` com timestamp UTC e throttle de 60 segundos. O registro ocorre em login, Google OAuth, setup complete e requests autenticadas validas. Falhas nesse registro sao auxiliares e nao derrubam autenticacao valida. O endpoint ADM de usuarios retorna `last_seen_at` e `is_online`, calculado por janela de 3 minutos.
 
 ## Usuarios, perfis e permissoes
 
@@ -105,3 +107,31 @@ Codigo: `backend/routes/licenca_routes.py`, modelos `plano.py`, `assinatura.py`,
 Gerencia informacoes de licenca, checkout, confirmacao, sincronizacao e webhook Mercado Pago.
 
 Regras: Mercado Pago exige `MERCADOPAGO_ACCESS_TOKEN` para checkout real; webhook precisa protecao quando publicado.
+
+## Painel ADM - Usuarios
+
+Codigo React: `frontend-react/src/features/admin/users/`.
+
+Fase atual: leitura administrativa em `/app/adm/usuarios`, usando `GET /superadmin/usuarios`.
+
+Exportacao CSV read-only disponivel em `/app/adm/usuarios` pela toolbar global, usando `GET /superadmin/usuarios/export.csv` com token Bearer no header. A exportacao respeita a busca server-side atual (`q`) e preserva os estados locais da tabela.
+
+Funcionalidades entregues nesta fase:
+
+- toolbar global com `Atualizar`, `Exportar CSV`, `Ver detalhes` e `Buscar usuario`;
+- toolbar visualmente padronizada com `auxiliary-shell-button`, sem botoes caixados do Ant Design nos controles de acao;
+- tabela compacta com selecao unica;
+- filtros por coluna;
+- ordenacao por coluna;
+- controle de colunas visiveis;
+- rodape de contagem;
+- estados de carregamento, erro e vazio;
+- modal `Detalhes do usuario` somente leitura, baseado no usuario selecionado;
+- modal `Detalhes do usuario` em padrao compacto denso, com respiro discreto entre blocos, sem scroll interno no desktop normal, largura horizontal ajustada, grade interna comum de seis trilhas e fallback responsivo;
+- acao read-only `Ver conta`, que navega para `ADM -> Clinicas` por `clinica_id` e seleciona a conta vinculada;
+- dados ausentes no detalhe exibidos como `Nao disponivel`;
+- indicacao de usuario de sistema e conta proprietaria.
+
+Fora do escopo desta fase: ver conta, criar usuario, alterar usuario, ativar/inativar, alternar perfil administrativo, resetar senha e excluir.
+
+Presenca online: `/app/adm/usuarios` exibe a coluna `Online` imediatamente apos `Status`, com `Online`, `Offline`, `Nunca acessou` e `Nao aplicavel` para usuario sistemico. A coluna visual independente `Protecao` nao fica mais na tabela principal, mas a protecao permanece no subtitulo do nome, no modal de detalhes, no badge e nas regras internas.

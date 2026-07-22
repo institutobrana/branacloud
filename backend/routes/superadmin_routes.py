@@ -1,11 +1,12 @@
 import csv
 import io
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import Response
 from pydantic import BaseModel
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -23,6 +24,7 @@ from security.dependencies import get_current_user
 from security.hash import hash_password
 from security.system_accounts import is_system_user
 from security.superadmin import is_owner_email, is_platform_superadmin_user
+from routes.auth_routes import normalize_email, validate_email, validate_password
 from services.platform_admin_service import (
     aplicar_plano_na_clinica,
     assinatura_plano_from_clinica,
@@ -30,6 +32,8 @@ from services.platform_admin_service import (
     registrar_auditoria,
     sync_assinatura_from_clinica,
 )
+from services.signup_service import provisionar_conta_saas
+from services.user_presence_service import ONLINE_WINDOW_SECONDS
 
 router = APIRouter(prefix="/superadmin", tags=["superadmin"])
 
@@ -39,12 +43,35 @@ def _require_superadmin(current_user: Usuario):
         raise HTTPException(status_code=403, detail="Acesso restrito ao Super Admin da plataforma.")
 
 
+def _require_owner(current_user: Usuario):
+    if not is_owner_email(current_user.email):
+        raise HTTPException(status_code=403, detail="Acesso restrito ao proprietario da plataforma.")
+
+
 def _fmt_datetime(value):
     if not value:
         return None
     if isinstance(value, datetime):
         return value.isoformat()
     return str(value)
+
+
+def _as_aware_utc(value):
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        if value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc)
+    return None
+
+
+def _is_user_online_from_last_seen(value, now_utc: datetime | None = None) -> bool:
+    last_seen_at = _as_aware_utc(value)
+    if last_seen_at is None:
+        return False
+    reference = now_utc or datetime.now(timezone.utc)
+    return last_seen_at >= reference - timedelta(seconds=ONLINE_WINDOW_SECONDS)
 
 
 def _parse_bool(value: str | None) -> bool | None:
@@ -73,6 +100,43 @@ def _is_owner_clinica(db: Session, clinica_id: int) -> bool:
     return int(clinica_id) in _owner_clinica_ids(db, [int(clinica_id)])
 
 
+def _resolve_clinica_responsavel(db: Session, clinica_id: int) -> dict:
+    usuarios = (
+        db.query(Usuario)
+        .filter(Usuario.clinica_id == int(clinica_id))
+        .order_by(Usuario.is_admin.desc(), Usuario.id.asc())
+        .all()
+    )
+    owner_user = next((u for u in usuarios if is_owner_email(u.email) and not is_system_user(u)), None)
+    if owner_user:
+        return {
+            "nome": (owner_user.nome or "").strip() or owner_user.email,
+            "email": owner_user.email,
+            "online": bool(owner_user.online),
+            "ultimo_login_em": getattr(owner_user, "ultimo_login_em", None),
+        }
+
+    admin_user = next((u for u in usuarios if bool(u.is_admin) and not is_system_user(u)), None)
+    if admin_user:
+        return {
+            "nome": (admin_user.nome or "").strip() or admin_user.email,
+            "email": admin_user.email,
+            "online": bool(admin_user.online),
+            "ultimo_login_em": getattr(admin_user, "ultimo_login_em", None),
+        }
+
+    non_system_user = next((u for u in usuarios if not is_system_user(u)), None)
+    if non_system_user:
+        return {
+            "nome": (non_system_user.nome or "").strip() or non_system_user.email,
+            "email": non_system_user.email,
+            "online": bool(non_system_user.online),
+            "ultimo_login_em": getattr(non_system_user, "ultimo_login_em", None),
+        }
+
+    return {"nome": None, "email": None, "online": None, "ultimo_login_em": None}
+
+
 class SuperAdminSetStatusPayload(BaseModel):
     ativo: bool
     motivo: str | None = None
@@ -99,6 +163,17 @@ class SuperAdminCreateUserPayload(BaseModel):
     senha: str
     is_admin: bool = True
     ativar_clinica: bool = True
+
+
+class SuperAdminCreateClinicAccountPayload(BaseModel):
+    nome_clinica: str
+    admin_nome: str
+    admin_email: str
+    admin_senha: str
+    admin_confirma_senha: str
+
+    class Config:
+        extra = "forbid"
 
 
 class SuperAdminResetUserSenhaPayload(BaseModel):
@@ -192,6 +267,7 @@ def _listar_usuarios_superadmin(
     plano_filter = (plano or "").strip().upper()
     status_filter = (clinica_status or "").strip().lower()
     out = []
+    now_utc = datetime.now(timezone.utc)
     for u in usuarios:
         c = clinicas.get(u.clinica_id)
         owner_clinica = bool(c and c.id in owner_clinica_ids)
@@ -220,6 +296,8 @@ def _listar_usuarios_superadmin(
                 "clinica_cnpj": c.cnpj if c else None,
                 "is_owner_account": is_owner_email(u.email),
                 "is_system_user": is_system_user(u),
+                "last_seen_at": None if is_system_user(u) else _fmt_datetime(getattr(u, "last_seen_at", None)),
+                "is_online": False if is_system_user(u) else _is_user_online_from_last_seen(getattr(u, "last_seen_at", None), now_utc),
             }
         )
     return out
@@ -293,17 +371,33 @@ def superadmin_overview(
         )
         .count()
     )
-    online_rows = (
-        db.query(Usuario.id, Usuario.nome, Usuario.email, Usuario.clinica_id, Clinica.nome)
-        .join(Clinica, Clinica.id == Usuario.clinica_id)
-        .filter(Usuario.online == True)  # noqa: E712
-        .order_by(Usuario.nome.asc(), Usuario.id.asc())
-        .all()
-    )
-    online_resumo = "; ".join(
-        f"{(nome or email or f'Usuário #{user_id}').strip()} / {(clinica_nome or f'Clínica #{clinica_id}')}"
-        for user_id, nome, email, clinica_id, clinica_nome in online_rows
-    ) or "Nenhum usuário online."
+
+    acessos_clinicas = []
+    for clinica in clinicas:
+        responsavel = _resolve_clinica_responsavel(db, clinica.id)
+        acessos_clinicas.append(
+            {
+                "clinica_id": clinica.id,
+                "clinica_nome": clinica.nome,
+                "responsavel_nome": responsavel["nome"],
+                "responsavel_email": responsavel["email"],
+                "ultimo_acesso": _fmt_datetime(responsavel["ultimo_login_em"]),
+                "status": (
+                    "online"
+                    if responsavel["online"] is True
+                    else "offline"
+                    if responsavel["online"] is False
+                    else "indisponivel"
+                ),
+                "status_label": (
+                    "Online"
+                    if responsavel["online"] is True
+                    else "Offline"
+                    if responsavel["online"] is False
+                    else "Indisponível"
+                ),
+            }
+        )
 
     return {
         "total_clinicas": total_clinicas,
@@ -320,9 +414,8 @@ def superadmin_overview(
         "mrr_estimado": round(float(mrr_estimado), 2),
         "arr_estimado": round(float(arr_estimado), 2),
         "cobrancas_aprovadas_hoje": int(cobrancas_30d),
-        "online_resumo": online_resumo,
+        "acessos_clinicas": acessos_clinicas,
     }
-
 
 @router.get("/clinicas")
 def superadmin_list_clinicas(
@@ -403,6 +496,99 @@ def superadmin_list_clinicas(
 
     db.commit()
     return out
+
+
+@router.post("/clinicas/nova-conta")
+def superadmin_create_clinic_account(
+    payload: SuperAdminCreateClinicAccountPayload,
+    request: Request,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    _require_owner(current_user)
+
+    nome_clinica = (payload.nome_clinica or "").strip()
+    admin_nome = (payload.admin_nome or "").strip()
+    admin_email = normalize_email(payload.admin_email or "")
+    admin_senha = payload.admin_senha or ""
+    admin_confirma_senha = payload.admin_confirma_senha or ""
+
+    if not nome_clinica:
+        raise HTTPException(status_code=400, detail="Nome da clinica obrigatorio.")
+    if not admin_nome:
+        raise HTTPException(status_code=400, detail="Nome do administrador obrigatorio.")
+    validate_email(admin_email)
+    validate_password(admin_senha)
+    if admin_senha != admin_confirma_senha:
+        raise HTTPException(status_code=400, detail="Confirmacao de senha nao confere.")
+
+    if db.query(Clinica.id).filter(func.lower(Clinica.email) == admin_email).first():
+        raise HTTPException(status_code=409, detail="E-mail ja cadastrado em clinica.")
+    if db.query(Usuario.id).filter(func.lower(Usuario.email) == admin_email).first():
+        raise HTTPException(status_code=409, detail="E-mail ja cadastrado em usuario.")
+
+    try:
+        clinica = provisionar_conta_saas(
+            db=db,
+            nome_clinica=nome_clinica,
+            admin_nome=admin_nome,
+            admin_email=admin_email,
+            admin_senha=admin_senha,
+        )
+    except IntegrityError as exc:
+        raise HTTPException(status_code=409, detail="E-mail ja cadastrado.") from exc
+
+    usuario_admin = (
+        db.query(Usuario)
+        .filter(Usuario.clinica_id == int(clinica.id), Usuario.email == admin_email, Usuario.codigo == 1)
+        .first()
+    )
+    usuarios_total = db.query(func.count(Usuario.id)).filter(Usuario.clinica_id == int(clinica.id)).scalar() or 0
+    usuarios_sistema = (
+        db.query(func.count(Usuario.id))
+        .filter(Usuario.clinica_id == int(clinica.id), Usuario.is_system_user == True)  # noqa: E712
+        .scalar()
+        or 0
+    )
+
+    registrar_auditoria(
+        db=db,
+        actor=current_user,
+        acao="clinica_nova_conta_create",
+        alvo_tipo="clinica",
+        alvo_id=clinica.id,
+        detalhes={
+            "clinica_id": clinica.id,
+            "clinica_nome": clinica.nome,
+            "admin_user_id": usuario_admin.id if usuario_admin else None,
+            "admin_email": admin_email,
+            "tipo_conta": clinica.tipo_conta,
+            "trial_ate": _fmt_datetime(clinica.trial_ate),
+            "usuarios_total": int(usuarios_total),
+            "usuarios_sistema": int(usuarios_sistema),
+        },
+        ip=request.client.host if request.client else None,
+    )
+    db.commit()
+    db.refresh(clinica)
+    if usuario_admin:
+        db.refresh(usuario_admin)
+
+    return {
+        "detail": "Conta criada com sucesso.",
+        "clinica_id": clinica.id,
+        "clinica_nome": clinica.nome,
+        "clinica_email": clinica.email,
+        "tipo_conta": clinica.tipo_conta,
+        "trial_ate": _fmt_datetime(clinica.trial_ate),
+        "ativo": bool(clinica.ativo),
+        "admin_user_id": usuario_admin.id if usuario_admin else None,
+        "admin_nome": usuario_admin.nome if usuario_admin else admin_nome,
+        "admin_email": usuario_admin.email if usuario_admin else admin_email,
+        "admin_setup_completed": bool(usuario_admin.setup_completed) if usuario_admin else False,
+        "usuarios_total": int(usuarios_total),
+        "usuarios_sistema": int(usuarios_sistema),
+    }
 
 
 @router.post("/usuarios")

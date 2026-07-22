@@ -13,12 +13,14 @@ from security.jwt_handler import decode_token
 from security.permissions import get_module_access_level
 from security.system_accounts import is_system_user
 from security.superadmin import is_owner_email
+from services.user_presence_service import mark_user_activity_fail_open
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 SETUP_ALLOWED_PATHS = {
     "/me",
     "/logout",
+    "/auth/renew",
     "/auth/setup/complete",
 }
 
@@ -80,6 +82,8 @@ def get_current_user(
         path = (request.url.path or "").strip()
         if path not in SETUP_ALLOWED_PATHS:
             raise HTTPException(status_code=403, detail="setup_required")
+
+    mark_user_activity_fail_open(usuario)
 
     # Conta proprietaria sempre com acesso total.
     if owner:

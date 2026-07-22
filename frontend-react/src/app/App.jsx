@@ -8,6 +8,10 @@ import { BranaContextPanel } from '../layout/BranaContextPanel.jsx';
 import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
+import { FirstAccessPage } from '../features/firstAccess/FirstAccessPage.jsx';
+import { canAccessPlatformAdmin } from '../features/admin/adminAccess.js';
+import { AdminRoutes } from '../features/admin/AdminRoutes.jsx';
+import { adminPath } from '../features/admin/adminRoutes.js';
 import { appPath, getAppBasePath, isUnderAppBase, loginPath } from './basePath.js';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
 import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
@@ -111,6 +115,11 @@ function isLoginRoute() {
   return path === `${getAppBasePath()}/login`;
 }
 
+function isFirstAccessRoute() {
+  const path = window.location.pathname || '/';
+  return path === `${getAppBasePath()}/primeiro-acesso`;
+}
+
 function isAppRoute() {
   const path = window.location.pathname || '/';
   return isUnderAppBase(path) || path === '/' || path === '';
@@ -119,6 +128,11 @@ function isAppRoute() {
 function resolveScreenFromPath() {
   const path = window.location.pathname || '/';
   const base = getAppBasePath();
+  if (path === `${base}/adm`) return 'adm';
+  if (path === `${base}/adm/clinicas`) return 'adm-clinicas';
+  if (path === `${base}/adm/usuarios`) return 'adm-usuarios';
+  if (path === `${base}/adm/cobrancas`) return 'adm-cobrancas';
+  if (path === `${base}/adm/auditoria`) return 'adm-auditoria';
   if (path === `${base}/pacientes`) return 'pacientes';
   if (path === `${base}/ficha-clinica`) return 'ficha-clinica';
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
@@ -137,8 +151,18 @@ function resolveScreenFromPath() {
 
 function syncAppPath(screen) {
   const nextPath =
-      screen === 'pacientes'
-      ? appPath('pacientes')
+      screen === 'adm'
+      ? adminPath()
+      : screen === 'adm-clinicas'
+        ? `${adminPath()}/clinicas`
+      : screen === 'adm-usuarios'
+        ? `${adminPath()}/usuarios`
+      : screen === 'adm-cobrancas'
+        ? `${adminPath()}/cobrancas`
+      : screen === 'adm-auditoria'
+        ? `${adminPath()}/auditoria`
+      : screen === 'pacientes'
+        ? appPath('pacientes')
       : screen === 'ficha-clinica'
         ? appPath('ficha-clinica')
       : screen === 'cenario-anual'
@@ -172,6 +196,7 @@ function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
   const initialScreen = resolveScreenFromPath();
   const [screen, setScreen] = useState(initialScreen);
+  const [adminNavigationState, setAdminNavigationState] = useState(null);
   const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
   const [procedimentosGenericosSearch, setProcedimentosGenericosSearch] = useState('');
@@ -230,6 +255,7 @@ function AppContent() {
     migrating: false,
     migrationModalOpen: false,
   });
+  const [adminToolbar, setAdminToolbar] = useState(null);
   const [unidadesAtendimentoToolbarState, setUnidadesAtendimentoToolbarState] = useState({
     selectedItemId: null,
     loading: false,
@@ -238,6 +264,7 @@ function AppContent() {
     hasSelection: false,
   });
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
+    if (initialScreen === 'adm' || initialScreen === 'adm-clinicas' || initialScreen === 'adm-usuarios' || initialScreen === 'adm-cobrancas' || initialScreen === 'adm-auditoria') return 'adm';
     if (initialScreen === 'pacientes') return 'cadastro';
     if (initialScreen === 'procedimentos') return 'tabelas';
     if (initialScreen === 'procedimentos-genericos') return 'tabelas';
@@ -254,6 +281,29 @@ function AppContent() {
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
   const [preferenciasOpen, setPreferenciasOpen] = useState(false);
   const panelCloseTimerRef = useRef(null);
+  const mainGroups = useMemo(() => {
+    const baseGroups = branaMainGroups.filter((group) => group.key !== 'adm');
+    if (!canAccessPlatformAdmin(user)) {
+      return baseGroups;
+    }
+    return branaMainGroups;
+  }, [user]);
+  const adminContextItems = useMemo(() => ([
+    { key: 'adm', label: 'Visão geral' },
+    { key: 'adm-clinicas', label: 'Clínicas' },
+    { key: 'adm-usuarios', label: 'Usuários' },
+    { key: 'adm-cobrancas', label: 'Cobranças' },
+    { key: 'adm-auditoria', label: 'Auditoria' },
+  ]), []);
+  const adminTopBar = useMemo(() => {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band admin-shell-band" aria-label="Barra operacional do Painel ADM">
+        {adminToolbar}
+      </div>
+    );
+  }, [adminToolbar, screen]);
 
   useEffect(() => {
     const onPopState = () => setScreen(resolveScreenFromPath());
@@ -389,18 +439,27 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'unidades-atendimento' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'unidades-atendimento' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
 
   const activeKey = screen;
-  const panelGroup = panelGroupKey ? branaMainGroups.find((item) => item.key === panelGroupKey) : null;
+  const panelGroup = panelGroupKey === 'adm'
+    ? { key: 'adm', label: 'ADM' }
+    : panelGroupKey
+      ? branaMainGroups.find((item) => item.key === panelGroupKey)
+      : null;
 
   const handleNavigate = (nextScreen) => {
     if (!nextScreen) return;
     setScreen(nextScreen);
     syncAppPath(nextScreen);
+    if (nextScreen === 'adm' || nextScreen === 'adm-clinicas' || nextScreen === 'adm-usuarios' || nextScreen === 'adm-cobrancas' || nextScreen === 'adm-auditoria') {
+      setActiveGroupKey('adm');
+      setPanelGroupKey('adm');
+      return;
+    }
     if (nextScreen === 'dashboard') {
       setActiveGroupKey('atendimento');
       setPanelGroupKey('');
@@ -454,11 +513,28 @@ function AppContent() {
     }
   };
 
+  const handleAdminNavigate = (nextScreen, navigationState = null) => {
+    setAdminNavigationState(navigationState);
+    handleNavigate(nextScreen);
+  };
+
+  const handleConsumeAdminNavigationState = () => {
+    setAdminNavigationState(null);
+  };
+
   const handleOpenGroup = (groupKey) => {
     if (!groupKey) return;
     if (panelCloseTimerRef.current) {
       window.clearTimeout(panelCloseTimerRef.current);
       panelCloseTimerRef.current = null;
+    }
+    if (groupKey === 'adm') {
+      setActiveGroupKey('adm');
+      setPanelGroupKey('adm');
+      if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria') {
+        handleNavigate('adm');
+      }
+      return;
     }
     setActiveGroupKey(groupKey);
     setPanelGroupKey(groupKey);
@@ -482,6 +558,10 @@ function AppContent() {
   };
 
   const handleSelectMenuItem = async (groupKey, item) => {
+    if (groupKey === 'adm') {
+      handleNavigate(item?.key || 'adm');
+      return;
+    }
     if (groupKey === 'cadastro' && item?.key === 'pacientes' && !item?.disabled) {
       handleNavigate('pacientes');
       return;
@@ -616,6 +696,34 @@ function AppContent() {
   };
 
   const activePage = useMemo(() => {
+    const renderAdminRoutes = (activeSection) => (
+      <AdminRoutes
+        user={user}
+        loading={loading}
+        onReturnHome={() => handleNavigate('dashboard')}
+        activeSection={activeSection}
+        onToolbarChange={setAdminToolbar}
+        navigationState={adminNavigationState}
+        onConsumeNavigationState={handleConsumeAdminNavigationState}
+        onAdminNavigate={handleAdminNavigate}
+      />
+    );
+
+    if (screen === 'adm') {
+      return renderAdminRoutes('overview');
+    }
+    if (screen === 'adm-clinicas') {
+      return renderAdminRoutes('clinics');
+    }
+    if (screen === 'adm-usuarios') {
+      return renderAdminRoutes('users');
+    }
+    if (screen === 'adm-cobrancas') {
+      return renderAdminRoutes('billing');
+    }
+    if (screen === 'adm-auditoria') {
+      return renderAdminRoutes('audit');
+    }
     if (screen === 'pacientes') {
       return <PacientesPage onBackHome={() => handleNavigate('dashboard')} />;
     }
@@ -661,7 +769,7 @@ function AppContent() {
       return <ServicosProteticoPage />;
     }
     return <DashboardPage key={dashboardVersion} />;
-  }, [cenarioAnualOpenRequestId, dashboardVersion, materiaisEstoqueToolbarState, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen]);
+  }, [cenarioAnualOpenRequestId, dashboardVersion, loading, materiaisEstoqueToolbarState, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen, user]);
 
   const auxiliaryTopBar = useMemo(() => {
     if (screen === 'unidades-atendimento') {
@@ -896,6 +1004,7 @@ function AppContent() {
                 options={materiaisEstoqueToolbarState.listas.map((item) => ({ value: item.id, label: item.nome }))}
                 onChange={(value) => window.dispatchEvent(new CustomEvent('brana-materiais-estoque-toolbar-filter', { detail: { field: 'lista', value } }))}
                 placeholder="Selecione"
+                size="small"
               />
             </label>
             <label className="materiais-estoque-field">
@@ -903,6 +1012,7 @@ function AppContent() {
                 value={materiaisEstoqueToolbarState.classificacao}
                 options={classOptions}
                 onChange={(value) => window.dispatchEvent(new CustomEvent('brana-materiais-estoque-toolbar-filter', { detail: { field: 'classificacao', value } }))}
+                size="small"
               />
             </label>
             <label className="materiais-estoque-field grow">
@@ -912,6 +1022,7 @@ function AppContent() {
                 onChange={(event) => window.dispatchEvent(new CustomEvent('brana-materiais-estoque-toolbar-filter', { detail: { field: 'q', value: event.target.value } }))}
                 onSearch={(value) => window.dispatchEvent(new CustomEvent('brana-materiais-estoque-toolbar-filter', { detail: { field: 'q', value } }))}
                 placeholder={selectedLista ? `Buscar em ${selectedLista.nome}` : 'Buscar por c?digo ou nome'}
+                size="small"
               />
             </label>
           </div>
@@ -952,7 +1063,7 @@ function AppContent() {
         onClose={() => handleNavigate('dashboard')}
       />
     );
-  }, [doencasCidToolbarState, screen]);
+  }, [adminNavigationState, doencasCidToolbarState, loading, screen, user]);
 
   const medicamentosTopBar = useMemo(() => {
     if (screen !== 'medicamentos') return null;
@@ -1021,6 +1132,19 @@ function AppContent() {
     return null;
   }
 
+  if (user?.setup_completed === false) {
+    if (!isFirstAccessRoute()) {
+      window.location.replace(appPath('primeiro-acesso'));
+      return null;
+    }
+    return <FirstAccessPage />;
+  }
+
+  if (isFirstAccessRoute()) {
+    window.location.replace(appPath());
+    return null;
+  }
+
   if (isAppRoute()) {
     return (
       <div className="brana-app brana-shell" style={shellStyle}>
@@ -1046,6 +1170,8 @@ function AppContent() {
             <div className="brana-shell-band">
               <DashboardOperationalStrip />
             </div>
+          ) : screen === 'adm' || screen === 'adm-clinicas' || screen === 'adm-usuarios' || screen === 'adm-cobrancas' || screen === 'adm-auditoria' ? (
+            adminTopBar
           ) : screen === 'tabelas-auxiliares' || screen === 'unidades-atendimento' ? (
             auxiliaryTopBar
           ) : screen === 'procedimentos-genericos' ? (
@@ -1066,7 +1192,7 @@ function AppContent() {
           <BranaIconRail
             activeKey={activeKey}
             expanded={railExpanded}
-            groups={branaMainGroups}
+            groups={mainGroups}
             activeGroupKey={activeGroupKey}
             panelOpen={Boolean(panelGroup)}
             onNavigate={handleNavigate}
@@ -1077,7 +1203,7 @@ function AppContent() {
           />
           <BranaContextPanel
             group={panelGroup}
-            items={contextualMenus[panelGroupKey] || []}
+            items={panelGroupKey === 'adm' ? adminContextItems : (contextualMenus[panelGroupKey] || [])}
             onClose={() => setPanelGroupKey('')}
             onSelectItem={handleSelectMenuItem}
             onMouseEnter={handleContextRegionEnter}
