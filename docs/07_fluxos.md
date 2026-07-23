@@ -280,6 +280,22 @@ O que pode quebrar:
 - Webhook exposto sem validacao adequada.
 - Estado de assinatura divergente do provedor.
 
+## ADM Cobranca React - contrato de leitura
+
+Sequencia prevista para a primeira fase segura:
+
+1. Usuario MASTER acessa `/app/adm/cobrancas`.
+2. `App.jsx` monta a barra global ADM no shell em L.
+3. `AdminRoutes` renderiza a frente `billing` quando habilitada.
+4. A pagina futura deve chamar apenas `GET /superadmin/cobrancas` com token Bearer.
+5. O backend valida `_require_superadmin`.
+6. A resposta vem de `plataforma_cobrancas`, ordenada por `criado_em desc` e `id desc`.
+7. A tabela React deve renderizar `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+
+Nao faz parte deste fluxo inicial: checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook, cancelamento, reembolso, baixa manual ou qualquer POST/PUT/PATCH/DELETE financeiro.
+
+`GET /superadmin/assinaturas` existe como visao complementar derivada de estado de plano/licenca, mas nao deve substituir a tabela principal de cobrancas na primeira fase.
+
 ## Bootstrap local
 
 Sequencia:
@@ -367,3 +383,51 @@ Nao ha request mutavel neste fluxo. Nao ha fallback por nome, e-mail, indice vis
 5. O frontend valida status HTTP, Content-Type CSV e blob nao vazio.
 6. O nome de arquivo vem do `Content-Disposition`; se ausente ou inseguro, usa `usuarios-adm-YYYY-MM-DD.csv`.
 7. O download e iniciado no navegador sem alterar filtros locais, ordenacao, selecao ou dados renderizados.
+
+## ADM Cobrancas React - leitura
+
+Sequencia:
+
+1. Usuario MASTER acessa `/app/adm/cobrancas`.
+2. `App.jsx` monta a barra global do ADM no shell em L.
+3. `AdminRoutes` renderiza `BillingPage` com `activeSection="billing"`.
+4. `BillingPage` publica a toolbar global com `Atualizar`, `Exportar CSV`, `Ver detalhes`, `Ver conta` e `Buscar cobranca`.
+5. `useAdminBilling` consulta `GET /superadmin/cobrancas` com token Bearer.
+6. O payload e normalizado por `normalizeAdminBilling`.
+7. A tabela exibe `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+8. Busca textual, filtros, ordenacao e visibilidade de colunas sao aplicados localmente.
+9. `Atualizar` refaz a leitura sem executar acao financeira.
+
+O que pode quebrar:
+
+- Sessao expirada ou token ausente.
+- Usuario sem permissao MASTER.
+- Backend retornar payload diferente de array.
+- Volume real exigir paginacao ou filtro backend em fase futura.
+
+Nao ha fluxo de escrita em `ADM -> Cobrancas` nesta fase.
+
+## ADM Cobrancas React - Ver detalhes
+
+Sequencia:
+
+1. Usuario MASTER acessa `/app/adm/cobrancas`.
+2. A listagem carrega cobrancas por `GET /superadmin/cobrancas`.
+3. Sem linha selecionada, `Ver detalhes` permanece desabilitado.
+4. Ao selecionar uma linha, `Ver detalhes` abre o modal `Detalhes da cobranca`.
+5. O modal usa o objeto normalizado da listagem carregada, sem endpoint adicional.
+6. O footer possui somente `Fechar`, em formato compacto.
+7. Ao iniciar refresh, o modal fecha para evitar snapshot obsoleto.
+8. Se a selecao desaparecer por busca, filtro ou refresh, o modal fecha.
+
+Nao ha fluxo de escrita em `Ver detalhes`.
+
+Observacao visual: o modal usa largura `800px`, altura natural, `max-height: calc(100vh - 24px)`, grade interna comum de seis trilhas em desktop/tablet (`rotulo | valor` repetido tres vezes), ellipsis com tooltip para campos longos e empilhamento em telas menores a partir de `760px`.
+
+Estado vazio:
+
+1. Se `GET /superadmin/cobrancas` retornar `[]`, a tabela continua montada.
+2. Os cabecalhos permanecem visiveis.
+3. O corpo mostra `Nenhuma cobrança encontrada.`.
+4. O rodape mostra zero registros.
+5. Se houver cobrancas carregadas, mas busca/filtro zerar a lista visivel, o corpo mostra `Nenhuma cobrança corresponde aos filtros aplicados.` e o rodape preserva o total carregado.

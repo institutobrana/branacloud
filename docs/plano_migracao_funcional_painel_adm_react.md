@@ -216,6 +216,9 @@ Médio, com dependência de integrações externas.
 - Consulta de cobranças.
 - Visão de pagamentos.
 - Filtro opcional por status.
+- Primeira fase segura: listagem read-only de `plataforma_cobrancas` via `GET /superadmin/cobrancas`.
+- `GET /superadmin/assinaturas` fica como visao complementar derivada, nao como tabela principal inicial.
+- Ficam fora da primeira fase: checkout, Pix, boleto, baixa manual, confirmacao de pagamento, sincronizacao Mercado Pago, webhook, cancelamento, reembolso e qualquer mutacao financeira.
 
 ### Backend base
 
@@ -231,6 +234,13 @@ Médio, com dependência de integrações externas.
 ### Risco
 
 Médio, por ser essencialmente consulta, mas com informação financeira sensível.
+
+### Auditoria 2026-07-22
+
+- Documento criado: `docs/auditoria_adm_cobranca_react.md`.
+- O legado usa `saCarregarCobrancas()` com `GET /superadmin/cobrancas?limit=80`.
+- Colunas de paridade inicial: `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+- A implementacao React futura deve manter a tela como read-only ate contrato especifico de acoes financeiras.
 
 ## 9. Fase 6 - Auditoria
 
@@ -426,3 +436,45 @@ Iniciar a Fase 0 visual e estrutural do ADM React, antes de conectar qualquer m�
 - O identificador usado e exclusivamente `clinica_id`.
 - A pagina de Clinicas seleciona a conta vinculada por ID exato, preserva ordenacao e colunas visiveis e limpa filtros locais somente quando ocultam a linha alvo.
 - Nenhum backend, banco, migration ou metodo mutavel foi adicionado nesta fase.
+
+## Atualizacao - ADM Cobrancas Fase 1 leitura
+
+- A rota `/app/adm/cobrancas` foi conectada ao painel React usando o shell global ADM.
+- O menu `Cobrancas` foi habilitado.
+- A implementacao React foi criada de forma modular em `frontend-react/src/features/admin/billing/`.
+- A tela entrega somente leitura: toolbar com `Atualizar` e `Buscar cobranca`, tabela compacta, selecao unica, filtros por coluna, ordenacao, controle de colunas e rodape.
+- Backend base usado: `GET /superadmin/cobrancas`.
+- A busca textual e local no frontend e nao envia `q`, pois esse parametro nao faz parte do contrato atual do endpoint.
+- Nao foram adicionados checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook, cancelamento, reembolso, exportacao CSV, modal de detalhes ou qualquer mutacao financeira.
+
+## Atualizacao - ADM Cobrancas auditoria de dados vazios
+
+- Auditoria curta de 2026-07-22 confirmou que o vazio atual e esperado no banco local: `GET /superadmin/cobrancas?limit=80` retorna HTTP 200 com `[]`.
+- `plataforma_cobrancas` possui 0 registros; `plataforma_assinaturas` possui dados complementares de assinatura/licenca.
+- A tabela de cobrancas e alimentada automaticamente por checkout, confirmacao, sincronizacao e webhook de licenca.
+- Proxima etapa segura recomendada: `Ver conta`, usando `clinica_id` do item selecionado.
+- `Exportar CSV` pode ser implementado depois com os dados do GET atual; `Ver detalhes` exige cautela para nao expor `payload_json` sem contrato.
+
+## Atualizacao - ADM Cobrancas Ver conta
+
+- `Ver conta` entrou como primeira acao incremental read-only apos a Fase 1.
+- A toolbar passou para `Atualizar`, `Ver conta`, `Buscar cobranca`.
+- A acao navega para `ADM -> Clinicas` usando `selectedClinicId` derivado de `clinica_id`.
+- O botao fica desabilitado sem selecao, sem `clinica_id` valido ou durante refresh.
+- Nenhum backend, banco, migration, metodo mutavel, CSV ou modal de detalhes foi adicionado nesta fase.
+
+## Atualizacao - ADM Cobrancas Exportar CSV
+
+- `Exportar CSV` entrou como segunda acao incremental read-only da frente.
+- A toolbar passou para `Atualizar`, `Exportar CSV`, `Ver conta`, `Buscar cobranca`.
+- A exportacao e client-side, usando as linhas ja carregadas/visiveis no frontend.
+- Nao foi criada rota, endpoint, requisicao adicional, backend, migration, seed ou integracao financeira.
+- `Ver detalhes` e qualquer mutacao financeira permanecem pendentes/fora do escopo.
+
+## Atualizacao - ADM Cobrancas Ver detalhes
+
+- `Ver detalhes` entrou como terceira acao incremental read-only da frente.
+- A toolbar passou para `Atualizar`, `Exportar CSV`, `Ver detalhes`, `Ver conta`, `Buscar cobranca`.
+- O modal usa somente a cobranca selecionada ja carregada no frontend.
+- Nao foi criada rota, endpoint, requisicao adicional, backend, migration, seed ou integracao financeira.
+- `payload_json` permanece fora do escopo.

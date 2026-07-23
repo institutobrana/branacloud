@@ -26,6 +26,8 @@ Permite visao geral da plataforma, gestao de clinicas, usuarios, cobrancas, audi
 
 Regras: superadmin nao e o mesmo que admin de clinica; estas rotas podem atravessar clinicas e exigem revisao extra.
 
+ADM Cobranca: a auditoria de 2026-07-22 definiu que a primeira fase React deve ser somente leitura sobre `GET /superadmin/cobrancas`, usando os registros de `plataforma_cobrancas`. `GET /superadmin/assinaturas` existe como visao complementar derivada, mas nao e a tabela principal inicial. Checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook e qualquer mutacao financeira ficam fora da primeira fase.
+
 ## Cadastros operacionais
 
 Codigo: `backend/routes/cadastros_routes.py`, `backend/routes/unidades_atendimento_routes.py`, `backend/routes/cid_routes.py`, `backend/routes/materiais_routes.py`, `backend/routes/medicamentos_routes.py`, `backend/routes/proteticos_routes.py`.
@@ -132,6 +134,33 @@ Funcionalidades entregues nesta fase:
 - dados ausentes no detalhe exibidos como `Nao disponivel`;
 - indicacao de usuario de sistema e conta proprietaria.
 
-Fora do escopo desta fase: ver conta, criar usuario, alterar usuario, ativar/inativar, alternar perfil administrativo, resetar senha e excluir.
+Fora do escopo desta fase: criar usuario, alterar usuario, ativar/inativar, alternar perfil administrativo, resetar senha e excluir.
 
 Presenca online: `/app/adm/usuarios` exibe a coluna `Online` imediatamente apos `Status`, com `Online`, `Offline`, `Nunca acessou` e `Nao aplicavel` para usuario sistemico. A coluna visual independente `Protecao` nao fica mais na tabela principal, mas a protecao permanece no subtitulo do nome, no modal de detalhes, no badge e nas regras internas.
+
+## Painel ADM - Cobrancas
+
+Codigo React: `frontend-react/src/features/admin/billing/`.
+
+Fase atual: leitura administrativa em `/app/adm/cobrancas`, usando `GET /superadmin/cobrancas`.
+
+Funcionalidades entregues nesta fase:
+
+- toolbar global com `Atualizar`, `Exportar CSV`, `Ver detalhes`, `Ver conta` e `Buscar cobranca`;
+- listagem real de cobrancas de plataforma;
+- tabela compacta com selecao unica;
+- filtros por coluna;
+- ordenacao por coluna;
+- controle de colunas visiveis;
+- rodape de contagem;
+- estados de carregamento, erro e vazio.
+
+Colunas exibidas: `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+
+A busca textual e local no frontend, sem enviar `q` ao backend.
+
+Fora do escopo desta fase: checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook, cancelamento, reembolso e qualquer mutacao financeira.
+
+Correcao runtime visual: mesmo com zero cobrancas retornadas pelo endpoint, a tabela permanece visivel com os sete cabecalhos e o estado vazio aparece dentro do corpo. Quando busca ou filtro eliminam os resultados carregados, a mensagem muda para `Nenhuma cobrança corresponde aos filtros aplicados.`. Os textos visiveis da frente foram corrigidos para UTF-8 real.
+
+Ver detalhes: o modal `Detalhes da cobranca` e somente leitura, usa apenas a linha selecionada ja carregada no frontend, nao faz request adicional e nao exibe `payload_json`.

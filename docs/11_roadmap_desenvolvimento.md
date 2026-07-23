@@ -6588,3 +6588,64 @@ Observacoes:
 - Correcao estrutural final aplicada: a grade visual do modal deixou de depender de `Descriptions` e passou a usar seis trilhas comuns, alinhando `Identificacao`, `Conta`, `Vinculos`, `Sistema`, `Ultimo acesso` e `Protecao` sem alterar o tamanho geral aprovado.
 - Refinamento visual final aplicado: respiro uniforme de `8px` entre blocos e aumento controlado de 1px em labels/valores internos, preservando largura `800`, altura natural, grade de seis trilhas, responsividade, presenca online e protecao.
 - Acao read-only `Ver conta` implementada: a toolbar de `/app/adm/usuarios` navega para `/app/adm/clinicas` com `clinica_id` via estado transitorio do `App.jsx`, e Clinicas seleciona a conta vinculada por ID exato sem mutacoes.
+
+## Atualizacao recente - ADM Cobranca auditoria
+
+- Auditoria documental e tecnica concluida em 2026-07-22 para iniciar `ADM -> Cobranca`.
+- Documento criado: `docs/auditoria_adm_cobranca_react.md`.
+- O dominio foi separado do financeiro operacional da clinica, conta corrente, fluxo de caixa, plano de contas, convenios/planos odontologicos e formas de cobranca de procedimentos.
+- O legado usa `saCarregarCobrancas()` e `GET /superadmin/cobrancas?limit=80`, renderizando `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+- Backend reutilizavel confirmado: `GET /superadmin/cobrancas` com `_require_superadmin`, filtro opcional por `status` e `limit`.
+- `GET /superadmin/assinaturas` foi classificado como visao complementar derivada para fase posterior.
+- Primeira fase segura recomendada: tabela React read-only de cobrancas de plataforma, sem checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook ou qualquer mutacao financeira.
+
+## Atualizacao recente - ADM Cobrancas Fase 1 leitura
+
+- Implementacao read-only concluida em codigo em 2026-07-22 para `/app/adm/cobrancas`.
+- O submenu ADM habilita `Cobrancas`, preservando shell global em L e guard MASTER.
+- A tela consome somente `GET /superadmin/cobrancas`, com service, hook, normalizer, formatters, tabela e toolbar modulares em `frontend-react/src/features/admin/billing/`.
+- Entrega: `Atualizar`, `Buscar cobranca`, listagem real, selecao unica, filtros por coluna, ordenacao, controle de colunas visiveis, rodape e estados de loading/erro/vazio.
+- A busca e local no frontend; nao foi criado parametro `q` no backend.
+- Backend, banco, migration, checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook, cancelamento, reembolso, modal de detalhes, CSV, commit, push e AWS permanecem fora desta rodada.
+
+## Atualizacao recente - ADM Cobrancas correcao runtime visual
+
+- Correcao pontual em 2026-07-22: `ADM -> Cobrancas` deixou de substituir a tabela por um card vazio quando o endpoint retorna zero registros.
+- A tabela permanece renderizada com `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+- O vazio real usa `Nenhuma cobrança encontrada.` dentro do corpo da tabela.
+- O vazio por busca/filtro usa `Nenhuma cobrança corresponde aos filtros aplicados.` e preserva o total carregado no rodape.
+- Textos visiveis foram corrigidos para UTF-8 real, removendo escapes literais como `cobran\u00e7a` do runtime.
+- Backend, endpoint, banco, migration, rota, menu, toolbar, shell, tema, commit, push e AWS nao foram alterados.
+- Validacao visual autenticada automatizada ficou pendente nesta sessao porque o navegador controlavel nao possuia sessao MASTER/Owner e redirecionou para `/app/login`; a ferramenta bloqueou preparacao de sessao via URL `javascript:`.
+
+## Atualizacao recente - ADM Cobrancas auditoria de dados vazios
+
+- Auditoria curta, somente leitura, concluida em 2026-07-22 para explicar o estado vazio em runtime.
+- `GET /superadmin/cobrancas?limit=80` retornou HTTP 200 com array vazio (`[]`) no banco local.
+- `plataforma_cobrancas` possui 0 registros locais; `plataforma_assinaturas` possui dados de estado derivado, nao eventos de cobranca.
+- As cobrancas sao criadas automaticamente pelos fluxos de licenca/checkout/pagamento em `licenca_routes.py` e `platform_admin_service.py`; nao foi encontrado seed/manual padrao.
+- Proxima funcionalidade segura recomendada: `Ver conta`, usando `clinica_id` ja retornado pelo contrato quando houver registros.
+- `Exportar CSV` pode ser feito client-side com o GET atual; `Ver detalhes` deve evitar `payload_json` ate contrato especifico.
+
+## Atualizacao recente - ADM Cobrancas Ver conta
+
+- Acao read-only `Ver conta` implementada em 2026-07-22 na toolbar de `/app/adm/cobrancas`.
+- Toolbar da etapa: `Atualizar`, `Ver conta`, `Buscar cobranca`.
+- O botao depende de selecao unica e de `clinica_id` valido no item selecionado.
+- A navegacao usa `onAdminNavigate('adm-clinicas', { selectedClinicId })`, reaproveitando a selecao por ID exato ja existente em Clinicas.
+- Nenhum backend, endpoint, banco, migration, checkout, webhook, status financeiro, valor, CSV, detalhes, commit, push ou AWS foi alterado nesta etapa.
+
+## Atualizacao recente - ADM Cobrancas Exportar CSV
+
+- Acao read-only `Exportar CSV` implementada em 2026-07-22 na toolbar de `/app/adm/cobrancas`.
+- Toolbar da etapa: `Atualizar`, `Exportar CSV`, `Ver conta`, `Buscar cobranca`.
+- A exportacao usa somente as linhas ja carregadas/visiveis no frontend e nao faz nova requisicao.
+- Nenhum endpoint novo, backend, banco, migration, seed, checkout, webhook, assinatura, detalhe, acao mutavel, commit, push ou AWS foi adicionado.
+
+## Atualizacao recente - ADM Cobrancas Ver detalhes
+
+- Acao read-only `Ver detalhes` implementada em 2026-07-22 na toolbar de `/app/adm/cobrancas`.
+- Toolbar da etapa: `Atualizar`, `Exportar CSV`, `Ver detalhes`, `Ver conta`, `Buscar cobranca`.
+- O modal usa somente a linha selecionada ja carregada no frontend.
+- Nao ha request adicional, endpoint novo, `payload_json`, backend, banco, migration, seed, checkout, webhook, pagamento, cancelamento, reembolso, commit, push ou AWS.
+- Documento criado: `docs/implementacao_adm_cobrancas_ver_detalhes.md`.

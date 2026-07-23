@@ -22,9 +22,9 @@ Registrar a correspondência funcional entre o Painel ADM legado e a futura impl
 | ADM-012 | Plataforma | Alterar plano clínica | `frontend/app.js` | `saAlterarPlanoClinica` | `/superadmin/clinicas/{id}/plano` | PATCH | superadmin | crítico | `admin/clinics` | `ClinicPlanAction` | `superadminApi` | `useClinicActions` | confirmação + dias | sim | aplicar plano e manter ativo | bloqueado até contrato | mesma mudança de plano e trial |
 | ADM-013 | Plataforma | Prorrogar trial | `frontend/app.js` | `saProrrogarTesteClinica` | `/superadmin/clinicas/{id}/trial-extra` | PATCH | superadmin | crítico | `admin/clinics` | `ClinicTrialExtendAction` | `superadminApi` | `useClinicActions` | confirmação | sim | proteger MASTER | bloqueado até contrato | mesma extensão e auditoria |
 | ADM-014 | Plataforma | Excluir clínica | `frontend/app.js` | `saExcluirClinica` | `/superadmin/clinicas/{id}` | DELETE | superadmin | crítico | `admin/clinics` | `ClinicDeleteAction` | `superadminApi` | `useClinicActions` | confirmação forte | sim | rollback/limpeza de dependências | bloqueado até contrato | mesma remoção definitiva e limpeza |
-| ADM-015 | Plataforma | Listar cobranças | `frontend/app.js` | `saCarregarCobrancas` | `/superadmin/cobrancas` | GET | superadmin | medio | `admin/billing` | `BillingTablePage` | `superadminApi` | `useBillingList` | tabela | sim | paginação/filtro opcional | pendente de contrato | mesma consulta e mesmas colunas |
+| ADM-015 | Plataforma | Listar cobranças | `frontend/app.js` | `saCarregarCobrancas` | `/superadmin/cobrancas` | GET | superadmin | medio | `admin/billing` | `BillingTablePage` | `adminBillingApi` | `useAdminBilling` | tabela read-only | sim | normalizar valor/status/data e preservar limite | contrato definido | mesma consulta e mesmas 7 colunas do legado |
 | ADM-016 | Plataforma | Listar auditoria | `frontend/app.js` | `saCarregarAuditoria` | `/superadmin/auditoria` | GET | superadmin | medio | `admin/audit` | `AuditTablePage` | `superadminApi` | `useAuditList` | tabela | sim | payload/segredo | pendente de contrato | mesma ordenação e mesma retenção |
-| ADM-017 | Plataforma | Listar assinaturas | `frontend/app.js` | `saRecarregarTudo` | `/superadmin/assinaturas` | GET | superadmin | medio | `admin/billing` | `SubscriptionsPage` | `superadminApi` | `useSubscriptionsList` | tabela | sim | separar de billing se preciso | pendente de contrato | mesma visão de plano/estado |
+| ADM-017 | Plataforma | Listar assinaturas | `frontend/app.js` | `saRecarregarTudo` | `/superadmin/assinaturas` | GET | superadmin | medio | `admin/billing` | `SubscriptionsPage` | `adminBillingApi` | `useSubscriptionsList` | tabela complementar | sim | separar de billing se preciso | pos-fase 1 | visão derivada de plano/estado, não tabela principal inicial |
 | ADM-018 | Plataforma | Indicadores do overview | `frontend/app.js` | `saRenderOverview` | `/superadmin/overview` | GET | superadmin | medio | `admin/dashboard` | `AdminKpiGrid` | `superadminApi` | `useSuperadminOverview` | KPI cards | sim | fórmulas derivadas do backend | pendente de contrato | mesma origem e mesmos valores |
 | ADM-019 | Clínica | Painel de usuários da clínica | `frontend/index.html` e `frontend/app.js` | `showUsersPanel` | `/admin/users` | GET | admin da clínica | alto | `admin/users` | `ClinicUsersPage` | `usersApi` | `useClinicUsers` | lista e ações | sim | separar por módulo | pronto para implementação | mesma proteção e mesma lista |
 | ADM-020 | Sistema | Licença e status do plano | `frontend/app.js` | `licCarregarInfo` | `/licenca/info` | GET | owner/superadmin | medio | `admin/billing` | `LicensePanelPage` | `licenseApi` | `useLicenseInfo` | card/modal | sim | contrato separado | pendente de contrato | mesma leitura do estado |
@@ -176,3 +176,58 @@ Registrar a correspondência funcional entre o Painel ADM legado e a futura impl
 - Selecao: Clinicas procura por ID exato, seleciona a linha encontrada e limpa filtros locais apenas se ocultarem a linha alvo.
 - Mutacao: nenhuma.
 - Endpoint novo: nenhum.
+
+## Atualizacao - ADM Cobranca auditoria
+
+- Auditoria documental e tecnica concluida em 2026-07-22 para `ADM -> Cobranca`.
+- O legado usa `saCarregarCobrancas()` e `GET /superadmin/cobrancas?limit=80`.
+- A tabela visual do legado possui 7 colunas: `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+- O endpoint backend retorna tambem campos tecnicos como `clinica_id`, `payment_id`, `external_reference`, `moeda` e `atualizado_em`.
+- `GET /superadmin/assinaturas` existe, mas foi classificado como visao complementar derivada para etapa posterior.
+- Primeira fase segura definida: listagem read-only de cobrancas de plataforma, sem checkout, Pix, boleto, sincronizacao Mercado Pago, confirmacao de pagamento, webhook ou mutacao financeira.
+
+## Atualizacao - ADM Cobrancas Fase 1 leitura
+
+- Status React: implementado read-only em `frontend-react/src/features/admin/billing/`.
+- Rota: `/app/adm/cobrancas`.
+- Fonte de dados: `GET /superadmin/cobrancas`.
+- Paridade visual inicial: `ID`, `Clinica`, `Plano`, `Status`, `Valor`, `Origem` e `Data`.
+- Recursos adicionais seguros: selecao unica, filtros por coluna, ordenacao, controle de colunas visiveis, rodape, refresh manual e busca textual local.
+- Fora da paridade inicial: checkout, Pix, boleto, confirmacao manual, sincronizacao Mercado Pago, webhook, cancelamento, reembolso, `payload_json`, modal de detalhes, exportacao CSV e qualquer mutacao financeira.
+
+## Atualizacao - ADM Cobrancas dados vazios
+
+- Auditoria somente leitura confirmou que `GET /superadmin/cobrancas?limit=80` retorna HTTP 200 com `[]` quando `plataforma_cobrancas` esta vazia.
+- Banco local: `plataforma_cobrancas` com 0 registros; `plataforma_assinaturas` com registros de estado derivado.
+- A alimentacao de cobrancas vem dos fluxos de licenca/checkout/pagamento, nao de seed/manual padrao.
+- Proxima paridade segura: `Ver conta` por `clinica_id`, sem mutacao e sem endpoint novo.
+- `Exportar CSV` pode usar o GET atual; `Ver detalhes` deve permanecer sem `payload_json` ate contrato especifico.
+
+## Atualizacao - ADM Cobrancas Ver conta
+
+- `Ver conta` foi implementado como acao read-only em `ADM -> Cobrancas`.
+- Origem: `/app/adm/cobrancas`.
+- Destino: `/app/adm/clinicas`.
+- Identificador: `clinica_id` da cobranca selecionada.
+- Mecanismo: estado transitorio controlado por `App.jsx` com `selectedClinicId`.
+- Mutacao: nenhuma.
+- Endpoint novo: nenhum.
+
+## Atualizacao - ADM Cobrancas Exportar CSV
+
+- `Exportar CSV` foi implementado como acao read-only em `ADM -> Cobrancas`.
+- Origem dos dados: linhas ja carregadas/visiveis no frontend.
+- Endpoint novo: nenhum.
+- Nova requisicao HTTP: nenhuma.
+- Mutacao: nenhuma.
+- `Ver detalhes`, pagamento, baixa, cancelamento, reembolso, checkout, webhook e Mercado Pago permanecem fora do escopo.
+
+## Atualizacao - ADM Cobrancas Ver detalhes
+
+- `Ver detalhes` foi implementado como acao read-only em `ADM -> Cobrancas`.
+- Origem dos dados: linha selecionada ja carregada/normalizada no frontend.
+- Endpoint novo: nenhum.
+- Nova requisicao HTTP: nenhuma.
+- `payload_json`: nao exibido.
+- Mutacao: nenhuma.
+- Pagamento, baixa, cancelamento, reembolso, checkout, webhook e Mercado Pago permanecem fora do escopo.
