@@ -1,5 +1,6 @@
 ﻿import re
 import csv
+import shutil
 import unicodedata
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -230,6 +231,15 @@ def _garantir_diretorios_modelos_clinica(clinica_id: int) -> None:
     base_clinica_dir = MODEL_STORAGE_DIR / str(int(clinica_id))
     for tipo in MODELO_TIPOS_DIR:
         (base_clinica_dir / tipo).mkdir(parents=True, exist_ok=True)
+
+
+def _remover_diretorios_modelos_clinica_se_seguro(clinica_id: int) -> None:
+    base_root = MODEL_STORAGE_DIR.resolve()
+    target = (MODEL_STORAGE_DIR / str(int(clinica_id))).resolve()
+    if base_root not in target.parents:
+        raise RuntimeError("Caminho de storage da clinica fora da raiz esperada.")
+    if target.exists() and target.is_dir():
+        shutil.rmtree(target)
 
 
 def _codigo_material_variantes(codigo):
@@ -2413,59 +2423,78 @@ def _garantir_unidade_principal_clinica(db, clinica_id: int) -> UnidadeAtendimen
     return item
 
 
+def provisionar_conta_saas(db, nome_clinica, admin_nome, admin_email, admin_senha):
+    clinica = None
+    storage_criado = False
+    try:
+        clinica = Clinica(
+            nome=nome_clinica,
+            email=admin_email,
+            tipo_conta="DEMO 7 dias",
+            trial_ate=datetime.utcnow() + timedelta(days=7),
+            ativo=True,
+        )
+        db.add(clinica)
+        db.flush()
+        clinica.nome_tabela_procedimentos = PRIVATE_TABLE_NAME
+        _garantir_diretorios_modelos_clinica(clinica.id)
+        storage_criado = True
+        unidade_principal = _garantir_unidade_principal_clinica(db, clinica.id)
+        garantir_padroes_etiqueta(db)
+        garantir_modelos_etiqueta_clinica(db, clinica.id)
+        prestador_sistemico = _garantir_prestador_sistemico_clinica(db, clinica.id)
+        _garantir_usuario_sistemico_clinica(db, clinica.id, prestador_sistemico)
+        _aplicar_bootstrap_access_profiles_clinica(db, clinica.id)
+
+        prestador_adm = _garantir_prestador_adm_funcional_clinica(db, clinica.id, admin_nome)
+
+        usuario_admin = Usuario(
+            codigo=1,
+            nome=admin_nome,
+            apelido=(str(admin_nome or "").strip().split(" ", 1)[0][:60] if str(admin_nome or "").strip() else None),
+            tipo_usuario=TIPO_USUARIO_DENTISTA,
+            email=admin_email,
+            senha_hash=hash_password(admin_senha),
+            clinica_id=clinica.id,
+            is_admin=True,
+            online=False,
+            setup_completed=False,
+            is_system_user=False,
+            permissoes_json=dump_permissions_json(
+                sanitize_permissions({}, tipo_usuario=TIPO_USUARIO_DENTISTA, is_admin=True)
+            ),
+        )
+        db.add(usuario_admin)
+        db.flush()
+        _apply_user_links(db, usuario_admin, prestador_adm, unidade_principal)
+
+        garantir_lista_padrao_clinica(db, clinica.id)
+        # Seed oficial estatico (extraido da conta modelo) para novas contas.
+        seed_simbolos_graficos(db, clinica.id)
+        seed_procedimentos_genericos(db, clinica.id)
+        seed_procedimentos(db, clinica.id)
+        garantir_financeiro_padrao_clinica(db, clinica.id)
+        garantir_indices_padrao_clinica(db, clinica.id)
+        garantir_especialidades_padrao_clinica(db, clinica.id)
+        garantir_auxiliares_raw_clinica(db, clinica.id)
+        garantir_convenios_planos_padrao_clinica(db, clinica.id)
+        garantir_cid_padrao_clinica(db, clinica.id)
+        garantir_anamnese_padrao_clinica(db, clinica.id)
+
+        db.commit()
+        return clinica
+    except Exception:
+        db.rollback()
+        if clinica is not None and getattr(clinica, "id", None) and storage_criado:
+            _remover_diretorios_modelos_clinica_se_seguro(clinica.id)
+        raise
+
+
 def criar_conta_saas(db, nome, email, senha):
-    clinica = Clinica(
-        nome=nome,
-        email=email,
-        tipo_conta="DEMO 7 dias",
-        trial_ate=datetime.utcnow() + timedelta(days=7),
-        ativo=True,
+    return provisionar_conta_saas(
+        db=db,
+        nome_clinica=nome,
+        admin_nome=nome,
+        admin_email=email,
+        admin_senha=senha,
     )
-    db.add(clinica)
-    db.flush()
-    clinica.nome_tabela_procedimentos = PRIVATE_TABLE_NAME
-    _garantir_diretorios_modelos_clinica(clinica.id)
-    unidade_principal = _garantir_unidade_principal_clinica(db, clinica.id)
-    garantir_padroes_etiqueta(db)
-    garantir_modelos_etiqueta_clinica(db, clinica.id)
-    prestador_sistemico = _garantir_prestador_sistemico_clinica(db, clinica.id)
-    _garantir_usuario_sistemico_clinica(db, clinica.id, prestador_sistemico)
-    _aplicar_bootstrap_access_profiles_clinica(db, clinica.id)
-
-    prestador_adm = _garantir_prestador_adm_funcional_clinica(db, clinica.id, nome)
-
-    usuario_admin = Usuario(
-        codigo=1,
-        nome=nome,
-        apelido=(str(nome or "").strip().split(" ", 1)[0][:60] if str(nome or "").strip() else None),
-        tipo_usuario=TIPO_USUARIO_DENTISTA,
-        email=email,
-        senha_hash=hash_password(senha),
-        clinica_id=clinica.id,
-        is_admin=True,
-        online=False,
-        setup_completed=False,
-        is_system_user=False,
-        permissoes_json=dump_permissions_json(
-            sanitize_permissions({}, tipo_usuario=TIPO_USUARIO_DENTISTA, is_admin=True)
-        ),
-    )
-    db.add(usuario_admin)
-    db.flush()
-    _apply_user_links(db, usuario_admin, prestador_adm, unidade_principal)
-
-    garantir_lista_padrao_clinica(db, clinica.id)
-    # Seed oficial estatico (extraido da conta modelo) para novas contas.
-    seed_simbolos_graficos(db, clinica.id)
-    seed_procedimentos_genericos(db, clinica.id)
-    seed_procedimentos(db, clinica.id)
-    garantir_financeiro_padrao_clinica(db, clinica.id)
-    garantir_indices_padrao_clinica(db, clinica.id)
-    garantir_especialidades_padrao_clinica(db, clinica.id)
-    garantir_auxiliares_raw_clinica(db, clinica.id)
-    garantir_convenios_planos_padrao_clinica(db, clinica.id)
-    garantir_cid_padrao_clinica(db, clinica.id)
-    garantir_anamnese_padrao_clinica(db, clinica.id)
-
-    db.commit()
-    return clinica
