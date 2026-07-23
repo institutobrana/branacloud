@@ -1,8 +1,8 @@
 const DEFAULT_METRICS = [
   { key: 'total_clinicas', label: 'Total de clínicas' },
   { key: 'total_usuarios', label: 'Total de usuários' },
-  { key: 'mrr_estimado', label: 'MRR' },
-  { key: 'arr_estimado', label: 'ARR' },
+  { key: 'mrr_estimado', label: 'Receita Recorrente Mensal' },
+  { key: 'arr_estimado', label: 'Receita Recorrente Anual' },
   { key: 'clinicas_ativas', label: 'Ativas' },
   { key: 'clinicas_trial', label: 'Trial' },
   { key: 'clinicas_expiradas', label: 'Expiradas' },

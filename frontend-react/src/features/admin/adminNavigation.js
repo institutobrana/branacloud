@@ -1,11 +1,11 @@
 export const ADMIN_ROUTE_SUFFIX = 'adm';
 
 export const ADMIN_SECTIONS = [
-  { key: 'overview', label: 'Visão geral', available: true, status: null },
-  { key: 'clinics', label: 'Clínicas', available: true, status: null },
-  { key: 'users', label: 'Usuários', available: true, status: null },
-  { key: 'billing', label: 'Cobranças', available: false, status: 'Em migração' },
-  { key: 'audit', label: 'Auditoria', available: false, status: 'Em migração' },
+  { key: 'overview', label: 'Vis\u00e3o geral', available: true, status: null },
+  { key: 'clinics', label: 'Cl\u00ednicas', available: true, status: null },
+  { key: 'users', label: 'Usu\u00e1rios', available: true, status: null },
+  { key: 'billing', label: 'Cobran\u00e7as', available: true, status: null },
+  { key: 'audit', label: 'Auditoria', available: true, status: null },
 ];
 
 export function getAdminSectionByKey(key) {

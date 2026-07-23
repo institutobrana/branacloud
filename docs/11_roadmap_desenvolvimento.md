@@ -6649,3 +6649,18 @@ Observacoes:
 - O modal usa somente a linha selecionada ja carregada no frontend.
 - Nao ha request adicional, endpoint novo, `payload_json`, backend, banco, migration, seed, checkout, webhook, pagamento, cancelamento, reembolso, commit, push ou AWS.
 - Documento criado: `docs/implementacao_adm_cobrancas_ver_detalhes.md`.
+## Atualizacao recente - ADM Auditoria auditoria inicial
+
+- Auditoria documental e tecnica iniciada em 2026-07-23 para `ADM -> Auditoria`.
+- O legado atual confirma tabela simples com cinco colunas e endpoint `GET /superadmin/auditoria?limit=80`.
+- O banco possui a tabela `plataforma_auditoria` com `actor_user_id`, `actor_email`, `acao`, `alvo_tipo`, `alvo_id`, `detalhes_json`, `ip` e `criado_em`.
+- O histórico operacional mostra eventos de clínicas, usuários, cobranças/licença e editor de textos/PDF.
+- A fase inicial recomendada continua read-only, sem mutação, sem exclusão e sem limpeza de logs.
+
+## Atualizacao recente - ADM Auditoria Fase 1 implementada
+
+- A Fase 1 funcional foi implementada em 2026-07-23 no frontend React.
+- A seção `Auditoria` foi habilitada no menu ADM.
+- A toolbar atual ficou restrita a `Atualizar | Buscar evento`.
+- O painel mantém tabela read-only compacta com cinco colunas, seleção única, filtros, ordenação, controle de colunas, rodapé, loading, vazio e erro.
+- Exportação CSV, detalhes e navegação por alvo permanecem fora desta fase.

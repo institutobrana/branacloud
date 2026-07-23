@@ -31,7 +31,8 @@ test('admin shell models keep a single Painel ADM title and no provisional found
   assert.equal(nav.filter((item) => item.active).length, 1);
   assert.equal(nav.find((item) => item.key === 'overview')?.active, true);
   assert.equal(nav.find((item) => item.key === 'users')?.available, true);
-  assert.equal(nav.filter((item) => !item.available).every((item) => typeof item.status === 'string' && item.status.length > 0), true);
+  assert.equal(nav.every((item) => item.available === true || (typeof item.status === 'string' && item.status.length > 0)), true);
+  assert.equal(nav.find((item) => item.key === 'audit')?.available, true);
   assert.equal(nav.length, 5);
 });
 

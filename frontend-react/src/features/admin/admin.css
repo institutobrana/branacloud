@@ -586,6 +586,290 @@
   width: 100%;
 }
 
+.admin-audit-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+}
+
+.admin-audit-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.admin-audit-toolbar-actions .auxiliary-shell-button:disabled {
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.admin-audit-toolbar-actions .auxiliary-shell-button[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.72;
+}
+
+.admin-audit-toolbar-actions .auxiliary-shell-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.78);
+  outline-offset: 2px;
+}
+
+.admin-audit-toolbar-search {
+  width: 100%;
+  max-width: 280px;
+  min-width: 220px;
+  margin-left: auto;
+}
+
+.admin-audit-toolbar-search .ant-input-search,
+.admin-audit-toolbar-search .ant-input-affix-wrapper {
+  width: 100%;
+}
+
+.admin-audit-page-content {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.admin-audit-state {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+}
+
+.admin-audit-table-shell {
+  width: min(88vw, 1180px);
+  max-width: calc(100% - 80px);
+  min-width: 920px;
+  margin-inline: auto;
+}
+
+.admin-audit-table-frame {
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 100%;
+  border: 1px solid var(--brana-border-subtle);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--brana-surface-card);
+}
+
+.admin-audit-table-grid {
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-audit-table-shell .ant-table-wrapper,
+.admin-audit-table,
+.admin-audit-table .ant-table {
+  width: 100%;
+}
+
+.admin-audit-table .ant-table-container {
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.admin-audit-table .ant-table-cell {
+  vertical-align: middle;
+}
+
+.admin-audit-table .ant-table-thead > tr > th,
+.admin-audit-table .ant-table-tbody > tr > td,
+.admin-audit-table .ant-table-selection-column {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.admin-audit-table .ant-table-thead > tr > th {
+  height: 32px;
+  min-height: 32px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.admin-audit-table .ant-table-tbody > tr > td {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-audit-table .ant-table-selection-column {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+}
+
+.admin-audit-table .ant-table-cell-scrollbar {
+  box-shadow: none;
+}
+
+.admin-audit-table .ant-table-content,
+.admin-audit-table .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.admin-audit-target-cell {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.admin-audit-target-cell .ant-typography {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-audit-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 30px;
+  padding: 0 10px;
+  border-top: 1px solid var(--brana-border-subtle);
+  background: var(--brana-surface-card);
+}
+
+.admin-audit-table-footer .ant-typography {
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.admin-audit-details-modal {
+  width: min(800px, calc(100vw - 24px));
+}
+
+.admin-audit-details-modal .ant-modal-content {
+  border-radius: 10px;
+  max-height: calc(100vh - 24px);
+  overflow: visible;
+}
+
+.admin-audit-details-modal .ant-modal-header {
+  padding: 4px 10px 2px;
+  margin-bottom: 0;
+}
+
+.admin-audit-details-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.admin-audit-details-modal .ant-modal-close {
+  top: 3px;
+  inset-inline-end: 5px;
+}
+
+.admin-audit-details-modal .ant-modal-close-x {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.admin-audit-details-modal .ant-modal-body {
+  overflow-x: hidden;
+  overflow-y: visible;
+  padding: 3px 8px 4px;
+}
+
+.admin-audit-details-modal .ant-modal-footer {
+  margin-top: 0;
+  padding: 3px 8px 4px;
+}
+
+.admin-audit-details-modal .ant-modal-footer .ant-btn {
+  height: 22px;
+  padding: 0 9px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.admin-audit-details-sections {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-audit-details-section {
+  display: grid;
+  gap: 2px;
+}
+
+.admin-audit-details-section .ant-typography {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.admin-audit-details-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(76px, 12%)
+    minmax(0, 21.333%)
+    minmax(76px, 12%)
+    minmax(0, 21.333%)
+    minmax(76px, 12%)
+    minmax(0, 21.334%);
+  border-top: 1px solid var(--brana-border-subtle);
+  border-left: 1px solid var(--brana-border-subtle);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.admin-audit-details-pair {
+  display: contents;
+}
+
+.admin-audit-details-label,
+.admin-audit-details-content {
+  min-width: 0;
+  padding: 2px 4px;
+  border-right: 1px solid var(--brana-border-subtle);
+  border-bottom: 1px solid var(--brana-border-subtle);
+  line-height: 1.05;
+}
+
+.admin-audit-details-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brana-text-secondary);
+  background: color-mix(in srgb, var(--brana-surface-card) 84%, var(--brana-surface-muted) 16%);
+  white-space: nowrap;
+}
+
+.admin-audit-details-content {
+  overflow-wrap: normal;
+  font-size: 12px;
+  color: var(--brana-text-primary);
+  background: var(--brana-surface-card);
+}
+
+.admin-audit-details-value {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+}
+
+.admin-audit-details-value--long {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .admin-billing-page-content {
   display: grid;
   gap: 10px;
@@ -1113,5 +1397,42 @@
     width: 100%;
     min-width: 0;
     max-width: 100%;
+  }
+
+  .admin-audit-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-audit-toolbar-actions {
+    width: 100%;
+  }
+
+  .admin-audit-toolbar-search {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .admin-audit-table-shell {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .admin-audit-details-modal {
+    width: calc(100vw - 16px);
+  }
+
+  .admin-audit-details-modal .ant-modal-content {
+    max-height: calc(100vh - 16px);
+    overflow: hidden;
+  }
+
+  .admin-audit-details-modal .ant-modal-body {
+    max-height: calc(100vh - 86px);
+    overflow-y: auto;
+    padding-inline: 8px;
   }
 }

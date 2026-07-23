@@ -231,3 +231,18 @@ Registrar a correspondência funcional entre o Painel ADM legado e a futura impl
 - `payload_json`: nao exibido.
 - Mutacao: nenhuma.
 - Pagamento, baixa, cancelamento, reembolso, checkout, webhook e Mercado Pago permanecem fora do escopo.
+## Atualizacao - ADM Auditoria auditoria inicial
+
+- Auditoria documental e tecnica iniciada em 2026-07-23 para `ADM -> Auditoria`.
+- O legado atual usa `saCarregarAuditoria()` e `saRenderAuditoria()`.
+- A tabela visual legada possui 5 colunas: `ID`, `Data`, `Ação`, `Autor`, `Alvo`.
+- O endpoint atual e `GET /superadmin/auditoria?limit=80`.
+- O React possui placeholder `AuditPage`, ainda sem tabela funcional.
+- Fase 1 recomendada: listagem read-only, sem mutacao, com contrato seguro para CSV e detalhes.
+
+## Atualizacao - ADM Auditoria implementada
+
+- A Fase 1 funcional do React foi concluida em 2026-07-23.
+- A toolbar ficou read-only com `Atualizar | Buscar evento`.
+- A tabela continua com cinco colunas e controle de colunas, filtro local, ordenacao, selecao unica, rodape, loading, vazio e erro.
+- CSV, detalhes e navegacao por alvo seguem fora do escopo desta fase.
