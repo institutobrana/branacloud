@@ -827,4 +827,8 @@ def unlock_protected_module(
 @router.get("/me")
 def me(current_user = Depends(get_current_user)):
     is_super = is_platform_superadmin_user(current_user)
-    return build_user_context(current_user, is_superadmin=is_super)
+    context = build_user_context(current_user, is_superadmin=is_super)
+    owner = is_owner_email(getattr(current_user, "email", None))
+    context["is_master"] = bool(owner or context.get("is_superadmin"))
+    context["is_superadmin"] = bool(context.get("is_superadmin") or owner)
+    return context

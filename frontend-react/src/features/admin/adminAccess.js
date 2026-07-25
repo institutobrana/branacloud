@@ -1,5 +1,5 @@
 export function canAccessPlatformAdmin(user) {
-  return Boolean(user && user.is_master);
+  return Boolean(user && (user.is_master || user.is_superadmin));
 }
 
 export function getAdminAccessState(user, loading) {
