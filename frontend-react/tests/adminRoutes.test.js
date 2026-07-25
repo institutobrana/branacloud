@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { getAdminMainGroups } from '../src/features/admin/adminRailGroups.js';
 import { adminPath, isAdminRoutePath } from '../src/features/admin/adminRoutes.js';
 import { ADMIN_SECTIONS, getAdminSectionByKey } from '../src/features/admin/adminNavigation.js';
 import { getAdminHeaderModel, getAdminHomeModel, getAdminNavigationModel } from '../src/features/admin/adminVisualModel.js';
@@ -43,6 +44,8 @@ test('admin top bar is mounted in the global app shell and pages only provide co
   const globals = readFileSync(resolve('frontend-react/src/styles/globals.css'), 'utf8');
 
   assert.match(app, /const adminTopBar = useMemo\(/);
+  assert.match(app, /const canAccessAdminPlatform = canAccessPlatformAdmin\(user\);/);
+  assert.match(app, /const mainGroups = getAdminMainGroups\(user, branaMainGroups\);/);
   assert.match(app, /className="brana-shell-band auxiliary-shell-band admin-shell-band"/);
   assert.match(app, /className="brana-shell-band auxiliary-shell-band materiais-estoque-shell-band"/);
   assert.match(app, /screen === 'adm' \|\| screen === 'adm-clinicas' \|\| screen === 'adm-usuarios' \|\| screen === 'adm-cobrancas' \|\| screen === 'adm-auditoria'/);
@@ -54,6 +57,33 @@ test('admin top bar is mounted in the global app shell and pages only provide co
   assert.doesNotMatch(globals, /brana-shell-band--module-toolbar/);
   assert.match(globals, /\.materiais-estoque-toolbar-filters\s*\{\s*display:\s*flex;/);
   assert.match(globals, /\.materiais-estoque-toolbar-filters \.ant-select-selector,[\s\S]*height:\s*28px;/);
+});
+
+test('admin rail groups react to async auth transitions and only expose ADM to owner sessions', () => {
+  const groups = [
+    { key: 'atendimento' },
+    { key: 'cadastro' },
+    { key: 'financeiro' },
+    { key: 'tabelas' },
+    { key: 'relatorios' },
+    { key: 'configuracao' },
+    { key: 'ferramentas' },
+    { key: 'ajuda' },
+    { key: 'adm' },
+  ];
+  const anonymous = getAdminMainGroups(null, groups).map((item) => item.key);
+  const master = getAdminMainGroups({ is_master: true }, groups).map((item) => item.key);
+  const superAdmin = getAdminMainGroups({ is_superadmin: true }, groups).map((item) => item.key);
+  const common = getAdminMainGroups({ is_admin: true }, groups).map((item) => item.key);
+  const logout = getAdminMainGroups(undefined, groups).map((item) => item.key);
+
+  assert.equal(anonymous.includes('adm'), false);
+  assert.equal(common.includes('adm'), false);
+  assert.equal(logout.includes('adm'), false);
+  assert.equal(master.includes('adm'), true);
+  assert.equal(superAdmin.includes('adm'), true);
+  assert.equal(master.filter((key) => key === 'adm').length, 1);
+  assert.equal(superAdmin.filter((key) => key === 'adm').length, 1);
 });
 
 test('admin navigation contract keeps the planned sections only as informational items', () => {

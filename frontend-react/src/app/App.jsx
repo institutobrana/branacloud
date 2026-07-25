@@ -10,6 +10,7 @@ import { LoginPage } from '../features/auth/LoginPage.jsx';
 import { AuthProvider, useAuth } from '../features/auth/AuthProvider.jsx';
 import { FirstAccessPage } from '../features/firstAccess/FirstAccessPage.jsx';
 import { canAccessPlatformAdmin } from '../features/admin/adminAccess.js';
+import { getAdminMainGroups } from '../features/admin/adminRailGroups.js';
 import { AdminRoutes } from '../features/admin/AdminRoutes.jsx';
 import { adminPath } from '../features/admin/adminRoutes.js';
 import { appPath, getAppBasePath, isUnderAppBase, loginPath } from './basePath.js';
@@ -281,13 +282,8 @@ function AppContent() {
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
   const [preferenciasOpen, setPreferenciasOpen] = useState(false);
   const panelCloseTimerRef = useRef(null);
-  const mainGroups = useMemo(() => {
-    const baseGroups = branaMainGroups.filter((group) => group.key !== 'adm');
-    if (!canAccessPlatformAdmin(user)) {
-      return baseGroups;
-    }
-    return branaMainGroups;
-  }, [user]);
+  const canAccessAdminPlatform = canAccessPlatformAdmin(user);
+  const mainGroups = getAdminMainGroups(user, branaMainGroups);
   const adminContextItems = useMemo(() => ([
     { key: 'adm', label: 'Visão geral' },
     { key: 'adm-clinicas', label: 'Clínicas' },
