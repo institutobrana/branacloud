@@ -160,21 +160,20 @@ body {
 }
 
 .materiais-estoque-toolbar-actions .auxiliary-shell-button {
-  min-height: 30px;
-  padding: 5px 10px;
+  min-height: 28px;
+  padding: 4px 10px;
   font-size: 12px;
   line-height: 1;
   border-radius: 8px;
 }
 
 .materiais-estoque-toolbar-filters {
-  display: grid;
-  grid-template-columns: 180px 180px minmax(190px, 1fr);
+  display: flex;
+  align-items: center;
   gap: 8px;
-  align-items: end;
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 640px;
+  max-width: 520px;
 }
 
 .materiais-estoque-toolbar-filters .ant-select,
@@ -190,8 +189,8 @@ body {
 .materiais-estoque-toolbar-filters .ant-select-selector,
 .materiais-estoque-toolbar-filters .ant-input,
 .materiais-estoque-toolbar-filters .ant-input-affix-wrapper {
-  min-height: 30px !important;
-  height: 30px;
+  min-height: 28px !important;
+  height: 28px;
   padding-top: 0;
   padding-bottom: 0;
   font-size: 12px;
@@ -202,19 +201,22 @@ body {
 }
 
 .materiais-estoque-toolbar-filters .ant-input-search-button {
-  height: 30px;
+  height: 28px;
   padding-inline: 10px;
 }
 
 .materiais-estoque-field {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
 .materiais-estoque-field > span {
   font-size: 12px;
   font-weight: 700;
   color: #17474b;
+  white-space: nowrap;
 }
 
 .materiais-estoque-field.grow {
@@ -702,6 +704,10 @@ body {
   padding-left: var(--brana-rail-width, 72px);
 }
 
+.brana-shell-body.has-panel > .brana-shell-band {
+  padding-left: calc(var(--brana-rail-width, 72px) + var(--brana-panel-width, 272px));
+}
+
 .auxiliary-shell-band {
   display: flex;
   align-items: center;
@@ -733,7 +739,8 @@ body {
   background: var(--brana-surface-sidebar);
   border-right: 0;
   box-shadow: none;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: width 0.2s ease;
 }
 
@@ -753,6 +760,7 @@ body {
 .brana-icon-rail-nav {
   flex: 1;
   padding: 0;
+  min-height: 0;
 }
 
 .brana-icon-rail-footer {

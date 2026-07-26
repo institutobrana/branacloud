@@ -5,6 +5,7 @@ import {
   DollarOutlined,
   FileTextOutlined,
   CustomerServiceOutlined,
+  SafetyCertificateOutlined,
   SettingOutlined,
   TableOutlined,
   TeamOutlined,
@@ -80,4 +81,5 @@ export const branaMainGroups = [
   { key: 'configuracao', label: 'Configuração', icon: <SettingOutlined /> },
   { key: 'ferramentas', label: 'Ferramentas', icon: <ToolOutlined /> },
   { key: 'ajuda', label: 'Ajuda', icon: <CustomerServiceOutlined /> },
+  { key: 'adm', label: 'ADM', icon: <SafetyCertificateOutlined /> },
 ];
