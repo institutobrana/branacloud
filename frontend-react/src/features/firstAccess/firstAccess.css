@@ -1,0 +1,86 @@
+.first-access-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(32, 132, 94, 0.18), transparent 30%),
+    radial-gradient(circle at 86% 18%, rgba(234, 179, 8, 0.16), transparent 28%),
+    linear-gradient(145deg, #f7fbf6 0%, #edf6ef 52%, #f8f4e7 100%);
+}
+
+.first-access-shell {
+  width: 100%;
+  max-width: 520px;
+}
+
+.first-access-card {
+  border-radius: 24px;
+  box-shadow: 0 30px 72px rgba(18, 62, 41, 0.14);
+}
+
+.first-access-eyebrow {
+  display: inline-flex;
+  margin-bottom: 10px;
+  color: #177047;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.first-access-title {
+  margin-bottom: 8px !important;
+}
+
+.first-access-subtitle {
+  margin-bottom: 0 !important;
+}
+
+.first-access-form {
+  margin-top: 4px;
+}
+
+.first-access-internal-password-alert .ant-alert-message {
+  font-weight: 800;
+}
+
+.first-access-internal-password-copy {
+  display: grid;
+  gap: 8px;
+  color: inherit;
+}
+
+.first-access-internal-password-copy .ant-typography {
+  margin-bottom: 0;
+}
+
+.first-access-internal-password-copy ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.first-access-internal-password-copy li + li {
+  margin-top: 4px;
+}
+
+.first-access-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .first-access-page {
+    padding: 18px;
+  }
+
+  .first-access-actions {
+    flex-direction: column;
+  }
+
+  .first-access-actions .ant-btn {
+    width: 100%;
+  }
+}
