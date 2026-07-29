@@ -12,6 +12,10 @@ export const routes = [
     label: 'Unidades de atendimento',
   },
   {
+    path: '/app/configuracoes/questionarios-anamnese',
+    label: 'Questionários de anamnese',
+  },
+  {
     path: '/app/cadastro/corpo-clinico',
     label: 'Corpo clínico',
   },

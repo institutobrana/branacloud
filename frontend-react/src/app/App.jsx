@@ -34,6 +34,7 @@ import { MedicamentosPage } from '../features/medicamentos/MedicamentosPage.jsx'
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
 import { PrestadoresPage } from '../features/prestadores/PrestadoresPage.jsx';
+import { QuestionariosAnamnesePage } from '../features/questionariosAnamnese/QuestionariosAnamnesePage.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -86,7 +87,7 @@ const contextualMenus = {
     { key: 'contas-bancarias', label: 'Contas bancárias', disabled: true },
     { key: 'perfis-usuario', label: 'Perfis de usuário', disabled: true },
     { key: 'plano-contas', label: 'Plano de contas' },
-    { key: 'questionarios-anamnese', label: 'Questionários de anamnese', disabled: true },
+    { key: 'questionarios-anamnese', label: 'Questionários de anamnese' },
     { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares' },
     { key: 'taxas-cobranca', label: 'Taxas de cobrança', disabled: true },
     { key: 'unidades-atendimento', label: 'Unidades de atendimento' },
@@ -139,6 +140,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
+  if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
   if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
   if (path === `${base}/tabelas-auxiliares`) return 'tabelas-auxiliares';
   if (path === `${base}/tabelas/procedimentos`) return 'procedimentos';
@@ -172,6 +174,8 @@ function syncAppPath(screen) {
             ? appPath('configuracoes/plano-de-contas')
           : screen === 'unidades-atendimento'
             ? appPath('configuracoes/unidades-atendimento')
+          : screen === 'questionarios-anamnese'
+            ? appPath('configuracoes/questionarios-anamnese')
           : screen === 'prestadores'
             ? appPath('cadastro/corpo-clinico')
         : screen === 'tabelas-auxiliares'
@@ -257,6 +261,7 @@ function AppContent() {
     migrationModalOpen: false,
   });
   const [adminToolbar, setAdminToolbar] = useState(null);
+  const [questionariosToolbar, setQuestionariosToolbar] = useState(null);
   const [unidadesAtendimentoToolbarState, setUnidadesAtendimentoToolbarState] = useState({
     selectedItemId: null,
     loading: false,
@@ -277,6 +282,7 @@ function AppContent() {
     if (initialScreen === 'cenario-anual') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
+    if (initialScreen === 'questionarios-anamnese') return 'configuracao';
     return 'atendimento';
   });
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
@@ -300,6 +306,16 @@ function AppContent() {
       </div>
     );
   }, [adminToolbar, screen]);
+
+  const questionariosTopBar = useMemo(() => {
+    if (screen !== 'questionarios-anamnese') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band admin-shell-band" aria-label="Barra operacional de questionários de anamnese">
+        {questionariosToolbar}
+      </div>
+    );
+  }, [questionariosToolbar, screen]);
 
   useEffect(() => {
     const onPopState = () => setScreen(resolveScreenFromPath());
@@ -435,7 +451,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'unidades-atendimento' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -500,6 +516,11 @@ function AppContent() {
       return;
     }
     if (nextScreen === 'unidades-atendimento') {
+      setActiveGroupKey('configuracao');
+      setPanelGroupKey('configuracao');
+      return;
+    }
+    if (nextScreen === 'questionarios-anamnese') {
       setActiveGroupKey('configuracao');
       setPanelGroupKey('configuracao');
       return;
@@ -582,6 +603,10 @@ function AppContent() {
       handleNavigate('unidades-atendimento');
       return;
     }
+    if (groupKey === 'configuracao' && item?.key === 'questionarios-anamnese' && !item?.disabled) {
+      handleNavigate('questionarios-anamnese');
+      return;
+    }
     if (groupKey === 'tabelas' && item?.key === 'procedimentos-genericos' && !item?.disabled) {
       handleNavigate('procedimentos-genericos');
       return;
@@ -618,6 +643,10 @@ function AppContent() {
       handleNavigate('dashboard');
       return;
     }
+    if (actionKey === 'anamnese') {
+      handleNavigate('questionarios-anamnese');
+      return;
+    }
     if (actionKey === 'cadastro-pacientes') {
       handleNavigate('pacientes');
       return;
@@ -645,6 +674,10 @@ function AppContent() {
     }
     if (actionKey === 'unidades-atendimento') {
       handleNavigate('unidades-atendimento');
+      return;
+    }
+    if (actionKey === 'questionarios-anamnese') {
+      handleNavigate('questionarios-anamnese');
       return;
     }
     if (actionKey === 'prestadores') {
@@ -1063,19 +1096,7 @@ function AppContent() {
 
   const medicamentosTopBar = useMemo(() => {
     if (screen !== 'medicamentos') return null;
-
-    return (
-      <div className="brana-shell-band auxiliary-shell-band medicamentos-shell-band" aria-label="Barra operacional de medicamentos">
-        <MedicamentosToolbar
-          group={medicamentosToolbarState.group}
-          groups={medicamentosToolbarState.groups}
-          name={medicamentosToolbarState.name}
-          loadingGroups={medicamentosToolbarState.loadingGroups}
-          onGroupChange={(value) => window.dispatchEvent(new CustomEvent('brana-medicamentos-toolbar-filter', { detail: { field: 'group', value } }))}
-          onNameChange={(value) => window.dispatchEvent(new CustomEvent('brana-medicamentos-toolbar-filter', { detail: { field: 'name', value } }))}
-        />
-      </div>
-    );
+    return null;
   }, [medicamentosToolbarState.group, medicamentosToolbarState.groups, medicamentosToolbarState.loadingGroups, medicamentosToolbarState.name, screen]);
 
   const planoContasTopBar = useMemo(() => {
