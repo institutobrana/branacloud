@@ -21,6 +21,8 @@
 - `backend/security/dependencies.py`: controla usuario atual, setup, conta sistemica e permissoes.
 - `backend/security/permissions.py`: matriz de acesso dos modulos.
 - `frontend/app.js`: arquivo monolitico; mudancas podem afetar telas distantes.
+- `frontend-react/src/app/App.jsx`: controla o roteamento do novo frontend React e agora precisa respeitar `appPath()` para publicar em `/react` sem quebrar `/app`.
+- `Dockerfile`: agora faz build multi-stage do React antes de publicar a imagem.
 - `backend/routes/editor_textos_routes.py`: documentos, PDFs, assinatura e local bridge.
 - `backend/routes/agenda_legado_routes.py`: agenda, repeticao, avisos e integracoes.
 - `backend/scripts/`: scripts podem alterar dados em massa.
@@ -97,6 +99,31 @@ Evite como primeira tarefa:
 - Documentar impacto.
 
 ## PROXIMOS PASSOS SUGERIDOS
+
+### Publicacao do frontend React
+
+1. Manter `/app` no legado ate a validacao final do React.
+2. Validar `/react` com login, menus, refresh e assets.
+3. Quando aprovar, trocar `/app` para o React e manter `/legado` como contingencia temporaria.
+4. Registrar a revisao da task ECS usada em cada corte.
+
+## Como comecar um deploy AWS
+
+1. Ler `docs/deploy/release_contract.md`.
+2. Ler `docs/deploy/release_runner.md`.
+3. Ler `docs/deploy/release_configuration.md`.
+4. Ler `docs/deploy/release_git_audit.md`.
+5. Ler `docs/incidente_deploy_ecs_canary_20260729.md` como referencia historica do incidente de 2026-07-29.
+6. Confirmar que o servico continua em `default-brana-hml-backend:16` antes de qualquer nova publicacao.
+7. Exigir clone limpo, build local e validacao do mecanismo real de promocao antes de escrever em AWS.
+
+### Publicacao AWS com CANARY
+
+1. Tratar `docs/deploy/release_contract.md` como fonte unica do contrato de release.
+2. Tratar `docs/deploy/release_runner.md` como entrada operacional de leitura e validacao.
+3. Tratar `docs/deploy/release_configuration.md` como fonte de configuracao do ambiente, nao como guia de execucao.
+4. Bloquear qualquer deploy que assuma rolling quando o servico estiver em CANARY.
+5. Exigir os quatro portoes antes de qualquer escrita em AWS.
 
 ### Prioridade 1 - seguranca e previsibilidade
 
