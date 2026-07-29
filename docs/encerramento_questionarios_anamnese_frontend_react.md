@@ -216,3 +216,27 @@ A impressao deve ser tratada como nova frente, com auditoria propria e contrato 
 - `Y:\EDS70` permaneceu somente leitura;
 - nenhum commit;
 - nenhum push.
+
+## 24. Publicacao AWS
+
+- commit publicado: `5f8d1ecc72db0125fd6ebdf1b0f50f4c57b01d3d`;
+- branch publicada: `modularizacao-segura-fase-1`;
+- remoto sincronizado antes do deploy: `0 0`;
+- conta AWS: `810204249111`;
+- regiao AWS: `sa-east-1`;
+- repositorio ECR: `810204249111.dkr.ecr.sa-east-1.amazonaws.com/brana-cloud/backend`;
+- tag ECR: `anamnese-5f8d1ecc-20260729`;
+- digest ECR: `sha256:02aeb33184545e35517591217cc943fa25bd2780fd8a4fabcee6672ba1793372`;
+- cluster ECS: `default`;
+- servico ECS: `brana-hml-backend`;
+- task definition anterior: `default-brana-hml-backend:16`;
+- task definition nova: `default-brana-hml-backend:17`;
+- task anterior: `arn:aws:ecs:sa-east-1:810204249111:task/default/a329a01689d945d3b2b7869a3fdfaba4`;
+- task nova: `arn:aws:ecs:sa-east-1:810204249111:task/default/df51043b7a87428ea1c1ee2bc1a4f23e`;
+- target group: `arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/ecs-gateway-tg-e9a92e7d6f31c7aaa/93b9db17c258ebe0`;
+- health do servico: `running=1`, `pending=0`, `rolloutState=COMPLETED`;
+- URL publica validada: `https://app.institutobrana.com.br`;
+- smoke test: `/app`, `/app/configuracoes/questionarios-anamnese` e `/health` responderam com sucesso em GET;
+- rollback preparado: `default-brana-hml-backend:16`;
+- `Imprime` permanece desabilitado;
+- nenhum rollback foi necessario.
