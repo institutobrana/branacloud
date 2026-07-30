@@ -681,8 +681,12 @@ function Test-BranaRollingPreflight {
     }
     $configResult = Test-BranaEnvironmentConfig -Config $Config
     $rollingResult = Test-BranaRollingReleaseConfig -Config $Config
-    if (-not $configResult.IsValid) { $errors.AddRange($configResult.Errors) }
-    if (-not $rollingResult.IsValid) { $errors.AddRange($rollingResult.Errors) }
+    if (-not $configResult.IsValid) {
+        foreach ($error in @($configResult.Errors)) { $errors.Add([string]$error) }
+    }
+    if (-not $rollingResult.IsValid) {
+        foreach ($error in @($rollingResult.Errors)) { $errors.Add([string]$error) }
+    }
     if ($git) {
         if ($git.WorktreeDirty -or $git.StageDirty) { $errors.Add('git worktree must be clean') }
         if ($git.IsDetachedHead) { $errors.Add('git must not be detached') }

@@ -1,4 +1,5 @@
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Common.psm1" -Force
+Import-Module "$PSScriptRoot\..\modules\Brana.Release.Git.psm1" -Force
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Config.psm1" -Force
 Import-Module "$PSScriptRoot\..\Brana.Release.psm1" -Force
 
@@ -203,7 +204,7 @@ Describe 'Brana.Release module' {
         $table['ROLLBACK_FAILED'].Count | Should Be 0
     }
 
-    It '20 plano rolling pode ser montado com preflight simulado' {
+    It '20 hml express gateway bloqueia rolling e standard ecs aceita rolling' {
         $tempDir = Join-Path $env:TEMP ('brana-release-plan-' + [guid]::NewGuid().ToString('N'))
         New-Item -ItemType Directory -Path $tempDir | Out-Null
         $original = Get-Command Get-BranaGitRepositorySummary -CommandType Function -ErrorAction SilentlyContinue
@@ -226,10 +227,41 @@ Describe 'Brana.Release module' {
         try {
             $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
             $preflight = Test-BranaRollingPreflight -RepositoryPath (Resolve-Path "$PSScriptRoot\..\..").Path -Config $config
-            $preflight.IsValid | Should Be $true
-            $plan = Get-BranaRollingDeploymentPlan -Config $config -CurrentTaskDefinition 'default-brana-hml-backend:16' -CurrentImageDigest 'sha256:f8f23562da55b1ebbcee08cd4628368d1303d7471b2cdf5e0dac903d4c4eda0a'
+            $preflight.IsValid | Should Be $false
+            ($preflight.Errors -join ' ') | Should Match 'deploymentStrategy must be ROLLING'
+
+            $rollingConfig = [pscustomobject]@{
+                serviceType = 'STANDARD_ECS'
+                deploymentStrategy = 'ROLLING'
+                desiredCount = 1
+                minimumHealthyPercent = 100
+                maximumPercent = 200
+                observationMinutes = 15
+                requestIntervalSeconds = 30
+                productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'
+                publicHealthUrl = 'https://app.example.invalid/health'
+                publicAppUrl = 'https://app.example.invalid/app'
+                rollbackTaskDefinition = 'brana-prod-backend:1'
+                requireCleanClone = $true
+                requireImageDigest = $true
+                requireZeroElb503 = $true
+                requirePublicTargetHealthy = $true
+                requireOldTaskUntilNewHealthy = $true
+                logGroup = '/aws/ecs/default/brana'
+                awsAccountId = '810204249111'
+                awsRegion = 'sa-east-1'
+                ecsCluster = 'default'
+                ecsService = 'brana-prod-backend'
+                taskFamily = 'prod-backend'
+                schema_version = '2.0.0'
+                environment = 'prod'
+                runtimePlatform = [pscustomobject]@{ operatingSystemFamily = 'LINUX'; cpuArchitecture = 'X86_64' }
+            }
+            $rollingValidation = Test-BranaRollingReleaseConfig -Config $rollingConfig
+            $rollingValidation.IsValid | Should Be $true
+            $plan = Get-BranaRollingDeploymentPlan -Config $rollingConfig -CurrentTaskDefinition 'default-brana-hml-backend:16' -CurrentImageDigest 'sha256:f8f23562da55b1ebbcee08cd4628368d1303d7471b2cdf5e0dac903d4c4eda0a'
             $plan.DeploymentStrategy | Should Be 'ROLLING'
-            $plan.RollbackCommand | Should Match 'default-brana-hml-backend:16'
+            $plan.RollbackCommand | Should Match 'prod-backend'
         }
         finally {
             if ($original) {

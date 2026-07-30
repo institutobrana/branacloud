@@ -89,7 +89,7 @@ function Test-BranaEnvironmentConfig {
     $errors = New-Object System.Collections.Generic.List[string]
     $warnings = New-Object System.Collections.Generic.List[string]
     $required = @(
-        'schema_version','environment','awsAccountId','awsRegion','ecsCluster','ecsService',
+        'schema_version','environment','serviceType','awsAccountId','awsRegion','ecsCluster','ecsService',
         'taskFamily','deploymentStrategy','desiredCount','minimumHealthyPercent','maximumPercent',
         'productionTargetGroupArn','publicHealthUrl','publicAppUrl','observationMinutes',
         'requestIntervalSeconds','rollbackTaskDefinition','requireCleanClone','requireImageDigest',
@@ -104,9 +104,12 @@ function Test-BranaEnvironmentConfig {
 
     $schemaVersion = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'schema_version')
     $environment = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'environment')
+    $serviceType = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'serviceType')
     $awsAccountId = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'awsAccountId')
     $awsRegion = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'awsRegion')
     $deploymentStrategy = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'deploymentStrategy')
+    $canaryPercent = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'canaryPercent')
+    $bakeTimeInMinutes = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'bakeTimeInMinutes')
     $publicHealthUrl = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'publicHealthUrl')
     $publicAppUrl = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'publicAppUrl')
     $minimumHealthyPercent = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'minimumHealthyPercent')
@@ -116,6 +119,7 @@ function Test-BranaEnvironmentConfig {
 
     if ($schemaVersion -notin @('1.0.0','2.0.0')) { $errors.Add('schema_version must be 1.0.0 or 2.0.0') }
     if ($environment -notin @('hml','prod')) { $errors.Add('environment must be hml or prod') }
+    if ($serviceType -notin @('STANDARD_ECS','EXPRESS_GATEWAY')) { $errors.Add('serviceType must be STANDARD_ECS or EXPRESS_GATEWAY') }
     if ($awsAccountId -notmatch '^\d{12}$') { $errors.Add('awsAccountId must be 12 digits') }
     if ($awsRegion -notmatch '^[a-z]{2}-[a-z]+-\d$') { $errors.Add('awsRegion has invalid format') }
     if ($deploymentStrategy -notin @('ROLLING','CANARY')) { $errors.Add('deploymentStrategy must be ROLLING or CANARY') }
@@ -125,6 +129,13 @@ function Test-BranaEnvironmentConfig {
     if ($maximumPercent -lt 100) { $errors.Add('maximumPercent must be at least 100') }
     if ($desiredCount -lt 1) { $errors.Add('desiredCount must be positive') }
     if ($observationMinutes -lt 15) { $errors.Add('observationMinutes must be at least 15') }
+    if ($deploymentStrategy -eq 'CANARY') {
+        if ($canaryPercent -lt 1 -or $canaryPercent -gt 100) { $errors.Add('canaryPercent must be between 1 and 100 for canary') }
+        if ($bakeTimeInMinutes -lt 1) { $errors.Add('bakeTimeInMinutes must be positive for canary') }
+    }
+    if ($serviceType -eq 'EXPRESS_GATEWAY' -and $deploymentStrategy -eq 'ROLLING') {
+        $errors.Add('ROLLING deployment strategy is not supported for ExpressGatewayServices. Configure CANARY or use a different service architecture.')
+    }
     if ($deploymentStrategy -eq 'ROLLING') {
         if ($minimumHealthyPercent -ne 100) { $errors.Add('minimumHealthyPercent must be 100 for rolling') }
         if ($maximumPercent -lt 200 -and $desiredCount -eq 1) { $errors.Add('maximumPercent must be at least 200 for rolling desiredCount 1') }

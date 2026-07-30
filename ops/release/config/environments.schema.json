@@ -7,6 +7,7 @@
   "required": [
     "schema_version",
     "environment",
+    "serviceType",
     "awsAccountId",
     "awsRegion",
     "ecsCluster",
@@ -33,6 +34,7 @@
   "properties": {
     "schema_version": { "type": "string", "const": "2.0.0" },
     "environment": { "type": "string", "enum": ["hml", "prod"] },
+    "serviceType": { "type": "string", "enum": ["STANDARD_ECS", "EXPRESS_GATEWAY"] },
     "awsAccountId": { "type": "string", "pattern": "^\\d{12}$" },
     "awsRegion": { "type": "string", "pattern": "^[a-z]{2}-[a-z]+-\\d$" },
     "ecsCluster": { "type": "string", "minLength": 1 },
@@ -42,6 +44,8 @@
     "desiredCount": { "type": "integer", "minimum": 1 },
     "minimumHealthyPercent": { "type": "integer", "minimum": 0, "maximum": 100 },
     "maximumPercent": { "type": "integer", "minimum": 100 },
+    "canaryPercent": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "bakeTimeInMinutes": { "type": "integer", "minimum": 0 },
     "productionTargetGroupArn": { "type": "string", "minLength": 1 },
     "publicHealthUrl": { "type": "string", "minLength": 1 },
     "publicAppUrl": { "type": "string", "minLength": 1 },
@@ -63,5 +67,47 @@
         "cpuArchitecture": { "type": "string", "enum": ["X86_64", "ARM64"] }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "serviceType": { "const": "EXPRESS_GATEWAY" }
+        },
+        "required": ["serviceType"]
+      },
+      "then": {
+        "properties": {
+          "deploymentStrategy": { "const": "CANARY" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "deploymentStrategy": { "const": "CANARY" }
+        },
+        "required": ["deploymentStrategy"]
+      },
+      "then": {
+        "required": ["canaryPercent", "bakeTimeInMinutes"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "deploymentStrategy": { "const": "ROLLING" }
+        },
+        "required": ["deploymentStrategy"]
+      },
+      "then": {
+        "not": {
+          "properties": {
+            "serviceType": { "const": "EXPRESS_GATEWAY" }
+          },
+          "required": ["serviceType"]
+        }
+      }
+    }
+  ]
 }

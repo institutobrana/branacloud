@@ -7,6 +7,10 @@ Describe 'Brana.Release.Config' {
         $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
         $result = Test-BranaEnvironmentConfig -Config $config
         $result.IsValid | Should Be $true
+        $config.serviceType | Should Be 'EXPRESS_GATEWAY'
+        $config.deploymentStrategy | Should Be 'CANARY'
+        $config.canaryPercent | Should Be 5
+        $config.bakeTimeInMinutes | Should Be 3
     }
 
     It 'parses the schema and example files' {
@@ -77,9 +81,68 @@ Describe 'Brana.Release.Config' {
         $result.IsValid | Should Be $false
     }
 
-    It 'accepts rolling config values' {
-        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
-        $rolling = Test-BranaRollingReleaseConfig -Config $config
-        $rolling.IsValid | Should Be $true
+    It 'accepts standard ECS rolling and rejects express gateway rolling' {
+        $rolling = [pscustomobject]@{
+            schema_version = '2.0.0'
+            environment = 'prod'
+            serviceType = 'STANDARD_ECS'
+            awsAccountId = '810204249111'
+            awsRegion = 'sa-east-1'
+            ecsCluster = 'default'
+            ecsService = 'brana-prod-backend'
+            taskFamily = 'prod-backend'
+            deploymentStrategy = 'ROLLING'
+            desiredCount = 1
+            minimumHealthyPercent = 100
+            maximumPercent = 200
+            observationMinutes = 15
+            requestIntervalSeconds = 30
+            productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'
+            publicHealthUrl = 'https://app.example.invalid/health'
+            publicAppUrl = 'https://app.example.invalid/app'
+            rollbackTaskDefinition = 'brana-prod-backend:1'
+            requireCleanClone = $true
+            requireImageDigest = $true
+            requireZeroElb503 = $true
+            requirePublicTargetHealthy = $true
+            requireOldTaskUntilNewHealthy = $true
+            logGroup = '/aws/ecs/prod/brana'
+            runtimePlatform = [pscustomobject]@{ operatingSystemFamily = 'LINUX'; cpuArchitecture = 'X86_64' }
+        }
+        $rollingResult = Test-BranaEnvironmentConfig -Config $rolling
+        $rollingResult.IsValid | Should Be $true
+
+        $bad = [pscustomobject]@{
+            schema_version = '2.0.0'
+            environment = 'hml'
+            serviceType = 'EXPRESS_GATEWAY'
+            awsAccountId = '810204249111'
+            awsRegion = 'sa-east-1'
+            ecsCluster = 'default'
+            ecsService = 'brana-hml-backend'
+            taskFamily = 'default-brana-hml-backend'
+            deploymentStrategy = 'ROLLING'
+            desiredCount = 1
+            minimumHealthyPercent = 100
+            maximumPercent = 200
+            canaryPercent = 5
+            bakeTimeInMinutes = 3
+            productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'
+            publicHealthUrl = 'https://app.example.invalid/health'
+            publicAppUrl = 'https://app.example.invalid/app'
+            observationMinutes = 15
+            requestIntervalSeconds = 30
+            rollbackTaskDefinition = 'default-brana-hml-backend:15'
+            requireCleanClone = $true
+            requireImageDigest = $true
+            requireZeroElb503 = $true
+            requirePublicTargetHealthy = $true
+            requireOldTaskUntilNewHealthy = $true
+            logGroup = '/aws/ecs/default/brana'
+            runtimePlatform = [pscustomobject]@{ operatingSystemFamily = 'LINUX'; cpuArchitecture = 'X86_64' }
+        }
+        $badResult = Test-BranaEnvironmentConfig -Config $bad
+        $badResult.IsValid | Should Be $false
+        ($badResult.Errors -join ' ') | Should Match 'ExpressGatewayServices'
     }
 }
