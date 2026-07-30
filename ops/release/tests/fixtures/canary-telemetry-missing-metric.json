@@ -1,0 +1,40 @@
+{
+  "TimestampUtc": "2026-07-30T18:00:00.000Z",
+  "Source": "fixture",
+  "Complete": false,
+  "Errors": ["métrica obrigatória ausente"],
+  "Warnings": [],
+  "AwsIdentity": {},
+  "Service": {},
+  "Deployment": {},
+  "Revisions": {},
+  "Targets": {},
+  "Metrics": {
+    "HealthyHostCount": null,
+    "UnHealthyHostCount": null,
+    "HTTPCode_ELB_5XX_Count": null,
+    "HTTPCode_Target_5XX_Count": null,
+    "DatapointStatus": "incomplete",
+    "Source": "cloudwatch"
+  },
+  "Http": {
+    "HealthStatusCode": 200,
+    "AppStatusCode": 200,
+    "HealthOk": true,
+    "AppOk": true,
+    "Observed503": false,
+    "ProbeErrors": []
+  },
+  "Alarms": {},
+  "serviceStable": true,
+  "deploymentConcurrent": false,
+  "publicTargetHealthy": true,
+  "alternateTargetHealthy": false,
+  "rollbackServiceRevision": "default-brana-hml-backend:15",
+  "healthyHostCount": 1,
+  "elb5xxCount": 0,
+  "target5xxCount": 0,
+  "observed503Count": 0,
+  "lifecycleStage": "OBSERVING",
+  "allowed503": 0
+}

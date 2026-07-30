@@ -1,5 +1,6 @@
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Common.psm1" -Force
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Canary.psm1" -Force
+Import-Module "$PSScriptRoot\..\modules\Brana.Release.Telemetry.psm1" -Force
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Git.psm1" -Force
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Config.psm1" -Force
 Import-Module "$PSScriptRoot\..\Brana.Release.psm1" -Force
@@ -255,6 +256,10 @@ Describe 'Brana.Release module' {
             }
             $ready = Test-BranaCanaryDeploymentReadiness -Config $config -Signals $signals
             $ready.IsValid | Should Be $true
+
+            $telemetry = Get-BranaCanaryTelemetry -Config $config -TelemetryPath "$PSScriptRoot\fixtures\canary-telemetry-healthy.json"
+            $telemetry.Complete | Should Be $true
+            (Test-BranaCanaryDeploymentReadiness -Config $config -Signals $telemetry).IsValid | Should Be $true
 
             ($plan.LifecycleStages -join ' ') | Should Match 'BASELINE'
             ($plan.LifecycleStages -join ' ') | Should Match 'BAKE'

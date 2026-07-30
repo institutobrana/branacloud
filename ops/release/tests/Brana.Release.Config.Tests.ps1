@@ -11,6 +11,11 @@ Describe 'Brana.Release.Config' {
         $config.serviceType | Should Be 'EXPRESS_GATEWAY'
         $config.deploymentStrategy | Should Be 'CANARY'
         $config.baselineMinutes | Should Be 15
+        $config.telemetryWindowMinutes | Should Be 15
+        $config.telemetryPeriodSeconds | Should Be 60
+        $config.httpProbeTimeoutSeconds | Should Be 10
+        $config.telemetryMaxAttempts | Should Be 2
+        $config.telemetryBackoffSeconds | Should Be 2
         $config.canaryPercent | Should Be 5
         $config.bakeTimeInMinutes | Should Be 3
     }
@@ -51,6 +56,11 @@ Describe 'Brana.Release.Config' {
             minimumHealthyPercent = 80
             maximumPercent = 50
             baselineMinutes = 10
+            telemetryWindowMinutes = 0
+            telemetryPeriodSeconds = 0
+            httpProbeTimeoutSeconds = 0
+            telemetryMaxAttempts = 3
+            telemetryBackoffSeconds = -1
             productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:999999999999:targetgroup/x/y'
             publicHealthUrl = 'ftp://app.example.invalid/health'
             publicAppUrl = 'https://app.example.invalid/app'
@@ -99,6 +109,11 @@ Describe 'Brana.Release.Config' {
             minimumHealthyPercent = 100
             maximumPercent = 200
             baselineMinutes = 15
+            telemetryWindowMinutes = 15
+            telemetryPeriodSeconds = 60
+            httpProbeTimeoutSeconds = 10
+            telemetryMaxAttempts = 2
+            telemetryBackoffSeconds = 2
             observationMinutes = 15
             requestIntervalSeconds = 30
             productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'
@@ -130,6 +145,11 @@ Describe 'Brana.Release.Config' {
             minimumHealthyPercent = 100
             maximumPercent = 200
             baselineMinutes = 15
+            telemetryWindowMinutes = 15
+            telemetryPeriodSeconds = 60
+            httpProbeTimeoutSeconds = 10
+            telemetryMaxAttempts = 2
+            telemetryBackoffSeconds = 2
             canaryPercent = 5
             bakeTimeInMinutes = 3
             productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'

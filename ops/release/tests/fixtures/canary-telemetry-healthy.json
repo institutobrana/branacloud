@@ -1,0 +1,87 @@
+{
+  "TimestampUtc": "2026-07-30T18:00:00.000Z",
+  "Source": "fixture",
+  "Complete": true,
+  "Errors": [],
+  "Warnings": [],
+  "AwsIdentity": {
+    "AccountId": "810204249111",
+    "Arn": "arn:aws:sts::810204249111:assumed-role/brana-hml-release/fixture",
+    "UserId": "fixture-user"
+  },
+  "Service": {
+    "AccountId": "810204249111",
+    "Region": "sa-east-1",
+    "Cluster": "default",
+    "ServiceName": "brana-hml-backend",
+    "ServiceArn": "arn:aws:ecs:sa-east-1:810204249111:service/default/brana-hml-backend",
+    "ServiceType": "EXPRESS_GATEWAY",
+    "Strategy": "CANARY",
+    "TaskDefinition": "default-brana-hml-backend:16",
+    "DesiredCount": 1,
+    "RunningCount": 1,
+    "PendingCount": 0,
+    "RolloutState": "COMPLETED",
+    "ActiveDeploymentCount": 1,
+    "ConcurrentDeployment": false,
+    "CurrentServiceDeploymentArn": "ecs-svc/fixture",
+    "CurrentServiceRevisionArn": "default-brana-hml-backend:16",
+    "PreviousStableServiceRevisionArn": "default-brana-hml-backend:15",
+    "LifecycleStage": "OBSERVING",
+    "RollbackAvailable": true,
+    "CircuitBreakerEnabled": true,
+    "AlarmsEnabled": true
+  },
+  "Deployment": {
+    "CurrentDeploymentId": "ecs-svc/fixture",
+    "CurrentTaskDefinition": "default-brana-hml-backend:16",
+    "CurrentRolloutState": "COMPLETED",
+    "ConcurrentDeployment": false
+  },
+  "Revisions": {
+    "Current": "default-brana-hml-backend:16",
+    "PreviousStable": "default-brana-hml-backend:15"
+  },
+  "Targets": {
+    "PublicTargetGroupArn": "arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/ecs-gateway-tg-755fef69195f7dbe3/570f304e06f75054",
+    "AlternateTargetGroupArn": null,
+    "PublicHealthyHostCount": 1,
+    "PublicUnhealthyHostCount": 0,
+    "AlternateHealthyHostCount": null,
+    "AlternateUnhealthyHostCount": null,
+    "States": ["healthy"],
+    "Reasons": [],
+    "TargetGroupWithoutTargets": false,
+    "TargetGroupNotFound": false
+  },
+  "Metrics": {
+    "HealthyHostCount": 1,
+    "UnHealthyHostCount": 0,
+    "HTTPCode_ELB_5XX_Count": 0,
+    "HTTPCode_Target_5XX_Count": 0,
+    "DatapointStatus": "complete",
+    "Source": "cloudwatch"
+  },
+  "Http": {
+    "HealthStatusCode": 200,
+    "AppStatusCode": 200,
+    "HealthOk": true,
+    "AppOk": true,
+    "Observed503": false,
+    "ProbeErrors": []
+  },
+  "Alarms": {
+    "Relevant": []
+  },
+  "serviceStable": true,
+  "deploymentConcurrent": false,
+  "publicTargetHealthy": true,
+  "alternateTargetHealthy": true,
+  "rollbackServiceRevision": "default-brana-hml-backend:15",
+  "healthyHostCount": 1,
+  "elb5xxCount": 0,
+  "target5xxCount": 0,
+  "observed503Count": 0,
+  "lifecycleStage": "OBSERVING",
+  "allowed503": 0
+}

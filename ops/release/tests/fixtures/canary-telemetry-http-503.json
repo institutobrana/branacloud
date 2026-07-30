@@ -1,0 +1,33 @@
+{
+  "TimestampUtc": "2026-07-30T18:00:00.000Z",
+  "Source": "fixture",
+  "Complete": false,
+  "Errors": ["HTTP 503 observed"],
+  "Warnings": [],
+  "AwsIdentity": {},
+  "Service": {},
+  "Deployment": {},
+  "Revisions": {},
+  "Targets": {},
+  "Metrics": {},
+  "Http": {
+    "HealthStatusCode": 503,
+    "AppStatusCode": 200,
+    "HealthOk": false,
+    "AppOk": true,
+    "Observed503": true,
+    "ProbeErrors": ["503"]
+  },
+  "Alarms": {},
+  "serviceStable": true,
+  "deploymentConcurrent": false,
+  "publicTargetHealthy": false,
+  "alternateTargetHealthy": false,
+  "rollbackServiceRevision": "default-brana-hml-backend:15",
+  "healthyHostCount": 1,
+  "elb5xxCount": 0,
+  "target5xxCount": 0,
+  "observed503Count": 1,
+  "lifecycleStage": "OBSERVING",
+  "allowed503": 0
+}

@@ -16,6 +16,39 @@ function Get-BranaCanaryPropertyValue {
     return $property.Value
 }
 
+function Get-BranaCanaryTelemetryValue {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$InputObject,
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    $value = Get-BranaCanaryPropertyValue -InputObject $InputObject -Name $Name
+    if ($null -ne $value) {
+        return $value
+    }
+
+    $telemetry = Get-BranaCanaryPropertyValue -InputObject $InputObject -Name 'Telemetry'
+    if ($null -ne $telemetry) {
+        $value = Get-BranaCanaryPropertyValue -InputObject $telemetry -Name $Name
+        if ($null -ne $value) {
+            return $value
+        }
+    }
+
+    $signals = Get-BranaCanaryPropertyValue -InputObject $InputObject -Name 'Signals'
+    if ($null -ne $signals) {
+        $value = Get-BranaCanaryPropertyValue -InputObject $signals -Name $Name
+        if ($null -ne $value) {
+            return $value
+        }
+    }
+
+    return $null
+}
+
 function Get-BranaCanaryLifecycleStages {
     [CmdletBinding()]
     param()
@@ -111,26 +144,28 @@ function Test-BranaCanaryDeploymentReadiness {
         $errors.Add('canary telemetry signals are required')
     }
     else {
-        $lifecycleStage = [string](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'lifecycleStage')
-        $serviceStable = [bool](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'serviceStable')
-        $deploymentConcurrent = [bool](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'deploymentConcurrent')
-        $publicTargetHealthy = [bool](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'publicTargetHealthy')
-        $alternateTargetHealthy = [bool](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'alternateTargetHealthy')
-        $rollbackServiceRevision = [string](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'rollbackServiceRevision')
-        $healthyHostCount = [int](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'healthyHostCount')
-        $elb5xxCount = [int](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'elb5xxCount')
-        $target5xxCount = [int](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'target5xxCount')
-        $observed503Count = [int](Get-BranaCanaryPropertyValue -InputObject $Signals -Name 'observed503Count')
+        $lifecycleStage = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'lifecycleStage')
+        $serviceStable = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'serviceStable')
+        $deploymentConcurrent = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'deploymentConcurrent')
+        $publicTargetHealthy = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetHealthy')
+        $alternateTargetHealthy = Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'alternateTargetHealthy'
+        $rollbackServiceRevision = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'rollbackServiceRevision')
+        $healthyHostCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'healthyHostCount')
+        $elb5xxCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'elb5xxCount')
+        $target5xxCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'target5xxCount')
+        $observed503Count = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'observed503Count')
+        $allowed503 = [int]([object](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'allowed503'))
 
         if (-not $serviceStable) { $errors.Add('service must be stable before canary') }
         if ($deploymentConcurrent) { $errors.Add('deployment concurrent blocks canary') }
         if ([string]::IsNullOrWhiteSpace($rollbackServiceRevision)) { $errors.Add('rollback service revision is required') }
         if (-not $publicTargetHealthy) { $errors.Add('public target must be healthy') }
-        if ($alternateTargetHealthy -eq $false) { $errors.Add('alternate target must be identified and healthy') }
+        if ($null -ne $alternateTargetHealthy -and -not [bool]$alternateTargetHealthy) { $errors.Add('alternate target must be identified and healthy') }
         if ($healthyHostCount -lt 1) { $errors.Add('HealthyHostCount below 1 blocks canary') }
         if ($elb5xxCount -gt 0) { $errors.Add('ELB 5xx above zero blocks canary') }
         if ($target5xxCount -gt 0) { $errors.Add('target 5xx above zero blocks canary') }
         if ($observed503Count -gt 0) { $errors.Add('503 during observation triggers rollback') }
+        if ($allowed503 -gt 0) { $errors.Add('allowed503 must be zero for canary') }
         if ($lifecycleStage -notin @(Get-BranaCanaryLifecycleStages)) { $errors.Add('lifecycle stage unknown') }
     }
 

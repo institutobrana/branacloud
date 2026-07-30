@@ -92,7 +92,8 @@ function Test-BranaEnvironmentConfig {
         'schema_version','environment','serviceType','baselineMinutes','awsAccountId','awsRegion','ecsCluster','ecsService',
         'taskFamily','deploymentStrategy','desiredCount','minimumHealthyPercent','maximumPercent',
         'productionTargetGroupArn','publicHealthUrl','publicAppUrl','observationMinutes',
-        'requestIntervalSeconds','rollbackTaskDefinition','requireCleanClone','requireImageDigest',
+        'requestIntervalSeconds','telemetryWindowMinutes','telemetryPeriodSeconds','httpProbeTimeoutSeconds',
+        'telemetryMaxAttempts','telemetryBackoffSeconds','rollbackTaskDefinition','requireCleanClone','requireImageDigest',
         'requireZeroElb503','requirePublicTargetHealthy','requireOldTaskUntilNewHealthy',
         'logGroup','runtimePlatform'
     )
@@ -117,6 +118,11 @@ function Test-BranaEnvironmentConfig {
     $maximumPercent = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'maximumPercent')
     $desiredCount = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'desiredCount')
     $observationMinutes = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'observationMinutes')
+    $telemetryWindowMinutes = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'telemetryWindowMinutes')
+    $telemetryPeriodSeconds = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'telemetryPeriodSeconds')
+    $httpProbeTimeoutSeconds = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'httpProbeTimeoutSeconds')
+    $telemetryMaxAttempts = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'telemetryMaxAttempts')
+    $telemetryBackoffSeconds = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'telemetryBackoffSeconds')
 
     if ($schemaVersion -notin @('1.0.0','2.0.0')) { $errors.Add('schema_version must be 1.0.0 or 2.0.0') }
     if ($environment -notin @('hml','prod')) { $errors.Add('environment must be hml or prod') }
@@ -131,6 +137,11 @@ function Test-BranaEnvironmentConfig {
     if ($maximumPercent -lt 100) { $errors.Add('maximumPercent must be at least 100') }
     if ($desiredCount -lt 1) { $errors.Add('desiredCount must be positive') }
     if ($observationMinutes -lt 15) { $errors.Add('observationMinutes must be at least 15') }
+    if ($telemetryWindowMinutes -lt 1) { $errors.Add('telemetryWindowMinutes must be positive') }
+    if ($telemetryPeriodSeconds -lt 1) { $errors.Add('telemetryPeriodSeconds must be positive') }
+    if ($httpProbeTimeoutSeconds -lt 1) { $errors.Add('httpProbeTimeoutSeconds must be positive') }
+    if ($telemetryMaxAttempts -lt 1 -or $telemetryMaxAttempts -gt 2) { $errors.Add('telemetryMaxAttempts must be 1 or 2') }
+    if ($telemetryBackoffSeconds -lt 0) { $errors.Add('telemetryBackoffSeconds cannot be negative') }
     if ($deploymentStrategy -eq 'CANARY') {
         if ($canaryPercent -lt 1 -or $canaryPercent -gt 100) { $errors.Add('canaryPercent must be between 1 and 100 for canary') }
         if ($bakeTimeInMinutes -lt 1) { $errors.Add('bakeTimeInMinutes must be positive for canary') }

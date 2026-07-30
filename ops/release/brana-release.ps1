@@ -72,6 +72,7 @@ param(
     [string]$Environment,
     [string]$RepositoryPath = (Get-Location).Path,
     [string]$ConfigPath,
+    [string]$TelemetryPath,
     [string]$ReleaseContractPath,
     [string]$GitCommit,
     [string]$GitBranch,
@@ -163,6 +164,7 @@ function Import-BranaReleaseModules {
     Import-Module (Join-Path $base 'Brana.Release.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Common.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Canary.psm1') -Force -ErrorAction Stop
+    Import-Module (Join-Path $base 'modules\Brana.Release.Telemetry.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Config.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Git.psm1') -Force -ErrorAction Stop
 }
@@ -434,6 +436,7 @@ function Invoke-BranaPlanMode {
         [string]$RepositoryPath,
         [string]$Environment,
         [string]$ConfigPath,
+        [string]$TelemetryPath,
         [switch]$DryRun,
         [string]$OutputFormat
     )
@@ -451,8 +454,11 @@ function Invoke-BranaPlanMode {
     }
     $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
     $config = Get-BranaEnvironmentConfig -Path $resolvedConfigPath
-    $preflightSignals = $null
-    $preflight = Test-BranaReleaseDeploymentPreflight -RepositoryPath $repoNormalized -Config $config -Signals $preflightSignals
+    $telemetry = $null
+    if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
+        $telemetry = Get-BranaCanaryTelemetry -Config $config -TelemetryPath $TelemetryPath
+    }
+    $preflight = Test-BranaReleaseDeploymentPreflight -RepositoryPath $repoNormalized -Config $config -Signals $telemetry
     $plan = Get-BranaReleaseDeploymentPlan -Config $config
     $success = $preflight.IsValid
     return [pscustomobject]@{
@@ -478,10 +484,38 @@ function Invoke-BranaPreflightMode {
         [string]$RepositoryPath,
         [string]$Environment,
         [string]$ConfigPath,
+        [string]$TelemetryPath,
         [switch]$DryRun,
         [string]$OutputFormat
     )
-    return Invoke-BranaPlanMode -RepositoryPath $RepositoryPath -Environment $Environment -ConfigPath $ConfigPath -DryRun:$DryRun -OutputFormat $OutputFormat
+    $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
+    $config = Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+    $telemetry = $null
+    if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
+        $telemetry = Get-BranaCanaryTelemetry -Config $config -TelemetryPath $TelemetryPath
+    }
+    else {
+        $telemetry = Get-BranaCanaryTelemetry -Config $config
+    }
+    $preflight = Test-BranaReleaseDeploymentPreflight -RepositoryPath $RepositoryPath -Config $config -Signals $telemetry
+    $plan = Get-BranaReleaseDeploymentPlan -Config $config
+    return [pscustomobject]@{
+        Success = $preflight.IsValid
+        ExitCode = if ($preflight.IsValid) { Get-BranaExitCode -Name 'SUCCESS' } else { Get-BranaExitCode -Name 'RECOVERABLE_BLOCK' }
+        Message = if ($preflight.IsValid) { 'Plano canary pronto.' } else { 'Plano canary bloqueado.' }
+        Data = [pscustomobject]@{
+            RepositoryPath = $RepositoryPath
+            ConfigPath = $resolvedConfigPath
+            Config = $config
+            Preflight = $preflight
+            Plan = $plan
+            Telemetry = $telemetry
+            DryRun = [bool]$DryRun
+            OutputFormat = $OutputFormat
+        }
+        Warnings = @()
+        Errors = @($preflight.Errors)
+    }
 }
 
 function Invoke-BranaReservedMode {
@@ -527,7 +561,7 @@ function Invoke-BranaRunner {
             return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $reserved.Success -ExitCode $reserved.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $reserved.Message -Data $reserved.Data -Warnings $reserved.Warnings -Errors $reserved.Errors
         }
         if ($Mode -eq 'plan' -or $Mode -eq 'preflight') {
-        $result = Invoke-BranaPreflightMode -RepositoryPath $RepositoryPath -Environment $Environment -ConfigPath $ConfigPath -DryRun:$DryRun -OutputFormat $OutputFormat
+            $result = Invoke-BranaPreflightMode -RepositoryPath $RepositoryPath -Environment $Environment -ConfigPath $ConfigPath -TelemetryPath $TelemetryPath -DryRun:$DryRun -OutputFormat $OutputFormat
             return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $result.Success -ExitCode $result.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $result.Message -Data $result.Data -Warnings $result.Warnings -Errors $result.Errors
         }
         if ($Mode -eq 'audit') {

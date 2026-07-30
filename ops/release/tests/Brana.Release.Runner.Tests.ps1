@@ -28,11 +28,11 @@ Describe 'Brana.Release runner' {
         $r.ExitCode | Should Be 2
     }
 
-    It 'preflight mode is available and blocks express gateway rolling attempts' {
-        $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','preflight','-Environment','hml','-OutputFormat','Text')
+    It 'preflight mode is available and uses telemetry fixture when provided' {
+        $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-healthy.json'
+        $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','preflight','-Environment','hml','-TelemetryPath',$telemetryPath,'-OutputFormat','Text')
         $r.ExitCode | Should Not Be 9
-        $r.Stdout | Should Match 'Plano canary bloqueado'
-        $r.Stdout | Should Match 'canary telemetry signals are required'
+        $r.Stdout | Should Match 'Plano canary pronto'
     }
 
     It 'invalid output format is rejected' {
@@ -99,5 +99,12 @@ Describe 'Brana.Release runner' {
         $r.ExitCode | Should Not Be 0
         $r.Stdout | Should Match 'Plano canary bloqueado'
         $after | Should Be $before
+    }
+
+    It 'plan accepts a telemetry fixture and stays read only' {
+        $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-healthy.json'
+        $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','plan','-Environment','hml','-RepositoryPath','D:\BRANA ARQUIVOS\BRANA CLOUD','-TelemetryPath',$telemetryPath,'-OutputFormat','Json','-DryRun')
+        $r.ExitCode | Should Be 0
+        $r.StdOut | Should Match 'Plano canary pronto'
     }
 }
