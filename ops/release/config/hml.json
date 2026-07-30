@@ -1,0 +1,29 @@
+{
+  "schema_version": "2.0.0",
+  "environment": "hml",
+  "awsAccountId": "810204249111",
+  "awsRegion": "sa-east-1",
+  "ecsCluster": "default",
+  "ecsService": "brana-hml-backend",
+  "taskFamily": "default-brana-hml-backend",
+  "deploymentStrategy": "ROLLING",
+  "desiredCount": 1,
+  "minimumHealthyPercent": 100,
+  "maximumPercent": 200,
+  "productionTargetGroupArn": "arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/ecs-gateway-tg-755fef69195f7dbe3/570f304e06f75054",
+  "publicHealthUrl": "https://app.institutobrana.com.br/health",
+  "publicAppUrl": "https://app.institutobrana.com.br/app",
+  "observationMinutes": 15,
+  "requestIntervalSeconds": 30,
+  "rollbackTaskDefinition": "default-brana-hml-backend:16",
+  "requireCleanClone": true,
+  "requireImageDigest": true,
+  "requireZeroElb503": true,
+  "requirePublicTargetHealthy": true,
+  "requireOldTaskUntilNewHealthy": true,
+  "logGroup": "/aws/ecs/default/brana-hml-backend-f5f1",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  }
+}

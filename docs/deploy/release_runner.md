@@ -9,7 +9,7 @@ Fornecer um runner PowerShell fino para:
 - auditar o ambiente local;
 - auditar o Git local em modo somente leitura;
 - ler status de um contrato de release;
-- reconhecer modos futuros sem executa-los;
+- preparar um plano rolling local sem escrita em AWS;
 - retornar codigos de saida estaveis;
 - mascarar erros e manter a saida segura.
 
@@ -18,18 +18,20 @@ Fornecer um runner PowerShell fino para:
 - contrato de release: `docs/deploy/release_contract.md`
 - configuracao do ambiente: `docs/deploy/release_configuration.md`
 - auditoria Git: `docs/deploy/release_git_audit.md`
+- auditoria CANARY historica: `docs/deploy/release_canary_promotion_audit_20260729.md`
 - referencia historica do incidente: `docs/incidente_deploy_ecs_canary_20260729.md`
 
 ## Escopo atual
 
-Nesta fase, apenas os modos abaixo sao funcionais:
+Os modos abaixo sao funcionais:
 
 - `audit`
 - `status`
+- `plan`
+- `preflight`
 
 Os modos abaixo sao reconhecidos, mas retornam `MODE_NOT_IMPLEMENTED`:
 
-- `preflight`
 - `build`
 - `push`
 - `migrate`
@@ -55,6 +57,17 @@ Antes de qualquer comando AWS, o runner deve exigir:
 10. teste local disponivel;
 11. proibicao de usar worktree principal sujo como contexto Docker.
 
+## Modo rolling
+
+Os modos `plan` e `preflight` preparam o suporte operacional local para rolling ECS:
+
+- carregam a configuracao HML;
+- validam o schema e o preflight local;
+- montam comandos futuros sem executa-los;
+- retornam bloqueio se o clone estiver sujo ou a configuracao nao for compatível.
+
+Esses modos nao escrevem em AWS e nao registram task definition.
+
 ## Infraestrutura a confirmar
 
 Antes do deploy, a documentacao operacional deve capturar:
@@ -66,18 +79,10 @@ Antes do deploy, a documentacao operacional deve capturar:
 - maximumPercent;
 - circuit breaker;
 - alarms;
-- bake time;
-- lifecycle hooks;
-- production target group;
-- alternate target group;
-- production listener rule;
-- test listener rule;
-- mecanismo de promocao;
-- mecanismo de rollback;
 - health check;
 - deregistration delay.
 
-Se o servico estiver em CANARY, nao assumir rolling.
+Em rolling, o contrato local deve considerar um unico target group publico e rejeitar dependencia de target group alternativo, bake ou listener de teste.
 
 ## Parametros
 
@@ -101,8 +106,12 @@ Se o servico estiver em CANARY, nao assumir rolling.
 - `1` falha generica
 - `2` parametros invalidos
 - `3` configuracao invalida
+- `4` git invalido
+- `6` identidade AWS invalida
+- `7` infraestrutura AWS divergente
 - `8` contrato invalido
 - `9` modo nao implementado
+- `10` bloqueio recuperavel
 
 ## Saida Text
 
@@ -114,13 +123,13 @@ Saida estruturada, sem texto extra, para consumo automatizado.
 
 ## Seguranca
 
-- executa apenas leitura de Git na auditoria
-- nao executa AWS nesta fase
-- nao executa Docker
-- nao altera contrato
-- nao cria contrato
-- nao imprime secrets
-- nao considera `rolloutState COMPLETED` como prova suficiente de ausencia de 503
+- executa apenas leitura de Git na auditoria;
+- nao executa AWS nesta fase;
+- nao executa Docker;
+- nao altera contrato;
+- nao cria contrato;
+- nao imprime secrets;
+- nao considera `rolloutState COMPLETED` como prova suficiente de ausencia de 503.
 
 ## Compatibilidade
 
@@ -139,21 +148,20 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -File .\ops\release\brana-release.ps1 `
-  -Mode status `
-  -ReleaseContractPath 'C:\temp\release-contract.json' `
-  -OutputFormat Json
+  -Mode plan `
+  -Environment hml `
+  -RepositoryPath 'D:\BRANA ARQUIVOS\BRANA CLOUD' `
+  -DryRun
 ```
 
 ## Limitacoes
 
-- sem preflight Git
-- sem preflight ferramentas
-- sem preflight AWS
-- sem escrita de contrato
-- sem logging JSONL persistente
-- sem report de preflight
-- sem validação de mecanismo de promocao por si so
+- sem execucao de AWS;
+- sem escrita de contrato;
+- sem logging JSONL persistente;
+- sem report de preflight remoto;
+- sem validacao de mecanismo de promocao por si so.
 
 ## Proximos passos
 
-As proximas subfases devem adicionar preflight de Git, ferramentas e AWS sem alterar a base de contratos e configuracoes ja validada.
+As proximas subfases devem aprofundar o preflight remoto e a execucao operacional sem alterar a base de contratos e configuracoes ja validada.
