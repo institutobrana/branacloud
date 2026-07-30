@@ -162,6 +162,7 @@ function Import-BranaReleaseModules {
     $base = $PSScriptRoot
     Import-Module (Join-Path $base 'Brana.Release.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Common.psm1') -Force -ErrorAction Stop
+    Import-Module (Join-Path $base 'modules\Brana.Release.Canary.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Config.psm1') -Force -ErrorAction Stop
     Import-Module (Join-Path $base 'modules\Brana.Release.Git.psm1') -Force -ErrorAction Stop
 }
@@ -450,16 +451,14 @@ function Invoke-BranaPlanMode {
     }
     $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
     $config = Get-BranaEnvironmentConfig -Path $resolvedConfigPath
-    $preflight = Test-BranaRollingPreflight -RepositoryPath $repoNormalized -Config $config
-    $plan = $null
-    if ($preflight.IsValid) {
-        $plan = Get-BranaRollingDeploymentPlan -Config $config
-    }
+    $preflightSignals = $null
+    $preflight = Test-BranaReleaseDeploymentPreflight -RepositoryPath $repoNormalized -Config $config -Signals $preflightSignals
+    $plan = Get-BranaReleaseDeploymentPlan -Config $config
     $success = $preflight.IsValid
     return [pscustomobject]@{
         Success = $success
         ExitCode = if ($success) { Get-BranaExitCode -Name 'SUCCESS' } else { Get-BranaExitCode -Name 'RECOVERABLE_BLOCK' }
-        Message = if ($success) { 'Plano rolling pronto.' } else { 'Plano rolling bloqueado.' }
+        Message = if ($success) { 'Plano canary pronto.' } else { 'Plano canary bloqueado.' }
         Data = [pscustomobject]@{
             RepositoryPath = $repoNormalized
             ConfigPath = $resolvedConfigPath
@@ -528,7 +527,7 @@ function Invoke-BranaRunner {
             return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $reserved.Success -ExitCode $reserved.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $reserved.Message -Data $reserved.Data -Warnings $reserved.Warnings -Errors $reserved.Errors
         }
         if ($Mode -eq 'plan' -or $Mode -eq 'preflight') {
-            $result = Invoke-BranaPreflightMode -RepositoryPath $RepositoryPath -Environment $Environment -ConfigPath $ConfigPath -DryRun:$DryRun -OutputFormat $OutputFormat
+        $result = Invoke-BranaPreflightMode -RepositoryPath $RepositoryPath -Environment $Environment -ConfigPath $ConfigPath -DryRun:$DryRun -OutputFormat $OutputFormat
             return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $result.Success -ExitCode $result.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $result.Message -Data $result.Data -Warnings $result.Warnings -Errors $result.Errors
         }
         if ($Mode -eq 'audit') {

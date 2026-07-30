@@ -1,4 +1,5 @@
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Common.psm1" -Force
+Import-Module "$PSScriptRoot\..\modules\Brana.Release.Canary.psm1" -Force
 Import-Module "$PSScriptRoot\..\modules\Brana.Release.Config.psm1" -Force
 Import-Module "$PSScriptRoot\..\Brana.Release.psm1" -Force
 
@@ -9,6 +10,7 @@ Describe 'Brana.Release.Config' {
         $result.IsValid | Should Be $true
         $config.serviceType | Should Be 'EXPRESS_GATEWAY'
         $config.deploymentStrategy | Should Be 'CANARY'
+        $config.baselineMinutes | Should Be 15
         $config.canaryPercent | Should Be 5
         $config.bakeTimeInMinutes | Should Be 3
     }
@@ -48,6 +50,7 @@ Describe 'Brana.Release.Config' {
             desiredCount = 0
             minimumHealthyPercent = 80
             maximumPercent = 50
+            baselineMinutes = 10
             productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:999999999999:targetgroup/x/y'
             publicHealthUrl = 'ftp://app.example.invalid/health'
             publicAppUrl = 'https://app.example.invalid/app'
@@ -95,6 +98,7 @@ Describe 'Brana.Release.Config' {
             desiredCount = 1
             minimumHealthyPercent = 100
             maximumPercent = 200
+            baselineMinutes = 15
             observationMinutes = 15
             requestIntervalSeconds = 30
             productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'
@@ -125,6 +129,7 @@ Describe 'Brana.Release.Config' {
             desiredCount = 1
             minimumHealthyPercent = 100
             maximumPercent = 200
+            baselineMinutes = 15
             canaryPercent = 5
             bakeTimeInMinutes = 3
             productionTargetGroupArn = 'arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/x/y'

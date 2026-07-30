@@ -89,7 +89,7 @@ function Test-BranaEnvironmentConfig {
     $errors = New-Object System.Collections.Generic.List[string]
     $warnings = New-Object System.Collections.Generic.List[string]
     $required = @(
-        'schema_version','environment','serviceType','awsAccountId','awsRegion','ecsCluster','ecsService',
+        'schema_version','environment','serviceType','baselineMinutes','awsAccountId','awsRegion','ecsCluster','ecsService',
         'taskFamily','deploymentStrategy','desiredCount','minimumHealthyPercent','maximumPercent',
         'productionTargetGroupArn','publicHealthUrl','publicAppUrl','observationMinutes',
         'requestIntervalSeconds','rollbackTaskDefinition','requireCleanClone','requireImageDigest',
@@ -105,6 +105,7 @@ function Test-BranaEnvironmentConfig {
     $schemaVersion = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'schema_version')
     $environment = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'environment')
     $serviceType = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'serviceType')
+    $baselineMinutes = [int](Get-BranaConfigPropertyValue -InputObject $Config -Name 'baselineMinutes')
     $awsAccountId = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'awsAccountId')
     $awsRegion = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'awsRegion')
     $deploymentStrategy = [string](Get-BranaConfigPropertyValue -InputObject $Config -Name 'deploymentStrategy')
@@ -120,6 +121,7 @@ function Test-BranaEnvironmentConfig {
     if ($schemaVersion -notin @('1.0.0','2.0.0')) { $errors.Add('schema_version must be 1.0.0 or 2.0.0') }
     if ($environment -notin @('hml','prod')) { $errors.Add('environment must be hml or prod') }
     if ($serviceType -notin @('STANDARD_ECS','EXPRESS_GATEWAY')) { $errors.Add('serviceType must be STANDARD_ECS or EXPRESS_GATEWAY') }
+    if ($baselineMinutes -lt 15) { $errors.Add('baselineMinutes must be at least 15') }
     if ($awsAccountId -notmatch '^\d{12}$') { $errors.Add('awsAccountId must be 12 digits') }
     if ($awsRegion -notmatch '^[a-z]{2}-[a-z]+-\d$') { $errors.Add('awsRegion has invalid format') }
     if ($deploymentStrategy -notin @('ROLLING','CANARY')) { $errors.Add('deploymentStrategy must be ROLLING or CANARY') }

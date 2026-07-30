@@ -31,8 +31,8 @@ Describe 'Brana.Release runner' {
     It 'preflight mode is available and blocks express gateway rolling attempts' {
         $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','preflight','-Environment','hml','-OutputFormat','Text')
         $r.ExitCode | Should Not Be 9
-        $r.Stdout | Should Match 'Plano rolling bloqueado'
-        $r.Stdout | Should Match 'deploymentStrategy must be ROLLING'
+        $r.Stdout | Should Match 'Plano canary bloqueado'
+        $r.Stdout | Should Match 'canary telemetry signals are required'
     }
 
     It 'invalid output format is rejected' {
@@ -97,7 +97,7 @@ Describe 'Brana.Release runner' {
         $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','plan','-Environment','hml','-RepositoryPath','D:\BRANA ARQUIVOS\BRANA CLOUD','-OutputFormat','Json','-DryRun')
         $after = (Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.tmp' -Force | Measure-Object).Count
         $r.ExitCode | Should Not Be 0
-        $r.Stdout | Should Match 'Plano rolling bloqueado'
+        $r.Stdout | Should Match 'Plano canary bloqueado'
         $after | Should Be $before
     }
 }

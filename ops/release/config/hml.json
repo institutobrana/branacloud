@@ -8,6 +8,7 @@
   "taskFamily": "default-brana-hml-backend",
   "serviceType": "EXPRESS_GATEWAY",
   "deploymentStrategy": "CANARY",
+  "baselineMinutes": 15,
   "desiredCount": 1,
   "minimumHealthyPercent": 100,
   "maximumPercent": 200,

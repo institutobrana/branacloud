@@ -642,6 +642,25 @@ function Get-BranaRollingDeploymentPlan {
     }
 }
 
+function Get-BranaReleaseDeploymentPlan {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$Config,
+        [string]$CurrentTaskDefinition = $null,
+        [string]$CurrentImageDigest = $null
+    )
+
+    $serviceType = [string]$Config.serviceType
+    $deploymentStrategy = [string]$Config.deploymentStrategy
+
+    if ($serviceType -eq 'EXPRESS_GATEWAY' -or $deploymentStrategy -eq 'CANARY') {
+        return Get-BranaCanaryDeploymentPlan -Config $Config
+    }
+
+    return Get-BranaRollingDeploymentPlan -Config $Config -CurrentTaskDefinition $CurrentTaskDefinition -CurrentImageDigest $CurrentImageDigest
+}
+
 function Test-BranaRollingReleaseConfig {
     [CmdletBinding()]
     param(
@@ -700,4 +719,21 @@ function Test-BranaRollingPreflight {
     }
 }
 
-Export-ModuleMember -Function New-BranaReleaseContract,Get-BranaReleaseContract,Test-BranaReleaseContract,Set-BranaReleaseState,Update-BranaReleaseContract,Get-BranaAllowedStateTransitions,Protect-BranaSensitiveText,Get-BranaRollingDeploymentPlan,Test-BranaRollingReleaseConfig,Test-BranaRollingPreflight
+function Test-BranaReleaseDeploymentPreflight {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$RepositoryPath,
+        [Parameter(Mandatory)][object]$Config,
+        [AllowNull()][object]$Signals
+    )
+
+    $serviceType = [string]$Config.serviceType
+    $deploymentStrategy = [string]$Config.deploymentStrategy
+    if ($serviceType -eq 'EXPRESS_GATEWAY' -or $deploymentStrategy -eq 'CANARY') {
+        return Test-BranaCanaryDeploymentReadiness -Config $Config -Signals $Signals
+    }
+
+    return Test-BranaRollingPreflight -RepositoryPath $RepositoryPath -Config $Config
+}
+
+Export-ModuleMember -Function New-BranaReleaseContract,Get-BranaReleaseContract,Test-BranaReleaseContract,Set-BranaReleaseState,Update-BranaReleaseContract,Get-BranaAllowedStateTransitions,Protect-BranaSensitiveText,Get-BranaRollingDeploymentPlan,Get-BranaReleaseDeploymentPlan,Test-BranaRollingReleaseConfig,Test-BranaRollingPreflight,Test-BranaReleaseDeploymentPreflight
