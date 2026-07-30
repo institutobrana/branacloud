@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "environment": "prod",
+  "aws_account": "000000000000",
+  "aws_region": "us-east-1",
+  "ecs_cluster": "prod-cluster",
+  "ecs_service": "brana-prod-backend",
+  "ecr_repository": "brana-cloud/backend:latest",
+  "domain": "app.example.invalid",
+  "alb_arn": "arn:aws:elasticloadbalancing:us-east-1:000000000000:loadbalancer/app/example/0000000000000000",
+  "https_listener_arn": "arn:aws:elasticloadbalancing:us-east-1:000000000000:listener/app/example/0000000000000000/0000000000000000",
+  "public_rule_arn": "arn:aws:elasticloadbalancing:us-east-1:000000000000:listener-rule/app/example/0000000000000000/0000000000000000/0000000000000000",
+  "official_target_group_arn": "arn:aws:elasticloadbalancing:us-east-1:000000000000:targetgroup/example/0000000000000000",
+  "secondary_target_group_arn": null,
+  "certificate_arn": "arn:aws:acm:us-east-1:000000000000:certificate/00000000-0000-0000-0000-000000000000",
+  "log_group": "/aws/ecs/prod/brana-prod-backend",
+  "runtime_platform": {
+    "operating_system_family": "LINUX",
+    "cpu_architecture": "X86_64"
+  }
+}
