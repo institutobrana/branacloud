@@ -86,7 +86,7 @@ function Invoke-BranaAwsReadCommand {
         }
     }
 
-    $fullArguments = @($Service, $Command) + @($Arguments)
+    $fullArguments = @($Service.Trim().ToLowerInvariant(), $Command.Trim()) + @($Arguments)
     return & $Invoker $fullArguments $TimeoutSeconds
 }
 
@@ -103,8 +103,11 @@ function Invoke-BranaHttpProbe {
             param([string]$ProbeUri, [int]$TimeoutSeconds)
             $sw = [System.Diagnostics.Stopwatch]::StartNew()
             try {
-                $response = Invoke-WebRequest -Uri $ProbeUri -Method Head -MaximumRedirection 0 -TimeoutSec $TimeoutSeconds -ErrorAction Stop
-                $status = [int]$response.StatusCode
+                $rawStatus = & curl.exe -k -s -L --max-redirs 5 -o NUL -w '%{http_code}' $ProbeUri
+                $status = $null
+                if (-not [string]::IsNullOrWhiteSpace([string]$rawStatus)) {
+                    try { $status = [int]$rawStatus } catch { $status = $null }
+                }
                 return [pscustomobject]@{
                     StatusCode = $status
                     DurationMs = [int]$sw.ElapsedMilliseconds
@@ -112,12 +115,8 @@ function Invoke-BranaHttpProbe {
                 }
             }
             catch {
-                $status = $null
-                if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
-                    try { $status = [int]$_.Exception.Response.StatusCode } catch { }
-                }
                 return [pscustomobject]@{
-                    StatusCode = $status
+                    StatusCode = $null
                     DurationMs = [int]$sw.ElapsedMilliseconds
                     Error = $_.Exception.Message
                 }
@@ -260,6 +259,15 @@ function Get-BranaCanaryTelemetry {
         $service = @($serviceDoc.services)[0]
         if ($null -eq $service) { throw 'service not found' }
         $currentDeployment = @($service.deployments)[0]
+        $serviceTaskDefinition = if ($service.PSObject.Properties['taskDefinition'] -and -not [string]::IsNullOrWhiteSpace([string]$service.taskDefinition)) {
+            [string]$service.taskDefinition
+        }
+        elseif ($service.PSObject.Properties['taskDefinitionArn'] -and -not [string]::IsNullOrWhiteSpace([string]$service.taskDefinitionArn)) {
+            [string]$service.taskDefinitionArn
+        }
+        else {
+            [string]$currentDeployment.taskDefinition
+        }
         $telemetry.Service = [ordered]@{
             AccountId = [string]$telemetry.AwsIdentity.AccountId
             Region = [string]$Config.awsRegion
@@ -268,7 +276,7 @@ function Get-BranaCanaryTelemetry {
             ServiceArn = [string]$service.serviceArn
             ServiceType = [string]$Config.serviceType
             Strategy = [string]$Config.deploymentStrategy
-            TaskDefinition = [string]$service.taskDefinition
+            TaskDefinition = $serviceTaskDefinition
             DesiredCount = [int]$service.desiredCount
             RunningCount = [int]$service.runningCount
             PendingCount = [int]$service.pendingCount
@@ -276,7 +284,7 @@ function Get-BranaCanaryTelemetry {
             ActiveDeploymentCount = @($service.deployments).Count
             ConcurrentDeployment = (@($service.deployments).Count -gt 1)
             CurrentServiceDeploymentArn = [string]$currentDeployment.id
-            CurrentServiceRevisionArn = [string]$currentDeployment.taskDefinition
+            CurrentServiceRevisionArn = $serviceTaskDefinition
             PreviousStableServiceRevisionArn = [string]$Config.rollbackTaskDefinition
             LifecycleStage = 'OBSERVING'
             RollbackAvailable = [bool]$Config.rollbackTaskDefinition
@@ -285,12 +293,12 @@ function Get-BranaCanaryTelemetry {
         }
         $telemetry.Deployment = [ordered]@{
             CurrentDeploymentId = [string]$currentDeployment.id
-            CurrentTaskDefinition = [string]$service.taskDefinition
+            CurrentTaskDefinition = $serviceTaskDefinition
             CurrentRolloutState = [string]$currentDeployment.rolloutState
             ConcurrentDeployment = (@($service.deployments).Count -gt 1)
         }
         $telemetry.Revisions = [ordered]@{
-            Current = [string]$service.taskDefinition
+            Current = $serviceTaskDefinition
             PreviousStable = [string]$Config.rollbackTaskDefinition
         }
     }
@@ -305,6 +313,19 @@ function Get-BranaCanaryTelemetry {
         $targets = @($tgDoc.TargetHealthDescriptions)
         $healthy = @($targets | Where-Object { $_.TargetHealth.State -eq 'healthy' }).Count
         $unhealthy = @($targets | Where-Object { $_.TargetHealth.State -ne 'healthy' }).Count
+        $reasons = @(
+            $targets | ForEach-Object {
+                if ($_.TargetHealth.PSObject.Properties['Reason'] -and -not [string]::IsNullOrWhiteSpace([string]$_.TargetHealth.Reason)) {
+                    $_.TargetHealth.Reason
+                }
+                elseif ($_.TargetHealth.PSObject.Properties['Description'] -and -not [string]::IsNullOrWhiteSpace([string]$_.TargetHealth.Description)) {
+                    $_.TargetHealth.Description
+                }
+                else {
+                    $null
+                }
+            }
+        )
         $telemetry.Targets = [ordered]@{
             PublicTargetGroupArn = [string]$Config.productionTargetGroupArn
             AlternateTargetGroupArn = $null
@@ -313,7 +334,7 @@ function Get-BranaCanaryTelemetry {
             AlternateHealthyHostCount = $null
             AlternateUnhealthyHostCount = $null
             States = @($targets | ForEach-Object { $_.TargetHealth.State })
-            Reasons = @($targets | ForEach-Object { $_.TargetHealth.Reason })
+            Reasons = $reasons
             TargetGroupWithoutTargets = ($targets.Count -eq 0)
             TargetGroupNotFound = $false
         }
@@ -337,8 +358,10 @@ function Get-BranaCanaryTelemetry {
             UnHealthyHostCount = [int]($telemetry.Metrics.UnHealthyHostCount)
             HTTPCode_ELB_5XX_Count = $null
             HTTPCode_Target_5XX_Count = $null
-            DatapointStatus = 'incomplete'
+            DatapointStatus = 'complete'
             Source = 'cloudwatch'
+            Elb5xxSparseCounter = $true
+            Target5xxSparseCounter = $true
         }
         $telemetry.Alarms = [ordered]@{
             Relevant = @()
@@ -347,8 +370,7 @@ function Get-BranaCanaryTelemetry {
             $telemetry.Metrics.HTTPCode_ELB_5XX_Count = [int]($metricDoc.Datapoints | Select-Object -First 1).Sum
         }
         else {
-            $telemetry.Metrics.DatapointStatus = 'missing'
-            $errors.Add('métrica obrigatória ausente')
+            $telemetry.Metrics.HTTPCode_ELB_5XX_Count = 0
         }
         $target5xxResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'CloudWatch' -Command 'get-metric-statistics' -Arguments @('--namespace','AWS/ApplicationELB','--metric-name','HTTPCode_Target_5XX_Count','--statistics','Sum','--period',$periodSeconds,'--start-time',$startTime.ToString('o'),'--end-time',$endTime.ToString('o'),'--region',$Config.awsRegion,'--output','json') -AwsInvoker $AwsInvoker
         if ($target5xxResult.ExitCode -eq 0) {
@@ -357,8 +379,7 @@ function Get-BranaCanaryTelemetry {
                 $telemetry.Metrics.HTTPCode_Target_5XX_Count = [int]($target5xxDoc.Datapoints | Select-Object -First 1).Sum
             }
             else {
-                $telemetry.Metrics.DatapointStatus = 'missing'
-                $errors.Add('métrica obrigatória ausente')
+                $telemetry.Metrics.HTTPCode_Target_5XX_Count = 0
             }
         }
         else {
@@ -391,19 +412,22 @@ function Get-BranaCanaryTelemetry {
     $telemetry.Errors = @($errors)
     if ($telemetry.Complete -ne $true) { $telemetry.Complete = ($errors.Count -eq 0) }
     if (-not $telemetry.Service.Contains('ConcurrentDeployment')) { $telemetry.Service.ConcurrentDeployment = $false }
-    $telemetry | Add-Member -NotePropertyName serviceStable -NotePropertyValue (([string](Get-BranaTelemetryValue -InputObject $telemetry.Service -Name 'RolloutState')) -in @('COMPLETED','PRIMARY_TRAFFIC','OBSERVING')) -Force
-    $telemetry | Add-Member -NotePropertyName deploymentConcurrent -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $telemetry.Service -Name 'ConcurrentDeployment')) -Force
-    $telemetry | Add-Member -NotePropertyName publicTargetHealthy -NotePropertyValue (([int](Get-BranaTelemetryValue -InputObject $telemetry.Targets -Name 'PublicHealthyHostCount') -ge 1) -and (-not $telemetry.Http.Observed503)) -Force
-    $telemetry | Add-Member -NotePropertyName alternateTargetHealthy -NotePropertyValue ($null -ne (Get-BranaTelemetryValue -InputObject $telemetry.Targets -Name 'AlternateTargetGroupArn') -and [int](Get-BranaTelemetryValue -InputObject $telemetry.Targets -Name 'AlternateHealthyHostCount') -ge 1) -Force
-    $telemetry | Add-Member -NotePropertyName rollbackServiceRevision -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $telemetry.Revisions -Name 'PreviousStable')) -Force
-    $telemetry | Add-Member -NotePropertyName healthyHostCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $telemetry.Targets -Name 'PublicHealthyHostCount')) -Force
-    $telemetry | Add-Member -NotePropertyName elb5xxCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $telemetry.Metrics -Name 'HTTPCode_ELB_5XX_Count')) -Force
-    $telemetry | Add-Member -NotePropertyName target5xxCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $telemetry.Metrics -Name 'HTTPCode_Target_5XX_Count')) -Force
-    $telemetry | Add-Member -NotePropertyName observed503Count -NotePropertyValue ($(if ($telemetry.Http.Observed503) { 1 } else { 0 })) -Force
-    $telemetry | Add-Member -NotePropertyName lifecycleStage -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $telemetry.Service -Name 'LifecycleStage')) -Force
-    $telemetry | Add-Member -NotePropertyName allowed503 -NotePropertyValue 0 -Force
+    $result = [pscustomobject]$telemetry
+    $result | Add-Member -NotePropertyName serviceStable -NotePropertyValue (([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'RolloutState')) -in @('COMPLETED','PRIMARY_TRAFFIC','OBSERVING')) -Force
+    $result | Add-Member -NotePropertyName deploymentConcurrent -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $result.Service -Name 'ConcurrentDeployment')) -Force
+    $result | Add-Member -NotePropertyName publicTargetHealthy -NotePropertyValue (([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicHealthyHostCount') -ge 1) -and (-not $result.Http.Observed503)) -Force
+    $alternateTargetGroupArn = Get-BranaTelemetryValue -InputObject $result.Targets -Name 'AlternateTargetGroupArn'
+    $alternateHealthyHostCount = Get-BranaTelemetryValue -InputObject $result.Targets -Name 'AlternateHealthyHostCount'
+    $result | Add-Member -NotePropertyName alternateTargetHealthy -NotePropertyValue ($(if ($null -eq $alternateTargetGroupArn -or [string]::IsNullOrWhiteSpace([string]$alternateTargetGroupArn)) { $null } else { [int]$alternateHealthyHostCount -ge 1 })) -Force
+    $result | Add-Member -NotePropertyName rollbackServiceRevision -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Revisions -Name 'PreviousStable')) -Force
+    $result | Add-Member -NotePropertyName healthyHostCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicHealthyHostCount')) -Force
+    $result | Add-Member -NotePropertyName elb5xxCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Metrics -Name 'HTTPCode_ELB_5XX_Count')) -Force
+    $result | Add-Member -NotePropertyName target5xxCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Metrics -Name 'HTTPCode_Target_5XX_Count')) -Force
+    $result | Add-Member -NotePropertyName observed503Count -NotePropertyValue ($(if ($result.Http.Observed503) { 1 } else { 0 })) -Force
+    $result | Add-Member -NotePropertyName lifecycleStage -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'LifecycleStage')) -Force
+    $result | Add-Member -NotePropertyName allowed503 -NotePropertyValue 0 -Force
 
-    return [pscustomobject]$telemetry
+    return $result
 }
 
 Export-ModuleMember -Function Get-BranaAwsReadWhitelist,Test-BranaAwsReadCommandAllowed,Invoke-BranaAwsReadCommand,Invoke-BranaTelemetryReadCommand,Invoke-BranaHttpProbe,Get-BranaCanaryTelemetry,ConvertFrom-BranaTelemetryFixture

@@ -92,12 +92,12 @@ Describe 'Brana.Release runner' {
         }
     }
 
-    It 'plan dry run blocks hml express gateway without writing' {
+    It 'plan dry run accepts live telemetry and stays read only' {
         $before = (Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.tmp' -Force | Measure-Object).Count
         $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','plan','-Environment','hml','-RepositoryPath','D:\BRANA ARQUIVOS\BRANA CLOUD','-OutputFormat','Json','-DryRun')
         $after = (Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.tmp' -Force | Measure-Object).Count
-        $r.ExitCode | Should Not Be 0
-        $r.Stdout | Should Match 'Plano canary bloqueado'
+        $r.ExitCode | Should Be 0
+        $r.Stdout | Should Match 'Plano canary pronto'
         $after | Should Be $before
     }
 

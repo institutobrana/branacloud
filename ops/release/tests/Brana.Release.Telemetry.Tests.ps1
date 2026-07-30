@@ -13,10 +13,10 @@ Describe 'Brana.Release.Telemetry' {
 
     It 'allows whitelisted commands and rejects write commands' {
         $invoker = {
-            param($Args, $Timeout)
-            [pscustomobject]@{ ExitCode = 0; StdOut = '{"ok":true}'; StdErr = ''; TimedOut = $false; DurationMs = 1 }
+            param($FullArguments, $Timeout)
+            [pscustomobject]@{ ExitCode = 0; StdOut = ($FullArguments -join ' '); StdErr = ''; TimedOut = $false; DurationMs = 1 }
         }
-        (Invoke-BranaAwsReadCommand -Service 'STS' -Command 'get-caller-identity' -Invoker $invoker).ExitCode | Should Be 0
+        (Invoke-BranaAwsReadCommand -Service 'STS' -Command 'get-caller-identity' -Invoker $invoker).StdOut | Should Match '^sts get-caller-identity'
         { Invoke-BranaAwsReadCommand -Service 'ECS' -Command 'update-service' -Invoker $invoker } | Should Throw
     }
 
@@ -86,6 +86,11 @@ Describe 'Brana.Release.Telemetry' {
         $telemetry.Complete | Should Be $false
         $telemetry.Metrics['HTTPCode_Target_5XX_Count'] | Should Be $null
         $telemetry.Metrics['HTTPCode_ELB_5XX_Count'] | Should Be $null
+    }
+
+    It 'uses GET probes' {
+        (Invoke-BranaHttpProbe -Uri 'https://app.institutobrana.com.br/health').StatusCode | Should Be 200
+        (Invoke-BranaHttpProbe -Uri 'https://app.institutobrana.com.br/app').StatusCode | Should Be 200
     }
 
     It 'rejects non-whitelisted write operations before execution' {
