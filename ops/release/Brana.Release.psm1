@@ -296,7 +296,7 @@ function Test-BranaReleaseContract {
 
 function Read-BranaJson {
     param([Parameter(Mandatory)][string]$Path)
-    $json = Get-Content -LiteralPath $Path -Raw
+    $json = Get-Content -LiteralPath $Path -Raw -ErrorAction Stop
     return (ConvertFrom-Json -InputObject $json -ErrorAction Stop)
 }
 

@@ -371,9 +371,18 @@ function Invoke-BranaDeploymentMode {
         [scriptblock]$AwsReadInvoker = $null,
         [scriptblock]$AwsWriteInvoker = $null,
         [scriptblock]$HttpInvoker = $null,
+        [scriptblock]$NowInvoker = $null,
+        [scriptblock]$SleepInvoker = $null,
         [int]$PollIntervalSeconds = 5,
         [int]$TimeoutSeconds = 300
     )
+
+    if ($null -eq $NowInvoker) {
+        $NowInvoker = { [DateTime]::UtcNow }
+    }
+    if ($null -eq $SleepInvoker) {
+        $SleepInvoker = { param([int]$Seconds) if ($Seconds -gt 0) { Start-Sleep -Seconds $Seconds } }
+    }
 
     $signals = if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
         Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -TelemetryPath $TelemetryPath
@@ -464,12 +473,14 @@ function Invoke-BranaDeploymentMode {
     $state.phase = 'WAITING_FOR_PROMOTION'
     Write-BranaDeploymentStateAtomic -Path $statePath -State $state
 
-    $stabilizationSamples = [Math]::Max(1, [int]$Config.postPromotionStabilizationMinutes)
+    $stabilizationMinutesRaw = if ($Config.PSObject.Properties.Match('postPromotionStabilizationMinutes').Count -gt 0) { $Config.postPromotionStabilizationMinutes } else { 3 }
+    $stabilizationMinutes = [Math]::Max(1, [int]$stabilizationMinutesRaw)
+    $stabilizationDeadline = (& $NowInvoker).AddMinutes($stabilizationMinutes)
     $stabilizationTelemetry = @()
     $promotionReadiness = $null
-    for ($sample = 1; $sample -le $stabilizationSamples; $sample++) {
+    do {
         $state.phase = 'VERIFYING_PUBLIC_TARGET'
-        $state.lastTelemetryAtUtc = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
+        $state.lastTelemetryAtUtc = (& $NowInvoker).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
         Write-BranaDeploymentStateAtomic -Path $statePath -State $state
         $telemetry = if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
             Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -TelemetryPath $TelemetryPath
@@ -486,10 +497,13 @@ function Invoke-BranaDeploymentMode {
             Write-BranaDeploymentStateAtomic -Path $statePath -State $state
             return [pscustomobject]@{ Success = $false; ExitCode = 40; Message = 'Rollback recommended.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @($promotionReadiness.Errors) }
         }
-    }
+        if ((& $NowInvoker) -lt $stabilizationDeadline) {
+            & $SleepInvoker ([Math]::Max(0, [int]$PollIntervalSeconds))
+        }
+    } while ((& $NowInvoker) -lt $stabilizationDeadline)
 
     $state.phase = 'POST_PROMOTION_STABILIZATION'
-    $state.completedAtUtc = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
+    $state.completedAtUtc = (& $NowInvoker).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
     $state.phase = 'COMPLETED'
     Write-BranaDeploymentStateAtomic -Path $statePath -State $state
     return [pscustomobject]@{ Success = $true; ExitCode = 0; Message = 'Deployment completed after public target stabilization.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @() }

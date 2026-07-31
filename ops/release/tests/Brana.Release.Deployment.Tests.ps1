@@ -46,6 +46,23 @@ function Copy-TestObjectDeep {
     return (ConvertFrom-Json -InputObject (ConvertTo-Json -Depth 32 -InputObject $InputObject))
 }
 
+function New-TestDeploymentClock {
+    param(
+        [DateTime]$StartUtc = [DateTime]'2026-07-31T18:00:00Z'
+    )
+    $script:deploymentClock = [DateTime]::SpecifyKind($StartUtc, [DateTimeKind]::Utc)
+    $now = {
+        $script:deploymentClock
+    }
+    $sleep = {
+        param([int]$Seconds)
+        if ($Seconds -gt 0) {
+            $script:deploymentClock = $script:deploymentClock.AddSeconds($Seconds)
+        }
+    }
+    return [pscustomobject]@{ Now = $now; Sleep = $sleep }
+}
+
 Describe 'Brana.Release.Deployment' {
     It 'exposes a closed write whitelist' {
         $whitelist = Get-BranaDeploymentWriteWhitelist
@@ -136,6 +153,7 @@ Describe 'Brana.Release.Deployment' {
     It 'executes deploy, rollback and resume with mocks' {
         $config = New-TestDeploymentConfig
         $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-healthy.json'
+        $clock = New-TestDeploymentClock
         $awsRead = {
             param($Args, $Timeout)
             switch ($Args[0]) {
@@ -154,7 +172,7 @@ Describe 'Brana.Release.Deployment' {
             return [pscustomobject]@{ ExitCode = 0; StdOut = '{"service":{"serviceArn":"arn","deployments":[{"id":"ecs-svc/2"}]}}'; StdErr = ''; TimedOut = $false; DurationMs = 1 }
         }
         $confirm = '810204249111:sa-east-1:c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06:default-brana-hml-backend:17'
-        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -TelemetryPath $telemetryPath -ReleaseId 'hml-17' -TaskDefinitionArn 'default-brana-hml-backend:17' -ConfirmDeployment -ConfirmationToken $confirm -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http
+        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -TelemetryPath $telemetryPath -ReleaseId 'hml-17' -TaskDefinitionArn 'default-brana-hml-backend:17' -ConfirmDeployment -ConfirmationToken $confirm -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http -NowInvoker $clock.Now -SleepInvoker $clock.Sleep -PollIntervalSeconds 60
         $deploy.ExitCode | Should Be 0
         $deploy.Data.State.phase | Should Be 'COMPLETED'
         $deploy.Data.StabilizationTelemetry.Count | Should Be 3
@@ -173,6 +191,7 @@ Describe 'Brana.Release.Deployment' {
     It 'rejects promotion when the public target is empty or unhealthy' {
         $config = New-TestDeploymentConfig
         $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-public-target-empty-503.json'
+        $clock = New-TestDeploymentClock
         $awsRead = {
             param($Args, $Timeout)
             switch ($Args[0]) {
@@ -185,10 +204,73 @@ Describe 'Brana.Release.Deployment' {
         $http = { param($Uri, $Timeout) [pscustomobject]@{ StatusCode = 503; DurationMs = 1; Error = '503' } }
         $write = { param($Args, $Timeout) [pscustomobject]@{ ExitCode = 0; StdOut = '{}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
         $confirm = '810204249111:sa-east-1:c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06:default-brana-hml-backend:19'
-        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -TelemetryPath $telemetryPath -ReleaseId 'hml-19' -TaskDefinitionArn 'default-brana-hml-backend:19' -ConfirmDeployment -ConfirmationToken $confirm -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http
+        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -TelemetryPath $telemetryPath -ReleaseId 'hml-19' -TaskDefinitionArn 'default-brana-hml-backend:19' -ConfirmDeployment -ConfirmationToken $confirm -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http -NowInvoker $clock.Now -SleepInvoker $clock.Sleep -PollIntervalSeconds 60
         $deploy.Success | Should Be $false
         $deploy.ExitCode | Should Be 40
         $deploy.Message | Should Match 'Rollback recommended'
         $deploy.Data.State.phase | Should Be 'ROLLBACK_RECOMMENDED'
+    }
+
+    It 'keeps the deployment open until the stabilization window elapses' {
+        $config = New-TestDeploymentConfig
+        $config | Add-Member -NotePropertyName postPromotionStabilizationMinutes -NotePropertyValue 3 -Force
+        $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-healthy.json'
+        $clock = New-TestDeploymentClock -StartUtc ([DateTime]'2026-07-31T12:00:00Z')
+        $probe = [pscustomobject]@{
+            SleepCalls = 0
+            ObservedTimes = @()
+        }
+        $awsRead = {
+            param($Args, $Timeout)
+            switch ($Args[0]) {
+                'sts' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Account":"810204249111","Arn":"arn","UserId":"U"}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'ecs' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"services":[{"serviceArn":"arn","taskDefinition":"default-brana-hml-backend:19","desiredCount":1,"runningCount":1,"pendingCount":0,"deployments":[{"id":"ecs-svc/2","taskDefinition":"default-brana-hml-backend:19","rolloutState":"COMPLETED"}],"deploymentConfiguration":{"deploymentCircuitBreaker":{"enable":true}}}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'elbv2' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"TargetHealthDescriptions":[{"TargetHealth":{"State":"healthy"}}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'cloudwatch' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Datapoints":[{"Sum":0}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+            }
+        }
+        $http = { param($Uri, $Timeout) [pscustomobject]@{ StatusCode = 200; DurationMs = 1; Error = $null } }
+        $write = { param($Args, $Timeout) [pscustomobject]@{ ExitCode = 0; StdOut = '{}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+        $sleep = {
+            param([int]$Seconds)
+            $probe.SleepCalls++
+            & $clock.Sleep $Seconds
+            $probe.ObservedTimes += (& $clock.Now)
+        }
+        $confirm = '810204249111:sa-east-1:c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06:default-brana-hml-backend:19'
+        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -TelemetryPath $telemetryPath -ReleaseId 'hml-19-window' -TaskDefinitionArn 'default-brana-hml-backend:19' -ConfirmDeployment -ConfirmationToken $confirm -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http -NowInvoker $clock.Now -SleepInvoker $sleep -PollIntervalSeconds 60
+        $deploy.Success | Should Be $true
+        $deploy.Data.State.phase | Should Be 'COMPLETED'
+        $deploy.Data.StabilizationTelemetry.Count | Should Be 3
+        $probe.SleepCalls | Should Be 3
+        $probe.ObservedTimes.Count | Should Be 3
+        $probe.ObservedTimes[0].ToString('HH:mm:ss') | Should Be '09:01:00'
+        $probe.ObservedTimes[1].ToString('HH:mm:ss') | Should Be '09:02:00'
+        $probe.ObservedTimes[2].ToString('HH:mm:ss') | Should Be '09:03:00'
+        $deploy.Data.State.completedAtUtc | Should Match '^2026-07-31T09:03:00\.000Z$'
+    }
+
+    It 'rolls back immediately when the public target becomes unhealthy at the stabilization boundary' {
+        $config = New-TestDeploymentConfig
+        $config | Add-Member -NotePropertyName postPromotionStabilizationMinutes -NotePropertyValue 3 -Force
+        $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-public-target-empty-503.json'
+        $clock = New-TestDeploymentClock -StartUtc ([DateTime]'2026-07-31T12:03:00Z')
+        $awsRead = {
+            param($Args, $Timeout)
+            switch ($Args[0]) {
+                'sts' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Account":"810204249111","Arn":"arn","UserId":"U"}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'ecs' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"services":[{"serviceArn":"arn","taskDefinition":"default-brana-hml-backend:19","desiredCount":1,"runningCount":1,"pendingCount":0,"deployments":[{"id":"ecs-svc/2","taskDefinition":"default-brana-hml-backend:19","rolloutState":"COMPLETED"}],"deploymentConfiguration":{"deploymentCircuitBreaker":{"enable":true}}}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'elbv2' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"TargetHealthDescriptions":[]}' ; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'cloudwatch' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Datapoints":[{"Sum":0}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+            }
+        }
+        $http = { param($Uri, $Timeout) [pscustomobject]@{ StatusCode = 503; DurationMs = 1; Error = '503' } }
+        $write = { param($Args, $Timeout) [pscustomobject]@{ ExitCode = 0; StdOut = '{}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+        $confirm = '810204249111:sa-east-1:c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06:default-brana-hml-backend:19'
+        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -TelemetryPath $telemetryPath -ReleaseId 'hml-19-boundary' -TaskDefinitionArn 'default-brana-hml-backend:19' -ConfirmDeployment -ConfirmationToken $confirm -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http -NowInvoker $clock.Now -SleepInvoker $clock.Sleep -PollIntervalSeconds 60
+        $deploy.Success | Should Be $false
+        $deploy.ExitCode | Should Be 40
+        $deploy.Data.State.phase | Should Be 'ROLLBACK_RECOMMENDED'
+        $deploy.Data.StabilizationTelemetry.Count | Should Be 1
     }
 }
