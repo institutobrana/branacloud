@@ -77,6 +77,13 @@ param(
     [string]$GitCommit,
     [string]$GitBranch,
     [string]$Operator,
+    [string]$TaskDefinitionArn,
+    [string]$TaskDefinitionJsonPath,
+    [string]$ReleaseId,
+    [switch]$ConfirmDeployment,
+    [string]$ConfirmationToken,
+    [switch]$ConfirmRollback,
+    [string]$StatePath,
     [string]$OutputFormat = 'Text',
     [switch]$DryRun,
     [switch]$NonInteractive,
@@ -85,6 +92,57 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$script:BranaReleaseModuleBase = $PSScriptRoot
+function Get-BranaRunnerExitCodes {
+    return [ordered]@{
+        SUCCESS = 0
+        GENERIC_FAILURE = 1
+        INVALID_PARAMETERS = 2
+        INVALID_CONFIGURATION = 3
+        INVALID_GIT_STATE = 4
+        MISSING_TOOL = 5
+        INVALID_AWS_IDENTITY = 6
+        AWS_INFRASTRUCTURE_MISMATCH = 7
+        INVALID_RELEASE_CONTRACT = 8
+        MODE_NOT_IMPLEMENTED = 9
+        RECOVERABLE_BLOCK = 10
+    }
+}
+function Get-BranaRunnerExitCode {
+    param([Parameter(Mandatory)][string]$Name)
+    $codes = Get-BranaRunnerExitCodes
+    if (-not $codes.Contains($Name)) { throw "Unknown exit code name: $Name" }
+    return [int]$codes[$Name]
+}
+function Protect-BranaSensitiveText {
+    param([AllowNull()][object]$Text)
+    if ($null -eq $Text) { return $null }
+    $value = [string]$Text
+    if ([string]::IsNullOrEmpty($value)) { return $value }
+    $value = [regex]::Replace($value, '(?i)\b(password|pass|token|secret|apikey|api_key|client_secret)\s*[:=]\s*([^\s;,&]+)', '$1=<redacted>')
+    $value = [regex]::Replace($value, '(?i)(authorization\s*:\s*bearer)\s+[A-Za-z0-9\-._~+/]+=*', '$1 <redacted>')
+    return $value
+}
+function New-BranaRunnerReleaseId {
+    param([string]$Environment)
+    $prefix = if ([string]::IsNullOrWhiteSpace($Environment)) { 'release' } else { $Environment.Trim().ToLowerInvariant() }
+    return ('{0}-{1}' -f $prefix, ([guid]::NewGuid().ToString('N')))
+}
+function Get-BranaRunnerGitHead {
+    param([string]$RepositoryPath)
+    try {
+        $head = (& git -C $RepositoryPath rev-parse HEAD 2>$null).Trim()
+        if (-not [string]::IsNullOrWhiteSpace($head)) { return $head }
+    }
+    catch { }
+    return $null
+}
+Import-Module (Join-Path $script:BranaReleaseModuleBase 'modules\Brana.Release.Common.psm1') -Force -Scope Global -ErrorAction Stop
+Import-Module (Join-Path $script:BranaReleaseModuleBase 'modules\Brana.Release.Config.psm1') -Force -Scope Global -ErrorAction Stop
+Import-Module (Join-Path $script:BranaReleaseModuleBase 'modules\Brana.Release.Canary.psm1') -Force -Scope Global -ErrorAction Stop
+Import-Module (Join-Path $script:BranaReleaseModuleBase 'modules\Brana.Release.Telemetry.psm1') -Force -Scope Global -ErrorAction Stop
+Import-Module (Join-Path $script:BranaReleaseModuleBase 'modules\Brana.Release.Git.psm1') -Force -Scope Global -ErrorAction Stop
+Import-Module (Join-Path $script:BranaReleaseModuleBase 'modules\Brana.Release.Deployment.psm1') -Force -Scope Global -ErrorAction Stop
 
 function New-BranaRunnerTimestamp {
     return ([DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ss.fffZ'))
@@ -160,13 +218,8 @@ function ConvertTo-BranaRunnerText {
 }
 
 function Import-BranaReleaseModules {
-    $base = $PSScriptRoot
+    $base = $script:BranaReleaseModuleBase
     Import-Module (Join-Path $base 'Brana.Release.psm1') -Force -ErrorAction Stop
-    Import-Module (Join-Path $base 'modules\Brana.Release.Common.psm1') -Force -ErrorAction Stop
-    Import-Module (Join-Path $base 'modules\Brana.Release.Canary.psm1') -Force -ErrorAction Stop
-    Import-Module (Join-Path $base 'modules\Brana.Release.Telemetry.psm1') -Force -ErrorAction Stop
-    Import-Module (Join-Path $base 'modules\Brana.Release.Config.psm1') -Force -ErrorAction Stop
-    Import-Module (Join-Path $base 'modules\Brana.Release.Git.psm1') -Force -ErrorAction Stop
 }
 
 function Test-BranaRunnerModeKnown {
@@ -181,13 +234,13 @@ function Resolve-BranaConfigPath {
     )
 
     if (-not [string]::IsNullOrWhiteSpace($ExplicitConfigPath)) {
-        return (ConvertTo-BranaNormalizedPath -Path $ExplicitConfigPath -RequireExists)
+        return (Brana.Release.Common\ConvertTo-BranaNormalizedPath -Path $ExplicitConfigPath -RequireExists)
     }
     if ([string]::IsNullOrWhiteSpace($Environment)) {
         throw 'Environment is required to resolve configuration.'
     }
     $candidate = Join-Path $PSScriptRoot ("config\{0}.json" -f $Environment.ToLowerInvariant())
-    return (ConvertTo-BranaNormalizedPath -Path $candidate -RequireExists)
+    return (Brana.Release.Common\ConvertTo-BranaNormalizedPath -Path $candidate -RequireExists)
 }
 
 function Get-BranaContractSummary {
@@ -221,11 +274,11 @@ function Invoke-BranaAuditMode {
         [string]$OutputFormat
     )
 
-    $repoNormalized = ConvertTo-BranaNormalizedPath -Path $RepositoryPath
+    $repoNormalized = Brana.Release.Common\ConvertTo-BranaNormalizedPath -Path $RepositoryPath
     if (-not (Test-Path -LiteralPath $repoNormalized)) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_PARAMETERS'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS'
             Message = 'Repository path not found.'
             Data = [pscustomobject]@{ RepositoryPath = $repoNormalized }
             Warnings = @()
@@ -236,7 +289,7 @@ function Invoke-BranaAuditMode {
     if ([string]::IsNullOrWhiteSpace($Environment)) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_PARAMETERS'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS'
             Message = 'Environment is required.'
             Data = [pscustomobject]@{ RepositoryPath = $repoNormalized }
             Warnings = @()
@@ -248,7 +301,7 @@ function Invoke-BranaAuditMode {
     if (-not (Test-Path -LiteralPath $resolvedConfigPath)) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_PARAMETERS'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS'
             Message = 'Configuration file not found.'
             Data = [pscustomobject]@{ RepositoryPath = $repoNormalized; ConfigPath = $resolvedConfigPath }
             Warnings = @()
@@ -256,10 +309,10 @@ function Invoke-BranaAuditMode {
         }
     }
 
-    $config = Get-BranaEnvironmentConfig -Path $resolvedConfigPath
-    $validation = Test-BranaEnvironmentConfig -Config $config
+    $config = Brana.Release.Config\Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+    $validation = Brana.Release.Config\Test-BranaEnvironmentConfig -Config $config
     $success = $validation.IsValid
-    $exitCode = if ($success) { Get-BranaExitCode -Name 'SUCCESS' } else { Get-BranaExitCode -Name 'INVALID_CONFIGURATION' }
+    $exitCode = if ($success) { Get-BranaRunnerExitCode -Name 'SUCCESS' } else { Get-BranaRunnerExitCode -Name 'INVALID_CONFIGURATION' }
     $message = if ($success) { 'Auditoria local concluida.' } else { 'Configuracao invalida.' }
     $data = [pscustomobject]@{
         RepositoryPath = $repoNormalized
@@ -289,7 +342,7 @@ function Invoke-BranaAuditMode {
     }
     $gitSummary = $null
     try {
-        $gitSummary = Get-BranaGitRepositorySummary -Path $repoNormalized -RequiredPaths @(
+        $gitSummary = Brana.Release.Git\Get-BranaGitRepositorySummary -Path $repoNormalized -RequiredPaths @(
             'ops/release/brana-release.ps1',
             'ops/release/modules/Brana.Release.Common.psm1',
             'ops/release/modules/Brana.Release.Config.psm1',
@@ -312,14 +365,14 @@ function Invoke-BranaAuditMode {
             IsHealthy = $false
         }
         $success = $false
-        $exitCode = Get-BranaExitCode -Name 'INVALID_GIT_STATE'
+        $exitCode = Get-BranaRunnerExitCode -Name 'INVALID_GIT_STATE'
         $message = 'Git audit invalid.'
     }
     $data | Add-Member -NotePropertyName GitSummary -NotePropertyValue $gitSummary -Force
-    $data | Add-Member -NotePropertyName GitAvailable -NotePropertyValue (Test-BranaGitAvailable) -Force
+    $data | Add-Member -NotePropertyName GitAvailable -NotePropertyValue (Brana.Release.Git\Test-BranaGitAvailable) -Force
     if ($gitSummary -and $gitSummary.IsHealthy -eq $false -and $success) {
         $success = $false
-        $exitCode = Get-BranaExitCode -Name 'INVALID_GIT_STATE'
+        $exitCode = Get-BranaRunnerExitCode -Name 'INVALID_GIT_STATE'
         $message = 'Git audit invalid.'
     }
     return [pscustomobject]@{
@@ -343,7 +396,7 @@ function Invoke-BranaStatusMode {
     if ([string]::IsNullOrWhiteSpace($ReleaseContractPath)) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_PARAMETERS'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS'
             Message = 'ReleaseContractPath is required.'
             Data = $null
             Warnings = @()
@@ -351,11 +404,11 @@ function Invoke-BranaStatusMode {
         }
     }
 
-    $contractPath = ConvertTo-BranaNormalizedPath -Path $ReleaseContractPath -RequireExists
+    $contractPath = Brana.Release.Common\ConvertTo-BranaNormalizedPath -Path $ReleaseContractPath -RequireExists
     if (-not (Test-Path -LiteralPath $contractPath)) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_PARAMETERS'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS'
             Message = 'Release contract not found.'
             Data = [pscustomobject]@{ ReleaseContractPath = $contractPath }
             Warnings = @()
@@ -364,12 +417,12 @@ function Invoke-BranaStatusMode {
     }
 
     try {
-        $contract = Get-BranaReleaseContract -Path $contractPath
-        $validation = Test-BranaReleaseContract -Path $contractPath
+        $contract = Brana.Release\Get-BranaReleaseContract -Path $contractPath
+        $validation = Brana.Release\Test-BranaReleaseContract -Path $contractPath
         if (-not $validation.IsValid) {
             return [pscustomobject]@{
                 Success = $false
-                ExitCode = Get-BranaExitCode -Name 'INVALID_RELEASE_CONTRACT'
+                ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_RELEASE_CONTRACT'
                 Message = 'Contract invalid.'
                 Data = [pscustomobject]@{ ReleaseContractPath = $contractPath; Validation = $validation }
                 Warnings = @()
@@ -380,7 +433,7 @@ function Invoke-BranaStatusMode {
     catch {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_RELEASE_CONTRACT'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_RELEASE_CONTRACT'
             Message = 'Contract invalid.'
             Data = [pscustomobject]@{ ReleaseContractPath = $contractPath }
             Warnings = @()
@@ -391,7 +444,7 @@ function Invoke-BranaStatusMode {
     if (-not [string]::IsNullOrWhiteSpace($Environment) -and ($contract.environment.ToLowerInvariant() -ne $Environment.ToLowerInvariant())) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_RELEASE_CONTRACT'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_RELEASE_CONTRACT'
             Message = 'Environment mismatch.'
             Data = [pscustomobject]@{ ReleaseContractPath = $contractPath; ContractEnvironment = $contract.environment; RequestedEnvironment = $Environment }
             Warnings = @()
@@ -423,7 +476,7 @@ function Invoke-BranaStatusMode {
     }
     return [pscustomobject]@{
         Success = $true
-        ExitCode = Get-BranaExitCode -Name 'SUCCESS'
+        ExitCode = Get-BranaRunnerExitCode -Name 'SUCCESS'
         Message = 'Status local concluido.'
         Data = $data
         Warnings = @()
@@ -441,11 +494,11 @@ function Invoke-BranaPlanMode {
         [string]$OutputFormat
     )
 
-    $repoNormalized = ConvertTo-BranaNormalizedPath -Path $RepositoryPath
+    $repoNormalized = Brana.Release.Common\ConvertTo-BranaNormalizedPath -Path $RepositoryPath
     if ([string]::IsNullOrWhiteSpace($Environment)) {
         return [pscustomobject]@{
             Success = $false
-            ExitCode = Get-BranaExitCode -Name 'INVALID_PARAMETERS'
+            ExitCode = Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS'
             Message = 'Environment is required.'
             Data = [pscustomobject]@{ RepositoryPath = $repoNormalized }
             Warnings = @()
@@ -453,17 +506,17 @@ function Invoke-BranaPlanMode {
         }
     }
     $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
-    $config = Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+    $config = Brana.Release.Config\Get-BranaEnvironmentConfig -Path $resolvedConfigPath
     $telemetry = $null
     if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
-        $telemetry = Get-BranaCanaryTelemetry -Config $config -TelemetryPath $TelemetryPath
+        $telemetry = Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $config -TelemetryPath $TelemetryPath
     }
     $preflight = Test-BranaReleaseDeploymentPreflight -RepositoryPath $repoNormalized -Config $config -Signals $telemetry
     $plan = Get-BranaReleaseDeploymentPlan -Config $config
     $success = $preflight.IsValid
     return [pscustomobject]@{
         Success = $success
-        ExitCode = if ($success) { Get-BranaExitCode -Name 'SUCCESS' } else { Get-BranaExitCode -Name 'RECOVERABLE_BLOCK' }
+        ExitCode = if ($success) { Get-BranaRunnerExitCode -Name 'SUCCESS' } else { Get-BranaRunnerExitCode -Name 'RECOVERABLE_BLOCK' }
         Message = if ($success) { 'Plano canary pronto.' } else { 'Plano canary bloqueado.' }
         Data = [pscustomobject]@{
             RepositoryPath = $repoNormalized
@@ -489,19 +542,19 @@ function Invoke-BranaPreflightMode {
         [string]$OutputFormat
     )
     $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
-    $config = Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+    $config = Brana.Release.Config\Get-BranaEnvironmentConfig -Path $resolvedConfigPath
     $telemetry = $null
     if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
-        $telemetry = Get-BranaCanaryTelemetry -Config $config -TelemetryPath $TelemetryPath
+        $telemetry = Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $config -TelemetryPath $TelemetryPath
     }
     else {
-        $telemetry = Get-BranaCanaryTelemetry -Config $config
+        $telemetry = Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $config
     }
     $preflight = Test-BranaReleaseDeploymentPreflight -RepositoryPath $RepositoryPath -Config $config -Signals $telemetry
     $plan = Get-BranaReleaseDeploymentPlan -Config $config
     return [pscustomobject]@{
         Success = $preflight.IsValid
-        ExitCode = if ($preflight.IsValid) { Get-BranaExitCode -Name 'SUCCESS' } else { Get-BranaExitCode -Name 'RECOVERABLE_BLOCK' }
+        ExitCode = if ($preflight.IsValid) { Get-BranaRunnerExitCode -Name 'SUCCESS' } else { Get-BranaRunnerExitCode -Name 'RECOVERABLE_BLOCK' }
         Message = if ($preflight.IsValid) { 'Plano canary pronto.' } else { 'Plano canary bloqueado.' }
         Data = [pscustomobject]@{
             RepositoryPath = $RepositoryPath
@@ -522,7 +575,7 @@ function Invoke-BranaReservedMode {
     param([string]$Mode)
     return [pscustomobject]@{
         Success = $false
-        ExitCode = Get-BranaExitCode -Name 'MODE_NOT_IMPLEMENTED'
+        ExitCode = Get-BranaRunnerExitCode -Name 'MODE_NOT_IMPLEMENTED'
         Message = ('Mode not implemented: {0}' -f $Mode)
         Data = [pscustomobject]@{ Mode = $Mode }
         Warnings = @()
@@ -540,6 +593,13 @@ function Invoke-BranaRunner {
         [string]$GitCommit,
         [string]$GitBranch,
         [string]$Operator,
+        [string]$TaskDefinitionArn,
+        [string]$TaskDefinitionJsonPath,
+        [string]$ReleaseId,
+        [switch]$ConfirmDeployment,
+        [string]$ConfirmationToken,
+        [switch]$ConfirmRollback,
+        [string]$StatePath,
         [string]$OutputFormat,
         [switch]$DryRun,
         [switch]$NonInteractive,
@@ -551,12 +611,12 @@ function Invoke-BranaRunner {
     try {
         Import-BranaReleaseModules
         if ($OutputFormat -notin @('Text','Json')) {
-            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaExitCode -Name 'INVALID_PARAMETERS') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message 'Invalid OutputFormat.' -Data $null -Warnings @() -Errors @('Invalid OutputFormat.')
+            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message 'Invalid OutputFormat.' -Data $null -Warnings @() -Errors @('Invalid OutputFormat.')
         }
         if (-not (Test-BranaRunnerModeKnown -Value $Mode)) {
-            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaExitCode -Name 'INVALID_PARAMETERS') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message 'Unknown mode.' -Data $null -Warnings @() -Errors @('Unknown mode.')
+            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaRunnerExitCode -Name 'INVALID_PARAMETERS') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message 'Unknown mode.' -Data $null -Warnings @() -Errors @('Unknown mode.')
         }
-        if ($Mode -in @('build','push','migrate','deploy','validate','rollback','full-release','resume')) {
+        if ($Mode -in @('build','push','migrate','validate','full-release')) {
             $reserved = Invoke-BranaReservedMode -Mode $Mode
             return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $reserved.Success -ExitCode $reserved.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $reserved.Message -Data $reserved.Data -Warnings $reserved.Warnings -Errors $reserved.Errors
         }
@@ -572,16 +632,84 @@ function Invoke-BranaRunner {
             $result = Invoke-BranaStatusMode -ReleaseContractPath $ReleaseContractPath -Environment $Environment -DryRun:$DryRun -OutputFormat $OutputFormat
             return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $result.Success -ExitCode $result.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $result.Message -Data $result.Data -Warnings $result.Warnings -Errors $result.Errors
         }
-        return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaExitCode -Name 'MODE_NOT_IMPLEMENTED') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message 'Mode not implemented.' -Data $null -Warnings @() -Errors @('Mode not implemented.')
+        if ($Mode -eq 'deploy') {
+            $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
+            $config = Brana.Release.Config\Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+            $deployParams = @{
+                RepositoryPath = $RepositoryPath
+                Environment = $Environment
+                Config = $config
+                TelemetryPath = $TelemetryPath
+                ConfirmDeployment = $ConfirmDeployment
+                ConfirmationToken = $ConfirmationToken
+                DryRun = $DryRun
+                AwsReadInvoker = $null
+                AwsWriteInvoker = $null
+            }
+            if (-not [string]::IsNullOrWhiteSpace($ReleaseId)) { $deployParams.ReleaseId = $ReleaseId }
+            if (-not [string]::IsNullOrWhiteSpace($TaskDefinitionArn)) {
+                $deployParams.TaskDefinitionArn = $TaskDefinitionArn
+            }
+            elseif (-not [string]::IsNullOrWhiteSpace($config.rollbackTaskDefinition)) {
+                $deployParams.TaskDefinitionArn = [string]$config.rollbackTaskDefinition
+            }
+            if (-not [string]::IsNullOrWhiteSpace($TaskDefinitionJsonPath)) { $deployParams.TaskDefinitionJsonPath = $TaskDefinitionJsonPath }
+            $deployParams.GitHead = if (-not [string]::IsNullOrWhiteSpace($GitCommit)) { $GitCommit } else { Get-BranaRunnerGitHead -RepositoryPath $RepositoryPath }
+            $result = Brana.Release.Deployment\Invoke-BranaDeploymentMode @deployParams
+            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $result.Success -ExitCode $result.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $result.Message -Data $result.Data -Warnings $result.Warnings -Errors $result.Errors
+        }
+        if ($Mode -eq 'rollback') {
+            $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
+            $config = Brana.Release.Config\Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+            $resolvedStatePath = if (-not [string]::IsNullOrWhiteSpace($StatePath)) {
+                $StatePath
+            }
+            else {
+                $resolvedReleaseId = if (-not [string]::IsNullOrWhiteSpace($ReleaseId)) { $ReleaseId } else { New-BranaRunnerReleaseId -Environment $Environment }
+                Brana.Release.Deployment\Get-BranaDeploymentStatePath -ReleaseId $resolvedReleaseId
+            }
+            $rollbackParams = @{
+                RepositoryPath = $RepositoryPath
+                Environment = $Environment
+                Config = $config
+                StatePath = $resolvedStatePath
+                TelemetryPath = $TelemetryPath
+                ConfirmRollback = $ConfirmRollback
+                ConfirmationToken = $ConfirmationToken
+                DryRun = $DryRun
+            }
+            $result = Brana.Release.Deployment\Invoke-BranaRollbackMode @rollbackParams
+            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $result.Success -ExitCode $result.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $result.Message -Data $result.Data -Warnings $result.Warnings -Errors $result.Errors
+        }
+        if ($Mode -eq 'resume') {
+            $resolvedStatePath = if (-not [string]::IsNullOrWhiteSpace($StatePath)) {
+                $StatePath
+            }
+            else {
+                $resolvedReleaseId = if (-not [string]::IsNullOrWhiteSpace($ReleaseId)) { $ReleaseId } else { New-BranaRunnerReleaseId -Environment $Environment }
+                Brana.Release.Deployment\Get-BranaDeploymentStatePath -ReleaseId $resolvedReleaseId
+            }
+            $resolvedConfigPath = Resolve-BranaConfigPath -Environment $Environment -ExplicitConfigPath $ConfigPath
+            $config = Brana.Release.Config\Get-BranaEnvironmentConfig -Path $resolvedConfigPath
+            $resumeParams = @{
+                StatePath = $resolvedStatePath
+                Config = $config
+                TelemetryPath = $TelemetryPath
+            }
+            if (-not [string]::IsNullOrWhiteSpace($ReleaseId)) { $resumeParams.ReleaseId = $ReleaseId }
+            $result = Brana.Release.Deployment\Invoke-BranaResumeMode @resumeParams
+            return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $result.Success -ExitCode $result.ExitCode -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $result.Message -Data $result.Data -Warnings $result.Warnings -Errors $result.Errors
+        }
+        return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaRunnerExitCode -Name 'MODE_NOT_IMPLEMENTED') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message 'Mode not implemented.' -Data $null -Warnings @() -Errors @('Mode not implemented.')
     }
     catch {
         $message = Protect-BranaSensitiveText $_.Exception.Message
-        return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaExitCode -Name 'GENERIC_FAILURE') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $message -Data $null -Warnings @() -Errors @($message)
+        return New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaRunnerExitCode -Name 'GENERIC_FAILURE') -StartedAt $started -FinishedAt ([DateTime]::UtcNow) -Message $message -Data $null -Warnings @() -Errors @($message)
     }
 }
 
 try {
-    $result = Invoke-BranaRunner -Mode $Mode -Environment $Environment -RepositoryPath $RepositoryPath -ConfigPath $ConfigPath -ReleaseContractPath $ReleaseContractPath -GitCommit $GitCommit -GitBranch $GitBranch -Operator $Operator -OutputFormat $OutputFormat -DryRun:$DryRun -NonInteractive:$NonInteractive -NoColor:$NoColor -ReleaseNotes $ReleaseNotes
+    $result = Invoke-BranaRunner -Mode $Mode -Environment $Environment -RepositoryPath $RepositoryPath -ConfigPath $ConfigPath -ReleaseContractPath $ReleaseContractPath -GitCommit $GitCommit -GitBranch $GitBranch -Operator $Operator -TaskDefinitionArn $TaskDefinitionArn -TaskDefinitionJsonPath $TaskDefinitionJsonPath -ReleaseId $ReleaseId -ConfirmDeployment:$ConfirmDeployment -ConfirmationToken $ConfirmationToken -ConfirmRollback:$ConfirmRollback -StatePath $StatePath -OutputFormat $OutputFormat -DryRun:$DryRun -NonInteractive:$NonInteractive -NoColor:$NoColor -ReleaseNotes $ReleaseNotes
     if ($OutputFormat -eq 'Json') {
         $result | ConvertTo-Json -Depth 8
     }
@@ -592,7 +720,7 @@ try {
 }
 catch {
     $message = Protect-BranaSensitiveText $_.Exception.Message
-    $fallback = New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaExitCode -Name 'GENERIC_FAILURE') -StartedAt ([DateTime]::UtcNow) -FinishedAt ([DateTime]::UtcNow) -Message $message -Data $null -Warnings @() -Errors @($message)
+    $fallback = New-BranaRunnerResult -Mode $Mode -Environment $Environment -Success $false -ExitCode (Get-BranaRunnerExitCode -Name 'GENERIC_FAILURE') -StartedAt ([DateTime]::UtcNow) -FinishedAt ([DateTime]::UtcNow) -Message $message -Data $null -Warnings @() -Errors @($message)
     if ($OutputFormat -eq 'Json') {
         $fallback | ConvertTo-Json -Depth 8
     }
