@@ -152,6 +152,7 @@ function New-BranaCanaryTelemetryBase {
         Deployment = [ordered]@{}
         Revisions = [ordered]@{}
         Targets = [ordered]@{}
+        Tasks = [ordered]@{}
         Metrics = [ordered]@{}
         Http = [ordered]@{}
         Alarms = [ordered]@{}
@@ -301,9 +302,81 @@ function Get-BranaCanaryTelemetry {
             Current = $serviceTaskDefinition
             PreviousStable = [string]$Config.rollbackTaskDefinition
         }
+        $telemetry.Tasks = [ordered]@{
+            Current = @()
+            Previous = @()
+        }
     }
     catch {
         $errors.Add(('service telemetry unavailable: {0}' -f $_.Exception.Message))
+    }
+
+    try {
+        $listTasksResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ECS' -Command 'list-tasks' -Arguments @('--cluster', $Config.ecsCluster, '--service-name', $Config.ecsService, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+        if ($listTasksResult.ExitCode -ne 0) { throw "Unable to list ECS tasks: $($listTasksResult.StdErr)" }
+        $taskDoc = ConvertFrom-BranaJsonSafe -Json $listTasksResult.StdOut
+        $taskArns = @($taskDoc.taskArns)
+        $currentTasks = @()
+        $previousTasks = @()
+        $tasksByPrivateIp = @{}
+        if ($taskArns.Count -gt 0) {
+            $describeTasksResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ECS' -Command 'describe-tasks' -Arguments (@('--cluster', $Config.ecsCluster, '--tasks') + $taskArns + @('--region', $Config.awsRegion, '--output', 'json')) -AwsInvoker $AwsInvoker
+            if ($describeTasksResult.ExitCode -ne 0) { throw "Unable to describe ECS tasks: $($describeTasksResult.StdErr)" }
+            $taskDetails = ConvertFrom-BranaJsonSafe -Json $describeTasksResult.StdOut
+            foreach ($task in @($taskDetails.tasks)) {
+                $revision = [string]$task.taskDefinitionArn
+                $privateIp = $null
+                foreach ($attachment in @($task.attachments)) {
+                    foreach ($detail in @($attachment.details)) {
+                        if ([string]$detail.name -eq 'privateIPv4Address' -and -not [string]::IsNullOrWhiteSpace([string]$detail.value)) {
+                            $privateIp = [string]$detail.value
+                            break
+                        }
+                    }
+                    if (-not [string]::IsNullOrWhiteSpace([string]$privateIp)) {
+                        break
+                    }
+                }
+                $entry = [ordered]@{
+                    TaskArn = [string]$task.taskArn
+                    TaskDefinitionArn = $revision
+                    LastStatus = [string]$task.lastStatus
+                    DesiredStatus = [string]$task.desiredStatus
+                    HealthStatus = [string]$task.healthStatus
+                    StartedAt = [string]$task.startedAt
+                    StopCode = [string]$task.stopCode
+                    StoppedReason = [string]$task.stoppedReason
+                    StoppedAt = [string]$task.stoppedAt
+                    AvailabilityZone = [string]$task.availabilityZone
+                    Containers = @($task.containers | ForEach-Object {
+                        [ordered]@{
+                            Name = [string]$_.name
+                            LastStatus = [string]$_.lastStatus
+                            HealthStatus = [string]$_.healthStatus
+                            ExitCode = $_.exitCode
+                            Reason = [string]$_.reason
+                            Image = [string]$_.image
+                        }
+                    })
+                    Attachments = @($task.attachments)
+                }
+                if (-not [string]::IsNullOrWhiteSpace([string]$privateIp)) {
+                    $entry.PrivateIp = $privateIp
+                    $tasksByPrivateIp[$privateIp] = $entry
+                }
+                if ($revision -like "*$($Config.rollbackTaskDefinition)") { $previousTasks += $entry } else { $currentTasks += $entry }
+            }
+        }
+        $telemetry.Tasks = [ordered]@{
+            Current = $currentTasks
+            Previous = $previousTasks
+            CurrentCount = $currentTasks.Count
+            PreviousCount = $previousTasks.Count
+            ByPrivateIp = $tasksByPrivateIp
+        }
+    }
+    catch {
+        $errors.Add(('task telemetry unavailable: {0}' -f $_.Exception.Message))
     }
 
     try {
@@ -313,6 +386,8 @@ function Get-BranaCanaryTelemetry {
         $targets = @($tgDoc.TargetHealthDescriptions)
         $healthy = @($targets | Where-Object { $_.TargetHealth.State -eq 'healthy' }).Count
         $unhealthy = @($targets | Where-Object { $_.TargetHealth.State -ne 'healthy' }).Count
+        $publicTargets = @()
+        $publicTargetRevision = $null
         $reasons = @(
             $targets | ForEach-Object {
                 if ($_.TargetHealth.PSObject.Properties['Reason'] -and -not [string]::IsNullOrWhiteSpace([string]$_.TargetHealth.Reason)) {
@@ -326,6 +401,27 @@ function Get-BranaCanaryTelemetry {
                 }
             }
         )
+        foreach ($target in @($targets)) {
+            $privateIp = [string]$target.Target.Id
+            $taskMatch = $null
+            if ($telemetry.Tasks.ByPrivateIp.Contains($privateIp)) {
+                $taskMatch = $telemetry.Tasks.ByPrivateIp[$privateIp]
+            }
+            if ($null -eq $publicTargetRevision -and $null -ne $taskMatch) {
+                $publicTargetRevision = [string]$taskMatch.TaskDefinitionArn
+            }
+            $publicTargets += [ordered]@{
+                TargetGroup = [string]$Config.productionTargetGroupArn
+                Ip = $privateIp
+                Port = [int]$target.Target.Port
+                AvailabilityZone = [string]$target.Target.AvailabilityZone
+                HealthState = [string]$target.TargetHealth.State
+                Reason = if ($target.TargetHealth.PSObject.Properties['Reason']) { [string]$target.TargetHealth.Reason } else { $null }
+                Description = if ($target.TargetHealth.PSObject.Properties['Description']) { [string]$target.TargetHealth.Description } else { $null }
+                TaskArn = if ($null -ne $taskMatch) { [string]$taskMatch.TaskArn } else { $null }
+                TaskDefinitionArn = if ($null -ne $taskMatch) { [string]$taskMatch.TaskDefinitionArn } else { $null }
+            }
+        }
         $telemetry.Targets = [ordered]@{
             PublicTargetGroupArn = [string]$Config.productionTargetGroupArn
             AlternateTargetGroupArn = $null
@@ -337,6 +433,9 @@ function Get-BranaCanaryTelemetry {
             Reasons = $reasons
             TargetGroupWithoutTargets = ($targets.Count -eq 0)
             TargetGroupNotFound = $false
+            PublicTargets = @($publicTargets)
+            AlternateTargets = @()
+            PublicTargetRevision = $publicTargetRevision
         }
         $telemetry.Metrics.HealthyHostCount = [int]$healthy
         $telemetry.Metrics.UnHealthyHostCount = [int]$unhealthy
@@ -426,6 +525,23 @@ function Get-BranaCanaryTelemetry {
     $result | Add-Member -NotePropertyName observed503Count -NotePropertyValue ($(if ($result.Http.Observed503) { 1 } else { 0 })) -Force
     $result | Add-Member -NotePropertyName lifecycleStage -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'LifecycleStage')) -Force
     $result | Add-Member -NotePropertyName allowed503 -NotePropertyValue 0 -Force
+    $currentTasks = Get-BranaTelemetryValue -InputObject $result.Tasks -Name 'Current'
+    $previousTasks = Get-BranaTelemetryValue -InputObject $result.Tasks -Name 'Previous'
+    $publicTargets = Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargets'
+    $alternateTargets = Get-BranaTelemetryValue -InputObject $result.Targets -Name 'AlternateTargets'
+    $result | Add-Member -NotePropertyName currentTasks -NotePropertyValue @($currentTasks) -Force
+    $result | Add-Member -NotePropertyName previousTasks -NotePropertyValue @($previousTasks) -Force
+    $result | Add-Member -NotePropertyName publicTargets -NotePropertyValue @($publicTargets) -Force
+    $result | Add-Member -NotePropertyName alternateTargets -NotePropertyValue @($alternateTargets) -Force
+    $result | Add-Member -NotePropertyName publicTargetGroupArn -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetGroupArn')) -Force
+    $result | Add-Member -NotePropertyName alternateTargetGroupArn -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'AlternateTargetGroupArn')) -Force
+    $result | Add-Member -NotePropertyName publicTargetRevision -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevision')) -Force
+    $result | Add-Member -NotePropertyName activeTaskDefinition -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'TaskDefinition')) -Force
+    $result | Add-Member -NotePropertyName unHealthyHostCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicUnhealthyHostCount')) -Force
+    $result | Add-Member -NotePropertyName healthStatusCode -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Http -Name 'HealthStatusCode')) -Force
+    $result | Add-Member -NotePropertyName appStatusCode -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Http -Name 'AppStatusCode')) -Force
+    $result | Add-Member -NotePropertyName publicTargetHealthy -NotePropertyValue (([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicHealthyHostCount') -ge 1) -and (@($result.publicTargets).Count -ge 1) -and (-not $result.Http.Observed503)) -Force
+    $result | Add-Member -NotePropertyName publicTargetEmpty -NotePropertyValue (@($result.publicTargets).Count -eq 0) -Force
 
     return $result
 }

@@ -60,6 +60,9 @@ function Get-BranaCanaryLifecycleStages {
         'CANARY_TRAFFIC'
         'BAKE'
         'PROMOTING'
+        'WAITING_FOR_PROMOTION'
+        'VERIFYING_PUBLIC_TARGET'
+        'POST_PROMOTION_STABILIZATION'
         'PRIMARY_TRAFFIC'
         'OBSERVING'
         'COMPLETED'
@@ -177,4 +180,75 @@ function Test-BranaCanaryDeploymentReadiness {
     }
 }
 
-Export-ModuleMember -Function Get-BranaCanaryLifecycleStages,Get-BranaCanaryDeploymentPlan,Test-BranaCanaryDeploymentReadiness
+function Test-BranaCanaryPromotionReadiness {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$Config,
+        [AllowNull()]
+        [object]$Signals
+    )
+
+    $errors = New-Object System.Collections.Generic.List[string]
+    if ($null -eq $Signals) {
+        $errors.Add('promotion telemetry signals are required')
+    }
+    else {
+        $lifecycleStage = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'lifecycleStage')
+        $publicTargetHealthy = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetHealthy')
+        $publicTargetEmpty = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetEmpty')
+        $publicTargets = @((Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargets'))
+        $publicTargetRevision = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevision')
+        $healthStatus = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'healthStatusCode')
+        $appStatus = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'appStatusCode')
+        $observed503Count = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'observed503Count')
+        $healthyHostCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'healthyHostCount')
+        $unhealthyHostCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'unHealthyHostCount')
+        $currentTasks = @((Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'currentTasks'))
+        $activeTaskDefinition = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'activeTaskDefinition')
+        if ($lifecycleStage -notin @(Get-BranaCanaryLifecycleStages)) { $errors.Add('lifecycle stage unknown') }
+        if ($publicTargetEmpty) { $errors.Add('public target group is empty') }
+        if (-not $publicTargetHealthy) { $errors.Add('public target must be healthy') }
+        if ($healthStatus -ne 200) { $errors.Add('/health must be 200 after promotion') }
+        if ($appStatus -ne 200) { $errors.Add('/app must be 200 after promotion') }
+        if ($observed503Count -gt 0) { $errors.Add('503 after promotion triggers rollback') }
+        if ($healthyHostCount -lt 1) { $errors.Add('HealthyHostCount below 1 blocks completion') }
+        if ($unhealthyHostCount -gt 0) { $errors.Add('UnHealthyHostCount above 0 blocks completion') }
+        if ([string]::IsNullOrWhiteSpace($publicTargetRevision)) { $errors.Add('public target revision is required') }
+        if (-not [string]::IsNullOrWhiteSpace($activeTaskDefinition) -and $publicTargetRevision -ne $activeTaskDefinition) { $errors.Add('public target must serve the active task definition') }
+        if ([string]::IsNullOrWhiteSpace($activeTaskDefinition)) { $errors.Add('active task definition is required') }
+        if ($currentTasks.Count -lt 1) { $errors.Add('target task must be running') }
+    }
+
+    return [pscustomobject]@{
+        IsValid = ($errors.Count -eq 0)
+        Errors = @($errors)
+        Signals = $Signals
+    }
+}
+
+function Test-BranaCanaryStabilizationWindow {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][object]$Config,
+        [Parameter(Mandatory)][object[]]$Signals,
+        [int]$MinimumSamples = 1
+    )
+
+    $errors = New-Object System.Collections.Generic.List[string]
+    if ($Signals.Count -lt $MinimumSamples) {
+        $errors.Add('stabilization window has insufficient samples')
+    }
+    foreach ($sample in $Signals) {
+        $readiness = Test-BranaCanaryPromotionReadiness -Config $Config -Signals $sample
+        if (-not $readiness.IsValid) {
+            foreach ($error in @($readiness.Errors)) { $errors.Add([string]$error) }
+        }
+    }
+    return [pscustomobject]@{
+        IsValid = ($errors.Count -eq 0)
+        Errors = @($errors)
+    }
+}
+
+Export-ModuleMember -Function Get-BranaCanaryLifecycleStages,Get-BranaCanaryDeploymentPlan,Test-BranaCanaryDeploymentReadiness,Test-BranaCanaryPromotionReadiness,Test-BranaCanaryStabilizationWindow

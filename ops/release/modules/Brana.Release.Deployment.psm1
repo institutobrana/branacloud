@@ -462,10 +462,37 @@ function Invoke-BranaDeploymentMode {
     $state.decision = 'continue'
     Write-BranaDeploymentStateAtomic -Path $statePath -State $state
     $state.phase = 'WAITING_FOR_PROMOTION'
+    Write-BranaDeploymentStateAtomic -Path $statePath -State $state
+
+    $stabilizationSamples = [Math]::Max(1, [int]$Config.postPromotionStabilizationMinutes)
+    $stabilizationTelemetry = @()
+    $promotionReadiness = $null
+    for ($sample = 1; $sample -le $stabilizationSamples; $sample++) {
+        $state.phase = 'VERIFYING_PUBLIC_TARGET'
+        $state.lastTelemetryAtUtc = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
+        Write-BranaDeploymentStateAtomic -Path $statePath -State $state
+        $telemetry = if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
+            Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -TelemetryPath $TelemetryPath
+        }
+        else {
+            Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -AwsInvoker $AwsReadInvoker -HttpInvoker $HttpInvoker
+        }
+        $promotionReadiness = Brana.Release.Canary\Test-BranaCanaryPromotionReadiness -Config $Config -Signals $telemetry
+        $stabilizationTelemetry += $telemetry
+        if (-not $promotionReadiness.IsValid) {
+            $state.phase = 'ROLLBACK_RECOMMENDED'
+            $state.decision = 'rollback-recommended'
+            $state.errors = @($promotionReadiness.Errors)
+            Write-BranaDeploymentStateAtomic -Path $statePath -State $state
+            return [pscustomobject]@{ Success = $false; ExitCode = 40; Message = 'Rollback recommended.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @($promotionReadiness.Errors) }
+        }
+    }
+
+    $state.phase = 'POST_PROMOTION_STABILIZATION'
     $state.completedAtUtc = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
     $state.phase = 'COMPLETED'
     Write-BranaDeploymentStateAtomic -Path $statePath -State $state
-    return [pscustomobject]@{ Success = $true; ExitCode = 0; Message = 'Deployment completed.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $readiness }; Warnings = @(); Errors = @() }
+    return [pscustomobject]@{ Success = $true; ExitCode = 0; Message = 'Deployment completed after public target stabilization.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @() }
 }
 
 function Invoke-BranaRollbackMode {

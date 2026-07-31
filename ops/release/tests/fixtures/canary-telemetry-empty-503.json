@@ -1,0 +1,166 @@
+{
+  "TimestampUtc": "2026-07-31T18:00:00.000Z",
+  "Source": "fixture",
+  "Complete": false,
+  "Errors": [
+    "HTTP 503 observed",
+    "/health probe failed",
+    "/app probe failed"
+  ],
+  "Warnings": [],
+  "AwsIdentity": {
+    "AccountId": "810204249111",
+    "Arn": "arn:aws:sts::810204249111:assumed-role/brana-hml-release/fixture",
+    "UserId": "fixture-user"
+  },
+  "Service": {
+    "AccountId": "810204249111",
+    "Region": "sa-east-1",
+    "Cluster": "default",
+    "ServiceName": "brana-hml-backend",
+    "ServiceArn": "arn:aws:ecs:sa-east-1:810204249111:service/default/brana-hml-backend",
+    "ServiceType": "EXPRESS_GATEWAY",
+    "Strategy": "CANARY",
+    "TaskDefinition": "default-brana-hml-backend:19",
+    "DesiredCount": 1,
+    "RunningCount": 1,
+    "PendingCount": 0,
+    "RolloutState": "COMPLETED",
+    "ActiveDeploymentCount": 1,
+    "ConcurrentDeployment": false,
+    "CurrentServiceDeploymentArn": "ecs-svc/incident",
+    "CurrentServiceRevisionArn": "default-brana-hml-backend:19",
+    "PreviousStableServiceRevisionArn": "default-brana-hml-backend:16",
+    "LifecycleStage": "VERIFYING_PUBLIC_TARGET",
+    "RollbackAvailable": true,
+    "CircuitBreakerEnabled": true,
+    "AlarmsEnabled": true
+  },
+  "Deployment": {
+    "CurrentDeploymentId": "ecs-svc/incident",
+    "CurrentTaskDefinition": "default-brana-hml-backend:19",
+    "CurrentRolloutState": "COMPLETED",
+    "ConcurrentDeployment": false
+  },
+  "Revisions": {
+    "Current": "default-brana-hml-backend:19",
+    "PreviousStable": "default-brana-hml-backend:16"
+  },
+  "Tasks": {
+    "Current": [
+      {
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/incident",
+        "TaskDefinitionArn": "default-brana-hml-backend:19",
+        "LastStatus": "RUNNING",
+        "DesiredStatus": "RUNNING",
+        "HealthStatus": "UNKNOWN",
+        "PrivateIp": "10.0.1.26"
+      }
+    ],
+    "Previous": [
+      {
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
+        "TaskDefinitionArn": "default-brana-hml-backend:16",
+        "LastStatus": "RUNNING",
+        "DesiredStatus": "RUNNING",
+        "HealthStatus": "HEALTHY",
+        "PrivateIp": "10.0.1.25"
+      }
+    ],
+    "CurrentCount": 1,
+    "PreviousCount": 1,
+    "ByPrivateIp": {
+      "10.0.1.26": {
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/incident",
+        "TaskDefinitionArn": "default-brana-hml-backend:19",
+        "LastStatus": "RUNNING",
+        "DesiredStatus": "RUNNING",
+        "HealthStatus": "UNKNOWN",
+        "PrivateIp": "10.0.1.26"
+      },
+      "10.0.1.25": {
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
+        "TaskDefinitionArn": "default-brana-hml-backend:16",
+        "LastStatus": "RUNNING",
+        "DesiredStatus": "RUNNING",
+        "HealthStatus": "HEALTHY",
+        "PrivateIp": "10.0.1.25"
+      }
+    }
+  },
+  "Targets": {
+    "PublicTargetGroupArn": "arn:aws:elasticloadbalancing:sa-east-1:810204249111:targetgroup/ecs-gateway-tg-755fef69195f7dbe3/570f304e06f75054",
+    "AlternateTargetGroupArn": null,
+    "PublicHealthyHostCount": 0,
+    "PublicUnhealthyHostCount": 1,
+    "AlternateHealthyHostCount": null,
+    "AlternateUnhealthyHostCount": null,
+    "States": ["unhealthy"],
+    "Reasons": ["Target.ResponseCodeMismatch"],
+    "TargetGroupWithoutTargets": true,
+    "TargetGroupNotFound": false,
+    "PublicTargets": [],
+    "AlternateTargets": [],
+    "PublicTargetRevision": null
+  },
+  "Metrics": {
+    "HealthyHostCount": 0,
+    "UnHealthyHostCount": 1,
+    "HTTPCode_ELB_5XX_Count": 0,
+    "HTTPCode_Target_5XX_Count": 0,
+    "DatapointStatus": "complete",
+    "Source": "cloudwatch"
+  },
+  "Http": {
+    "HealthStatusCode": 503,
+    "AppStatusCode": 503,
+    "HealthOk": false,
+    "AppOk": false,
+    "Observed503": true,
+    "ProbeErrors": [
+      "503",
+      "503"
+    ]
+  },
+  "Alarms": {
+    "Relevant": []
+  },
+  "serviceStable": true,
+  "deploymentConcurrent": false,
+  "publicTargetHealthy": false,
+  "publicTargetEmpty": true,
+  "alternateTargetHealthy": false,
+  "rollbackServiceRevision": "default-brana-hml-backend:16",
+  "activeTaskDefinition": "default-brana-hml-backend:19",
+  "publicTargetRevision": null,
+  "healthStatusCode": 503,
+  "appStatusCode": 503,
+  "healthyHostCount": 0,
+  "unHealthyHostCount": 1,
+  "elb5xxCount": 0,
+  "target5xxCount": 0,
+  "observed503Count": 1,
+  "lifecycleStage": "VERIFYING_PUBLIC_TARGET",
+  "allowed503": 0,
+  "currentTasks": [
+    {
+      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/incident",
+      "TaskDefinitionArn": "default-brana-hml-backend:19",
+      "LastStatus": "RUNNING",
+      "DesiredStatus": "RUNNING",
+      "HealthStatus": "UNKNOWN",
+      "PrivateIp": "10.0.1.26"
+    }
+  ],
+  "publicTargets": [],
+  "previousTasks": [
+    {
+      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
+      "TaskDefinitionArn": "default-brana-hml-backend:16",
+      "LastStatus": "RUNNING",
+      "DesiredStatus": "RUNNING",
+      "HealthStatus": "HEALTHY",
+      "PrivateIp": "10.0.1.25"
+    }
+  ]
+}

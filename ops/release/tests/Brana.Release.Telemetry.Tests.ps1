@@ -27,8 +27,25 @@ Describe 'Brana.Release.Telemetry' {
         $telemetry.serviceStable | Should Be $true
         $telemetry.deploymentConcurrent | Should Be $false
         $telemetry.publicTargetHealthy | Should Be $true
+        $telemetry.publicTargetEmpty | Should Be $false
+        $telemetry.publicTargetRevision | Should Be 'default-brana-hml-backend:16'
+        $telemetry.activeTaskDefinition | Should Be 'default-brana-hml-backend:16'
+        $telemetry.healthStatusCode | Should Be 200
+        $telemetry.appStatusCode | Should Be 200
         $telemetry.allowed503 | Should Be 0
         $telemetry.Http.HealthStatusCode | Should Be 200
+    }
+
+    It 'normalizes an incident telemetry fixture with empty public target and 503' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $telemetry = Get-BranaCanaryTelemetry -Config $config -TelemetryPath "$PSScriptRoot\fixtures\canary-telemetry-empty-503.json"
+        $telemetry.Complete | Should Be $false
+        $telemetry.publicTargetEmpty | Should Be $true
+        $telemetry.publicTargetHealthy | Should Be $false
+        $telemetry.publicTargetRevision | Should Be $null
+        $telemetry.healthStatusCode | Should Be 503
+        $telemetry.appStatusCode | Should Be 503
+        $telemetry.Http.Observed503 | Should Be $true
     }
 
     It 'retries throttled AWS reads at most twice' {

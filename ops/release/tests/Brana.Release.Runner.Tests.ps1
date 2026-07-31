@@ -94,7 +94,8 @@ Describe 'Brana.Release runner' {
 
     It 'plan dry run accepts live telemetry and stays read only' {
         $before = (Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.tmp' -Force | Measure-Object).Count
-        $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','plan','-Environment','hml','-RepositoryPath','D:\BRANA ARQUIVOS\BRANA CLOUD','-OutputFormat','Json','-DryRun')
+        $telemetryPath = Join-Path $PSScriptRoot 'fixtures\canary-telemetry-healthy.json'
+        $r = Invoke-BranaRunnerProcess -Arguments @('-Mode','plan','-Environment','hml','-RepositoryPath','D:\BRANA ARQUIVOS\BRANA CLOUD','-TelemetryPath',$telemetryPath,'-OutputFormat','Json','-DryRun')
         $after = (Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.tmp' -Force | Measure-Object).Count
         $r.ExitCode | Should Be 0
         $r.Stdout | Should Match 'Plano canary pronto'

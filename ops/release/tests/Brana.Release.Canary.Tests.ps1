@@ -13,31 +13,34 @@ Describe 'Brana.Release.Canary' {
         $plan.BaselineMinutes | Should Be 15
         $plan.Allowed503 | Should Be 0
         $plan.RollbackTaskDefinition | Should Be 'default-brana-hml-backend:16'
-        ($plan.LifecycleStages -join ' ') | Should Match 'CANARY_TRAFFIC'
-        ($plan.LifecycleStages -join ' ') | Should Match 'ROLLING_BACK'
+        ($plan.LifecycleStages -join ' ') | Should Match 'WAITING_FOR_PROMOTION'
+        ($plan.LifecycleStages -join ' ') | Should Match 'POST_PROMOTION_STABILIZATION'
     }
 
-    It 'accepts healthy canary signals and blocks incomplete telemetry' {
+    It 'accepts healthy canary and promotion telemetry' {
         $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
         $signals = [pscustomobject]@{
             serviceStable = $true
             deploymentConcurrent = $false
             publicTargetHealthy = $true
+            publicTargetEmpty = $false
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            healthStatusCode = 200
+            appStatusCode = 200
             healthyHostCount = 1
+            unHealthyHostCount = 0
             elb5xxCount = 0
             target5xxCount = 0
             observed503Count = 0
             lifecycleStage = 'OBSERVING'
+            currentTasks = @(@{ TaskArn = 'arn'; TaskDefinitionArn = 'default-brana-hml-backend:16' })
         }
-        $ready = Test-BranaCanaryDeploymentReadiness -Config $config -Signals $signals
-        $ready.IsValid | Should Be $true
-
-        $blocked = Test-BranaCanaryDeploymentReadiness -Config $config -Signals ([pscustomobject]@{})
-        $blocked.IsValid | Should Be $false
-        ($blocked.Errors -join ' ') | Should Match 'service must be stable'
-        ($blocked.Errors -join ' ') | Should Match 'rollback service revision is required'
+        (Test-BranaCanaryDeploymentReadiness -Config $config -Signals $signals).IsValid | Should Be $true
+        (Test-BranaCanaryPromotionReadiness -Config $config -Signals $signals).IsValid | Should Be $true
+        (Test-BranaCanaryStabilizationWindow -Config $config -Signals @($signals, $signals) -MinimumSamples 2).IsValid | Should Be $true
     }
 
     It 'blocks the required negative canary scenarios' {
@@ -47,9 +50,15 @@ Describe 'Brana.Release.Canary' {
             serviceStable = $true
             deploymentConcurrent = $false
             publicTargetHealthy = $false
+            publicTargetEmpty = $false
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            healthStatusCode = 200
+            appStatusCode = 200
             healthyHostCount = 1
+            unHealthyHostCount = 0
             elb5xxCount = 0
             target5xxCount = 0
             observed503Count = 0
@@ -60,9 +69,15 @@ Describe 'Brana.Release.Canary' {
             serviceStable = $true
             deploymentConcurrent = $true
             publicTargetHealthy = $true
+            publicTargetEmpty = $false
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            healthStatusCode = 200
+            appStatusCode = 200
             healthyHostCount = 1
+            unHealthyHostCount = 0
             elb5xxCount = 0
             target5xxCount = 0
             observed503Count = 0
@@ -73,9 +88,15 @@ Describe 'Brana.Release.Canary' {
             serviceStable = $true
             deploymentConcurrent = $false
             publicTargetHealthy = $true
+            publicTargetEmpty = $false
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            healthStatusCode = 200
+            appStatusCode = 200
             healthyHostCount = 1
+            unHealthyHostCount = 0
             elb5xxCount = 1
             target5xxCount = 0
             observed503Count = 0
@@ -86,9 +107,15 @@ Describe 'Brana.Release.Canary' {
             serviceStable = $true
             deploymentConcurrent = $false
             publicTargetHealthy = $true
+            publicTargetEmpty = $false
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            healthStatusCode = 200
+            appStatusCode = 200
             healthyHostCount = 0
+            unHealthyHostCount = 1
             elb5xxCount = 0
             target5xxCount = 0
             observed503Count = 1
@@ -99,9 +126,15 @@ Describe 'Brana.Release.Canary' {
             serviceStable = $true
             deploymentConcurrent = $false
             publicTargetHealthy = $true
+            publicTargetEmpty = $false
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            healthStatusCode = 200
+            appStatusCode = 200
             healthyHostCount = 1
+            unHealthyHostCount = 0
             elb5xxCount = 0
             target5xxCount = 0
             observed503Count = 0

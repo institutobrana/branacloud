@@ -1,8 +1,10 @@
 {
-  "TimestampUtc": "2026-07-30T18:00:00.000Z",
+  "TimestampUtc": "2026-07-31T18:00:00.000Z",
   "Source": "fixture",
-  "Complete": true,
-  "Errors": [],
+  "Complete": false,
+  "Errors": [
+    "public target must serve the active task definition"
+  ],
   "Warnings": [],
   "AwsIdentity": {
     "AccountId": "810204249111",
@@ -17,35 +19,45 @@
     "ServiceArn": "arn:aws:ecs:sa-east-1:810204249111:service/default/brana-hml-backend",
     "ServiceType": "EXPRESS_GATEWAY",
     "Strategy": "CANARY",
-    "TaskDefinition": "default-brana-hml-backend:16",
+    "TaskDefinition": "default-brana-hml-backend:19",
     "DesiredCount": 1,
     "RunningCount": 1,
     "PendingCount": 0,
     "RolloutState": "COMPLETED",
     "ActiveDeploymentCount": 1,
     "ConcurrentDeployment": false,
-    "CurrentServiceDeploymentArn": "ecs-svc/fixture",
-    "CurrentServiceRevisionArn": "default-brana-hml-backend:16",
-    "PreviousStableServiceRevisionArn": "default-brana-hml-backend:15",
-    "LifecycleStage": "OBSERVING",
+    "CurrentServiceDeploymentArn": "ecs-svc/incident",
+    "CurrentServiceRevisionArn": "default-brana-hml-backend:19",
+    "PreviousStableServiceRevisionArn": "default-brana-hml-backend:16",
+    "LifecycleStage": "VERIFYING_PUBLIC_TARGET",
     "RollbackAvailable": true,
     "CircuitBreakerEnabled": true,
     "AlarmsEnabled": true
   },
   "Deployment": {
-    "CurrentDeploymentId": "ecs-svc/fixture",
-    "CurrentTaskDefinition": "default-brana-hml-backend:16",
+    "CurrentDeploymentId": "ecs-svc/incident",
+    "CurrentTaskDefinition": "default-brana-hml-backend:19",
     "CurrentRolloutState": "COMPLETED",
     "ConcurrentDeployment": false
   },
   "Revisions": {
-    "Current": "default-brana-hml-backend:16",
-    "PreviousStable": "default-brana-hml-backend:15"
+    "Current": "default-brana-hml-backend:19",
+    "PreviousStable": "default-brana-hml-backend:16"
   },
   "Tasks": {
     "Current": [
       {
-        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/fixture",
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/incident",
+        "TaskDefinitionArn": "default-brana-hml-backend:19",
+        "LastStatus": "RUNNING",
+        "DesiredStatus": "RUNNING",
+        "HealthStatus": "UNKNOWN",
+        "PrivateIp": "10.0.1.26"
+      }
+    ],
+    "Previous": [
+      {
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
         "TaskDefinitionArn": "default-brana-hml-backend:16",
         "LastStatus": "RUNNING",
         "DesiredStatus": "RUNNING",
@@ -53,12 +65,19 @@
         "PrivateIp": "10.0.1.25"
       }
     ],
-    "Previous": [],
     "CurrentCount": 1,
-    "PreviousCount": 0,
+    "PreviousCount": 1,
     "ByPrivateIp": {
+      "10.0.1.26": {
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/incident",
+        "TaskDefinitionArn": "default-brana-hml-backend:19",
+        "LastStatus": "RUNNING",
+        "DesiredStatus": "RUNNING",
+        "HealthStatus": "UNKNOWN",
+        "PrivateIp": "10.0.1.26"
+      },
       "10.0.1.25": {
-        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/fixture",
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
         "TaskDefinitionArn": "default-brana-hml-backend:16",
         "LastStatus": "RUNNING",
         "DesiredStatus": "RUNNING",
@@ -87,7 +106,7 @@
         "HealthState": "healthy",
         "Reason": null,
         "Description": null,
-        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/fixture",
+        "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
         "TaskDefinitionArn": "default-brana-hml-backend:16"
       }
     ],
@@ -118,8 +137,8 @@
   "publicTargetHealthy": true,
   "publicTargetEmpty": false,
   "alternateTargetHealthy": true,
-  "rollbackServiceRevision": "default-brana-hml-backend:15",
-  "activeTaskDefinition": "default-brana-hml-backend:16",
+  "rollbackServiceRevision": "default-brana-hml-backend:16",
+  "activeTaskDefinition": "default-brana-hml-backend:19",
   "publicTargetRevision": "default-brana-hml-backend:16",
   "healthStatusCode": 200,
   "appStatusCode": 200,
@@ -128,16 +147,16 @@
   "elb5xxCount": 0,
   "target5xxCount": 0,
   "observed503Count": 0,
-  "lifecycleStage": "OBSERVING",
+  "lifecycleStage": "VERIFYING_PUBLIC_TARGET",
   "allowed503": 0,
   "currentTasks": [
     {
-      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/fixture",
-      "TaskDefinitionArn": "default-brana-hml-backend:16",
+      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/incident",
+      "TaskDefinitionArn": "default-brana-hml-backend:19",
       "LastStatus": "RUNNING",
       "DesiredStatus": "RUNNING",
-      "HealthStatus": "HEALTHY",
-      "PrivateIp": "10.0.1.25"
+      "HealthStatus": "UNKNOWN",
+      "PrivateIp": "10.0.1.26"
     }
   ],
   "publicTargets": [
@@ -149,8 +168,18 @@
       "HealthState": "healthy",
       "Reason": null,
       "Description": null,
-      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/fixture",
+      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
       "TaskDefinitionArn": "default-brana-hml-backend:16"
+    }
+  ],
+  "previousTasks": [
+    {
+      "TaskArn": "arn:aws:ecs:sa-east-1:810204249111:task/default/stable",
+      "TaskDefinitionArn": "default-brana-hml-backend:16",
+      "LastStatus": "RUNNING",
+      "DesiredStatus": "RUNNING",
+      "HealthStatus": "HEALTHY",
+      "PrivateIp": "10.0.1.25"
     }
   ]
 }
