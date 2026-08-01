@@ -192,6 +192,31 @@ function Get-BranaTelemetryValue {
     return $property.Value
 }
 
+function Get-BranaTelemetryPropertyValue {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$InputObject,
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    if ($null -eq $InputObject) {
+        return $null
+    }
+    if ($InputObject -is [System.Collections.IDictionary]) {
+        if ($InputObject.Contains($Name)) {
+            return $InputObject[$Name]
+        }
+        return $null
+    }
+    $property = $InputObject.PSObject.Properties[$Name]
+    if ($null -eq $property) {
+        return $null
+    }
+    return $property.Value
+}
+
 function Invoke-BranaTelemetryReadCommand {
     [CmdletBinding()]
     param(
@@ -233,7 +258,59 @@ function Get-BranaCanaryTelemetry {
     )
 
     if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
-        return (ConvertFrom-BranaTelemetryFixture -Path $TelemetryPath)
+        $fixture = ConvertFrom-BranaTelemetryFixture -Path $TelemetryPath
+        if ($fixture.PSObject.Properties['Targets']) {
+            $fixtureTargets = Get-BranaTelemetryValue -InputObject $fixture -Name 'Targets'
+            $fixturePublicTargets = @((Get-BranaTelemetryValue -InputObject $fixtureTargets -Name 'PublicTargets'))
+            $fixtureRevision = [string](Get-BranaTelemetryValue -InputObject $fixtureTargets -Name 'PublicTargetRevision')
+            $fixtureSource = [string](Get-BranaTelemetryValue -InputObject $fixtureTargets -Name 'PublicTargetRevisionSource')
+            $fixtureConfirmed = Get-BranaTelemetryValue -InputObject $fixtureTargets -Name 'PublicTargetRevisionConfirmed'
+            $fixtureInferred = Get-BranaTelemetryValue -InputObject $fixtureTargets -Name 'PublicTargetRevisionInferred'
+            if ($fixturePublicTargets.Count -gt 0) {
+                if ([string]::IsNullOrWhiteSpace($fixtureRevision)) {
+                    $fixtureRevision = [string]$fixturePublicTargets[0].TaskDefinitionArn
+                }
+                if ([string]::IsNullOrWhiteSpace($fixtureSource)) {
+                    $fixtureSource = 'target-task-ip'
+                }
+                if ($null -eq $fixtureConfirmed) {
+                    $fixtureConfirmed = $true
+                }
+                if ($null -eq $fixtureInferred) {
+                    $fixtureInferred = $false
+                }
+            }
+            elseif ([string]::IsNullOrWhiteSpace($fixtureSource)) {
+                if (-not [string]::IsNullOrWhiteSpace($fixtureRevision)) {
+                    $fixtureSource = 'service-active-task-definition'
+                    if ($null -eq $fixtureConfirmed) {
+                        $fixtureConfirmed = $false
+                    }
+                    if ($null -eq $fixtureInferred) {
+                        $fixtureInferred = $true
+                    }
+                }
+                else {
+                    $fixtureSource = 'unavailable'
+                    if ($null -eq $fixtureConfirmed) {
+                        $fixtureConfirmed = $false
+                    }
+                    if ($null -eq $fixtureInferred) {
+                        $fixtureInferred = $false
+                    }
+                }
+            }
+            $fixtureTargets | Add-Member -NotePropertyName PublicTargetRevision -NotePropertyValue $fixtureRevision -Force
+            $fixtureTargets | Add-Member -NotePropertyName PublicTargetRevisionSource -NotePropertyValue $fixtureSource -Force
+            $fixtureTargets | Add-Member -NotePropertyName PublicTargetRevisionConfirmed -NotePropertyValue ([bool]$fixtureConfirmed) -Force
+            $fixtureTargets | Add-Member -NotePropertyName PublicTargetRevisionInferred -NotePropertyValue ([bool]$fixtureInferred) -Force
+        }
+        $fixture | Add-Member -NotePropertyName publicTargetRevision -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $fixture.Targets -Name 'PublicTargetRevision')) -Force
+        $fixture | Add-Member -NotePropertyName publicTargetRevisionSource -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $fixture.Targets -Name 'PublicTargetRevisionSource')) -Force
+        $fixture | Add-Member -NotePropertyName publicTargetRevisionConfirmed -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $fixture.Targets -Name 'PublicTargetRevisionConfirmed')) -Force
+        $fixture | Add-Member -NotePropertyName publicTargetRevisionInferred -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $fixture.Targets -Name 'PublicTargetRevisionInferred')) -Force
+        $fixture | Add-Member -NotePropertyName activeTaskDefinition -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $fixture.Service -Name 'TaskDefinition')) -Force
+        return $fixture
     }
 
     $telemetry = New-BranaCanaryTelemetryBase
@@ -344,17 +421,17 @@ function Get-BranaCanaryTelemetry {
                     DesiredStatus = [string]$task.desiredStatus
                     HealthStatus = [string]$task.healthStatus
                     StartedAt = [string]$task.startedAt
-                    StopCode = [string]$task.stopCode
-                    StoppedReason = [string]$task.stoppedReason
-                    StoppedAt = [string]$task.stoppedAt
+                    StopCode = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'stopCode')
+                    StoppedReason = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'stoppedReason')
+                    StoppedAt = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'stoppedAt')
                     AvailabilityZone = [string]$task.availabilityZone
                     Containers = @($task.containers | ForEach-Object {
                         [ordered]@{
                             Name = [string]$_.name
                             LastStatus = [string]$_.lastStatus
                             HealthStatus = [string]$_.healthStatus
-                            ExitCode = $_.exitCode
-                            Reason = [string]$_.reason
+                            ExitCode = Get-BranaTelemetryPropertyValue -InputObject $_ -Name 'exitCode'
+                            Reason = [string](Get-BranaTelemetryPropertyValue -InputObject $_ -Name 'reason')
                             Image = [string]$_.image
                         }
                     })
@@ -388,6 +465,16 @@ function Get-BranaCanaryTelemetry {
         $unhealthy = @($targets | Where-Object { $_.TargetHealth.State -ne 'healthy' }).Count
         $publicTargets = @()
         $publicTargetRevision = $null
+        $publicTargetRevisionSource = 'unavailable'
+        $publicTargetRevisionConfirmed = $false
+        $publicTargetRevisionInferred = $false
+        $tasksByPrivateIp = @{}
+        if ($telemetry.Tasks -and $telemetry.Tasks.PSObject.Properties['ByPrivateIp']) {
+            $candidateTasksByPrivateIp = $telemetry.Tasks.ByPrivateIp
+            if ($candidateTasksByPrivateIp -is [System.Collections.IDictionary]) {
+                $tasksByPrivateIp = $candidateTasksByPrivateIp
+            }
+        }
         $reasons = @(
             $targets | ForEach-Object {
                 if ($_.TargetHealth.PSObject.Properties['Reason'] -and -not [string]::IsNullOrWhiteSpace([string]$_.TargetHealth.Reason)) {
@@ -404,11 +491,14 @@ function Get-BranaCanaryTelemetry {
         foreach ($target in @($targets)) {
             $privateIp = [string]$target.Target.Id
             $taskMatch = $null
-            if ($telemetry.Tasks.ByPrivateIp.Contains($privateIp)) {
-                $taskMatch = $telemetry.Tasks.ByPrivateIp[$privateIp]
+            if ($tasksByPrivateIp.Contains($privateIp)) {
+                $taskMatch = $tasksByPrivateIp[$privateIp]
             }
             if ($null -eq $publicTargetRevision -and $null -ne $taskMatch) {
                 $publicTargetRevision = [string]$taskMatch.TaskDefinitionArn
+                $publicTargetRevisionSource = 'target-task-ip'
+                $publicTargetRevisionConfirmed = $true
+                $publicTargetRevisionInferred = $false
             }
             $publicTargets += [ordered]@{
                 TargetGroup = [string]$Config.productionTargetGroupArn
@@ -421,6 +511,12 @@ function Get-BranaCanaryTelemetry {
                 TaskArn = if ($null -ne $taskMatch) { [string]$taskMatch.TaskArn } else { $null }
                 TaskDefinitionArn = if ($null -ne $taskMatch) { [string]$taskMatch.TaskDefinitionArn } else { $null }
             }
+        }
+        if ([string]::IsNullOrWhiteSpace([string]$publicTargetRevision)) {
+            $publicTargetRevision = [string]$telemetry.Service.TaskDefinition
+            $publicTargetRevisionSource = 'service-active-task-definition'
+            $publicTargetRevisionConfirmed = $false
+            $publicTargetRevisionInferred = $true
         }
         $telemetry.Targets = [ordered]@{
             PublicTargetGroupArn = [string]$Config.productionTargetGroupArn
@@ -436,6 +532,9 @@ function Get-BranaCanaryTelemetry {
             PublicTargets = @($publicTargets)
             AlternateTargets = @()
             PublicTargetRevision = $publicTargetRevision
+            PublicTargetRevisionSource = $publicTargetRevisionSource
+            PublicTargetRevisionConfirmed = [bool]$publicTargetRevisionConfirmed
+            PublicTargetRevisionInferred = [bool]$publicTargetRevisionInferred
         }
         $telemetry.Metrics.HealthyHostCount = [int]$healthy
         $telemetry.Metrics.UnHealthyHostCount = [int]$unhealthy
@@ -536,6 +635,9 @@ function Get-BranaCanaryTelemetry {
     $result | Add-Member -NotePropertyName publicTargetGroupArn -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetGroupArn')) -Force
     $result | Add-Member -NotePropertyName alternateTargetGroupArn -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'AlternateTargetGroupArn')) -Force
     $result | Add-Member -NotePropertyName publicTargetRevision -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevision')) -Force
+    $result | Add-Member -NotePropertyName publicTargetRevisionSource -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionSource')) -Force
+    $result | Add-Member -NotePropertyName publicTargetRevisionConfirmed -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionConfirmed')) -Force
+    $result | Add-Member -NotePropertyName publicTargetRevisionInferred -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionInferred')) -Force
     $result | Add-Member -NotePropertyName activeTaskDefinition -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'TaskDefinition')) -Force
     $result | Add-Member -NotePropertyName unHealthyHostCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicUnhealthyHostCount')) -Force
     $result | Add-Member -NotePropertyName healthStatusCode -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Http -Name 'HealthStatusCode')) -Force

@@ -206,6 +206,8 @@ function Test-BranaCanaryPromotionReadiness {
         $unhealthyHostCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'unHealthyHostCount')
         $currentTasks = @((Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'currentTasks'))
         $activeTaskDefinition = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'activeTaskDefinition')
+        $publicTargetRevisionConfirmed = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevisionConfirmed')
+        $publicTargetRevisionSource = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevisionSource')
         if ($lifecycleStage -notin @(Get-BranaCanaryLifecycleStages)) { $errors.Add('lifecycle stage unknown') }
         if ($publicTargetEmpty) { $errors.Add('public target group is empty') }
         if (-not $publicTargetHealthy) { $errors.Add('public target must be healthy') }
@@ -215,6 +217,10 @@ function Test-BranaCanaryPromotionReadiness {
         if ($healthyHostCount -lt 1) { $errors.Add('HealthyHostCount below 1 blocks completion') }
         if ($unhealthyHostCount -gt 0) { $errors.Add('UnHealthyHostCount above 0 blocks completion') }
         if ([string]::IsNullOrWhiteSpace($publicTargetRevision)) { $errors.Add('public target revision is required') }
+        if (-not [string]::IsNullOrWhiteSpace($publicTargetRevisionSource) -and $publicTargetRevisionSource -eq 'service-active-task-definition' -and -not $publicTargetRevisionConfirmed) {
+            $errors.Add('public target revision is inferred and cannot confirm promotion')
+        }
+        if (-not $publicTargetRevisionConfirmed) { $errors.Add('public target revision must be confirmed directly') }
         if (-not [string]::IsNullOrWhiteSpace($activeTaskDefinition) -and $publicTargetRevision -ne $activeTaskDefinition) { $errors.Add('public target must serve the active task definition') }
         if ([string]::IsNullOrWhiteSpace($activeTaskDefinition)) { $errors.Add('active task definition is required') }
         if ($currentTasks.Count -lt 1) { $errors.Add('target task must be running') }

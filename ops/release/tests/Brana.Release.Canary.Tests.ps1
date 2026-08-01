@@ -28,6 +28,9 @@ Describe 'Brana.Release.Canary' {
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
             publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'target-task-ip'
+            publicTargetRevisionConfirmed = $true
+            publicTargetRevisionInferred = $false
             healthStatusCode = 200
             appStatusCode = 200
             healthyHostCount = 1
@@ -43,6 +46,35 @@ Describe 'Brana.Release.Canary' {
         (Test-BranaCanaryStabilizationWindow -Config $config -Signals @($signals, $signals) -MinimumSamples 2).IsValid | Should Be $true
     }
 
+    It 'rejects inferred public target revisions during promotion' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $signals = [pscustomobject]@{
+            serviceStable = $true
+            deploymentConcurrent = $false
+            publicTargetHealthy = $true
+            publicTargetEmpty = $false
+            alternateTargetHealthy = $true
+            rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'service-active-task-definition'
+            publicTargetRevisionConfirmed = $false
+            publicTargetRevisionInferred = $true
+            healthStatusCode = 200
+            appStatusCode = 200
+            healthyHostCount = 1
+            unHealthyHostCount = 0
+            elb5xxCount = 0
+            target5xxCount = 0
+            observed503Count = 0
+            lifecycleStage = 'OBSERVING'
+            currentTasks = @(@{ TaskArn = 'arn'; TaskDefinitionArn = 'default-brana-hml-backend:16' })
+        }
+        $readiness = Test-BranaCanaryPromotionReadiness -Config $config -Signals $signals
+        $readiness.IsValid | Should Be $false
+        $readiness.Errors -join ' ' | Should Match 'public target revision is inferred and cannot confirm promotion'
+    }
+
     It 'blocks the required negative canary scenarios' {
         $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
 
@@ -55,6 +87,9 @@ Describe 'Brana.Release.Canary' {
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
             publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'target-task-ip'
+            publicTargetRevisionConfirmed = $true
+            publicTargetRevisionInferred = $false
             healthStatusCode = 200
             appStatusCode = 200
             healthyHostCount = 1
@@ -74,6 +109,9 @@ Describe 'Brana.Release.Canary' {
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
             publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'target-task-ip'
+            publicTargetRevisionConfirmed = $true
+            publicTargetRevisionInferred = $false
             healthStatusCode = 200
             appStatusCode = 200
             healthyHostCount = 1
@@ -93,6 +131,9 @@ Describe 'Brana.Release.Canary' {
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
             publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'target-task-ip'
+            publicTargetRevisionConfirmed = $true
+            publicTargetRevisionInferred = $false
             healthStatusCode = 200
             appStatusCode = 200
             healthyHostCount = 1
@@ -112,6 +153,9 @@ Describe 'Brana.Release.Canary' {
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
             publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'service-active-task-definition'
+            publicTargetRevisionConfirmed = $false
+            publicTargetRevisionInferred = $true
             healthStatusCode = 200
             appStatusCode = 200
             healthyHostCount = 0
@@ -131,6 +175,9 @@ Describe 'Brana.Release.Canary' {
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
             publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'service-active-task-definition'
+            publicTargetRevisionConfirmed = $false
+            publicTargetRevisionInferred = $true
             healthStatusCode = 200
             appStatusCode = 200
             healthyHostCount = 1

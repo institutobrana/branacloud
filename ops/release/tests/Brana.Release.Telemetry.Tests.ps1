@@ -29,6 +29,9 @@ Describe 'Brana.Release.Telemetry' {
         $telemetry.publicTargetHealthy | Should Be $true
         $telemetry.publicTargetEmpty | Should Be $false
         $telemetry.publicTargetRevision | Should Be 'default-brana-hml-backend:16'
+        $telemetry.publicTargetRevisionSource | Should Be 'target-task-ip'
+        $telemetry.publicTargetRevisionConfirmed | Should Be $true
+        $telemetry.publicTargetRevisionInferred | Should Be $false
         $telemetry.activeTaskDefinition | Should Be 'default-brana-hml-backend:16'
         $telemetry.healthStatusCode | Should Be 200
         $telemetry.appStatusCode | Should Be 200
@@ -42,7 +45,10 @@ Describe 'Brana.Release.Telemetry' {
         $telemetry.Complete | Should Be $false
         $telemetry.publicTargetEmpty | Should Be $true
         $telemetry.publicTargetHealthy | Should Be $false
-        $telemetry.publicTargetRevision | Should Be $null
+        $telemetry.publicTargetRevision | Should Be ''
+        $telemetry.publicTargetRevisionSource | Should Be 'unavailable'
+        $telemetry.publicTargetRevisionConfirmed | Should Be $false
+        $telemetry.publicTargetRevisionInferred | Should Be $false
         $telemetry.healthStatusCode | Should Be 503
         $telemetry.appStatusCode | Should Be 503
         $telemetry.Http.Observed503 | Should Be $true
