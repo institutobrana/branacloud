@@ -371,6 +371,7 @@ function Invoke-BranaDeploymentMode {
         [scriptblock]$AwsReadInvoker = $null,
         [scriptblock]$AwsWriteInvoker = $null,
         [scriptblock]$HttpInvoker = $null,
+        [scriptblock]$TelemetryInvoker = $null,
         [scriptblock]$NowInvoker = $null,
         [scriptblock]$SleepInvoker = $null,
         [int]$PollIntervalSeconds = 5,
@@ -386,6 +387,9 @@ function Invoke-BranaDeploymentMode {
 
     $signals = if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
         Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -TelemetryPath $TelemetryPath
+    }
+    elseif ($null -ne $TelemetryInvoker) {
+        & $TelemetryInvoker
     }
     else {
         Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -AwsInvoker $AwsReadInvoker -HttpInvoker $HttpInvoker
@@ -478,6 +482,7 @@ function Invoke-BranaDeploymentMode {
     $stabilizationDeadline = (& $NowInvoker).AddMinutes($stabilizationMinutes)
     $stabilizationTelemetry = @()
     $promotionReadiness = $null
+    $promotionDecision = $null
     do {
         $state.phase = 'VERIFYING_PUBLIC_TARGET'
         $state.lastTelemetryAtUtc = (& $NowInvoker).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
@@ -485,22 +490,40 @@ function Invoke-BranaDeploymentMode {
         $telemetry = if (-not [string]::IsNullOrWhiteSpace($TelemetryPath)) {
             Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -TelemetryPath $TelemetryPath
         }
+        elseif ($null -ne $TelemetryInvoker) {
+            & $TelemetryInvoker
+        }
         else {
             Brana.Release.Telemetry\Get-BranaCanaryTelemetry -Config $Config -AwsInvoker $AwsReadInvoker -HttpInvoker $HttpInvoker
         }
-        $promotionReadiness = Brana.Release.Canary\Test-BranaCanaryPromotionReadiness -Config $Config -Signals $telemetry
+        $promotionDecision = Brana.Release.Canary\Get-BranaCanaryPromotionDecision -Config $Config -Signals $telemetry
+        $promotionReadiness = $promotionDecision.Readiness
         $stabilizationTelemetry += $telemetry
-        if (-not $promotionReadiness.IsValid) {
+        if ($promotionDecision.Decision -eq 'fail') {
             $state.phase = 'ROLLBACK_RECOMMENDED'
             $state.decision = 'rollback-recommended'
-            $state.errors = @($promotionReadiness.Errors)
+            $state.errors = @($(if ([string]::IsNullOrWhiteSpace([string]$promotionDecision.Reason)) { @($promotionReadiness.Errors) } else { @($promotionDecision.Reason) }))
             Write-BranaDeploymentStateAtomic -Path $statePath -State $state
-            return [pscustomobject]@{ Success = $false; ExitCode = 40; Message = 'Rollback recommended.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @($promotionReadiness.Errors) }
+            return [pscustomobject]@{ Success = $false; ExitCode = 40; Message = 'Rollback recommended.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; Decision = $promotionDecision; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @($(if ([string]::IsNullOrWhiteSpace([string]$promotionDecision.Reason)) { @($promotionReadiness.Errors) } else { @($promotionDecision.Reason) })) }
+        }
+        if ($promotionDecision.Decision -eq 'wait') {
+            if ((& $NowInvoker) -lt $stabilizationDeadline) {
+                & $SleepInvoker ([Math]::Max(0, [int]$PollIntervalSeconds))
+                continue
+            }
         }
         if ((& $NowInvoker) -lt $stabilizationDeadline) {
             & $SleepInvoker ([Math]::Max(0, [int]$PollIntervalSeconds))
         }
     } while ((& $NowInvoker) -lt $stabilizationDeadline)
+
+    if ($promotionDecision -and $promotionDecision.Decision -eq 'wait') {
+        $state.phase = 'ROLLBACK_RECOMMENDED'
+        $state.decision = 'rollback-recommended'
+        $state.errors = @($(if ([string]::IsNullOrWhiteSpace([string]$promotionDecision.Reason)) { 'public target did not become directly confirmed before timeout' } else { $promotionDecision.Reason }))
+        Write-BranaDeploymentStateAtomic -Path $statePath -State $state
+        return [pscustomobject]@{ Success = $false; ExitCode = 40; Message = 'Rollback recommended.'; Data = [pscustomobject]@{ State = $state; Telemetry = $telemetry; Readiness = $promotionReadiness; Decision = $promotionDecision; StabilizationTelemetry = $stabilizationTelemetry }; Warnings = @(); Errors = @($state.errors) }
+    }
 
     $state.phase = 'POST_PROMOTION_STABILIZATION'
     $state.completedAtUtc = (& $NowInvoker).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')

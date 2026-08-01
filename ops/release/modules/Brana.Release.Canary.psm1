@@ -233,6 +233,83 @@ function Test-BranaCanaryPromotionReadiness {
     }
 }
 
+function Get-BranaCanaryPromotionDecision {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object]$Config,
+        [AllowNull()]
+        [object]$Signals
+    )
+
+    $readiness = Test-BranaCanaryPromotionReadiness -Config $Config -Signals $Signals
+    $decision = 'fail'
+    $reason = $null
+
+    if ($null -eq $Signals) {
+        $reason = 'promotion telemetry signals are required'
+    }
+    else {
+        $publicTargetRevisionConfirmed = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevisionConfirmed')
+        $publicTargetRevisionInferred = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevisionInferred')
+        $publicTargetEmpty = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetEmpty')
+        $publicTargetHealthy = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetHealthy')
+        $publicTargetRevision = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevision')
+        $activeTaskDefinition = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'activeTaskDefinition')
+        $observed503Count = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'observed503Count')
+        $unhealthyHostCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'unHealthyHostCount')
+
+        if ($observed503Count -gt 0) {
+            $reason = '503 after promotion triggers rollback'
+        }
+        elseif ($unhealthyHostCount -gt 0) {
+            $reason = 'UnHealthyHostCount above 0 blocks completion'
+        }
+        elseif ($publicTargetRevisionConfirmed) {
+            if ([string]::IsNullOrWhiteSpace($publicTargetRevision)) {
+                $reason = 'public target revision is required'
+            }
+            elseif ([string]::IsNullOrWhiteSpace($activeTaskDefinition)) {
+                $reason = 'active task definition is required'
+            }
+            elseif ($publicTargetRevision -ne $activeTaskDefinition) {
+                $reason = 'public target must serve the active task definition'
+            }
+            elseif (-not $publicTargetHealthy -or $publicTargetEmpty) {
+                $reason = 'public target must be healthy'
+            }
+            elseif (-not $readiness.IsValid) {
+                $reason = @($readiness.Errors)[0]
+            }
+            else {
+                $decision = 'ready'
+            }
+        }
+        elseif ($publicTargetRevisionInferred -or $publicTargetEmpty -or (-not $publicTargetRevisionConfirmed)) {
+            $decision = 'wait'
+            if ($publicTargetEmpty) {
+                $reason = 'public target not yet visible'
+            }
+            else {
+                $reason = 'public target revision not yet confirmed directly'
+            }
+        }
+        elseif (-not $readiness.IsValid) {
+            $reason = @($readiness.Errors)[0]
+        }
+        else {
+            $decision = 'ready'
+        }
+    }
+
+    return [pscustomobject]@{
+        Decision = $decision
+        Reason = $reason
+        Readiness = $readiness
+        Signals = $Signals
+    }
+}
+
 function Test-BranaCanaryStabilizationWindow {
     [CmdletBinding()]
     param(
@@ -257,4 +334,4 @@ function Test-BranaCanaryStabilizationWindow {
     }
 }
 
-Export-ModuleMember -Function Get-BranaCanaryLifecycleStages,Get-BranaCanaryDeploymentPlan,Test-BranaCanaryDeploymentReadiness,Test-BranaCanaryPromotionReadiness,Test-BranaCanaryStabilizationWindow
+Export-ModuleMember -Function Get-BranaCanaryLifecycleStages,Get-BranaCanaryDeploymentPlan,Test-BranaCanaryDeploymentReadiness,Test-BranaCanaryPromotionReadiness,Get-BranaCanaryPromotionDecision,Test-BranaCanaryStabilizationWindow

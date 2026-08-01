@@ -250,6 +250,158 @@ Describe 'Brana.Release.Deployment' {
         $deploy.Data.State.completedAtUtc | Should Match '^2026-07-31T09:03:00\.000Z$'
     }
 
+    It 'waits while the public target is only inferred and advances once confirmed' {
+        $config = New-TestDeploymentConfig
+        $config | Add-Member -NotePropertyName postPromotionStabilizationMinutes -NotePropertyValue 3 -Force
+        $telemetrySnapshots = @(
+            [pscustomobject]@{
+                serviceStable = $true
+                deploymentConcurrent = $false
+                publicTargetHealthy = $true
+                publicTargetEmpty = $false
+                alternateTargetHealthy = $true
+                rollbackServiceRevision = 'default-brana-hml-backend:16'
+                activeTaskDefinition = 'default-brana-hml-backend:20'
+                publicTargetRevision = 'default-brana-hml-backend:20'
+                publicTargetRevisionSource = 'service-active-task-definition'
+                publicTargetRevisionConfirmed = $false
+                publicTargetRevisionInferred = $true
+                healthStatusCode = 200
+                appStatusCode = 200
+                healthyHostCount = 1
+                unHealthyHostCount = 0
+                elb5xxCount = 0
+                target5xxCount = 0
+                observed503Count = 0
+                lifecycleStage = 'OBSERVING'
+                currentTasks = @(@{ TaskArn = 'arn:task:20'; TaskDefinitionArn = 'default-brana-hml-backend:20' })
+            },
+            [pscustomobject]@{
+                serviceStable = $true
+                deploymentConcurrent = $false
+                publicTargetHealthy = $true
+                publicTargetEmpty = $false
+                alternateTargetHealthy = $true
+                rollbackServiceRevision = 'default-brana-hml-backend:16'
+                activeTaskDefinition = 'default-brana-hml-backend:20'
+                publicTargetRevision = 'default-brana-hml-backend:20'
+                publicTargetRevisionSource = 'target-task-ip'
+                publicTargetRevisionConfirmed = $true
+                publicTargetRevisionInferred = $false
+                healthStatusCode = 200
+                appStatusCode = 200
+                healthyHostCount = 1
+                unHealthyHostCount = 0
+                elb5xxCount = 0
+                target5xxCount = 0
+                observed503Count = 0
+                lifecycleStage = 'OBSERVING'
+                currentTasks = @(@{ TaskArn = 'arn:task:20'; TaskDefinitionArn = 'default-brana-hml-backend:20' })
+            },
+            [pscustomobject]@{
+                serviceStable = $true
+                deploymentConcurrent = $false
+                publicTargetHealthy = $true
+                publicTargetEmpty = $false
+                alternateTargetHealthy = $true
+                rollbackServiceRevision = 'default-brana-hml-backend:16'
+                activeTaskDefinition = 'default-brana-hml-backend:20'
+                publicTargetRevision = 'default-brana-hml-backend:20'
+                publicTargetRevisionSource = 'target-task-ip'
+                publicTargetRevisionConfirmed = $true
+                publicTargetRevisionInferred = $false
+                healthStatusCode = 200
+                appStatusCode = 200
+                healthyHostCount = 1
+                unHealthyHostCount = 0
+                elb5xxCount = 0
+                target5xxCount = 0
+                observed503Count = 0
+                lifecycleStage = 'OBSERVING'
+                currentTasks = @(@{ TaskArn = 'arn:task:20'; TaskDefinitionArn = 'default-brana-hml-backend:20' })
+            }
+        )
+        $script:signalIndex = 0
+        $awsRead = {
+            param($Args, $Timeout)
+            switch ($Args[0]) {
+                'sts' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Account":"810204249111","Arn":"arn","UserId":"U"}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'ecs' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"services":[{"serviceArn":"arn","taskDefinition":"default-brana-hml-backend:20","desiredCount":1,"runningCount":1,"pendingCount":0,"deployments":[{"id":"ecs-svc/20","taskDefinition":"default-brana-hml-backend:20","rolloutState":"COMPLETED"}],"deploymentConfiguration":{"deploymentCircuitBreaker":{"enable":true}}}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'elbv2' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"TargetHealthDescriptions":[{"Target":{"Id":"10.20.13.205","Port":8080},"TargetHealth":{"State":"healthy"}}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'cloudwatch' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Datapoints":[{"Sum":0}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+            }
+        }
+        $http = { param($Uri, $Timeout) [pscustomobject]@{ StatusCode = 200; DurationMs = 1; Error = $null } }
+        $write = { param($Args, $Timeout) [pscustomobject]@{ ExitCode = 0; StdOut = '{}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+        $clock = New-TestDeploymentClock -StartUtc ([DateTime]'2026-07-31T12:00:00Z')
+        $script:sleepCalls = 0
+        $sleep = {
+            param([int]$Seconds)
+            $script:sleepCalls++
+            & $clock.Sleep $Seconds
+        }
+        $telemetryInvoker = {
+            if ($script:signalIndex -ge $telemetrySnapshots.Count) {
+                return $telemetrySnapshots[-1]
+            }
+            $value = $telemetrySnapshots[$script:signalIndex]
+            $script:signalIndex++
+            return $value
+        }
+        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -ReleaseId 'hml-20-inferred' -TaskDefinitionArn 'default-brana-hml-backend:20' -ConfirmDeployment -ConfirmationToken '810204249111:sa-east-1:c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06:default-brana-hml-backend:20' -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http -TelemetryInvoker $telemetryInvoker -NowInvoker $clock.Now -SleepInvoker $sleep -PollIntervalSeconds 60
+        $deploy.ExitCode | Should Be 0
+        $deploy.Data.StabilizationTelemetry.Count | Should Be 3
+        $deploy.Data.Readiness.IsValid | Should Be $true
+        $script:sleepCalls | Should Be 3
+    }
+
+    It 'recommends rollback when the public target remains only inferred until timeout' {
+        $config = New-TestDeploymentConfig
+        $config | Add-Member -NotePropertyName postPromotionStabilizationMinutes -NotePropertyValue 1 -Force
+        $clock = New-TestDeploymentClock -StartUtc ([DateTime]'2026-07-31T12:00:00Z')
+        $awsRead = {
+            param($Args, $Timeout)
+            switch ($Args[0]) {
+                'sts' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Account":"810204249111","Arn":"arn","UserId":"U"}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'ecs' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"services":[{"serviceArn":"arn","taskDefinition":"default-brana-hml-backend:20","desiredCount":1,"runningCount":1,"pendingCount":0,"deployments":[{"id":"ecs-svc/20","taskDefinition":"default-brana-hml-backend:20","rolloutState":"COMPLETED"}],"deploymentConfiguration":{"deploymentCircuitBreaker":{"enable":true}}}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'elbv2' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"TargetHealthDescriptions":[]}' ; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+                'cloudwatch' { [pscustomobject]@{ ExitCode = 0; StdOut = '{"Datapoints":[{"Sum":0}]}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+            }
+        }
+        $http = { param($Uri, $Timeout) [pscustomobject]@{ StatusCode = 200; DurationMs = 1; Error = $null } }
+        $write = { param($Args, $Timeout) [pscustomobject]@{ ExitCode = 0; StdOut = '{}'; StdErr = ''; TimedOut = $false; DurationMs = 1 } }
+        $sleep = { param([int]$Seconds) & $clock.Sleep $Seconds }
+        $telemetryInvoker = {
+            return [pscustomobject]@{
+                serviceStable = $true
+                deploymentConcurrent = $false
+                publicTargetHealthy = $true
+                publicTargetEmpty = $false
+                alternateTargetHealthy = $true
+                rollbackServiceRevision = 'default-brana-hml-backend:16'
+                activeTaskDefinition = 'default-brana-hml-backend:20'
+                publicTargetRevision = 'default-brana-hml-backend:20'
+                publicTargetRevisionSource = 'service-active-task-definition'
+                publicTargetRevisionConfirmed = $false
+                publicTargetRevisionInferred = $true
+                healthStatusCode = 200
+                appStatusCode = 200
+                healthyHostCount = 1
+                unHealthyHostCount = 0
+                elb5xxCount = 0
+                target5xxCount = 0
+                observed503Count = 0
+                lifecycleStage = 'OBSERVING'
+                currentTasks = @(@{ TaskArn = 'arn:task:20'; TaskDefinitionArn = 'default-brana-hml-backend:20' })
+            }
+        }
+        $deploy = Invoke-BranaDeploymentMode -RepositoryPath $PSScriptRoot -Environment 'hml' -Config $config -ReleaseId 'hml-20-timeout' -TaskDefinitionArn 'default-brana-hml-backend:20' -ConfirmDeployment -ConfirmationToken '810204249111:sa-east-1:c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06:default-brana-hml-backend:20' -GitHead 'c3ea78b1d5f4b12c2a4e3d8269ae0251446f1a06' -AwsReadInvoker $awsRead -AwsWriteInvoker $write -HttpInvoker $http -TelemetryInvoker $telemetryInvoker -NowInvoker $clock.Now -SleepInvoker $sleep -PollIntervalSeconds 60
+        $deploy.Success | Should Be $false
+        $deploy.ExitCode | Should Be 40
+        $deploy.Data.State.phase | Should Be 'ROLLBACK_RECOMMENDED'
+        $deploy.Errors -join ' ' | Should Match 'not yet'
+    }
+
     It 'rolls back immediately when the public target becomes unhealthy at the stabilization boundary' {
         $config = New-TestDeploymentConfig
         $config | Add-Member -NotePropertyName postPromotionStabilizationMinutes -NotePropertyValue 3 -Force

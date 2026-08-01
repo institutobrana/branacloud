@@ -75,6 +75,93 @@ Describe 'Brana.Release.Canary' {
         $readiness.Errors -join ' ' | Should Match 'public target revision is inferred and cannot confirm promotion'
     }
 
+    It 'waits when the public target is only inferred' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $signals = [pscustomobject]@{
+            serviceStable = $true
+            deploymentConcurrent = $false
+            publicTargetHealthy = $true
+            publicTargetEmpty = $false
+            alternateTargetHealthy = $true
+            rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'service-active-task-definition'
+            publicTargetRevisionConfirmed = $false
+            publicTargetRevisionInferred = $true
+            healthStatusCode = 200
+            appStatusCode = 200
+            healthyHostCount = 1
+            unHealthyHostCount = 0
+            elb5xxCount = 0
+            target5xxCount = 0
+            observed503Count = 0
+            lifecycleStage = 'OBSERVING'
+            currentTasks = @(@{ TaskArn = 'arn'; TaskDefinitionArn = 'default-brana-hml-backend:16' })
+        }
+        $decision = Get-BranaCanaryPromotionDecision -Config $config -Signals $signals
+        $decision.Decision | Should Be 'wait'
+        $decision.Reason | Should Match 'not yet confirmed directly'
+    }
+
+    It 'waits when the public target is temporarily missing' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $signals = [pscustomobject]@{
+            serviceStable = $true
+            deploymentConcurrent = $false
+            publicTargetHealthy = $false
+            publicTargetEmpty = $true
+            alternateTargetHealthy = $true
+            rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:16'
+            publicTargetRevisionSource = 'service-active-task-definition'
+            publicTargetRevisionConfirmed = $false
+            publicTargetRevisionInferred = $true
+            healthStatusCode = 200
+            appStatusCode = 200
+            healthyHostCount = 0
+            unHealthyHostCount = 0
+            elb5xxCount = 0
+            target5xxCount = 0
+            observed503Count = 0
+            lifecycleStage = 'OBSERVING'
+            currentTasks = @()
+        }
+        $decision = Get-BranaCanaryPromotionDecision -Config $config -Signals $signals
+        $decision.Decision | Should Be 'wait'
+        $decision.Reason | Should Match 'not yet visible'
+    }
+
+    It 'fails when the public target is confirmed on the wrong revision' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $signals = [pscustomobject]@{
+            serviceStable = $true
+            deploymentConcurrent = $false
+            publicTargetHealthy = $true
+            publicTargetEmpty = $false
+            alternateTargetHealthy = $true
+            rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:16'
+            publicTargetRevision = 'default-brana-hml-backend:15'
+            publicTargetRevisionSource = 'target-task-ip'
+            publicTargetRevisionConfirmed = $true
+            publicTargetRevisionInferred = $false
+            healthStatusCode = 200
+            appStatusCode = 200
+            healthyHostCount = 1
+            unHealthyHostCount = 0
+            elb5xxCount = 0
+            target5xxCount = 0
+            observed503Count = 0
+            lifecycleStage = 'OBSERVING'
+            currentTasks = @(@{ TaskArn = 'arn'; TaskDefinitionArn = 'default-brana-hml-backend:16' })
+        }
+        $decision = Get-BranaCanaryPromotionDecision -Config $config -Signals $signals
+        $decision.Decision | Should Be 'fail'
+        $decision.Reason | Should Match 'public target must serve the active task definition'
+    }
+
     It 'blocks the required negative canary scenarios' {
         $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
 
