@@ -30,11 +30,13 @@ import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasU
 import { CenarioAnualPage } from '../features/cenarioAnual/CenarioAnualPage.jsx';
 import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
 import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
-import { MedicamentosPage } from '../features/medicamentos/MedicamentosPage.jsx';
+import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNew.jsx';
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
 import { PrestadoresPage } from '../features/prestadores/PrestadoresPage.jsx';
 import { QuestionariosAnamnesePage } from '../features/questionariosAnamnese/QuestionariosAnamnesePage.jsx';
+import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGraficosPage.jsx';
+import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -87,6 +89,7 @@ const contextualMenus = {
     { key: 'contas-bancarias', label: 'Contas bancárias', disabled: true },
     { key: 'perfis-usuario', label: 'Perfis de usuário', disabled: true },
     { key: 'plano-contas', label: 'Plano de contas' },
+    { key: 'simbolos-graficos', label: 'Símbolos gráficos' },
     { key: 'questionarios-anamnese', label: 'Questionários de anamnese' },
     { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares' },
     { key: 'taxas-cobranca', label: 'Taxas de cobrança', disabled: true },
@@ -139,6 +142,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/ficha-clinica`) return 'ficha-clinica';
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
+  if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
   if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
@@ -172,6 +176,8 @@ function syncAppPath(screen) {
           ? appPath('cenario-anual')
           : screen === 'plano-contas'
             ? appPath('configuracoes/plano-de-contas')
+          : screen === 'simbolos-graficos'
+            ? appPath('configuracoes/simbolos-graficos')
           : screen === 'unidades-atendimento'
             ? appPath('configuracoes/unidades-atendimento')
           : screen === 'questionarios-anamnese'
@@ -195,6 +201,7 @@ function syncAppPath(screen) {
             : appPath();
   if ((window.location.pathname || '/') === nextPath) return;
   window.history.pushState({ screen }, '', nextPath);
+  window.dispatchEvent(new Event('brana-app-navigation'));
 }
 
 function AppContent() {
@@ -260,6 +267,7 @@ function AppContent() {
     migrating: false,
     migrationModalOpen: false,
   });
+  const [simbolosGraficosCreateOpen, setSimbolosGraficosCreateOpen] = useState(false);
   const [adminToolbar, setAdminToolbar] = useState(null);
   const [questionariosToolbar, setQuestionariosToolbar] = useState(null);
   const [unidadesAtendimentoToolbarState, setUnidadesAtendimentoToolbarState] = useState({
@@ -281,6 +289,7 @@ function AppContent() {
     if (initialScreen === 'prestadores') return 'cadastro';
     if (initialScreen === 'cenario-anual') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
+    if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
     if (initialScreen === 'questionarios-anamnese') return 'configuracao';
     return 'atendimento';
@@ -317,10 +326,30 @@ function AppContent() {
     );
   }, [questionariosToolbar, screen]);
 
+  const simbolosGraficosTopBar = useMemo(() => {
+    if (screen !== 'simbolos-graficos') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de simbolos graficos">
+        <SimbolosGraficosToolbar
+          onNovo={() => {
+            setSimbolosGraficosCreateOpen(true);
+          }}
+        />
+      </div>
+    );
+  }, [screen]);
+
   useEffect(() => {
-    const onPopState = () => setScreen(resolveScreenFromPath());
+    const syncScreenFromLocation = () => setScreen(resolveScreenFromPath());
+    const onPopState = () => syncScreenFromLocation();
+    const onAppNavigation = () => syncScreenFromLocation();
     window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
+    window.addEventListener('brana-app-navigation', onAppNavigation);
+    return () => {
+      window.removeEventListener('popstate', onPopState);
+      window.removeEventListener('brana-app-navigation', onAppNavigation);
+    };
   }, []);
 
   useEffect(() => {
@@ -451,7 +480,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -511,6 +540,11 @@ function AppContent() {
       return;
     }
     if (nextScreen === 'plano-contas') {
+      setActiveGroupKey('configuracao');
+      setPanelGroupKey('configuracao');
+      return;
+    }
+    if (nextScreen === 'simbolos-graficos') {
       setActiveGroupKey('configuracao');
       setPanelGroupKey('configuracao');
       return;
@@ -599,6 +633,10 @@ function AppContent() {
       handleNavigate('plano-contas');
       return;
     }
+    if (groupKey === 'configuracao' && item?.key === 'simbolos-graficos' && !item?.disabled) {
+      handleNavigate('simbolos-graficos');
+      return;
+    }
     if (groupKey === 'configuracao' && item?.key === 'unidades-atendimento' && !item?.disabled) {
       handleNavigate('unidades-atendimento');
       return;
@@ -670,6 +708,10 @@ function AppContent() {
     }
     if (actionKey === 'plano-contas') {
       handleNavigate('plano-contas');
+      return;
+    }
+    if (actionKey === 'simbolos-graficos') {
+      handleNavigate('simbolos-graficos');
       return;
     }
     if (actionKey === 'unidades-atendimento') {
@@ -768,8 +810,19 @@ function AppContent() {
     if (screen === 'plano-contas') {
       return <PlanoContasPage />;
     }
+    if (screen === 'simbolos-graficos') {
+      return (
+        <SimbolosGraficosPage
+          createOpen={simbolosGraficosCreateOpen}
+          onCreateClose={() => setSimbolosGraficosCreateOpen(false)}
+        />
+      );
+    }
     if (screen === 'unidades-atendimento') {
       return <UnidadesAtendimentoPage />;
+    }
+    if (screen === 'questionarios-anamnese') {
+      return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
     }
     if (screen === 'prestadores') {
       return <PrestadoresPage />;
@@ -792,13 +845,13 @@ function AppContent() {
       return <DoencasCidPage onClose={() => handleNavigate('dashboard')} />;
     }
     if (screen === 'medicamentos') {
-      return <MedicamentosPage />;
+      return <MedicamentosPageNew />;
     }
     if (screen === 'servicos-protetico') {
       return <ServicosProteticoPage />;
     }
     return <DashboardPage key={dashboardVersion} />;
-  }, [cenarioAnualOpenRequestId, dashboardVersion, loading, materiaisEstoqueToolbarState, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen, user]);
+  }, [cenarioAnualOpenRequestId, dashboardVersion, loading, materiaisEstoqueToolbarState, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen, simbolosGraficosCreateOpen, user]);
 
   const auxiliaryTopBar = useMemo(() => {
     if (screen === 'unidades-atendimento') {
@@ -1205,6 +1258,10 @@ function AppContent() {
             medicamentosTopBar
           ) : screen === 'plano-contas' ? (
             planoContasTopBar
+          ) : screen === 'simbolos-graficos' ? (
+            simbolosGraficosTopBar
+          ) : screen === 'questionarios-anamnese' ? (
+            questionariosTopBar
           ) : null}
           <BranaIconRail
             activeKey={activeKey}
