@@ -274,6 +274,9 @@ function AppContent() {
     migrationModalOpen: false,
   });
   const [simbolosGraficosCreateOpen, setSimbolosGraficosCreateOpen] = useState(false);
+  const [simbolosGraficosSelectionState, setSimbolosGraficosSelectionState] = useState({
+    selectedId: null,
+  });
   const [indicesFinanceirosToolbarState, setIndicesFinanceirosToolbarState] = useState({
     selectedNumero: null,
     selectedIsReserved: false,
@@ -352,13 +355,20 @@ function AppContent() {
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de simbolos graficos">
         <SimbolosGraficosToolbar
+          hasSelection={Boolean(simbolosGraficosSelectionState.selectedId)}
           onNovo={() => {
             setSimbolosGraficosCreateOpen(true);
+          }}
+          onAltera={() => {
+            window.dispatchEvent(new CustomEvent('brana-simbolos-graficos-toolbar-action', { detail: { action: 'altera' } }));
+          }}
+          onElimina={() => {
+            window.dispatchEvent(new CustomEvent('brana-simbolos-graficos-toolbar-action', { detail: { action: 'elimina' } }));
           }}
         />
       </div>
     );
-  }, [screen]);
+  }, [screen, simbolosGraficosSelectionState.selectedId]);
 
   useEffect(() => {
     const syncScreenFromLocation = () => setScreen(resolveScreenFromPath());
@@ -404,6 +414,18 @@ function AppContent() {
 
     window.addEventListener('brana-indices-financeiros-toolbar-state', onIndicesFinanceirosState);
     return () => window.removeEventListener('brana-indices-financeiros-toolbar-state', onIndicesFinanceirosState);
+  }, []);
+
+  useEffect(() => {
+    const onSimbolosGraficosSelection = (event) => {
+      const detail = event?.detail || {};
+      setSimbolosGraficosSelectionState({
+        selectedId: detail.selectedId == null ? null : Number(detail.selectedId),
+      });
+    };
+
+    window.addEventListener('brana-simbolos-graficos-selection', onSimbolosGraficosSelection);
+    return () => window.removeEventListener('brana-simbolos-graficos-selection', onSimbolosGraficosSelection);
   }, []);
 
   useEffect(() => {
