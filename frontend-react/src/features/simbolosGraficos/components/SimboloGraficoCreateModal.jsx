@@ -156,7 +156,7 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
     && Number(values.formaMarcacao) <= 6;
   const isFormValid = nomeValido && especialidadeValida && formaValida;
   const isEditMode = mode === 'edit';
-  const modalTitle = isEditMode ? 'Altera s??mbolo gr??fico' : 'Novo s??mbolo gr??fico';
+  const modalTitle = isEditMode ? 'Altera símbolo gráfico' : 'Novo símbolo gráfico';
   const okLabel = flow.submitting ? 'Salvando...' : 'Ok';
 
   const handleSelectLibraryItem = (item) => {
