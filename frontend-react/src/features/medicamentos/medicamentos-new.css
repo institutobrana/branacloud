@@ -3,34 +3,20 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  min-width: 0;
 }
 
-.medicamentos-diagnostic-panel {
-  width: min(82vw, 1040px);
-  max-width: calc(100% - 120px);
-  min-width: 860px;
-  margin-inline: auto;
-  padding: 10px 12px;
-  border: 1px dashed var(--brana-border-subtle);
-  border-radius: 10px;
-  background: var(--brana-surface-card);
-  color: var(--brana-text-primary);
+.medicamentos-page-new {
+  align-items: flex-start;
 }
 
-.medicamentos-diagnostic-grid {
-  margin-top: 8px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px 12px;
-  font-size: 12px;
-}
-
-.medicamentos-diagnostic-grid pre {
-  margin: 4px 0 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-size: 11px;
-  line-height: 1.35;
+.medicamentos-page-new .medicamentos-table-shell {
+  width: min(940px, calc(100vw - 112px));
+  max-width: 940px;
+  min-width: 0;
+  margin-inline: 0;
+  align-self: flex-start;
+  flex: 0 0 auto;
 }
 
 .medicamentos-shell-band {
@@ -109,14 +95,6 @@
   display: grid;
   align-content: start;
   gap: 0;
-  width: min(82vw, 1040px);
-  max-width: calc(100% - 120px);
-  min-width: 860px;
-  margin-inline: auto;
-}
-
-.medicamentos-table-shell .ant-table-wrapper {
-  width: 100%;
 }
 
 .medicamentos-error {
@@ -132,7 +110,7 @@
   grid-template-rows: auto auto;
   width: 100%;
   border: 1px solid var(--brana-border-subtle);
-  border-radius: 9px;
+  border-radius: 10px;
   overflow: hidden;
   background: var(--brana-surface-card);
 }
@@ -224,15 +202,6 @@
   min-width: 28px !important;
   max-width: 28px !important;
   padding-inline: 5px 3px !important;
-}
-
-.medicamentos-selection-dot {
-  font-size: 12px;
-  color: var(--brana-brand-primary);
-}
-
-.medicamentos-selection-dot.is-selected {
-  color: var(--brana-brand-primary);
 }
 
 :root[data-brana-theme='dark'] .medicamentos-table-frame {
