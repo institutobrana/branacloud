@@ -28,6 +28,8 @@ import { ServicosProteticoPage } from '../features/servicosProtetico/ServicosPro
 import { ServicosProteticoToolbar } from '../features/servicosProtetico/components/ServicosProteticoToolbar.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
 import { CenarioAnualPage } from '../features/cenarioAnual/CenarioAnualPage.jsx';
+import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/components/IndicesFinanceirosToolbar.jsx';
+import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFinanceirosPage.jsx';
 import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
 import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
 import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNew.jsx';
@@ -86,6 +88,7 @@ const contextualMenus = {
     { key: 'agendas', label: 'Agendas', disabled: true },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
     { key: 'cenario-anual', label: 'Cenário anual' },
+    { key: 'indices-financeiros', label: 'Índices financeiros' },
     { key: 'contas-bancarias', label: 'Contas bancárias', disabled: true },
     { key: 'perfis-usuario', label: 'Perfis de usuário', disabled: true },
     { key: 'plano-contas', label: 'Plano de contas' },
@@ -141,6 +144,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/pacientes`) return 'pacientes';
   if (path === `${base}/ficha-clinica`) return 'ficha-clinica';
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
+  if (path === `${base}/configuracoes/indices-financeiros`) return 'indices-financeiros';
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
@@ -174,6 +178,8 @@ function syncAppPath(screen) {
         ? appPath('ficha-clinica')
       : screen === 'cenario-anual'
           ? appPath('cenario-anual')
+          : screen === 'indices-financeiros'
+            ? appPath('configuracoes/indices-financeiros')
           : screen === 'plano-contas'
             ? appPath('configuracoes/plano-de-contas')
           : screen === 'simbolos-graficos'
@@ -268,6 +274,19 @@ function AppContent() {
     migrationModalOpen: false,
   });
   const [simbolosGraficosCreateOpen, setSimbolosGraficosCreateOpen] = useState(false);
+  const [indicesFinanceirosToolbarState, setIndicesFinanceirosToolbarState] = useState({
+    selectedNumero: null,
+    selectedIsReserved: false,
+    loading: false,
+    canDeleteIndex: false,
+    canCreateQuotation: false,
+    canEditQuotation: false,
+    canDeleteQuotation: false,
+    checkingUsage: false,
+    deletingIndex: false,
+    migratingIndex: false,
+    quotingIndex: false,
+  });
   const [adminToolbar, setAdminToolbar] = useState(null);
   const [questionariosToolbar, setQuestionariosToolbar] = useState(null);
   const [unidadesAtendimentoToolbarState, setUnidadesAtendimentoToolbarState] = useState({
@@ -288,6 +307,7 @@ function AppContent() {
     if (initialScreen === 'servicos-protetico') return 'tabelas';
     if (initialScreen === 'prestadores') return 'cadastro';
     if (initialScreen === 'cenario-anual') return 'configuracao';
+    if (initialScreen === 'indices-financeiros') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
     if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
@@ -361,6 +381,29 @@ function AppContent() {
     };
     window.addEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
     return () => window.removeEventListener('brana-procedimentos-genericos-especialidades', onEspecialidades);
+  }, []);
+
+  useEffect(() => {
+    const onIndicesFinanceirosState = (event) => {
+      const detail = event?.detail || {};
+      setIndicesFinanceirosToolbarState((current) => ({
+        ...current,
+        selectedNumero: detail.selectedNumero == null ? null : Number(detail.selectedNumero),
+        selectedIsReserved: Boolean(detail.selectedIsReserved),
+        loading: Boolean(detail.loading),
+        canDeleteIndex: Boolean(detail.canDeleteIndex),
+        canCreateQuotation: Boolean(detail.canCreateQuotation),
+        canEditQuotation: Boolean(detail.canEditQuotation),
+        canDeleteQuotation: Boolean(detail.canDeleteQuotation),
+        checkingUsage: Boolean(detail.checkingUsage),
+        deletingIndex: Boolean(detail.deletingIndex),
+        migratingIndex: Boolean(detail.migratingIndex),
+        quotingIndex: Boolean(detail.quotingIndex),
+      }));
+    };
+
+    window.addEventListener('brana-indices-financeiros-toolbar-state', onIndicesFinanceirosState);
+    return () => window.removeEventListener('brana-indices-financeiros-toolbar-state', onIndicesFinanceirosState);
   }, []);
 
   useEffect(() => {
@@ -480,7 +523,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'plano-contas' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -535,6 +578,11 @@ function AppContent() {
     }
     if (nextScreen === 'cenario-anual') {
       setCenarioAnualOpenRequestId((current) => current + 1);
+      setActiveGroupKey('configuracao');
+      setPanelGroupKey('configuracao');
+      return;
+    }
+    if (nextScreen === 'indices-financeiros') {
       setActiveGroupKey('configuracao');
       setPanelGroupKey('configuracao');
       return;
@@ -629,6 +677,10 @@ function AppContent() {
       handleNavigate('cenario-anual');
       return;
     }
+    if (groupKey === 'configuracao' && item?.key === 'indices-financeiros' && !item?.disabled) {
+      handleNavigate('indices-financeiros');
+      return;
+    }
     if (groupKey === 'configuracao' && item?.key === 'plano-contas' && !item?.disabled) {
       handleNavigate('plano-contas');
       return;
@@ -704,6 +756,10 @@ function AppContent() {
     if (actionKey === 'cenario-anual') {
       setCenarioAnualOpenRequestId((current) => current + 1);
       handleNavigate('cenario-anual');
+      return;
+    }
+    if (actionKey === 'indices-financeiros') {
+      handleNavigate('indices-financeiros');
       return;
     }
     if (actionKey === 'plano-contas') {
@@ -807,6 +863,9 @@ function AppContent() {
     if (screen === 'cenario-anual') {
       return <CenarioAnualPage openRequestId={cenarioAnualOpenRequestId} />;
     }
+    if (screen === 'indices-financeiros') {
+      return <IndicesFinanceirosPage />;
+    }
     if (screen === 'plano-contas') {
       return <PlanoContasPage />;
     }
@@ -891,6 +950,29 @@ function AppContent() {
       </div>
     );
   }, [screen]);
+
+  const indicesFinanceirosTopBar = useMemo(() => {
+    if (screen !== 'indices-financeiros') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band indices-financeiros-shell-band" aria-label="Barra operacional de índices financeiros">
+          <IndicesFinanceirosToolbar
+            onNewIndex={() => window.dispatchEvent(new CustomEvent('brana-indices-financeiros-toolbar-action', { detail: { action: 'new-index' } }))}
+            onEditIndex={() => window.dispatchEvent(new CustomEvent('brana-indices-financeiros-toolbar-action', { detail: { action: 'edit-index' } }))}
+            onDeleteIndex={() => window.dispatchEvent(new CustomEvent('brana-indices-financeiros-toolbar-action', { detail: { action: 'delete-index' } }))}
+            onNewQuotation={() => window.dispatchEvent(new CustomEvent('brana-indices-financeiros-toolbar-action', { detail: { action: 'new-quotation' } }))}
+            onEditQuotation={() => window.dispatchEvent(new CustomEvent('brana-indices-financeiros-toolbar-action', { detail: { action: 'edit-quotation' } }))}
+            onDeleteQuotation={() => window.dispatchEvent(new CustomEvent('brana-indices-financeiros-toolbar-action', { detail: { action: 'delete-quotation' } }))}
+            disabled={indicesFinanceirosToolbarState.loading}
+          canEditIndex={Boolean(indicesFinanceirosToolbarState.selectedNumero && !indicesFinanceirosToolbarState.loading)}
+          canDeleteIndex={Boolean(indicesFinanceirosToolbarState.canDeleteIndex && !indicesFinanceirosToolbarState.checkingUsage && !indicesFinanceirosToolbarState.deletingIndex && !indicesFinanceirosToolbarState.migratingIndex)}
+          canCreateQuotation={Boolean(indicesFinanceirosToolbarState.canCreateQuotation && !indicesFinanceirosToolbarState.checkingUsage && !indicesFinanceirosToolbarState.deletingIndex && !indicesFinanceirosToolbarState.migratingIndex && !indicesFinanceirosToolbarState.quotingIndex)}
+          canEditQuotation={Boolean(indicesFinanceirosToolbarState.canEditQuotation && !indicesFinanceirosToolbarState.checkingUsage && !indicesFinanceirosToolbarState.deletingIndex && !indicesFinanceirosToolbarState.migratingIndex && !indicesFinanceirosToolbarState.quotingIndex)}
+          canDeleteQuotation={Boolean(indicesFinanceirosToolbarState.canDeleteQuotation && !indicesFinanceirosToolbarState.checkingUsage && !indicesFinanceirosToolbarState.deletingIndex && !indicesFinanceirosToolbarState.migratingIndex && !indicesFinanceirosToolbarState.quotingIndex)}
+        />
+      </div>
+    );
+  }, [indicesFinanceirosToolbarState.checkingUsage, indicesFinanceirosToolbarState.deletingIndex, indicesFinanceirosToolbarState.loading, indicesFinanceirosToolbarState.migratingIndex, indicesFinanceirosToolbarState.quotingIndex, indicesFinanceirosToolbarState.selectedIsReserved, indicesFinanceirosToolbarState.selectedNumero, screen, indicesFinanceirosToolbarState.canEditQuotation, indicesFinanceirosToolbarState.canCreateQuotation, indicesFinanceirosToolbarState.canDeleteIndex]);
 
   const procedimentosGenericosTopBar = useMemo(() => {
     if (screen !== 'procedimentos-genericos') return null;
@@ -1256,6 +1338,8 @@ function AppContent() {
             doencasCidTopBar
           ) : screen === 'medicamentos' ? (
             medicamentosTopBar
+          ) : screen === 'indices-financeiros' ? (
+            indicesFinanceirosTopBar
           ) : screen === 'plano-contas' ? (
             planoContasTopBar
           ) : screen === 'simbolos-graficos' ? (

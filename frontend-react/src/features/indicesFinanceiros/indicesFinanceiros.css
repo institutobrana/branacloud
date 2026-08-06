@@ -1,0 +1,101 @@
+.indices-financeiros-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary,
+.indices-financeiros-modal-actions .indices-financeiros-modal-secondary {
+  min-width: 96px;
+  min-height: 32px;
+  padding: 6px 14px;
+  border: 1px solid var(--brana-border-subtle);
+  background: var(--brana-control-background);
+  color: var(--brana-text-primary);
+  box-shadow: none;
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary:hover:not(:disabled),
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary:focus-visible:not(:disabled),
+.indices-financeiros-modal-actions .indices-financeiros-modal-secondary:hover:not(:disabled),
+.indices-financeiros-modal-actions .indices-financeiros-modal-secondary:focus-visible:not(:disabled) {
+  background: var(--brana-control-background);
+  border-color: var(--brana-deep-green);
+  color: var(--brana-text-primary);
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary {
+  background: var(--brana-deep-green);
+  border-color: var(--brana-deep-green);
+  color: #ffffff;
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary:hover:not(:disabled),
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary:focus-visible:not(:disabled) {
+  background: var(--brana-deep-green);
+  border-color: var(--brana-deep-green);
+  color: #ffffff;
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-danger {
+  background: rgba(196, 58, 58, 0.12);
+  border-color: rgba(196, 58, 58, 0.36);
+  color: #b83333;
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-danger:hover:not(:disabled),
+.indices-financeiros-modal-actions .indices-financeiros-modal-danger:focus-visible:not(:disabled) {
+  background: rgba(196, 58, 58, 0.18);
+  border-color: rgba(196, 58, 58, 0.5);
+  color: #a93030;
+}
+
+.indices-financeiros-modal-actions .indices-financeiros-modal-primary:disabled,
+.indices-financeiros-modal-actions .indices-financeiros-modal-secondary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-primary,
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-secondary {
+  background: var(--brana-control-background);
+  border-color: var(--brana-control-border);
+  color: var(--brana-text-primary);
+}
+
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-primary:hover:not(:disabled),
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-primary:focus-visible:not(:disabled),
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-secondary:hover:not(:disabled),
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-secondary:focus-visible:not(:disabled) {
+  background: var(--brana-control-background);
+  border-color: #00a79d;
+  color: var(--brana-text-primary);
+}
+
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-primary {
+  background: #00a79d;
+  border-color: #00a79d;
+  color: #ffffff;
+}
+
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-primary:hover:not(:disabled),
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-primary:focus-visible:not(:disabled) {
+  background: #00a79d;
+  border-color: #00a79d;
+  color: #ffffff;
+}
+
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-danger {
+  background: rgba(255, 113, 113, 0.12);
+  border-color: rgba(255, 113, 113, 0.36);
+  color: #ff9d9d;
+}
+
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-danger:hover:not(:disabled),
+:root[data-brana-theme='dark'] .indices-financeiros-modal-actions .indices-financeiros-modal-danger:focus-visible:not(:disabled) {
+  background: rgba(255, 113, 113, 0.18);
+  border-color: rgba(255, 113, 113, 0.5);
+  color: #ffd0d0;
+}

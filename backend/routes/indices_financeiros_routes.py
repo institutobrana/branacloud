@@ -31,6 +31,9 @@ class IndiceUpdatePayload(BaseModel):
     nome: str | None = None
     sigla: str | None = None
 
+    class Config:
+        extra = "ignore"
+
 
 class CotacaoPayload(BaseModel):
     data: str
@@ -110,8 +113,6 @@ def atualizar(
     db: Session = Depends(get_db),
 ):
     indice = _load_indice_or_404(db, current_user.clinica_id, numero)
-    if indice.reservado:
-        raise HTTPException(status_code=400, detail="Índice reservado do sistema.")
     nome = (payload.nome or "").strip()
     sigla = (payload.sigla or "").strip().upper()
     if nome:
