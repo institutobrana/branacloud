@@ -1,5 +1,6 @@
 export function createSimboloGraficoCreateInitialState() {
   return {
+    nome: '',
     descricao: '',
     especialidade: '',
     formaMarcacao: 2,

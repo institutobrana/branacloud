@@ -52,8 +52,18 @@ export function mapSimboloGraficoLibraryCatalog(payload) {
       id,
       codigo,
       nome,
+      descricao: String(item?.descricao ?? item?.nome ?? '').trim() || null,
+      especialidade: String(item?.especialidade ?? '').trim() || null,
+      especialidadeCodigo: item?.especialidadeCodigo == null ? null : Number(item?.especialidadeCodigo) || null,
+      especialidade_codigo: item?.especialidade_codigo == null ? null : Number(item?.especialidade_codigo) || null,
+      formaMarcacao: item?.formaMarcacao == null ? null : Number(item?.formaMarcacao) || null,
+      tipoMarca: item?.tipoMarca == null ? null : Number(item?.tipoMarca) || null,
+      tipo_marca: item?.tipo_marca == null ? null : Number(item?.tipo_marca) || null,
+      tipoSimbolo: item?.tipoSimbolo == null ? null : Number(item?.tipoSimbolo) || null,
       imageUrl,
       imageAlt: nome,
+      imagemUrl: imageUrl || null,
+      imagemCustom: String(item?.imagem_custom || '').trim() || null,
       source: String(item?.tipo_simbolo === 1 ? 'sistema' : 'usuario'),
     });
   }

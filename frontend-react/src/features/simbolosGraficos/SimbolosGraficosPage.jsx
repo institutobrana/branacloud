@@ -145,12 +145,6 @@ export function SimbolosGraficosPage({ createOpen = false, onCreateClose } = {})
 
         {!error ? <SimbolosGraficosTable rows={resolvedRows} selectedId={selectedId} onSelect={selectRow} footerLabel={countLabel} /> : null}
 
-        {selectedRow ? (
-          <Typography.Text className="simbolos-graficos-selection" type="secondary">
-            Selecionado: {selectedRow.nome || 'Sem nome'}
-          </Typography.Text>
-        ) : null}
-
         <SimboloGraficoCreateModal open={createOpen} mode="create" onCancel={handleCreateClose} onCreated={handleCreateSuccess} />
         <SimboloGraficoCreateModal open={editOpen} mode="edit" record={selectedRecord} onCancel={handleEditClose} onUpdated={handleEditSuccess} />
         <SimboloGraficoDeleteModal

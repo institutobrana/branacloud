@@ -58,18 +58,84 @@ function createInitialState() {
   return createSimboloGraficoCreateInitialState();
 }
 
+function resolveRecordName(record) {
+  const descricao = String(record?.descricao ?? '').trim();
+  if (descricao) {
+    return descricao;
+  }
+
+  const nome = String(record?.nome ?? '').trim();
+  if (nome) {
+    return nome;
+  }
+
+  return '';
+}
+
 function createEditState(record) {
   const base = createSimboloGraficoCreateInitialState();
+  const descricao = resolveRecordName(record);
+  const especialidade = String(
+    record?.especialidadeCodigo
+    ?? record?.especialidade_codigo
+    ?? record?.especialidade
+    ?? record?.especial
+    ?? '',
+  ).trim();
+  const formaMarcacao = Number.isFinite(Number(record?.formaMarcacao ?? record?.tipoMarca ?? record?.tipo_marca))
+    ? Number(record?.formaMarcacao ?? record?.tipoMarca ?? record?.tipo_marca)
+    : base.formaMarcacao;
+  const imagemCustom = record?.imagemCustom || record?.imagem_custom || null;
+  const bibliotecaSelecionada = record?.bibliotecaSelecionada
+    || record?.biblioteca_selecionada
+    || record?.codigo
+    || record?.icone
+    || record?.bitmap1
+    || base.bibliotecaSelecionada;
+  const bibliotecaSelecionadaId = record?.bibliotecaSelecionadaId
+    ?? record?.biblioteca_selecionada_id
+    ?? record?.id
+    ?? base.bibliotecaSelecionadaId;
   return {
     ...base,
-    descricao: String(record?.descricao ?? record?.nome ?? '').trim(),
-    especialidade: String(record?.especialidade ?? '').trim(),
-    formaMarcacao: Number.isFinite(Number(record?.tipo_marca)) ? Number(record.tipo_marca) : base.formaMarcacao,
-    tipoSimbolo: Number.isFinite(Number(record?.tipo_simbolo)) ? Number(record.tipo_simbolo) : base.tipoSimbolo,
-    desenho: String(record?.desenho ?? '').trim() || null,
-    bibliotecaSelecionada: record?.bibliotecaSelecionada || record?.biblioteca_selecionada || base.bibliotecaSelecionada,
-    bibliotecaSelecionadaId: record?.bibliotecaSelecionadaId ?? record?.biblioteca_selecionada_id ?? base.bibliotecaSelecionadaId,
-    imagemCustom: record?.imagemCustom || record?.imagem_custom || null,
+    nome: descricao,
+    descricao,
+    especialidade,
+    formaMarcacao,
+    tipoSimbolo: 1,
+    desenho: String(record?.desenho ?? record?.imagemUrl ?? record?.imagem_url ?? imagemCustom ?? '').trim() || null,
+    bibliotecaSelecionada,
+    bibliotecaSelecionadaId,
+    imagemCustom,
+  };
+}
+
+function resolveEditorInitialValues(values, selectedLibraryItem, resolvedPreviewImageUrl) {
+  const selectedName = String(
+    selectedLibraryItem?.nome
+    || selectedLibraryItem?.descricao
+    || selectedLibraryItem?.imageAlt
+    || selectedLibraryItem?.code
+    || selectedLibraryItem?.codigo
+    || selectedLibraryItem?.fileName
+    || '',
+  ).trim();
+  const selectedSpecialty = String(
+    selectedLibraryItem?.especialidadeCodigo
+    ?? selectedLibraryItem?.especialidade_codigo
+    ?? selectedLibraryItem?.especialidade
+    ?? '',
+  ).trim();
+  const selectedMarking = Number.isFinite(Number(selectedLibraryItem?.formaMarcacao ?? selectedLibraryItem?.tipoMarca ?? selectedLibraryItem?.tipo_marca))
+    ? Number(selectedLibraryItem?.formaMarcacao ?? selectedLibraryItem?.tipoMarca ?? selectedLibraryItem?.tipo_marca)
+    : null;
+
+  return {
+    nome: selectedName || String(values.nome || '').trim(),
+    especialidade: selectedSpecialty || String(values.especialidade || '').trim(),
+    formaMarcacao: selectedMarking ?? values.formaMarcacao ?? null,
+    initialImage: resolvedPreviewImageUrl || null,
+    selectedLibraryItem,
   };
 }
 
@@ -100,6 +166,8 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
   const createFlow = useCreateSimboloGrafico();
   const updateFlow = useUpdateSimboloGrafico();
   const flow = mode === 'edit' ? updateFlow : createFlow;
+  const isEditMode = mode === 'edit';
+  const isCreateMode = !isEditMode;
   const [values, setValues] = useState(() => (mode === 'edit' ? createEditState(record) : createInitialState()));
   const [selectedId, setSelectedId] = useState(null);
   const [nomeTouched, setNomeTouched] = useState(false);
@@ -129,11 +197,19 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
     [biblioteca, selectedId, values.bibliotecaSelecionada],
   );
   const resolvedPreviewImageUrl = normalizeAssetUrl(values.imagemCustom || selectedLibraryItem?.imageUrl || resolveRecordPreviewImageUrl(record));
+  const editorInitialValues = useMemo(
+    () => resolveEditorInitialValues(values, selectedLibraryItem, resolvedPreviewImageUrl),
+    [resolvedPreviewImageUrl, selectedLibraryItem, values],
+  );
   const currentPreviewItem = resolvedPreviewImageUrl
-    ? { imageUrl: resolvedPreviewImageUrl, imageAlt: values.nome || values.descricao || 'Desenho' }
+    ? { imageUrl: resolvedPreviewImageUrl, imageAlt: values.descricao || 'Desenho' }
     : selectedLibraryItem;
   const editorInitialImage = resolvedPreviewImageUrl;
   const hasCurrentDrawing = Boolean(values.imagemCustom || selectedLibraryItem);
+  const canChooseUserDefined = isCreateMode;
+  const canUseLibrary = isCreateMode;
+  const canEditDrawing = isCreateMode;
+  const canRemoveDrawing = isCreateMode;
   const drawingFileName = values.imagemCustom
     ? ''
     : String(selectedLibraryItem?.fileName || '').trim();
@@ -155,17 +231,17 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
     && Number(values.formaMarcacao) >= 1
     && Number(values.formaMarcacao) <= 6;
   const isFormValid = nomeValido && especialidadeValida && formaValida;
-  const isEditMode = mode === 'edit';
   const modalTitle = isEditMode ? 'Altera símbolo gráfico' : 'Novo símbolo gráfico';
   const okLabel = flow.submitting ? 'Salvando...' : 'Ok';
 
   const handleSelectLibraryItem = (item) => {
+    if (!canUseLibrary) return;
     setSelectedId(item.id);
     setValues((current) => ({ ...current, bibliotecaSelecionada: item }));
   };
 
   const handleRequestRemoveDrawing = () => {
-    if (!hasCurrentDrawing) return;
+    if (!isCreateMode || !hasCurrentDrawing) return;
     setRemoveConfirmOpen(true);
   };
 
@@ -174,6 +250,7 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
   };
 
   const handleConfirmRemoveDrawing = () => {
+    if (!isCreateMode || !hasCurrentDrawing) return;
     const removeSelectedLibrary = !values.imagemCustom;
     setValues((current) => ({
       ...current,
@@ -197,6 +274,7 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
   };
 
   const handleEditorConfirm = (imageDataUrl) => {
+    if (!isCreateMode) return;
     setValues((current) => ({ ...current, imagemCustom: imageDataUrl || null }));
     setEditorOpen(false);
   };
@@ -358,7 +436,19 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
           <div className="simbolos-graficos-create-panel simbolos-graficos-create-right">
             <div className="simbolos-graficos-create-field">
               <span className="simbolos-graficos-create-right-title">Tipo do símbolo:</span>
-              <Radio.Group className="simbolos-graficos-create-radio" value={values.tipoSimbolo} onChange={(event) => setValues((current) => ({ ...current, tipoSimbolo: event.target.value }))} options={[{ label: 'Sistema', value: 1, disabled: true }, { label: 'Definido pelo usuário', value: 2 }]} />
+              <Radio.Group
+                className="simbolos-graficos-create-radio"
+                value={values.tipoSimbolo}
+                onChange={(event) => {
+                  if (isEditMode && event?.target?.value !== 1) return;
+                  if (isCreateMode && event?.target?.value === 1) return;
+                  setValues((current) => ({ ...current, tipoSimbolo: event.target.value }));
+                }}
+                options={[
+                  { label: 'Sistema', value: 1, disabled: !isEditMode },
+                  { label: 'Definido pelo usuário', value: 2, disabled: !canChooseUserDefined },
+                ]}
+              />
             </div>
 
             <div className="simbolos-graficos-create-field">
@@ -369,9 +459,9 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
                 </div>
                 <div className="simbolos-graficos-create-drawing-buttons">
                   <span className="simbolos-graficos-create-icon-wrap" title="Símbolos da biblioteca do sistema não podem ser excluídos" aria-label="Excluir símbolo da biblioteca — indisponível para símbolos do sistema">
-                    <button type="button" className="simbolos-graficos-create-icon-btn" aria-label={hasCurrentDrawing ? 'Excluir desenho' : 'Excluir símbolo indisponível'} onClick={handleRequestRemoveDrawing} disabled={!hasCurrentDrawing}><CloseOutlined /></button>
+                    <button type="button" className="simbolos-graficos-create-icon-btn" aria-label="Excluir desenho" onClick={handleRequestRemoveDrawing} disabled={isEditMode}><CloseOutlined /></button>
                   </span>
-                  <button type="button" className="simbolos-graficos-create-icon-btn" aria-label="Editar desenho" onClick={() => setEditorOpen(true)}>✎</button>
+                  <button type="button" className="simbolos-graficos-create-icon-btn" aria-label="Editar desenho" onClick={() => { if (isCreateMode) setEditorOpen(true); }} disabled={isEditMode}>✎</button>
                 </div>
               </div>
             </div>
@@ -386,6 +476,7 @@ export function SimboloGraficoCreateModal({ open, mode = 'create', record = null
       <SimboloGraficoPixelEditor
         open={editorOpen}
         initialImage={editorInitialImage}
+        initialName={editorInitialValues.nome}
         onConfirm={handleEditorConfirm}
         onCancel={() => setEditorOpen(false)}
         disabled={flow.submitting}
