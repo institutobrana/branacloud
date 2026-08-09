@@ -27,7 +27,7 @@ test('pagina habilita edicao de cotacao selecionada sem misturar com nova cotaca
   assert.match(pageSource, /selectCotacaoRow\(null\)/);
   assert.match(pageSource, /selectCotacaoRow\(resolvedCotacaoId\)/);
   assert.match(pageSource, /mode: 'edit'/);
-  assert.match(pageSource, /initialValues: \{\n\s+data: selectedCotacaoRow\.data/);
+  assert.match(pageSource, /initialValues:\s*\{[\s\S]*?data:\s*selectedCotacaoRow\.data\s*\?\?\s*''[\s\S]*?valor:\s*selectedCotacaoRow\.valor\s*\?\?\s*''/);
 });
 
 test('toolbar de indices financeiros expõe o segundo Altera para cotacao', () => {

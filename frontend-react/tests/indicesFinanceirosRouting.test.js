@@ -3,13 +3,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const routesSource = fs.readFileSync(path.resolve('frontend-react/src/app/routes.jsx'), 'utf8');
 const appSource = fs.readFileSync(path.resolve('frontend-react/src/app/App.jsx'), 'utf8');
 const pageSource = fs.readFileSync(path.resolve('frontend-react/src/features/indicesFinanceiros/IndicesFinanceirosPage.jsx'), 'utf8');
 
 test('rotas registram Indices financeiros', () => {
-  assert.match(routesSource, /\/app\/configuracoes\/indices-financeiros/);
-  assert.match(routesSource, /Índices financeiros/);
+  assert.match(appSource, /appPath\('configuracoes\/indices-financeiros'\)/);
+  assert.match(appSource, /Índices financeiros/);
 });
 
 test('App.jsx resolve a screen de Indices financeiros', () => {
