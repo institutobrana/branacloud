@@ -2,7 +2,7 @@ Set-StrictMode -Version Latest
 
 $script:BranaAwsReadWhitelist = [ordered]@{
     ECS = @('describe-services','list-service-deployments','describe-service-deployments','describe-service-revisions','list-tasks','describe-tasks','describe-task-definition')
-    ELBV2 = @('describe-rules','describe-target-health','describe-target-groups','describe-target-group-attributes')
+    ELBV2 = @('describe-listeners','describe-rules','describe-target-health','describe-target-groups','describe-target-group-attributes')
     CloudWatch = @('get-metric-data','get-metric-statistics')
     STS = @('get-caller-identity')
 }
@@ -217,6 +217,160 @@ function Get-BranaTelemetryPropertyValue {
     return $property.Value
 }
 
+function Get-BranaUriHost {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Uri
+    )
+
+    try {
+        return ([Uri]$Uri).Host
+    }
+    catch {
+        return $null
+    }
+}
+
+function Resolve-BranaLiveTargetTopology {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][object]$Config,
+        [scriptblock]$AwsInvoker = $null
+    )
+
+    $warnings = New-Object System.Collections.Generic.List[string]
+    $configuredTargetGroupArn = [string]$Config.productionTargetGroupArn
+    $hostHeader = Get-BranaUriHost -Uri ([string]$Config.publicAppUrl)
+    $loadBalancerArn = $null
+    $listenerRules = @()
+    $resolvedTargetGroups = @()
+    $listenerRuleArn = $null
+
+    try {
+        $tgResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-target-groups' -Arguments @('--target-group-arns', $configuredTargetGroupArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+        if ($tgResult.ExitCode -ne 0) { throw "Unable to describe target groups: $($tgResult.StdErr)" }
+        $tgDoc = ConvertFrom-BranaJsonSafe -Json $tgResult.StdOut
+        $loadBalancerArn = [string](@($tgDoc.TargetGroups | ForEach-Object { @($_.LoadBalancerArns) } | Select-Object -First 1))
+        if ([string]::IsNullOrWhiteSpace($loadBalancerArn)) {
+            $warnings.Add('configured target group has no associated load balancer')
+        }
+    }
+    catch {
+        $warnings.Add(('target group topology unavailable: {0}' -f $_.Exception.Message))
+    }
+
+    try {
+        if (-not [string]::IsNullOrWhiteSpace($loadBalancerArn)) {
+            $listenersResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-listeners' -Arguments @('--load-balancer-arn', $loadBalancerArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+            if ($listenersResult.ExitCode -ne 0) { throw "Unable to describe listeners: $($listenersResult.StdErr)" }
+            $listenersDoc = ConvertFrom-BranaJsonSafe -Json $listenersResult.StdOut
+            foreach ($listener in @($listenersDoc.Listeners)) {
+                $rulesResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-rules' -Arguments @('--listener-arn', [string]$listener.ListenerArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+                if ($rulesResult.ExitCode -ne 0) { throw "Unable to describe listener rules: $($rulesResult.StdErr)" }
+                $rulesDoc = ConvertFrom-BranaJsonSafe -Json $rulesResult.StdOut
+                foreach ($rule in @($rulesDoc.Rules)) {
+                    $matchedHostHeader = $false
+                    foreach ($condition in @($rule.Conditions)) {
+                        if ([string]$condition.Field -ne 'host-header') { continue }
+                        $values = @()
+                        if ($condition.PSObject.Properties['HostHeaderConfig'] -and $null -ne $condition.HostHeaderConfig) {
+                            $values = @($condition.HostHeaderConfig.Values)
+                        }
+                        elseif ($condition.PSObject.Properties['Values']) {
+                            $values = @($condition.Values)
+                        }
+                        if ($values -contains $hostHeader) {
+                            $matchedHostHeader = $true
+                            break
+                        }
+                    }
+                    if ($matchedHostHeader) {
+                        $ruleTargetGroups = New-Object System.Collections.ArrayList
+                        foreach ($action in @($rule.Actions)) {
+                            if ($action.Type -ne 'forward') { continue }
+                            if ($action.PSObject.Properties['ForwardConfig'] -and $null -ne $action.ForwardConfig) {
+                                foreach ($forwardTargetGroup in @($action.ForwardConfig.TargetGroups)) {
+                                    if ($null -eq $forwardTargetGroup -or [string]::IsNullOrWhiteSpace([string]$forwardTargetGroup.TargetGroupArn)) { continue }
+                                    $ruleTargetGroups.Add([ordered]@{
+                                        Arn = [string]$forwardTargetGroup.TargetGroupArn
+                                        Weight = [int]$forwardTargetGroup.Weight
+                                    }) | Out-Null
+                                }
+                            }
+                            elseif ($action.PSObject.Properties['TargetGroupArn'] -and -not [string]::IsNullOrWhiteSpace([string]$action.TargetGroupArn)) {
+                                $ruleTargetGroups.Add([ordered]@{
+                                    Arn = [string]$action.TargetGroupArn
+                                    Weight = 1
+                                }) | Out-Null
+                            }
+                        }
+                        $listenerRules += [ordered]@{
+                            ListenerArn = [string]$listener.ListenerArn
+                            RuleArn = [string]$rule.RuleArn
+                            Priority = [string]$rule.Priority
+                            TargetGroups = @($ruleTargetGroups)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    catch {
+        $warnings.Add(('listener topology unavailable: {0}' -f $_.Exception.Message))
+    }
+
+    $allTargetGroups = New-Object System.Collections.ArrayList
+    foreach ($rule in @($listenerRules)) {
+        $listenerRuleArn = if ([string]::IsNullOrWhiteSpace($listenerRuleArn)) { [string]$rule.RuleArn } else { $listenerRuleArn }
+        foreach ($tg in @($rule.TargetGroups)) {
+            if ([string]::IsNullOrWhiteSpace([string]$tg.Arn)) { continue }
+            $alreadyPresent = $false
+            foreach ($existingTargetGroup in @($allTargetGroups)) {
+                if ([string]$existingTargetGroup.Arn -eq [string]$tg.Arn) {
+                    $alreadyPresent = $true
+                    break
+                }
+            }
+            if (-not $alreadyPresent) {
+                $null = $allTargetGroups.Add([ordered]@{
+                    Arn = [string]$tg.Arn
+                    Weight = [int]$tg.Weight
+                })
+            }
+        }
+    }
+
+    if ($allTargetGroups.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($configuredTargetGroupArn)) {
+        $null = $allTargetGroups.Add([ordered]@{
+            Arn = $configuredTargetGroupArn
+            Weight = 1
+        })
+        $warnings.Add('listener topology not resolved; falling back to configured target group')
+    }
+
+    $configMatchesLive = $false
+    foreach ($tg in @($allTargetGroups)) {
+        if ([string]$tg.Arn -eq $configuredTargetGroupArn) {
+            $configMatchesLive = $true
+            break
+        }
+    }
+
+    if (-not $configMatchesLive -and $allTargetGroups.Count -gt 0) {
+        $warnings.Add('configured production target group differs from live listener topology')
+    }
+
+    return [ordered]@{
+        ConfiguredTargetGroupArn = $configuredTargetGroupArn
+        ConfigMatchesLive = [bool]$configMatchesLive
+        HostHeader = $hostHeader
+        LoadBalancerArn = $loadBalancerArn
+        ListenerRuleArn = $listenerRuleArn
+        TargetGroups = @($allTargetGroups.ToArray())
+        Warnings = @($warnings)
+    }
+}
+
 function Invoke-BranaTelemetryReadCommand {
     [CmdletBinding()]
     param(
@@ -315,6 +469,7 @@ function Get-BranaCanaryTelemetry {
 
     $telemetry = New-BranaCanaryTelemetryBase
     $errors = New-Object System.Collections.Generic.List[string]
+    $warnings = New-Object System.Collections.Generic.List[string]
 
     try {
         $identityResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'STS' -Command 'get-caller-identity' -Arguments @('--output','json') -AwsInvoker $AwsInvoker
@@ -424,7 +579,7 @@ function Get-BranaCanaryTelemetry {
                     StopCode = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'stopCode')
                     StoppedReason = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'stoppedReason')
                     StoppedAt = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'stoppedAt')
-                    AvailabilityZone = [string]$task.availabilityZone
+                    AvailabilityZone = [string](Get-BranaTelemetryPropertyValue -InputObject $task -Name 'availabilityZone')
                     Containers = @($task.containers | ForEach-Object {
                         [ordered]@{
                             Name = [string]$_.name
@@ -457,42 +612,251 @@ function Get-BranaCanaryTelemetry {
     }
 
     try {
-        $tgResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-target-health' -Arguments @('--target-group-arn', $Config.productionTargetGroupArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
-        if ($tgResult.ExitCode -ne 0) { throw "Unable to read target health: $($tgResult.StdErr)" }
-        $tgDoc = ConvertFrom-BranaJsonSafe -Json $tgResult.StdOut
-        $targets = @($tgDoc.TargetHealthDescriptions)
-        $healthy = @($targets | Where-Object { $_.TargetHealth.State -eq 'healthy' }).Count
-        $unhealthy = @($targets | Where-Object { $_.TargetHealth.State -ne 'healthy' }).Count
+        $configuredTargetGroupArn = [string]$Config.productionTargetGroupArn
+        $hostHeader = Get-BranaUriHost -Uri ([string]$Config.publicAppUrl)
+        $loadBalancerArn = $null
+        $listenerRuleArn = $null
+        $liveWarnings = New-Object System.Collections.Generic.List[string]
+        $listenerRules = @()
+        $allTargetGroups = New-Object System.Collections.ArrayList
+
+        try {
+            $tgResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-target-groups' -Arguments @('--target-group-arns', $configuredTargetGroupArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+            if ($tgResult.ExitCode -ne 0) { throw "Unable to describe target groups: $($tgResult.StdErr)" }
+            $tgDoc = ConvertFrom-BranaJsonSafe -Json $tgResult.StdOut
+            $firstTg = @($tgDoc.TargetGroups)[0]
+            if ($null -ne $firstTg -and $firstTg.PSObject.Properties['LoadBalancerArns']) {
+                $loadBalancerArn = [string](@($firstTg.LoadBalancerArns)[0])
+            }
+            if ([string]::IsNullOrWhiteSpace($loadBalancerArn)) {
+                $liveWarnings.Add('configured target group has no associated load balancer')
+            }
+        }
+        catch {
+            $liveWarnings.Add(('target group topology unavailable: {0}' -f $_.Exception.Message))
+        }
+
+        try {
+            if (-not [string]::IsNullOrWhiteSpace($loadBalancerArn)) {
+                $listenersResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-listeners' -Arguments @('--load-balancer-arn', $loadBalancerArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+                if ($listenersResult.ExitCode -ne 0) { throw "Unable to describe listeners: $($listenersResult.StdErr)" }
+                $listenersDoc = ConvertFrom-BranaJsonSafe -Json $listenersResult.StdOut
+                foreach ($listener in @($listenersDoc.Listeners)) {
+                    $rulesResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-rules' -Arguments @('--listener-arn', [string]$listener.ListenerArn, '--region', $Config.awsRegion, '--output', 'json') -AwsInvoker $AwsInvoker
+                    if ($rulesResult.ExitCode -ne 0) { throw "Unable to describe listener rules: $($rulesResult.StdErr)" }
+                    $rulesDoc = ConvertFrom-BranaJsonSafe -Json $rulesResult.StdOut
+                    foreach ($rule in @($rulesDoc.Rules)) {
+                        $matchedHostHeader = $false
+                        foreach ($condition in @($rule.Conditions)) {
+                            if ([string]$condition.Field -ne 'host-header') { continue }
+                            $values = @()
+                            if ($condition.PSObject.Properties['HostHeaderConfig'] -and $null -ne $condition.HostHeaderConfig) {
+                                $values = @($condition.HostHeaderConfig.Values)
+                            }
+                            elseif ($condition.PSObject.Properties['Values']) {
+                                $values = @($condition.Values)
+                            }
+                            if ($values -contains $hostHeader) {
+                                $matchedHostHeader = $true
+                                break
+                            }
+                        }
+                        if ($matchedHostHeader) {
+                            $ruleTargetGroups = New-Object System.Collections.ArrayList
+                            foreach ($action in @($rule.Actions)) {
+                                if ($action.Type -ne 'forward') { continue }
+                                if ($action.PSObject.Properties['ForwardConfig'] -and $null -ne $action.ForwardConfig) {
+                                    foreach ($forwardTargetGroup in @($action.ForwardConfig.TargetGroups)) {
+                                        if ($null -eq $forwardTargetGroup -or [string]::IsNullOrWhiteSpace([string]$forwardTargetGroup.TargetGroupArn)) { continue }
+                                        $null = $ruleTargetGroups.Add([pscustomobject]@{
+                                            Arn = [string]$forwardTargetGroup.TargetGroupArn
+                                            Weight = [int]$forwardTargetGroup.Weight
+                                        })
+                                    }
+                                }
+                                elseif ($action.PSObject.Properties['TargetGroupArn'] -and -not [string]::IsNullOrWhiteSpace([string]$action.TargetGroupArn)) {
+                                    $null = $ruleTargetGroups.Add([pscustomobject]@{
+                                        Arn = [string]$action.TargetGroupArn
+                                        Weight = 1
+                                    })
+                                }
+                            }
+                            $listenerRules += [ordered]@{
+                                ListenerArn = [string]$listener.ListenerArn
+                                RuleArn = [string]$rule.RuleArn
+                                Priority = [string]$rule.Priority
+                                TargetGroups = @($ruleTargetGroups)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch {
+            $liveWarnings.Add(('listener topology unavailable: {0}' -f $_.Exception.Message))
+        }
+
+        foreach ($rule in @($listenerRules)) {
+            if ([string]::IsNullOrWhiteSpace($listenerRuleArn)) {
+                $listenerRuleArn = [string]$rule.RuleArn
+            }
+            foreach ($tg in @($rule.TargetGroups)) {
+                if ([string]::IsNullOrWhiteSpace([string]$tg.Arn)) { continue }
+                $alreadyPresent = $false
+                foreach ($existingTargetGroup in @($allTargetGroups)) {
+                    if ([string]$existingTargetGroup.Arn -eq [string]$tg.Arn) {
+                        $alreadyPresent = $true
+                        break
+                    }
+                }
+                if (-not $alreadyPresent) {
+                    $null = $allTargetGroups.Add([ordered]@{
+                        Arn = [string]$tg.Arn
+                        Weight = [int]$tg.Weight
+                    })
+                }
+            }
+        }
+
+        if ($allTargetGroups.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($configuredTargetGroupArn)) {
+            $null = $allTargetGroups.Add([ordered]@{
+                Arn = $configuredTargetGroupArn
+                Weight = 1
+            })
+            $liveWarnings.Add('listener topology not resolved; falling back to configured target group')
+        }
+
+        $configMatchesLive = $false
+        foreach ($tg in @($allTargetGroups)) {
+            if ([string]$tg.Arn -eq $configuredTargetGroupArn) {
+                $configMatchesLive = $true
+                break
+            }
+        }
+        $selectedTargetGroupArn = [string]$configuredTargetGroupArn
+        if (-not [string]::IsNullOrWhiteSpace($configuredTargetGroupArn) -and $allTargetGroups.Count -gt 1) {
+            $liveWarnings.Add('configured production target group differs from live listener topology')
+        }
+        $liveTopology = [ordered]@{
+            ConfiguredTargetGroupArn = $configuredTargetGroupArn
+            ConfigMatchesLive = [bool]$configMatchesLive
+            HostHeader = $hostHeader
+            LoadBalancerArn = $loadBalancerArn
+            ListenerRuleArn = $listenerRuleArn
+            TargetGroups = @($allTargetGroups.ToArray())
+            Warnings = @($liveWarnings)
+        }
+        foreach ($warning in @($liveTopology.Warnings)) {
+            if (-not [string]::IsNullOrWhiteSpace([string]$warning)) {
+                $warnings.Add([string]$warning)
+            }
+        }
+        $targetGroupEntries = @($liveTopology.TargetGroups)
+        $targetHealthEntries = @()
+        $targets = @()
+        foreach ($targetGroupEntry in @($targetGroupEntries)) {
+            $tgArn = [string]$targetGroupEntry.Arn
+            if ([string]::IsNullOrWhiteSpace($tgArn)) { continue }
+            $tgArguments = @('--target-group-arn', $tgArn, '--region', $Config.awsRegion, '--output', 'json')
+            $tgResult = Invoke-BranaTelemetryReadCommand -Config $Config -Service 'ELBV2' -Command 'describe-target-health' -Arguments $tgArguments -AwsInvoker $AwsInvoker
+            if ($tgResult.ExitCode -ne 0) { throw "Unable to read target health: $($tgResult.StdErr)" }
+            $tgDoc = ConvertFrom-BranaJsonSafe -Json $tgResult.StdOut
+            $tgTargets = @($tgDoc.TargetHealthDescriptions)
+            $healthyCount = 0
+            $unhealthyCount = 0
+            foreach ($tgTarget in @($tgTargets)) {
+                $targetInfo = $tgTarget.Target
+                $targetHealthInfo = $tgTarget.TargetHealth
+                if ([string]$targetHealthInfo.State -eq 'healthy') { $healthyCount++ } else { $unhealthyCount++ }
+                $targets += [pscustomobject]@{
+                    TargetGroupArn = $tgArn
+                    Target = $targetInfo
+                    TargetHealth = $targetHealthInfo
+                }
+            }
+            $targetHealthEntries += [pscustomobject]@{
+                Arn = $tgArn
+                Targets = @($tgTargets)
+                HealthyCount = [int]$healthyCount
+                UnhealthyCount = [int]$unhealthyCount
+            }
+        }
+        if ($targets.Count -eq 0) {
+            throw 'no target health returned from live topology'
+        }
+        $selectedTargetGroupArn = $null
+        $selectedTargetHealth = @()
+        $selectedTargetWeight = $null
+        foreach ($targetGroupEntry in @($targetGroupEntries)) {
+            $candidateArn = [string]$targetGroupEntry.Arn
+            $candidateTargets = @()
+            foreach ($healthEntry in @($targetHealthEntries)) {
+                if ([string]$healthEntry.Arn -eq $candidateArn) {
+                    $candidateTargets = @($healthEntry.Targets)
+                    break
+                }
+            }
+            $matched = $false
+            foreach ($target in @($candidateTargets)) {
+                $privateIp = [string]$target.Target.Id
+                if ($tasksByPrivateIp.Contains($privateIp)) {
+                    $matched = $true
+                    break
+                }
+            }
+            if ($matched) {
+                $selectedTargetGroupArn = $candidateArn
+                $selectedTargetHealth = $candidateTargets
+                $selectedTargetWeight = [int]$targetGroupEntry.Weight
+                break
+            }
+        }
+        if ([string]::IsNullOrWhiteSpace($selectedTargetGroupArn)) {
+            $firstTargetGroupEntry = $null
+            foreach ($candidateEntry in @($targetGroupEntries)) {
+                $firstTargetGroupEntry = $candidateEntry
+                break
+            }
+            if ($null -ne $firstTargetGroupEntry) {
+                $selectedTargetGroupArn = [string]$firstTargetGroupEntry.Arn
+                foreach ($healthEntry in @($targetHealthEntries)) {
+                    if ([string]$healthEntry.Arn -eq $selectedTargetGroupArn) {
+                        $selectedTargetHealth = @($healthEntry.Targets)
+                        break
+                    }
+                }
+                $selectedTargetWeight = [int]$firstTargetGroupEntry.Weight
+            }
+        }
+        $healthy = 0
+        $unhealthy = 0
+        foreach ($selectedHealthEntry in @($selectedTargetHealth)) {
+            if ([string]$selectedHealthEntry.TargetHealth.State -eq 'healthy') {
+                $healthy++
+            }
+            else {
+                $unhealthy++
+            }
+        }
         $publicTargets = @()
         $publicTargetRevision = $null
         $publicTargetRevisionSource = 'unavailable'
         $publicTargetRevisionConfirmed = $false
         $publicTargetRevisionInferred = $false
-        $tasksByPrivateIp = @{}
-        if ($telemetry.Tasks -and $telemetry.Tasks.PSObject.Properties['ByPrivateIp']) {
-            $candidateTasksByPrivateIp = $telemetry.Tasks.ByPrivateIp
-            if ($candidateTasksByPrivateIp -is [System.Collections.IDictionary]) {
-                $tasksByPrivateIp = $candidateTasksByPrivateIp
-            }
+        $candidateTasks = @()
+        if ($telemetry.Tasks) {
+            $candidateTasks += @((Get-BranaTelemetryValue -InputObject $telemetry.Tasks -Name 'Current'))
+            $candidateTasks += @((Get-BranaTelemetryValue -InputObject $telemetry.Tasks -Name 'Previous'))
         }
-        $reasons = @(
-            $targets | ForEach-Object {
-                if ($_.TargetHealth.PSObject.Properties['Reason'] -and -not [string]::IsNullOrWhiteSpace([string]$_.TargetHealth.Reason)) {
-                    $_.TargetHealth.Reason
-                }
-                elseif ($_.TargetHealth.PSObject.Properties['Description'] -and -not [string]::IsNullOrWhiteSpace([string]$_.TargetHealth.Description)) {
-                    $_.TargetHealth.Description
-                }
-                else {
-                    $null
-                }
-            }
-        )
-        foreach ($target in @($targets)) {
+        $reasons = @()
+        foreach ($target in @($selectedTargetHealth)) {
             $privateIp = [string]$target.Target.Id
             $taskMatch = $null
-            if ($tasksByPrivateIp.Contains($privateIp)) {
-                $taskMatch = $tasksByPrivateIp[$privateIp]
+            foreach ($taskEntry in @($candidateTasks)) {
+                if ([string](Get-BranaTelemetryValue -InputObject $taskEntry -Name 'PrivateIp') -eq $privateIp) {
+                    $taskMatch = $taskEntry
+                    break
+                }
             }
             if ($null -eq $publicTargetRevision -and $null -ne $taskMatch) {
                 $publicTargetRevision = [string]$taskMatch.TaskDefinitionArn
@@ -500,8 +864,8 @@ function Get-BranaCanaryTelemetry {
                 $publicTargetRevisionConfirmed = $true
                 $publicTargetRevisionInferred = $false
             }
-            $publicTargets += [ordered]@{
-                TargetGroup = [string]$Config.productionTargetGroupArn
+            $publicTargets += [pscustomobject]@{
+                TargetGroup = [string]$selectedTargetGroupArn
                 Ip = $privateIp
                 Port = [int]$target.Target.Port
                 AvailabilityZone = [string]$target.Target.AvailabilityZone
@@ -511,6 +875,51 @@ function Get-BranaCanaryTelemetry {
                 TaskArn = if ($null -ne $taskMatch) { [string]$taskMatch.TaskArn } else { $null }
                 TaskDefinitionArn = if ($null -ne $taskMatch) { [string]$taskMatch.TaskDefinitionArn } else { $null }
             }
+            if ($target.TargetHealth.PSObject.Properties['Reason'] -and -not [string]::IsNullOrWhiteSpace([string]$target.TargetHealth.Reason)) {
+                $reasons += [string]$target.TargetHealth.Reason
+            }
+            elseif ($target.TargetHealth.PSObject.Properties['Description'] -and -not [string]::IsNullOrWhiteSpace([string]$target.TargetHealth.Description)) {
+                $reasons += [string]$target.TargetHealth.Description
+            }
+            else {
+                $reasons += $null
+            }
+        }
+        $alternateTargetGroups = @()
+        foreach ($candidateEntry in @($targetGroupEntries)) {
+            if ([string]$candidateEntry.Arn -ne $selectedTargetGroupArn) {
+                $alternateTargetGroups += $candidateEntry
+            }
+        }
+        $alternateHealthy = 0
+        $alternateUnhealthy = 0
+        $alternateTargets = @()
+        foreach ($alternateTargetGroup in @($alternateTargetGroups)) {
+            $alternateArn = [string]$alternateTargetGroup.Arn
+            if ([string]::IsNullOrWhiteSpace($alternateArn)) { continue }
+            $alternateHealth = $null
+            foreach ($healthEntry in @($targetHealthEntries)) {
+                if ([string]$healthEntry.Arn -eq $alternateArn) {
+                    $alternateHealth = $healthEntry
+                    break
+                }
+            }
+            if ($null -eq $alternateHealth) { continue }
+            $alternateHealthy += [int]$alternateHealth.HealthyCount
+            $alternateUnhealthy += [int]$alternateHealth.UnhealthyCount
+            foreach ($alternateTarget in @($alternateHealth.Targets)) {
+                $alternateTargets += [pscustomobject]@{
+                    TargetGroup = $alternateArn
+                    Ip = [string]$alternateTarget.Target.Id
+                    Port = [int]$alternateTarget.Target.Port
+                    AvailabilityZone = [string]$alternateTarget.Target.AvailabilityZone
+                    HealthState = [string]$alternateTarget.TargetHealth.State
+                    Reason = if ($alternateTarget.TargetHealth.PSObject.Properties['Reason']) { [string]$alternateTarget.TargetHealth.Reason } else { $null }
+                    Description = if ($alternateTarget.TargetHealth.PSObject.Properties['Description']) { [string]$alternateTarget.TargetHealth.Description } else { $null }
+                    TaskArn = $null
+                    TaskDefinitionArn = $null
+                }
+            }
         }
         if ([string]::IsNullOrWhiteSpace([string]$publicTargetRevision)) {
             $publicTargetRevision = [string]$telemetry.Service.TaskDefinition
@@ -519,22 +928,45 @@ function Get-BranaCanaryTelemetry {
             $publicTargetRevisionInferred = $true
         }
         $telemetry.Targets = [ordered]@{
-            PublicTargetGroupArn = [string]$Config.productionTargetGroupArn
-            AlternateTargetGroupArn = $null
+            PublicTargetGroupArn = [string]$selectedTargetGroupArn
+            AlternateTargetGroupArn = if ($alternateTargets.Count -gt 0) {
+                $firstAlternateTargetGroupArn = $null
+                foreach ($candidateAlternateTargetGroup in @($alternateTargetGroups)) {
+                    $candidateAlternateArn = [string]$candidateAlternateTargetGroup.Arn
+                    foreach ($healthEntry in @($targetHealthEntries)) {
+                        if ([string]$healthEntry.Arn -eq $candidateAlternateArn -and @($healthEntry.Targets).Count -gt 0) {
+                            $firstAlternateTargetGroupArn = $candidateAlternateArn
+                            break
+                        }
+                    }
+                    if (-not [string]::IsNullOrWhiteSpace($firstAlternateTargetGroupArn)) {
+                        break
+                    }
+                }
+                $firstAlternateTargetGroupArn
+            } else { $null }
             PublicHealthyHostCount = [int]$healthy
             PublicUnhealthyHostCount = [int]$unhealthy
-            AlternateHealthyHostCount = $null
-            AlternateUnhealthyHostCount = $null
-            States = @($targets | ForEach-Object { $_.TargetHealth.State })
+            AlternateHealthyHostCount = if ($alternateTargets.Count -gt 0) { [int]$alternateHealthy } else { $null }
+            AlternateUnhealthyHostCount = if ($alternateTargets.Count -gt 0) { [int]$alternateUnhealthy } else { $null }
+            States = @($selectedTargetHealth | ForEach-Object { $_.TargetHealth.State })
             Reasons = $reasons
-            TargetGroupWithoutTargets = ($targets.Count -eq 0)
+            TargetGroupWithoutTargets = ($selectedTargetHealth.Count -eq 0)
             TargetGroupNotFound = $false
             PublicTargets = @($publicTargets)
-            AlternateTargets = @()
+            AlternateTargets = @($alternateTargets)
             PublicTargetRevision = $publicTargetRevision
             PublicTargetRevisionSource = $publicTargetRevisionSource
             PublicTargetRevisionConfirmed = [bool]$publicTargetRevisionConfirmed
             PublicTargetRevisionInferred = [bool]$publicTargetRevisionInferred
+            LiveTopology = [ordered]@{
+                ConfiguredTargetGroupArn = [string]$liveTopology.ConfiguredTargetGroupArn
+                ConfigMatchesLive = [bool]$liveTopology.ConfigMatchesLive
+                HostHeader = [string]$liveTopology.HostHeader
+                LoadBalancerArn = [string]$liveTopology.LoadBalancerArn
+                ListenerRuleArn = [string]$liveTopology.ListenerRuleArn
+                TargetGroups = @($targetGroupEntries)
+            }
         }
         $telemetry.Metrics.HealthyHostCount = [int]$healthy
         $telemetry.Metrics.UnHealthyHostCount = [int]$unhealthy
@@ -607,6 +1039,7 @@ function Get-BranaCanaryTelemetry {
         $errors.Add(('http probe unavailable: {0}' -f $_.Exception.Message))
     }
 
+    $telemetry.Warnings = @($warnings)
     $telemetry.Errors = @($errors)
     if ($telemetry.Complete -ne $true) { $telemetry.Complete = ($errors.Count -eq 0) }
     if (-not $telemetry.Service.Contains('ConcurrentDeployment')) { $telemetry.Service.ConcurrentDeployment = $false }
@@ -638,6 +1071,7 @@ function Get-BranaCanaryTelemetry {
     $result | Add-Member -NotePropertyName publicTargetRevisionSource -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionSource')) -Force
     $result | Add-Member -NotePropertyName publicTargetRevisionConfirmed -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionConfirmed')) -Force
     $result | Add-Member -NotePropertyName publicTargetRevisionInferred -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionInferred')) -Force
+    $result | Add-Member -NotePropertyName warnings -NotePropertyValue @($telemetry.Warnings) -Force
     $result | Add-Member -NotePropertyName activeTaskDefinition -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'TaskDefinition')) -Force
     $result | Add-Member -NotePropertyName unHealthyHostCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicUnhealthyHostCount')) -Force
     $result | Add-Member -NotePropertyName healthStatusCode -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Http -Name 'HealthStatusCode')) -Force
