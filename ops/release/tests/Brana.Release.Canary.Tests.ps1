@@ -12,7 +12,7 @@ Describe 'Brana.Release.Canary' {
         $plan.BakeTimeInMinutes | Should Be 3
         $plan.BaselineMinutes | Should Be 15
         $plan.Allowed503 | Should Be 0
-        $plan.RollbackTaskDefinition | Should Be 'default-brana-hml-backend:16'
+        $plan.RollbackTaskDefinition | Should Be 'default-brana-hml-backend:24'
         ($plan.LifecycleStages -join ' ') | Should Match 'WAITING_FOR_PROMOTION'
         ($plan.LifecycleStages -join ' ') | Should Match 'POST_PROMOTION_STABILIZATION'
     }
@@ -27,6 +27,7 @@ Describe 'Brana.Release.Canary' {
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
+            rolloutState = 'COMPLETED'
             publicTargetRevision = 'default-brana-hml-backend:16'
             publicTargetRevisionSource = 'target-task-ip'
             publicTargetRevisionConfirmed = $true
@@ -56,6 +57,7 @@ Describe 'Brana.Release.Canary' {
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
+            rolloutState = 'IN_PROGRESS'
             publicTargetRevision = 'default-brana-hml-backend:16'
             publicTargetRevisionSource = 'service-active-task-definition'
             publicTargetRevisionConfirmed = $false
@@ -85,6 +87,7 @@ Describe 'Brana.Release.Canary' {
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
+            rolloutState = 'IN_PROGRESS'
             publicTargetRevision = 'default-brana-hml-backend:16'
             publicTargetRevisionSource = 'service-active-task-definition'
             publicTargetRevisionConfirmed = $false
@@ -143,6 +146,7 @@ Describe 'Brana.Release.Canary' {
             alternateTargetHealthy = $true
             rollbackServiceRevision = 'default-brana-hml-backend:16'
             activeTaskDefinition = 'default-brana-hml-backend:16'
+            rolloutState = 'COMPLETED'
             publicTargetRevision = 'default-brana-hml-backend:15'
             publicTargetRevisionSource = 'target-task-ip'
             publicTargetRevisionConfirmed = $true
@@ -160,6 +164,66 @@ Describe 'Brana.Release.Canary' {
         $decision = Get-BranaCanaryPromotionDecision -Config $config -Signals $signals
         $decision.Decision | Should Be 'fail'
         $decision.Reason | Should Match 'public target must serve the active task definition'
+    }
+
+    It 'waits when the public target is confirmed on the wrong revision while rollout is in progress' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $signals = [pscustomobject]@{
+            serviceStable = $false
+            deploymentConcurrent = $true
+            publicTargetHealthy = $true
+            publicTargetEmpty = $false
+            alternateTargetHealthy = $true
+            rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:25'
+            rolloutState = 'IN_PROGRESS'
+            publicTargetRevision = 'default-brana-hml-backend:24'
+            publicTargetRevisionSource = 'target-task-ip'
+            publicTargetRevisionConfirmed = $true
+            publicTargetRevisionInferred = $false
+            healthStatusCode = 200
+            appStatusCode = 200
+            healthyHostCount = 1
+            unHealthyHostCount = 0
+            elb5xxCount = 0
+            target5xxCount = 0
+            observed503Count = 0
+            lifecycleStage = 'OBSERVING'
+            currentTasks = @(@{ TaskArn = 'arn'; TaskDefinitionArn = 'default-brana-hml-backend:25' })
+        }
+        $decision = Get-BranaCanaryPromotionDecision -Config $config -Signals $signals
+        $decision.Decision | Should Be 'wait'
+        $decision.Reason | Should Match 'not converged to active task definition yet'
+    }
+
+    It 'fails immediately when rollout has failed' {
+        $config = Get-BranaEnvironmentConfig -Path "$PSScriptRoot\..\config\hml.json"
+        $signals = [pscustomobject]@{
+            serviceStable = $false
+            deploymentConcurrent = $true
+            publicTargetHealthy = $true
+            publicTargetEmpty = $false
+            alternateTargetHealthy = $true
+            rollbackServiceRevision = 'default-brana-hml-backend:16'
+            activeTaskDefinition = 'default-brana-hml-backend:25'
+            rolloutState = 'FAILED'
+            publicTargetRevision = 'default-brana-hml-backend:24'
+            publicTargetRevisionSource = 'service-active-task-definition'
+            publicTargetRevisionConfirmed = $false
+            publicTargetRevisionInferred = $true
+            healthStatusCode = 200
+            appStatusCode = 200
+            healthyHostCount = 1
+            unHealthyHostCount = 0
+            elb5xxCount = 0
+            target5xxCount = 0
+            observed503Count = 0
+            lifecycleStage = 'OBSERVING'
+            currentTasks = @(@{ TaskArn = 'arn'; TaskDefinitionArn = 'default-brana-hml-backend:25' })
+        }
+        $decision = Get-BranaCanaryPromotionDecision -Config $config -Signals $signals
+        $decision.Decision | Should Be 'fail'
+        $decision.Reason | Should Match 'deployment rollout failed'
     }
 
     It 'blocks the required negative canary scenarios' {

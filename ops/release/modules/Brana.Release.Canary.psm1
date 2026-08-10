@@ -208,6 +208,7 @@ function Test-BranaCanaryPromotionReadiness {
         $activeTaskDefinition = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'activeTaskDefinition')
         $publicTargetRevisionConfirmed = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevisionConfirmed')
         $publicTargetRevisionSource = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevisionSource')
+        $rolloutState = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'rolloutState')
         if ($lifecycleStage -notin @(Get-BranaCanaryLifecycleStages)) { $errors.Add('lifecycle stage unknown') }
         if ($publicTargetEmpty) { $errors.Add('public target group is empty') }
         if (-not $publicTargetHealthy) { $errors.Add('public target must be healthy') }
@@ -256,6 +257,7 @@ function Get-BranaCanaryPromotionDecision {
         $publicTargetHealthy = [bool](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetHealthy')
         $publicTargetRevision = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'publicTargetRevision')
         $activeTaskDefinition = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'activeTaskDefinition')
+        $rolloutState = [string](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'rolloutState')
         $observed503Count = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'observed503Count')
         $unhealthyHostCount = [int](Get-BranaCanaryTelemetryValue -InputObject $Signals -Name 'unHealthyHostCount')
 
@@ -265,6 +267,9 @@ function Get-BranaCanaryPromotionDecision {
         elseif ($unhealthyHostCount -gt 0) {
             $reason = 'UnHealthyHostCount above 0 blocks completion'
         }
+        elseif ($rolloutState -eq 'FAILED') {
+            $reason = 'deployment rollout failed'
+        }
         elseif ($publicTargetRevisionConfirmed) {
             if ([string]::IsNullOrWhiteSpace($publicTargetRevision)) {
                 $reason = 'public target revision is required'
@@ -272,11 +277,15 @@ function Get-BranaCanaryPromotionDecision {
             elseif ([string]::IsNullOrWhiteSpace($activeTaskDefinition)) {
                 $reason = 'active task definition is required'
             }
-            elseif ($publicTargetRevision -ne $activeTaskDefinition) {
-                $reason = 'public target must serve the active task definition'
-            }
             elseif (-not $publicTargetHealthy -or $publicTargetEmpty) {
                 $reason = 'public target must be healthy'
+            }
+            elseif ($rolloutState -eq 'IN_PROGRESS' -and $publicTargetRevision -ne $activeTaskDefinition) {
+                $decision = 'wait'
+                $reason = 'public target has not converged to active task definition yet'
+            }
+            elseif ($publicTargetRevision -ne $activeTaskDefinition) {
+                $reason = 'public target must serve the active task definition'
             }
             elseif (-not $readiness.IsValid) {
                 $reason = @($readiness.Errors)[0]
