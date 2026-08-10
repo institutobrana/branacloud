@@ -147,6 +147,71 @@ body {
   background: rgba(255, 255, 255, 0.28);
 }
 
+.indices-financeiros-toolbar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.indices-financeiros-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.indices-financeiros-toolbar-actions .auxiliary-shell-button {
+  white-space: nowrap;
+}
+
+.indices-financeiros-toolbar-divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 2px;
+  flex: 0 0 1px;
+  background: var(--brana-divider);
+  opacity: 0.9;
+}
+
+.indices-financeiros-page {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.indices-financeiros-panels {
+  display: grid;
+  gap: 12px;
+  justify-items: stretch;
+  width: min(820px, calc(100% - 64px));
+  margin-inline: auto;
+  min-width: 0;
+}
+
+.indices-financeiros-section {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+
+.indices-financeiros-section .ant-typography {
+  margin-bottom: 0;
+}
+
+.indices-financeiros-selection-summary {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .indices-financeiros-panels {
+    width: calc(100% - 24px);
+  }
+}
+
 .materiais-estoque-toolbar-actions,
 .materiais-estoque-actions {
   display: flex;
