@@ -1,23 +1,28 @@
 import './contaCorrenteCirurgiao.css';
-import { useState } from 'react';
 
 import { ContaCorrenteCirurgiaoTable } from './components/ContaCorrenteCirurgiaoTable.jsx';
 import { ContaCorrenteCirurgiaoTotals } from './components/ContaCorrenteCirurgiaoTotals.jsx';
 
-export function ContaCorrenteCirurgiaoPage() {
-  const [selectedId, setSelectedId] = useState(null);
-  const items = [];
-
+export function ContaCorrenteCirurgiaoPage({
+  items = [],
+  totalEntrada = 0,
+  totalSaida = 0,
+  saldo = 0,
+  selectedId = null,
+  error = '',
+  onSelect,
+}) {
   return (
     <div className="conta-corrente-cirurgiao-page">
       <div className="conta-corrente-cirurgiao-content">
+        {error ? <div className="conta-corrente-cirurgiao-error" role="alert">{error}</div> : null}
         <ContaCorrenteCirurgiaoTable
           items={items}
           selectedId={selectedId}
-          onSelect={setSelectedId}
+          onSelect={onSelect}
           onDoubleClick={() => {}}
         />
-        <ContaCorrenteCirurgiaoTotals totalEntrada={0} totalSaida={0} saldo={0} />
+        <ContaCorrenteCirurgiaoTotals totalEntrada={totalEntrada} totalSaida={totalSaida} saldo={saldo} />
       </div>
     </div>
   );
