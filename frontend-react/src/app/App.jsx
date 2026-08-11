@@ -32,6 +32,7 @@ import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/compon
 import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFinanceirosPage.jsx';
 import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
 import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
+import { ContaCorrenteCirurgiaoPage } from '../features/contaCorrenteCirurgiao/ContaCorrenteCirurgiaoPage.jsx';
 import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNew.jsx';
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
@@ -60,6 +61,7 @@ const contextualMenus = {
   financeiro: [
     { key: 'contas-pagar', label: 'Contas a pagar', disabled: true },
     { key: 'contas-receber', label: 'Contas a receber', disabled: true },
+    { key: 'conta-corrente-cirurgiao', label: 'Conta corrente do cirurgião' },
     { key: 'controle-estoque', label: 'Controle de estoque', disabled: true },
     { key: 'faturamento-convenio', label: 'Faturamento de convênio', disabled: true },
     { key: 'fluxo-caixa', label: 'Fluxo de caixa', disabled: true },
@@ -149,6 +151,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
+  if (path === `${base}/financeiro/conta-corrente-cirurgiao`) return 'conta-corrente-cirurgiao';
   if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
   if (path === `${base}/tabelas-auxiliares`) return 'tabelas-auxiliares';
   if (path === `${base}/tabelas/procedimentos`) return 'procedimentos';
@@ -185,9 +188,11 @@ function syncAppPath(screen) {
           : screen === 'simbolos-graficos'
             ? appPath('configuracoes/simbolos-graficos')
           : screen === 'unidades-atendimento'
-            ? appPath('configuracoes/unidades-atendimento')
+          ? appPath('configuracoes/unidades-atendimento')
           : screen === 'questionarios-anamnese'
             ? appPath('configuracoes/questionarios-anamnese')
+          : screen === 'conta-corrente-cirurgiao'
+            ? appPath('financeiro/conta-corrente-cirurgiao')
           : screen === 'prestadores'
             ? appPath('cadastro/corpo-clinico')
         : screen === 'tabelas-auxiliares'
@@ -312,6 +317,7 @@ function AppContent() {
     if (initialScreen === 'cenario-anual') return 'configuracao';
     if (initialScreen === 'indices-financeiros') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
+    if (initialScreen === 'conta-corrente-cirurgiao') return 'financeiro';
     if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
     if (initialScreen === 'questionarios-anamnese') return 'configuracao';
@@ -545,7 +551,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -719,6 +725,10 @@ function AppContent() {
       handleNavigate('questionarios-anamnese');
       return;
     }
+    if (groupKey === 'financeiro' && item?.key === 'conta-corrente-cirurgiao' && !item?.disabled) {
+      handleNavigate('conta-corrente-cirurgiao');
+      return;
+    }
     if (groupKey === 'tabelas' && item?.key === 'procedimentos-genericos' && !item?.disabled) {
       handleNavigate('procedimentos-genericos');
       return;
@@ -890,6 +900,9 @@ function AppContent() {
     }
     if (screen === 'plano-contas') {
       return <PlanoContasPage />;
+    }
+    if (screen === 'conta-corrente-cirurgiao') {
+      return <ContaCorrenteCirurgiaoPage />;
     }
     if (screen === 'simbolos-graficos') {
       return (
@@ -1280,6 +1293,18 @@ function AppContent() {
     );
   }, [handleNavigate, planoContasToolbarState.canCreateCategory, planoContasToolbarState.canDeleteSelection, planoContasToolbarState.canEditCategory, planoContasToolbarState.canEditGroup, planoContasToolbarState.deleteDisabledReason, planoContasToolbarState.deleting, planoContasToolbarState.loading, planoContasToolbarState.migrating, planoContasToolbarState.migrationModalOpen, planoContasToolbarState.saving, screen]);
 
+  const contaCorrenteCirurgiaoTopBar = useMemo(() => {
+    if (screen !== 'conta-corrente-cirurgiao') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da conta corrente do cirurgião">
+        <div className="conta-corrente-cirurgiao-topbar">
+          <Typography.Text strong>Conta corrente do cirurgião</Typography.Text>
+        </div>
+      </div>
+    );
+  }, [screen]);
+
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
     '--brana-panel-width': panelGroup ? '272px' : '0px',
@@ -1364,6 +1389,8 @@ function AppContent() {
             indicesFinanceirosTopBar
           ) : screen === 'plano-contas' ? (
             planoContasTopBar
+          ) : screen === 'conta-corrente-cirurgiao' ? (
+            contaCorrenteCirurgiaoTopBar
           ) : screen === 'simbolos-graficos' ? (
             simbolosGraficosTopBar
           ) : screen === 'questionarios-anamnese' ? (
