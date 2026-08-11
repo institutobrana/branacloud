@@ -33,6 +33,7 @@ import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFi
 import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
 import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
 import { ContaCorrenteCirurgiaoPage } from '../features/contaCorrenteCirurgiao/ContaCorrenteCirurgiaoPage.jsx';
+import { ContaCorrenteCirurgiaoToolbar } from '../features/contaCorrenteCirurgiao/components/ContaCorrenteCirurgiaoToolbar.jsx';
 import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNew.jsx';
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
@@ -277,6 +278,13 @@ function AppContent() {
     deleting: false,
     migrating: false,
     migrationModalOpen: false,
+  });
+  const [contaCorrenteCirurgiaoToolbarState, setContaCorrenteCirurgiaoToolbarState] = useState({
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+    surgeonId: null,
+    viewMode: 'todos',
+    surgeonOptions: [],
   });
   const [simbolosGraficosCreateOpen, setSimbolosGraficosCreateOpen] = useState(false);
   const [simbolosGraficosSelectionState, setSimbolosGraficosSelectionState] = useState({
@@ -1298,12 +1306,20 @@ function AppContent() {
 
     return (
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da conta corrente do cirurgião">
-        <div className="conta-corrente-cirurgiao-topbar">
-          <Typography.Text strong>Conta corrente do cirurgião</Typography.Text>
-        </div>
+        <ContaCorrenteCirurgiaoToolbar
+          month={contaCorrenteCirurgiaoToolbarState.month}
+          year={contaCorrenteCirurgiaoToolbarState.year}
+          surgeonId={contaCorrenteCirurgiaoToolbarState.surgeonId}
+          viewMode={contaCorrenteCirurgiaoToolbarState.viewMode}
+          surgeonOptions={contaCorrenteCirurgiaoToolbarState.surgeonOptions}
+          onMonthChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, month: value }))}
+          onYearChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, year: value }))}
+          onSurgeonChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, surgeonId: value }))}
+          onViewModeChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, viewMode: value }))}
+        />
       </div>
     );
-  }, [screen]);
+  }, [contaCorrenteCirurgiaoToolbarState.month, contaCorrenteCirurgiaoToolbarState.surgeonId, contaCorrenteCirurgiaoToolbarState.surgeonOptions, contaCorrenteCirurgiaoToolbarState.viewMode, contaCorrenteCirurgiaoToolbarState.year, screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',

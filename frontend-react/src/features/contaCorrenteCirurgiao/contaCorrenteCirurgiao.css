@@ -1,21 +1,18 @@
 .conta-corrente-cirurgiao-page {
   min-height: 100%;
-  padding: 24px 28px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  padding: 20px 28px 32px;
 }
 
 .conta-corrente-cirurgiao-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 16px;
-  padding: 14px 18px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.66);
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
-  border: 1px solid rgba(22, 170, 161, 0.18);
+  gap: 10px 14px;
+  width: 100%;
+  padding: 2px 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .conta-corrente-cirurgiao-toolbar-actions {
@@ -23,6 +20,7 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 0 1 auto;
 }
 
 .conta-corrente-cirurgiao-toolbar-actions .auxiliary-shell-button {
@@ -33,18 +31,18 @@
 
 .conta-corrente-cirurgiao-toolbar-divider {
   width: 1px;
-  height: 28px;
-  background: rgba(148, 163, 184, 0.6);
+  height: 26px;
+  background: rgba(148, 163, 184, 0.45);
   margin: 0 2px;
   flex: 0 0 auto;
 }
 
 .conta-corrente-cirurgiao-filters {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: end;
   gap: 12px 14px;
-  flex: 1 1 520px;
+  flex: 1 1 540px;
 }
 
 .conta-corrente-cirurgiao-filter {
@@ -86,7 +84,7 @@
   min-height: 280px;
   border: 1px dashed rgba(22, 170, 161, 0.28);
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.28));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.18));
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
 }
 
@@ -95,10 +93,6 @@
 }
 
 @media (max-width: 1366px) {
-  .conta-corrente-cirurgiao-toolbar {
-    padding: 12px 14px;
-  }
-
   .conta-corrente-cirurgiao-filter--view {
     min-width: 240px;
   }
@@ -110,7 +104,7 @@
   }
 
   .conta-corrente-cirurgiao-toolbar {
-    border-radius: 16px;
+    gap: 8px 12px;
   }
 
   .conta-corrente-cirurgiao-filter--surgeon,

@@ -54,7 +54,6 @@ export function ContaCorrenteCirurgiaoFilters({
           value={year}
           min={1900}
           max={2100}
-          controls={false}
           onChange={(value) => onYearChange?.(Number(value || new Date().getFullYear()))}
           aria-label="Ano"
         />
