@@ -152,3 +152,4 @@ storage/modelos/base/
 - `docs/contrato_funcional_indices_financeiros.md`: contrato da frente de indices financeiros.
 - `docs/contrato_painel_financeiro_procedimentos_frontend_react.md`: painel financeiro de procedimentos.
 - `docs/auditoria_conta_corrente_cirurgiao.md`: contrato alvo da conta corrente do cirurgiao, com foco em `PrestadorOdonto` e evolucao futura de `Lancamento.prestador_id`.
+- `docs/padrao_barra_horizontal.md`: padrao oficial de barra horizontal, com o L do shell global e a composicao validada a partir de `Servicos de Protético`.
