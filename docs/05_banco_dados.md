@@ -49,6 +49,26 @@ Regra central: uma rota operacional deve sempre consultar, criar, editar e exclu
 - `anamnese_questionarios` possui perguntas; respostas vinculam paciente/pergunta/questionario.
 - `modelo_documento` e usado por editor, agenda, receitas, atestados e PDF.
 
+## Contrato futuro da conta corrente do cirurgiao
+
+### Atual
+
+`Lancamento` nao possui `prestador_id`.
+
+### Planejado
+
+`Lancamento` podera receber uma FK nullable para `PrestadorOdonto.id`.
+
+### Regra conceitual planejada
+
+- `conta = CLINICA`: `prestador_id = NULL`
+- `conta = CIRURGIAO`: `prestador_id` podera identificar o profissional individual
+- `clinica_id` do lancamento devera ser compativel com `clinica_id` do prestador
+
+### Observacao
+
+Esse contrato ainda nao esta aplicado no schema atual; trata-se de planejamento documental para evolucao futura.
+
 ## Bootstrap e compatibilidade
 
 O startup contem hotfixes aditivos para:

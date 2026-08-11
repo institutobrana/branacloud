@@ -200,3 +200,7 @@ Ao concluir uma tarefa, informe:
 ## Regra de ouro
 
 O Brana Cloude manipula dados clinicos, financeiros e documentos. Priorize seguranca, isolamento por clinica e previsibilidade antes de refatoracoes grandes.
+
+## Frente em documentacao
+
+A frente `Conta corrente do cirurgião` possui contrato alvo documentado em `docs/auditoria_conta_corrente_cirurgiao.md`. O proximo micropasso seguro e transformar essa documentacao em plano tecnico de implementacao incremental, sem mexer ainda em backend ou frontend.

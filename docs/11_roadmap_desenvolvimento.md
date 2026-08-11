@@ -6665,3 +6665,10 @@ Observacoes:
 - A toolbar atual ficou restrita a `Atualizar | Buscar evento`.
 - O painel mantém tabela read-only compacta com cinco colunas, seleção única, filtros, ordenação, controle de colunas, rodapé, loading, vazio e erro.
 - Exportação CSV, detalhes e navegação por alvo permanecem fora desta fase.
+
+## Frente em documentacao - Conta corrente do cirurgião
+
+- Documento dedicado criado em `docs/auditoria_conta_corrente_cirurgiao.md`.
+- Contrato alvo documentado: `Lancamento.prestador_id -> PrestadorOdonto.id`.
+- Estrategia aprovada: preservar `Lancamento`, preservar `conta`, adicionar futuramente `prestador_id` nullable e manter `CLINICA` sem prestador individual.
+- Primeira entrega futura: somente a tela principal React, deixando `rcc-panel` e `rview-panel` para etapas posteriores.
