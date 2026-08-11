@@ -171,6 +171,11 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         self.db.refresh(lanc)
         return lanc
 
+    def _assert_item(self, item, *, prestador_id, valor, conta="CIRURGIAO"):
+        self.assertEqual(item["prestador_id"], prestador_id)
+        self.assertEqual(item["valor"], valor)
+        self.assertEqual(item["conta"], conta)
+
     def test_get_clinica_sem_prestador(self):
         self._seed_lancamento(conta="CLINICA", prestador_id=None, valor=50.0)
         result = financeiro_routes.listar_lancamentos(
@@ -184,6 +189,8 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         )
         self.assertEqual(len(result["itens"]), 1)
         self.assertIsNone(result["itens"][0]["prestador_id"])
+        self.assertEqual(result["total_entrada"], 50.0)
+        self.assertEqual(result["total_saida"], 0.0)
 
     def test_get_cirurgiao_legado_sem_prestador_id_continua_funcionando(self):
         self._seed_lancamento(conta="CIRURGIAO", prestador_id=None, valor=60.0)
@@ -198,6 +205,8 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         )
         self.assertEqual(len(result["itens"]), 1)
         self.assertIsNone(result["itens"][0]["prestador_id"])
+        self.assertEqual(result["total_entrada"], 60.0)
+        self.assertEqual(result["total_saida"], 0.0)
 
     def test_get_cirurgiao_filtra_por_prestador(self):
         self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=70.0)
@@ -212,8 +221,9 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
             db=self.db,
         )
         self.assertEqual(len(result["itens"]), 1)
-        self.assertEqual(result["itens"][0]["prestador_id"], 1)
+        self._assert_item(result["itens"][0], prestador_id=1, valor=70.0)
         self.assertEqual(result["total_entrada"], 70.0)
+        self.assertEqual(result["total_saida"], 0.0)
 
     def test_get_rejeita_prestador_de_outra_clinica(self):
         with self.assertRaises(HTTPException) as ctx:
@@ -228,6 +238,58 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
             )
         self.assertEqual(ctx.exception.status_code, 404)
 
+    def test_get_cirurgiao_filtra_e_isola_a1_a2(self):
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=11.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=13.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=2, valor=17.0)
+        result = financeiro_routes.listar_lancamentos(
+            mes=8,
+            ano=2026,
+            conta="CIRURGIAO",
+            prestador_id=1,
+            filtro="Todos os lancamentos",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual([item["prestador_id"] for item in result["itens"]], [1, 1])
+        self.assertEqual([item["valor"] for item in result["itens"]], [11.0, 13.0])
+        self.assertEqual(result["total_entrada"], 24.0)
+        self.assertEqual(result["saldo"], 24.0)
+
+    def test_get_cirurgiao_legacy_agregado_inclui_null_a1_a2(self):
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=None, valor=5.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=7.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=2, valor=9.0)
+        result = financeiro_routes.listar_lancamentos(
+            mes=8,
+            ano=2026,
+            conta="CIRURGIAO",
+            prestador_id=None,
+            filtro="Todos os lancamentos",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual([item["prestador_id"] for item in result["itens"]], [None, 1, 2])
+        self.assertEqual([item["valor"] for item in result["itens"]], [5.0, 7.0, 9.0])
+        self.assertEqual(result["total_entrada"], 21.0)
+        self.assertEqual(result["total_saida"], 0.0)
+
+    def test_get_clinica_nao_mistura_prestador_id_incoerente(self):
+        self._seed_lancamento(conta="CLINICA", prestador_id=None, valor=19.0)
+        result = financeiro_routes.listar_lancamentos(
+            mes=8,
+            ano=2026,
+            conta="CLINICA",
+            prestador_id=None,
+            filtro="Todos os lancamentos",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual(len(result["itens"]), 1)
+        self.assertIsNone(result["itens"][0]["prestador_id"])
+        self.assertEqual(result["total_entrada"], 19.0)
+        self.assertEqual(result["saldo"], 19.0)
+
     def test_post_cirurgiao_persisted_with_prestador(self):
         result = financeiro_routes.criar_lancamento(
             payload=self._novo_payload(conta="CIRURGIAO", prestador_id=1),
@@ -238,6 +300,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         lanc = self.db.query(Lancamento).filter(Lancamento.clinica_id == 1).order_by(Lancamento.id.desc()).first()
         self.assertEqual(lanc.prestador_id, 1)
         self.assertEqual(lanc.conta, "CIRURGIAO")
+        self.assertEqual(self.db.query(Lancamento).filter(Lancamento.prestador_id == 1).count(), 1)
 
     def test_post_clinica_rejeita_prestador(self):
         with self.assertRaises(HTTPException) as ctx:
@@ -259,6 +322,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         self.assertEqual(atualizado["detail"], "Lancamento atualizado.")
         self.db.refresh(lanc)
         self.assertEqual(lanc.prestador_id, 1)
+        self.assertEqual(lanc.conta, "CIRURGIAO")
 
     def test_put_rejeita_cross_tenant(self):
         lanc = self._seed_lancamento(conta="CIRURGIAO", prestador_id=None)
@@ -281,6 +345,32 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
                 db=self.db,
             )
         self.assertEqual(ctx.exception.status_code, 400)
+
+    def test_put_cirurgiao_isola_a1_e_preserva_b1_em_outro_lancamento(self):
+        lanc_a1 = self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=31.0)
+        lanc_a2 = self._seed_lancamento(conta="CIRURGIAO", prestador_id=2, valor=41.0)
+        financeiro_routes.atualizar_lancamento(
+            lancamento_id=lanc_a1.id,
+            payload=self._novo_payload(conta="CIRURGIAO", prestador_id=1, valor=33.0),
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.db.refresh(lanc_a1)
+        self.db.refresh(lanc_a2)
+        self.assertEqual(lanc_a1.prestador_id, 1)
+        self.assertEqual(lanc_a2.prestador_id, 2)
+        self.assertEqual(lanc_a1.valor, 33.0)
+        result = financeiro_routes.listar_lancamentos(
+            mes=8,
+            ano=2026,
+            conta="CIRURGIAO",
+            prestador_id=1,
+            filtro="Todos os lancamentos",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual([item["prestador_id"] for item in result["itens"]], [1])
+        self.assertEqual([item["valor"] for item in result["itens"]], [33.0])
 
 
 if __name__ == "__main__":
