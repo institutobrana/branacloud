@@ -77,6 +77,7 @@ class PrestadorOdonto(Base):
 
     clinica = relationship("Clinica")
     usuario = relationship("Usuario", foreign_keys=[usuario_id])
+    lancamentos = relationship("Lancamento", back_populates="prestador")
     credenciamentos = relationship(
         "PrestadorCredenciamentoOdonto",
         back_populates="prestador",
