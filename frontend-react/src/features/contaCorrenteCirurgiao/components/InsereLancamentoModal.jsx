@@ -24,7 +24,7 @@ function createTabState() {
     complemento: '',
     tributavel: false,
     copiarMeses: false,
-    mesesExtras: 1,
+    mesesExtras: 0,
     inclusao: today,
     ultimaAtualizacao: null,
   };
@@ -137,7 +137,7 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
           </Checkbox>
           <label className="conta-corrente-cirurgiao-modal-inline-spin">
             <span>Quantidade de meses</span>
-            <InputNumber value={state.mesesExtras} min={1} disabled={!state.copiarMeses} onChange={(value) => onChange('mesesExtras', Number(value || 1))} />
+            <InputNumber value={state.mesesExtras} min={0} disabled={!state.copiarMeses} onChange={(value) => onChange('mesesExtras', Number(value ?? 0))} />
           </label>
         </div>
         <div className="conta-corrente-cirurgiao-modal-grid conta-corrente-cirurgiao-modal-grid--meta">
@@ -220,16 +220,20 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose,
 
   const validationMessage = useMemo(() => {
     if (!prestadorId) return 'Selecione um cirurgião antes de salvar o lançamento.';
-    if (currentState.copiarMeses) return 'Repetição para próximos meses será habilitada em etapa posterior.';
     if (!currentState.historico.trim()) return 'Informe o histórico.';
     const parsedValue = parseDecimal(currentState.valor);
     if (parsedValue == null || parsedValue <= 0) return 'Informe um valor válido.';
     if (!currentState.categoriaId) return 'Selecione uma categoria.';
+    if (currentState.copiarMeses) {
+      const extras = Number(currentState.mesesExtras);
+      if (!Number.isFinite(extras) || extras < 0) return 'Quantidade de meses extras inválida.';
+    }
     return '';
   }, [currentState.categoriaId, currentState.copiarMeses, currentState.historico, currentState.valor, prestadorId]);
 
   const buildPayload = () => {
     const parsedValue = parseDecimal(currentState.valor) ?? 0;
+    const extras = currentState.copiarMeses ? Math.max(0, Number(currentState.mesesExtras || 0)) : 0;
     return {
       categoria_id: Number(currentState.categoriaId || 0),
       historico: currentState.historico.trim(),
@@ -243,7 +247,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose,
       complemento: currentState.complemento.trim() || null,
       prestador_id: Number(prestadorId || 0) || null,
       tributavel: currentState.tributavel ? 1 : 0,
-      parcelas: 1,
+      parcelas: 1 + extras,
       data_lancamento: dayjs(currentState.dataLancamento).format('YYYY-MM-DD'),
       data_vencimento: dayjs(currentState.dataVencimento).format('YYYY-MM-DD'),
     };
@@ -314,9 +318,6 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose,
         {error ? <Alert type="error" message={error} showIcon /> : null}
         {success ? <Alert type="success" message={success} showIcon /> : null}
         {!prestadorId ? <Alert type="warning" message="Selecione um cirurgião antes de salvar o lançamento." showIcon /> : null}
-        {currentState.copiarMeses ? (
-          <Alert type="warning" message="Repetição para próximos meses será habilitada em etapa posterior." showIcon />
-        ) : null}
         <Tabs
           activeKey={activeKey}
           onChange={(key) => {
