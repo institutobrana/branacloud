@@ -108,3 +108,30 @@ export async function listarLancamentosContaCirurgiao({ month, year, surgeonId, 
     saldo: Number(data?.saldo ?? 0) || 0,
   };
 }
+
+export async function listarCategoriasContaCirurgiao(tipo) {
+  const params = new URLSearchParams();
+  if (tipo) params.set('tipo', tipo);
+
+  const data = await requestJson(`/financeiro/categorias${params.toString() ? `?${params.toString()}` : ''}`, {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listarFormasPagamentoContaCirurgiao() {
+  const data = await requestJson('/financeiro/formas-pagamento', {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listarSituacoesContaCirurgiao() {
+  const data = await requestJson('/financeiro/situacoes', {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data : [];
+}

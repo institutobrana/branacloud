@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, FileTextOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, FileTextOutlined } from '@ant-design/icons';
 
 import { ContaCorrenteCirurgiaoFilters } from './ContaCorrenteCirurgiaoFilters.jsx';
 
@@ -12,15 +12,17 @@ export function ContaCorrenteCirurgiaoToolbar({
   onYearChange,
   onSurgeonChange,
   onViewModeChange,
+  onNewDebit,
+  onNewCredit,
 }) {
   return (
-    <div className="conta-corrente-cirurgiao-toolbar" role="toolbar" aria-label="Barra operacional da conta corrente do cirurgião">
+    <div className="conta-corrente-cirurgiao-toolbar" role="toolbar" aria-label="Barra operacional da conta corrente do cirurgiao">
       <div className="conta-corrente-cirurgiao-toolbar-actions">
-        <button type="button" className="auxiliary-shell-button primary" disabled>
-          <PlusOutlined /> Novo débito
+        <button type="button" className="auxiliary-shell-button primary" onClick={() => onNewDebit?.()}>
+          Novo debito
         </button>
-        <button type="button" className="auxiliary-shell-button primary" disabled>
-          <PlusOutlined /> Novo crédito
+        <button type="button" className="auxiliary-shell-button primary" onClick={() => onNewCredit?.()}>
+          Novo credito
         </button>
         <button type="button" className="auxiliary-shell-button" disabled aria-disabled="true">
           <EditOutlined /> Altera

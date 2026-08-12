@@ -32,8 +32,7 @@ import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/compon
 import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFinanceirosPage.jsx';
 import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
 import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
-import { ContaCorrenteCirurgiaoPage } from '../features/contaCorrenteCirurgiao/ContaCorrenteCirurgiaoPage.jsx';
-import { ContaCorrenteCirurgiaoToolbar } from '../features/contaCorrenteCirurgiao/components/ContaCorrenteCirurgiaoToolbar.jsx';
+import { ContaCorrenteCirurgiaoShell } from '../features/contaCorrenteCirurgiao/ContaCorrenteCirurgiaoShell.jsx';
 import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNew.jsx';
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
@@ -278,13 +277,6 @@ function AppContent() {
     deleting: false,
     migrating: false,
     migrationModalOpen: false,
-  });
-  const [contaCorrenteCirurgiaoToolbarState, setContaCorrenteCirurgiaoToolbarState] = useState({
-    month: new Date().getMonth() + 1,
-    year: new Date().getFullYear(),
-    surgeonId: null,
-    viewMode: 'todos',
-    surgeonOptions: [],
   });
   const [simbolosGraficosCreateOpen, setSimbolosGraficosCreateOpen] = useState(false);
   const [simbolosGraficosSelectionState, setSimbolosGraficosSelectionState] = useState({
@@ -910,7 +902,7 @@ function AppContent() {
       return <PlanoContasPage />;
     }
     if (screen === 'conta-corrente-cirurgiao') {
-      return <ContaCorrenteCirurgiaoPage />;
+      return <ContaCorrenteCirurgiaoShell />;
     }
     if (screen === 'simbolos-graficos') {
       return (
@@ -1303,23 +1295,8 @@ function AppContent() {
 
   const contaCorrenteCirurgiaoTopBar = useMemo(() => {
     if (screen !== 'conta-corrente-cirurgiao') return null;
-
-    return (
-      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da conta corrente do cirurgião">
-        <ContaCorrenteCirurgiaoToolbar
-          month={contaCorrenteCirurgiaoToolbarState.month}
-          year={contaCorrenteCirurgiaoToolbarState.year}
-          surgeonId={contaCorrenteCirurgiaoToolbarState.surgeonId}
-          viewMode={contaCorrenteCirurgiaoToolbarState.viewMode}
-          surgeonOptions={contaCorrenteCirurgiaoToolbarState.surgeonOptions}
-          onMonthChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, month: value }))}
-          onYearChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, year: value }))}
-          onSurgeonChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, surgeonId: value }))}
-          onViewModeChange={(value) => setContaCorrenteCirurgiaoToolbarState((current) => ({ ...current, viewMode: value }))}
-        />
-      </div>
-    );
-  }, [contaCorrenteCirurgiaoToolbarState.month, contaCorrenteCirurgiaoToolbarState.surgeonId, contaCorrenteCirurgiaoToolbarState.surgeonOptions, contaCorrenteCirurgiaoToolbarState.viewMode, contaCorrenteCirurgiaoToolbarState.year, screen]);
+    return null;
+  }, [screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',

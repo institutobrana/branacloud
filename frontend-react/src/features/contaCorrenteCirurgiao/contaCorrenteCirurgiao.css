@@ -17,11 +17,11 @@
 
 .conta-corrente-cirurgiao-toolbar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 10px 14px;
+  gap: 8px 12px;
   width: 100%;
-  padding: 2px 0;
+  padding: 0;
   background: transparent;
   border: 0;
   box-shadow: none;
@@ -30,43 +30,61 @@
 .conta-corrente-cirurgiao-toolbar-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
   flex: 0 1 auto;
+  min-width: 0;
 }
 
 .conta-corrente-cirurgiao-toolbar-actions .auxiliary-shell-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0;
+  white-space: nowrap;
 }
 
 .conta-corrente-cirurgiao-toolbar-divider {
   width: 1px;
   height: 26px;
-  background: rgba(148, 163, 184, 0.45);
+  background: rgba(255, 255, 255, 0.72);
   margin: 0 2px;
   flex: 0 0 auto;
+  opacity: 1;
+}
+
+.conta-corrente-cirurgiao-error {
+  padding: 10px 12px;
+  border: 1px solid rgba(192, 54, 44, 0.25);
+  border-radius: 10px;
+  background: rgba(192, 54, 44, 0.08);
+  color: #9f241d;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .conta-corrente-cirurgiao-filters {
   display: flex;
-  justify-content: flex-end;
-  align-items: end;
-  gap: 12px 14px;
-  flex: 1 1 540px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .conta-corrente-cirurgiao-filter {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .conta-corrente-cirurgiao-filter-label {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--brana-text-secondary, #5b6472);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--brana-text-inverse, #fff);
 }
 
 .conta-corrente-cirurgiao-filter .ant-select,
@@ -75,21 +93,48 @@
 }
 
 .conta-corrente-cirurgiao-filter--month {
-  width: 128px;
+  width: auto;
+  flex: 0 0 auto;
 }
 
 .conta-corrente-cirurgiao-filter--year {
-  width: 96px;
+  width: auto;
+  flex: 0 0 auto;
 }
 
 .conta-corrente-cirurgiao-filter--surgeon {
-  min-width: 220px;
-  flex: 1 1 220px;
+  min-width: 0;
+  flex: 0 1 160px;
 }
 
 .conta-corrente-cirurgiao-filter--view {
-  min-width: 260px;
-  flex: 1 1 260px;
+  min-width: 360px;
+  flex: 0 0 360px;
+  width: 360px;
+  max-width: 360px;
+}
+
+.conta-corrente-cirurgiao-filter .ant-select {
+  min-width: 0;
+  height: 30px;
+}
+
+.conta-corrente-cirurgiao-filter--month .ant-select {
+  width: 112px;
+}
+
+.conta-corrente-cirurgiao-filter--year .ant-input-number {
+  width: 84px;
+}
+
+.conta-corrente-cirurgiao-filter--surgeon .ant-select {
+  width: clamp(140px, 14vw, 210px);
+}
+
+.conta-corrente-cirurgiao-filter--view .ant-select {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
 }
 
 .conta-corrente-cirurgiao-shell {
@@ -224,6 +269,89 @@
   color: #c0362c;
 }
 
+.conta-corrente-cirurgiao-modal .ant-modal-content {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.conta-corrente-cirurgiao-modal .ant-modal-header {
+  background: linear-gradient(180deg, #f8fbfc 0%, #eef5f7 100%);
+}
+
+.conta-corrente-cirurgiao-modal .ant-modal-title {
+  font-weight: 700;
+}
+
+.conta-corrente-cirurgiao-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.conta-corrente-cirurgiao-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.conta-corrente-cirurgiao-modal-grid--meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.conta-corrente-cirurgiao-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.conta-corrente-cirurgiao-modal-field--full {
+  grid-column: 1 / -1;
+}
+
+.conta-corrente-cirurgiao-modal-field--readonly {
+  justify-content: flex-start;
+}
+
+.conta-corrente-cirurgiao-modal-field > span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brana-text-primary, #22313f);
+}
+
+.conta-corrente-cirurgiao-modal-field .ant-picker,
+.conta-corrente-cirurgiao-modal-field .ant-input,
+.conta-corrente-cirurgiao-modal-field .ant-select,
+.conta-corrente-cirurgiao-modal-field .ant-input-number {
+  width: 100%;
+}
+
+.conta-corrente-cirurgiao-modal-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.conta-corrente-cirurgiao-modal-inline-spin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.conta-corrente-cirurgiao-modal-inline-spin .ant-input-number {
+  width: 110px;
+}
+
+.conta-corrente-cirurgiao-modal .ant-tabs-nav {
+  margin-bottom: 12px;
+}
+
+.conta-corrente-cirurgiao-modal .ant-alert {
+  border-radius: 10px;
+}
+
 :root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-thead > tr > th {
   color: var(--brana-text-inverse);
 }
@@ -246,8 +374,22 @@
 }
 
 @media (max-width: 1366px) {
-  .conta-corrente-cirurgiao-filter--view {
-    min-width: 240px;
+  .conta-corrente-cirurgiao-filter--month .ant-select {
+    width: 104px;
+  }
+
+  .conta-corrente-cirurgiao-filter--year .ant-input-number {
+    width: 80px;
+  }
+
+  .conta-corrente-cirurgiao-filter--surgeon .ant-select {
+    width: clamp(132px, 13vw, 190px);
+  }
+
+  .conta-corrente-cirurgiao-filter--view .ant-select {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
@@ -262,12 +404,6 @@
 
   .conta-corrente-cirurgiao-toolbar {
     gap: 8px 12px;
-  }
-
-  .conta-corrente-cirurgiao-filter--surgeon,
-  .conta-corrente-cirurgiao-filter--view {
-    min-width: 100%;
-    flex-basis: 100%;
   }
 
   .conta-corrente-cirurgiao-totals {

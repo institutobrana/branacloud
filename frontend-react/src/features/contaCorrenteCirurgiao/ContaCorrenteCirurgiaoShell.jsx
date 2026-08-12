@@ -1,8 +1,12 @@
+import { useState } from 'react';
+
 import { ContaCorrenteCirurgiaoPage } from './ContaCorrenteCirurgiaoPage.jsx';
+import { InsereLancamentoModal } from './components/InsereLancamentoModal.jsx';
 import { ContaCorrenteCirurgiaoToolbar } from './components/ContaCorrenteCirurgiaoToolbar.jsx';
 import { useContaCorrenteCirurgiao } from './hooks/useContaCorrenteCirurgiao.js';
 
 export function ContaCorrenteCirurgiaoShell() {
+  const [launchModal, setLaunchModal] = useState({ open: false, type: 'debito' });
   const {
     month,
     year,
@@ -35,6 +39,8 @@ export function ContaCorrenteCirurgiaoShell() {
           onYearChange={setYear}
           onSurgeonChange={setSurgeonId}
           onViewModeChange={setViewMode}
+          onNewDebit={() => setLaunchModal({ open: true, type: 'debito' })}
+          onNewCredit={() => setLaunchModal({ open: true, type: 'credito' })}
         />
       </div>
       <ContaCorrenteCirurgiaoPage
@@ -45,6 +51,12 @@ export function ContaCorrenteCirurgiaoShell() {
         selectedId={selectedId}
         error={error}
         onSelect={setSelectedId}
+      />
+      <InsereLancamentoModal
+        open={launchModal.open}
+        initialType={launchModal.type}
+        prestadorId={surgeonId}
+        onClose={() => setLaunchModal({ open: false, type: 'debito' })}
       />
     </>
   );

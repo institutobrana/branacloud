@@ -16,6 +16,7 @@ export function useContaCorrenteCirurgiao() {
   const [loadingLancamentos, setLoadingLancamentos] = useState(false);
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
+  const [launchModal, setLaunchModal] = useState({ open: false, type: 'debito' });
 
   useEffect(() => {
     let active = true;
@@ -112,6 +113,9 @@ export function useContaCorrenteCirurgiao() {
       setSurgeonId,
       setViewMode,
       setSelectedId,
+      openLaunchModal: (type) => setLaunchModal({ open: true, type }),
+      closeLaunchModal: () => setLaunchModal({ open: false, type: 'debito' }),
+      launchModal,
     }),
     [
       error,
@@ -124,6 +128,7 @@ export function useContaCorrenteCirurgiao() {
       surgeonOptions,
       totalEntrada,
       totalSaida,
+      launchModal,
       viewMode,
       year,
     ],
