@@ -47,14 +47,14 @@ function normalizeNumber(value) {
   return Number.isFinite(amount) ? amount : null;
 }
 
-function TabForm({
-  mode,
-  state,
-  onChange,
-  categories,
-  paymentOptions,
-  situacoes,
-}) {
+function parseDecimal(value) {
+  if (value == null || value === '') return null;
+  const normalized = String(value).replace(/\./g, '').replace(',', '.');
+  const amount = Number(normalized);
+  return Number.isFinite(amount) ? amount : null;
+}
+
+function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes }) {
   const categoryLabel = mode === 'debito' ? 'Categoria de Saída' : 'Categoria de Entrada';
 
   return (
@@ -62,11 +62,7 @@ function TabForm({
       <div className="conta-corrente-cirurgiao-modal-grid">
         <label className="conta-corrente-cirurgiao-modal-field">
           <span>Vencimento</span>
-          <DatePicker
-            value={state.dataVencimento}
-            onChange={(value) => onChange('dataVencimento', value)}
-            format="DD/MM/YYYY"
-          />
+          <DatePicker value={state.dataVencimento} onChange={(value) => onChange('dataVencimento', value)} format="DD/MM/YYYY" />
         </label>
         <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly">
           <span>Dia da semana</span>
@@ -87,19 +83,11 @@ function TabForm({
         </label>
         <label className="conta-corrente-cirurgiao-modal-field">
           <span>Data do lançamento</span>
-          <DatePicker
-            value={state.dataLancamento}
-            onChange={(value) => onChange('dataLancamento', value)}
-            format="DD/MM/YYYY"
-          />
+          <DatePicker value={state.dataLancamento} onChange={(value) => onChange('dataLancamento', value)} format="DD/MM/YYYY" />
         </label>
         <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--full">
           <span>Histórico</span>
-          <Input
-            value={state.historico}
-            onChange={(event) => onChange('historico', event.target.value)}
-            placeholder="Descreva o lançamento"
-          />
+          <Input value={state.historico} onChange={(event) => onChange('historico', event.target.value)} placeholder="Descreva o lançamento" />
         </label>
         <label className="conta-corrente-cirurgiao-modal-field">
           <span>{categoryLabel}</span>
@@ -114,11 +102,7 @@ function TabForm({
         </label>
         <label className="conta-corrente-cirurgiao-modal-field">
           <span>Situação</span>
-          <Select
-            value={state.situacao}
-            onChange={(value) => onChange('situacao', value)}
-            options={situacoes}
-          />
+          <Select value={state.situacao} onChange={(value) => onChange('situacao', value)} options={situacoes} />
         </label>
         <label className="conta-corrente-cirurgiao-modal-field">
           <span>Forma de pagamento</span>
@@ -153,12 +137,7 @@ function TabForm({
           </Checkbox>
           <label className="conta-corrente-cirurgiao-modal-inline-spin">
             <span>Quantidade de meses</span>
-            <InputNumber
-              value={state.mesesExtras}
-              min={1}
-              disabled={!state.copiarMeses}
-              onChange={(value) => onChange('mesesExtras', Number(value || 1))}
-            />
+            <InputNumber value={state.mesesExtras} min={1} disabled={!state.copiarMeses} onChange={(value) => onChange('mesesExtras', Number(value || 1))} />
           </label>
         </div>
         <div className="conta-corrente-cirurgiao-modal-grid conta-corrente-cirurgiao-modal-grid--meta">
@@ -176,13 +155,17 @@ function TabForm({
   );
 }
 
-export function InsereLancamentoModal({ open, initialType, prestadorId, onClose }) {
+export function InsereLancamentoModal({ open, initialType, prestadorId, onClose, onSubmit }) {
   const [activeKey, setActiveKey] = useState(initialType || 'debito');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [saving, setSaving] = useState(false);
   const [categories, setCategories] = useState([]);
   const [paymentOptions, setPaymentOptions] = useState([]);
-  const [situacoes, setSituacoes] = useState([{ value: 'Aberto', label: 'Aberto' }, { value: 'Efetivado', label: 'Efetivado' }]);
+  const [situacoes, setSituacoes] = useState([
+    { value: 'Aberto', label: 'Aberto' },
+    { value: 'Efetivado', label: 'Efetivado' },
+  ]);
   const [loadingLookup, setLoadingLookup] = useState(false);
   const [formState, setFormState] = useState({
     debito: createTabState(),
@@ -194,6 +177,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
     setActiveKey(initialType || 'debito');
     setError('');
     setSuccess('');
+    setSaving(false);
     setFormState({
       debito: createTabState(),
       credito: createTabState(),
@@ -232,37 +216,65 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
   }, [activeKey, open]);
 
   const currentState = formState[activeKey];
-
-  const onChange = (field, value) => {
-    setFormState((prev) => ({
-      ...prev,
-      [activeKey]: {
-        ...prev[activeKey],
-        [field]: value,
-      },
-    }));
-  };
+  const currentTipo = activeKey === 'credito' ? 'credito' : 'debito';
 
   const validationMessage = useMemo(() => {
+    if (!prestadorId) return 'Selecione um cirurgião antes de salvar o lançamento.';
+    if (currentState.copiarMeses) return 'Repetição para próximos meses será habilitada em etapa posterior.';
     if (!currentState.historico.trim()) return 'Informe o histórico.';
-    if (currentState.valor == null || Number(currentState.valor) <= 0) return 'Informe um valor válido.';
+    const parsedValue = parseDecimal(currentState.valor);
+    if (parsedValue == null || parsedValue <= 0) return 'Informe um valor válido.';
     if (!currentState.categoriaId) return 'Selecione uma categoria.';
     return '';
-  }, [currentState.categoriaId, currentState.historico, currentState.valor]);
+  }, [currentState.categoriaId, currentState.copiarMeses, currentState.historico, currentState.valor, prestadorId]);
 
-  const handleOk = () => {
+  const buildPayload = () => {
+    const parsedValue = parseDecimal(currentState.valor) ?? 0;
+    return {
+      categoria_id: Number(currentState.categoriaId || 0),
+      historico: currentState.historico.trim(),
+      valor: parsedValue,
+      tipo: currentTipo,
+      conta: 'CIRURGIAO',
+      situacao: currentState.situacao || 'Aberto',
+      forma_pagamento: currentState.formaPagamento || null,
+      documento: currentState.documento.trim() || null,
+      referencia: currentState.referencia.trim() || null,
+      complemento: currentState.complemento.trim() || null,
+      prestador_id: Number(prestadorId || 0) || null,
+      tributavel: currentState.tributavel ? 1 : 0,
+      parcelas: 1,
+      data_lancamento: dayjs(currentState.dataLancamento).format('YYYY-MM-DD'),
+      data_vencimento: dayjs(currentState.dataVencimento).format('YYYY-MM-DD'),
+    };
+  };
+
+  const handleOk = async () => {
+    if (saving) return;
     if (validationMessage) {
       setError(validationMessage);
       setSuccess('');
       return;
     }
+
     setError('');
-    setSuccess('Persistência ainda não implementada nesta etapa.');
+    setSaving(true);
+    try {
+      await onSubmit?.(buildPayload());
+      setSuccess('');
+      onClose?.({ saved: true });
+    } catch (err) {
+      setError(err?.message || 'Falha ao salvar lançamento.');
+      setSuccess('');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
     setError('');
     setSuccess('');
+    setSaving(false);
     onClose?.();
   };
 
@@ -275,8 +287,8 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
         <Button key="cancel" onClick={handleCancel}>
           Cancela
         </Button>,
-        <Button key="ok" type="primary" onClick={handleOk}>
-          OK
+        <Button key="ok" type="primary" onClick={handleOk} loading={saving} disabled={saving}>
+          {saving ? 'Salvando...' : 'OK'}
         </Button>,
       ]}
       width={980}
@@ -287,6 +299,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
         if (!visible) {
           setError('');
           setSuccess('');
+          setSaving(false);
         }
       }}
       className="conta-corrente-cirurgiao-modal"
@@ -300,6 +313,10 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
         {error ? <Alert type="error" message={error} showIcon /> : null}
         {success ? <Alert type="success" message={success} showIcon /> : null}
+        {!prestadorId ? <Alert type="warning" message="Selecione um cirurgião antes de salvar o lançamento." showIcon /> : null}
+        {currentState.copiarMeses ? (
+          <Alert type="warning" message="Repetição para próximos meses será habilitada em etapa posterior." showIcon />
+        ) : null}
         <Tabs
           activeKey={activeKey}
           onChange={(key) => {
@@ -321,7 +338,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
                       debito: { ...prev.debito, [field]: value },
                     }))
                   }
-                  categories={activeKey === 'debito' ? categories : []}
+                  categories={categories}
                   paymentOptions={paymentOptions}
                   situacoes={situacoes}
                 />
@@ -340,7 +357,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose 
                       credito: { ...prev.credito, [field]: value },
                     }))
                   }
-                  categories={activeKey === 'credito' ? categories : []}
+                  categories={categories}
                   paymentOptions={paymentOptions}
                   situacoes={situacoes}
                 />

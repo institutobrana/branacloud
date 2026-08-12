@@ -135,3 +135,15 @@ export async function listarSituacoesContaCirurgiao() {
 
   return Array.isArray(data) ? data : [];
 }
+
+export async function criarLancamentoContaCirurgiao(payload) {
+  const data = await requestJson('/financeiro/lancamentos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return data || {};
+}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ContaCorrenteCirurgiaoPage } from './ContaCorrenteCirurgiaoPage.jsx';
 import { InsereLancamentoModal } from './components/InsereLancamentoModal.jsx';
 import { ContaCorrenteCirurgiaoToolbar } from './components/ContaCorrenteCirurgiaoToolbar.jsx';
+import { criarLancamentoContaCirurgiao } from './contaCorrenteCirurgiaoApi.js';
 import { useContaCorrenteCirurgiao } from './hooks/useContaCorrenteCirurgiao.js';
 
 export function ContaCorrenteCirurgiaoShell() {
@@ -24,6 +25,7 @@ export function ContaCorrenteCirurgiaoShell() {
     setSurgeonId,
     setViewMode,
     setSelectedId,
+    reloadLancamentos,
   } = useContaCorrenteCirurgiao();
 
   return (
@@ -57,6 +59,11 @@ export function ContaCorrenteCirurgiaoShell() {
         initialType={launchModal.type}
         prestadorId={surgeonId}
         onClose={() => setLaunchModal({ open: false, type: 'debito' })}
+        onSubmit={async (payload) => {
+          await criarLancamentoContaCirurgiao(payload);
+          await reloadLancamentos();
+          setLaunchModal({ open: false, type: 'debito' });
+        }}
       />
     </>
   );
