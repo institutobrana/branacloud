@@ -42,6 +42,7 @@ function normalizePrestador(item) {
   const record = item || {};
   return {
     id: Number(record.id ?? 0) || null,
+    apelido: String(record.apelido ?? '').trim(),
     nome: String(record.nome ?? '').trim(),
   };
 }

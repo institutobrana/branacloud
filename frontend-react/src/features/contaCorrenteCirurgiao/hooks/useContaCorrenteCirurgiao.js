@@ -26,7 +26,7 @@ export function useContaCorrenteCirurgiao() {
         if (!active) return;
         setSurgeonOptions(
           rows.map((item) => ({
-            label: item.nome,
+            label: item.apelido || item.nome,
             value: item.id,
           })),
         );
