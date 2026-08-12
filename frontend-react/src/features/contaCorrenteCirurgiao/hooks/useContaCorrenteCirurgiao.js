@@ -17,6 +17,10 @@ export function useContaCorrenteCirurgiao() {
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const [refreshToken, setRefreshToken] = useState(0);
+  const selectedRow = useMemo(
+    () => items.find((item) => String(item.id) === String(selectedId ?? '')) || null,
+    [items, selectedId],
+  );
 
   useEffect(() => {
     let active = true;
@@ -106,6 +110,7 @@ export function useContaCorrenteCirurgiao() {
       totalSaida,
       saldo,
       selectedId,
+      selectedRow,
       loading: isLoading,
       error,
       setMonth,
@@ -121,6 +126,7 @@ export function useContaCorrenteCirurgiao() {
       items,
       month,
       selectedId,
+      selectedRow,
       saldo,
       surgeonId,
       surgeonOptions,

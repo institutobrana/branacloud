@@ -49,7 +49,8 @@ function normalizeNumber(value) {
 
 function parseDecimal(value) {
   if (value == null || value === '') return null;
-  const normalized = String(value).replace(/\./g, '').replace(',', '.');
+  const raw = String(value).trim();
+  const normalized = raw.includes(',') ? raw.replace(/\./g, '').replace(',', '.') : raw;
   const amount = Number(normalized);
   return Number.isFinite(amount) ? amount : null;
 }
@@ -155,7 +156,39 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
   );
 }
 
-export function InsereLancamentoModal({ open, initialType, prestadorId, onClose, onSubmit }) {
+function cloneTabState(source) {
+  return {
+    ...createTabState(),
+    ...source,
+  };
+}
+
+function buildStateFromLancamento(lancamento) {
+  if (!lancamento) return null;
+  const dataLancamento = dayjs(lancamento.data_lancamento || lancamento.dataLancamento || null);
+  const dataVencimento = dayjs(lancamento.data_vencimento || lancamento.dataVencimento || null);
+  const base = createTabState();
+  return {
+    ...base,
+    dataLancamento: dataLancamento.isValid() ? dataLancamento : base.dataLancamento,
+    dataVencimento: dataVencimento.isValid() ? dataVencimento : base.dataVencimento,
+    valor: Number(lancamento.valor ?? 0) || null,
+    historico: String(lancamento.historico ?? ''),
+    categoriaId: Number(lancamento.categoria_id ?? 0) || null,
+    situacao: String(lancamento.situacao ?? 'Aberto'),
+    formaPagamento: lancamento.forma_pagamento ?? null,
+    documento: String(lancamento.documento ?? ''),
+    referencia: String(lancamento.referencia ?? ''),
+    complemento: String(lancamento.complemento ?? ''),
+    tributavel: Boolean(Number(lancamento.tributavel ?? 0)),
+    copiarMeses: false,
+    mesesExtras: 0,
+    inclusao: dataLancamento.isValid() ? dataLancamento : base.inclusao,
+    ultimaAtualizacao: lancamento.data_alteracao ? dayjs(lancamento.data_alteracao) : null,
+  };
+}
+
+export function InsereLancamentoModal({ open, initialType, prestadorId, mode = 'create', lancamento = null, onClose, onSubmit }) {
   const [activeKey, setActiveKey] = useState(initialType || 'debito');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -178,11 +211,21 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose,
     setError('');
     setSuccess('');
     setSaving(false);
-    setFormState({
-      debito: createTabState(),
-      credito: createTabState(),
-    });
-  }, [initialType, open]);
+    const seedState = mode === 'edit' && lancamento ? buildStateFromLancamento(lancamento) : null;
+    if (seedState) {
+      const key = initialType || (String(lancamento?.tipo || '').toLowerCase() === 'credito' ? 'credito' : 'debito');
+      setActiveKey(key);
+      setFormState({
+        debito: key === 'debito' ? cloneTabState(seedState) : createTabState(),
+        credito: key === 'credito' ? cloneTabState(seedState) : createTabState(),
+      });
+    } else {
+      setFormState({
+        debito: createTabState(),
+        credito: createTabState(),
+      });
+    }
+  }, [initialType, lancamento, mode, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -285,7 +328,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, onClose,
   return (
     <Modal
       open={open}
-      title="Insere lançamento"
+      title={mode === 'edit' ? 'Altera lançamento' : 'Insere lançamento'}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>

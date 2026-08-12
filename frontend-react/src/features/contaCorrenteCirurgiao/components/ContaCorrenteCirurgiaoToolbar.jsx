@@ -8,12 +8,14 @@ export function ContaCorrenteCirurgiaoToolbar({
   surgeonId,
   viewMode,
   surgeonOptions,
+  hasSelection = false,
   onMonthChange,
   onYearChange,
   onSurgeonChange,
   onViewModeChange,
   onNewDebit,
   onNewCredit,
+  onEdit,
 }) {
   return (
     <div className="conta-corrente-cirurgiao-toolbar" role="toolbar" aria-label="Barra operacional da conta corrente do cirurgiao">
@@ -24,7 +26,7 @@ export function ContaCorrenteCirurgiaoToolbar({
         <button type="button" className="auxiliary-shell-button primary" onClick={() => onNewCredit?.()}>
           Novo credito
         </button>
-        <button type="button" className="auxiliary-shell-button" disabled aria-disabled="true">
+        <button type="button" className="auxiliary-shell-button" disabled={!hasSelection} aria-disabled={!hasSelection} onClick={() => onEdit?.()}>
           <EditOutlined /> Altera
         </button>
         <button type="button" className="auxiliary-shell-button danger" disabled aria-disabled="true">

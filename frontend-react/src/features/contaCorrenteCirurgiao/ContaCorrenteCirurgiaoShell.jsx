@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { ContaCorrenteCirurgiaoPage } from './ContaCorrenteCirurgiaoPage.jsx';
 import { InsereLancamentoModal } from './components/InsereLancamentoModal.jsx';
 import { ContaCorrenteCirurgiaoToolbar } from './components/ContaCorrenteCirurgiaoToolbar.jsx';
-import { criarLancamentoContaCirurgiao } from './contaCorrenteCirurgiaoApi.js';
+import { atualizarLancamentoContaCirurgiao, criarLancamentoContaCirurgiao } from './contaCorrenteCirurgiaoApi.js';
 import { useContaCorrenteCirurgiao } from './hooks/useContaCorrenteCirurgiao.js';
 
 export function ContaCorrenteCirurgiaoShell() {
-  const [launchModal, setLaunchModal] = useState({ open: false, type: 'debito' });
+  const [launchModal, setLaunchModal] = useState({ open: false, type: 'debito', mode: 'create' });
   const {
     month,
     year,
@@ -19,6 +19,7 @@ export function ContaCorrenteCirurgiaoShell() {
     totalSaida,
     saldo,
     selectedId,
+    selectedRow,
     error,
     setMonth,
     setYear,
@@ -37,12 +38,14 @@ export function ContaCorrenteCirurgiaoShell() {
           surgeonId={surgeonId}
           viewMode={viewMode}
           surgeonOptions={surgeonOptions}
+          hasSelection={selectedId != null}
           onMonthChange={setMonth}
           onYearChange={setYear}
           onSurgeonChange={setSurgeonId}
           onViewModeChange={setViewMode}
-          onNewDebit={() => setLaunchModal({ open: true, type: 'debito' })}
-          onNewCredit={() => setLaunchModal({ open: true, type: 'credito' })}
+          onNewDebit={() => setLaunchModal({ open: true, type: 'debito', mode: 'create' })}
+          onNewCredit={() => setLaunchModal({ open: true, type: 'credito', mode: 'create' })}
+          onEdit={() => setLaunchModal({ open: true, type: selectedRow?.tipo === 'credito' ? 'credito' : 'debito', mode: 'edit' })}
         />
       </div>
       <ContaCorrenteCirurgiaoPage
@@ -58,11 +61,17 @@ export function ContaCorrenteCirurgiaoShell() {
         open={launchModal.open}
         initialType={launchModal.type}
         prestadorId={surgeonId}
-        onClose={() => setLaunchModal({ open: false, type: 'debito' })}
+        mode={launchModal.mode || 'create'}
+        lancamento={launchModal.mode === 'edit' ? selectedRow : null}
+        onClose={() => setLaunchModal({ open: false, type: 'debito', mode: 'create' })}
         onSubmit={async (payload) => {
-          await criarLancamentoContaCirurgiao(payload);
+          if (launchModal.mode === 'edit' && selectedRow?.id != null) {
+            await atualizarLancamentoContaCirurgiao(selectedRow.id, payload);
+          } else {
+            await criarLancamentoContaCirurgiao(payload);
+          }
           await reloadLancamentos();
-          setLaunchModal({ open: false, type: 'debito' });
+          setLaunchModal({ open: false, type: 'debito', mode: 'create' });
         }}
       />
     </>

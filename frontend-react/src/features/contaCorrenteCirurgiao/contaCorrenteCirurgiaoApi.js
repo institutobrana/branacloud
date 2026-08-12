@@ -147,3 +147,15 @@ export async function criarLancamentoContaCirurgiao(payload) {
 
   return data || {};
 }
+
+export async function atualizarLancamentoContaCirurgiao(id, payload) {
+  const data = await requestJson(`/financeiro/lancamentos/${encodeURIComponent(String(id))}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return data || {};
+}
