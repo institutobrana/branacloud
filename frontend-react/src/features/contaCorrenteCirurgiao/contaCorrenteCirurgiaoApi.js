@@ -159,3 +159,11 @@ export async function atualizarLancamentoContaCirurgiao(id, payload) {
 
   return data || {};
 }
+
+export async function excluirLancamentoContaCirurgiao(id) {
+  const data = await requestJson(`/financeiro/lancamentos/${encodeURIComponent(String(id))}`, {
+    method: 'DELETE',
+  });
+
+  return data || {};
+}

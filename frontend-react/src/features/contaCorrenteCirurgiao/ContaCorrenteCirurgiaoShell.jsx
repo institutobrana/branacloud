@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { Button, Modal } from 'antd';
 
 import { ContaCorrenteCirurgiaoPage } from './ContaCorrenteCirurgiaoPage.jsx';
 import { InsereLancamentoModal } from './components/InsereLancamentoModal.jsx';
 import { ContaCorrenteCirurgiaoToolbar } from './components/ContaCorrenteCirurgiaoToolbar.jsx';
-import { atualizarLancamentoContaCirurgiao, criarLancamentoContaCirurgiao } from './contaCorrenteCirurgiaoApi.js';
+import { atualizarLancamentoContaCirurgiao, criarLancamentoContaCirurgiao, excluirLancamentoContaCirurgiao } from './contaCorrenteCirurgiaoApi.js';
 import { useContaCorrenteCirurgiao } from './hooks/useContaCorrenteCirurgiao.js';
 
 export function ContaCorrenteCirurgiaoShell() {
   const [launchModal, setLaunchModal] = useState({ open: false, type: 'debito', mode: 'create' });
+  const [deleting, setDeleting] = useState(false);
+  const [deletePromptOpen, setDeletePromptOpen] = useState(false);
   const {
     month,
     year,
@@ -29,6 +32,24 @@ export function ContaCorrenteCirurgiaoShell() {
     reloadLancamentos,
   } = useContaCorrenteCirurgiao();
 
+  const handleDelete = () => {
+    if (!selectedRow?.id || deleting) return;
+    setDeletePromptOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedRow?.id || deleting) return;
+    setDeleting(true);
+    try {
+      await excluirLancamentoContaCirurgiao(selectedRow.id);
+      setSelectedId(null);
+      setDeletePromptOpen(false);
+      await reloadLancamentos();
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <>
       <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da conta corrente do cirurgião">
@@ -46,6 +67,7 @@ export function ContaCorrenteCirurgiaoShell() {
           onNewDebit={() => setLaunchModal({ open: true, type: 'debito', mode: 'create' })}
           onNewCredit={() => setLaunchModal({ open: true, type: 'credito', mode: 'create' })}
           onEdit={() => setLaunchModal({ open: true, type: selectedRow?.tipo === 'credito' ? 'credito' : 'debito', mode: 'edit' })}
+          onDelete={handleDelete}
         />
       </div>
       <ContaCorrenteCirurgiaoPage
@@ -74,6 +96,26 @@ export function ContaCorrenteCirurgiaoShell() {
           setLaunchModal({ open: false, type: 'debito', mode: 'create' });
         }}
       />
+      <Modal
+        open={deletePromptOpen}
+        title="Excluir lançamento"
+        onCancel={() => {
+          if (!deleting) setDeletePromptOpen(false);
+        }}
+        footer={[
+          <Button key="cancel" onClick={() => setDeletePromptOpen(false)} disabled={deleting}>
+            Cancelar
+          </Button>,
+          <Button key="ok" danger type="primary" onClick={confirmDelete} loading={deleting} disabled={deleting}>
+            Excluir
+          </Button>,
+        ]}
+        centered
+        destroyOnClose
+        maskClosable={false}
+      >
+        <p>{selectedRow ? `Confirma a exclusão do lançamento "${selectedRow.historico}"?` : 'Selecione um lançamento.'}</p>
+      </Modal>
     </>
   );
 }
