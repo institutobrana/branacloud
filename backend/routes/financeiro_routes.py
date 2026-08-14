@@ -10,6 +10,7 @@ from database import get_db
 from models.financeiro import CategoriaFinanceira, GrupoFinanceiro, ItemAuxiliar, Lancamento
 from models.prestador_odonto import PrestadorOdonto
 from models.usuario import Usuario
+from security.system_accounts import is_system_prestador
 from security.dependencies import get_current_user, require_module_access
 
 router = APIRouter(
@@ -220,9 +221,13 @@ def listar_lancamentos(
     prefixo_data = f"{ano:04d}-{mes:02d}-"
     conta_norm = _normalizar_conta(conta)
     conta_var = _conta_variantes(conta_norm)
-    if conta_norm == CONTA_CLINICA and prestador_id is not None:
-        raise HTTPException(status_code=400, detail='prestador_id nao se aplica a conta CLINICA.')
     prestador = _prestador_da_clinica_or_404(db, current_user.clinica_id, prestador_id)
+
+    if prestador is not None and is_system_prestador(prestador):
+        conta_norm = CONTA_CLINICA
+        conta_var = _conta_variantes(conta_norm)
+        prestador = None
+
     query = (
         db.query(Lancamento)
         .join(CategoriaFinanceira, CategoriaFinanceira.id == Lancamento.categoria_id)
@@ -234,7 +239,14 @@ def listar_lancamentos(
         )
     )
     if conta_norm == CONTA_CIRURGIAO and prestador is not None:
-        query = query.filter(Lancamento.prestador_id == prestador.id)
+        if int(current_user.prestador_id or 0) == int(prestador.id):
+            query = query.filter(
+                (Lancamento.prestador_id.is_(None)) | (Lancamento.prestador_id == prestador.id)
+            )
+        else:
+            query = query.filter(Lancamento.prestador_id == prestador.id)
+    elif conta_norm == CONTA_CLINICA:
+        query = query.filter(Lancamento.conta.in_(_conta_variantes(CONTA_CLINICA)))
 
     filtro_norm = _norm(filtro)
     if 'tributave' in filtro_norm:

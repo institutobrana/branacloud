@@ -11,6 +11,7 @@ export function ContaCorrenteCirurgiaoPage({
   selectedId = null,
   error = '',
   onSelect,
+  onDoubleClick,
 }) {
   return (
     <div className="conta-corrente-cirurgiao-page">
@@ -20,7 +21,7 @@ export function ContaCorrenteCirurgiaoPage({
           items={items}
           selectedId={selectedId}
           onSelect={onSelect}
-          onDoubleClick={() => {}}
+          onDoubleClick={onDoubleClick}
         />
         <ContaCorrenteCirurgiaoTotals totalEntrada={totalEntrada} totalSaida={totalSaida} saldo={saldo} />
       </div>

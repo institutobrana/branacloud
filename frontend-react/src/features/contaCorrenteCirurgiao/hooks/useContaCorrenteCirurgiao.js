@@ -1,11 +1,23 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useAuth } from '../../auth/AuthProvider.jsx';
 import { listarLancamentosContaCirurgiao, listarPrestadoresCirurgiao } from '../contaCorrenteCirurgiaoApi.js';
 
+function resolveAuthenticatedUserPrestadorId(user) {
+  if (!user) return null;
+  const candidates = [user.prestador_id, user.prestadorId, user.prestador?.id, user.prestador?.prestador_id];
+  for (const candidate of candidates) {
+    const id = Number(candidate ?? 0);
+    if (Number.isFinite(id) && id > 0) return id;
+  }
+  return null;
+}
+
 export function useContaCorrenteCirurgiao() {
+  const { user } = useAuth();
   const [month, setMonth] = useState(() => new Date().getMonth() + 1);
   const [year, setYear] = useState(() => new Date().getFullYear());
-  const [surgeonId, setSurgeonId] = useState(null);
+  const [surgeonId, setSurgeonIdState] = useState(null);
   const [viewMode, setViewMode] = useState('todos');
   const [surgeonOptions, setSurgeonOptions] = useState([]);
   const [items, setItems] = useState([]);
@@ -17,10 +29,17 @@ export function useContaCorrenteCirurgiao() {
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const [refreshToken, setRefreshToken] = useState(0);
+  const autoSelectedRef = useRef(false);
+  const manualSelectionRef = useRef(false);
   const selectedRow = useMemo(
     () => items.find((item) => String(item.id) === String(selectedId ?? '')) || null,
     [items, selectedId],
   );
+
+  const setSurgeonId = (nextSurgeonId) => {
+    manualSelectionRef.current = true;
+    setSurgeonIdState(nextSurgeonId);
+  };
 
   useEffect(() => {
     let active = true;
@@ -29,12 +48,20 @@ export function useContaCorrenteCirurgiao() {
     listarPrestadoresCirurgiao()
       .then((rows) => {
         if (!active) return;
-        setSurgeonOptions(
-          rows.map((item) => ({
-            label: item.apelido || item.nome,
-            value: item.id,
-          })),
-        );
+        const nextOptions = rows.map((item) => ({
+          label: item.apelido || item.nome,
+          value: item.id,
+        }));
+        setSurgeonOptions(nextOptions);
+
+        const userPrestadorId = resolveAuthenticatedUserPrestadorId(user);
+        if (!manualSelectionRef.current && !autoSelectedRef.current && userPrestadorId) {
+          const matchedOption = nextOptions.find((item) => String(item.value) === String(userPrestadorId));
+          if (matchedOption) {
+            autoSelectedRef.current = true;
+            setSurgeonIdState(matchedOption.value);
+          }
+        }
       })
       .catch((err) => {
         if (!active) return;
@@ -48,7 +75,17 @@ export function useContaCorrenteCirurgiao() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [user]);
+
+  useEffect(() => {
+    if (manualSelectionRef.current || autoSelectedRef.current) return;
+    const userPrestadorId = resolveAuthenticatedUserPrestadorId(user);
+    if (!userPrestadorId) return;
+    const matchedOption = surgeonOptions.find((item) => String(item.value) === String(userPrestadorId));
+    if (!matchedOption) return;
+    autoSelectedRef.current = true;
+    setSurgeonIdState(matchedOption.value);
+  }, [surgeonOptions, user]);
 
   useEffect(() => {
     if (!surgeonId) {

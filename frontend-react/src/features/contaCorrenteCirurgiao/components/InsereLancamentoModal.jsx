@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Alert, Button, Checkbox, DatePicker, Input, InputNumber, Modal, Select, Space, Tabs, Typography } from 'antd';
 import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 
 import {
   listarCategoriasContaCirurgiao,
@@ -33,7 +34,8 @@ function createTabState() {
 function formatWeekday(value) {
   const date = dayjs.isDayjs(value) ? value : dayjs(value);
   if (!date.isValid()) return '—';
-  return date.locale('pt-br').format('ddd');
+  const weekday = date.locale('pt-br').format('dddd');
+  return weekday.charAt(0).toUpperCase() + weekday.slice(1);
 }
 
 function formatDateLabel(value) {
@@ -60,16 +62,16 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
 
   return (
     <div className="conta-corrente-cirurgiao-modal-form">
-      <div className="conta-corrente-cirurgiao-modal-grid">
-        <label className="conta-corrente-cirurgiao-modal-field">
+      <div className="conta-corrente-cirurgiao-modal-grid conta-corrente-cirurgiao-modal-grid--main">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--w-date">
           <span>Vencimento</span>
           <DatePicker value={state.dataVencimento} onChange={(value) => onChange('dataVencimento', value)} format="DD/MM/YYYY" />
         </label>
-        <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly">
+        <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly conta-corrente-cirurgiao-modal-field--w-weekday">
           <span>Dia da semana</span>
-          <Typography.Text>{formatWeekday(state.dataVencimento)}</Typography.Text>
+          <span className="conta-corrente-cirurgiao-readonly-value">{formatWeekday(state.dataVencimento)}</span>
         </div>
-        <label className="conta-corrente-cirurgiao-modal-field">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--w-money">
           <span>Valor</span>
           <InputNumber
             value={state.valor}
@@ -82,15 +84,17 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
             placeholder="0,00"
           />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--w-date">
           <span>Data do lançamento</span>
           <DatePicker value={state.dataLancamento} onChange={(value) => onChange('dataLancamento', value)} format="DD/MM/YYYY" />
         </label>
+
         <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--full">
           <span>Histórico</span>
           <Input value={state.historico} onChange={(event) => onChange('historico', event.target.value)} placeholder="Descreva o lançamento" />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field">
+
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--category">
           <span>{categoryLabel}</span>
           <Select
             value={state.categoriaId}
@@ -101,11 +105,12 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
             optionFilterProp="label"
           />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--status">
           <span>Situação</span>
           <Select value={state.situacao} onChange={(value) => onChange('situacao', value)} options={situacoes} />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field">
+
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--payment">
           <span>Forma de pagamento</span>
           <Select
             value={state.formaPagamento}
@@ -117,19 +122,31 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
             optionFilterProp="label"
           />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--doc conta-corrente-cirurgiao-modal-field--equal">
           <span>Nº documento</span>
           <Input value={state.documento} onChange={(event) => onChange('documento', event.target.value)} />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--ref conta-corrente-cirurgiao-modal-field--equal">
           <span>Referência</span>
           <Input value={state.referencia} onChange={(event) => onChange('referencia', event.target.value)} />
         </label>
-        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--full">
+        <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--complement conta-corrente-cirurgiao-modal-field--equal">
           <span>Complemento</span>
           <Input value={state.complemento} onChange={(event) => onChange('complemento', event.target.value)} />
         </label>
-        <div className="conta-corrente-cirurgiao-modal-row">
+
+        <div className="conta-corrente-cirurgiao-modal-meta-row">
+          <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly">
+            <span>Inclusão</span>
+            <span className="conta-corrente-cirurgiao-readonly-value">{formatDateLabel(state.inclusao)}</span>
+          </div>
+          <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly">
+            <span>Última atualização</span>
+            <span className="conta-corrente-cirurgiao-readonly-value">{state.ultimaAtualizacao ? formatDateLabel(state.ultimaAtualizacao) : '—'}</span>
+          </div>
+        </div>
+
+        <div className="conta-corrente-cirurgiao-modal-row conta-corrente-cirurgiao-modal-row--compact">
           <Checkbox checked={state.tributavel} onChange={(event) => onChange('tributavel', event.target.checked)}>
             Tributável
           </Checkbox>
@@ -141,19 +158,13 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
             <InputNumber value={state.mesesExtras} min={0} disabled={!state.copiarMeses} onChange={(value) => onChange('mesesExtras', Number(value ?? 0))} />
           </label>
         </div>
-        <div className="conta-corrente-cirurgiao-modal-grid conta-corrente-cirurgiao-modal-grid--meta">
-          <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly">
-            <span>Inclusão</span>
-            <Typography.Text>{formatDateLabel(state.inclusao)}</Typography.Text>
-          </div>
-          <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly">
-            <span>Última atualização</span>
-            <Typography.Text>{state.ultimaAtualizacao ? formatDateLabel(state.ultimaAtualizacao) : '—'}</Typography.Text>
-          </div>
-        </div>
       </div>
     </div>
   );
+}
+
+function LancamentoTabLabel({ children }) {
+  return <span className="conta-corrente-cirurgiao-tab-label">{children}</span>;
 }
 
 function cloneTabState(source) {
@@ -238,7 +249,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, mode = '
     ])
       .then(([cats, payments, statuses]) => {
         if (!active) return;
-        setCategories(cats.map((item) => ({ value: item.id, label: item.nome })));
+        setCategories(cats.map((item) => ({ value: item.value, label: item.label })));
         setPaymentOptions(payments.map((item) => ({ value: item.codigo, label: item.descricao })));
         if (Array.isArray(statuses) && statuses.length) {
           setSituacoes(statuses.map((value) => ({ value, label: value })));
@@ -338,7 +349,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, mode = '
           {saving ? 'Salvando...' : 'OK'}
         </Button>,
       ]}
-      width={980}
+      width={760}
       destroyOnClose
       maskClosable={false}
       keyboard
@@ -352,12 +363,11 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, mode = '
       className="conta-corrente-cirurgiao-modal"
       styles={{
         body: {
-          maxHeight: 'calc(100vh - 180px)',
-          overflowY: 'auto',
+          padding: '10px 12px 12px',
         },
       }}
     >
-      <Space direction="vertical" size={12} style={{ width: '100%' }}>
+      <Space direction="vertical" size={10} style={{ width: '100%' }}>
         {error ? <Alert type="error" message={error} showIcon /> : null}
         {success ? <Alert type="success" message={success} showIcon /> : null}
         {!prestadorId ? <Alert type="warning" message="Selecione um cirurgião antes de salvar o lançamento." showIcon /> : null}
@@ -368,10 +378,12 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, mode = '
             setError('');
             setSuccess('');
           }}
+          type="card"
+          className="conta-corrente-cirurgiao-classic-tabs"
           items={[
             {
               key: 'debito',
-              label: 'Débito',
+              label: <LancamentoTabLabel>Débito</LancamentoTabLabel>,
               children: (
                 <TabForm
                   mode="debito"
@@ -390,7 +402,7 @@ export function InsereLancamentoModal({ open, initialType, prestadorId, mode = '
             },
             {
               key: 'credito',
-              label: 'Crédito',
+              label: <LancamentoTabLabel>Crédito</LancamentoTabLabel>,
               children: (
                 <TabForm
                   mode="credito"

@@ -44,6 +44,27 @@ function normalizePrestador(item) {
     id: Number(record.id ?? 0) || null,
     apelido: String(record.apelido ?? '').trim(),
     nome: String(record.nome ?? '').trim(),
+    usuario_id: Number(record.usuario_id ?? 0) || null,
+  };
+}
+
+function normalizeGrupo(item) {
+  const record = item || {};
+  return {
+    value: Number(record.id ?? 0) || null,
+    label: String(record.nome ?? '').trim(),
+    tipo: String(record.tipo ?? '').trim(),
+  };
+}
+
+function normalizeCategoria(item) {
+  const record = item || {};
+  return {
+    value: Number(record.id ?? 0) || null,
+    label: String(record.nome ?? '').trim(),
+    grupo_id: Number(record.grupo_id ?? 0) || null,
+    tipo: String(record.tipo ?? '').trim(),
+    tributavel: Boolean(record.tributavel),
   };
 }
 
@@ -117,7 +138,15 @@ export async function listarCategoriasContaCirurgiao(tipo) {
     method: 'GET',
   });
 
-  return Array.isArray(data) ? data : [];
+  return Array.isArray(data) ? data.map(normalizeCategoria).filter((item) => item.value != null && item.label) : [];
+}
+
+export async function listarGruposContaCirurgiao() {
+  const data = await requestJson('/cadastros/grupos', {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data.map(normalizeGrupo).filter((item) => item.value != null && item.label) : [];
 }
 
 export async function listarFormasPagamentoContaCirurgiao() {

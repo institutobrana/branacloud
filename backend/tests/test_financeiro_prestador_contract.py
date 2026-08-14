@@ -75,6 +75,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
                     is_system_user=False,
                     is_admin=True,
                     clinica_id=1,
+                    prestador_id=1,
                 ),
                 GrupoFinanceiro(id=1, clinica_id=1, nome="Receitas", tipo="Entrada"),
                 GrupoFinanceiro(id=2, clinica_id=1, nome="Despesas", tipo="Saida"),
@@ -93,11 +94,14 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
                 PrestadorOdonto(
                     id=2,
                     clinica_id=1,
-                    source_id=12,
-                    nome="Dr B",
+                    source_id=255,
+                    codigo="001",
+                    nome="Clínica",
+                    apelido="Clínica",
+                    tipo_prestador="Clínica odontológica",
                     inativo=False,
                     executa_procedimento=True,
-                    is_system_prestador=False,
+                    is_system_prestador=True,
                 ),
                 PrestadorOdonto(
                     id=3,
@@ -111,7 +115,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
             ]
         )
         self.db.commit()
-        self.current_user = SimpleNamespace(id=1, clinica_id=1, is_admin=True)
+        self.current_user = SimpleNamespace(id=1, clinica_id=1, is_admin=True, prestador_id=1)
 
     def tearDown(self):
         self.db.close()
@@ -182,7 +186,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
             mes=8,
             ano=2026,
             conta="CLINICA",
-            prestador_id=None,
+            prestador_id=2,
             filtro="Todos os lancamentos",
             current_user=self.current_user,
             db=self.db,
@@ -198,7 +202,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
             mes=8,
             ano=2026,
             conta="CIRURGIAO",
-            prestador_id=None,
+            prestador_id=1,
             filtro="Todos os lancamentos",
             current_user=self.current_user,
             db=self.db,
@@ -235,7 +239,7 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
                 filtro="Todos os lancamentos",
                 current_user=self.current_user,
                 db=self.db,
-            )
+        )
         self.assertEqual(ctx.exception.status_code, 404)
 
     def test_get_cirurgiao_filtra_e_isola_a1_a2(self):
@@ -371,6 +375,38 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         )
         self.assertEqual([item["prestador_id"] for item in result["itens"]], [1])
         self.assertEqual([item["valor"] for item in result["itens"]], [33.0])
+
+    def test_get_tel_legacy_inclui_null_e_moderno(self):
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=None, valor=5.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=7.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=2, valor=9.0)
+        result = financeiro_routes.listar_lancamentos(
+            mes=8,
+            ano=2026,
+            conta="CIRURGIAO",
+            prestador_id=1,
+            filtro="Todos os lancamentos",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual([item["prestador_id"] for item in result["itens"]], [None, 1])
+        self.assertEqual([item["valor"] for item in result["itens"]], [5.0, 7.0])
+
+    def test_get_clinica_historica_ignora_prestador_e_retorna_conta(self):
+        self._seed_lancamento(conta="CLINICA", prestador_id=None, valor=19.0)
+        result = financeiro_routes.listar_lancamentos(
+            mes=8,
+            ano=2026,
+            conta="CLINICA",
+            prestador_id=2,
+            filtro="Todos os lancamentos",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual(len(result["itens"]), 1)
+        self.assertIsNone(result["itens"][0]["prestador_id"])
+        self.assertEqual(result["total_entrada"], 19.0)
+        self.assertEqual(result["saldo"], 19.0)
 
 
 if __name__ == "__main__":

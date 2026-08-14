@@ -17,6 +17,7 @@ export function ContaCorrenteCirurgiaoToolbar({
   onNewCredit,
   onEdit,
   onDelete,
+  onPrint,
 }) {
   return (
     <div className="conta-corrente-cirurgiao-toolbar" role="toolbar" aria-label="Barra operacional da conta corrente do cirurgiao">
@@ -33,7 +34,7 @@ export function ContaCorrenteCirurgiaoToolbar({
         <button type="button" className="auxiliary-shell-button danger" disabled={!hasSelection} aria-disabled={!hasSelection} onClick={() => onDelete?.()}>
           <DeleteOutlined /> Elimina
         </button>
-        <button type="button" className="auxiliary-shell-button" disabled>
+        <button type="button" className="auxiliary-shell-button" onClick={() => onPrint?.()}>
           <FileTextOutlined /> Imprime
         </button>
         <span className="conta-corrente-cirurgiao-toolbar-divider" aria-hidden="true" />
