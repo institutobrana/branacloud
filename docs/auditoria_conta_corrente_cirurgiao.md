@@ -197,4 +197,23 @@ A primeira implementação React cobre apenas a tela principal.
 - permissões
 - integração futura com comissão/repasse
 - compatibilidade com frontend legado
+## 19. Contrato mestre de datas
 
+Referencia documental: `docs/contrato_mestre_campos_data_brana_cloude.md`.
+
+O modulo usa dois contratos diferentes:
+
+- campo de data generico, com digitacao curta, selecao integral ao foco e tabulacao para confirmacao;
+- periodo de data, com inicio e fim separados e defaults distintos.
+
+O contrato generico nao deve ser usado como se fosse o contrato de periodo. Essa separacao e obrigatoria para evitar regressao de comportamento nos filtros e nos modais da frente.
+
+## 20. Fechamento da frente DATA
+
+Pontos homologados na frente atual:
+
+- `Pesquisa fluxo de caixa -> Criterios gerais` usa o motor compartilhado de datas para periodo de vencimento e periodo de lancamento;
+- `Insere lancamento` usa o mesmo motor para `Vencimento` e `Data do lancamento`;
+- selecao total, substituicao por nova digitacao, validacao calendaria e confirmacao por `Tab` foram verificadas em runtime;
+- `Shift+Tab` permanece funcional no modal de insere lancamento;
+- o componente visual compartilhado ainda nao foi extraido para um modulo global.

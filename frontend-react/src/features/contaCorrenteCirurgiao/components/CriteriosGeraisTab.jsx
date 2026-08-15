@@ -1,6 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Checkbox, DatePicker, Select } from 'antd';
+import dayjs from 'dayjs';
 import { listarCategoriasContaCirurgiao, listarGruposContaCirurgiao } from '../contaCorrenteCirurgiaoApi.js';
+import {
+  CONTA_CORRENTE_DATE_FORMATS,
+  normalizeContaCorrenteDateInput,
+} from '../dateParsing.js';
 
 const tipoLancamentoOptions = [
   { value: 'debito', label: 'Débito' },
@@ -24,7 +29,136 @@ function FieldRow({ label, checked, onCheckedChange, children, className = '' })
   );
 }
 
-export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = null }) {
+function createDefaultDateRange() {
+  const today = dayjs();
+  return {
+    start: today.startOf('month'),
+    end: today,
+  };
+}
+
+function parseDateInput(value) {
+  const normalized = normalizeContaCorrenteDateInput(value);
+  return normalized && normalized.isValid() ? normalized : null;
+}
+
+function finalizeDateInput(value, reference = dayjs()) {
+  const normalized = normalizeContaCorrenteDateInput(value, reference);
+  return normalized && normalized.isValid() ? normalized : null;
+}
+
+function selectDatePickerValue(event) {
+  const input = event?.target;
+  if (!(input instanceof HTMLInputElement)) return;
+  requestAnimationFrame(() => {
+    input.select();
+  });
+}
+
+function makeDatePickerHandlers(set, field) {
+  return {
+    onChange: (value) => set(field, parseDateInput(value)),
+    onKeyDown: (event) => {
+      if (event.key !== 'Tab') return;
+      const normalized = finalizeDateInput(event?.currentTarget?.value, dayjs());
+      if (normalized) {
+        set(field, normalized);
+      }
+    },
+    onBlur: (event) => {
+      const normalized = finalizeDateInput(event?.target?.value, dayjs());
+      if (normalized) {
+        set(field, normalized);
+      }
+    },
+    onFocus: selectDatePickerValue,
+    onClick: selectDatePickerValue,
+  };
+}
+
+function DatePickerField({ value, disabled, onChange }) {
+  const containerRef = useRef(null);
+  const valueRef = useRef(value);
+  const [renderSeed, setRenderSeed] = useState(0);
+
+  useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
+
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return undefined;
+
+    const input = root.querySelector('input');
+    if (!(input instanceof HTMLInputElement)) return undefined;
+
+    const commit = () => {
+      const rawValue = input.value;
+      const normalized = finalizeDateInput(rawValue, dayjs());
+      if (normalized) {
+        const normalizedText = normalized.format('DD/MM/YYYY');
+        if (rawValue !== normalizedText) {
+          onChange(null);
+          setTimeout(() => {
+            onChange(normalized);
+            setRenderSeed((current) => current + 1);
+          }, 0);
+          return;
+        }
+        onChange(normalized);
+      }
+    };
+
+    const handleFocus = () => {
+      requestAnimationFrame(() => {
+        input.select();
+      });
+    };
+
+    const handleClick = () => {
+      requestAnimationFrame(() => {
+        input.select();
+      });
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Tab') return;
+      setTimeout(commit, 50);
+    };
+
+    const handleBlur = () => {
+      setTimeout(commit, 50);
+    };
+
+    input.addEventListener('focus', handleFocus);
+    input.addEventListener('click', handleClick);
+    input.addEventListener('keydown', handleKeyDown);
+    input.addEventListener('blur', handleBlur);
+
+    return () => {
+      input.removeEventListener('focus', handleFocus);
+      input.removeEventListener('click', handleClick);
+      input.removeEventListener('keydown', handleKeyDown);
+      input.removeEventListener('blur', handleBlur);
+    };
+  }, [disabled, onChange, value]);
+
+  return (
+    <div ref={containerRef} className="pesquisa-fluxo-caixa-criterios-date-field">
+        <DatePicker
+          key={renderSeed}
+          value={value}
+          format={CONTA_CORRENTE_DATE_FORMATS}
+          disabled={disabled}
+          preserveInvalidOnBlur
+          onChange={(nextValue) => onChange(parseDateInput(nextValue))}
+      />
+    </div>
+  );
+}
+
+export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = null, onStateChange }) {
+  const defaultDates = useMemo(() => createDefaultDateRange(), []);
   const [state, setState] = useState({
     contaCorrenteEnabled: true,
     contaCorrente: initialSurgeonId ?? null,
@@ -37,11 +171,11 @@ export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = nul
     categoriaEnabled: false,
     categoria: null,
     periodoVencimentoEnabled: false,
-    periodoVencimentoInicio: null,
-    periodoVencimentoFim: null,
+    periodoVencimentoInicio: defaultDates.start,
+    periodoVencimentoFim: defaultDates.end,
     periodoLancamentoEnabled: false,
-    periodoLancamentoInicio: null,
-    periodoLancamentoFim: null,
+    periodoLancamentoInicio: defaultDates.start,
+    periodoLancamentoFim: defaultDates.end,
   });
   const [groupOptions, setGroupOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
@@ -56,6 +190,16 @@ export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = nul
       setState((current) => ({ ...current, contaCorrente: surgeonOptions[0].value }));
     }
   }, [surgeonOptions, state.contaCorrente]);
+
+  useEffect(() => {
+    if (typeof onStateChange === 'function') {
+      onStateChange({
+        ...state,
+        groupOptions,
+        categoryOptions,
+      });
+    }
+  }, [categoryOptions, groupOptions, onStateChange, state]);
 
   useEffect(() => {
     let active = true;
@@ -192,18 +336,16 @@ export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = nul
         className="pesquisa-fluxo-caixa-criterios-row--dates"
       >
         <div className="pesquisa-fluxo-caixa-criterios-dates">
-          <DatePicker
+          <DatePickerField
             value={state.periodoVencimentoInicio}
-            onChange={(value) => set('periodoVencimentoInicio', value)}
-            format="DD/MM/YYYY"
             disabled={!state.periodoVencimentoEnabled}
+            onChange={(nextValue) => set('periodoVencimentoInicio', nextValue)}
           />
           <span className="pesquisa-fluxo-caixa-criterios-date-separator">até</span>
-          <DatePicker
+          <DatePickerField
             value={state.periodoVencimentoFim}
-            onChange={(value) => set('periodoVencimentoFim', value)}
-            format="DD/MM/YYYY"
             disabled={!state.periodoVencimentoEnabled}
+            onChange={(nextValue) => set('periodoVencimentoFim', nextValue)}
           />
         </div>
       </FieldRow>
@@ -215,18 +357,16 @@ export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = nul
         className="pesquisa-fluxo-caixa-criterios-row--dates"
       >
         <div className="pesquisa-fluxo-caixa-criterios-dates">
-          <DatePicker
+          <DatePickerField
             value={state.periodoLancamentoInicio}
-            onChange={(value) => set('periodoLancamentoInicio', value)}
-            format="DD/MM/YYYY"
             disabled={!state.periodoLancamentoEnabled}
+            onChange={(nextValue) => set('periodoLancamentoInicio', nextValue)}
           />
           <span className="pesquisa-fluxo-caixa-criterios-date-separator">até</span>
-          <DatePicker
+          <DatePickerField
             value={state.periodoLancamentoFim}
-            onChange={(value) => set('periodoLancamentoFim', value)}
-            format="DD/MM/YYYY"
             disabled={!state.periodoLancamentoEnabled}
+            onChange={(nextValue) => set('periodoLancamentoFim', nextValue)}
           />
         </div>
       </FieldRow>

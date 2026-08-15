@@ -460,3 +460,14 @@ O que pode quebrar:
 - uso de `alvo` como string sem contrato navegavel.
 
 Nao ha fluxo de escrita em `ADM -> Auditoria` nesta fase.
+### Contrato de datas no fluxo da conta corrente
+
+- `mes` e `ano` continuam sendo filtros de periodo e nao substituem um campo de data isolado.
+- Campos como `data_lancamento` e `data_vencimento` seguem o contrato mestre de data generica.
+- Se o fluxo exigir intervalo, o contrato deve explicitar `inicio` e `fim` e documentar os defaults de periodo.
+
+### Fechamento da frente DATA
+
+- O fluxo `Pesquisa fluxo de caixa -> Criterios gerais` foi homologado com o contrato mestre.
+- O fluxo `Insere lancamento -> Vencimento / Data do lancamento` foi homologado com o mesmo motor.
+- A proxima evolucao de fluxo deve esperar novo consumidor ou evidencia tecnica para extrair um componente compartilhado.

@@ -173,3 +173,14 @@ Fora do escopo desta fase: checkout, Pix, boleto, confirmacao de pagamento, sinc
 Correcao runtime visual: mesmo com zero cobrancas retornadas pelo endpoint, a tabela permanece visivel com os sete cabecalhos e o estado vazio aparece dentro do corpo. Quando busca ou filtro eliminam os resultados carregados, a mensagem muda para `Nenhuma cobrança corresponde aos filtros aplicados.`. Os textos visiveis da frente foram corrigidos para UTF-8 real.
 
 Ver detalhes: o modal `Detalhes da cobranca` e somente leitura, usa apenas a linha selecionada ja carregada no frontend, nao faz request adicional e nao exibe `payload_json`.
+## Contrato mestre de datas aplicado ao financeiro
+
+- campo de data generico: entrada curta, selecao integral no foco, confirmacao por `Tab` e validacao de data real;
+- periodo de data: inicio e fim separados, com defaults distintos;
+- use `DatePicker` ou controle equivalente apenas quando o contrato funcional do fluxo exigir periodo, e nao como substituto automatico do campo generico.
+
+## Fechamento da frente DATA
+
+- DATA-P1 a DATA-P5 foram concluídas para os consumidores validados na conta corrente do cirurgião.
+- O contrato mestre de datas ficou registrado em `docs/contrato_mestre_campos_data_brana_cloude.md`.
+- A próxima frente técnica futura é a possível extração de um componente visual compartilhado, somente quando houver necessidade comprovada.

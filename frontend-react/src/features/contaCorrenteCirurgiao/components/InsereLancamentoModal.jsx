@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Alert, Button, Checkbox, DatePicker, Input, InputNumber, Modal, Select, Space, Tabs, Typography } from 'antd';
+import { flushSync } from 'react-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 
@@ -9,6 +10,7 @@ import {
   listarFormasPagamentoContaCirurgiao,
   listarSituacoesContaCirurgiao,
 } from '../contaCorrenteCirurgiaoApi.js';
+import { normalizeContaCorrenteDateInput } from '../dateParsing.js';
 
 function createTabState() {
   const today = dayjs();
@@ -57,6 +59,118 @@ function parseDecimal(value) {
   return Number.isFinite(amount) ? amount : null;
 }
 
+function selectDatePickerText(event) {
+  const target = event?.target;
+  const input = target instanceof HTMLInputElement ? target : event?.currentTarget?.querySelector?.('input');
+  if (!(input instanceof HTMLInputElement)) return;
+  requestAnimationFrame(() => {
+    input.select();
+  });
+}
+
+function focusRelativeFocusable(control, direction) {
+  const root = control?.closest?.('.ant-modal-content') ?? control?.closest?.('.conta-corrente-cirurgiao-modal') ?? document;
+  const focusableSelectors = [
+    'input:not([disabled])',
+    'button:not([disabled])',
+    'textarea:not([disabled])',
+    'select:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(',');
+  const focusables = Array.from(root.querySelectorAll?.(focusableSelectors) ?? []).filter((element) => {
+    if (!(element instanceof HTMLElement)) return false;
+    if (element === control) return true;
+    return element.offsetParent !== null || element === document.activeElement;
+  });
+  const index = focusables.indexOf(control);
+  const target = focusables[index + direction];
+  if (target instanceof HTMLElement) {
+    target.focus();
+  }
+}
+
+function DatePickerEntry({ value, onChange }) {
+  const containerRef = useRef(null);
+  const draftValueRef = useRef('');
+  const isEditingRef = useRef(false);
+  const skipNextBlurCommitRef = useRef(false);
+
+  useEffect(() => {
+    if (isEditingRef.current) {
+      return;
+    }
+    draftValueRef.current = dayjs.isDayjs(value) ? value.format('DD/MM/YYYY') : String(value || '');
+  }, [value]);
+
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return undefined;
+    const input = root.querySelector('input');
+    if (!(input instanceof HTMLInputElement)) return undefined;
+
+    const handleInput = () => {
+      draftValueRef.current = input.value;
+    };
+
+    input.addEventListener('input', handleInput);
+    return () => {
+      input.removeEventListener('input', handleInput);
+    };
+  }, [value]);
+
+  const commitDraft = () => {
+    if (skipNextBlurCommitRef.current) {
+      skipNextBlurCommitRef.current = false;
+      return;
+    }
+    const input = containerRef.current?.querySelector('input');
+    const rawValue = input instanceof HTMLInputElement ? input.value : draftValueRef.current;
+    const normalized = normalizeContaCorrenteDateInput(rawValue);
+    isEditingRef.current = false;
+    flushSync(() => {
+      onChange(normalized || null);
+    });
+  };
+
+  return (
+    <div ref={containerRef}>
+      <DatePicker
+        value={value}
+        onChange={(nextValue) => {
+          if (nextValue == null) {
+            draftValueRef.current = '';
+            onChange(null);
+            return;
+          }
+          if (!dayjs.isDayjs(nextValue)) return;
+          draftValueRef.current = nextValue.format('DD/MM/YYYY');
+          isEditingRef.current = false;
+          onChange(nextValue);
+        }}
+        onFocus={(event) => {
+          isEditingRef.current = true;
+          selectDatePickerText(event);
+        }}
+        onClick={(event) => {
+          isEditingRef.current = true;
+          selectDatePickerText(event);
+        }}
+        onBlur={commitDraft}
+        onKeyDown={(event) => {
+          if (event.key !== 'Tab') return;
+          skipNextBlurCommitRef.current = true;
+          event.preventDefault();
+          commitDraft();
+          requestAnimationFrame(() => {
+            focusRelativeFocusable(event.target, event.shiftKey ? -1 : 1);
+          });
+        }}
+        format="DD/MM/YYYY"
+      />
+    </div>
+  );
+}
+
 function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes }) {
   const categoryLabel = mode === 'debito' ? 'Categoria de Saída' : 'Categoria de Entrada';
 
@@ -65,7 +179,7 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
       <div className="conta-corrente-cirurgiao-modal-grid conta-corrente-cirurgiao-modal-grid--main">
         <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--w-date">
           <span>Vencimento</span>
-          <DatePicker value={state.dataVencimento} onChange={(value) => onChange('dataVencimento', value)} format="DD/MM/YYYY" />
+          <DatePickerEntry value={state.dataVencimento} onChange={(nextValue) => onChange('dataVencimento', nextValue)} />
         </label>
         <div className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--readonly conta-corrente-cirurgiao-modal-field--w-weekday">
           <span>Dia da semana</span>
@@ -86,7 +200,7 @@ function TabForm({ mode, state, onChange, categories, paymentOptions, situacoes 
         </label>
         <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--w-date">
           <span>Data do lançamento</span>
-          <DatePicker value={state.dataLancamento} onChange={(value) => onChange('dataLancamento', value)} format="DD/MM/YYYY" />
+          <DatePickerEntry value={state.dataLancamento} onChange={(nextValue) => onChange('dataLancamento', nextValue)} />
         </label>
 
         <label className="conta-corrente-cirurgiao-modal-field conta-corrente-cirurgiao-modal-field--full">

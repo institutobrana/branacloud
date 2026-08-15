@@ -153,3 +153,13 @@ storage/modelos/base/
 - `docs/contrato_painel_financeiro_procedimentos_frontend_react.md`: painel financeiro de procedimentos.
 - `docs/auditoria_conta_corrente_cirurgiao.md`: contrato alvo da conta corrente do cirurgiao, com foco em `PrestadorOdonto` e evolucao futura de `Lancamento.prestador_id`.
 - `docs/padrao_barra_horizontal.md`: padrao oficial de barra horizontal, com o L do shell global e a composicao validada a partir de `Servicos de Protético`.
+## Contratos transversais
+
+- `docs/contrato_mestre_campos_data_brana_cloude.md`: contrato mestre dos campos de data, separando data generica de periodo e listando os consumidores atuais em React.
+
+## Fechamento da frente DATA
+
+- `frontend-react/src/features/contaCorrenteCirurgiao/dateParsing.js`: motor puro reutilizavel para DD, DDMM, DDMMAA, DD/MM/YYYY e validacao.
+- `frontend-react/src/features/contaCorrenteCirurgiao/components/CriteriosGeraisTab.jsx`: consumidor 1 homologado no fluxo de pesquisa.
+- `frontend-react/src/features/contaCorrenteCirurgiao/components/InsereLancamentoModal.jsx`: consumidor 2 homologado no modal de insercao.
+- `frontend-react/tests/contaCorrenteCirurgiaoDateParsing.test.js`: regressao unitária do contrato de parsing.
