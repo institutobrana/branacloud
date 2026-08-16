@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Input, Radio, Select } from 'antd';
 
-const availableItems = [
-  'Categoria',
-  'Cirurgião',
-  'Complemento',
-  'Crédito',
-  'Data',
-  'Débito',
-  'Grupo',
-  'Histórico',
-  'Lançamento',
-  'Nº Documento',
-  'Pagamento',
-  'Referência',
-  'Saldo',
+const REPORT_OPTION_CATALOG = [
+  { key: 'categoria', label: 'Categoria' },
+  { key: 'cirurgiao', label: 'Cirurgião' },
+  { key: 'complemento', label: 'Complemento' },
+  { key: 'credito', label: 'Crédito' },
+  { key: 'data', label: 'Data' },
+  { key: 'debito', label: 'Débito' },
+  { key: 'grupo', label: 'Grupo' },
+  { key: 'historico', label: 'Histórico' },
+  { key: 'lancamento', label: 'Lançamento' },
+  { key: 'numero_documento', label: 'Nº Documento' },
+  { key: 'pagamento', label: 'Pagamento' },
+  { key: 'referencia', label: 'Referência' },
+  { key: 'saldo', label: 'Saldo' },
 ];
 
 const outputOptions = [
@@ -23,8 +23,56 @@ const outputOptions = [
   { value: 'Imprimir', label: 'Imprimir' },
 ];
 
+const defaultFormState = {
+  selectedFields: [],
+  reportName: 'Relatório de contas do cirurgião',
+  output: 'Tela',
+  orientation: 'retrato',
+};
+
+const allowedOutputValues = new Set(outputOptions.map((item) => item.value));
+const allowedOrientations = new Set(['retrato', 'paisagem']);
+const labelByKey = new Map(REPORT_OPTION_CATALOG.map((item) => [item.key, item.label]));
+const keyByLabel = new Map(REPORT_OPTION_CATALOG.map((item) => [normalizeReportOptionText(item.label), item.key]));
+
+function normalizeReportOptionText(value) {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function normalizeReportOptionKey(value) {
+  return String(value ?? '').trim().toLowerCase();
+}
+
+function resolveKeyFromPreference(value) {
+  const normalized = normalizeReportOptionKey(value);
+  if (!normalized) return '';
+  if (labelByKey.has(normalized)) return normalized;
+  return keyByLabel.get(normalizeReportOptionText(normalized)) || '';
+}
+
+function buildSelectionFromPreferences(initialPreferences) {
+  const selectedFields = Array.isArray(initialPreferences?.selectedFields)
+    ? initialPreferences.selectedFields.map((field) => resolveKeyFromPreference(field)).filter(Boolean)
+    : [];
+
+  const reportName = String(initialPreferences?.reportName ?? defaultFormState.reportName).trim() || defaultFormState.reportName;
+  const outputValue = String(initialPreferences?.output ?? defaultFormState.output).trim();
+  const orientationValue = normalizeReportOptionKey(initialPreferences?.orientation || defaultFormState.orientation);
+
+  return {
+    selectedFields,
+    reportName,
+    output: allowedOutputValues.has(outputValue) ? outputValue : defaultFormState.output,
+    orientation: allowedOrientations.has(orientationValue) ? orientationValue : defaultFormState.orientation,
+  };
+}
+
 function buildRows(items) {
-  return items.map((item) => ({ key: item, nome: item }));
+  return items.map((item) => ({ key: item.key, nome: item.label }));
 }
 
 function moveItemToFront(items, value) {
@@ -35,70 +83,120 @@ function moveItemToFront(items, value) {
   return [value, ...items.filter((item) => item !== value)];
 }
 
-export function OpcoesRelatorioTab() {
-  const [selecionados, setSelecionados] = useState([]);
+function findLabelByKey(key) {
+  return labelByKey.get(key) || key;
+}
+
+function mergeState(base, updates) {
+  return {
+    ...base,
+    ...updates,
+    selectedFields: Array.isArray(updates.selectedFields) ? updates.selectedFields : base.selectedFields,
+  };
+}
+
+export function OpcoesRelatorioTab({ onStateChange, initialPreferences = null, loadingPreferences = false }) {
+  const resolvedPreferences = useMemo(() => buildSelectionFromPreferences(initialPreferences), [initialPreferences]);
+  const [draftState, setDraftState] = useState(null);
   const [selectedDisponiveis, setSelectedDisponiveis] = useState([]);
   const [selectedSelecionados, setSelectedSelecionados] = useState([]);
-  const [nomeRelatorio, setNomeRelatorio] = useState('Relatório de contas do cirurgião');
-  const [ordem, setOrdem] = useState('Data');
-  const [saida, setSaida] = useState('Tela');
-  const [orientacao, setOrientacao] = useState('paisagem');
 
-  const rowsDisponiveis = useMemo(() => buildRows(availableItems), []);
-  const rowsSelecionados = useMemo(() => buildRows(selecionados), [selecionados]);
-  const orderOptions = useMemo(() => {
-    return selecionados.map((item) => ({ value: item, label: item }));
-  }, [selecionados]);
-
-  const ordemAtual = selecionados.includes(ordem) ? ordem : (selecionados[0] || 'Data');
+  const currentState = draftState ?? resolvedPreferences ?? defaultFormState;
+  const selecionados = Array.isArray(currentState.selectedFields) ? currentState.selectedFields : [];
+  const nomeRelatorio = currentState.reportName || defaultFormState.reportName;
+  const saida = currentState.output || defaultFormState.output;
+  const orientacao = currentState.orientation || defaultFormState.orientation;
+  const ordemAtual = selecionados[0] || '';
 
   useEffect(() => {
-    if (selecionados.length === 0) {
-      if (ordem !== 'Data') {
-        setOrdem('Data');
-      }
+    if (loadingPreferences) {
       return;
     }
+    setDraftState((current) => {
+      if (current && current.selectedFields.join('|') === resolvedPreferences.selectedFields.join('|')
+        && current.reportName === resolvedPreferences.reportName
+        && current.output === resolvedPreferences.output
+        && current.orientation === resolvedPreferences.orientation) {
+        return current;
+      }
+      return resolvedPreferences;
+    });
+  }, [loadingPreferences, resolvedPreferences]);
 
-    if (!selecionados.includes(ordem)) {
-      setOrdem(selecionados[0]);
+  const rowsDisponiveis = useMemo(() => buildRows(REPORT_OPTION_CATALOG), []);
+  const rowsSelecionados = useMemo(() => buildRows(REPORT_OPTION_CATALOG.filter((item) => selecionados.includes(item.key))), [selecionados]);
+  const orderOptions = useMemo(() => {
+    return selecionados.map((item) => ({ value: item, label: findLabelByKey(item) }));
+  }, [selecionados]);
+
+  const updateState = (updater) => {
+    const base = draftState ?? resolvedPreferences ?? defaultFormState;
+    const next = typeof updater === 'function' ? updater(base) : updater;
+    const merged = mergeState(base, next);
+    setDraftState(merged);
+    if (typeof onStateChange === 'function') {
+      onStateChange({
+        selectedItems: merged.selectedFields.map((item) => findLabelByKey(item)),
+        selectedFields: merged.selectedFields,
+        order: findLabelByKey(merged.selectedFields[0] || ''),
+        orderField: merged.selectedFields[0] || '',
+        reportName: merged.reportName,
+        output: merged.output,
+        orientation: merged.orientation,
+        mode: merged.orientation,
+      });
     }
-  }, [ordem, selecionados]);
+  };
 
   const incluir = () => {
     if (!selectedDisponiveis.length) return;
-    setSelecionados((current) => {
-      const next = [...current];
+    updateState((base) => {
+      const next = [...base.selectedFields];
       selectedDisponiveis.forEach((key) => {
         if (!next.includes(key)) next.push(key);
       });
-      return next;
+      return { selectedFields: next };
     });
     setSelectedDisponiveis([]);
   };
 
   const excluir = () => {
     if (!selectedSelecionados.length) return;
-    setSelecionados((current) => current.filter((item) => !selectedSelecionados.includes(item)));
+    updateState((base) => ({
+      selectedFields: base.selectedFields.filter((item) => !selectedSelecionados.includes(item)),
+    }));
     setSelectedSelecionados([]);
   };
 
   const incluirPorDuploClique = (key) => {
     setSelectedDisponiveis([key]);
-    setSelecionados((current) => (current.includes(key) ? current : [...current, key]));
+    updateState((base) => ({
+      selectedFields: base.selectedFields.includes(key) ? base.selectedFields : [...base.selectedFields, key],
+    }));
     setSelectedDisponiveis([]);
   };
 
   const excluirPorDuploClique = (key) => {
     setSelectedSelecionados([key]);
-    setSelecionados((current) => current.filter((item) => item !== key));
+    updateState((base) => ({
+      selectedFields: base.selectedFields.filter((item) => item !== key),
+    }));
     setSelectedSelecionados([]);
   };
 
   const onChangeOrdem = (value) => {
-    setOrdem(value);
-    setSelecionados((current) => moveItemToFront(current, value));
+    updateState((base) => ({
+      selectedFields: moveItemToFront(base.selectedFields, value),
+    }));
   };
+
+  if (loadingPreferences && !initialPreferences) {
+    return (
+      <div className="pesquisa-fluxo-caixa-opcoes pesquisa-fluxo-caixa-opcoes--loading" aria-live="polite">
+        <div className="pesquisa-fluxo-caixa-opcoes-loading">Carregando preferências do relatório...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="pesquisa-fluxo-caixa-opcoes">
@@ -154,12 +252,12 @@ export function OpcoesRelatorioTab() {
 
           <label className="pesquisa-fluxo-caixa-opcoes-field">
             <span>Saída do relatório:</span>
-            <Select value={saida} onChange={setSaida} options={outputOptions} />
+            <Select value={saida} onChange={(value) => updateState({ output: String(value || '').trim() || defaultFormState.output })} options={outputOptions} />
           </label>
 
           <div className="pesquisa-fluxo-caixa-opcoes-radio-group">
             <div className="pesquisa-fluxo-caixa-opcoes-radio-title">Modo de impressão</div>
-            <Radio.Group value={orientacao} onChange={(event) => setOrientacao(event.target.value)}>
+            <Radio.Group value={orientacao} onChange={(event) => updateState({ orientation: event.target.value })}>
               <Radio value="retrato">Modo "Retrato"</Radio>
               <Radio value="paisagem">Modo "Paisagem"</Radio>
             </Radio.Group>
@@ -170,7 +268,7 @@ export function OpcoesRelatorioTab() {
       <div className="pesquisa-fluxo-caixa-opcoes-footer">
         <label className="pesquisa-fluxo-caixa-opcoes-field pesquisa-fluxo-caixa-opcoes-field--full">
           <span>Nome do relatório:</span>
-          <Input value={nomeRelatorio} onChange={(event) => setNomeRelatorio(event.target.value)} />
+          <Input value={nomeRelatorio} onChange={(event) => updateState({ reportName: event.target.value })} />
         </label>
       </div>
     </div>

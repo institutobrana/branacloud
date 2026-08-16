@@ -19,7 +19,7 @@ function FieldRow({ label, checked, onCheckedChange, children }) {
   );
 }
 
-export function CriteriosAdicionaisTab() {
+export function CriteriosAdicionaisTab({ onStateChange }) {
   const [state, setState] = useState({
     tributaveis: false,
     nTributaveis: false,
@@ -62,6 +62,15 @@ export function CriteriosAdicionaisTab() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof onStateChange === 'function') {
+      onStateChange({
+        ...state,
+        paymentOptions,
+      });
+    }
+  }, [onStateChange, paymentOptions, state]);
 
   return (
     <div className="pesquisa-fluxo-caixa-adicionais">

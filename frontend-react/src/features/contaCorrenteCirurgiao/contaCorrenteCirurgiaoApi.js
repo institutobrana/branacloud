@@ -196,3 +196,51 @@ export async function excluirLancamentoContaCirurgiao(id) {
 
   return data || {};
 }
+
+export async function consultarRelatorioContaCorrente(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value == null || value === '') return;
+    query.set(key, String(value));
+  });
+
+  const data = await requestJson(`/financeiro/relatorio-cc${query.toString() ? `?${query.toString()}` : ''}`, {
+    method: 'GET',
+  });
+
+  return data || {};
+}
+
+const REPORT_OPTIONS_ENDPOINT = '/preferences/report-options/conta-corrente-cirurgiao';
+
+function normalizeReportOptionsConfig(config) {
+  const source = config || {};
+  return {
+    version: Number(source.version ?? 1) || 1,
+    selectedFields: Array.isArray(source.selectedFields) ? source.selectedFields.map((field) => String(field || '').trim()).filter(Boolean) : [],
+    reportName: String(source.reportName ?? '').trim(),
+    output: String(source.output ?? '').trim(),
+    orientation: String(source.orientation ?? '').trim(),
+  };
+}
+
+export async function obterPreferenciasRelatorioContaCorrenteCirurgiao() {
+  const data = await requestJson(REPORT_OPTIONS_ENDPOINT, {
+    method: 'GET',
+  });
+
+  return normalizeReportOptionsConfig(data);
+}
+
+export async function salvarPreferenciasRelatorioContaCorrenteCirurgiao(config) {
+  const payload = normalizeReportOptionsConfig(config);
+  const data = await requestJson(REPORT_OPTIONS_ENDPOINT, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return normalizeReportOptionsConfig(data?.config || data);
+}
