@@ -18,15 +18,20 @@ const REPORT_OPTION_CATALOG = [
 ];
 
 const outputOptions = [
-  { value: 'Tela', label: 'Tela' },
-  { value: 'Arquivo', label: 'Arquivo' },
-  { value: 'Imprimir', label: 'Imprimir' },
+  { value: 'tela', label: 'Tela' },
+  { value: 'pdf', label: 'PDF' },
+  { value: 'html', label: 'HTML' },
+  { value: 'rtf', label: 'RTF' },
+  { value: 'xls', label: 'XLS' },
+  { value: 'txt', label: 'TXT' },
+  { value: 'csv', label: 'CSV' },
+  { value: 'imprimir', label: 'Imprimir' },
 ];
 
 const defaultFormState = {
   selectedFields: [],
   reportName: 'Relatório de contas do cirurgião',
-  output: 'Tela',
+  output: 'tela',
   orientation: 'retrato',
 };
 
@@ -60,7 +65,8 @@ function buildSelectionFromPreferences(initialPreferences) {
     : [];
 
   const reportName = String(initialPreferences?.reportName ?? defaultFormState.reportName).trim() || defaultFormState.reportName;
-  const outputValue = String(initialPreferences?.output ?? defaultFormState.output).trim();
+  const outputRaw = String(initialPreferences?.output ?? defaultFormState.output).trim().toLowerCase();
+  const outputValue = outputRaw === 'arquivo' ? 'pdf' : outputRaw;
   const orientationValue = normalizeReportOptionKey(initialPreferences?.orientation || defaultFormState.orientation);
 
   return {

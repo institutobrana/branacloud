@@ -1,54 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { abrirImpressaoRelatorioContaCorrente } from '../relatorioContaCorrentePrint.js';
-
-function formatMoney(value) {
-  const number = Number(value ?? 0) || 0;
-  return number.toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
-function formatDate(value) {
-  const text = String(value || '').trim();
-  if (!text) return '';
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
-    const [year, month, day] = text.split('-');
-    return `${day}/${month}/${year}`;
-  }
-  return text;
-}
-
-function getVisibleColumns(selectedItems = []) {
-  const fallback = ['Data', 'Histórico', 'Débito'];
-  const items = Array.isArray(selectedItems) && selectedItems.length ? selectedItems : fallback;
-  return items;
-}
-
-function resolveCellValue(row, column) {
-  const normalized = String(column || '').trim().toLowerCase();
-  if (normalized === 'data') return formatDate(row.data_lancamento || row.data_vencimento || row.data_pagamento);
-  if (normalized === 'lançamento' || normalized === 'lancamento') return row.historico || '';
-  if (normalized === 'histórico' || normalized === 'historico') return row.historico || '';
-  if (normalized === 'débito' || normalized === 'debito') return row.debito ? formatMoney(row.debito) : '-';
-  if (normalized === 'crédito' || normalized === 'credito') return row.credito ? formatMoney(row.credito) : '-';
-  if (normalized === 'categoria') return row.categoria_nome || '';
-  if (normalized === 'grupo') return row.grupo_nome || '';
-  if (normalized === 'complemento') return row.complemento || '';
-  if (normalized === 'pagamento') return row.forma_pagamento || '';
-  if (normalized === 'referência' || normalized === 'referencia') return row.referencia || '';
-  if (normalized === 'saldo') return formatMoney(row.saldo);
-  if (normalized === 'conta corrente' || normalized === 'conta corrente do cirurgião' || normalized === 'conta corrente do cirurgiao') return row.conta || '';
-  if (normalized === 'nº documento' || normalized === 'n° documento' || normalized === 'no documento' || normalized === 'numero documento' || normalized === 'n documento') return row.documento || '';
-  return row[column] ?? '';
-}
-
-function getOrientationConfig(orientation) {
-  return String(orientation || '').trim().toLowerCase() === 'paisagem'
-    ? { width: 1123, height: 794, className: 'landscape' }
-    : { width: 794, height: 1123, className: 'portrait' };
-}
+import {
+  formatDateContaCorrente as formatDate,
+  formatMoneyContaCorrente as formatMoney,
+  getRelatorioContaCorrenteCellValue,
+  getRelatorioContaCorrenteColumns,
+  getRelatorioContaCorrenteOrientationConfig,
+  getRelatorioContaCorrenteTotals,
+} from '../relatorioContaCorrenteModel.js';
 
 function clampPositiveInteger(value, fallback = 1) {
   const number = Math.trunc(Number(value) || 0);
@@ -93,10 +53,11 @@ export function RelatorioContaCorrentePreviewModal({
   orientation,
 }) {
   const items = useMemo(() => (Array.isArray(reportData?.itens) ? reportData.itens : []), [reportData]);
-  const columns = useMemo(() => getVisibleColumns(selectedItems), [selectedItems]);
-  const totalCredito = Number(reportData?.total_credito ?? 0) || 0;
-  const totalDebito = Number(reportData?.total_debito ?? 0) || 0;
-  const saldoFinal = Number(reportData?.saldo_final ?? 0) || 0;
+  const columns = useMemo(() => getRelatorioContaCorrenteColumns(selectedItems), [selectedItems]);
+  const totals = useMemo(() => getRelatorioContaCorrenteTotals(reportData), [reportData]);
+  const totalCredito = totals.totalCredito;
+  const totalDebito = totals.totalDebito;
+  const saldoFinal = totals.saldoFinal;
   const title = String(reportName || 'Relatório de contas do cirurgião').trim();
   const generatedAt = useMemo(() => new Date(), [open]);
   const [paginaAtual, setPaginaAtual] = useState(1);
@@ -109,7 +70,7 @@ export function RelatorioContaCorrentePreviewModal({
   const measureRowRef = useRef(null);
   const measureFootRef = useRef(null);
 
-  const orientationConfig = useMemo(() => getOrientationConfig(orientation), [orientation]);
+  const orientationConfig = useMemo(() => getRelatorioContaCorrenteOrientationConfig(orientation), [orientation]);
   const zoomValue = Math.min(200, Math.max(50, Number(zoom || 100) || 100));
   const zoomFactor = zoomValue / 100;
   const fallbackBodyRows = Math.max(1, Math.floor(orientationConfig.width >= orientationConfig.height ? 34 : 26));
@@ -146,6 +107,14 @@ export function RelatorioContaCorrentePreviewModal({
     let frame = 0;
     let observer = null;
     let cancelled = false;
+    let retryCount = 0;
+    const maxMeasureRetries = 8;
+
+    const scheduleMeasure = () => {
+      if (cancelled) return;
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(measure);
+    };
 
     const measure = () => {
       if (cancelled) return;
@@ -155,7 +124,13 @@ export function RelatorioContaCorrentePreviewModal({
       const row = measureRowRef.current;
       const foot = measureFootRef.current;
 
-      if (!sheet || !head || !thead || !row) return;
+      if (!sheet || !head || !thead || !row) {
+        if (retryCount < maxMeasureRetries) {
+          retryCount += 1;
+          scheduleMeasure();
+        }
+        return;
+      }
 
       const sheetStyle = window.getComputedStyle(sheet);
       const headStyle = window.getComputedStyle(head);
@@ -222,8 +197,8 @@ export function RelatorioContaCorrentePreviewModal({
     if (typeof ResizeObserver === 'function') {
       observer = new ResizeObserver(() => {
         if (cancelled) return;
-        window.cancelAnimationFrame(frame);
-        frame = window.requestAnimationFrame(measure);
+        retryCount = 0;
+        scheduleMeasure();
       });
 
       [measureSheetRef.current, measureHeadRef.current, measureTheadRef.current, measureRowRef.current, measureFootRef.current]
@@ -233,8 +208,8 @@ export function RelatorioContaCorrentePreviewModal({
 
     const onResize = () => {
       if (cancelled) return;
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(measure);
+      retryCount = 0;
+      scheduleMeasure();
     };
 
     window.addEventListener('resize', onResize);
@@ -352,7 +327,7 @@ export function RelatorioContaCorrentePreviewModal({
                     const isMoney = ['débito', 'debito', 'crédito', 'credito', 'saldo'].includes(normalized);
                     return (
                       <td key={column} className={isMoney ? 'money' : ''}>
-                        {resolveCellValue(sampleRow, column) || (isMoney ? '-' : '')}
+                        {getRelatorioContaCorrenteCellValue(sampleRow, column) || (isMoney ? '-' : '')}
                       </td>
                     );
                   })}
@@ -438,7 +413,7 @@ export function RelatorioContaCorrentePreviewModal({
                           const isMoney = ['débito', 'debito', 'crédito', 'credito', 'saldo'].includes(normalized);
                           return (
                             <td key={column} className={isMoney ? 'money' : ''}>
-                              {resolveCellValue(row, column)}
+                              {getRelatorioContaCorrenteCellValue(row, column)}
                             </td>
                           );
                         })}

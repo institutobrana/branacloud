@@ -162,11 +162,11 @@ export function CriteriosGeraisTab({ surgeonOptions = [], initialSurgeonId = nul
   const [state, setState] = useState({
     contaCorrenteEnabled: true,
     contaCorrente: initialSurgeonId ?? null,
-    tipoLancamentoEnabled: true,
+    tipoLancamentoEnabled: false,
     tipoLancamento: 'debito',
     grupoEnabled: false,
     grupo: null,
-    tipoGrupoEnabled: true,
+    tipoGrupoEnabled: false,
     tipoGrupo: 'pessoal',
     categoriaEnabled: false,
     categoria: null,

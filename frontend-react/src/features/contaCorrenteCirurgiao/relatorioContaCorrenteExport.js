@@ -1,47 +1,21 @@
-function formatMoney(value) {
-  const number = Number(value ?? 0) || 0;
-  return number.toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
+import {
+  formatDateContaCorrente as formatDate,
+  formatMoneyContaCorrente as formatMoney,
+  getRelatorioContaCorrenteCellValue,
+  getRelatorioContaCorrenteColumns,
+  getRelatorioContaCorrenteTotals,
+} from './relatorioContaCorrenteModel.js';
 
-function formatDate(value) {
-  const text = String(value || '').trim();
-  if (!text) return '';
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
-    const [year, month, day] = text.split('-');
-    return `${day}/${month}/${year}`;
-  }
-  return text;
-}
+export {
+  formatDateContaCorrente,
+  formatMoneyContaCorrente,
+  getRelatorioContaCorrenteCellValue,
+  getRelatorioContaCorrenteColumns,
+  getRelatorioContaCorrenteTotals,
+} from './relatorioContaCorrenteModel.js';
 
 function normalizeText(value) {
   return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-}
-
-export function getRelatorioContaCorrenteColumns(selectedItems = []) {
-  const fallback = ['Data', 'Histórico', 'Débito'];
-  const items = Array.isArray(selectedItems) && selectedItems.length ? selectedItems : fallback;
-  return items;
-}
-
-export function getRelatorioContaCorrenteCellValue(row, column) {
-  const normalized = normalizeText(column);
-  if (normalized === 'data') return formatDate(row.data_lancamento || row.data_vencimento || row.data_pagamento);
-  if (normalized === 'lançamento' || normalized === 'lancamento') return row.historico || '';
-  if (normalized === 'histórico' || normalized === 'historico') return row.historico || '';
-  if (normalized === 'débito' || normalized === 'debito') return Number(row.debito ?? 0) ? formatMoney(row.debito) : '-';
-  if (normalized === 'crédito' || normalized === 'credito') return Number(row.credito ?? 0) ? formatMoney(row.credito) : '-';
-  if (normalized === 'categoria') return row.categoria_nome || '';
-  if (normalized === 'grupo') return row.grupo_nome || '';
-  if (normalized === 'complemento') return row.complemento || '';
-  if (normalized === 'pagamento') return row.forma_pagamento || '';
-  if (normalized === 'referência' || normalized === 'referencia') return row.referencia || '';
-  if (normalized === 'saldo') return formatMoney(row.saldo);
-  if (normalized === 'conta corrente' || normalized === 'conta corrente do cirurgião' || normalized === 'conta corrente do cirurgiao') return row.conta || '';
-  if (normalized === 'nº documento' || normalized === 'n° documento' || normalized === 'no documento' || normalized === 'numero documento' || normalized === 'n documento') return row.documento || '';
-  return row[column] ?? '';
 }
 
 function csvEscape(value) {
@@ -69,6 +43,116 @@ function xmlEscape(value) {
     .replace(/'/g, '&apos;');
 }
 
+function rtfEscapeText(value) {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/{/g, '\\{')
+    .replace(/}/g, '\\}')
+    .replace(/[^\x20-\x7e]/g, (char) => {
+      const code = char.codePointAt(0) || 0;
+      return `\\u${code > 32767 ? code - 65536 : code}?`;
+    });
+}
+
+function pdfEscapeText(value) {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)')
+    .replace(/\r/g, ' ')
+    .replace(/\n/g, ' ');
+}
+
+function latin1ByteLength(value) {
+  return String(value ?? '').length;
+}
+
+function latin1Bytes(value) {
+  const text = String(value ?? '');
+  const bytes = new Uint8Array(text.length);
+  for (let index = 0; index < text.length; index += 1) {
+    bytes[index] = text.charCodeAt(index) & 0xff;
+  }
+  return bytes;
+}
+
+function pdfSafeWidthText(value) {
+  return String(value ?? '').replace(/\r/g, ' ').replace(/\n/g, ' ');
+}
+
+function pdfApproxTextWidth(text, fontSize = 8) {
+  const value = String(text ?? '');
+  let total = 0;
+  for (const char of value) {
+    if (char === ' ') {
+      total += fontSize * 0.28;
+    } else if (/[0-9]/.test(char)) {
+      total += fontSize * 0.52;
+    } else if (/[A-ZÁÀÂÃÉÈÊÍÌÓÒÔÕÚÙÇ]/.test(char)) {
+      total += fontSize * 0.66;
+    } else if (/[a-záàâãéèêíìóòôõúùç]/.test(char)) {
+      total += fontSize * 0.55;
+    } else if (/[.,;:]/.test(char)) {
+      total += fontSize * 0.22;
+    } else if (/[|]/.test(char)) {
+      total += fontSize * 0.18;
+    } else {
+      total += fontSize * 0.5;
+    }
+  }
+  return total;
+}
+
+function truncatePdfText(text, maxWidth, fontSize = 8) {
+  const value = String(text ?? '');
+  if (!value) return '';
+  if (pdfApproxTextWidth(value, fontSize) <= maxWidth) return value;
+  let result = '';
+  for (const char of value) {
+    const next = `${result}${char}`;
+    if (pdfApproxTextWidth(next, fontSize) > maxWidth) break;
+    result = next;
+  }
+  return result.trimEnd();
+}
+
+function isMoneyColumn(column) {
+  const normalized = normalizeText(column);
+  return ['débito', 'debito', 'crédito', 'credito', 'saldo'].includes(normalized);
+}
+
+function isDateColumn(column) {
+  return normalizeText(column) === 'data';
+}
+
+function isTextColumn(column) {
+  const normalized = normalizeText(column);
+  return ['histórico', 'historico', 'lançamento', 'lancamento', 'pagamento', 'categoria', 'grupo', 'complemento', 'referência', 'referencia', 'conta corrente', 'conta corrente do cirurgião', 'conta corrente do cirurgiao', 'nº documento', 'n° documento', 'no documento', 'numero documento', 'n documento'].includes(normalized);
+}
+
+function resolvePdfColumnRatios(columns) {
+  const normalized = columns.map((column) => normalizeText(column));
+  const baseRatios = {
+    data: 0.15,
+    historico: 0.45,
+    lancamento: 0.25,
+    dinheiro: 0.15,
+    text: 0.2,
+  };
+
+  const ratioMap = normalized.map((name) => {
+    if (name === 'data') return baseRatios.data;
+    if (name === 'historico' || name === 'histórico') return baseRatios.historico;
+    if (name === 'lancamento' || name === 'lançamento') return baseRatios.lancamento;
+    if (['debito', 'débito', 'credito', 'crédito', 'saldo'].includes(name)) return baseRatios.dinheiro;
+    return baseRatios.text;
+  });
+
+  let total = ratioMap.reduce((sum, value) => sum + value, 0);
+  if (!total) total = 1;
+  return ratioMap.map((value) => value / total);
+}
+
 function buildCsvBlob(columns, rows, totals) {
   const lines = [];
   lines.push(columns.map(csvEscape).join(';'));
@@ -88,68 +172,232 @@ function buildCsvBlob(columns, rows, totals) {
   return new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
 }
 
-function buildSimplePdfBlob(columns, rows, title, totals) {
+function buildHtmlBlob(columns, rows, totals, title) {
+  const header = columns.map((column) => `<th>${xmlEscape(column)}</th>`).join('');
+  const bodyRows = rows.map((row) => {
+    const cells = columns.map((column) => `<td>${xmlEscape(getRelatorioContaCorrenteCellValue(row, column))}</td>`).join('');
+    return `<tr>${cells}</tr>`;
+  }).join('');
+  const totalRow = totals ? `<tr>${columns.map((column, index) => {
+    const normalized = normalizeText(column);
+    if (normalized === 'débito' || normalized === 'debito') return `<td>${xmlEscape(formatMoney(totals.totalDebito))}</td>`;
+    if (normalized === 'crédito' || normalized === 'credito') return `<td>${xmlEscape(formatMoney(totals.totalCredito))}</td>`;
+    const labelIndex = columns.findIndex((item) => !['Débito', 'Crédito', 'Débito', 'Credito', 'Crédito'].includes(item));
+    if (index === labelIndex) return '<td>TOTAL</td>';
+    return '<td></td>';
+  }).join('')}</tr>` : '';
+  const emptyRow = `<tr><td colspan="${Math.max(1, columns.length)}">Sem dados.</td></tr>`;
+  const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>${xmlEscape(title || 'Relatório de contas do cirurgião')}</title>
+  <style>
+    body{font-family:Tahoma,Arial,sans-serif;font-size:12px;color:#000;margin:24px}
+    h1{font-size:16px;margin:0 0 16px 0}
+    table{border-collapse:collapse;width:100%}
+    th,td{border:1px solid #999;padding:4px 6px;vertical-align:top}
+    th{text-align:left;background:#f3f3f3}
+    td:nth-child(1){white-space:nowrap}
+    tfoot td{font-weight:700}
+  </style>
+</head>
+<body>
+  <h1>${xmlEscape(title || 'Relatório de contas do cirurgião')}</h1>
+  <table>
+    <thead><tr>${header}</tr></thead>
+    <tbody>${bodyRows || emptyRow}</tbody>
+    ${totalRow ? `<tfoot>${totalRow}</tfoot>` : ''}
+  </table>
+</body>
+</html>`;
+  return new Blob([`\ufeff${html}`], { type: 'text/html;charset=utf-8;' });
+}
+
+function buildRtfBlob(columns, rows, totals, title) {
+  const header = columns.map((column) => rtfEscapeText(column)).join('\\tab ');
+  const bodyRows = rows.map((row) => columns.map((column) => rtfEscapeText(getRelatorioContaCorrenteCellValue(row, column))).join('\\tab '));
+  const totalRow = totals ? columns.map((column, index) => {
+    const normalized = normalizeText(column);
+    const labelIndex = columns.findIndex((item) => !['Débito', 'Crédito', 'Débito', 'Credito', 'Crédito'].includes(item));
+    if (normalized === 'débito' || normalized === 'debito') return rtfEscapeText(formatMoney(totals.totalDebito));
+    if (normalized === 'crédito' || normalized === 'credito') return rtfEscapeText(formatMoney(totals.totalCredito));
+    if (index === labelIndex) return 'TOTAL';
+    return '';
+  }).join('\\tab ') : '';
+
+  const lines = [
+    '{\\rtf1\\ansi\\deff0',
+    '{\\fonttbl{\\f0\\fnil Tahoma;}}',
+    '\\viewkind4\\uc1\\pard\\f0\\fs20',
+    `\\b ${rtfEscapeText(title || 'Relatório de contas do cirurgião')}\\b0\\par`,
+    `${header}\\par`,
+    ...bodyRows.map((line) => `${line}\\par`),
+    totalRow ? `${totalRow}\\par` : '',
+    '}',
+  ].filter(Boolean);
+  return new Blob([lines.join('\n')], { type: 'application/rtf;charset=utf-8;' });
+}
+
+function buildSimplePdfBlob(columns, rows, title, totals, orientation = 'retrato', orderLabel = '') {
+  const normalizedOrientation = String(orientation || 'retrato').trim().toLowerCase() === 'paisagem' ? 'paisagem' : 'retrato';
+  const pageSpec = normalizedOrientation === 'paisagem'
+    ? { width: 842, height: 595, top: 21, right: 24, bottom: 20, left: 24 }
+    : { width: 595, height: 842, top: 27, right: 30, bottom: 24, left: 30 };
+
+  const captionText = 'Conta corrente do cirurgião';
+  const titleText = String(title || 'Relatório de contas do cirurgião').trim();
+  const printDate = new Date();
+  const metaText = [
+    printDate.toLocaleDateString('pt-BR'),
+    printDate.toLocaleTimeString('pt-BR'),
+    String(orderLabel || '').trim(),
+  ].filter(Boolean).join('  ');
+
   const header = columns.map((column) => String(column || ''));
-  const bodyRows = rows.map((row) => columns.map((column) => String(getRelatorioContaCorrenteCellValue(row, column) || '')));
-  if (totals) {
-    const labelIndex = columns.findIndex((column) => !['Débito', 'Crédito', 'Débito', 'Credito', 'Crédito'].includes(column));
-    bodyRows.push(columns.map((column, index) => {
-      const normalized = normalizeText(column);
-      if (normalized === 'débito' || normalized === 'debito') return formatMoney(totals.totalDebito);
-      if (normalized === 'crédito' || normalized === 'credito') return formatMoney(totals.totalCredito);
-      if (index === labelIndex) return 'TOTAL';
-      return '';
-    }));
+  const rowsData = rows.map((row) => columns.map((column) => String(getRelatorioContaCorrenteCellValue(row, column) || '')));
+  const totalsRow = totals ? columns.map((column, index) => {
+    const normalized = normalizeText(column);
+    const labelIndex = columns.findIndex((item) => !['Débito', 'Crédito', 'Débito', 'Credito', 'Crédito'].includes(item));
+    if (normalized === 'débito' || normalized === 'debito') return formatMoney(totals.totalDebito);
+    if (normalized === 'crédito' || normalized === 'credito') return formatMoney(totals.totalCredito);
+    if (index === labelIndex) return 'TOTAL';
+    return '';
+  }) : null;
+
+  const ratios = resolvePdfColumnRatios(header);
+  const usableWidth = pageSpec.width - pageSpec.left - pageSpec.right;
+  const columnWidthsBase = ratios.map((ratio, index) => {
+    const column = header[index] || '';
+    const minWidth = isMoneyColumn(column) ? 54 : (isDateColumn(column) ? 48 : 60);
+    return Math.max(minWidth, Math.floor(usableWidth * ratio));
+  });
+  const widthTotal = columnWidthsBase.reduce((sum, value) => sum + value, 0) || 1;
+  const columnWidths = columnWidthsBase.map((value) => Math.max(32, Math.floor(value * usableWidth / widthTotal)));
+  let widthRemainder = usableWidth - columnWidths.reduce((sum, value) => sum + value, 0);
+  for (let index = 0; widthRemainder > 0 && index < columnWidths.length; index += 1, widthRemainder -= 1) {
+    columnWidths[index] += 1;
   }
 
-  const widths = header.map((column, index) => Math.min(24, Math.max(column.length, ...bodyRows.map((line) => (line[index] || '').length), 6)));
-  const toLine = (arr) => arr.map((value, index) => String(value || '').padEnd(widths[index], ' ').slice(0, widths[index])).join(' | ');
-  const separator = widths.map((size) => '-'.repeat(size)).join('-+-');
-  const lines = [String(title || 'Relatório'), '', toLine(header), separator, ...bodyRows.map(toLine)];
-
-  const pageHeight = 842;
-  const startY = 800;
-  const lineHeight = 13;
-  const bottom = 40;
-  const perPage = Math.max(20, Math.floor((startY - bottom) / lineHeight));
-  const pages = [];
-  for (let index = 0; index < lines.length; index += perPage) {
-    pages.push(lines.slice(index, index + perPage));
+  const columnsX = [];
+  let cursorX = pageSpec.left;
+  for (const width of columnWidths) {
+    columnsX.push(cursorX);
+    cursorX += width;
   }
+
+  const headerFontSize = 7;
+  const bodyFontSize = 6.75;
+  const cellPaddingX = 3;
+  const rowHeight = 11;
+  const headerHeight = 12;
+  const captionY = pageSpec.height - pageSpec.top - 4;
+  const titleY = captionY - 11;
+  const metaY = titleY - 10;
+  const tableHeaderTopY = metaY - 16;
+  const bodyStartY = tableHeaderTopY - headerHeight;
+  const totalsHeight = totals ? 34 : 0;
+  const pageNumberReserve = 12;
+  const usableRowsHeight = bodyStartY - pageSpec.bottom - totalsHeight - pageNumberReserve - 4;
+  const rowsPerPage = Math.max(1, Math.floor(usableRowsHeight / rowHeight));
+  const pageRows = [];
+  for (let index = 0; index < rowsData.length; index += rowsPerPage) {
+    pageRows.push(rowsData.slice(index, index + rowsPerPage));
+  }
+
+  const pages = pageRows.length ? pageRows : [[]];
+  const totalPages = pages.length;
 
   const objects = [];
   const addObject = (id, body) => objects.push({ id, body });
   addObject(1, '<< /Type /Catalog /Pages 2 0 R >>');
-  addObject(3, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+  addObject(3, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+  addObject(4, '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
 
-  let nextId = 4;
+  let nextId = 5;
   const kids = [];
-  for (const page of pages) {
+  for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
+    const currentRows = pages[pageIndex];
     const contentId = nextId++;
     const pageId = nextId++;
-    const stream = [
-      'BT',
-      '/F1 10 Tf',
-      '13 TL',
-      `40 ${startY} Td`,
-      ...page.map((line, idx) => `${idx === 0 ? '' : 'T* '}(${String(line).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)')}) Tj`),
-      'ET',
-    ].join('\n');
-    addObject(contentId, `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
-    addObject(pageId, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentId} 0 R >>`);
+    const isLastPage = pageIndex === pages.length - 1;
+    const streamParts = [];
+    const drawText = (font, size, x, y, text) => {
+      streamParts.push(`BT /${font} ${size} Tf 1 0 0 1 ${x} ${y} Tm (${pdfEscapeText(text)}) Tj ET`);
+    };
+    const drawBox = (x, y, width, height, fill, stroke = '0.72 0.78 0.82') => {
+      streamParts.push(`q ${fill} rg ${stroke} RG ${x} ${y} ${width} ${height} re B Q`);
+    };
+
+    drawText('F2', 8.5, pageSpec.left, captionY, captionText);
+    drawText('F2', 9, pageSpec.left, titleY, titleText);
+    drawText('F2', 8, pageSpec.left, metaY, metaText);
+
+    header.forEach((column, index) => {
+      const x = columnsX[index];
+      const width = columnWidths[index];
+      const title = truncatePdfText(column, width - (cellPaddingX * 2), headerFontSize);
+      streamParts.push(`q 0.94 0.95 0.97 rg 0 0 0 RG ${x} ${tableHeaderTopY} ${width} ${headerHeight} re B Q`);
+      drawText('F2', 7, x + cellPaddingX, tableHeaderTopY + 3.4, title);
+    });
+
+    const rowBaseTop = bodyStartY;
+    currentRows.forEach((row, rowIndex) => {
+      const topY = rowBaseTop - (rowIndex * rowHeight);
+      const bottomY = topY - rowHeight + 1;
+      row.forEach((value, index) => {
+        const column = header[index];
+        const width = columnWidths[index];
+        const x = columnsX[index];
+        const rectY = bottomY;
+        streamParts.push(`q 1 1 1 rg 0.86 0.86 0.86 RG ${x} ${rectY} ${width} ${rowHeight} re B Q`);
+        const available = width - (cellPaddingX * 2);
+        const rendered = truncatePdfText(pdfSafeWidthText(value), available, bodyFontSize) || (isMoneyColumn(column) ? '-' : '');
+        const textWidth = pdfApproxTextWidth(rendered, bodyFontSize);
+        const textX = isMoneyColumn(column)
+          ? x + width - cellPaddingX - textWidth
+          : x + cellPaddingX;
+        drawText('F1', 6.75, textX, rectY + 3.2, rendered);
+      });
+    });
+
+    if (isLastPage && totals && totalsRow) {
+      const totalsTop = Math.max(pageSpec.bottom + pageNumberReserve + 8, rowBaseTop - (currentRows.length * rowHeight) - 6);
+      const blockHeight = 30;
+      const blockX = pageSpec.left;
+      const blockWidth = usableWidth;
+      streamParts.push(`q 0.96 0.99 1 rg 0.72 0.80 0.84 RG ${blockX} ${totalsTop} ${blockWidth} ${blockHeight} re B Q`);
+      const totalLabels = ['Total crédito', 'Total débito', 'Saldo final'];
+      const totalValues = [formatMoney(totals.totalCredito), formatMoney(totals.totalDebito), formatMoney(totals.saldoFinal)];
+      const segmentWidth = Math.floor(blockWidth / 3);
+      totalLabels.forEach((label, index) => {
+        const segX = blockX + (index * segmentWidth);
+        const segWidth = index === 2 ? blockWidth - (segmentWidth * 2) : segmentWidth;
+        drawText('F2', 7.5, segX + 4, totalsTop + 18, label);
+        streamParts.push(`q 0.85 0.96 0.98 rg 0.56 0.72 0.76 RG ${segX + 2} ${totalsTop + 4} ${segWidth - 4} 10 re B Q`);
+        const value = totalValues[index];
+        const valueWidth = pdfApproxTextWidth(value, 7);
+        drawText('F2', 7, segX + segWidth - valueWidth - 6, totalsTop + 7.2, value);
+      });
+    }
+
+    drawText('F1', 7, pageSpec.width - pageSpec.right - 58, pageSpec.bottom - 2 + 9, `Página ${pageIndex + 1} de ${totalPages}`);
+
+    const stream = streamParts.join('\n');
+    addObject(contentId, `<< /Length ${latin1ByteLength(stream)} >>\nstream\n${stream}\nendstream`);
+    addObject(pageId, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageSpec.width} ${pageSpec.height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`);
     kids.push(`${pageId} 0 R`);
   }
   addObject(2, `<< /Type /Pages /Count ${kids.length || 1} /Kids [${kids.join(' ')}] >>`);
 
   objects.sort((a, b) => a.id - b.id);
   let pdf = '%PDF-1.4\n';
-  const encoder = new TextEncoder();
   const offsets = {};
   for (const object of objects) {
-    offsets[object.id] = encoder.encode(pdf).length;
+    offsets[object.id] = latin1ByteLength(pdf);
     pdf += `${object.id} 0 obj\n${object.body}\nendobj\n`;
   }
-  const xref = encoder.encode(pdf).length;
+  const xref = latin1ByteLength(pdf);
   const maxId = Math.max(...objects.map((object) => object.id));
   pdf += `xref\n0 ${maxId + 1}\n0000000000 65535 f \n`;
   for (let index = 1; index <= maxId; index += 1) {
@@ -157,7 +405,7 @@ function buildSimplePdfBlob(columns, rows, title, totals) {
     pdf += `${String(offset).padStart(10, '0')} 00000 n \n`;
   }
   pdf += `trailer\n<< /Size ${maxId + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-  return new Blob([pdf], { type: 'application/pdf' });
+  return new Blob([latin1Bytes(pdf)], { type: 'application/pdf' });
 }
 
 function buildSpreadsheetXmlBlob(columns, rows, totals, title) {
@@ -208,10 +456,42 @@ ${rowXml.map((line) => `   ${line}`).join('\n')}
   return new Blob(['\ufeff' + xml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
 }
 
-function buildFileFromFormat(format, columns, rows, title, totals) {
-  if (format === 'PDF') return { blob: buildSimplePdfBlob(columns, rows, title, totals), extension: 'pdf', mimeType: 'application/pdf' };
-  if (format === 'EXCEL') return { blob: buildSpreadsheetXmlBlob(columns, rows, totals, title), extension: 'xls', mimeType: 'application/vnd.ms-excel;charset=utf-8;' };
-  return { blob: buildCsvBlob(columns, rows, totals), extension: 'csv', mimeType: 'text/csv;charset=utf-8;' };
+function buildTextBlob(columns, rows, totals, title) {
+  const lines = [];
+  lines.push(String(title || 'Relatório de contas do cirurgião'));
+  lines.push(columns.join('\t'));
+  rows.forEach((row) => {
+    lines.push(columns.map((column) => String(getRelatorioContaCorrenteCellValue(row, column) || '')).join('\t'));
+  });
+  if (totals) {
+    const labelIndex = columns.findIndex((column) => !['Débito', 'Crédito', 'Débito', 'Credito', 'Crédito'].includes(column));
+    lines.push(columns.map((column, index) => {
+      const normalized = normalizeText(column);
+      if (normalized === 'débito' || normalized === 'debito') return formatMoney(totals.totalDebito);
+      if (normalized === 'crédito' || normalized === 'credito') return formatMoney(totals.totalCredito);
+      if (index === labelIndex) return 'TOTAL';
+      return '';
+    }).join('\t'));
+  }
+  return new Blob([`\ufeff${lines.join('\r\n')}`], { type: 'text/plain;charset=utf-8;' });
+}
+
+function buildFileFromFormat(format, columns, rows, title, totals, orientation, orderLabel) {
+  switch (format) {
+    case 'PDF':
+      return { blob: buildSimplePdfBlob(columns, rows, title, totals, orientation, orderLabel), extension: 'pdf', mimeType: 'application/pdf' };
+    case 'HTML':
+      return { blob: buildHtmlBlob(columns, rows, totals, title), extension: 'html', mimeType: 'text/html;charset=utf-8;' };
+    case 'RTF':
+      return { blob: buildRtfBlob(columns, rows, totals, title), extension: 'rtf', mimeType: 'application/rtf;charset=utf-8;' };
+    case 'XLS':
+      return { blob: buildSpreadsheetXmlBlob(columns, rows, totals, title), extension: 'xls', mimeType: 'application/vnd.ms-excel;charset=utf-8;' };
+    case 'TXT':
+      return { blob: buildTextBlob(columns, rows, totals, title), extension: 'txt', mimeType: 'text/plain;charset=utf-8;' };
+    case 'CSV':
+    default:
+      return { blob: buildCsvBlob(columns, rows, totals), extension: 'csv', mimeType: 'text/csv;charset=utf-8;' };
+  }
 }
 
 function triggerDownload(blob, filename) {
@@ -230,26 +510,22 @@ function suggestFileName(reportName, extension) {
   return `${base}.${extension}`;
 }
 
-export function exportarRelatorioContaCorrenteArquivo({ reportData, selectedItems, reportName }) {
+export function exportarRelatorioContaCorrenteArquivo({ reportData, selectedItems, reportName, format, orientation, orderLabel }) {
   const rows = Array.isArray(reportData?.itens) ? reportData.itens : [];
   const columns = getRelatorioContaCorrenteColumns(selectedItems);
-  const totals = {
-    totalCredito: Number(reportData?.total_credito ?? 0) || 0,
-    totalDebito: Number(reportData?.total_debito ?? 0) || 0,
-    saldoFinal: Number(reportData?.saldo_final ?? 0) || 0,
-  };
+  const totals = getRelatorioContaCorrenteTotals(reportData);
 
-  const response = window.prompt('Escolha o formato para exportar: CSV, PDF ou EXCEL.', 'CSV');
-  const format = String(response || '').trim().toUpperCase();
-  if (!format) return { cancelled: true };
+  const normalizedFormat = String(format || '').trim().toUpperCase();
+  if (!normalizedFormat) {
+    return { cancelled: true, error: 'Formato não informado' };
+  }
 
-  if (!['CSV', 'PDF', 'EXCEL', 'XLS', 'XLSX', 'XLSM', 'XLMS'].includes(format)) {
-    window.alert('Formato inválido. Use CSV, PDF ou EXCEL.');
+  if (!['CSV', 'PDF', 'HTML', 'RTF', 'XLS', 'TXT'].includes(normalizedFormat)) {
+    window.alert('Formato inválido. Use PDF, HTML, RTF, XLS, TXT ou CSV.');
     return { cancelled: true, error: 'Formato inválido' };
   }
 
-  const normalizedFormat = format === 'CSV' ? 'CSV' : (format === 'PDF' ? 'PDF' : 'EXCEL');
-  const { blob, extension } = buildFileFromFormat(normalizedFormat, columns, rows, reportName, totals);
+  const { blob, extension } = buildFileFromFormat(normalizedFormat, columns, rows, reportName, totals, orientation, orderLabel);
   const filename = suggestFileName(reportName, extension);
   triggerDownload(blob, filename);
 

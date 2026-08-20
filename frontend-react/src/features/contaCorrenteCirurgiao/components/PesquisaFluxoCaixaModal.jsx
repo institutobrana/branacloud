@@ -42,7 +42,10 @@ function buildReportOptionsSnapshot(preferences) {
     ? preferences.selectedFields.map((field) => normalizeReportOptionKey(field)).filter((field) => allowedKeys.has(field))
     : [];
   const reportName = String(preferences?.reportName ?? 'Relatório de contas do cirurgião').trim() || 'Relatório de contas do cirurgião';
-  const output = ['Tela', 'Arquivo', 'Imprimir'].includes(String(preferences?.output ?? '').trim()) ? String(preferences.output).trim() : 'Tela';
+  const rawOutput = String(preferences?.output ?? '').trim().toLowerCase();
+  const output = ['tela', 'pdf', 'html', 'rtf', 'xls', 'txt', 'csv', 'imprimir'].includes(rawOutput)
+    ? rawOutput
+    : (rawOutput === 'arquivo' ? 'pdf' : 'tela');
   const orientation = ['retrato', 'paisagem'].includes(normalizeReportOptionKey(preferences?.orientation))
     ? normalizeReportOptionKey(preferences.orientation)
     : 'retrato';
@@ -63,8 +66,8 @@ function buildReportOptionsPayload(reportState = {}) {
   const selectedFields = Array.isArray(reportState.selectedFields)
     ? reportState.selectedFields.map((field) => normalizeReportOptionKey(field)).filter((field) => allowedKeys.has(field))
     : [];
-  const output = ['Tela', 'Arquivo', 'Imprimir'].includes(String(reportState.output ?? '').trim())
-    ? String(reportState.output).trim().toLowerCase()
+  const output = ['tela', 'pdf', 'html', 'rtf', 'xls', 'txt', 'csv', 'imprimir'].includes(normalizeReportOptionKey(reportState.output))
+    ? normalizeReportOptionKey(reportState.output)
     : 'tela';
   const orientation = ['retrato', 'paisagem'].includes(normalizeReportOptionKey(reportState.orientation))
     ? normalizeReportOptionKey(reportState.orientation)
@@ -174,9 +177,15 @@ export function PesquisaFluxoCaixaModal({ open, activeKey, onTabChange, onClose,
     const geraisState = filters.criteriosGerais || {};
     const adicionaisState = filters.criteriosAdicionais || {};
     const reportState = configuracaoConsolidada.reportOptions || {};
+    const contaCorrenteOption = Array.isArray(surgeonOptions)
+      ? surgeonOptions.find((item) => String(item.value) === String(geraisState.contaCorrente))
+      : null;
+    const contaCorrenteLabel = String(contaCorrenteOption?.label || '').trim().toLowerCase();
+    const contaCorrenteValue = contaCorrenteOption?.value ?? null;
+    const conta = contaCorrenteLabel === 'clínica' ? 'CLINICA' : 'CIRURGIAO';
 
     const params = {
-      conta: 'CIRURGIAO',
+      conta,
       tipo_lancamento: geraisState.tipoLancamentoEnabled ? geraisState.tipoLancamento : '',
       grupo: geraisState.grupoEnabled ? getOptionLabel(geraisState.groupOptions, geraisState.grupo) : '',
       tipo_grupo: geraisState.tipoGrupoEnabled ? geraisState.tipoGrupo : '',
@@ -192,6 +201,10 @@ export function PesquisaFluxoCaixaModal({ open, activeKey, onTabChange, onClose,
       data_lanc_fim: geraisState.periodoLancamentoEnabled ? formatDate(geraisState.periodoLancamentoFim) : '',
       ordem: reportState.order || '',
     };
+
+    if (conta === 'CIRURGIAO' && contaCorrenteValue != null) {
+      params.prestador_id = contaCorrenteValue;
+    }
 
     if (adicionaisState.tributaveis && !adicionaisState.nTributaveis) {
       params.tributavel = '1';
@@ -241,25 +254,28 @@ export function PesquisaFluxoCaixaModal({ open, activeKey, onTabChange, onClose,
       void persistReportOptions(reportState);
       const relatorio = await consultarRelatorioContaCorrente(buildReportParams());
       setUltimoRelatorio(relatorio);
-      const saida = String(reportState?.output || 'Tela').trim();
+      const saida = String(reportState?.output || 'tela').trim().toLowerCase();
       const resolvedOrientation = resolvePreviewOrientation(reportState);
 
-      if (saida === 'Tela') {
+      if (saida === 'tela') {
         setOverlayOpen(false);
         setPreviewOpen(true);
         return;
       }
 
-      if (saida === 'Arquivo') {
+      if (['pdf', 'html', 'rtf', 'xls', 'txt', 'csv'].includes(saida)) {
         exportarRelatorioContaCorrenteArquivo({
           reportData: relatorio,
           selectedItems: reportState?.selectedItems,
           reportName: reportState?.reportName,
+          format: saida.toUpperCase(),
+          orientation: resolvedOrientation,
+          orderLabel: reportState?.order,
         });
         return;
       }
 
-      if (saida === 'Imprimir') {
+      if (saida === 'imprimir') {
         const result = abrirImpressaoRelatorioContaCorrente({
           reportData: relatorio,
           selectedItems: reportState?.selectedItems,
