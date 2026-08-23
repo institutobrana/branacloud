@@ -6680,6 +6680,7 @@ Observacoes:
 - O motor reutilizavel de datas foi consolidado.
 - Os consumidores `CriteriosGeraisTab` e `InsereLancamentoModal` foram homologados.
 - A futura DATA-P6, se surgir, deve avaliar apenas a extracao de um componente visual compartilhado.
+
 ## Fechamento-T2A — Cadastro / Prestadores
 
 - **CONCLUIDO — Prestadores React:** shell, filtros, tabela, selecao, estados,
@@ -6695,3 +6696,15 @@ Observacoes:
 - O botao `Agenda` permanece ponto de entrada. `Configura horarios de
   agendamento` nao e marcado como concluido nesta secao.
 - O motor financeiro de aplicacao e precedencia de comissoes permanece futuro.
+
+## Fechamento-T2B — Frente B Configura horarios de agendamento
+
+- **CONCLUIDO — Configura horarios de agendamento:** modal por prestador,
+  contexto, Escala, Bloqueios, Apresentacao, Visualizacao, persistencia,
+  CRUD de bloqueios, contratos de data/hora, estados Ok/Cancelar/X e temas
+  light/dark.
+- A entrada `Prestadores -> Agenda` continua sendo somente o ponto de entrada;
+  a implementacao interna pertence a esta frente separada.
+- **Nao incluido:** Prestadores, Credenciamentos, Comissoes, Unidades de
+  atendimento, Motivos/Situacao de agendamento, ADM e Financeiro.
+- Documento consolidado: `docs/fechamento_t2b_configura_horarios_agendamento.md`.

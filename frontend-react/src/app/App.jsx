@@ -52,6 +52,8 @@ import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGrafi
 import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
 import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciamentos/PrestadorCredenciamentosModal.jsx';
 import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
+import { AgendaConfiguracaoModal } from '../features/agendaConfiguracao/AgendaConfiguracaoModal.jsx';
+import { buildAgendaConfiguracaoContext } from '../features/agendaConfiguracao/agendaConfiguracaoConstants.js';
 
 const contextualMenus = {
   atendimento: [
@@ -99,7 +101,7 @@ const contextualMenus = {
     { key: 'relatorios-tabelas', label: 'Tabelas', disabled: true },
   ],
   configuracao: [
-    { key: 'agendas', label: 'Agendas', disabled: true },
+    { key: 'agendas', label: 'Agenda' },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
     { key: 'cenario-anual', label: 'Cenário anual' },
     { key: 'indices-financeiros', label: 'Índices financeiros' },
@@ -160,6 +162,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
   if (path === `${base}/configuracoes/indices-financeiros`) return 'indices-financeiros';
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
+  if (path === `${base}/configuracoes/agendas`) return 'agenda-configuracao';
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
@@ -318,6 +321,7 @@ function AppContent() {
   });
   const [prestadorModalState, setPrestadorModalState] = useState({ open: false, mode: 'create', record: null, rowId: null });
   const [prestadorDeleteState, setPrestadorDeleteState] = useState({ open: false, target: null, loading: false, error: '' });
+  const [agendaConfiguracaoState, setAgendaConfiguracaoState] = useState({ open: false, context: null });
   const [prestadorCredenciamentosOpen, setPrestadorCredenciamentosOpen] = useState(false);
   const [prestadorComissoesOpen, setPrestadorComissoesOpen] = useState(false);
   const prestadoresState = usePrestadores();
@@ -331,6 +335,20 @@ function AppContent() {
     const target = prestadoresState.selectedItem || null;
     if (!target) return;
     setPrestadorDeleteState({ open: true, target, loading: false, error: '' });
+  };
+  const openAgendaConfiguracao = (item) => {
+    const selected = item || prestadoresState.selectedItem || null;
+    const prestadorId = selected?.id ?? null;
+    if (!prestadorId || !selected) return;
+    setAgendaConfiguracaoState({
+      open: true,
+      context: buildAgendaConfiguracaoContext({
+        source: 'prestadores',
+        prestadorId,
+        allowPrestadorChange: false,
+        selectedPrestadorSnapshot: selected,
+      }),
+    });
   };
   const closeDeletePrestador = () => {
     setPrestadorDeleteState((current) => {
@@ -392,6 +410,23 @@ function AppContent() {
     { key: 'adm-auditoria', label: 'Auditoria' },
   ]), []);
 
+  useEffect(() => {
+    if (screen !== 'agenda-configuracao') return;
+    setActiveGroupKey('configuracao');
+    setPanelGroupKey('configuracao');
+    setAgendaConfiguracaoState((current) => {
+      if (current.open) return current;
+      return {
+        open: true,
+        context: buildAgendaConfiguracaoContext({
+          source: 'configuracoes',
+          prestadorId: user?.prestador_id ?? user?.prestadorId ?? user?.prestador?.id ?? null,
+          allowPrestadorChange: false,
+          selectedPrestadorSnapshot: null,
+        }),
+      };
+    });
+  }, [screen, user]);
   const adminTopBar = useMemo(() => {
     if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria') return null;
 
@@ -692,6 +727,11 @@ function AppContent() {
       setPanelGroupKey('configuracao');
       return;
     }
+    if (nextScreen === 'agenda-configuracao') {
+      setActiveGroupKey('configuracao');
+      setPanelGroupKey('configuracao');
+      return;
+    }
     if (nextScreen === 'ficha-clinica') {
       setActiveGroupKey('atendimento');
     }
@@ -780,6 +820,23 @@ function AppContent() {
     }
     if (groupKey === 'configuracao' && item?.key === 'questionarios-anamnese' && !item?.disabled) {
       handleNavigate('questionarios-anamnese');
+      return;
+    }
+    if (groupKey === 'financeiro' && item?.key === 'conta-corrente-cirurgiao' && !item?.disabled) {
+      handleNavigate('conta-corrente-cirurgiao');
+      return;
+    }
+    if (groupKey === 'configuracao' && item?.key === 'agendas' && !item?.disabled) {
+      setAgendaConfiguracaoState({
+        open: true,
+        context: buildAgendaConfiguracaoContext({
+          source: 'configuracoes',
+          prestadorId: user?.prestador_id ?? user?.prestadorId ?? user?.prestador?.id ?? null,
+          allowPrestadorChange: false,
+          selectedPrestadorSnapshot: null,
+        }),
+      });
+      handleNavigate('agenda-configuracao');
       return;
     }
     if (groupKey === 'financeiro' && item?.key === 'conta-corrente-cirurgiao' && !item?.disabled) {
@@ -998,6 +1055,9 @@ function AppContent() {
     }
     if (screen === 'questionarios-anamnese') {
       return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
+    }
+    if (screen === 'agenda-configuracao') {
+      return <div className="brana-empty-state" aria-hidden="true" />;
     }
     if (screen === 'prestadores') {
       return (
@@ -1366,6 +1426,7 @@ function AppContent() {
           onNovoPrestador={() => setPrestadorModalState({ open: true, mode: 'create', record: null, rowId: null })}
           onAltera={() => openEditPrestador(prestadoresState.selectedItem)}
           onElimina={openDeletePrestador}
+          onAgenda={() => openAgendaConfiguracao(prestadoresState.selectedItem)}
           onConvenios={() => setPrestadorCredenciamentosOpen(true)}
           onComissoes={() => setPrestadorComissoesOpen(true)}
           onEspecialidadeChange={(value) => prestadoresState.setFilters((current) => ({ ...current, especialidade: value }))}
@@ -1592,6 +1653,16 @@ function AppContent() {
           target={prestadorDeleteState.target}
           onCancel={closeDeletePrestador}
           onConfirm={() => void confirmDeletePrestador()}
+        />
+        <AgendaConfiguracaoModal
+          open={agendaConfiguracaoState.open || screen === 'agenda-configuracao'}
+          context={agendaConfiguracaoState.context}
+          onCancel={() => {
+            if (agendaConfiguracaoState.context?.source === 'configuracoes') {
+              handleNavigate('dashboard');
+            }
+            setAgendaConfiguracaoState({ open: false, context: null });
+          }}
         />
         <PrestadorCredenciamentosModal
           open={prestadorCredenciamentosOpen && screen === 'prestadores'}

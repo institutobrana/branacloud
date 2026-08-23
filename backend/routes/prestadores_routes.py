@@ -10,6 +10,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from database import get_db
+from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento
 from models.convenio_odonto import ConvenioOdonto
 from models.financeiro import ItemAuxiliar
 from models.prestador_odonto import (
@@ -1068,6 +1069,20 @@ def _contar_vinculos_prestador(db: Session, clinica_id: int, prestador_id: int, 
                 PrestadorOdonto.clinica_id == int(clinica_id),
                 PrestadorOdonto.id == int(prestador_id),
                 PrestadorOdonto.usuario_id.isnot(None),
+            ),
+        ),
+        (
+            "agenda",
+            db.query(AgendaLegadoEvento.id).filter(
+                AgendaLegadoEvento.clinica_id == int(clinica_id),
+                AgendaLegadoEvento.id_prestador == int(prestador_id),
+            ),
+        ),
+        (
+            "bloqueios de agenda",
+            db.query(AgendaLegadoBloqueio.id).filter(
+                AgendaLegadoBloqueio.clinica_id == int(clinica_id),
+                AgendaLegadoBloqueio.id_prestador == int(prestador_id),
             ),
         ),
     ]
