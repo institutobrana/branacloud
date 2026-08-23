@@ -6665,3 +6665,33 @@ Observacoes:
 - A toolbar atual ficou restrita a `Atualizar | Buscar evento`.
 - O painel mantém tabela read-only compacta com cinco colunas, seleção única, filtros, ordenação, controle de colunas, rodapé, loading, vazio e erro.
 - Exportação CSV, detalhes e navegação por alvo permanecem fora desta fase.
+
+## Frente em documentacao - Conta corrente do cirurgião
+
+- Documento dedicado criado em `docs/auditoria_conta_corrente_cirurgiao.md`.
+- Contrato alvo documentado: `Lancamento.prestador_id -> PrestadorOdonto.id`.
+- Estrategia aprovada: preservar `Lancamento`, preservar `conta`, adicionar futuramente `prestador_id` nullable e manter `CLINICA` sem prestador individual.
+- Primeira entrega futura: somente a tela principal React, deixando `rcc-panel` e `rview-panel` para etapas posteriores.
+- O contrato mestre dos campos de data do Brana Cloude foi formalizado em `docs/contrato_mestre_campos_data_brana_cloude.md`; a proxima evolucao tecnica deve reutilizar essa referencia para inputs genericos, periodos e filtros financeiros sem misturar as semanticas.
+
+## Fechamento da frente DATA
+
+- DATA-P1 a DATA-P5 foram concluídas.
+- O motor reutilizavel de datas foi consolidado.
+- Os consumidores `CriteriosGeraisTab` e `InsereLancamentoModal` foram homologados.
+- A futura DATA-P6, se surgir, deve avaliar apenas a extracao de um componente visual compartilhado.
+## Fechamento-T2A — Cadastro / Prestadores
+
+- **CONCLUIDO — Prestadores React:** shell, filtros, tabela, selecao, estados,
+  Novo, Altera e Elimina.
+- **CONCLUIDO — Abas:** Principal, Contato, Detalhes e Observacoes.
+- **CONCLUIDO — Correcoes finais:** Observacoes multiline, redistribuicao
+  horizontal de Contato, dark mode/footer e readonly cianos.
+- **CONCLUIDO — Credenciamentos:** filtros, Novo, Altera, duplo clique,
+  Elimina e identidade por `id`.
+- **CONCLUIDO — Comissoes:** shell, Novo, Altera, duplo clique, Elimina,
+  filtros, Especialidade, percentual visual e contratos backend de tenant e
+  `source_id`.
+- O botao `Agenda` permanece ponto de entrada. `Configura horarios de
+  agendamento` nao e marcado como concluido nesta secao.
+- O motor financeiro de aplicacao e precedencia de comissoes permanece futuro.

@@ -1,0 +1,246 @@
+import { buildApiUrl } from '../../services/api.js';
+import { getToken } from '../auth/authStorage.js';
+
+async function requestJson(path, options = {}) {
+  const token = getToken();
+  const headers = new Headers(options.headers || {});
+
+  if (token && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  let response;
+  try {
+    response = await fetch(buildApiUrl(path), {
+      ...options,
+      headers,
+    });
+  } catch (err) {
+    const error = new Error('Falha de conexao ao consultar conta corrente do cirurgiao.');
+    error.cause = err;
+    throw error;
+  }
+
+  let data = null;
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    const error = new Error(data?.detail || data?.message || 'Falha ao consultar conta corrente do cirurgiao.');
+    error.status = response.status;
+    error.data = data;
+    throw error;
+  }
+
+  return data;
+}
+
+function normalizePrestador(item) {
+  const record = item || {};
+  return {
+    id: Number(record.id ?? 0) || null,
+    apelido: String(record.apelido ?? '').trim(),
+    nome: String(record.nome ?? '').trim(),
+    usuario_id: Number(record.usuario_id ?? 0) || null,
+  };
+}
+
+function normalizeGrupo(item) {
+  const record = item || {};
+  return {
+    value: Number(record.id ?? 0) || null,
+    label: String(record.nome ?? '').trim(),
+    tipo: String(record.tipo ?? '').trim(),
+  };
+}
+
+function normalizeCategoria(item) {
+  const record = item || {};
+  return {
+    value: Number(record.id ?? 0) || null,
+    label: String(record.nome ?? '').trim(),
+    grupo_id: Number(record.grupo_id ?? 0) || null,
+    tipo: String(record.tipo ?? '').trim(),
+    tributavel: Boolean(record.tributavel),
+  };
+}
+
+function normalizeLancamento(item) {
+  const record = item || {};
+  return {
+    id: Number(record.id ?? 0) || null,
+    categoria_id: Number(record.categoria_id ?? 0) || null,
+    categoria_nome: String(record.categoria_nome ?? '').trim(),
+    grupo_nome: String(record.grupo_nome ?? '').trim(),
+    historico: String(record.historico ?? '').trim(),
+    valor: Number(record.valor ?? 0) || 0,
+    tipo: String(record.tipo ?? '').trim(),
+    conta: String(record.conta ?? '').trim(),
+    situacao: String(record.situacao ?? 'Aberto').trim(),
+    forma_pagamento: record.forma_pagamento ?? null,
+    documento: record.documento ?? null,
+    referencia: record.referencia ?? null,
+    complemento: record.complemento ?? null,
+    tributavel: Number(record.tributavel ?? 0) || 0,
+    data_lancamento: String(record.data_lancamento ?? '').trim(),
+    data_vencimento: String(record.data_vencimento ?? '').trim(),
+    data_pagamento: record.data_pagamento ?? null,
+    prestador_id: record.prestador_id ?? null,
+  };
+}
+
+export async function listarPrestadoresCirurgiao() {
+  const data = await requestJson('/cadastros/prestadores', {
+    method: 'GET',
+  });
+  const itens = Array.isArray(data?.itens) ? data.itens : [];
+  return itens
+    .map(normalizePrestador)
+    .filter((item) => item.id != null && item.nome);
+}
+
+export async function listarLancamentosContaCirurgiao({ month, year, surgeonId, viewMode }) {
+  const params = new URLSearchParams();
+  params.set('mes', String(Number(month || 0) || new Date().getMonth() + 1));
+  params.set('ano', String(Number(year || 0) || new Date().getFullYear()));
+  params.set('conta', 'CIRURGIAO');
+  params.set('prestador_id', String(Number(surgeonId || 0) || 0));
+
+  const filtroMap = {
+    todos: 'Todos os lancamentos',
+    tributaveis: 'Apenas lancamentos tributaveis',
+    debito: 'Apenas debitos (Saidas)',
+    credito: 'Apenas creditos (Entradas)',
+    pessoal: 'Apenas despesas pessoais',
+  };
+  params.set('filtro', filtroMap[viewMode] || filtroMap.todos);
+
+  const data = await requestJson(`/financeiro/lancamentos?${params.toString()}`, {
+    method: 'GET',
+  });
+
+  return {
+    itens: Array.isArray(data?.itens) ? data.itens.map(normalizeLancamento) : [],
+    totalEntrada: Number(data?.total_entrada ?? 0) || 0,
+    totalSaida: Number(data?.total_saida ?? 0) || 0,
+    saldo: Number(data?.saldo ?? 0) || 0,
+  };
+}
+
+export async function listarCategoriasContaCirurgiao(tipo) {
+  const params = new URLSearchParams();
+  if (tipo) params.set('tipo', tipo);
+
+  const data = await requestJson(`/financeiro/categorias${params.toString() ? `?${params.toString()}` : ''}`, {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data.map(normalizeCategoria).filter((item) => item.value != null && item.label) : [];
+}
+
+export async function listarGruposContaCirurgiao() {
+  const data = await requestJson('/cadastros/grupos', {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data.map(normalizeGrupo).filter((item) => item.value != null && item.label) : [];
+}
+
+export async function listarFormasPagamentoContaCirurgiao() {
+  const data = await requestJson('/financeiro/formas-pagamento', {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listarSituacoesContaCirurgiao() {
+  const data = await requestJson('/financeiro/situacoes', {
+    method: 'GET',
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function criarLancamentoContaCirurgiao(payload) {
+  const data = await requestJson('/financeiro/lancamentos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return data || {};
+}
+
+export async function atualizarLancamentoContaCirurgiao(id, payload) {
+  const data = await requestJson(`/financeiro/lancamentos/${encodeURIComponent(String(id))}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return data || {};
+}
+
+export async function excluirLancamentoContaCirurgiao(id) {
+  const data = await requestJson(`/financeiro/lancamentos/${encodeURIComponent(String(id))}`, {
+    method: 'DELETE',
+  });
+
+  return data || {};
+}
+
+export async function consultarRelatorioContaCorrente(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value == null || value === '') return;
+    query.set(key, String(value));
+  });
+
+  const data = await requestJson(`/financeiro/relatorio-cc${query.toString() ? `?${query.toString()}` : ''}`, {
+    method: 'GET',
+  });
+
+  return data || {};
+}
+
+const REPORT_OPTIONS_ENDPOINT = '/preferences/report-options/conta-corrente-cirurgiao';
+
+function normalizeReportOptionsConfig(config) {
+  const source = config || {};
+  return {
+    version: Number(source.version ?? 1) || 1,
+    selectedFields: Array.isArray(source.selectedFields) ? source.selectedFields.map((field) => String(field || '').trim()).filter(Boolean) : [],
+    reportName: String(source.reportName ?? '').trim(),
+    output: String(source.output ?? '').trim(),
+    orientation: String(source.orientation ?? '').trim(),
+  };
+}
+
+export async function obterPreferenciasRelatorioContaCorrenteCirurgiao() {
+  const data = await requestJson(REPORT_OPTIONS_ENDPOINT, {
+    method: 'GET',
+  });
+
+  return normalizeReportOptionsConfig(data);
+}
+
+export async function salvarPreferenciasRelatorioContaCorrenteCirurgiao(config) {
+  const payload = normalizeReportOptionsConfig(config);
+  const data = await requestJson(REPORT_OPTIONS_ENDPOINT, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return normalizeReportOptionsConfig(data?.config || data);
+}

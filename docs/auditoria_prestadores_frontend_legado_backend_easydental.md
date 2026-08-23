@@ -314,3 +314,13 @@ Componentes/padroes existentes que podem ajudar na futura implementacao:
 - O modulo `Prestadores` existe e e funcional no backend, banco, frontend legado e contrato odonto.
 - A nova frente React deve tratar `Agenda`, `Convênios` e `Comissões` como fluxos separados ou submodulos isolados.
 - A etapa atual e exclusivamente documental.
+
+## Consolidacao final da Frente A
+
+O fechamento documental final esta em `docs/fechamento_t2a_prestadores.md`.
+O codigo atual contempla Novo, Altera e Elimina de Prestadores, as abas
+Principal, Contato, Detalhes e Observacoes, Credenciamentos e Comissoes.
+
+As conclusoes acima sao registro da auditoria original. Para o estado vigente,
+prevalecem o codigo atual e o fechamento final. A implementacao interna de
+Agenda permanece fora desta frente.

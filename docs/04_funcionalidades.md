@@ -28,6 +28,8 @@ Regras: superadmin nao e o mesmo que admin de clinica; estas rotas podem atraves
 
 ADM Cobranca: a auditoria de 2026-07-22 definiu que a primeira fase React deve ser somente leitura sobre `GET /superadmin/cobrancas`, usando os registros de `plataforma_cobrancas`. `GET /superadmin/assinaturas` existe como visao complementar derivada, mas nao e a tabela principal inicial. Checkout, Pix, boleto, confirmacao de pagamento, sincronizacao Mercado Pago, webhook e qualquer mutacao financeira ficam fora da primeira fase.
 
+ADM Auditoria: a auditoria de 2026-07-23 iniciou a leitura historica e tecnica da frente React. O legado atual continua como tabela read-only com cinco colunas (`ID`, `Data`, `Ação`, `Autor`, `Alvo`) e a tabela real `plataforma_auditoria` possui `actor_user_id`, `actor_email`, `acao`, `alvo_tipo`, `alvo_id`, `detalhes_json`, `ip` e `criado_em`. A fase inicial deve continuar somente leitura.
+
 ## Cadastros operacionais
 
 Codigo: `backend/routes/cadastros_routes.py`, `backend/routes/unidades_atendimento_routes.py`, `backend/routes/cid_routes.py`, `backend/routes/materiais_routes.py`, `backend/routes/medicamentos_routes.py`, `backend/routes/proteticos_routes.py`.
@@ -59,6 +61,13 @@ Codigo: `backend/routes/financeiro_routes.py`, `backend/routes/indices_financeir
 Inclui grupos, categorias, lancamentos, formas de pagamento, situacoes, relatorio de conta corrente, fluxo de caixa, indices financeiros e simulacao de cenario.
 
 Regras: lancamentos usam categorias e grupos por clinica; exclusao de categorias em uso deve ser bloqueada ou migrada; indices podem ter cotacoes.
+
+Conta corrente do cirurgiao:
+
+- documento dedicado: `docs/auditoria_conta_corrente_cirurgiao.md`
+- contrato alvo: `Lancamento.prestador_id -> PrestadorOdonto.id`
+- situacao atual: `Lancamento` ainda nao possui `prestador_id`
+- compatibilidade: `conta = CIRURGIAO` continua existindo como categoria agregada ate a evolucao futura
 
 ## Procedimentos e tratamentos
 
@@ -164,3 +173,14 @@ Fora do escopo desta fase: checkout, Pix, boleto, confirmacao de pagamento, sinc
 Correcao runtime visual: mesmo com zero cobrancas retornadas pelo endpoint, a tabela permanece visivel com os sete cabecalhos e o estado vazio aparece dentro do corpo. Quando busca ou filtro eliminam os resultados carregados, a mensagem muda para `Nenhuma cobrança corresponde aos filtros aplicados.`. Os textos visiveis da frente foram corrigidos para UTF-8 real.
 
 Ver detalhes: o modal `Detalhes da cobranca` e somente leitura, usa apenas a linha selecionada ja carregada no frontend, nao faz request adicional e nao exibe `payload_json`.
+## Contrato mestre de datas aplicado ao financeiro
+
+- campo de data generico: entrada curta, selecao integral no foco, confirmacao por `Tab` e validacao de data real;
+- periodo de data: inicio e fim separados, com defaults distintos;
+- use `DatePicker` ou controle equivalente apenas quando o contrato funcional do fluxo exigir periodo, e nao como substituto automatico do campo generico.
+
+## Fechamento da frente DATA
+
+- DATA-P1 a DATA-P5 foram concluídas para os consumidores validados na conta corrente do cirurgião.
+- O contrato mestre de datas ficou registrado em `docs/contrato_mestre_campos_data_brana_cloude.md`.
+- A próxima frente técnica futura é a possível extração de um componente visual compartilhado, somente quando houver necessidade comprovada.

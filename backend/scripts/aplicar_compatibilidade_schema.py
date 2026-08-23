@@ -677,11 +677,31 @@ def aplicar_compatibilidade_schema() -> None:
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS documento VARCHAR"))
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS referencia VARCHAR"))
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS complemento VARCHAR"))
+        conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS prestador_id INTEGER"))
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS tributavel INTEGER NOT NULL DEFAULT 0"))
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS parcelado INTEGER NOT NULL DEFAULT 0"))
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS qtd_parcelas INTEGER NOT NULL DEFAULT 1"))
         conn.execute(text("ALTER TABLE lancamento ADD COLUMN IF NOT EXISTS parcela_atual INTEGER NOT NULL DEFAULT 1"))
         conn.execute(text("ALTER TABLE lancamento ALTER COLUMN conta SET DEFAULT 'CLINICA'"))
+        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_lancamento_prestador_id ON lancamento (prestador_id)"))
+        conn.execute(
+            text(
+                """
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1
+                        FROM pg_constraint
+                        WHERE conname = 'fk_lancamento_prestador_odonto'
+                    ) THEN
+                        ALTER TABLE lancamento
+                        ADD CONSTRAINT fk_lancamento_prestador_odonto
+                        FOREIGN KEY (prestador_id) REFERENCES prestador_odonto(id);
+                    END IF;
+                END$$;
+                """
+            )
+        )
         conn.execute(
             text(
                 """

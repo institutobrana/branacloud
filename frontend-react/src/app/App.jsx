@@ -1,4 +1,4 @@
-import { ConfigProvider, Input, Select, Typography, message } from 'antd';
+import { Button, ConfigProvider, Input, Modal, Select, Typography, message } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BranaThemeModeProvider, useBranaThemeMode } from '../theme/branaThemeMode.jsx';
 import { getBranaTheme } from '../theme/branaTheme.js';
@@ -32,13 +32,26 @@ import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/compon
 import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFinanceirosPage.jsx';
 import { PlanoContasPage } from '../features/planoContas/PlanoContasPage.jsx';
 import { PlanoContasToolbar } from '../features/planoContas/components/PlanoContasToolbar.jsx';
+import { ContaCorrenteCirurgiaoShell } from '../features/contaCorrenteCirurgiao/ContaCorrenteCirurgiaoShell.jsx';
+import { ContaCorrenteCirurgiaoToolbar } from '../features/contaCorrenteCirurgiao/components/ContaCorrenteCirurgiaoToolbar.jsx';
+import { PesquisaFluxoCaixaModal } from '../features/contaCorrenteCirurgiao/components/PesquisaFluxoCaixaModal.jsx';
+import { InsereLancamentoModal } from '../features/contaCorrenteCirurgiao/components/InsereLancamentoModal.jsx';
+import { atualizarLancamentoContaCirurgiao, criarLancamentoContaCirurgiao, excluirLancamentoContaCirurgiao } from '../features/contaCorrenteCirurgiao/contaCorrenteCirurgiaoApi.js';
+import { useContaCorrenteCirurgiao } from '../features/contaCorrenteCirurgiao/hooks/useContaCorrenteCirurgiao.js';
 import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNew.jsx';
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
 import { PrestadoresPage } from '../features/prestadores/PrestadoresPage.jsx';
+import { PrestadoresToolbar } from '../features/prestadores/PrestadoresToolbar.jsx';
+import { PrestadorDeleteDialog } from '../features/prestadores/components/PrestadorDeleteDialog.jsx';
+import { PrestadorModal } from '../features/prestadores/components/PrestadorModal.jsx';
+import { deletePrestador } from '../features/prestadores/prestadoresApi.js';
+import { usePrestadores } from '../features/prestadores/hooks/usePrestadores.js';
 import { QuestionariosAnamnesePage } from '../features/questionariosAnamnese/QuestionariosAnamnesePage.jsx';
 import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGraficosPage.jsx';
 import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
+import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciamentos/PrestadorCredenciamentosModal.jsx';
+import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -60,6 +73,7 @@ const contextualMenus = {
   financeiro: [
     { key: 'contas-pagar', label: 'Contas a pagar', disabled: true },
     { key: 'contas-receber', label: 'Contas a receber', disabled: true },
+    { key: 'conta-corrente-cirurgiao', label: 'Conta corrente do cirurgião' },
     { key: 'controle-estoque', label: 'Controle de estoque', disabled: true },
     { key: 'faturamento-convenio', label: 'Faturamento de convênio', disabled: true },
     { key: 'fluxo-caixa', label: 'Fluxo de caixa', disabled: true },
@@ -149,6 +163,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
+  if (path === `${base}/financeiro/conta-corrente-cirurgiao`) return 'conta-corrente-cirurgiao';
   if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
   if (path === `${base}/tabelas-auxiliares`) return 'tabelas-auxiliares';
   if (path === `${base}/tabelas/procedimentos`) return 'procedimentos';
@@ -185,9 +200,11 @@ function syncAppPath(screen) {
           : screen === 'simbolos-graficos'
             ? appPath('configuracoes/simbolos-graficos')
           : screen === 'unidades-atendimento'
-            ? appPath('configuracoes/unidades-atendimento')
+          ? appPath('configuracoes/unidades-atendimento')
           : screen === 'questionarios-anamnese'
             ? appPath('configuracoes/questionarios-anamnese')
+          : screen === 'conta-corrente-cirurgiao'
+            ? appPath('financeiro/conta-corrente-cirurgiao')
           : screen === 'prestadores'
             ? appPath('cadastro/corpo-clinico')
         : screen === 'tabelas-auxiliares'
@@ -299,6 +316,44 @@ function AppContent() {
     deleteDisabledReason: '',
     hasSelection: false,
   });
+  const [prestadorModalState, setPrestadorModalState] = useState({ open: false, mode: 'create', record: null, rowId: null });
+  const [prestadorDeleteState, setPrestadorDeleteState] = useState({ open: false, target: null, loading: false, error: '' });
+  const [prestadorCredenciamentosOpen, setPrestadorCredenciamentosOpen] = useState(false);
+  const [prestadorComissoesOpen, setPrestadorComissoesOpen] = useState(false);
+  const prestadoresState = usePrestadores();
+  const openEditPrestador = (item) => {
+    const nextItem = item || null;
+    const rowId = nextItem?.row_id ?? nextItem?.id ?? null;
+    if (!rowId || !nextItem) return;
+    setPrestadorModalState({ open: true, mode: 'edit', record: nextItem, rowId });
+  };
+  const openDeletePrestador = () => {
+    const target = prestadoresState.selectedItem || null;
+    if (!target) return;
+    setPrestadorDeleteState({ open: true, target, loading: false, error: '' });
+  };
+  const closeDeletePrestador = () => {
+    setPrestadorDeleteState((current) => {
+      if (current.loading) return current;
+      return { open: false, target: null, loading: false, error: '' };
+    });
+  };
+  const confirmDeletePrestador = async () => {
+    const target = prestadorDeleteState.target;
+    const rowId = target?.row_id ?? target?.id ?? null;
+    if (!rowId || prestadorDeleteState.loading) return;
+    setPrestadorDeleteState((current) => ({ ...current, loading: true, error: '' }));
+    try {
+      await deletePrestador(rowId);
+      await prestadoresState.reload(undefined, { preserveSelection: false });
+      setPrestadorDeleteState({ open: false, target: null, loading: false, error: '' });
+      message.success('Prestador eliminado com sucesso.');
+    } catch (error) {
+      const nextError = error?.message || 'Falha ao eliminar prestador.';
+      setPrestadorDeleteState((current) => ({ ...current, loading: false, error: nextError }));
+      message.error(nextError);
+    }
+  };
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'adm' || initialScreen === 'adm-clinicas' || initialScreen === 'adm-usuarios' || initialScreen === 'adm-cobrancas' || initialScreen === 'adm-auditoria') return 'adm';
     if (initialScreen === 'pacientes') return 'cadastro';
@@ -312,6 +367,7 @@ function AppContent() {
     if (initialScreen === 'cenario-anual') return 'configuracao';
     if (initialScreen === 'indices-financeiros') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
+    if (initialScreen === 'conta-corrente-cirurgiao') return 'financeiro';
     if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
     if (initialScreen === 'questionarios-anamnese') return 'configuracao';
@@ -319,6 +375,12 @@ function AppContent() {
   });
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
   const [preferenciasOpen, setPreferenciasOpen] = useState(false);
+  const [contaCorrenteLaunchModal, setContaCorrenteLaunchModal] = useState({ open: false, type: 'debito', mode: 'create' });
+  const [pesquisaFluxoCaixaModalOpen, setPesquisaFluxoCaixaModalOpen] = useState(false);
+  const [pesquisaFluxoCaixaModalTab, setPesquisaFluxoCaixaModalTab] = useState('geral');
+  const [contaCorrenteDeleting, setContaCorrenteDeleting] = useState(false);
+  const [contaCorrenteDeletePromptOpen, setContaCorrenteDeletePromptOpen] = useState(false);
+  const contaCorrente = useContaCorrenteCirurgiao();
   const panelCloseTimerRef = useRef(null);
   const canAccessAdminPlatform = canAccessPlatformAdmin(user);
   const mainGroups = getAdminMainGroups(user, branaMainGroups);
@@ -329,6 +391,7 @@ function AppContent() {
     { key: 'adm-cobrancas', label: 'Cobranças' },
     { key: 'adm-auditoria', label: 'Auditoria' },
   ]), []);
+
   const adminTopBar = useMemo(() => {
     if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria') return null;
 
@@ -545,7 +608,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -717,6 +780,10 @@ function AppContent() {
     }
     if (groupKey === 'configuracao' && item?.key === 'questionarios-anamnese' && !item?.disabled) {
       handleNavigate('questionarios-anamnese');
+      return;
+    }
+    if (groupKey === 'financeiro' && item?.key === 'conta-corrente-cirurgiao' && !item?.disabled) {
+      handleNavigate('conta-corrente-cirurgiao');
       return;
     }
     if (groupKey === 'tabelas' && item?.key === 'procedimentos-genericos' && !item?.disabled) {
@@ -891,6 +958,33 @@ function AppContent() {
     if (screen === 'plano-contas') {
       return <PlanoContasPage />;
     }
+    if (screen === 'conta-corrente-cirurgiao') {
+      return (
+        <ContaCorrenteCirurgiaoShell
+          items={contaCorrente.items}
+          totalEntrada={contaCorrente.totalEntrada}
+          totalSaida={contaCorrente.totalSaida}
+          saldo={contaCorrente.saldo}
+          selectedId={contaCorrente.selectedId}
+          selectedRow={contaCorrente.selectedRow}
+          error={contaCorrente.error}
+          month={contaCorrente.month}
+          year={contaCorrente.year}
+          surgeonId={contaCorrente.surgeonId}
+          viewMode={contaCorrente.viewMode}
+          surgeonOptions={contaCorrente.surgeonOptions}
+          onMonthChange={contaCorrente.setMonth}
+          onYearChange={contaCorrente.setYear}
+          onSurgeonChange={contaCorrente.setSurgeonId}
+          onViewModeChange={contaCorrente.setViewMode}
+          onSelect={contaCorrente.setSelectedId}
+          onDoubleClick={(row) => {
+            contaCorrente.setSelectedId(row?.id ?? null);
+            openContaCorrenteEditModal(row);
+          }}
+        />
+      );
+    }
     if (screen === 'simbolos-graficos') {
       return (
         <SimbolosGraficosPage
@@ -906,7 +1000,17 @@ function AppContent() {
       return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
     }
     if (screen === 'prestadores') {
-      return <PrestadoresPage />;
+      return (
+        <PrestadoresPage
+          items={prestadoresState.items}
+          loading={prestadoresState.loading}
+          error={prestadoresState.error}
+          selectedId={prestadoresState.selectedId}
+          onSelect={prestadoresState.setSelectedId}
+          onDoubleClick={openEditPrestador}
+          footerLabel={prestadoresState.footerLabel}
+        />
+      );
     }
     if (screen === 'procedimentos-genericos') {
       return <ProcedimentosGenericosPage q={procedimentosGenericosSearch} especialidade={procedimentosGenericosEspecialidade} novoProcedimentoToken={procedimentosGenericosNovoToken} onResetFilters={() => { setProcedimentosGenericosSearch(''); setProcedimentosGenericosEspecialidade(''); }} />;
@@ -932,7 +1036,23 @@ function AppContent() {
       return <ServicosProteticoPage />;
     }
     return <DashboardPage key={dashboardVersion} />;
-  }, [cenarioAnualOpenRequestId, dashboardVersion, loading, materiaisEstoqueToolbarState, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen, simbolosGraficosCreateOpen, user]);
+  }, [
+    cenarioAnualOpenRequestId,
+    dashboardVersion,
+    loading,
+    materiaisEstoqueToolbarState,
+    procedimentosGenericosEspecialidade,
+    procedimentosGenericosNovoToken,
+    procedimentosGenericosSearch,
+    prestadoresState.error,
+    prestadoresState.footerLabel,
+    prestadoresState.items,
+    prestadoresState.loading,
+    prestadoresState.selectedId,
+    screen,
+    simbolosGraficosCreateOpen,
+    user,
+  ]);
 
   const auxiliaryTopBar = useMemo(() => {
     if (screen === 'unidades-atendimento') {
@@ -1233,6 +1353,28 @@ function AppContent() {
     );
   }, [screen, servicosProteticoToolbarState]);
 
+  const prestadoresTopBar = useMemo(() => {
+    if (screen !== 'prestadores') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band materiais-estoque-shell-band" aria-label="Barra operacional de corpo clínico">
+          <PrestadoresToolbar
+          especialidade={prestadoresState.filters.especialidade}
+          searchValue={prestadoresState.filters.nome}
+          especialidades={prestadoresState.especialidades}
+          hasSelection={prestadoresState.hasSelection}
+          onNovoPrestador={() => setPrestadorModalState({ open: true, mode: 'create', record: null, rowId: null })}
+          onAltera={() => openEditPrestador(prestadoresState.selectedItem)}
+          onElimina={openDeletePrestador}
+          onConvenios={() => setPrestadorCredenciamentosOpen(true)}
+          onComissoes={() => setPrestadorComissoesOpen(true)}
+          onEspecialidadeChange={(value) => prestadoresState.setFilters((current) => ({ ...current, especialidade: value }))}
+          onSearchChange={(value) => prestadoresState.setFilters((current) => ({ ...current, nome: value }))}
+        />
+      </div>
+    );
+  }, [openEditPrestador, prestadoresState.especialidades, prestadoresState.filters.especialidade, prestadoresState.filters.nome, prestadoresState.hasSelection, prestadoresState.items, prestadoresState.selectedId, prestadoresState.selectedItem, screen]);
+
   const doencasCidTopBar = useMemo(() => {
     if (screen !== 'doencas-cid') return null;
 
@@ -1279,6 +1421,43 @@ function AppContent() {
       </div>
     );
   }, [handleNavigate, planoContasToolbarState.canCreateCategory, planoContasToolbarState.canDeleteSelection, planoContasToolbarState.canEditCategory, planoContasToolbarState.canEditGroup, planoContasToolbarState.deleteDisabledReason, planoContasToolbarState.deleting, planoContasToolbarState.loading, planoContasToolbarState.migrating, planoContasToolbarState.migrationModalOpen, planoContasToolbarState.saving, screen]);
+
+  const openContaCorrenteEditModal = (row) => {
+    if (!row) return;
+    setContaCorrenteLaunchModal({
+      open: true,
+      type: String(row.tipo || '').toLowerCase() === 'credito' ? 'credito' : 'debito',
+      mode: 'edit',
+    });
+  };
+
+  const contaCorrenteCirurgiaoTopBar = useMemo(() => {
+    if (screen !== 'conta-corrente-cirurgiao') return null;
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da conta corrente do cirurgião">
+        <ContaCorrenteCirurgiaoToolbar
+          month={contaCorrente.month}
+          year={contaCorrente.year}
+          surgeonId={contaCorrente.surgeonId}
+          viewMode={contaCorrente.viewMode}
+          surgeonOptions={contaCorrente.surgeonOptions}
+          hasSelection={contaCorrente.selectedId != null}
+          onMonthChange={contaCorrente.setMonth}
+          onYearChange={contaCorrente.setYear}
+          onSurgeonChange={contaCorrente.setSurgeonId}
+          onViewModeChange={contaCorrente.setViewMode}
+          onNewDebit={() => setContaCorrenteLaunchModal({ open: true, type: 'debito', mode: 'create' })}
+          onNewCredit={() => setContaCorrenteLaunchModal({ open: true, type: 'credito', mode: 'create' })}
+          onEdit={() => openContaCorrenteEditModal(contaCorrente.selectedRow)}
+          onDelete={() => setContaCorrenteDeletePromptOpen(true)}
+          onPrint={() => {
+            setPesquisaFluxoCaixaModalTab('geral');
+            setPesquisaFluxoCaixaModalOpen(true);
+          }}
+        />
+      </div>
+    );
+  }, [contaCorrente.month, contaCorrente.year, contaCorrente.selectedId, contaCorrente.selectedRow, contaCorrente.surgeonId, contaCorrente.surgeonOptions, contaCorrente.setMonth, contaCorrente.setSurgeonId, contaCorrente.setViewMode, contaCorrente.setYear, contaCorrente.viewMode, screen]);
 
   const shellStyle = {
     '--brana-rail-width': railExpanded ? '184px' : '72px',
@@ -1356,6 +1535,8 @@ function AppContent() {
             materiaisEstoqueTopBar
           ) : screen === 'servicos-protetico' ? (
             servicosProteticoTopBar
+          ) : screen === 'prestadores' ? (
+            prestadoresTopBar
           ) : screen === 'doencas-cid' ? (
             doencasCidTopBar
           ) : screen === 'medicamentos' ? (
@@ -1364,6 +1545,8 @@ function AppContent() {
             indicesFinanceirosTopBar
           ) : screen === 'plano-contas' ? (
             planoContasTopBar
+          ) : screen === 'conta-corrente-cirurgiao' ? (
+            contaCorrenteCirurgiaoTopBar
           ) : screen === 'simbolos-graficos' ? (
             simbolosGraficosTopBar
           ) : screen === 'questionarios-anamnese' ? (
@@ -1391,11 +1574,103 @@ function AppContent() {
           />
           <BranaWorkspace>{activePage}</BranaWorkspace>
         </div>
+        <PrestadorModal
+          open={prestadorModalState.open && screen === 'prestadores'}
+          mode={prestadorModalState.mode}
+          record={prestadorModalState.record}
+          rowId={prestadorModalState.rowId}
+          onCancel={() => setPrestadorModalState({ open: false, mode: 'create', record: null, rowId: null })}
+          onSuccess={async () => {
+            await prestadoresState.reload();
+            setPrestadorModalState({ open: false, mode: 'create', record: null, rowId: null });
+          }}
+        />
+        <PrestadorDeleteDialog
+          open={prestadorDeleteState.open && screen === 'prestadores'}
+          loading={prestadorDeleteState.loading}
+          error={prestadorDeleteState.error}
+          target={prestadorDeleteState.target}
+          onCancel={closeDeletePrestador}
+          onConfirm={() => void confirmDeletePrestador()}
+        />
+        <PrestadorCredenciamentosModal
+          open={prestadorCredenciamentosOpen && screen === 'prestadores'}
+          prestador={prestadoresState.selectedItem}
+          onClose={() => setPrestadorCredenciamentosOpen(false)}
+        />
+        <PrestadorComissoesModal
+          open={prestadorComissoesOpen && screen === 'prestadores'}
+          prestador={prestadoresState.selectedItem}
+          onClose={() => setPrestadorComissoesOpen(false)}
+        />
         <PreferenciasUsuarioModal
           open={preferenciasOpen}
           userName={user?.apelido || user?.nome || user?.email || 'Tel'}
           onClose={() => setPreferenciasOpen(false)}
         />
+        <InsereLancamentoModal
+          open={contaCorrenteLaunchModal.open}
+          initialType={contaCorrenteLaunchModal.type}
+          prestadorId={contaCorrente.surgeonId}
+          mode={contaCorrenteLaunchModal.mode || 'create'}
+          lancamento={contaCorrenteLaunchModal.mode === 'edit' ? contaCorrente.selectedRow : null}
+          onClose={() => setContaCorrenteLaunchModal({ open: false, type: 'debito', mode: 'create' })}
+          onSubmit={async (payload) => {
+            if (contaCorrenteLaunchModal.mode === 'edit' && contaCorrente.selectedRow?.id != null) {
+              await atualizarLancamentoContaCirurgiao(contaCorrente.selectedRow.id, payload);
+            } else {
+              await criarLancamentoContaCirurgiao(payload);
+            }
+            await contaCorrente.reloadLancamentos();
+            setContaCorrenteLaunchModal({ open: false, type: 'debito', mode: 'create' });
+          }}
+        />
+        <PesquisaFluxoCaixaModal
+          open={pesquisaFluxoCaixaModalOpen}
+          activeKey={pesquisaFluxoCaixaModalTab}
+          onTabChange={(key) => setPesquisaFluxoCaixaModalTab(key)}
+          onClose={() => setPesquisaFluxoCaixaModalOpen(false)}
+          surgeonOptions={contaCorrente.surgeonOptions}
+          surgeonId={contaCorrente.surgeonId}
+        />
+        <Modal
+          open={contaCorrenteDeletePromptOpen}
+          title="Excluir lançamento"
+          onCancel={() => {
+            if (!contaCorrenteDeleting) setContaCorrenteDeletePromptOpen(false);
+          }}
+          footer={[
+            <Button key="cancel" onClick={() => setContaCorrenteDeletePromptOpen(false)} disabled={contaCorrenteDeleting}>
+              Cancelar
+            </Button>,
+            <Button
+              key="ok"
+              danger
+              type="primary"
+              loading={contaCorrenteDeleting}
+              disabled={contaCorrenteDeleting}
+              onClick={async () => {
+                if (!contaCorrente.selectedRow?.id || contaCorrenteDeleting) return;
+                setContaCorrenteDeleting(true);
+                try {
+                  await excluirLancamentoContaCirurgiao(contaCorrente.selectedRow.id);
+                  contaCorrente.setSelectedId(null);
+                  setContaCorrenteDeletePromptOpen(false);
+                  await contaCorrente.reloadLancamentos();
+                } finally {
+                  setContaCorrenteDeleting(false);
+                }
+              }}
+            >
+              Excluir
+            </Button>,
+          ]}
+          centered
+          destroyOnClose
+          maskClosable={false}
+        >
+          <p>{contaCorrente.selectedRow ? `Confirma a exclusão do lançamento "${contaCorrente.selectedRow.historico}"?` : 'Selecione um lançamento.'}</p>
+        </Modal>
       </div>
     );
   }

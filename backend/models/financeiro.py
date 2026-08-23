@@ -37,6 +37,7 @@ class Lancamento(Base):
     id = Column(Integer, primary_key=True, index=True)
     clinica_id = Column(Integer, ForeignKey("clinicas.id"), nullable=False, index=True)
     categoria_id = Column(Integer, ForeignKey("categoria_financeira.id"), nullable=False, index=True)
+    prestador_id = Column(Integer, ForeignKey("prestador_odonto.id"), nullable=True, index=True)
 
     historico = Column(String, nullable=True)
     valor = Column(Float, default=0)
@@ -61,6 +62,7 @@ class Lancamento(Base):
 
     clinica = relationship("Clinica")
     categoria = relationship("CategoriaFinanceira", back_populates="lancamentos")
+    prestador = relationship("PrestadorOdonto", back_populates="lancamentos")
 
 
 class ItemAuxiliar(Base):

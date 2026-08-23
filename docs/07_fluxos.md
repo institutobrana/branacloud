@@ -165,6 +165,16 @@ O que pode quebrar:
 - Permissao do modulo desabilitada: 403.
 - Modulo protegido sem senha/grant: 403 com `protected_password_required`.
 
+## Conta corrente do cirurgiao
+
+Fluxo documental futuro:
+
+1. O frontend consulta `GET /cadastros/prestadores` para montar o combo `Cirurgião`.
+2. A tela principal consulta `GET /financeiro/lancamentos` com `mes`, `ano`, `conta`, `filtro` e, futuramente, `prestador_id`.
+3. O backend valida a clínica do usuário e a relação do prestador com a mesma clínica.
+4. Para `conta = CLINICA`, não há prestador individual.
+5. Para `conta = CIRURGIAO`, o frontend futuro deverá operar sobre o prestador selecionado.
+
 ## Criacao de usuario
 
 Cadastro externo:
@@ -431,3 +441,33 @@ Estado vazio:
 3. O corpo mostra `Nenhuma cobrança encontrada.`.
 4. O rodape mostra zero registros.
 5. Se houver cobrancas carregadas, mas busca/filtro zerar a lista visivel, o corpo mostra `Nenhuma cobrança corresponde aos filtros aplicados.` e o rodape preserva o total carregado.
+
+## ADM Auditoria - leitura histórica
+
+Sequencia observada no legado:
+
+1. Usuario SUPERADMIN acessa o painel ADM.
+2. A tela carrega a secao de auditoria com `saCarregarAuditoria()`.
+3. O frontend chama `GET /superadmin/auditoria?limit=80`.
+4. A resposta e renderizada por `saRenderAuditoria()`.
+5. O corpo mostra as cinco colunas do legado: `ID`, `Data`, `Ação`, `Autor`, `Alvo`.
+
+O que pode quebrar:
+
+- campo `detalhes_json` expor dados demais em fase futura;
+- ausencia de filtros server-side;
+- ausencia de `request_id` e `user_agent`;
+- uso de `alvo` como string sem contrato navegavel.
+
+Nao ha fluxo de escrita em `ADM -> Auditoria` nesta fase.
+### Contrato de datas no fluxo da conta corrente
+
+- `mes` e `ano` continuam sendo filtros de periodo e nao substituem um campo de data isolado.
+- Campos como `data_lancamento` e `data_vencimento` seguem o contrato mestre de data generica.
+- Se o fluxo exigir intervalo, o contrato deve explicitar `inicio` e `fim` e documentar os defaults de periodo.
+
+### Fechamento da frente DATA
+
+- O fluxo `Pesquisa fluxo de caixa -> Criterios gerais` foi homologado com o contrato mestre.
+- O fluxo `Insere lancamento -> Vencimento / Data do lancamento` foi homologado com o mesmo motor.
+- A proxima evolucao de fluxo deve esperar novo consumidor ou evidencia tecnica para extrair um componente compartilhado.

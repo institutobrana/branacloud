@@ -200,3 +200,26 @@ Ao concluir uma tarefa, informe:
 ## Regra de ouro
 
 O Brana Cloude manipula dados clinicos, financeiros e documentos. Priorize seguranca, isolamento por clinica e previsibilidade antes de refatoracoes grandes.
+
+## Frente em documentacao
+
+A frente `Conta corrente do cirurgião` possui contrato alvo documentado em `docs/auditoria_conta_corrente_cirurgiao.md`. O proximo micropasso seguro e transformar essa documentacao em plano tecnico de implementacao incremental, sem mexer ainda em backend ou frontend.
+O contrato mestre de datas da frente esta em `docs/contrato_mestre_campos_data_brana_cloude.md` e deve ser consultado antes de qualquer futura mudanca em inputs de data, filtros por periodo ou modais financeiros.
+
+## Fechamento da frente DATA
+
+- DATA-P1 a DATA-P5 foram concluídas.
+- O parser de datas passou a ser reutilizavel.
+- Os dois consumidores validados ficaram homologados em runtime.
+- A interacao visual compartilha o mesmo contrato, mas continua local aos consumidores.
+- A extracao de componente visual compartilhado fica para DATA-P6 ou frente equivalente futura.
+## Fechamento-T2A — Frente Prestadores
+
+`Cadastro -> Corpo clinico / Prestadores` esta funcionalmente concluido e
+homologado para documentacao seletiva. O fechamento consolidado esta em
+`docs/fechamento_t2a_prestadores.md`.
+
+O escopo inclui Prestadores, suas quatro abas, Credenciamentos e Comissoes.
+O botao `Agenda` e apenas uma entrada para `Configura horarios de
+agendamento`, que continua sendo frente independente. O motor financeiro de
+aplicacao e precedencia permanece futuro.

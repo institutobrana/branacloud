@@ -205,3 +205,14 @@ Antes de considerar a frente madura:
 - qualquer mudanca de payload;
 - qualquer alteracao no frontend legado;
 - qualquer alteracao no EasyDental Desktop.
+
+## Fechamento tecnico da Frente A
+
+O estado homologado atual de `Cadastro -> Corpo clinico / Prestadores` esta
+consolidado em `docs/fechamento_t2a_prestadores.md`. Esse fechamento prevalece
+sobre propostas historicas quando houver divergencia com o codigo atual.
+
+A frente inclui o shell de Prestadores, as quatro abas do modal, os subfluxos
+de Credenciamentos e Comissoes e as correcoes finais de Observacoes, Contato e
+tema escuro. O botao `Agenda` e somente ponto de entrada para a frente separada
+`Configura horarios de agendamento`.

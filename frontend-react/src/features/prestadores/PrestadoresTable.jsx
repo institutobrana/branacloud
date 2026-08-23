@@ -1,32 +1,34 @@
-import { Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { Alert, Typography } from 'antd';
 
 import { BranaTable } from '../../components/BranaTable.jsx';
 import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
 import { getPrestadoresColumns } from './prestadoresColumns.js';
 
 const TABLE_SCROLL_Y = 480;
+const PRESTADORES_FILTER_DEBUG = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV;
 
-export function PrestadoresTable({ selectedId }) {
-  const [draftFilters, setDraftFilters] = useState({
-    codigo: '',
-    nome: '',
-    fone1: '',
-    fone2: '',
-    status: '',
-  });
+function renderStatus(ativo) {
+  const isActive = Boolean(ativo);
+  return (
+    <span title={isActive ? 'Ativo' : 'Inativo'} aria-label={isActive ? 'Prestador ativo' : 'Prestador inativo'}>
+      <span style={{ color: isActive ? '#2fbf2f' : '#d32f2f', fontSize: '14px', lineHeight: 1 }}>●</span>
+    </span>
+  );
+}
 
+export function PrestadoresTable({ items = [], selectedId, loading, error, footerLabel, onSelect, onDoubleClick }) {
   const columnsConfig = getPrestadoresColumns();
-
-  useEffect(() => {
-    setDraftFilters({
-      codigo: '',
-      nome: '',
-      fone1: '',
-      fone2: '',
-      status: '',
+  if (PRESTADORES_FILTER_DEBUG) {
+    // TEMP DEBUG — remover após diagnóstico do filtro de Prestadores
+    console.info('[PRESTADORES_FILTER_DEBUG] TABLE_DATASOURCE', {
+      itemsCount: Array.isArray(items) ? items.length : 0,
+      codes: Array.isArray(items) ? items.map((item) => String(item?.codigo ?? '').trim()) : [],
     });
-  }, []);
+    console.info('[PRESTADORES_FILTER_DEBUG] FOOTER', {
+      label: String(footerLabel || '0 prestadores'),
+      filteredCount: Array.isArray(items) ? items.length : 0,
+    });
+  }
 
   const renderHeader = (columnKey, label) => (
     <TableColumnFilterHeader
@@ -38,11 +40,11 @@ export function PrestadoresTable({ selectedId }) {
         locked: true,
       }))}
       onToggleColumn={() => {}}
-      filterValue={draftFilters[columnKey] ?? ''}
-      onFilterValueChange={(value) => setDraftFilters((current) => ({ ...current, [columnKey]: value }))}
+      filterValue=""
+      onFilterValueChange={() => {}}
       onFilterApply={() => {}}
-      onFilterClear={() => setDraftFilters((current) => ({ ...current, [columnKey]: '' }))}
-      activeFilter={Boolean(String(draftFilters[columnKey] ?? '').trim())}
+      onFilterClear={() => {}}
+      activeFilter={false}
     />
   );
 
@@ -81,14 +83,12 @@ export function PrestadoresTable({ selectedId }) {
     {
       key: 'status',
       title: renderHeader('status', 'Status'),
-      dataIndex: 'status',
+      dataIndex: 'ativo',
       width: 100,
       align: 'center',
-      render: (value) => <span title={value || ''}>{value || '-'}</span>,
+      render: (value) => renderStatus(value),
     },
   ];
-
-  const footerLabel = '0 prestadores';
 
   return (
     <div className="servicos-protetico-table-shell prestadores-table-shell">
@@ -97,23 +97,30 @@ export function PrestadoresTable({ selectedId }) {
           <BranaTable
             rowKey="id"
             className="module-table auxiliary-compact-table servicos-protetico-table prestadores-table"
-            loading={false}
+            loading={loading}
             pagination={false}
             size="small"
             tableLayout="fixed"
             scroll={{ y: TABLE_SCROLL_Y }}
-            dataSource={[]}
+            dataSource={items}
             columns={columns}
             rowSelection={{
               type: 'radio',
               selectedRowKeys: selectedId ? [selectedId] : [],
+              onChange: (keys) => onSelect?.(Number(keys[0] || 0) || null),
             }}
-            locale={{ emptyText: null }}
+            onRow={(record) => ({
+              role: 'row',
+              'aria-selected': Number(record.id) === Number(selectedId),
+              onClick: () => onSelect?.(Number(record.id) || null),
+              onDoubleClick: () => onDoubleClick?.(record),
+            })}
+            locale={{ emptyText: error ? <Alert type="error" message={error} showIcon /> : 'Nenhum prestador cadastrado.' }}
           />
         </div>
 
         <div className="servicos-protetico-table-footer prestadores-table-footer" aria-live="polite">
-          <Typography.Text type="secondary">{footerLabel}</Typography.Text>
+          <Typography.Text type="secondary">{footerLabel || '0 prestadores'}</Typography.Text>
         </div>
       </div>
     </div>

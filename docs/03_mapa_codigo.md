@@ -10,7 +10,8 @@ Se voce precisa se orientar rapido:
 - Regras reutilizaveis: `backend/services/`.
 - Autenticacao e permissoes: `backend/security/`.
 - Modelos/tabelas: `backend/models/`.
-- Frontend principal: `frontend/index.html` e `frontend/app.js`.
+- Frontend legado principal: `frontend/index.html` e `frontend/app.js`.
+- Frontend React: `frontend-react/src/` e `frontend-react/dist/`.
 - Configuracao local: `backend/.env`.
 
 ## Estrutura principal
@@ -34,7 +35,9 @@ BRANA CLOUD/
 
 `backend/`: contem a aplicacao FastAPI. E onde ficam entrada, rotas, modelos, banco, seguranca e servicos.
 
-`frontend/`: contem a interface web estatica. O backend monta esta pasta em `/frontend` e entrega a aplicacao em `/app`.
+`frontend/`: contem a interface web estatica legada. O backend monta esta pasta em `/frontend` e entrega a aplicacao legada em `/app` e `/legado`.
+
+`frontend-react/`: contem o novo frontend React. O backend entrega o build compilado em `/react`.
 
 `assets/`: imagens e recursos usados pela interface, incluindo assets historicos ainda referenciados.
 
@@ -48,7 +51,7 @@ BRANA CLOUD/
 
 ## Backend em detalhe
 
-- `backend/main.py`: entrypoint. Carrega `backend/.env`, cria `FastAPI`, registra rotas, configura CORS/middlewares, executa bootstrap quando habilitado e serve frontend.
+- `backend/main.py`: entrypoint. Carrega `backend/.env`, cria `FastAPI`, registra rotas, configura CORS/middlewares, executa bootstrap quando habilitado e serve frontend legado, `/legado` e `/react`.
 - `backend/database.py`: le `DATABASE_URL`, cria `engine`, `SessionLocal` e `Base`.
 - `backend/requirements.txt`: dependencias Python.
 - `backend/models/`: classes SQLAlchemy. Cada arquivo representa uma area do banco.
@@ -143,3 +146,20 @@ storage/modelos/base/
 - `backend/security/permissions.py`: matriz de acesso.
 - `backend/routes/*`: regras de negocio e filtros por clinica.
 - `backend/scripts/*`: scripts podem alterar dados em massa.
+
+## Frentes financeiras documentadas
+
+- `docs/contrato_funcional_indices_financeiros.md`: contrato da frente de indices financeiros.
+- `docs/contrato_painel_financeiro_procedimentos_frontend_react.md`: painel financeiro de procedimentos.
+- `docs/auditoria_conta_corrente_cirurgiao.md`: contrato alvo da conta corrente do cirurgiao, com foco em `PrestadorOdonto` e evolucao futura de `Lancamento.prestador_id`.
+- `docs/padrao_barra_horizontal.md`: padrao oficial de barra horizontal, com o L do shell global e a composicao validada a partir de `Servicos de Protético`.
+## Contratos transversais
+
+- `docs/contrato_mestre_campos_data_brana_cloude.md`: contrato mestre dos campos de data, separando data generica de periodo e listando os consumidores atuais em React.
+
+## Fechamento da frente DATA
+
+- `frontend-react/src/features/contaCorrenteCirurgiao/dateParsing.js`: motor puro reutilizavel para DD, DDMM, DDMMAA, DD/MM/YYYY e validacao.
+- `frontend-react/src/features/contaCorrenteCirurgiao/components/CriteriosGeraisTab.jsx`: consumidor 1 homologado no fluxo de pesquisa.
+- `frontend-react/src/features/contaCorrenteCirurgiao/components/InsereLancamentoModal.jsx`: consumidor 2 homologado no modal de insercao.
+- `frontend-react/tests/contaCorrenteCirurgiaoDateParsing.test.js`: regressao unitária do contrato de parsing.

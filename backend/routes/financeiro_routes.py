@@ -8,7 +8,9 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models.financeiro import CategoriaFinanceira, GrupoFinanceiro, ItemAuxiliar, Lancamento
+from models.prestador_odonto import PrestadorOdonto
 from models.usuario import Usuario
+from security.system_accounts import is_system_prestador
 from security.dependencies import get_current_user, require_module_access
 
 router = APIRouter(
@@ -37,6 +39,7 @@ class LancamentoPayload(BaseModel):
     data_vencimento: str
     data_pagamento: str | None = None
     parcelas: int = 1
+    prestador_id: int | None = None
 
 
 def _normalizar_conta(valor: str | None, default: str = CONTA_CLINICA) -> str:
@@ -117,6 +120,27 @@ def _lancamento_da_clinica_or_404(db: Session, clinica_id: int, lancamento_id: i
     return lanc
 
 
+def _prestador_da_clinica_or_404(db: Session, clinica_id: int, prestador_id: int | None) -> PrestadorOdonto | None:
+    if prestador_id is None:
+        return None
+    try:
+        prestador_int = int(prestador_id)
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Prestador invalido.") from exc
+
+    prestador = (
+        db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.id == prestador_int,
+            PrestadorOdonto.clinica_id == clinica_id,
+        )
+        .first()
+    )
+    if not prestador:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    return prestador
+
+
 @router.get("/categorias")
 def listar_categorias(
     tipo: str = Query(default=""),
@@ -189,12 +213,21 @@ def listar_lancamentos(
     mes: int,
     ano: int,
     conta: str = Query(default=CONTA_CLINICA),
-    filtro: str = Query(default="Todos os lançamentos"),
+    prestador_id: int | None = Query(default=None),
+    filtro: str = Query(default="Todos os lancamentos"),
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     prefixo_data = f"{ano:04d}-{mes:02d}-"
-    conta_var = _conta_variantes(conta)
+    conta_norm = _normalizar_conta(conta)
+    conta_var = _conta_variantes(conta_norm)
+    prestador = _prestador_da_clinica_or_404(db, current_user.clinica_id, prestador_id)
+
+    if prestador is not None and is_system_prestador(prestador):
+        conta_norm = CONTA_CLINICA
+        conta_var = _conta_variantes(conta_norm)
+        prestador = None
+
     query = (
         db.query(Lancamento)
         .join(CategoriaFinanceira, CategoriaFinanceira.id == Lancamento.categoria_id)
@@ -202,19 +235,28 @@ def listar_lancamentos(
         .filter(
             Lancamento.clinica_id == current_user.clinica_id,
             Lancamento.conta.in_(conta_var),
-            Lancamento.data_lancamento.like(f"{prefixo_data}%"),
+            Lancamento.data_lancamento.like(f'{prefixo_data}%'),
         )
     )
+    if conta_norm == CONTA_CIRURGIAO and prestador is not None:
+        if int(current_user.prestador_id or 0) == int(prestador.id):
+            query = query.filter(
+                (Lancamento.prestador_id.is_(None)) | (Lancamento.prestador_id == prestador.id)
+            )
+        else:
+            query = query.filter(Lancamento.prestador_id == prestador.id)
+    elif conta_norm == CONTA_CLINICA:
+        query = query.filter(Lancamento.conta.in_(_conta_variantes(CONTA_CLINICA)))
 
     filtro_norm = _norm(filtro)
-    if "tributave" in filtro_norm:
+    if 'tributave' in filtro_norm:
         query = query.filter(Lancamento.tributavel == 1)
-    elif "debitos" in filtro_norm or "debito" in filtro_norm:
-        query = query.filter(Lancamento.tipo == "debito")
-    elif "creditos" in filtro_norm or "credito" in filtro_norm:
-        query = query.filter(Lancamento.tipo == "credito")
-    elif "despesas pessoais" in filtro_norm or "despesas do cirurgiao" in filtro_norm:
-        query = query.filter(GrupoFinanceiro.tipo == "Pessoal")
+    elif 'debitos' in filtro_norm or 'debito' in filtro_norm:
+        query = query.filter(Lancamento.tipo == 'debito')
+    elif 'creditos' in filtro_norm or 'credito' in filtro_norm:
+        query = query.filter(Lancamento.tipo == 'credito')
+    elif 'despesas pessoais' in filtro_norm or 'despesas do cirurgiao' in filtro_norm:
+        query = query.filter(GrupoFinanceiro.tipo == 'Pessoal')
 
     itens = query.order_by(Lancamento.data_lancamento.asc(), Lancamento.id.asc()).all()
 
@@ -222,41 +264,42 @@ def listar_lancamentos(
     total_saida = 0.0
     rows = []
     for l in itens:
-        if (l.tipo or "").lower() == "debito":
+        if (l.tipo or '').lower() == 'debito':
             total_saida += float(l.valor or 0)
         else:
             total_entrada += float(l.valor or 0)
         rows.append(
             {
-                "id": l.id,
-                "categoria_id": l.categoria_id,
-                "categoria_nome": l.categoria.nome if l.categoria else "",
-                "grupo_nome": l.categoria.grupo.nome if l.categoria and l.categoria.grupo else "",
-                "historico": l.historico or "",
-                "valor": float(l.valor or 0),
-                "tipo": l.tipo or "",
-                "conta": _normalizar_conta(l.conta),
-                "situacao": l.situacao or "Aberto",
-                "forma_pagamento": l.forma_pagamento,
-                "documento": l.documento,
-                "referencia": l.referencia,
-                "complemento": l.complemento,
-                "tributavel": int(l.tributavel or 0),
-                "data_lancamento": l.data_lancamento,
-                "data_vencimento": l.data_vencimento,
-                "data_pagamento": l.data_pagamento,
-                "data_inclusao": l.data_inclusao,
-                "data_alteracao": l.data_alteracao,
-                "parcelado": int(l.parcelado or 0),
-                "qtd_parcelas": int(l.qtd_parcelas or 1),
-                "parcela_atual": int(l.parcela_atual or 1),
+                'id': l.id,
+                'categoria_id': l.categoria_id,
+                'categoria_nome': l.categoria.nome if l.categoria else '',
+                'grupo_nome': l.categoria.grupo.nome if l.categoria and l.categoria.grupo else '',
+                'historico': l.historico or '',
+                'valor': float(l.valor or 0),
+                'tipo': l.tipo or '',
+                'conta': _normalizar_conta(l.conta),
+                'situacao': l.situacao or 'Aberto',
+                'forma_pagamento': l.forma_pagamento,
+                'documento': l.documento,
+                'referencia': l.referencia,
+                'complemento': l.complemento,
+                'tributavel': int(l.tributavel or 0),
+                'data_lancamento': l.data_lancamento,
+                'data_vencimento': l.data_vencimento,
+                'data_pagamento': l.data_pagamento,
+                'data_inclusao': l.data_inclusao,
+                'data_alteracao': l.data_alteracao,
+                'parcelado': int(l.parcelado or 0),
+                'qtd_parcelas': int(l.qtd_parcelas or 1),
+                'parcela_atual': int(l.parcela_atual or 1),
+                'prestador_id': l.prestador_id,
             }
         )
     return {
-        "itens": rows,
-        "total_entrada": total_entrada,
-        "total_saida": total_saida,
-        "saldo": total_entrada - total_saida,
+        'itens': rows,
+        'total_entrada': total_entrada,
+        'total_saida': total_saida,
+        'saldo': total_entrada - total_saida,
     }
 
 
@@ -543,15 +586,19 @@ def criar_lancamento(
     db: Session = Depends(get_db),
 ):
     _categoria_da_clinica_or_404(db, current_user.clinica_id, payload.categoria_id)
-    historico = (payload.historico or "").strip()
+    conta_norm = _normalizar_conta(payload.conta)
+    prestador = _prestador_da_clinica_or_404(db, current_user.clinica_id, payload.prestador_id)
+    if conta_norm == CONTA_CLINICA and prestador is not None:
+        raise HTTPException(status_code=400, detail='prestador_id nao pode ser usado com conta CLINICA.')
+    historico = (payload.historico or '').strip()
     if not historico:
-        raise HTTPException(status_code=400, detail="Informe o histórico.")
+        raise HTTPException(status_code=400, detail='Informe o historico.')
     if float(payload.valor or 0) <= 0:
-        raise HTTPException(status_code=400, detail="Informe um valor válido.")
+        raise HTTPException(status_code=400, detail='Informe um valor valido.')
 
     base_lanc = _parse_iso_date(payload.data_lancamento)
     base_venc = _parse_iso_date(payload.data_vencimento)
-    hoje = datetime.utcnow().strftime("%Y-%m-%d")
+    hoje = datetime.utcnow().strftime('%Y-%m-%d')
     parcelas = max(1, int(payload.parcelas or 1))
 
     for i in range(parcelas):
@@ -563,26 +610,27 @@ def criar_lancamento(
                 categoria_id=int(payload.categoria_id),
                 historico=historico,
                 valor=float(payload.valor or 0),
-                tipo=(payload.tipo or "").strip().lower(),
-                conta=_normalizar_conta(payload.conta),
-                situacao=(payload.situacao or "Aberto").strip(),
+                tipo=(payload.tipo or '').strip().lower(),
+                conta=conta_norm,
+                situacao=(payload.situacao or 'Aberto').strip(),
                 forma_pagamento=payload.forma_pagamento,
                 documento=payload.documento,
                 referencia=payload.referencia,
                 complemento=payload.complemento,
+                prestador_id=prestador.id if prestador is not None else None,
                 tributavel=1 if int(payload.tributavel or 0) else 0,
                 parcelado=1 if parcelas > 1 else 0,
                 qtd_parcelas=parcelas,
                 parcela_atual=i + 1,
-                data_lancamento=d_lanc.strftime("%Y-%m-%d"),
-                data_vencimento=d_venc.strftime("%Y-%m-%d"),
-                data_pagamento=(payload.data_pagamento or d_lanc.strftime("%Y-%m-%d")),
+                data_lancamento=d_lanc.strftime('%Y-%m-%d'),
+                data_vencimento=d_venc.strftime('%Y-%m-%d'),
+                data_pagamento=(payload.data_pagamento or d_lanc.strftime('%Y-%m-%d')),
                 data_inclusao=hoje,
             )
         )
 
     db.commit()
-    return {"detail": "Lancamento salvo."}
+    return {'detail': 'Lancamento salvo.'}
 
 
 @router.put("/lancamentos/{lancamento_id}")
@@ -594,37 +642,42 @@ def atualizar_lancamento(
 ):
     _categoria_da_clinica_or_404(db, current_user.clinica_id, payload.categoria_id)
     lanc = _lancamento_da_clinica_or_404(db, current_user.clinica_id, lancamento_id)
-    historico = (payload.historico or "").strip()
+    conta_norm = _normalizar_conta(payload.conta)
+    prestador = _prestador_da_clinica_or_404(db, current_user.clinica_id, payload.prestador_id)
+    if conta_norm == CONTA_CLINICA and prestador is not None:
+        raise HTTPException(status_code=400, detail='prestador_id nao pode ser usado com conta CLINICA.')
+    historico = (payload.historico or '').strip()
     if not historico:
-        raise HTTPException(status_code=400, detail="Informe o histórico.")
+        raise HTTPException(status_code=400, detail='Informe o historico.')
     if float(payload.valor or 0) <= 0:
-        raise HTTPException(status_code=400, detail="Informe um valor válido.")
+        raise HTTPException(status_code=400, detail='Informe um valor valido.')
 
     lanc.categoria_id = int(payload.categoria_id)
     lanc.historico = historico
     lanc.valor = float(payload.valor or 0)
-    lanc.tipo = (payload.tipo or "").strip().lower()
-    lanc.conta = _normalizar_conta(payload.conta)
-    lanc.situacao = (payload.situacao or "Aberto").strip()
+    lanc.tipo = (payload.tipo or '').strip().lower()
+    lanc.conta = conta_norm
+    lanc.situacao = (payload.situacao or 'Aberto').strip()
     lanc.forma_pagamento = payload.forma_pagamento
     lanc.documento = payload.documento
     lanc.referencia = payload.referencia
     lanc.complemento = payload.complemento
+    lanc.prestador_id = prestador.id if prestador is not None else None
     lanc.tributavel = 1 if int(payload.tributavel or 0) else 0
-    lanc.data_lancamento = _parse_iso_date(payload.data_lancamento).strftime("%Y-%m-%d")
-    lanc.data_vencimento = _parse_iso_date(payload.data_vencimento).strftime("%Y-%m-%d")
+    lanc.data_lancamento = _parse_iso_date(payload.data_lancamento).strftime('%Y-%m-%d')
+    lanc.data_vencimento = _parse_iso_date(payload.data_vencimento).strftime('%Y-%m-%d')
     lanc.data_pagamento = (
-        _parse_iso_date(payload.data_pagamento).strftime("%Y-%m-%d")
+        _parse_iso_date(payload.data_pagamento).strftime('%Y-%m-%d')
         if payload.data_pagamento
         else lanc.data_lancamento
     )
-    lanc.data_alteracao = datetime.utcnow().strftime("%Y-%m-%d")
+    lanc.data_alteracao = datetime.utcnow().strftime('%Y-%m-%d')
     lanc.parcelado = 0
     lanc.qtd_parcelas = 1
     lanc.parcela_atual = 1
 
     db.commit()
-    return {"detail": "Lancamento atualizado."}
+    return {'detail': 'Lancamento atualizado.'}
 
 
 @router.delete("/lancamentos/{lancamento_id}")
