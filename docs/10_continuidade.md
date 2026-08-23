@@ -213,3 +213,13 @@ O contrato mestre de datas da frente esta em `docs/contrato_mestre_campos_data_b
 - Os dois consumidores validados ficaram homologados em runtime.
 - A interacao visual compartilha o mesmo contrato, mas continua local aos consumidores.
 - A extracao de componente visual compartilhado fica para DATA-P6 ou frente equivalente futura.
+## Fechamento-T2A — Frente Prestadores
+
+`Cadastro -> Corpo clinico / Prestadores` esta funcionalmente concluido e
+homologado para documentacao seletiva. O fechamento consolidado esta em
+`docs/fechamento_t2a_prestadores.md`.
+
+O escopo inclui Prestadores, suas quatro abas, Credenciamentos e Comissoes.
+O botao `Agenda` e apenas uma entrada para `Configura horarios de
+agendamento`, que continua sendo frente independente. O motor financeiro de
+aplicacao e precedencia permanece futuro.

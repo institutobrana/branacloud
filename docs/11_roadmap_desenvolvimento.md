@@ -6680,3 +6680,18 @@ Observacoes:
 - O motor reutilizavel de datas foi consolidado.
 - Os consumidores `CriteriosGeraisTab` e `InsereLancamentoModal` foram homologados.
 - A futura DATA-P6, se surgir, deve avaliar apenas a extracao de um componente visual compartilhado.
+## Fechamento-T2A — Cadastro / Prestadores
+
+- **CONCLUIDO — Prestadores React:** shell, filtros, tabela, selecao, estados,
+  Novo, Altera e Elimina.
+- **CONCLUIDO — Abas:** Principal, Contato, Detalhes e Observacoes.
+- **CONCLUIDO — Correcoes finais:** Observacoes multiline, redistribuicao
+  horizontal de Contato, dark mode/footer e readonly cianos.
+- **CONCLUIDO — Credenciamentos:** filtros, Novo, Altera, duplo clique,
+  Elimina e identidade por `id`.
+- **CONCLUIDO — Comissoes:** shell, Novo, Altera, duplo clique, Elimina,
+  filtros, Especialidade, percentual visual e contratos backend de tenant e
+  `source_id`.
+- O botao `Agenda` permanece ponto de entrada. `Configura horarios de
+  agendamento` nao e marcado como concluido nesta secao.
+- O motor financeiro de aplicacao e precedencia de comissoes permanece futuro.

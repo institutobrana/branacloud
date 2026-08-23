@@ -42,9 +42,16 @@ import { MedicamentosPageNew } from '../features/medicamentos/MedicamentosPageNe
 import { MedicamentosToolbar } from '../features/medicamentos/MedicamentosToolbar.jsx';
 import { UnidadesAtendimentoPage } from '../features/unidadesAtendimento/UnidadesAtendimentoPage.jsx';
 import { PrestadoresPage } from '../features/prestadores/PrestadoresPage.jsx';
+import { PrestadoresToolbar } from '../features/prestadores/PrestadoresToolbar.jsx';
+import { PrestadorDeleteDialog } from '../features/prestadores/components/PrestadorDeleteDialog.jsx';
+import { PrestadorModal } from '../features/prestadores/components/PrestadorModal.jsx';
+import { deletePrestador } from '../features/prestadores/prestadoresApi.js';
+import { usePrestadores } from '../features/prestadores/hooks/usePrestadores.js';
 import { QuestionariosAnamnesePage } from '../features/questionariosAnamnese/QuestionariosAnamnesePage.jsx';
 import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGraficosPage.jsx';
 import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
+import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciamentos/PrestadorCredenciamentosModal.jsx';
+import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -309,6 +316,44 @@ function AppContent() {
     deleteDisabledReason: '',
     hasSelection: false,
   });
+  const [prestadorModalState, setPrestadorModalState] = useState({ open: false, mode: 'create', record: null, rowId: null });
+  const [prestadorDeleteState, setPrestadorDeleteState] = useState({ open: false, target: null, loading: false, error: '' });
+  const [prestadorCredenciamentosOpen, setPrestadorCredenciamentosOpen] = useState(false);
+  const [prestadorComissoesOpen, setPrestadorComissoesOpen] = useState(false);
+  const prestadoresState = usePrestadores();
+  const openEditPrestador = (item) => {
+    const nextItem = item || null;
+    const rowId = nextItem?.row_id ?? nextItem?.id ?? null;
+    if (!rowId || !nextItem) return;
+    setPrestadorModalState({ open: true, mode: 'edit', record: nextItem, rowId });
+  };
+  const openDeletePrestador = () => {
+    const target = prestadoresState.selectedItem || null;
+    if (!target) return;
+    setPrestadorDeleteState({ open: true, target, loading: false, error: '' });
+  };
+  const closeDeletePrestador = () => {
+    setPrestadorDeleteState((current) => {
+      if (current.loading) return current;
+      return { open: false, target: null, loading: false, error: '' };
+    });
+  };
+  const confirmDeletePrestador = async () => {
+    const target = prestadorDeleteState.target;
+    const rowId = target?.row_id ?? target?.id ?? null;
+    if (!rowId || prestadorDeleteState.loading) return;
+    setPrestadorDeleteState((current) => ({ ...current, loading: true, error: '' }));
+    try {
+      await deletePrestador(rowId);
+      await prestadoresState.reload(undefined, { preserveSelection: false });
+      setPrestadorDeleteState({ open: false, target: null, loading: false, error: '' });
+      message.success('Prestador eliminado com sucesso.');
+    } catch (error) {
+      const nextError = error?.message || 'Falha ao eliminar prestador.';
+      setPrestadorDeleteState((current) => ({ ...current, loading: false, error: nextError }));
+      message.error(nextError);
+    }
+  };
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'adm' || initialScreen === 'adm-clinicas' || initialScreen === 'adm-usuarios' || initialScreen === 'adm-cobrancas' || initialScreen === 'adm-auditoria') return 'adm';
     if (initialScreen === 'pacientes') return 'cadastro';
@@ -346,6 +391,7 @@ function AppContent() {
     { key: 'adm-cobrancas', label: 'Cobranças' },
     { key: 'adm-auditoria', label: 'Auditoria' },
   ]), []);
+
   const adminTopBar = useMemo(() => {
     if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria') return null;
 
@@ -954,7 +1000,17 @@ function AppContent() {
       return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
     }
     if (screen === 'prestadores') {
-      return <PrestadoresPage />;
+      return (
+        <PrestadoresPage
+          items={prestadoresState.items}
+          loading={prestadoresState.loading}
+          error={prestadoresState.error}
+          selectedId={prestadoresState.selectedId}
+          onSelect={prestadoresState.setSelectedId}
+          onDoubleClick={openEditPrestador}
+          footerLabel={prestadoresState.footerLabel}
+        />
+      );
     }
     if (screen === 'procedimentos-genericos') {
       return <ProcedimentosGenericosPage q={procedimentosGenericosSearch} especialidade={procedimentosGenericosEspecialidade} novoProcedimentoToken={procedimentosGenericosNovoToken} onResetFilters={() => { setProcedimentosGenericosSearch(''); setProcedimentosGenericosEspecialidade(''); }} />;
@@ -980,7 +1036,23 @@ function AppContent() {
       return <ServicosProteticoPage />;
     }
     return <DashboardPage key={dashboardVersion} />;
-  }, [cenarioAnualOpenRequestId, contaCorrente, dashboardVersion, loading, materiaisEstoqueToolbarState, procedimentosGenericosEspecialidade, procedimentosGenericosNovoToken, procedimentosGenericosSearch, screen, simbolosGraficosCreateOpen, user]);
+  }, [
+    cenarioAnualOpenRequestId,
+    dashboardVersion,
+    loading,
+    materiaisEstoqueToolbarState,
+    procedimentosGenericosEspecialidade,
+    procedimentosGenericosNovoToken,
+    procedimentosGenericosSearch,
+    prestadoresState.error,
+    prestadoresState.footerLabel,
+    prestadoresState.items,
+    prestadoresState.loading,
+    prestadoresState.selectedId,
+    screen,
+    simbolosGraficosCreateOpen,
+    user,
+  ]);
 
   const auxiliaryTopBar = useMemo(() => {
     if (screen === 'unidades-atendimento') {
@@ -1281,6 +1353,28 @@ function AppContent() {
     );
   }, [screen, servicosProteticoToolbarState]);
 
+  const prestadoresTopBar = useMemo(() => {
+    if (screen !== 'prestadores') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band materiais-estoque-shell-band" aria-label="Barra operacional de corpo clínico">
+          <PrestadoresToolbar
+          especialidade={prestadoresState.filters.especialidade}
+          searchValue={prestadoresState.filters.nome}
+          especialidades={prestadoresState.especialidades}
+          hasSelection={prestadoresState.hasSelection}
+          onNovoPrestador={() => setPrestadorModalState({ open: true, mode: 'create', record: null, rowId: null })}
+          onAltera={() => openEditPrestador(prestadoresState.selectedItem)}
+          onElimina={openDeletePrestador}
+          onConvenios={() => setPrestadorCredenciamentosOpen(true)}
+          onComissoes={() => setPrestadorComissoesOpen(true)}
+          onEspecialidadeChange={(value) => prestadoresState.setFilters((current) => ({ ...current, especialidade: value }))}
+          onSearchChange={(value) => prestadoresState.setFilters((current) => ({ ...current, nome: value }))}
+        />
+      </div>
+    );
+  }, [openEditPrestador, prestadoresState.especialidades, prestadoresState.filters.especialidade, prestadoresState.filters.nome, prestadoresState.hasSelection, prestadoresState.items, prestadoresState.selectedId, prestadoresState.selectedItem, screen]);
+
   const doencasCidTopBar = useMemo(() => {
     if (screen !== 'doencas-cid') return null;
 
@@ -1441,6 +1535,8 @@ function AppContent() {
             materiaisEstoqueTopBar
           ) : screen === 'servicos-protetico' ? (
             servicosProteticoTopBar
+          ) : screen === 'prestadores' ? (
+            prestadoresTopBar
           ) : screen === 'doencas-cid' ? (
             doencasCidTopBar
           ) : screen === 'medicamentos' ? (
@@ -1478,6 +1574,35 @@ function AppContent() {
           />
           <BranaWorkspace>{activePage}</BranaWorkspace>
         </div>
+        <PrestadorModal
+          open={prestadorModalState.open && screen === 'prestadores'}
+          mode={prestadorModalState.mode}
+          record={prestadorModalState.record}
+          rowId={prestadorModalState.rowId}
+          onCancel={() => setPrestadorModalState({ open: false, mode: 'create', record: null, rowId: null })}
+          onSuccess={async () => {
+            await prestadoresState.reload();
+            setPrestadorModalState({ open: false, mode: 'create', record: null, rowId: null });
+          }}
+        />
+        <PrestadorDeleteDialog
+          open={prestadorDeleteState.open && screen === 'prestadores'}
+          loading={prestadorDeleteState.loading}
+          error={prestadorDeleteState.error}
+          target={prestadorDeleteState.target}
+          onCancel={closeDeletePrestador}
+          onConfirm={() => void confirmDeletePrestador()}
+        />
+        <PrestadorCredenciamentosModal
+          open={prestadorCredenciamentosOpen && screen === 'prestadores'}
+          prestador={prestadoresState.selectedItem}
+          onClose={() => setPrestadorCredenciamentosOpen(false)}
+        />
+        <PrestadorComissoesModal
+          open={prestadorComissoesOpen && screen === 'prestadores'}
+          prestador={prestadoresState.selectedItem}
+          onClose={() => setPrestadorComissoesOpen(false)}
+        />
         <PreferenciasUsuarioModal
           open={preferenciasOpen}
           userName={user?.apelido || user?.nome || user?.email || 'Tel'}

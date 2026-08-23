@@ -1,10 +1,12 @@
 import json
 from datetime import datetime
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import func
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -69,6 +71,12 @@ def _clean_text(value: Any, max_len: int | None = None) -> str | None:
     if max_len is not None:
         return txt[:max_len]
     return txt
+
+
+def _clean_multiline_text(value: Any) -> str | None:
+    """Trim only the edges while preserving internal line breaks and spaces."""
+    txt = str(value or "").strip()
+    return txt or None
 
 
 def _clean_bool(value: Any, default: bool = False) -> bool:
@@ -488,6 +496,9 @@ class CredenciamentoPayload(BaseModel):
     observacoes: str | None = None
 
 
+SYSTEM_PRESTADOR_FILTER_ID = 0
+
+
 class ComissaoPayload(BaseModel):
     vigencia: str | None = None
     prestador_row_id: int | None = None
@@ -501,6 +512,11 @@ class ComissaoPayload(BaseModel):
 
 
 def _proximo_source_id(db: Session, model: type[Any], clinica_id: int) -> int:
+    dialect = getattr(getattr(db, "bind", None), "dialect", None)
+    if getattr(dialect, "name", "") == "postgresql":
+        # Serialize source allocation only within the current tenant transaction.
+        lock_key = (int(clinica_id) << 20) | 0xC011
+        db.execute(text("SELECT pg_advisory_xact_lock(:lock_key)"), {"lock_key": lock_key})
     rows = db.query(model).filter(model.clinica_id == clinica_id).all()
     atual = 0
     for item in rows:
@@ -509,6 +525,58 @@ def _proximo_source_id(db: Session, model: type[Any], clinica_id: int) -> int:
         except Exception:
             continue
     return atual + 1
+
+
+def _proximo_codigo_credenciamento(db: Session, clinica_id: int) -> str:
+    """Allocate the next display code while serializing creates per tenant."""
+    db.execute(text("SELECT pg_advisory_xact_lock(:lock_key)"), {"lock_key": 2000000 + int(clinica_id)})
+    rows = (
+        db.query(PrestadorCredenciamentoOdonto.codigo)
+        .filter(PrestadorCredenciamentoOdonto.clinica_id == int(clinica_id))
+        .all()
+    )
+    maximum = 0
+    for (codigo,) in rows:
+        value = str(codigo or "").strip()
+        if value.isdigit():
+            maximum = max(maximum, int(value))
+    return str(maximum + 1).zfill(4)
+
+
+def _normalizar_valor_us(value: Any) -> str | None:
+    """Keep the historical four-decimal, comma-separated representation."""
+    text_value = str(value or "").strip()
+    if not text_value:
+        return None
+    normalized = text_value.replace(",", ".")
+    try:
+        amount = Decimal(normalized)
+    except (InvalidOperation, ValueError):
+        raise HTTPException(status_code=400, detail="Informe um Valor US numerico valido.")
+    if not amount.is_finite() or amount < 0:
+        raise HTTPException(status_code=400, detail="Valor US nao pode ser negativo.")
+    quantum = Decimal("0.0001")
+    if amount.quantize(quantum, rounding=ROUND_HALF_UP) != amount:
+        raise HTTPException(status_code=400, detail="Valor US deve ter no maximo 4 casas decimais.")
+    return f"{amount.quantize(quantum):.4f}".replace(".", ",")
+
+
+def _proximo_codigo_prestador(db: Session, clinica_id: int) -> str:
+    db.execute(text("SELECT pg_advisory_xact_lock(:lock_key)"), {"lock_key": int(clinica_id)})
+    rows = (
+        db.query(PrestadorOdonto.codigo)
+        .filter(PrestadorOdonto.clinica_id == int(clinica_id))
+        .all()
+    )
+    max_value = 0
+    width = 3
+    for (codigo,) in rows:
+        code = str(codigo or "").strip()
+        if not code.isdigit():
+            continue
+        max_value = max(max_value, int(code))
+        width = max(width, len(code))
+    return str(max_value + 1).zfill(width)
 
 
 def _prestador_to_dict(item: PrestadorOdonto) -> dict[str, Any]:
@@ -701,6 +769,7 @@ def _credenciamento_to_dict(item: PrestadorCredenciamentoOdonto) -> dict[str, An
         "codigo": (item.codigo or "").strip(),
         "prestador_row_id": int(item.prestador_id or 0) or None,
         "prestador_id": int(item.prestador_id or 0) or -1,
+        "prestador_sistemico": item.prestador_id is None,
         "prestador_nome": ((item.prestador.nome if item.prestador else "") or "Clinica").strip(),
         "convenio_row_id": int(item.convenio_id),
         "convenio_id": int(item.convenio_source_id or 0) or None,
@@ -770,7 +839,7 @@ def _apply_prestador_payload(item: PrestadorOdonto, payload: PrestadorPayload) -
     item.especialidades_json = _clean_json_list(payload.especialidades_exec)
     agenda_cfg = _normalize_agenda_config(payload.agenda_config or {})
     item.agenda_config_json = json.dumps(agenda_cfg, ensure_ascii=False) if agenda_cfg else None
-    item.observacoes = _clean_text(payload.observacoes)
+    item.observacoes = _clean_multiline_text(payload.observacoes)
 
 
 def _apply_credenciamento_payload(
@@ -779,16 +848,18 @@ def _apply_credenciamento_payload(
     convenio: ConvenioOdonto,
     prestador: PrestadorOdonto | None,
 ) -> None:
-    item.codigo = _clean_text(payload.codigo, 20)
+    payload_fields = getattr(payload, "model_fields_set", getattr(payload, "__fields_set__", set()))
+    if "codigo" in payload_fields:
+        item.codigo = _clean_text(payload.codigo, 20)
     item.convenio_id = int(convenio.id)
     item.convenio_source_id = int(convenio.source_id)
     item.prestador_id = int(prestador.id) if prestador else None
     item.prestador_source_id = int(prestador.source_id) if prestador else None
     item.inicio = _clean_br_date(payload.inicio) if str(payload.inicio or "").strip() else None
     item.fim = _clean_br_date(payload.fim) if str(payload.fim or "").strip() else None
-    item.valor_us = _clean_text(payload.valor_us, 30)
+    item.valor_us = _normalizar_valor_us(payload.valor_us)
     item.aviso = _clean_text(payload.aviso)
-    item.observacoes = _clean_text(payload.observacoes)
+    item.observacoes = _clean_multiline_text(payload.observacoes)
 
 
 def _apply_comissao_payload(
@@ -935,6 +1006,80 @@ def _buscar_prestador_ou_none(db: Session, clinica_id: int, row_id: int | None) 
     return item
 
 
+def _buscar_prestador_existente(db: Session, clinica_id: int, row_id: int | None) -> PrestadorOdonto:
+    if not row_id or int(row_id) <= 0:
+        raise HTTPException(status_code=400, detail="Prestador invalido.")
+    item = (
+        db.query(PrestadorOdonto)
+        .filter(PrestadorOdonto.clinica_id == clinica_id, PrestadorOdonto.id == int(row_id))
+        .first()
+    )
+    if not item:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    return item
+
+
+def _contar_vinculos_prestador(db: Session, clinica_id: int, prestador_id: int, prestador_source_id: int | None = None) -> list[tuple[str, int]]:
+    if int(prestador_id or 0) <= 0:
+        return []
+    source_id = int(prestador_source_id or 0)
+
+    vinculos: list[tuple[str, int]] = []
+
+    checks: list[tuple[str, Any]] = [
+        (
+            "credenciamentos",
+            db.query(PrestadorCredenciamentoOdonto.id).filter(
+                PrestadorCredenciamentoOdonto.clinica_id == int(clinica_id),
+                PrestadorCredenciamentoOdonto.prestador_id == int(prestador_id),
+            ),
+        ),
+        (
+            "credenciamentos por source",
+            db.query(PrestadorCredenciamentoOdonto.id).filter(
+                PrestadorCredenciamentoOdonto.clinica_id == int(clinica_id),
+                PrestadorCredenciamentoOdonto.prestador_source_id == source_id,
+            ),
+        ),
+        (
+            "comissões",
+            db.query(PrestadorComissaoOdonto.id).filter(
+                PrestadorComissaoOdonto.clinica_id == int(clinica_id),
+                PrestadorComissaoOdonto.prestador_id == int(prestador_id),
+            ),
+        ),
+        (
+            "comissões por source",
+            db.query(PrestadorComissaoOdonto.id).filter(
+                PrestadorComissaoOdonto.clinica_id == int(clinica_id),
+                PrestadorComissaoOdonto.prestador_source_id == source_id,
+            ),
+        ),
+        (
+            "usuários",
+            db.query(Usuario.id).filter(
+                Usuario.clinica_id == int(clinica_id),
+                Usuario.prestador_id == int(prestador_id),
+            ),
+        ),
+        (
+            "usuário vinculado",
+            db.query(PrestadorOdonto.id).filter(
+                PrestadorOdonto.clinica_id == int(clinica_id),
+                PrestadorOdonto.id == int(prestador_id),
+                PrestadorOdonto.usuario_id.isnot(None),
+            ),
+        ),
+    ]
+
+    for label, query in checks:
+        count = int(query.count() or 0)
+        if count > 0:
+            vinculos.append((label, count))
+
+    return vinculos
+
+
 @router.get("")
 def listar_prestadores(
     current_user: Usuario = Depends(get_current_user),
@@ -982,11 +1127,14 @@ def criar_prestador(
     db: Session = Depends(get_db),
 ):
     clinica_id = int(current_user.clinica_id)
+    codigo = _proximo_codigo_prestador(db, clinica_id)
     item = PrestadorOdonto(
         clinica_id=clinica_id,
         source_id=_proximo_source_id(db, PrestadorOdonto, clinica_id),
+        codigo=codigo,
     )
     _apply_prestador_payload(item, payload)
+    item.codigo = codigo
     if not item.data_inclusao:
         item.data_inclusao = item.data_alteracao or None
     db.add(item)
@@ -1020,10 +1168,17 @@ def excluir_prestador(
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    item = _buscar_prestador_ou_none(db, int(current_user.clinica_id), row_id)
-    if item is None:
-        raise HTTPException(status_code=400, detail="A conta Clinica nao pode ser eliminada.")
-    db.delete(item)
+    item = _buscar_prestador_existente(db, int(current_user.clinica_id), row_id)
+    if is_system_prestador(item):
+        raise HTTPException(status_code=400, detail="Prestador sistemico nao pode ser eliminado.")
+    vinculos = _contar_vinculos_prestador(db, int(current_user.clinica_id), int(item.id), int(item.source_id or 0))
+    if vinculos:
+        detalhe = ", ".join(f"{label} ({count})" for label, count in vinculos)
+        raise HTTPException(status_code=400, detail=f"Prestador possui vínculos e nao pode ser eliminado: {detalhe}.")
+    db.query(PrestadorOdonto).filter(
+        PrestadorOdonto.clinica_id == int(current_user.clinica_id),
+        PrestadorOdonto.id == int(item.id),
+    ).delete(synchronize_session=False)
     db.commit()
     return {"ok": True}
 
@@ -1040,7 +1195,7 @@ def listar_credenciamentos(
     if convenio_row_id and int(convenio_row_id) > 0:
         query = query.filter(PrestadorCredenciamentoOdonto.convenio_id == int(convenio_row_id))
     if prestador_row_id is not None:
-        if int(prestador_row_id) <= 0:
+        if int(prestador_row_id) <= SYSTEM_PRESTADOR_FILTER_ID:
             query = query.filter(PrestadorCredenciamentoOdonto.prestador_id.is_(None))
         else:
             query = query.filter(PrestadorCredenciamentoOdonto.prestador_id == int(prestador_row_id))
@@ -1063,15 +1218,19 @@ def criar_credenciamento(
     if not convenio:
         raise HTTPException(status_code=404, detail="Convenio nao encontrado.")
     prestador = _buscar_prestador_ou_none(db, clinica_id, payload.prestador_row_id)
+    codigo = _clean_text(payload.codigo, 20) or _proximo_codigo_credenciamento(db, clinica_id)
     item = PrestadorCredenciamentoOdonto(
         clinica_id=clinica_id,
         source_id=_proximo_source_id(db, PrestadorCredenciamentoOdonto, clinica_id),
+        codigo=codigo,
         data_inclusao=_today_br_date(),
         data_alteracao=_today_br_date(),
     )
     _apply_credenciamento_payload(item, payload, convenio, prestador)
     if not str(item.data_inclusao or "").strip():
         item.data_inclusao = _today_br_date()
+    # Preserve the backend-generated code when the new-client payload omits it.
+    item.codigo = codigo
     item.data_alteracao = _today_br_date()
     db.add(item)
     db.commit()
@@ -1255,3 +1414,15 @@ def excluir_comissao(
     db.delete(item)
     db.commit()
     return {"ok": True}
+
+
+@router.get("/{row_id}")
+def obter_prestador(
+    row_id: int,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    item = _buscar_prestador_ou_none(db, int(current_user.clinica_id), row_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    return _prestador_to_dict(item)
