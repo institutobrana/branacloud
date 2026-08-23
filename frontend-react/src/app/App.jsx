@@ -22,6 +22,7 @@ import { ProcedimentosPage } from '../features/procedimentos/ProcedimentosPage.j
 import { DoencasCidPage } from '../features/doencasCid/DoencasCidPage.jsx';
 import { DoencaCidToolbar } from '../features/doencasCid/components/DoencaCidToolbar.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
+import { PacientesToolbar } from '../features/pacientes/components/PacientesToolbar.jsx';
 import { TiposIndicacaoPage } from '../features/tabelasAuxiliares/TiposIndicacaoPage.jsx';
 import { MateriaisEstoquePage } from '../features/materiaisEstoque/MateriaisEstoquePage.jsx';
 import { ServicosProteticoPage } from '../features/servicosProtetico/ServicosProteticoPage.jsx';
@@ -47,13 +48,13 @@ import { PrestadorDeleteDialog } from '../features/prestadores/components/Presta
 import { PrestadorModal } from '../features/prestadores/components/PrestadorModal.jsx';
 import { deletePrestador } from '../features/prestadores/prestadoresApi.js';
 import { usePrestadores } from '../features/prestadores/hooks/usePrestadores.js';
+import { AgendaConfiguracaoModal } from '../features/agendaConfiguracao/AgendaConfiguracaoModal.jsx';
+import { buildAgendaConfiguracaoContext } from '../features/agendaConfiguracao/agendaConfiguracaoConstants.js';
 import { QuestionariosAnamnesePage } from '../features/questionariosAnamnese/QuestionariosAnamnesePage.jsx';
 import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGraficosPage.jsx';
 import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
 import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciamentos/PrestadorCredenciamentosModal.jsx';
 import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
-import { AgendaConfiguracaoModal } from '../features/agendaConfiguracao/AgendaConfiguracaoModal.jsx';
-import { buildAgendaConfiguracaoContext } from '../features/agendaConfiguracao/agendaConfiguracaoConstants.js';
 
 const contextualMenus = {
   atendimento: [
@@ -200,6 +201,8 @@ function syncAppPath(screen) {
             ? appPath('configuracoes/indices-financeiros')
           : screen === 'plano-contas'
             ? appPath('configuracoes/plano-de-contas')
+          : screen === 'agenda-configuracao'
+            ? appPath('configuracoes/agendas')
           : screen === 'simbolos-graficos'
             ? appPath('configuracoes/simbolos-graficos')
           : screen === 'unidades-atendimento'
@@ -265,6 +268,26 @@ function AppContent() {
     selectedProteticoId: null,
     loading: false,
   });
+  const [pacientesToolbarState, setPacientesToolbarState] = useState({
+    loading: true,
+    optionsLoading: true,
+    selectedId: null,
+    hasSelection: false,
+    queryDraft: '',
+    preferences: {
+      cir_menu_pac: 0,
+      status_menu_pac: 0,
+      visualizacao_menu_pac: 1,
+      pesquisa_menu_pac: 1,
+      active_ord_menu_pac: 0,
+    },
+    options: {
+      cirurgioes: [],
+      filtro_status: [],
+      visualizacao: [],
+      pesquisa: [],
+    },
+  });
   const [doencasCidToolbarState, setDoencasCidToolbarState] = useState({
     selectedId: null,
     loading: false,
@@ -325,6 +348,7 @@ function AppContent() {
   const [prestadorCredenciamentosOpen, setPrestadorCredenciamentosOpen] = useState(false);
   const [prestadorComissoesOpen, setPrestadorComissoesOpen] = useState(false);
   const prestadoresState = usePrestadores();
+  const prestadoresFilterDebug = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV;
   const openEditPrestador = (item) => {
     const nextItem = item || null;
     const rowId = nextItem?.row_id ?? nextItem?.id ?? null;
@@ -563,6 +587,19 @@ function AppContent() {
 
     window.addEventListener('brana-servicos-protetico-state', onServicosProteticoState);
     return () => window.removeEventListener('brana-servicos-protetico-state', onServicosProteticoState);
+  }, []);
+
+  useEffect(() => {
+    const onPacientesState = (event) => {
+      const detail = event?.detail || {};
+      setPacientesToolbarState((current) => ({
+        ...current,
+        ...detail,
+      }));
+    };
+
+    window.addEventListener('brana-pacientes-state', onPacientesState);
+    return () => window.removeEventListener('brana-pacientes-state', onPacientesState);
   }, []);
 
   useEffect(() => {
@@ -820,10 +857,6 @@ function AppContent() {
     }
     if (groupKey === 'configuracao' && item?.key === 'questionarios-anamnese' && !item?.disabled) {
       handleNavigate('questionarios-anamnese');
-      return;
-    }
-    if (groupKey === 'financeiro' && item?.key === 'conta-corrente-cirurgiao' && !item?.disabled) {
-      handleNavigate('conta-corrente-cirurgiao');
       return;
     }
     if (groupKey === 'configuracao' && item?.key === 'agendas' && !item?.disabled) {
@@ -1098,6 +1131,7 @@ function AppContent() {
     return <DashboardPage key={dashboardVersion} />;
   }, [
     cenarioAnualOpenRequestId,
+    contaCorrente,
     dashboardVersion,
     loading,
     materiaisEstoqueToolbarState,
@@ -1413,8 +1447,40 @@ function AppContent() {
     );
   }, [screen, servicosProteticoToolbarState]);
 
+  const pacientesTopBar = useMemo(() => {
+    if (screen !== 'pacientes') return null;
+
+    const dispatchAction = (action, extra = {}) => {
+      window.dispatchEvent(new CustomEvent('brana-pacientes-toolbar-action', { detail: { action, ...extra } }));
+    };
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band pacientes-shell-band" aria-label="Barra operacional de pacientes">
+        <PacientesToolbar
+          loading={Boolean(pacientesToolbarState.loading || pacientesToolbarState.optionsLoading)}
+          preferences={pacientesToolbarState.preferences}
+          optionSets={pacientesToolbarState.options}
+          queryDraft={pacientesToolbarState.queryDraft}
+          hasSelection={pacientesToolbarState.hasSelection}
+          onPreferenceChange={(key, value) => dispatchAction('set-preference', { key, value })}
+          onSearchChange={(value) => dispatchAction('set-search', { value })}
+          onSearchApply={(value) => dispatchAction('apply-search', { value })}
+          onNavigate={(direction) => dispatchAction('navigate', { direction })}
+        />
+      </div>
+    );
+  }, [pacientesToolbarState.hasSelection, pacientesToolbarState.loading, pacientesToolbarState.options, pacientesToolbarState.optionsLoading, pacientesToolbarState.preferences, pacientesToolbarState.queryDraft, pacientesToolbarState.selectedId, screen]);
+
   const prestadoresTopBar = useMemo(() => {
     if (screen !== 'prestadores') return null;
+
+    if (prestadoresFilterDebug) {
+      // TEMP DEBUG — remover após diagnóstico do filtro de Prestadores
+      console.info('[PRESTADORES_FILTER_DEBUG] APP_TO_PAGE', {
+        itemsCount: prestadoresState.items.length,
+        codes: prestadoresState.items.map((item) => String(item?.codigo ?? '').trim()),
+      });
+    }
 
     return (
       <div className="brana-shell-band auxiliary-shell-band materiais-estoque-shell-band" aria-label="Barra operacional de corpo clínico">
@@ -1434,7 +1500,7 @@ function AppContent() {
         />
       </div>
     );
-  }, [openEditPrestador, prestadoresState.especialidades, prestadoresState.filters.especialidade, prestadoresState.filters.nome, prestadoresState.hasSelection, prestadoresState.items, prestadoresState.selectedId, prestadoresState.selectedItem, screen]);
+  }, [openEditPrestador, prestadoresFilterDebug, prestadoresState.especialidades, prestadoresState.filters.especialidade, prestadoresState.filters.nome, prestadoresState.hasSelection, prestadoresState.items, prestadoresState.selectedId, prestadoresState.selectedItem, screen]);
 
   const doencasCidTopBar = useMemo(() => {
     if (screen !== 'doencas-cid') return null;
@@ -1596,6 +1662,8 @@ function AppContent() {
             materiaisEstoqueTopBar
           ) : screen === 'servicos-protetico' ? (
             servicosProteticoTopBar
+          ) : screen === 'pacientes' ? (
+            pacientesTopBar
           ) : screen === 'prestadores' ? (
             prestadoresTopBar
           ) : screen === 'doencas-cid' ? (

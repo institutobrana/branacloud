@@ -44,7 +44,7 @@ export async function listarPacientes(query = '') {
     params.set('q', String(query).trim());
   }
   params.set('limit', '80');
-  return requestJson(`/pacientes?${params.toString()}`, {
+  return requestJson(`/cadastros/pacientes?${params.toString()}`, {
     method: 'GET',
   });
 }
@@ -54,7 +54,62 @@ export async function obterPaciente(pacienteId) {
   if (!id) {
     throw new Error('Paciente inválido.');
   }
-  return requestJson(`/pacientes/${encodeURIComponent(String(id))}`, {
+  return requestJson(`/cadastros/pacientes/${encodeURIComponent(String(id))}`, {
+    method: 'GET',
+  });
+}
+
+export async function listarPacientesMenu(query = '', preferences = {}, pagination = {}) {
+  const params = new URLSearchParams();
+  const term = String(query || '').trim();
+  if (term) {
+    params.set('q', term);
+  }
+  const prefEntries = {
+    cir_menu_pac: 0,
+    status_menu_pac: 0,
+    visualizacao_menu_pac: 1,
+    pesquisa_menu_pac: 1,
+    active_ord_menu_pac: 0,
+    ...preferences,
+  };
+  Object.entries(prefEntries).forEach(([key, value]) => {
+    params.set(key, String(value ?? ''));
+  });
+  params.set('offset', String(Math.max(0, Number(pagination?.offset || 0) || 0)));
+  params.set('limit', String(Math.max(1, Math.min(Number(pagination?.limit || 80) || 80, 5000))));
+  return requestJson(`/cadastros/pacientes/menu?${params.toString()}`, {
+    method: 'GET',
+  });
+}
+
+export async function listarPacientesMenuOptions() {
+  return requestJson('/cadastros/pacientes/menu-options', {
+    method: 'GET',
+  });
+}
+
+export async function obterPacientesMenuPreferences() {
+  return requestJson('/cadastros/pacientes/menu-preferences', {
+    method: 'GET',
+  });
+}
+
+export async function atualizarPacientesMenuPreferences(values) {
+  return requestJson('/cadastros/pacientes/menu-preferences', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(values || {}),
+  });
+}
+
+export async function navegarPacientes(atualId, sentido) {
+  const params = new URLSearchParams();
+  if (atualId != null && atualId !== '') {
+    params.set('atual_id', String(atualId));
+  }
+  params.set('sentido', sentido);
+  return requestJson(`/cadastros/pacientes/navegar?${params.toString()}`, {
     method: 'GET',
   });
 }
