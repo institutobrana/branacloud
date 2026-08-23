@@ -206,13 +206,21 @@ O Brana Cloude manipula dados clinicos, financeiros e documentos. Priorize segur
 A frente `Conta corrente do cirurgião` possui contrato alvo documentado em `docs/auditoria_conta_corrente_cirurgiao.md`. O proximo micropasso seguro e transformar essa documentacao em plano tecnico de implementacao incremental, sem mexer ainda em backend ou frontend.
 O contrato mestre de datas da frente esta em `docs/contrato_mestre_campos_data_brana_cloude.md` e deve ser consultado antes de qualquer futura mudanca em inputs de data, filtros por periodo ou modais financeiros.
 
-## Fechamento da frente DATA
+## Fechamento-T2B — Frente B Configura horarios de agendamento
 
-- DATA-P1 a DATA-P5 foram concluídas.
-- O parser de datas passou a ser reutilizavel.
-- Os dois consumidores validados ficaram homologados em runtime.
-- A interacao visual compartilha o mesmo contrato, mas continua local aos consumidores.
-- A extracao de componente visual compartilhado fica para DATA-P6 ou frente equivalente futura.
+`Configura horarios de agendamento` esta **CONCLUIDA / HOMOLOGADA** como
+frente independente. O fechamento consolidado esta em
+`docs/fechamento_t2b_configura_horarios_agendamento.md`.
+
+O escopo documentado inclui a abertura por Prestador, Escala, Bloqueios,
+Apresentacao, Visualizacao, persistencia da configuracao, CRUD de bloqueios,
+contratos Ok/Cancelar/X, data/hora e light/dark. O botao Agenda de Prestadores
+permanece apenas como ponto de entrada.
+
+Unidades de atendimento e Motivos/Situacao de agendamento permanecem em
+frentes separadas. Antes da publicacao ainda ficam a auditoria seletiva do
+diff, os testes finais e a preparacao de stage/commit/push.
+
 ## Fechamento-T2A — Frente Prestadores
 
 `Cadastro -> Corpo clinico / Prestadores` esta funcionalmente concluido e
@@ -223,3 +231,11 @@ O escopo inclui Prestadores, suas quatro abas, Credenciamentos e Comissoes.
 O botao `Agenda` e apenas uma entrada para `Configura horarios de
 agendamento`, que continua sendo frente independente. O motor financeiro de
 aplicacao e precedencia permanece futuro.
+
+## Fechamento da frente DATA
+
+- DATA-P1 a DATA-P5 foram concluídas.
+- O parser de datas passou a ser reutilizavel.
+- Os dois consumidores validados ficaram homologados em runtime.
+- A interacao visual compartilha o mesmo contrato, mas continua local aos consumidores.
+- A extracao de componente visual compartilhado fica para DATA-P6 ou frente equivalente futura.

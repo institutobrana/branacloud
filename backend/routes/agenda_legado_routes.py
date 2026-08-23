@@ -2,15 +2,18 @@ import json
 import os
 import re
 import unicodedata
+from decimal import Decimal
 from datetime import date, datetime, time, timedelta
 from html import escape
 from pathlib import Path
+from types import SimpleNamespace
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
-from sqlalchemy import and_, case, or_
+from sqlalchemy import and_, case, or_, text
 from sqlalchemy.orm import Session
+from sqlalchemy import func as sa_func
 
 from database import get_db
 from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento
@@ -135,6 +138,17 @@ class GoogleAgendaExportarPayload(BaseModel):
     id_prestador: int | None = None
     id_unidade: int | None = None
     itens_ids: list[int] | None = None
+
+
+class AgendaBloqueioPayload(BaseModel):
+    id_bloqueio: int | None = None
+    id_unidade: int
+    dia_sem: int
+    data_ini: str
+    data_fin: str | None = None
+    hora_ini: int
+    hora_fin: int
+    msg_agenda: str | None = None
 
 
 def _parse_date(value: str | None) -> date | None:
@@ -297,6 +311,246 @@ def _load_prestador_agenda_config(db: Session, clinica_id: int, prestador_id: in
         except Exception:
             raw = {}
     return _normalize_agenda_config(raw)
+
+
+def _load_prestador_agenda_record(db: Session, clinica_id: int, prestador_id: int) -> dict[str, object]:
+    if int(prestador_id or 0) <= 0:
+        raise HTTPException(status_code=400, detail="Prestador invalido.")
+    prestador = (
+        db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.clinica_id == int(clinica_id),
+            PrestadorOdonto.id == int(prestador_id),
+        )
+        .first()
+    )
+    if not prestador:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    return {
+        "id": int(prestador.id),
+        "row_id": int(prestador.id),
+        "source_id": int(prestador.source_id),
+        "codigo": (prestador.codigo or "").strip(),
+        "nome": (prestador.nome or "").strip(),
+        "is_system_prestador": bool(prestador.is_system_prestador),
+        "agenda_config": _load_prestador_agenda_config(db, clinica_id, prestador_id),
+    }
+
+
+def _load_agenda_bloqueio_prestador(db: Session, clinica_id: int, prestador_id: int):
+    if int(prestador_id or 0) <= 0:
+        raise HTTPException(status_code=400, detail="Prestador invalido.")
+    row = (
+        db.query(
+            PrestadorOdonto.id,
+            PrestadorOdonto.clinica_id,
+            PrestadorOdonto.source_id,
+            PrestadorOdonto.codigo,
+            PrestadorOdonto.nome,
+            PrestadorOdonto.is_system_prestador,
+        )
+        .filter(
+            PrestadorOdonto.clinica_id == int(clinica_id),
+            PrestadorOdonto.id == int(prestador_id),
+        )
+        .first()
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    if not row.nome or not str(row.nome).strip():
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    return SimpleNamespace(
+        id=int(row.id),
+        clinica_id=int(row.clinica_id),
+        source_id=int(row.source_id),
+        codigo=str(row.codigo or "").strip(),
+        nome=str(row.nome or "").strip(),
+        is_system_prestador=bool(row.is_system_prestador),
+    )
+
+
+def _load_agenda_bloqueio_unidade(db: Session, clinica_id: int, unidade_id: int):
+    if int(unidade_id or 0) <= 0:
+        raise HTTPException(status_code=400, detail="Unidade invalida.")
+    row = (
+        db.query(UnidadeAtendimento.id, UnidadeAtendimento.clinica_id, UnidadeAtendimento.nome, UnidadeAtendimento.inativo)
+        .filter(
+            UnidadeAtendimento.clinica_id == int(clinica_id),
+            UnidadeAtendimento.id == int(unidade_id),
+        )
+        .first()
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Unidade nao encontrada.")
+    if bool(row.inativo):
+        raise HTTPException(status_code=400, detail="Unidade inativa.")
+    return SimpleNamespace(
+        id=int(row.id),
+        clinica_id=int(row.clinica_id),
+        nome=str(row.nome or "").strip(),
+        inativo=bool(row.inativo),
+    )
+
+
+def _parse_date_str(value: str | None) -> date:
+    parsed = _parse_date_any(value)
+    if not parsed:
+        raise HTTPException(status_code=400, detail="Data inicial invalida.")
+    return parsed
+
+
+def _normalize_bloqueio_request(payload: dict | AgendaBloqueioPayload) -> dict:
+    if isinstance(payload, AgendaBloqueioPayload):
+        raw = payload.model_dump()
+    elif isinstance(payload, dict):
+        raw = dict(payload)
+    else:
+        raw = {}
+
+    id_bloqueio_raw = raw.get("id_bloqueio")
+    id_unidade_raw = raw.get("id_unidade")
+    dia_sem_raw = raw.get("dia_sem")
+    data_ini_raw = raw.get("data_ini")
+    data_fin_raw = raw.get("data_fin")
+    hora_ini_raw = raw.get("hora_ini")
+    hora_fin_raw = raw.get("hora_fin")
+
+    try:
+        id_bloqueio = int(id_bloqueio_raw) if id_bloqueio_raw is not None and str(id_bloqueio_raw).strip() else None
+    except Exception:
+        id_bloqueio = None
+    try:
+        id_unidade = int(id_unidade_raw)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Unidade invalida.")
+    try:
+        dia_sem = int(dia_sem_raw)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Dia da semana invalido.")
+    if dia_sem < 1 or dia_sem > 7:
+        raise HTTPException(status_code=400, detail="Dia da semana invalido.")
+
+    data_ini = _parse_date_str(str(data_ini_raw or "").strip())
+    data_fin = _parse_date_any(str(data_fin_raw or "").strip()) if str(data_fin_raw or "").strip() else None
+    try:
+        hora_ini = int(hora_ini_raw)
+        hora_fin = int(hora_fin_raw)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Horario invalido.")
+    if hora_ini < 0 or hora_fin < 0:
+        raise HTTPException(status_code=400, detail="Horario invalido.")
+    if hora_fin <= hora_ini:
+        raise HTTPException(status_code=400, detail="Horario final deve ser maior que o inicial.")
+
+    msg_agenda = raw.get("msg_agenda")
+    if msg_agenda is None:
+        msg_agenda_limpa = None
+    else:
+        msg_agenda_limpa = str(msg_agenda).strip()
+        if not msg_agenda_limpa:
+            msg_agenda_limpa = None
+
+    return {
+        "id_bloqueio": id_bloqueio,
+        "id_unidade": id_unidade,
+        "dia_sem": dia_sem,
+        "data_ini": data_ini,
+        "data_fin": data_fin,
+        "hora_ini": hora_ini,
+        "hora_fin": hora_fin,
+        "msg_agenda": msg_agenda_limpa,
+    }
+
+
+def _serialize_agenda_bloqueio(item: AgendaLegadoBloqueio, unidade_nome: str | None = None) -> dict[str, object]:
+    unidade_label = str(unidade_nome or "").strip()
+    if not unidade_label:
+        unidade_label = ""
+    return {
+        "id": int(item.id),
+        "id_bloqueio": int(item.id_bloqueio),
+        "id_prestador": int(item.id_prestador),
+        "id_unidade": int(item.id_unidade),
+        "unidade": unidade_label,
+        "dia_sem": int(item.dia_sem),
+        "data_ini": item.data_ini.date().isoformat() if isinstance(item.data_ini, datetime) else str(item.data_ini)[:10],
+        "data_fin": item.data_fin.date().isoformat() if isinstance(item.data_fin, datetime) else (item.data_fin.isoformat()[:10] if item.data_fin else None),
+        "hora_ini": int(item.hora_ini),
+        "hora_fin": int(item.hora_fin),
+        "msg_agenda": str(item.msg_agenda or "").strip() if item.msg_agenda is not None else None,
+    }
+
+
+def _load_agenda_bloqueio_or_404(
+    db: Session,
+    clinica_id: int,
+    prestador_id: int,
+    bloqueio_id: int,
+) -> AgendaLegadoBloqueio:
+    item = (
+        db.query(AgendaLegadoBloqueio)
+        .filter(
+            AgendaLegadoBloqueio.clinica_id == int(clinica_id),
+            AgendaLegadoBloqueio.id_prestador == int(prestador_id),
+            AgendaLegadoBloqueio.id == int(bloqueio_id),
+        )
+        .first()
+    )
+    if not item:
+        raise HTTPException(status_code=404, detail="Bloqueio nao encontrado.")
+    return item
+
+
+def _next_id_bloqueio(db: Session, clinica_id: int) -> int:
+    dialect_name = getattr(getattr(db, "bind", None), "dialect", None)
+    dialect_name = getattr(dialect_name, "name", "")
+    if dialect_name == "postgresql":
+        chave = (int(clinica_id) << 20) | 0xA11
+        try:
+            db.execute(text("SELECT pg_advisory_xact_lock(:k)"), {"k": int(chave)})
+        except Exception:
+            pass
+    max_id = (
+        db.query(sa_func.max(AgendaLegadoBloqueio.id_bloqueio))
+        .filter(AgendaLegadoBloqueio.clinica_id == int(clinica_id))
+        .scalar()
+    )
+    proximo = int(max_id or 0) + 1
+    return proximo
+
+
+def _unidade_label_por_id(db: Session, clinica_id: int, unidade_id: int) -> str:
+    unidade = (
+        db.query(UnidadeAtendimento)
+        .filter(UnidadeAtendimento.clinica_id == int(clinica_id), UnidadeAtendimento.id == int(unidade_id))
+        .first()
+    )
+    return str((unidade.nome if unidade else "") or "").strip()
+
+
+def _load_bloqueio_summary(db: Session, clinica_id: int, prestador_id: int) -> list[dict[str, object]]:
+    rows = (
+        db.query(AgendaLegadoBloqueio, UnidadeAtendimento.nome.label("unidade_nome"))
+        .outerjoin(
+            UnidadeAtendimento,
+            and_(
+                UnidadeAtendimento.clinica_id == AgendaLegadoBloqueio.clinica_id,
+                UnidadeAtendimento.id == AgendaLegadoBloqueio.id_unidade,
+            ),
+        )
+        .filter(
+            AgendaLegadoBloqueio.clinica_id == int(clinica_id),
+            AgendaLegadoBloqueio.id_prestador == int(prestador_id),
+        )
+        .order_by(
+            AgendaLegadoBloqueio.dia_sem.asc(),
+            AgendaLegadoBloqueio.data_ini.asc(),
+            AgendaLegadoBloqueio.hora_ini.asc(),
+            AgendaLegadoBloqueio.id.asc(),
+        )
+        .all()
+    )
+    return [_serialize_agenda_bloqueio(row[0], row[1]) for row in rows]
 
 
 def _hora_ms(dt: datetime) -> int:
@@ -2018,6 +2272,129 @@ def listar_prestadores(
         )
     itens.sort(key=lambda x: (str(x.get("nome") or "").lower(), int(x.get("id") or 0)))
     return itens
+
+
+@router.get("/prestadores/{prestador_id}/agenda-config")
+def obter_prestador_agenda_config(
+    prestador_id: int,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = int(current_user.clinica_id)
+    return _load_prestador_agenda_record(db, clinica_id, prestador_id)
+
+
+@router.put("/prestadores/{prestador_id}/agenda-config")
+def salvar_prestador_agenda_config(
+    prestador_id: int,
+    payload: dict,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = int(current_user.clinica_id)
+    if int(prestador_id or 0) <= 0:
+        raise HTTPException(status_code=400, detail="Prestador invalido.")
+    prestador = (
+        db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.clinica_id == clinica_id,
+            PrestadorOdonto.id == int(prestador_id),
+        )
+        .first()
+    )
+    if not prestador:
+        raise HTTPException(status_code=404, detail="Prestador nao encontrado.")
+    agenda_cfg = payload.get("agenda_config") if isinstance(payload, dict) else None
+    if not isinstance(agenda_cfg, dict):
+        agenda_cfg = {}
+    agenda_cfg_normalizado = _normalize_agenda_config(agenda_cfg)
+    prestador.agenda_config_json = json.dumps(agenda_cfg_normalizado, ensure_ascii=False) if agenda_cfg_normalizado else None
+    db.add(prestador)
+    db.commit()
+    db.refresh(prestador)
+    return _load_prestador_agenda_record(db, clinica_id, prestador_id)
+
+
+@router.get("/prestadores/{prestador_id}/bloqueios")
+def listar_bloqueios_prestador(
+    prestador_id: int,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = int(current_user.clinica_id)
+    _load_agenda_bloqueio_prestador(db, clinica_id, prestador_id)
+    return _load_bloqueio_summary(db, clinica_id, prestador_id)
+
+
+@router.post("/prestadores/{prestador_id}/bloqueios", status_code=201)
+def criar_bloqueio_prestador(
+    prestador_id: int,
+    payload: AgendaBloqueioPayload,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = int(current_user.clinica_id)
+    prestador = _load_agenda_bloqueio_prestador(db, clinica_id, prestador_id)
+    dados = _normalize_bloqueio_request(payload)
+    unidade = _load_agenda_bloqueio_unidade(db, clinica_id, dados["id_unidade"])
+    novo_id_bloqueio = dados["id_bloqueio"] or _next_id_bloqueio(db, clinica_id)
+    bloqueio = AgendaLegadoBloqueio(
+        clinica_id=clinica_id,
+        id_bloqueio=int(novo_id_bloqueio),
+        id_prestador=int(prestador.id),
+        id_unidade=int(unidade.id),
+        dia_sem=int(dados["dia_sem"]),
+        data_ini=datetime.combine(dados["data_ini"], datetime.min.time()),
+        data_fin=datetime.combine(dados["data_fin"], datetime.min.time()) if dados["data_fin"] else None,
+        hora_ini=int(dados["hora_ini"]),
+        hora_fin=int(dados["hora_fin"]),
+        msg_agenda=dados["msg_agenda"],
+    )
+    db.add(bloqueio)
+    db.commit()
+    db.refresh(bloqueio)
+    return _serialize_agenda_bloqueio(bloqueio, unidade.nome)
+
+
+@router.put("/prestadores/{prestador_id}/bloqueios/{bloqueio_id}")
+def atualizar_bloqueio_prestador(
+    prestador_id: int,
+    bloqueio_id: int,
+    payload: AgendaBloqueioPayload,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = int(current_user.clinica_id)
+    prestador = _load_agenda_bloqueio_prestador(db, clinica_id, prestador_id)
+    bloqueio = _load_agenda_bloqueio_or_404(db, clinica_id, prestador.id, bloqueio_id)
+    dados = _normalize_bloqueio_request(payload)
+    unidade = _load_agenda_bloqueio_unidade(db, clinica_id, dados["id_unidade"])
+    bloqueio.id_unidade = int(unidade.id)
+    bloqueio.dia_sem = int(dados["dia_sem"])
+    bloqueio.data_ini = datetime.combine(dados["data_ini"], datetime.min.time())
+    bloqueio.data_fin = datetime.combine(dados["data_fin"], datetime.min.time()) if dados["data_fin"] else None
+    bloqueio.hora_ini = int(dados["hora_ini"])
+    bloqueio.hora_fin = int(dados["hora_fin"])
+    bloqueio.msg_agenda = dados["msg_agenda"]
+    db.add(bloqueio)
+    db.commit()
+    db.refresh(bloqueio)
+    return _serialize_agenda_bloqueio(bloqueio, unidade.nome)
+
+
+@router.delete("/prestadores/{prestador_id}/bloqueios/{bloqueio_id}")
+def excluir_bloqueio_prestador(
+    prestador_id: int,
+    bloqueio_id: int,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    clinica_id = int(current_user.clinica_id)
+    prestador = _load_agenda_bloqueio_prestador(db, clinica_id, prestador_id)
+    bloqueio = _load_agenda_bloqueio_or_404(db, clinica_id, prestador.id, bloqueio_id)
+    db.delete(bloqueio)
+    db.commit()
+    return {"ok": True}
 
 
 @router.get("/unidades")
