@@ -32,6 +32,9 @@ function normalizeMenuItem(item) {
     codigo: Number(item?.codigo || 0) || 0,
     nome: safeText(item?.nome || formatNome(item)),
     nome_completo: safeText(item?.nome_paciente || item?.nome_completo || formatNome(item)),
+    telefone1: safeText(item?.telefone1),
+    prestador: safeText(item?.prestador),
+    situacao: safeText(item?.situacao),
     status: item?.status ?? null,
     id_prestador: Number(item?.id_prestador || 0) || 0,
     valor_coluna2: safeText(item?.valor_coluna2),
@@ -55,10 +58,12 @@ export function usePacientes() {
     filtro_status: [],
     visualizacao: [],
     pesquisa: [],
+    active_ord_menu_pac: [],
   });
   const [detailLoading, setDetailLoading] = useState(false);
   const [navigationLoading, setNavigationLoading] = useState(false);
   const mountedRef = useRef(false);
+  const menuRequestRef = useRef(0);
 
   const selectedRowKeys = useMemo(() => (selectedId ? [selectedId] : []), [selectedId]);
   const selectedRecord = useMemo(() => items.find((item) => Number(item.id) === Number(selectedId)) || null, [items, selectedId]);
@@ -72,11 +77,14 @@ export function usePacientes() {
   };
 
   const loadMenu = async ({ nextQuery = query, nextPreferences = preferences, preserveSelection = true } = {}) => {
+    const requestId = menuRequestRef.current + 1;
+    menuRequestRef.current = requestId;
     setLoading(true);
     setError('');
     try {
-      const response = await listarPacientesMenu(nextQuery, nextPreferences, { limit: 80, offset: 0 });
+      const response = await listarPacientesMenu(nextQuery, nextPreferences, { limit: 5000, offset: 0 });
       const data = Array.isArray(response?.items) ? response.items.map(normalizeMenuItem) : [];
+      if (requestId !== menuRequestRef.current) return data;
       setItems(data);
       setCount(Number(response?.total || data.length || 0));
       if (data.length) {
@@ -93,6 +101,7 @@ export function usePacientes() {
       }
       return data;
     } catch (err) {
+      if (requestId !== menuRequestRef.current) return [];
       setItems([]);
       setCount(0);
       setSelectedId(null);
@@ -100,7 +109,7 @@ export function usePacientes() {
       setError(err?.message || 'Falha ao carregar pacientes.');
       return [];
     } finally {
-      setLoading(false);
+      if (requestId === menuRequestRef.current) setLoading(false);
     }
   };
 
@@ -122,6 +131,9 @@ export function usePacientes() {
         filtro_status: Array.isArray(optionsResponse?.filtro_status) ? optionsResponse.filtro_status : [],
         visualizacao: Array.isArray(optionsResponse?.visualizacao) ? optionsResponse.visualizacao : [],
         pesquisa: Array.isArray(optionsResponse?.pesquisa) ? optionsResponse.pesquisa : [],
+        active_ord_menu_pac: Array.isArray(prefsResponse?.options?.active_ord_menu_pac)
+          ? prefsResponse.options.active_ord_menu_pac
+          : [],
       });
       return nextPreferences;
     } catch (err) {

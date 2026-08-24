@@ -1,0 +1,85 @@
+import { useEffect, useState } from 'react';
+import { Modal } from 'antd';
+import { FichaPessoalTabs } from './FichaPessoalTabs.jsx';
+import { FichaPessoalToolbar } from './FichaPessoalToolbar.jsx';
+import { DadosPessoaisTab } from './DadosPessoaisTab.jsx';
+import { useFichaPessoalForm } from './useFichaPessoalForm.js';
+import './fichaPessoal.css';
+
+const tabContent = {
+  dados: 'Dados pessoais sera implementado na etapa seguinte.',
+  complementares: 'Dados complementares sera implementado na etapa seguinte.',
+  anotacoes: 'Anotacoes sera implementado na etapa seguinte.',
+};
+
+export function FichaPessoalModal({ open, onClose, patientId = null, mode = 'new' }) {
+  const [activeTab, setActiveTab] = useState('dados');
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const ficha = useFichaPessoalForm(open, mode, patientId);
+
+  useEffect(() => {
+    if (open) {
+      setActiveTab('dados');
+      setDeleteConfirmOpen(false);
+    }
+  }, [open, mode, patientId]);
+
+  const confirmDelete = () => setDeleteConfirmOpen(true);
+  const executeDelete = async () => {
+    const deleted = await ficha.remove();
+    if (!deleted) return;
+    setDeleteConfirmOpen(false);
+    window.dispatchEvent(new CustomEvent('brana-paciente-deleted'));
+    onClose();
+  };
+  const deleteName = String(ficha.form.nome || '').trim() || `#${ficha.form.codigo || ''}`;
+
+  return (
+    <>
+      <Modal
+        open={open}
+        title={`Ficha pessoal -${mode === 'existing' && ficha.loading ? '' : ficha.isNew ? '' : ` ${ficha.form.nome || ''}`}`}
+        onCancel={onClose}
+        footer={null}
+        width={820}
+        centered
+        destroyOnClose
+        maskClosable={false}
+        keyboard
+        className="ficha-pessoal-modal"
+        styles={{ body: { padding: 0 } }}
+      >
+        <FichaPessoalToolbar onClose={onClose} onSave={async () => { const saved = await ficha.save(); if (saved) window.dispatchEvent(new CustomEvent('brana-paciente-created')); }} onDelete={confirmDelete} saving={ficha.saving} deleting={ficha.deleting} isNew={ficha.isNew} dirty={ficha.dirty} />
+        <FichaPessoalTabs activeTab={activeTab} onChange={setActiveTab} hasPersistedPaciente={ficha.hasPersistedPaciente} />
+        <div className="ficha-pessoal-content" role="tabpanel">
+          {ficha.loading && mode === 'existing' ? <div className="ficha-pessoal-placeholder">Carregando paciente...</div> : activeTab === 'dados' ? <DadosPessoaisTab {...ficha} /> : <div className="ficha-pessoal-placeholder">{tabContent[activeTab] || 'Esta aba estara disponivel apos o salvamento do paciente.'}</div>}
+        </div>
+        <div className="ficha-pessoal-status">{tabsLabel(activeTab)}</div>
+      </Modal>
+      <Modal
+        open={deleteConfirmOpen}
+        title="Eliminar paciente"
+        onCancel={() => setDeleteConfirmOpen(false)}
+        onOk={executeDelete}
+        okText="Eliminar"
+        cancelText="Cancelar"
+        okButtonProps={{ danger: true, loading: ficha.deleting }}
+        cancelButtonProps={{ disabled: ficha.deleting }}
+        maskClosable={false}
+        centered
+      >
+        Deseja eliminar o paciente '{deleteName}'?
+      </Modal>
+    </>
+  );
+}
+
+function tabsLabel(activeTab) {
+  return {
+    dados: 'Dados pessoais',
+    complementares: 'Dados complementares',
+    anotacoes: 'Anotacoes',
+    anamnese: 'Anamnese',
+    historico: 'Historico',
+  }[activeTab] || 'Dados pessoais';
+}

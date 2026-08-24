@@ -77,7 +77,7 @@ export async function listarPacientesMenu(query = '', preferences = {}, paginati
     params.set(key, String(value ?? ''));
   });
   params.set('offset', String(Math.max(0, Number(pagination?.offset || 0) || 0)));
-  params.set('limit', String(Math.max(1, Math.min(Number(pagination?.limit || 80) || 80, 5000))));
+  params.set('limit', String(Math.max(1, Math.min(Number(pagination?.limit || 5000) || 5000, 5000))));
   return requestJson(`/cadastros/pacientes/menu?${params.toString()}`, {
     method: 'GET',
   });

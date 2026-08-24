@@ -1,10 +1,9 @@
-import { Typography } from 'antd';
 import { useEffect } from 'react';
 import { PacientesTable } from './components/PacientesTable.jsx';
 import { usePacientes } from './hooks/usePacientes.js';
 import './pacientes.css';
 
-export function PacientesPage() {
+export function PacientesPage({ onOpenExisting }) {
   const {
     items,
     selectedId,
@@ -13,6 +12,9 @@ export function PacientesPage() {
     count,
     selectedRowKeys,
     handleSelect,
+    preferences,
+    optionSets,
+    reload,
   } = usePacientes();
 
   useEffect(() => {
@@ -26,22 +28,19 @@ export function PacientesPage() {
     );
   }, [loading, selectedId]);
 
+  useEffect(() => {
+    const handleCreated = () => { reload(); };
+    const handleDeleted = () => { reload(); };
+    window.addEventListener('brana-paciente-created', handleCreated);
+    window.addEventListener('brana-paciente-deleted', handleDeleted);
+    return () => {
+      window.removeEventListener('brana-paciente-created', handleCreated);
+      window.removeEventListener('brana-paciente-deleted', handleDeleted);
+    };
+  }, [reload]);
+
   return (
     <div className="pacientes-page">
-      <div className="pacientes-page-header">
-        <div>
-          <Typography.Title level={2} className="pacientes-page-title">
-            Pacientes
-          </Typography.Title>
-          <Typography.Text type="secondary" className="pacientes-page-subtitle">
-            Cadastro → Pacientes
-          </Typography.Text>
-        </div>
-        <Typography.Text type="secondary" className="pacientes-page-counter">
-          {count} {count === 1 ? 'paciente' : 'pacientes'}
-        </Typography.Text>
-      </div>
-
       <PacientesTable
         items={items}
         loading={loading}
@@ -50,6 +49,9 @@ export function PacientesPage() {
         selectedRowKeys={selectedRowKeys}
         count={count}
         onSelect={handleSelect}
+        alphabetOptions={optionSets.active_ord_menu_pac}
+        activeAlphabet={preferences.active_ord_menu_pac}
+        onDoubleClick={(record) => onOpenExisting?.(record?.id)}
       />
     </div>
   );

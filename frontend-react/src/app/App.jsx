@@ -23,6 +23,7 @@ import { DoencasCidPage } from '../features/doencasCid/DoencasCidPage.jsx';
 import { DoencaCidToolbar } from '../features/doencasCid/components/DoencaCidToolbar.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
 import { PacientesToolbar } from '../features/pacientes/components/PacientesToolbar.jsx';
+import { FichaPessoalModal } from '../features/pacientes/components/fichaPessoal/FichaPessoalModal.jsx';
 import { TiposIndicacaoPage } from '../features/tabelasAuxiliares/TiposIndicacaoPage.jsx';
 import { MateriaisEstoquePage } from '../features/materiaisEstoque/MateriaisEstoquePage.jsx';
 import { ServicosProteticoPage } from '../features/servicosProtetico/ServicosProteticoPage.jsx';
@@ -288,6 +289,29 @@ function AppContent() {
       pesquisa: [],
     },
   });
+  const [fichaPessoalOpen, setFichaPessoalOpen] = useState(false);
+  const [fichaPessoalPatientId, setFichaPessoalPatientId] = useState(null);
+  const [fichaPessoalMode, setFichaPessoalMode] = useState('new');
+
+  const openNewPatient = () => {
+    setFichaPessoalPatientId(null);
+    setFichaPessoalMode('new');
+    setFichaPessoalOpen(true);
+  };
+
+  const openExistingPatient = (patientId) => {
+    const id = Number(patientId);
+    if (!id) return;
+    setFichaPessoalPatientId(id);
+    setFichaPessoalMode('existing');
+    setFichaPessoalOpen(true);
+  };
+
+  const closeFichaPessoal = () => {
+    setFichaPessoalOpen(false);
+    setFichaPessoalPatientId(null);
+    setFichaPessoalMode('new');
+  };
   const [doencasCidToolbarState, setDoencasCidToolbarState] = useState({
     selectedId: null,
     loading: false,
@@ -1031,7 +1055,7 @@ function AppContent() {
       return renderAdminRoutes('audit');
     }
     if (screen === 'pacientes') {
-      return <PacientesPage onBackHome={() => handleNavigate('dashboard')} />;
+      return <PacientesPage onBackHome={() => handleNavigate('dashboard')} onOpenExisting={openExistingPatient} />;
     }
     if (screen === 'ficha-clinica') {
       return <FichaClinicaPage onBackHome={() => handleNavigate('dashboard')} />;
@@ -1133,6 +1157,7 @@ function AppContent() {
     cenarioAnualOpenRequestId,
     contaCorrente,
     dashboardVersion,
+    fichaPessoalOpen,
     loading,
     materiaisEstoqueToolbarState,
     procedimentosGenericosEspecialidade,
@@ -1466,6 +1491,8 @@ function AppContent() {
           onSearchChange={(value) => dispatchAction('set-search', { value })}
           onSearchApply={(value) => dispatchAction('apply-search', { value })}
           onNavigate={(direction) => dispatchAction('navigate', { direction })}
+          onNew={openNewPatient}
+          onEdit={() => openExistingPatient(pacientesToolbarState.selectedId)}
         />
       </div>
     );
@@ -1702,6 +1729,12 @@ function AppContent() {
             onMouseLeave={handleContextRegionLeave}
           />
           <BranaWorkspace>{activePage}</BranaWorkspace>
+          <FichaPessoalModal
+            open={fichaPessoalOpen && screen === 'pacientes'}
+            patientId={fichaPessoalPatientId}
+            mode={fichaPessoalMode}
+            onClose={closeFichaPessoal}
+          />
         </div>
         <PrestadorModal
           open={prestadorModalState.open && screen === 'prestadores'}

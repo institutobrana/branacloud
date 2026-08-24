@@ -1,5 +1,6 @@
 import { Empty, Spin, Tag, Typography } from 'antd';
 import { BranaTable } from '../../../components/BranaTable.jsx';
+import { PacientesAlphabet } from './PacientesAlphabet.jsx';
 
 export function PacientesTable({
   items,
@@ -9,30 +10,63 @@ export function PacientesTable({
   selectedRowKeys,
   count,
   onSelect,
+  alphabetOptions,
+  activeAlphabet,
+  onDoubleClick,
 }) {
   const columns = [
+    {
+      key: 'codigo',
+      title: 'Número',
+      dataIndex: 'codigo',
+      width: 110,
+      align: 'center',
+      render: (value) => <Typography.Text strong>{value ?? '-'}</Typography.Text>,
+    },
     {
       key: 'nome',
       title: 'Nome',
       dataIndex: 'nome',
       ellipsis: true,
+      width: 280,
       render: (value) => <span title={value || ''}>{value || '-'}</span>,
     },
     {
-      key: 'codigo',
-      title: 'Número',
-      dataIndex: 'codigo',
-      width: 120,
-      align: 'center',
-      render: (value) => <Typography.Text strong>{value ?? '-'}</Typography.Text>,
+      key: 'telefone1',
+      title: 'Telefone 1',
+      dataIndex: 'telefone1',
+      width: 150,
+      render: (value) => value || '-',
+    },
+    {
+      key: 'prestador',
+      title: 'Prestador',
+      dataIndex: 'prestador',
+      width: 220,
+      ellipsis: true,
+      render: (value) => <span title={value || ''}>{value || '-'}</span>,
+    },
+    {
+      key: 'situacao',
+      title: 'Situação',
+      dataIndex: 'situacao',
+      width: 140,
+      render: (value) => value || '-',
     },
   ];
 
   return (
     <div className="pacientes-table-shell">
       {error ? <div className="pacientes-table-error"><Tag color="red">Erro</Tag><Typography.Text type="danger">{error}</Typography.Text></div> : null}
-      <div className="module-table-shell">
-        <div className="users-grid-shell pacientes-grid-shell" role="grid" aria-label="Listagem de pacientes">
+      <div className="pacientes-table-frame">
+        <PacientesAlphabet
+          options={alphabetOptions}
+          activeValue={activeAlphabet}
+          onChange={(value) => window.dispatchEvent(new CustomEvent('brana-pacientes-toolbar-action', {
+            detail: { action: 'set-preference', key: 'active_ord_menu_pac', value },
+          }))}
+        />
+        <div className="pacientes-table-grid" role="grid" aria-label="Listagem de pacientes">
           <BranaTable
             rowKey="id"
             className="module-table auxiliary-compact-table pacientes-table"
@@ -55,7 +89,7 @@ export function PacientesTable({
               'data-row-id': record.id,
               'data-selected': Number(record.id) === Number(selectedId) ? 'true' : 'false',
               onClick: () => onSelect?.(record),
-              onDoubleClick: () => onSelect?.(record),
+              onDoubleClick: () => onDoubleClick?.(record),
             })}
             locale={{
               emptyText: loading ? (
@@ -69,10 +103,9 @@ export function PacientesTable({
             }}
           />
         </div>
-      </div>
-
-      <div className="pacientes-table-footer" aria-live="polite">
-        <Typography.Text type="secondary">{count} {count === 1 ? 'paciente' : 'pacientes'}</Typography.Text>
+        <div className="pacientes-table-footer" aria-live="polite">
+          <Typography.Text type="secondary">{count} {count === 1 ? 'paciente' : 'pacientes'}</Typography.Text>
+        </div>
       </div>
     </div>
   );

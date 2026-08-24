@@ -1,5 +1,5 @@
 import { Button, Input, Select, Space, Typography } from 'antd';
-import { LeftOutlined, RightOutlined, SearchOutlined, VerticalAlignBottomOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 
 function optionLabel(item) {
   return item?.label || item?.name || item?.titulo || String(item?.id ?? '');
@@ -14,12 +14,13 @@ export function PacientesToolbar({
   onPreferenceChange,
   onSearchChange,
   onSearchApply,
-  onNavigate,
+  onNew,
+  onEdit,
 }) {
-  const cirurgiaoOptions = [
-    { value: 0, label: '<<Todos>>' },
-    ...(optionSets?.cirurgioes || []).map((item) => ({ value: Number(item.id || 0) || 0, label: optionLabel(item) })),
-  ];
+  const cirurgiaoOptions = (optionSets?.cirurgioes?.length
+    ? optionSets.cirurgioes
+    : [{ id: 0, label: '<<Todos>>' }]
+  ).map((item) => ({ value: Number(item.id || 0) || 0, label: optionLabel(item) }));
 
   const statusOptions = (optionSets?.filtro_status || []).map((item) => ({ value: Number(item.id || 0) || 0, label: optionLabel(item) }));
   const visualizacaoOptions = (optionSets?.visualizacao || []).map((item) => ({ value: Number(item.id || 0) || 0, label: optionLabel(item) }));
@@ -28,33 +29,16 @@ export function PacientesToolbar({
   return (
     <div className="pacientes-toolbar" role="toolbar" aria-label="Barra operacional de pacientes">
       <div className="pacientes-toolbar-actions">
-        <button type="button" className="auxiliary-shell-button primary" disabled>
+        <button type="button" className="auxiliary-shell-button primary" onClick={onNew}>
           Novo cadastro
         </button>
-        <button type="button" className="auxiliary-shell-button" disabled={!hasSelection || loading}>
+        <button type="button" className="auxiliary-shell-button" disabled={!hasSelection || loading} onClick={onEdit}>
           Altera
         </button>
         <button type="button" className="auxiliary-shell-button danger" disabled>
           Elimina
         </button>
-        <Button icon={<VerticalAlignBottomOutlined />} disabled>
-          Imprime
-        </Button>
-        <Button icon={<LeftOutlined />} disabled={loading} onClick={() => onNavigate?.('first')}>
-          |&lt;
-        </Button>
-        <Button icon={<LeftOutlined />} disabled={loading || !hasSelection} onClick={() => onNavigate?.('prev')}>
-          &lt;
-        </Button>
-        <Button icon={<RightOutlined />} disabled={loading || !hasSelection} onClick={() => onNavigate?.('next')}>
-          &gt;
-        </Button>
-        <Button icon={<RightOutlined />} disabled={loading} onClick={() => onNavigate?.('last')}>
-          &gt;|
-        </Button>
-        <button type="button" className="auxiliary-shell-button" disabled>
-          Odontograma
-        </button>
+        <span className="materiais-estoque-toolbar-divider" aria-hidden="true" />
       </div>
 
       <div className="pacientes-toolbar-filters">
@@ -66,6 +50,8 @@ export function PacientesToolbar({
             onChange={(value) => onPreferenceChange?.('cir_menu_pac', value)}
             loading={loading}
             size="small"
+            popupClassName="pacientes-toolbar-select-dropdown"
+            popupMatchSelectWidth={false}
             showSearch
             optionFilterProp="label"
           />
@@ -79,6 +65,8 @@ export function PacientesToolbar({
             onChange={(value) => onPreferenceChange?.('status_menu_pac', value)}
             loading={loading}
             size="small"
+            popupClassName="pacientes-toolbar-select-dropdown"
+            popupMatchSelectWidth={false}
             showSearch
             optionFilterProp="label"
           />
@@ -92,6 +80,8 @@ export function PacientesToolbar({
             onChange={(value) => onPreferenceChange?.('visualizacao_menu_pac', value)}
             loading={loading}
             size="small"
+            popupClassName="pacientes-toolbar-select-dropdown"
+            popupMatchSelectWidth={false}
             showSearch
             optionFilterProp="label"
           />
@@ -105,17 +95,19 @@ export function PacientesToolbar({
             onChange={(value) => onPreferenceChange?.('pesquisa_menu_pac', value)}
             loading={loading}
             size="small"
+            popupClassName="pacientes-toolbar-select-dropdown"
+            popupMatchSelectWidth={false}
           />
         </label>
 
         <label className="pacientes-toolbar-field pacientes-toolbar-search">
-          <Typography.Text className="pacientes-toolbar-label">Pesquisar nome do paciente</Typography.Text>
+          <Typography.Text className="pacientes-toolbar-label">Pesquisar nome</Typography.Text>
           <Space.Compact block>
             <Input
               allowClear
               value={queryDraft}
               prefix={<SearchOutlined />}
-              placeholder="Digite nome, número ou %sobrenome"
+              placeholder="Digite nome, número ou sobrenome"
               onChange={(event) => onSearchChange?.(event.target.value)}
               onPressEnter={(event) => onSearchApply?.(event.target.value)}
             />
