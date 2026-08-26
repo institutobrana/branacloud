@@ -6715,3 +6715,10 @@ Observacoes:
 - **Nao incluido:** Prestadores, Credenciamentos, Comissoes, Unidades de
   atendimento, Motivos/Situacao de agendamento, ADM e Financeiro.
 - Documento consolidado: `docs/fechamento_t2b_configura_horarios_agendamento.md`.
+
+## Fechamento DC.CLOSE.1 — Ficha Pessoal / Dados complementares
+
+- **IMPLEMENTADA / HOMOLOGADA / FECHADA** — a aba `Ficha Pessoal -> Dados complementares` foi implementada no React, integrada ao `Grava` global, validada em runtime pelo usuário e encerrada documentalmente.
+- O contrato preserva `matricula`, `extra`, catálogos textuais, CEP comercial, autocompletes livres, CPF do responsável, `extra.horario_trab`, flags booleanas, limpeza de palavras-chave e valores históricos fora de catálogo.
+- Documento consolidado: `docs/fechamento_dados_complementares_paciente_react_dc_close_1.md`.
+- Permanecem futuras e não bloqueantes a modernização de vínculos/IDs, o estudo `Paciente.apelido` versus `extra.apelido` e a paridade adicional com EasyDental.

@@ -19,12 +19,51 @@ export function listarOpcoesFichaPaciente() {
   return requestJson('/cadastros/pacientes/menu-options');
 }
 
+export function listarAuxiliarFicha(tipo) {
+  return requestJson(`/cadastros/auxiliares?tipo=${encodeURIComponent(tipo)}`).then((data) => (
+    Array.isArray(data)
+      ? data
+        .map((item) => String(typeof item === 'string' ? item : item?.descricao || '').trim())
+        .filter(Boolean)
+      : []
+  ));
+}
+
+export function listarUnidadesFicha() {
+  return requestJson('/cadastros/unidades-atendimento/combos');
+}
+
+export function listarPrestadoresFicha() {
+  return requestJson('/cadastros/prestadores');
+}
+
 export function listarConveniosPlanosCombos() {
   return requestJson('/cadastros/convenios-planos/combos');
 }
 
+export function obterPreferenciasGerais() {
+  return requestJson('/preferences/general');
+}
+
 export function listarTiposIndicacao() {
   return requestJson('/cadastros/auxiliares?tipo=Tipos%20de%20indicação');
+}
+
+export function lookupCep(cep) {
+  return requestJson(`/cadastros/cep/${encodeURIComponent(String(cep || ''))}`);
+}
+
+export function buscarPacientesIndicacao(q) {
+  return requestJson(`/cadastros/pacientes?q=${encodeURIComponent(String(q || ''))}&limit=20`);
+}
+
+export function buscarSugestoesPorSobrenome(sobrenome) {
+  const params = new URLSearchParams({ sobrenome: String(sobrenome || '').trim(), limit: '15' });
+  return requestJson(`/cadastros/pacientes/sugestoes-sobrenome?${params.toString()}`);
+}
+
+export function buscarContatosIndicacao(q) {
+  return requestJson(`/agenda-contatos?q=${encodeURIComponent(String(q || ''))}&limit=20`);
 }
 
 export function createPaciente(payload) {
