@@ -15,6 +15,13 @@ Este arquivo deve ser consultado antes de iniciar qualquer nova tarefa.
 ---
 # 11 - Roadmap de Desenvolvimento
 
+## Fechamento H.CLOSE.1 - Historico do paciente
+
+- A aba Historico da Ficha Pessoal foi congelada como baseline homologada em 2026-08-26, com toolbar, grade, insercao/edicao inline, Propriedades, cor, auditoria, ordenacao e Delete estabilizado.
+- A documentacao consolidada esta em `docs/fechamento_historico_paciente_react_h_close_1.md`.
+- A migracao EasyDental do piloto 214 (648 registros) foi adiada por decisao do usuario. H.M1 e H.M2 permanecem nao executadas.
+- Grava global, auditoria legada e eventual expansao da paleta permanecem pendencias documentadas, sem implementacao nesta fase.
+
 ## Objetivo
 
 Este documento registra o estado atual dos modulos do Brana Cloude com base no codigo existente em `backend/` e `frontend/`. Ele nao substitui o codigo como fonte da verdade; serve como mapa operacional para desenvolvedores e IAs entenderem o que ja existe, o que esta pendente e qual deve ser o proximo passo.
