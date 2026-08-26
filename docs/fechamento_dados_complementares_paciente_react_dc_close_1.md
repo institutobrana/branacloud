@@ -70,4 +70,8 @@ Essas pendências não bloqueiam a aba homologada atual.
 
 ## Âncora
 
-Commit e tag locais serão preenchidos no fechamento Git desta frente. Push, AWS, deploy, banco e EasyDental permanecem fora do escopo.
+Commit funcional de fechamento: `437b4efd5976a123f6686b72a1951968f896c6fa`.
+
+Tag anotada local: `anchor-pacientes-dados-complementares-react-homologado-2026-08-26`.
+
+O commit documental final registra esta referência. Push, AWS, deploy, banco e EasyDental permanecem fora do escopo.
