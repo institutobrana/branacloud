@@ -65,6 +65,9 @@ Remote: `origin https://github.com/institutobrana/branacloud.git`
 
 O worktree ja continha alteracoes de varias frentes. A ancora deve ser criada por stage seletivo, sem incluir essas alteracoes. Apos a criacao, registrar neste documento o hash completo, hash curto e tag anotada local.
 
+Commit de documentacao: `c6382bc1c3f7426a4d004cefca8a06f2e7f73f2b`
+Tag de baseline: `anchor-pacientes-historico-react-homologado-2026-08-26`
+
 Para diagnosticar regressao sem rollback destrutivo:
 
 ```text
