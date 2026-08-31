@@ -27,6 +27,7 @@ import { MateriaisEstoquePage } from '../features/materiaisEstoque/MateriaisEsto
 import { ServicosProteticoPage } from '../features/servicosProtetico/ServicosProteticoPage.jsx';
 import { ServicosProteticoToolbar } from '../features/servicosProtetico/components/ServicosProteticoToolbar.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
+import { ConfiguracaoPreferenciasModal } from '../features/configuracaoPreferencias/components/ConfiguracaoPreferenciasModal.jsx';
 import { CenarioAnualPage } from '../features/cenarioAnual/CenarioAnualPage.jsx';
 import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/components/IndicesFinanceirosToolbar.jsx';
 import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFinanceirosPage.jsx';
@@ -102,6 +103,7 @@ const contextualMenus = {
   ],
   configuracao: [
     { key: 'agendas', label: 'Agenda' },
+    { key: 'configuracao-preferencias', label: 'Preferências' },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
     { key: 'cenario-anual', label: 'Cenário anual' },
     { key: 'indices-financeiros', label: 'Índices financeiros' },
@@ -166,6 +168,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
+  if (path === `${base}/configuracoes/preferencias`) return 'configuracao-preferencias';
   if (path === `${base}/financeiro/conta-corrente-cirurgiao`) return 'conta-corrente-cirurgiao';
   if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
   if (path === `${base}/tabelas-auxiliares`) return 'tabelas-auxiliares';
@@ -206,6 +209,8 @@ function syncAppPath(screen) {
           ? appPath('configuracoes/unidades-atendimento')
           : screen === 'questionarios-anamnese'
             ? appPath('configuracoes/questionarios-anamnese')
+          : screen === 'configuracao-preferencias'
+            ? appPath('configuracoes/preferencias')
           : screen === 'conta-corrente-cirurgiao'
             ? appPath('financeiro/conta-corrente-cirurgiao')
           : screen === 'prestadores'
@@ -389,6 +394,7 @@ function AppContent() {
     if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
     if (initialScreen === 'questionarios-anamnese') return 'configuracao';
+    if (initialScreen === 'configuracao-preferencias') return 'configuracao';
     return 'atendimento';
   });
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
@@ -826,6 +832,10 @@ function AppContent() {
       handleNavigate('conta-corrente-cirurgiao');
       return;
     }
+    if (groupKey === 'configuracao' && item?.key === 'configuracao-preferencias' && !item?.disabled) {
+      handleNavigate('configuracao-preferencias');
+      return;
+    }
     if (groupKey === 'configuracao' && item?.key === 'agendas' && !item?.disabled) {
       setAgendaConfiguracaoState({
         open: true,
@@ -1055,6 +1065,9 @@ function AppContent() {
     }
     if (screen === 'questionarios-anamnese') {
       return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
+    }
+    if (screen === 'configuracao-preferencias') {
+      return <div className="brana-empty-state" aria-hidden="true" />;
     }
     if (screen === 'agenda-configuracao') {
       return <div className="brana-empty-state" aria-hidden="true" />;
@@ -1612,6 +1625,8 @@ function AppContent() {
             simbolosGraficosTopBar
           ) : screen === 'questionarios-anamnese' ? (
             questionariosTopBar
+          ) : screen === 'configuracao-preferencias' ? (
+            <div className="brana-shell-band auxiliary-shell-band auxiliary-shell-band-empty" aria-label="Barra operacional de Configuração e Preferências" />
           ) : null}
           <BranaIconRail
             activeKey={activeKey}
@@ -1678,6 +1693,10 @@ function AppContent() {
           open={preferenciasOpen}
           userName={user?.apelido || user?.nome || user?.email || 'Tel'}
           onClose={() => setPreferenciasOpen(false)}
+        />
+        <ConfiguracaoPreferenciasModal
+          open={screen === 'configuracao-preferencias'}
+          onClose={() => handleNavigate('dashboard')}
         />
         <InsereLancamentoModal
           open={contaCorrenteLaunchModal.open}

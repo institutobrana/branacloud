@@ -1,0 +1,91 @@
+.config-preferencias-modal .ant-modal-content,
+.config-preferencias-modal .ant-modal-header,
+.config-preferencias-modal.ant-modal .ant-modal-body,
+.config-preferencias-modal .ant-modal-footer {
+  background: #f5f0e6;
+}
+.config-preferencias-modal .ant-modal-content { background: #f5f0e6 !important; }
+.config-preferencias-modal .ant-modal-header { background: #f5f0e6 !important; }
+.config-preferencias-modal .ant-modal-footer { background: #f5f0e6 !important; }
+
+:root[data-brana-theme='dark'] .config-preferencias-modal .ant-modal-content,
+:root[data-brana-theme='dark'] .config-preferencias-modal .ant-modal-header,
+:root[data-brana-theme='dark'] .config-preferencias-modal.ant-modal .ant-modal-body,
+:root[data-brana-theme='dark'] .config-preferencias-modal .ant-modal-footer {
+  background: #142225 !important;
+}
+.config-preferencias-tabs { min-height: 280px; }
+.config-preferencias-geral { display: grid; gap: 10px; color: var(--brana-text-primary); }
+.config-preferencias-general-grid { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 12px; align-items: stretch; }
+.config-preferencias-general-grid .config-preferencias-field { grid-template-rows: minmax(32px, auto) auto; align-content: end; }
+.config-preferencias-field { display: grid; gap: 4px; min-width: 0; font-size: 12px; }
+.config-preferencias-field > .ant-select, .config-preferencias-field > .ant-input { width: 100%; }
+.config-preferencias-divider { border-top: 1px solid var(--brana-border-subtle); }
+.config-preferencias-checks { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 12px; }
+.config-preferencias-alarm { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.config-preferencias-alarm .ant-input-number { width: 52px; }
+.config-preferencias-modelos { display: grid; gap: 8px; min-height: 250px; }
+.config-preferencias-model-row { display: grid; grid-template-columns: 205px minmax(0, 1fr); gap: 12px; align-items: center; font-size: 12px; }
+.config-preferencias-model-row .ant-select { width: 100%; }
+.config-preferencias-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.config-preferencias-error { margin-bottom: 8px; }
+.config-preferencias-odontograma { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; min-height: 250px; color: var(--brana-text-primary); }
+.config-preferencias-odontograma-column { min-width: 0; display: grid; align-content: start; gap: 12px; }
+.config-preferencias-odontograma-box { display: grid; gap: 7px; margin: 0; padding: 10px; border: 1px solid var(--brana-border-subtle); color: var(--brana-text-primary); }
+.config-preferencias-odontograma-box legend { padding: 0 5px; font-size: 12px; }
+.config-preferencias-odontograma-box .ant-checkbox-wrapper { font-size: 12px; }
+.config-preferencias-odontograma-colors { gap: 9px; }
+.config-preferencias-odontograma-color-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 10px; align-items: center; font-size: 12px; }
+.config-preferencias-odontograma-color-select { position: relative; min-width: 0; }
+.config-preferencias-odontograma-color-trigger { display: grid; grid-template-columns: 18px minmax(0, 1fr) 14px; align-items: center; gap: 5px; width: 100%; min-height: 28px; padding: 3px 6px; color: var(--brana-text-primary); background: var(--brana-surface-panel); border: 1px solid var(--brana-border-subtle); cursor: pointer; text-align: left; }
+.config-preferencias-odontograma-color-swatch { display: inline-block; width: 14px; height: 12px; border: 1px solid currentColor; box-sizing: border-box; }
+.config-preferencias-odontograma-color-options { position: absolute; z-index: 30; left: 0; top: calc(100% + 2px); width: 100%; max-height: 230px; overflow-y: auto; padding: 3px; background: var(--brana-surface-panel); border: 1px solid var(--brana-border-subtle); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.config-preferencias-odontograma-color-option { display: grid; grid-template-columns: 18px 1fr; align-items: center; gap: 5px; width: 100%; padding: 4px 5px; color: var(--brana-text-primary); background: transparent; border: 0; text-align: left; cursor: pointer; }
+.config-preferencias-odontograma-color-option:hover, .config-preferencias-odontograma-color-option.is-selected { color: var(--brana-text-inverse); background: var(--brana-primary, #00a79d); }
+.config-preferencias-placeholder { min-height: 250px; padding: 18px 8px; color: var(--brana-text-secondary); }
+.config-preferencias-dados-usuario { display: grid; grid-template-columns: 1.1fr 1.1fr 1fr 1.2fr; gap: 10px 12px; min-height: 250px; color: var(--brana-text-primary); }
+.config-preferencias-dados-span-all { grid-column: 1 / -1; }
+.config-preferencias-ambiente-frame { min-height: 250px; border: 1px solid var(--brana-border-subtle); color: var(--brana-text-primary); padding: 8px; }
+.config-preferencias-ambiente-frame legend { padding: 0 6px; font-size: 12px; }
+.config-preferencias-ambiente-layout { display: grid; grid-template-columns: 128px 430px; gap: 10px; align-items: start; }
+.config-preferencias-ambiente-label { display: block; margin-bottom: 4px; font-size: 12px; }
+.config-preferencias-ambiente-section-list { border: 1px solid var(--brana-border-subtle); background: var(--brana-surface-panel); padding: 2px; display: grid; gap: 1px; }
+.config-preferencias-ambiente-section { border: 0; background: transparent; color: var(--brana-text-primary); text-align: left; padding: 4px 5px; font-size: 11px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.config-preferencias-ambiente-section.is-active { background: var(--brana-primary, #00a79d); color: var(--brana-text-inverse); }
+.config-preferencias-ambiente-main { min-width: 0; }
+.config-preferencias-ambiente-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 12px; }
+.config-preferencias-ambiente-heading .ant-btn { padding: 0 4px; height: auto; }
+.config-preferencias-ambiente-preview { width: 360px; min-height: 150px; border: 1px solid var(--brana-border-subtle); background: var(--brana-surface-panel); padding: 8px; display: grid; grid-template-columns: 170px 132px; gap: 10px; }
+.config-preferencias-ambiente-preview-left { display: grid; align-content: start; justify-items: start; gap: 7px; }
+.config-preferencias-ambiente-preview-left label { display: flex; gap: 5px; align-items: center; font-size: 11px; white-space: nowrap; }
+.config-preferencias-ambiente-preview input:not([type='checkbox']):not([type='radio']) { width: 145px; box-sizing: border-box; background: var(--brana-surface-modal); color: inherit; border: 1px solid var(--brana-border-subtle); }
+.config-preferencias-ambiente-preview button { width: fit-content; background: var(--brana-surface-modal); color: inherit; border: 1px solid var(--brana-border-subtle); padding: 3px 9px; }
+.config-preferencias-ambiente-preview-list { align-self: start; margin-top: 0; border: 1px solid var(--brana-border-subtle); background: var(--brana-surface-modal); padding: 2px 5px; min-height: 72px; }
+.config-preferencias-ambiente-preview-list .is-selected { background: var(--brana-primary, #00a79d); color: var(--brana-text-inverse); }
+.config-preferencias-ambiente-actions { width: 360px; display: flex; justify-content: center; margin-top: 3px; }
+.config-preferencias-ambiente-heading .ant-btn { padding: 0 6px; font-size: 12px; }
+.config-preferencias-ambiente-actions .ant-btn { font-size: 12px; }
+.config-preferencias-font-top { display: grid; grid-template-columns: 1.2fr 1fr 72px; gap: 8px; align-items: start; }
+.config-preferencias-font-top > label { display: grid; gap: 4px; font-size: 12px; min-width: 0; }
+.config-preferencias-font-current { height: 24px; padding: 3px 6px; border: 1px solid var(--brana-border-subtle); background: var(--brana-surface-panel); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.config-preferencias-font-list { width: 100%; min-height: 150px; padding: 2px; border: 1px solid var(--brana-border-subtle); background: var(--brana-surface-panel); color: var(--brana-text-primary); font: inherit; }
+.config-preferencias-font-list option:checked { background: var(--brana-primary, #00a79d); color: var(--brana-text-inverse); }
+.config-preferencias-font-bottom { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 10px; align-items: start; margin-top: 10px; }
+.config-preferencias-font-effects, .config-preferencias-font-example { margin: 0; border: 1px solid var(--brana-border-subtle); padding: 8px; color: var(--brana-text-primary); }
+.config-preferencias-font-effects { display: grid; gap: 8px; font-size: 12px; }
+.config-preferencias-font-effects legend, .config-preferencias-font-example legend { padding: 0 5px; font-size: 12px; }
+.config-preferencias-font-effects label { display: flex; align-items: center; gap: 5px; }
+.config-preferencias-font-example-column { min-width: 0; }
+.config-preferencias-font-preview { min-height: 108px; display: grid; place-items: center; border: 1px solid var(--brana-border-subtle); background: var(--brana-surface-panel); }
+.config-preferencias-font-script { display: grid; gap: 4px; margin-top: 8px; font-size: 12px; }
+.config-preferencias-font-script .ant-select { width: 100%; }
+.config-preferencias-font-list-field { display: grid; gap: 4px; min-width: 0; font-size: 12px; }
+.config-preferencias-font-color-select { position: relative; width: 120px; }
+.config-preferencias-font-color-trigger { display: grid; grid-template-columns: 18px minmax(0,1fr) 14px; align-items: center; gap: 4px; width: 100%; min-height: 26px; padding: 3px 5px; color: var(--brana-text-primary); background: var(--brana-surface-panel); border: 1px solid var(--brana-border-subtle); cursor: pointer; text-align: left; }
+.config-preferencias-font-color-swatch { display: inline-block; width: 14px; height: 11px; border: 1px solid currentColor; box-sizing: border-box; }
+.config-preferencias-font-color-options { position: absolute; z-index: 20; left: 0; top: calc(100% + 2px); width: 170px; max-height: 220px; overflow-y: auto; padding: 3px; background: var(--brana-surface-panel); border: 1px solid var(--brana-border-subtle); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.config-preferencias-font-color-option { display: grid; grid-template-columns: 18px 1fr; align-items: center; gap: 5px; width: 100%; padding: 4px 5px; color: var(--brana-text-primary); background: transparent; border: 0; text-align: left; cursor: pointer; }
+.config-preferencias-font-color-option:hover, .config-preferencias-font-color-option.is-selected { color: var(--brana-text-inverse); background: var(--brana-primary, #00a79d); }
+@media (max-width: 700px) { .config-preferencias-font-top, .config-preferencias-font-bottom { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .config-preferencias-odontograma { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .config-preferencias-general-grid { grid-template-columns: 1fr; } }
