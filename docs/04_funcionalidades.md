@@ -111,6 +111,10 @@ Controla preferencias gerais, modelos, ambiente, dados do usuario, odontograma, 
 
 Regras: configuracoes pertencem a clinica; opcoes de seguranca podem exigir senha administrativa.
 
+### Fechamento atual de Opções do sistema (React)
+
+O módulo está funcionalmente encerrado e homologado. O contrato atual está em [`docs/contrato_fechamento_opcoes_sistema_react.md`](contrato_fechamento_opcoes_sistema_react.md) e cobre as cinco abas, o modal protegido compartilhado, o contrato Ok/Cancelar/X, os campos financeiros FIN-001/FIN-002, a classificação não bloqueante de SEC-001 e o PATCH preservador.
+
 ## Licenca e pagamentos
 
 Codigo: `backend/routes/licenca_routes.py`, modelos `plano.py`, `assinatura.py`, `plataforma.py`.
