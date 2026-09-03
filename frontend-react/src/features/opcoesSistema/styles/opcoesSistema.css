@@ -1,0 +1,109 @@
+.opcoes-sistema-modal .ant-modal-content,
+.opcoes-sistema-modal .ant-modal-header,
+.opcoes-sistema-modal.ant-modal .ant-modal-body,
+.opcoes-sistema-modal .ant-modal-footer { background: #f5f0e6; }
+.opcoes-sistema-modal .ant-modal-content,
+.opcoes-sistema-modal .ant-modal-header,
+.opcoes-sistema-modal .ant-modal-footer { background: #f5f0e6 !important; }
+.opcoes-sistema-modal .ant-modal-content { height: 443.375px; box-sizing: border-box; }
+.opcoes-sistema-modal .ant-modal-body { height: 371px; box-sizing: border-box; overflow: visible; }
+.opcoes-sistema-tabs { min-height: 280px; }
+.opcoes-sistema-pane-content { display: grid; gap: 12px; min-height: 250px; color: var(--brana-text-primary); }
+.opcoes-sistema-pane-content h3 { margin: 0; font-size: 13px; }
+.opcoes-sistema-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; align-items: end; min-height: 250px; color: var(--brana-text-primary); }
+.opcoes-sistema-grid.clinica { grid-template-areas: "nome nome nome" "endereco endereco complemento" "cep uf telefones" "cnpj ie ie"; }
+.clinica-nome { grid-area: nome; } .clinica-endereco { grid-area: endereco; } .clinica-complemento { grid-area: complemento; } .clinica-cep { grid-area: cep; } .clinica-uf { grid-area: uf; } .clinica-telefones { grid-area: telefones; } .clinica-cnpj { grid-area: cnpj; } .clinica-ie { grid-area: ie; }
+.opcoes-sistema-grid.financeiro { grid-template-columns: 270px minmax(0,1fr) 70px; grid-template-areas: "periodo periodo periodo" "indice moeda sigla" "cobranca categoria categoria" "relatorios relatorios relatorios"; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] { gap: 6px; }
+.opcoes-sistema-grid.financeiro { row-gap: 5px; column-gap: 6px; min-height: 0; }
+.opcoes-sistema-grid.financeiro .opcoes-sistema-field,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field { gap: 2px; font-size: 10px; line-height: 14px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field > span { font-size: 11px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field input,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field .ant-input,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field .ant-select-selector,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field .ant-input-number { height: 22px !important; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-field .ant-select { height: 22px !important; font-size: 12px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-periodo { grid-area: periodo; display: grid; grid-template-columns: max-content minmax(16px,1fr) 70px; align-items: center; column-gap: 8px; font-size: 10px; line-height: 14px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-periodo > span { white-space: nowrap; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-periodo > span:first-child { font-size: 11px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-periodo .financeiro-periodo-guide { min-width: 16px; border-bottom: 1px dotted currentColor; opacity: .55; align-self: end; margin-bottom: 1px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-periodo .ant-input-number { width: 70px; height: 22px !important; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-input,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-select,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-select-selector,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-input-number { height: 22px !important; min-height: 22px !important; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-input-number-input { height: 20px !important; font-size: 12px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-input,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-input-number,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-select-selector { font-size: 12px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-select-selection-item,
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .ant-select-selection-placeholder,
+.opcoes-sistema-financeiro-select-popup .ant-select-item-option-content { font-size: 11px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-relatorios { justify-self: start; width: 150px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-relatorios .ant-select { width: 150px !important; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .financeiro-relatorios > span { white-space: nowrap; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-checks { gap: 4px; font-size: 10px; line-height: 16px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-checks .ant-checkbox-wrapper { line-height: 16px; }
+.opcoes-sistema-pane-content[aria-label="Opções financeiras"] .opcoes-sistema-checks .ant-checkbox { transform: scale(.8); transform-origin: left center; }
+.financeiro-indice { grid-area: indice; } .financeiro-moeda { grid-area: moeda; } .financeiro-sigla { grid-area: sigla; } .financeiro-periodo { grid-area: periodo; } .financeiro-cobranca { grid-area: cobranca; } .financeiro-categoria { grid-area: categoria; } .financeiro-relatorios { grid-area: relatorios; }
+.opcoes-sistema-grid.avancado { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] { gap: 0; }
+.opcoes-sistema-grid.avancado { gap: 2px; }
+.opcoes-sistema-grid.avancado .opcoes-sistema-field { gap: 2px; font-size: 10px; line-height: 14px; }
+.opcoes-sistema-grid.avancado .opcoes-sistema-field > span { font-size: 11px; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field input,
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field .ant-select-selector,
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field .ant-input-number { height: 22px !important; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field .ant-select { height: 22px !important; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field .ant-input,
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field .ant-select-selector,
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-field .ant-input-number { height: 22px !important; font-size: 12px; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-checks { gap: 4px; font-size: 10px; line-height: 16px; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-checks .ant-checkbox-wrapper { line-height: 16px; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"] .opcoes-sistema-checks .ant-checkbox { transform: scale(.8); transform-origin: left center; }
+.opcoes-sistema-pane-content[aria-label="Opções avançadas"],
+.opcoes-sistema-grid.avancado { min-height: 0; }
+.opcoes-sistema-grid.data { grid-template-columns: minmax(0,1.35fr) minmax(0,1.1fr) minmax(0,.8fr); grid-template-areas: "formato atual hora" "ano ano ano" "semanas semanas semanas"; gap: 6px 12px; min-height: 0; align-content: start; }
+.opcoes-sistema-grid.data .data-formato { grid-area: formato; }
+.opcoes-sistema-grid.data .data-atual { grid-area: atual; }
+.opcoes-sistema-grid.data .data-hora { grid-area: hora; }
+.opcoes-sistema-grid.data .data-ano { grid-area: ano; }
+.opcoes-sistema-grid.data .data-semanas { grid-area: semanas; }
+.opcoes-sistema-grid.data .opcoes-sistema-field { gap: 2px; font-size: 10px; line-height: 14px; }
+.opcoes-sistema-grid.data .opcoes-sistema-field > span { font-size: 11px; }
+.opcoes-sistema-grid.data .ant-input,.opcoes-sistema-grid.data .ant-select,.opcoes-sistema-grid.data .ant-select-selector,.opcoes-sistema-grid.data .ant-input-number { height: 22px !important; min-height: 22px !important; }
+.opcoes-sistema-grid.data .ant-input,.opcoes-sistema-grid.data .ant-select-selector,.opcoes-sistema-grid.data .ant-input-number { font-size: 12px; }
+.opcoes-sistema-grid.data .data-hora-fields { display: grid; grid-template-columns: 32px max-content 32px; align-items: center; gap: 4px; }
+.opcoes-sistema-grid.data .data-hora-fields .ant-input { width: 32px; padding: 0 4px; text-align: center; }
+.opcoes-sistema-grid.data .data-hora-fields > span { font-size: 12px; line-height: 22px; }
+.opcoes-sistema-grid.data .data-line { display: grid; grid-template-columns: max-content minmax(16px,1fr) 55px; align-items: center; column-gap: 8px; font-size: 10px; line-height: 14px; }
+.opcoes-sistema-grid.data .data-line > span:first-child { white-space: nowrap; }
+.opcoes-sistema-grid.data .data-line-guide { min-width: 16px; border-bottom: 1px dotted currentColor; opacity: .55; align-self: end; margin-bottom: 1px; }
+.opcoes-sistema-grid.data .data-line .ant-input-number { width: 55px; }
+.opcoes-sistema-grid.data .data-line .ant-input-number-input { height: 20px !important; font-size: 12px; text-align: center; }
+.opcoes-sistema-field { display: grid; gap: 4px; min-width: 0; font-size: 12px; }
+.opcoes-sistema-field > input,.opcoes-sistema-field > .ant-input,.opcoes-sistema-field > .ant-select,.opcoes-sistema-field > .ant-input-number { width: 100%; }
+.span-all { grid-column: 1/-1; }
+.opcoes-sistema-checks { display: grid; gap: 7px; font-size: 12px; }
+.opcoes-sistema-security { align-content: start; gap: 8px; }
+.opcoes-sistema-security-checks { display: grid; justify-items: start; gap: 4px; font-size: 12px; }
+.opcoes-sistema-security-checks .ant-checkbox-wrapper { line-height: 20px; }
+.opcoes-sistema-security-permissions { width: fit-content; align-self: start; }
+.opcoes-sistema-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; background: #f5f0e6; }
+.opcoes-sistema-error { margin-bottom: 8px; }
+:root[data-brana-theme='dark'] .opcoes-sistema-modal .ant-modal-content,
+:root[data-brana-theme='dark'] .opcoes-sistema-modal .ant-modal-header,
+:root[data-brana-theme='dark'] .opcoes-sistema-modal.ant-modal .ant-modal-body,
+:root[data-brana-theme='dark'] .opcoes-sistema-modal .ant-modal-footer,
+:root[data-brana-theme='dark'] .opcoes-sistema-modal .opcoes-sistema-footer { background: #142225 !important; }
+@media (max-width:700px) {
+  .opcoes-sistema-grid,.opcoes-sistema-grid.financeiro,.opcoes-sistema-grid.avancado,.opcoes-sistema-grid.data { grid-template-columns: 1fr; grid-template-areas: none; }
+  .opcoes-sistema-grid.clinica > .opcoes-sistema-field,.opcoes-sistema-grid.financeiro > .opcoes-sistema-field { grid-area: auto; }
+  .span-all { grid-column: auto; }
+  .opcoes-sistema-grid.data { grid-template-areas: none; }
+  .opcoes-sistema-grid.data .data-formato,.opcoes-sistema-grid.data .data-atual,.opcoes-sistema-grid.data .data-hora,.opcoes-sistema-grid.data .data-ano,.opcoes-sistema-grid.data .data-semanas { grid-area: auto; }
+  .opcoes-sistema-grid.data .data-line { grid-template-columns: minmax(0,1fr) 55px; }
+  .opcoes-sistema-grid.data .data-line-guide { display: none; }
+  .opcoes-sistema-grid.data .data-line > span:first-child { white-space: normal; }
+}

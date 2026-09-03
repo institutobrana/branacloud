@@ -313,6 +313,36 @@ def _sanitize_values(values: dict) -> dict:
     return merged
 
 
+def _retain_present_shape(value, source):
+    """Keep only keys supplied by the caller after field validation."""
+    if isinstance(source, dict) and isinstance(value, dict):
+        return {key: _retain_present_shape(value.get(key), item) for key, item in source.items()}
+    return value
+
+
+def _sanitize_incoming_changes(values: dict) -> dict:
+    """Validate supplied fields without injecting defaults for omitted fields."""
+    if not isinstance(values, dict):
+        return {}
+    sanitized = _sanitize_values(values)
+    return _retain_present_shape(sanitized, values)
+
+
+def _merge_system_options(existing: dict, incoming: dict) -> dict:
+    """Merge JSON objects without replacing omitted or unknown nested keys."""
+    if not isinstance(existing, dict):
+        existing = {}
+    if not isinstance(incoming, dict):
+        return dict(existing)
+    merged = dict(existing)
+    for key, value in incoming.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = _merge_system_options(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
 def _carregar_opcoes_auxiliares(db: Session, clinica_id: int) -> dict:
     cobrancas = (
         db.query(ItemAuxiliar)
@@ -392,12 +422,15 @@ def atualizar_opcoes_sistema(
 ):
     _garantir_admin(current_user)
     clinica = _carregar_clinica(db, current_user.clinica_id)
-    values = _sanitize_values(payload.values or {})
+    existing = _load_json(clinica)
+    incoming = _sanitize_incoming_changes(payload.values or {})
+    values = _merge_system_options(existing, incoming)
 
-    nome = str((values.get("clinica") or {}).get("nome") or "").strip()
-    if nome:
-        clinica.nome = nome
-    clinica.cnpj = (values.get("clinica") or {}).get("cnpj")
+    clinica_values = incoming.get("clinica") if isinstance(incoming.get("clinica"), dict) else {}
+    if "nome" in clinica_values:
+        clinica.nome = str(clinica_values["nome"] or "").strip()
+    if "cnpj" in clinica_values:
+        clinica.cnpj = clinica_values["cnpj"]
 
     clinica.opcoes_sistema_json = _dump_json(values)
     db.add(clinica)
