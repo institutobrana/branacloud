@@ -6708,3 +6708,12 @@ Observacoes:
 - **Nao incluido:** Prestadores, Credenciamentos, Comissoes, Unidades de
   atendimento, Motivos/Situacao de agendamento, ADM e Financeiro.
 - Documento consolidado: `docs/fechamento_t2b_configura_horarios_agendamento.md`.
+
+## Fechamento atual — Opções do sistema (React)
+
+- `Configuração → Opções do sistema`: **COMPLETE / ENCERRADO FUNCIONALMENTE**.
+- `SYSTEM_OPTIONS_FINAL_AUDIT = COMPLETE`, `RUNTIME = PASS`, `FINAL_BLOCKERS = 0` e `OPEN_CRITICAL_QUESTIONS = 0`.
+- As cinco abas foram auditadas: Clínica `8/8`, Financeiro `11/11`, Segurança `3/3`, Data `5/5` e Avançado `10/10`, sem divergências funcionais.
+- O contrato V9 de Ok/Cancelar/X está homologado: Ok salva e permanece aberto; Cancelar restaura o último baseline e permanece aberto; X é o único fechamento.
+- O registro atual dos contratos está em `docs/contrato_fechamento_opcoes_sistema_react.md`.
+- `SEC-001` permanece `PROVEN_NON_BLOCKER` / `LEGACY_NO_MODERN_CONSUMER`; isso não reabre o módulo.
