@@ -1,0 +1,22 @@
+.etiquetas-page { padding: 18px 22px; min-width: 0; }
+.etiquetas-table-shell { width: min(100%, 760px); margin: 0 auto; }
+.etiquetas-table-footer { padding: 8px 4px; }
+.etiquetas-loading { min-height: 160px; display: grid; place-items: center; }
+.etiquetas-toolbar-row { display: flex; align-items: center; min-height: 30px; }
+.etiquetas-toolbar-actions { display: flex; gap: 6px; flex-wrap: nowrap; }
+.etiqueta-modelo-modal-layout { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 24px; margin-top: 16px; }
+.etiqueta-modelo-form { display: grid; gap: 12px; }
+.etiqueta-modelo-form label { display: flex; align-items: center; gap: 8px; color: var(--brana-text-primary); font-size: 12px; }
+.etiqueta-modelo-form label > .ant-input, .etiqueta-modelo-form label > .ant-select { flex: 1; min-width: 0; }
+.etiqueta-modelo-top-row, .etiqueta-modelo-grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.etiqueta-modelo-top-row label, .etiqueta-modelo-grid-row label { display: grid; align-items: start; gap: 4px; }
+.etiqueta-modelo-geometry { display: grid; gap: 8px; }
+.etiqueta-modelo-geometry label { white-space: nowrap; }
+.etiqueta-dotted-leader { flex: 1; border-bottom: 1px dotted #9ca3af; }
+.etiqueta-layout-preview { display: grid; place-items: center; gap: 8px; color: var(--brana-text-secondary); font-size: 12px; }
+.etiqueta-layout-sheet { width: 220px; height: 285px; padding: 22px 14px; display: grid; gap: 4px; border: 1px solid #b7c3c5; background: #fff; box-shadow: 0 2px 7px rgba(0,0,0,.12); }
+.etiqueta-layout-cell { border: 1px solid #4caaa4; background: rgba(37, 166, 157, .12); min-width: 0; min-height: 0; }
+.etiqueta-modal-ok, .etiqueta-modal-cancel { border: 1px solid #0f8a83; border-radius: 4px; padding: 5px 16px; cursor: pointer; }
+.etiqueta-modal-ok { color: #fff; background: #0f8a83; }
+.etiqueta-modal-cancel { color: var(--brana-text-primary); background: transparent; }
+@media (max-width: 720px) { .etiqueta-modelo-modal-layout { grid-template-columns: 1fr; } .etiqueta-layout-preview { order: -1; } }
