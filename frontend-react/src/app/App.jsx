@@ -57,6 +57,8 @@ import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGrafi
 import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
 import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciamentos/PrestadorCredenciamentosModal.jsx';
 import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
+import { EtiquetasPage } from '../features/etiquetas/components/EtiquetasPage.jsx';
+import { EtiquetasToolbar } from '../features/etiquetas/components/EtiquetasToolbar.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -105,6 +107,7 @@ const contextualMenus = {
   ],
   configuracao: [
     { key: 'agendas', label: 'Agenda' },
+    { key: 'configuracao-etiquetas', label: 'Etiquetas' },
     { key: 'configuracao-preferencias', label: 'Preferências' },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
     { key: 'cenario-anual', label: 'Cenário anual' },
@@ -166,6 +169,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
   if (path === `${base}/configuracoes/indices-financeiros`) return 'indices-financeiros';
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
+  if (path === `${base}/configuracoes/etiquetas`) return 'configuracao-etiquetas';
   if (path === `${base}/configuracoes/agendas`) return 'agenda-configuracao';
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
@@ -215,6 +219,8 @@ function syncAppPath(screen) {
             ? appPath('configuracoes/questionarios-anamnese')
           : screen === 'configuracao-preferencias'
             ? appPath('configuracoes/preferencias')
+          : screen === 'configuracao-etiquetas'
+            ? appPath('configuracoes/etiquetas')
           : screen === 'conta-corrente-cirurgiao'
             ? appPath('financeiro/conta-corrente-cirurgiao')
           : screen === 'prestadores'
@@ -438,6 +444,7 @@ function AppContent() {
     if (initialScreen === 'cenario-anual') return 'configuracao';
     if (initialScreen === 'indices-financeiros') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
+    if (initialScreen === 'configuracao-etiquetas') return 'configuracao';
     if (initialScreen === 'conta-corrente-cirurgiao') return 'financeiro';
     if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
@@ -710,7 +717,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-etiquetas' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -891,6 +898,10 @@ function AppContent() {
     }
     if (groupKey === 'configuracao' && item?.key === 'configuracao-preferencias' && !item?.disabled) {
       handleNavigate('configuracao-preferencias');
+      return;
+    }
+    if (groupKey === 'configuracao' && item?.key === 'configuracao-etiquetas' && !item?.disabled) {
+      handleNavigate('configuracao-etiquetas');
       return;
     }
     if (groupKey === 'configuracao' && item?.key === 'agendas' && !item?.disabled) {
@@ -1123,6 +1134,9 @@ function AppContent() {
     if (screen === 'questionarios-anamnese') {
       return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
     }
+    if (screen === 'configuracao-etiquetas') {
+      return <EtiquetasPage />;
+    }
     if (screen === 'configuracao-preferencias') {
       return <div className="brana-empty-state" aria-hidden="true" />;
     }
@@ -1203,6 +1217,13 @@ function AppContent() {
               </button>
             </div>
           </div>
+        </div>
+      );
+    }
+    if (screen === 'configuracao-etiquetas') {
+      return (
+        <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional de Etiquetas">
+          <EtiquetasToolbar hasSelection={false} onNew={() => window.dispatchEvent(new CustomEvent('brana-etiquetas-new'))} />
         </div>
       );
     }
@@ -1720,6 +1741,8 @@ function AppContent() {
             simbolosGraficosTopBar
           ) : screen === 'questionarios-anamnese' ? (
             questionariosTopBar
+          ) : screen === 'configuracao-etiquetas' ? (
+            auxiliaryTopBar
           ) : screen === 'configuracao-preferencias' ? (
             <div className="brana-shell-band auxiliary-shell-band auxiliary-shell-band-empty" aria-label="Barra operacional de Configuração e Preferências" />
           ) : null}
