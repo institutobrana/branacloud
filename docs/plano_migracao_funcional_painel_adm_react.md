@@ -478,3 +478,18 @@ Iniciar a Fase 0 visual e estrutural do ADM React, antes de conectar qualquer m�
 - O modal usa somente a cobranca selecionada ja carregada no frontend.
 - Nao foi criada rota, endpoint, requisicao adicional, backend, migration, seed ou integracao financeira.
 - `payload_json` permanece fora do escopo.
+# Fechamento — Senha interna
+
+Status: **COMPLETE / HOMOLOGADO LOCALMENTE**.
+
+- Backend: COMPLETE (`POST /auth/internal-password/change`).
+- Frontend React: COMPLETE (Topbar → Alterar senha interna).
+- Testes unitários e regressões: PASS.
+- Integração PostgreSQL isolado: PASS.
+- Runtime, light, dark e responsivo: PASS.
+- Homologação real reversível: PASS; senha original restaurada: SIM.
+- GitHub: PENDING nesta etapa; AWS: NÃO PUBLICADO.
+
+Separação oficial: Usuários altera a senha de login (`Usuario.senha_hash`); Topbar altera a senha interna (`Usuario.senha_interna_hash`). O fallback para `senha_hash` só ocorre quando `senha_interna_hash` é nula, como compatibilidade legada.
+
+Nota de fechamento: o build global da base remota permanece bloqueado por uma falha pré-existente e não relacionada nesta etapa, em `frontend-react/src/features/contaCorrenteCirurgiao/`, causada por import ausente de `relatorioContaCorrenteModel.js`. A frente Senha Interna não altera esse arquivo nem esse import.

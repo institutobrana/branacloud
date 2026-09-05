@@ -49,11 +49,16 @@ def _resolve_admin_password_hash(admin: Usuario) -> str | None:
     return getattr(admin, "senha_hash", None)
 
 
+def verify_internal_password(usuario: Usuario, senha: str) -> bool:
+    senha_interna_hash = str(getattr(usuario, "senha_interna_hash", "") or "").strip()
+    password_hash = senha_interna_hash or getattr(usuario, "senha_hash", None)
+    if not password_hash:
+        return False
+    return verify_password((senha or "").strip(), password_hash)
+
+
 def verify_admin_password(db: Session, clinica_id: int, senha: str) -> bool:
     admin = resolve_admin_user(db, clinica_id)
     if not admin:
         return False
-    password_hash = _resolve_admin_password_hash(admin)
-    if not password_hash:
-        return False
-    return verify_password((senha or "").strip(), password_hash)
+    return verify_internal_password(admin, senha)

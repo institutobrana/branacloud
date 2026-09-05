@@ -20,7 +20,7 @@ from database import get_db
 from models.clinica import Clinica
 from models.email_code import EmailCode
 from models.usuario import Usuario
-from security.admin_password import verify_admin_password
+from security.admin_password import verify_admin_password, verify_internal_password
 from security.hash import hash_password, verify_password
 from security.jwt_handler import create_access_token, decode_token
 from security.dependencies import get_current_user
@@ -88,6 +88,12 @@ class ProtectedUnlockRequest(BaseModel):
 class SetupCompleteRequest(BaseModel):
     senha: str
     confirma_senha: str
+
+
+class InternalPasswordChangeRequest(BaseModel):
+    senha_interna_atual: str
+    nova_senha_interna: str
+    confirma_senha_interna: str
 
 
 def normalize_email(email: str) -> str:
@@ -719,6 +725,35 @@ def setup_complete(
     db.commit()
 
     return {"detail": "Configuracao inicial concluida com sucesso."}
+
+
+@router.post("/auth/internal-password/change")
+def change_internal_password(
+    payload: InternalPasswordChangeRequest,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    senha_atual = (payload.senha_interna_atual or "").strip()
+    nova_senha = payload.nova_senha_interna or ""
+    confirma_senha = payload.confirma_senha_interna or ""
+    if not senha_atual:
+        raise HTTPException(status_code=400, detail="Informe a senha interna atual.")
+    if not verify_internal_password(current_user, senha_atual):
+        raise HTTPException(status_code=400, detail="Senha interna atual incorreta.")
+    validate_password(nova_senha)
+    if not confirma_senha:
+        raise HTTPException(status_code=400, detail="Confirme a nova senha interna.")
+    if nova_senha != confirma_senha:
+        raise HTTPException(status_code=400, detail="Senha interna e confirmacao devem ser identicas.")
+    usuario = db.query(Usuario).filter(
+        Usuario.id == current_user.id,
+        Usuario.clinica_id == current_user.clinica_id,
+    ).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario nao encontrado.")
+    usuario.senha_interna_hash = hash_password(nova_senha)
+    db.commit()
+    return {"detail": "Senha interna alterada com sucesso."}
 
 
 @router.post("/auth/renew")

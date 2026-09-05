@@ -56,7 +56,7 @@ const toolbarGroups = [
 
 const userMenuItems = [
   { key: 'preferencias', label: 'Preferências' },
-  { key: 'alterar-senha', label: 'Alterar senha' },
+  { key: 'alterar-senha', label: 'Alterar senha interna' },
   { key: 'opcoes-conta', label: 'Opções da conta' },
   { type: 'divider' },
   { key: 'sair', label: 'Sair', icon: <UserOutlined /> },

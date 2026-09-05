@@ -27,6 +27,7 @@ import { MateriaisEstoquePage } from '../features/materiaisEstoque/MateriaisEsto
 import { ServicosProteticoPage } from '../features/servicosProtetico/ServicosProteticoPage.jsx';
 import { ServicosProteticoToolbar } from '../features/servicosProtetico/components/ServicosProteticoToolbar.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
+import { AlterarSenhaFlow } from '../features/alterarSenha/index.js';
 import { ConfiguracaoPreferenciasModal } from '../features/configuracaoPreferencias/components/ConfiguracaoPreferenciasModal.jsx';
 import { CenarioAnualPage } from '../features/cenarioAnual/CenarioAnualPage.jsx';
 import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/components/IndicesFinanceirosToolbar.jsx';
@@ -406,6 +407,7 @@ function AppContent() {
   });
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
   const [preferenciasOpen, setPreferenciasOpen] = useState(false);
+  const [alterarSenhaOpen, setAlterarSenhaOpen] = useState(false);
   const [contaCorrenteLaunchModal, setContaCorrenteLaunchModal] = useState({ open: false, type: 'debito', mode: 'create' });
   const [pesquisaFluxoCaixaModalOpen, setPesquisaFluxoCaixaModalOpen] = useState(false);
   const [pesquisaFluxoCaixaModalTab, setPesquisaFluxoCaixaModalTab] = useState('geral');
@@ -978,6 +980,10 @@ function AppContent() {
   };
 
   const handleUserMenuAction = async (key) => {
+    if (key === 'alterar-senha') {
+      setAlterarSenhaOpen(true);
+      return;
+    }
     if (key === 'preferencias') {
       setPreferenciasOpen(true);
       return;
@@ -1716,6 +1722,10 @@ function AppContent() {
           open={preferenciasOpen}
           userName={user?.apelido || user?.nome || user?.email || 'Tel'}
           onClose={() => setPreferenciasOpen(false)}
+        />
+        <AlterarSenhaFlow
+          open={alterarSenhaOpen}
+          onClose={() => setAlterarSenhaOpen(false)}
         />
         <ConfiguracaoPreferenciasModal
           open={screen === 'configuracao-preferencias'}
