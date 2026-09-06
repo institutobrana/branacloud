@@ -56,13 +56,23 @@ import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciam
 import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
 import { AgendaConfiguracaoModal } from '../features/agendaConfiguracao/AgendaConfiguracaoModal.jsx';
 import { buildAgendaConfiguracaoContext } from '../features/agendaConfiguracao/agendaConfiguracaoConstants.js';
+import { AgendaSemanalPage } from '../features/agendaSemanal/AgendaSemanalPage.jsx';
+import { AgendaDiariaPage } from '../features/agendaDiaria/AgendaDiariaPage.jsx';
+import { AgendaSemanalToolbar } from '../features/agendaSemanal/components/AgendaSemanalToolbar.jsx';
+import { AgendaSearchModal } from '../features/agendaSemanal/components/AgendaSearchModal.jsx';
+import { AgendaFreeSlotsModal } from '../features/agendaSemanal/components/AgendaFreeSlotsModal.jsx';
+import { AgendaNoticeModal } from '../features/agendaSemanal/components/AgendaNoticeModal.jsx';
+import { GoogleAgendaPublishModal } from '../features/agendaSemanal/components/GoogleAgendaPublishModal.jsx';
+import { AgendaContatosPage } from '../features/agendaContatos/AgendaContatosPage.jsx';
+import { AgendaContatosToolbar } from '../features/agendaContatos/components/AgendaContatosToolbar.jsx';
 import { EtiquetasPage } from '../features/etiquetas/components/EtiquetasPage.jsx';
 import { EtiquetasToolbar } from '../features/etiquetas/components/EtiquetasToolbar.jsx';
 
 const contextualMenus = {
   atendimento: [
-    { key: 'agenda-diaria', label: 'Agenda diária', disabled: true },
-    { key: 'agenda-semanal', label: 'Agenda semanal', disabled: true },
+    { key: 'agenda-diaria', label: 'Agenda diária' },
+    { key: 'agenda-semanal', label: 'Agenda semanal' },
+    { key: 'agenda-contatos', label: 'Agenda de contatos' },
     { key: 'retornos', label: 'Controle de retornos', disabled: true },
     { key: 'documentos', label: 'Documentos', disabled: true },
     { key: 'ficha-clinica', label: 'Ficha clínica', disabled: true },
@@ -170,6 +180,9 @@ function resolveScreenFromPath() {
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
   if (path === `${base}/configuracoes/etiquetas`) return 'configuracao-etiquetas';
   if (path === `${base}/configuracoes/agendas`) return 'agenda-configuracao';
+  if (path === `${base}/atendimento/agenda-diaria`) return 'agenda-diaria';
+  if (path === `${base}/atendimento/agenda-semanal`) return 'agenda-semanal';
+  if (path === `${base}/atendimento/agenda-contatos`) return 'agenda-contatos';
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
@@ -202,6 +215,12 @@ function syncAppPath(screen) {
         ? appPath('pacientes')
       : screen === 'ficha-clinica'
         ? appPath('ficha-clinica')
+      : screen === 'agenda-diaria'
+        ? appPath('atendimento/agenda-diaria')
+      : screen === 'agenda-semanal'
+        ? appPath('atendimento/agenda-semanal')
+      : screen === 'agenda-contatos'
+        ? appPath('atendimento/agenda-contatos')
       : screen === 'cenario-anual'
           ? appPath('cenario-anual')
           : screen === 'indices-financeiros'
@@ -334,6 +353,19 @@ function AppContent() {
   const [prestadorModalState, setPrestadorModalState] = useState({ open: false, mode: 'create', record: null, rowId: null });
   const [prestadorDeleteState, setPrestadorDeleteState] = useState({ open: false, target: null, loading: false, error: '' });
   const [agendaConfiguracaoState, setAgendaConfiguracaoState] = useState({ open: false, context: null });
+  const [agendaSemanalToolbarState, setAgendaSemanalToolbarState] = useState({
+    especialidades: [{ value: '', label: 'Todas' }],
+    prestadores: [{ value: '', label: 'Todos' }],
+    unidades: [{ value: '', label: 'Todas' }],
+    selected: { especialidade: '', prestadorId: '', unidadeId: '' },
+    loading: true,
+    error: '',
+  });
+  const [agendaContatosToolbarState, setAgendaContatosToolbarState] = useState({ types: [], tipo: '', busca: '', selectedId: null });
+  const [agendaSearchOpen, setAgendaSearchOpen] = useState(false);
+  const [agendaFreeSlotsOpen, setAgendaFreeSlotsOpen] = useState(false);
+  const [agendaNoticeOpen, setAgendaNoticeOpen] = useState(false);
+  const [googleAgendaPublishOpen, setGoogleAgendaPublishOpen] = useState(false);
   const [prestadorCredenciamentosOpen, setPrestadorCredenciamentosOpen] = useState(false);
   const [prestadorComissoesOpen, setPrestadorComissoesOpen] = useState(false);
   const prestadoresState = usePrestadores();
@@ -359,6 +391,21 @@ function AppContent() {
         prestadorId,
         allowPrestadorChange: false,
         selectedPrestadorSnapshot: selected,
+      }),
+    });
+  };
+  const openAgendaConfiguracaoFromAgenda = ({ prestadorId: requestedId, prestadorNome } = {}) => {
+    const selectedId = requestedId || agendaSemanalToolbarState.selected?.prestadorId;
+    const selected = agendaSemanalToolbarState.prestadores?.find((item) => String(item?.value) === String(selectedId));
+    if (!selectedId) return;
+    setAgendaConfiguracaoState({
+      open: true,
+      context: buildAgendaConfiguracaoContext({
+        source: 'agenda',
+        prestadorId: selectedId,
+        prestadorNome: prestadorNome || selected?.label || '',
+        allowPrestadorChange: true,
+        selectedPrestadorSnapshot: selected || null,
       }),
     });
   };
@@ -403,6 +450,7 @@ function AppContent() {
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
     if (initialScreen === 'questionarios-anamnese') return 'configuracao';
     if (initialScreen === 'configuracao-preferencias') return 'configuracao';
+    if (initialScreen === 'agenda-configuracao') return 'configuracao';
     return 'atendimento';
   });
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
@@ -482,6 +530,33 @@ function AppContent() {
       </div>
     );
   }, [screen, simbolosGraficosSelectionState.selectedId]);
+
+  useEffect(() => {
+    const onAgendaContatosState = (event) => setAgendaContatosToolbarState((current) => ({ ...current, ...(event.detail || {}) }));
+    window.addEventListener('brana-agenda-contatos-state', onAgendaContatosState);
+    return () => window.removeEventListener('brana-agenda-contatos-state', onAgendaContatosState);
+  }, []);
+
+  useEffect(() => {
+    const restoreFreeSlots = () => setAgendaFreeSlotsOpen(true);
+    window.addEventListener('brana-agenda-free-slot-cancelled', restoreFreeSlots);
+    return () => window.removeEventListener('brana-agenda-free-slot-cancelled', restoreFreeSlots);
+  }, []);
+
+  useEffect(() => {
+    const onAgendaFiltersState = (event) => {
+      const detail = event?.detail || {};
+      setAgendaSemanalToolbarState((current) => ({ ...current, ...detail, selected: { ...current.selected, ...(detail.selected || {}) } }));
+    };
+    window.addEventListener('brana-agenda-filters-state', onAgendaFiltersState);
+    return () => window.removeEventListener('brana-agenda-filters-state', onAgendaFiltersState);
+  }, []);
+
+  useEffect(() => {
+    const openSearch = () => setAgendaSearchOpen(true);
+    window.addEventListener('brana-agenda-patient-search', openSearch);
+    return () => window.removeEventListener('brana-agenda-patient-search', openSearch);
+  }, []);
 
   useEffect(() => {
     const syncScreenFromLocation = () => setScreen(resolveScreenFromPath());
@@ -658,7 +733,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-etiquetas' && screen !== 'prestadores') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-etiquetas' && screen !== 'prestadores' && screen !== 'agenda-configuracao' && screen !== 'agenda-semanal' && screen !== 'agenda-diaria' && screen !== 'agenda-contatos') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -745,6 +820,11 @@ function AppContent() {
     if (nextScreen === 'agenda-configuracao') {
       setActiveGroupKey('configuracao');
       setPanelGroupKey('configuracao');
+      return;
+    }
+    if (nextScreen === 'agenda-semanal' || nextScreen === 'agenda-diaria' || nextScreen === 'agenda-contatos') {
+      setActiveGroupKey('atendimento');
+      setPanelGroupKey('atendimento');
       return;
     }
     if (nextScreen === 'ficha-clinica') {
@@ -1086,6 +1166,9 @@ function AppContent() {
     if (screen === 'configuracao-etiquetas') {
       return <EtiquetasPage />;
     }
+    if (screen === 'agenda-semanal') return <AgendaSemanalPage />;
+    if (screen === 'agenda-diaria') return <AgendaDiariaPage />;
+    if (screen === 'agenda-contatos') return <AgendaContatosPage />;
     if (screen === 'configuracao-preferencias') {
       return <div className="brana-empty-state" aria-hidden="true" />;
     }
@@ -1453,6 +1536,25 @@ function AppContent() {
     );
   }, [screen, servicosProteticoToolbarState]);
 
+  const agendaSemanalTopBar = useMemo(() => {
+    if (screen !== 'agenda-semanal' && screen !== 'agenda-diaria') return null;
+    return <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da Agenda">
+      <AgendaSemanalToolbar state={agendaSemanalToolbarState} onConfigure={openAgendaConfiguracaoFromAgenda}
+        onPatient={() => window.dispatchEvent(new CustomEvent('brana-agenda-patient-search'))}
+        onHour={() => setAgendaFreeSlotsOpen(true)} onNotice={() => setAgendaNoticeOpen(true)}
+        onPublish={() => setGoogleAgendaPublishOpen(true)} />
+    </div>;
+  }, [screen, agendaSemanalToolbarState]);
+
+  const agendaContatosTopBar = useMemo(() => {
+    if (screen !== 'agenda-contatos') return null;
+    return <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da Agenda de contatos">
+      <AgendaContatosToolbar types={agendaContatosToolbarState.types} tipo={agendaContatosToolbarState.tipo}
+        busca={agendaContatosToolbarState.busca} selectedId={agendaContatosToolbarState.selectedId}
+        onTipoChange={() => {}} onBuscaChange={() => {}} />
+    </div>;
+  }, [screen, agendaContatosToolbarState]);
+
   const prestadoresTopBar = useMemo(() => {
     if (screen !== 'prestadores') return null;
 
@@ -1636,6 +1738,10 @@ function AppContent() {
             materiaisEstoqueTopBar
           ) : screen === 'servicos-protetico' ? (
             servicosProteticoTopBar
+          ) : screen === 'agenda-semanal' || screen === 'agenda-diaria' ? (
+            agendaSemanalTopBar
+          ) : screen === 'agenda-contatos' ? (
+            agendaContatosTopBar
           ) : screen === 'prestadores' ? (
             prestadoresTopBar
           ) : screen === 'doencas-cid' ? (
@@ -1701,11 +1807,44 @@ function AppContent() {
         <AgendaConfiguracaoModal
           open={agendaConfiguracaoState.open || screen === 'agenda-configuracao'}
           context={agendaConfiguracaoState.context}
+          onSaved={(saved) => {
+            if (agendaConfiguracaoState.context?.source === 'agenda') {
+              window.dispatchEvent(new CustomEvent('brana-agenda-config-saved', { detail: saved }));
+            }
+          }}
           onCancel={() => {
             if (agendaConfiguracaoState.context?.source === 'configuracoes') {
               handleNavigate('dashboard');
             }
             setAgendaConfiguracaoState({ open: false, context: null });
+          }}
+        />
+        <AgendaSearchModal
+          open={agendaSearchOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+          onClose={() => setAgendaSearchOpen(false)}
+          onEdit={(item) => window.dispatchEvent(new CustomEvent('brana-agenda-search-edit', { detail: item }))}
+        />
+        <AgendaNoticeModal
+          open={agendaNoticeOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+          onClose={() => setAgendaNoticeOpen(false)}
+          providerId={agendaSemanalToolbarState.selected.prestadorId}
+        />
+        <GoogleAgendaPublishModal
+          open={googleAgendaPublishOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+          onClose={() => setGoogleAgendaPublishOpen(false)}
+          providerId={agendaSemanalToolbarState.selected.prestadorId}
+          unitId={agendaSemanalToolbarState.selected.unidadeId}
+        />
+        <AgendaFreeSlotsModal
+          open={agendaFreeSlotsOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+          onClose={() => setAgendaFreeSlotsOpen(false)}
+          providers={agendaSemanalToolbarState.prestadores}
+          units={agendaSemanalToolbarState.unidades}
+          providerId={agendaSemanalToolbarState.selected.prestadorId}
+          unitId={agendaSemanalToolbarState.selected.unidadeId}
+          onEdit={(item) => {
+            setAgendaFreeSlotsOpen(false);
+            window.dispatchEvent(new CustomEvent('brana-agenda-free-slot-edit', { detail: item }));
           }}
         />
         <PrestadorCredenciamentosModal

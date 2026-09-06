@@ -1,7 +1,12 @@
 import json
+import logging
+from logging.handlers import RotatingFileHandler
 import os
 import re
+import tempfile
 import unicodedata
+import time as monotonic_time
+import uuid
 from decimal import Decimal
 from datetime import date, datetime, time, timedelta
 from html import escape
@@ -9,7 +14,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import quote
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel
 from sqlalchemy import and_, case, or_, text
 from sqlalchemy.orm import Session
@@ -28,12 +33,29 @@ from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
 from security.jwt_handler import create_access_token
 from services.email_service import EmailDeliveryError, enviar_email
+from services.google_oauth_observability import oauth_logger
 from services.google_calendar_service import (
     GoogleCalendarError,
     build_google_calendar_auth_url,
     refresh_google_calendar_access_token,
     upsert_google_calendar_event,
+    decrypt_google_token,
+    encrypt_google_token,
+    create_oauth_state,
+    create_oauth_attempt_id,
+    oauth_state_digest,
 )
+from services.google_calendar_reconciliation_service import (
+    GoogleCalendarDestination,
+    mapping_table_available,
+    reconcile_item,
+    reconcile_cancellations,
+    reconcile_physical_deletes,
+)
+from services.agenda_display import agenda_event_snapshot_name, resolve_agenda_display_name
+from services.agenda_identity_resolver import resolve_agenda_notice_patient_identities_batch
+from services.agenda_google_preview import resolve_agenda_identity, validate_google_period
+from services.model_document_storage import resolve_model_file_info, visible_model_overrides
 from services.signup_service import garantir_auxiliares_raw_clinica
 
 router = APIRouter(
@@ -41,6 +63,19 @@ router = APIRouter(
     tags=["agenda-legado"],
     dependencies=[Depends(require_module_access("agenda"))],
 )
+
+agenda_create_logger = logging.getLogger("brana.agenda.create")
+agenda_create_logger.setLevel(logging.INFO)
+if not any(getattr(handler, "_brana_agenda_debug", False) for handler in agenda_create_logger.handlers):
+    agenda_debug_handler = RotatingFileHandler(
+        Path(tempfile.gettempdir()) / "brana-agenda-create-debug.log",
+        maxBytes=2 * 1024 * 1024,
+        backupCount=1,
+        encoding="utf-8",
+    )
+    agenda_debug_handler._brana_agenda_debug = True
+    agenda_debug_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+    agenda_create_logger.addHandler(agenda_debug_handler)
 
 TIPOS_AUX_ESPECIALIDADE = ("Especialidade", "Especialidades")
 TIPOS_AUX_STATUS_AGENDA = ("Situação do agendamento", "Situacao do agendamento")
@@ -79,6 +114,11 @@ AGENDA_CONFIG_PADRAO = {
 
 PROJECT_DIR = Path(__file__).resolve().parents[3]
 COMPROMISSO_RAW_PATH = PROJECT_DIR / "Dados" / "Dist" / "_COMPROMISSO.raw"
+CANONICAL_COMPROMISSO_SUBJECTS = [
+    {"id": 0, "codigo": 0, "descricao": "Não disponível", "ordem": 0, "valor_int": 0},
+    {"id": 1, "codigo": 1, "descricao": "Reunião", "ordem": 1, "valor_int": 1},
+    {"id": 2, "codigo": 2, "descricao": "Particular", "ordem": 2, "valor_int": 2},
+]
 COMPROMISSO_UTF16_PATTERN = re.compile(rb"(?:[\x20-\x7E\x80-\xFF]\x00){2,}")
 HHMM_PATTERN = re.compile(r"^(\d{1,2}):(\d{2})$")
 PLACEHOLDER_PATTERN = re.compile(r"<<\s*([^>]+?)\s*>>")
@@ -95,6 +135,7 @@ class AgendaPayload(BaseModel):
     sala: int | None = None
     tipo: int | None = None
     nro_pac: int | None = None
+    patient_id: int | None = None
     nome: str | None = None
     motivo: str | None = None
     status: int | None = None
@@ -557,8 +598,8 @@ def _hora_ms(dt: datetime) -> int:
     return int((dt.hour * 3600 + dt.minute * 60 + dt.second) * 1000)
 
 
-def _to_dict(item: AgendaLegadoEvento) -> dict:
-    return {
+def _to_dict(item: AgendaLegadoEvento, prestador_apelido: str | None = None) -> dict:
+    payload = {
         "id": int(item.id),
         "data": item.data.date().isoformat(),
         "hora_inicio": int(item.hora_inicio or 0),
@@ -573,7 +614,9 @@ def _to_dict(item: AgendaLegadoEvento) -> dict:
         "id_prestador": int(item.id_prestador),
         "id_unidade": int(item.id_unidade),
         "nro_pac": int(item.nro_pac) if item.nro_pac is not None else None,
+        "patient_id": int(item.patient_id) if item.patient_id is not None else None,
         "tipo": int(item.tipo) if item.tipo is not None else None,
+        "prestador_apelido": str(prestador_apelido or "").strip(),
         "observ": str(item.observ or "").strip(),
         "tip_fone1": int(item.tip_fone1) if item.tip_fone1 is not None else None,
         "tip_fone2": int(item.tip_fone2) if item.tip_fone2 is not None else None,
@@ -581,6 +624,7 @@ def _to_dict(item: AgendaLegadoEvento) -> dict:
         "time_stamp_ins": item.time_stamp_ins.isoformat() if item.time_stamp_ins else None,
         "time_stamp_upd": item.time_stamp_upd.isoformat() if item.time_stamp_upd else None,
     }
+    return payload
 
 
 def _load_or_404(db: Session, clinica_id: int, item_id: int) -> AgendaLegadoEvento:
@@ -592,6 +636,17 @@ def _load_or_404(db: Session, clinica_id: int, item_id: int) -> AgendaLegadoEven
     if not item:
         raise HTTPException(status_code=404, detail="Agendamento nao encontrado.")
     return item
+
+
+def _validate_patient_id(db: Session, clinica_id: int, patient_id: int | None) -> int | None:
+    if patient_id is None:
+        return None
+    patient = db.query(Paciente).filter(
+        Paciente.id == int(patient_id), Paciente.clinica_id == int(clinica_id)
+    ).first()
+    if not patient:
+        raise HTTPException(status_code=400, detail="Paciente inválido para a clínica atual.")
+    return int(patient.id)
 
 
 def _normalize_interval(hora_inicio: int, hora_fim: int | None) -> tuple[int, int]:
@@ -651,10 +706,10 @@ def _catalogo_modelos_para_aviso(
             ModeloDocumento.id.asc(),
         ).all()
     )
+    rows = visible_model_overrides(rows, usuario.clinica_id)
 
     permitidas = {".rtf", ".txt"}
     catalogo: list[dict] = []
-    vistos: set[str] = set()
     for item in rows:
         nome_exibicao = str(item.nome_exibicao or "").strip()
         nome_arquivo = str(item.nome_arquivo or "").strip()
@@ -665,10 +720,6 @@ def _catalogo_modelos_para_aviso(
             continue
         if not nome:
             continue
-        chave = (nome_arquivo or nome_exibicao).casefold()
-        if chave in vistos:
-            continue
-        vistos.add(chave)
         catalogo.append(
             {
                 "id": int(item.id),
@@ -714,10 +765,10 @@ def _modelo_documento_por_id(
 def _ler_texto_modelo(item: ModeloDocumento | None) -> str:
     if not item:
         return ""
-    caminho_rel = str(item.caminho_arquivo or "").strip()
-    if not caminho_rel:
+    info = resolve_model_file_info(item)
+    caminho_abs = info.get("path") if isinstance(info, dict) else None
+    if not isinstance(caminho_abs, Path):
         return ""
-    caminho_abs = (PROJECT_DIR / caminho_rel).resolve()
     try:
         base = PROJECT_DIR.resolve()
         if not str(caminho_abs).startswith(str(base)):
@@ -933,7 +984,7 @@ def _build_template_context(
     prestador_nome: str,
 ) -> dict[str, str]:
     data_base = evento.data.date() if evento.data else date.today()
-    nome_paciente = str((paciente.nome_completo if paciente and paciente.nome_completo else None) or (paciente.nome if paciente else "") or evento.nome or "").strip()
+    nome_paciente = resolve_agenda_display_name(evento, paciente)
     assunto = str(evento.motivo or "").strip()
     email = str((paciente.email if paciente else "") or "").strip()
     numero_wa, telefone_exibicao = _telefone_whatsapp_paciente(paciente)
@@ -999,6 +1050,9 @@ def _google_calendar_mark_disconnected(usuario: Usuario) -> None:
     cfg = dict(cfg) if isinstance(cfg, dict) else {}
     cfg["connected"] = False
     cfg["access_token"] = ""
+    cfg["access_token_enc"] = ""
+    cfg["refresh_token_enc"] = ""
+    cfg.pop("refresh_token", None)
     prefs["google_calendar_sync"] = cfg
     _save_preferencias_dict_usuario(usuario, prefs)
 
@@ -1010,8 +1064,8 @@ def _google_calendar_ensure_access_token(usuario: Usuario, db: Session) -> tuple
     if not bool(cfg.get("connected")):
         raise HTTPException(status_code=400, detail="Google Agenda não conectado para este usuário.")
 
-    access_token = str(cfg.get("access_token") or "").strip()
-    refresh_token = str(cfg.get("refresh_token") or "").strip()
+    access_token = decrypt_google_token(cfg.get("access_token_enc")) if cfg.get("access_token_enc") else ""
+    refresh_token = decrypt_google_token(cfg.get("refresh_token_enc")) if cfg.get("refresh_token_enc") else ""
     expires_at_raw = str(cfg.get("expires_at") or "").strip()
     exp_dt: datetime | None = None
     if expires_at_raw:
@@ -1032,15 +1086,25 @@ def _google_calendar_ensure_access_token(usuario: Usuario, db: Session) -> tuple
         try:
             refreshed = refresh_google_calendar_access_token(refresh_token)
         except GoogleCalendarError as exc:
-            _google_calendar_mark_disconnected(usuario)
+            # Preserve encrypted credentials for diagnostics/reconnect while preventing use
+            # until the user authorizes the account again.
+            cfg["connected"] = False
+            cfg["requires_reconnect"] = True
+            prefs["google_calendar_sync"] = cfg
+            _save_preferencias_dict_usuario(usuario, prefs)
             db.add(usuario)
             db.commit()
             raise HTTPException(status_code=400, detail=f"Falha ao renovar conexão Google: {exc.message}") from exc
         access_token = str(refreshed.get("access_token") or "").strip()
         expires_in = int(refreshed.get("expires_in") or 3600)
         if access_token:
-            cfg["access_token"] = access_token
+            cfg["access_token_enc"] = encrypt_google_token(access_token)
+            cfg.pop("access_token", None)
             cfg["expires_at"] = (now + timedelta(seconds=max(60, expires_in))).isoformat()
+            rotated_refresh = str(refreshed.get("refresh_token") or "").strip()
+            if rotated_refresh:
+                cfg["refresh_token_enc"] = encrypt_google_token(rotated_refresh)
+                cfg.pop("refresh_token", None)
             if refreshed.get("scope"):
                 cfg["scope"] = str(refreshed.get("scope") or "").strip()
             prefs["google_calendar_sync"] = cfg
@@ -1063,7 +1127,8 @@ def _agenda_google_periodo_rows(
     id_unidade: int | None = None,
     itens_ids: list[int] | None = None,
     limit: int = 5000,
-) -> list[tuple[AgendaLegadoEvento, Paciente | None, PrestadorOdonto | None]]:
+    include_truncation: bool = False,
+) -> list[tuple[AgendaLegadoEvento, Paciente | None, PrestadorOdonto | None]] | tuple[list, bool]:
     query = (
         db.query(AgendaLegadoEvento, Paciente, PrestadorOdonto)
         .outerjoin(
@@ -1084,7 +1149,10 @@ def _agenda_google_periodo_rows(
             AgendaLegadoEvento.clinica_id == int(clinica_id),
             AgendaLegadoEvento.data >= datetime.combine(dt_ini, time.min),
             AgendaLegadoEvento.data <= datetime.combine(dt_fim, time.max),
-            or_(AgendaLegadoEvento.status.is_(None), AgendaLegadoEvento.status != 2),
+            or_(
+                AgendaLegadoEvento.status.is_(None),
+                AgendaLegadoEvento.status.in_([0, 1, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]),
+            ),
         )
     )
     if int(id_prestador or 0) > 0:
@@ -1095,21 +1163,25 @@ def _agenda_google_periodo_rows(
         valid_ids = [int(x) for x in itens_ids if int(x or 0) > 0]
         if valid_ids:
             query = query.filter(AgendaLegadoEvento.id.in_(valid_ids))
-    return (
+    rows = (
         query.order_by(
             AgendaLegadoEvento.data.asc(),
             AgendaLegadoEvento.hora_inicio.asc(),
             AgendaLegadoEvento.id.asc(),
         )
-        .limit(max(1, min(10000, int(limit or 5000))))
+        .limit(max(1, min(10000, int(limit or 5000)) + (1 if include_truncation else 0)))
         .all()
     )
+    if include_truncation:
+        canonical_limit = max(1, min(10000, int(limit or 5000)))
+        return rows[:canonical_limit], len(rows) > canonical_limit
+    return rows
 
 
 def _agenda_google_preview_item(evento: AgendaLegadoEvento, paciente: Paciente | None) -> dict:
     data_base = evento.data.date() if evento.data else date.today()
-    nome_paciente = str((paciente.nome_completo if paciente and paciente.nome_completo else None) or (paciente.nome if paciente else "") or "").strip()
-    titulo = str(evento.nome or "").strip() or nome_paciente or str(evento.motivo or "").strip() or "Compromisso"
+    nome_paciente = resolve_agenda_display_name(evento, paciente)
+    titulo = nome_paciente or str(evento.motivo or "").strip() or "Compromisso"
     return {
         "id": int(evento.id),
         "data": data_base.isoformat(),
@@ -1120,7 +1192,7 @@ def _agenda_google_preview_item(evento: AgendaLegadoEvento, paciente: Paciente |
 
 
 def _agenda_google_event_id(clinica_id: int, agenda_id: int) -> str:
-    return f"b{int(clinica_id)}e{int(agenda_id)}"
+    return resolve_agenda_identity(clinica_id=clinica_id, agenda_id=agenda_id)
 
 
 def _agenda_google_payload(
@@ -1132,8 +1204,8 @@ def _agenda_google_payload(
     clinica_id: int,
 ) -> tuple[str, dict]:
     data_base = evento.data.date() if evento.data else date.today()
-    nome_paciente = str((paciente.nome_completo if paciente and paciente.nome_completo else None) or (paciente.nome if paciente else "") or "").strip()
-    titulo = str(evento.nome or "").strip() or nome_paciente or str(evento.motivo or "").strip() or "Compromisso"
+    nome_paciente = resolve_agenda_display_name(evento, paciente)
+    titulo = nome_paciente or str(evento.motivo or "").strip() or "Compromisso"
     inicio_ms = int(evento.hora_inicio or 0)
     fim_ms = int(evento.hora_fim or 0)
     if fim_ms <= inicio_ms:
@@ -1147,23 +1219,9 @@ def _agenda_google_payload(
     if end_dt <= start_dt:
         end_dt = start_dt + timedelta(minutes=5)
 
-    prestador_nome = str((prestador.apelido if prestador and prestador.apelido else None) or (prestador.nome if prestador else "") or "").strip()
-    desc_lines = [
-        f"Origem SaaS agenda_id={int(evento.id)}",
-        f"Paciente/Compromisso: {titulo}",
-    ]
-    motivo = str(evento.motivo or "").strip()
-    if motivo:
-        desc_lines.append(f"Motivo: {motivo}")
-    if prestador_nome:
-        desc_lines.append(f"Cirurgião: {prestador_nome}")
-    for fone in (str(evento.fone1 or "").strip(), str(evento.fone2 or "").strip(), str(evento.fone3 or "").strip()):
-        if fone:
-            desc_lines.append(f"Telefone: {fone}")
-
     payload = {
         "summary": titulo,
-        "description": "\n".join(desc_lines).strip(),
+        "description": "",
         "start": {"dateTime": start_dt.isoformat(), "timeZone": timezone_name},
         "end": {"dateTime": end_dt.isoformat(), "timeZone": timezone_name},
         "extendedProperties": {
@@ -1174,6 +1232,11 @@ def _agenda_google_payload(
         },
     }
     return _agenda_google_event_id(clinica_id, int(evento.id)), payload
+
+
+def resolve_google_calendar_timezone(cfg: dict | None = None) -> str:
+    settings = cfg if isinstance(cfg, dict) else {}
+    return str(settings.get("time_zone") or "America/Sao_Paulo").strip() or "America/Sao_Paulo"
 
 
 def _enviar_whatsapp_meta(numero: str, mensagem: str) -> dict:
@@ -1288,6 +1351,7 @@ def _clonar_evento_intervalo(
         sala=source.sala,
         tipo=source.tipo,
         nro_pac=source.nro_pac,
+        patient_id=source.patient_id,
         nome=source.nome,
         motivo=source.motivo,
         status=source.status,
@@ -1381,10 +1445,8 @@ def _normalizar_data_sem_domingo(value: date) -> date:
 
 
 def _normalizar_data_mes_sem_domingo(value: date) -> date:
-    # No modo "Todo o dia", domingo recua um dia quando possível.
+    # No modo "Todo o dia", domingo avança para a segunda-feira seguinte.
     if value.weekday() == 6:
-        if value.day > 1:
-            return value - timedelta(days=1)
         return value + timedelta(days=1)
     return value
 
@@ -1467,11 +1529,11 @@ def _extract_utf16_texts(raw_bytes: bytes) -> list[str]:
 
 def _assuntos_compromisso_raw_options() -> list[dict]:
     if not COMPROMISSO_RAW_PATH.exists():
-        return []
+        return list(CANONICAL_COMPROMISSO_SUBJECTS)
     try:
         strings = _extract_utf16_texts(COMPROMISSO_RAW_PATH.read_bytes())
     except Exception:
-        return []
+        return list(CANONICAL_COMPROMISSO_SUBJECTS)
     itens: list[dict] = []
     vistos: set[str] = set()
     i = 0
@@ -1508,7 +1570,7 @@ def _assuntos_compromisso_raw_options() -> list[dict]:
             }
         )
         ordem += 1
-    return itens
+    return itens or list(CANONICAL_COMPROMISSO_SUBJECTS)
 
 
 def _aux_to_options(rows: list[ItemAuxiliar]) -> list[dict]:
@@ -1601,7 +1663,19 @@ def listar_agenda(
         .limit(limite)
         .all()
     )
-    return [_to_dict(item) for item in itens]
+    prestador_ids = {int(item.id_prestador) for item in itens if item.id_prestador is not None}
+    apelidos = {}
+    if prestador_ids:
+        apelidos = {
+            int(prestador.id): str(prestador.apelido or "").strip()
+            for prestador in db.query(PrestadorOdonto)
+            .filter(
+                PrestadorOdonto.clinica_id == int(current_user.clinica_id),
+                PrestadorOdonto.id.in_(prestador_ids),
+            )
+            .all()
+        }
+    return [_to_dict(item, apelidos.get(int(item.id_prestador))) for item in itens]
 
 
 @router.get("/avisos-agendamento/opcoes")
@@ -1619,9 +1693,8 @@ def listar_opcoes_avisos_agendamento(
             return None
         return val if val > 0 else None
 
-    modelos_texto = _catalogo_modelos_para_aviso(db, current_user, None)
-    modelos_email = list(modelos_texto)
-    modelos_whatsapp = list(modelos_texto)
+    modelos_email = _catalogo_modelos_para_aviso(db, current_user, "email_agenda")
+    modelos_whatsapp = _catalogo_modelos_para_aviso(db, current_user, "whatsapp_agenda")
     default_email_id = _to_int(modelos_vals.get("modelo_texto_email_agenda_id"))
     default_whatsapp_id = _to_int(modelos_vals.get("modelo_texto_whatsapp_agenda_id"))
 
@@ -1672,36 +1745,19 @@ def pesquisar_avisos_agendamento(
     if dt_fim < dt_ini:
         raise HTTPException(status_code=400, detail="Período de pesquisa inválido.")
 
-    query = (
-        db.query(AgendaLegadoEvento, Paciente, PrestadorOdonto)
-        .outerjoin(
-            Paciente,
-            and_(
-                Paciente.clinica_id == AgendaLegadoEvento.clinica_id,
-                or_(Paciente.codigo == AgendaLegadoEvento.nro_pac, Paciente.id == AgendaLegadoEvento.nro_pac),
-            ),
-        )
-        .outerjoin(
-            PrestadorOdonto,
-            and_(
-                PrestadorOdonto.clinica_id == AgendaLegadoEvento.clinica_id,
-                PrestadorOdonto.id == AgendaLegadoEvento.id_prestador,
-            ),
-        )
-        .filter(
+    query = db.query(AgendaLegadoEvento).filter(
             AgendaLegadoEvento.clinica_id == current_user.clinica_id,
             AgendaLegadoEvento.data >= datetime.combine(dt_ini, time.min),
             AgendaLegadoEvento.data <= datetime.combine(dt_fim, time.max),
             AgendaLegadoEvento.tipo == 1,
             or_(AgendaLegadoEvento.status.is_(None), AgendaLegadoEvento.status != 2),
         )
-    )
     if not todos_cirurgioes:
         prestador_alvo = int(id_prestador or current_user.prestador_id or 0)
         if prestador_alvo > 0:
             query = query.filter(AgendaLegadoEvento.id_prestador == prestador_alvo)
 
-    rows = (
+    eventos = (
         query.order_by(
             AgendaLegadoEvento.data.asc(),
             AgendaLegadoEvento.hora_inicio.asc(),
@@ -1711,21 +1767,44 @@ def pesquisar_avisos_agendamento(
         .all()
     )
 
+    patient_identities = resolve_agenda_notice_patient_identities_batch(
+        eventos, db, int(current_user.clinica_id)
+    )
+    prestador_ids = {int(item.id_prestador) for item in eventos if item.id_prestador is not None}
+    prestadores = {
+        int(prestador.id): prestador
+        for prestador in db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.clinica_id == int(current_user.clinica_id),
+            PrestadorOdonto.id.in_(prestador_ids or {-1}),
+        )
+        .all()
+    }
+
+
     itens: list[dict] = []
-    for evento, paciente, prestador in rows:
+    for evento in eventos:
+        identity = patient_identities[int(evento.id)]
+        paciente = identity.patient
         contato = ""
         if tipo == "email":
             contato = str((paciente.email if paciente else "") or "").strip()
-            if not contato:
-                continue
         else:
             _, contato_exibicao = _telefone_whatsapp_paciente(paciente)
             contato = str(contato_exibicao or "").strip()
-            if not contato:
-                continue
-        nome = str((paciente.nome_completo if paciente and paciente.nome_completo else None) or (paciente.nome if paciente else "") or evento.nome or "").strip()
+        nome = resolve_agenda_display_name(evento, paciente)
+        state = identity.state.value
+        blocked = not identity.external_effect_allowed or not contato or not nome
         if not nome:
-            continue
+            nome = "Paciente não identificado"
+        if blocked:
+            contato = ""
+        reason = None if not blocked else {
+            "HISTORICAL_UNRESOLVED_WITH_NRO_PAC": "Paciente histórico não confirmado",
+            "HISTORICAL_NULL_IDENTITY_UNKNOWN": "Paciente não identificado",
+            "NO_PATIENT_PROVEN": "Agendamento sem paciente",
+            "INVALID": "Identidade do paciente inválida",
+        }.get(state, "Contato não disponível")
         data_evento = evento.data.date() if evento.data else dt_ini
         itens.append(
             {
@@ -1734,9 +1813,16 @@ def pesquisar_avisos_agendamento(
                 "hora": _hora_inicio_para_hhmm(evento.hora_inicio),
                 "paciente": nome,
                 "contato": contato,
-                "ok": True,
+                "ok": not blocked,
+                "identity_state": state,
+                "identity_eligible": identity.external_effect_allowed,
+                "contact_eligible": bool(identity.external_effect_allowed and contato),
+                "send_eligible": bool(identity.external_effect_allowed and contato),
+                "block_reason": reason,
+                "proof_source": identity.proof_source,
                 "id_prestador": int(evento.id_prestador),
-                "cirurgiao": str(prestador.apelido or prestador.nome or "").strip() if prestador else "",
+                "cirurgiao": str((prestadores.get(int(evento.id_prestador)).apelido or prestadores.get(int(evento.id_prestador)).nome or "")).strip()
+                if prestadores.get(int(evento.id_prestador)) else "",
             }
         )
     return itens
@@ -1752,7 +1838,14 @@ def enviar_avisos_agendamento(
     if tipo not in {"email", "whatsapp"}:
         raise HTTPException(status_code=400, detail="Tipo de envio inválido.")
 
-    selecionados = [int(item.agenda_id) for item in (payload.itens or []) if bool(item.ok) and int(item.agenda_id or 0) > 0]
+    selecionados: list[int] = []
+    vistos: set[int] = set()
+    for item in payload.itens or []:
+        agenda_id = int(item.agenda_id or 0)
+        if not bool(item.ok) or agenda_id <= 0 or agenda_id in vistos:
+            continue
+        vistos.add(agenda_id)
+        selecionados.append(agenda_id)
     if not selecionados:
         return {
             "tipo_envio": tipo,
@@ -1770,29 +1863,28 @@ def enviar_avisos_agendamento(
             "Olá <<Paciente.Nome>>, seu agendamento é em <<Agenda.Data>> às <<Agenda.Hora>> com <<Cirurgião.Nome>>."
         )
 
-    rows = (
-        db.query(AgendaLegadoEvento, Paciente, PrestadorOdonto)
-        .outerjoin(
-            Paciente,
-            and_(
-                Paciente.clinica_id == AgendaLegadoEvento.clinica_id,
-                or_(Paciente.codigo == AgendaLegadoEvento.nro_pac, Paciente.id == AgendaLegadoEvento.nro_pac),
-            ),
-        )
-        .outerjoin(
-            PrestadorOdonto,
-            and_(
-                PrestadorOdonto.clinica_id == AgendaLegadoEvento.clinica_id,
-                PrestadorOdonto.id == AgendaLegadoEvento.id_prestador,
-            ),
-        )
+    eventos = (
+        db.query(AgendaLegadoEvento)
         .filter(
             AgendaLegadoEvento.clinica_id == current_user.clinica_id,
             AgendaLegadoEvento.id.in_(selecionados),
         )
         .all()
     )
-    by_id = {int(evento.id): (evento, paciente, prestador) for evento, paciente, prestador in rows}
+    identities = resolve_agenda_notice_patient_identities_batch(
+        eventos, db, int(current_user.clinica_id)
+    )
+    prestador_ids = {int(evento.id_prestador) for evento in eventos if evento.id_prestador is not None}
+    prestadores = {
+        int(prestador.id): prestador
+        for prestador in db.query(PrestadorOdonto)
+        .filter(
+            PrestadorOdonto.clinica_id == int(current_user.clinica_id),
+            PrestadorOdonto.id.in_(prestador_ids or {-1}),
+        )
+        .all()
+    }
+    by_id = {int(evento.id): evento for evento in eventos}
 
     enviados = 0
     pendentes = 0
@@ -1800,11 +1892,22 @@ def enviar_avisos_agendamento(
     links_whatsapp: list[dict] = []
     assunto_padrao = str(payload.assunto or "").strip()
     for agenda_id in selecionados:
-        trio = by_id.get(int(agenda_id))
-        if not trio:
+        evento = by_id.get(int(agenda_id))
+        if not evento:
             falhas.append({"agenda_id": int(agenda_id), "motivo": "Agendamento não encontrado."})
             continue
-        evento, paciente, prestador = trio
+        identity = identities[int(evento.id)]
+        if not identity.external_effect_allowed or identity.patient is None:
+            motivo = {
+                "HISTORICAL_UNRESOLVED_WITH_NRO_PAC": "Identidade histórica não confirmada.",
+                "HISTORICAL_NULL_IDENTITY_UNKNOWN": "Paciente não identificado.",
+                "NO_PATIENT_PROVEN": "Agendamento sem paciente.",
+                "INVALID": "Identidade do paciente inválida.",
+            }.get(identity.state.value, "Identidade do paciente não elegível.")
+            falhas.append({"agenda_id": int(agenda_id), "motivo": motivo})
+            continue
+        paciente = identity.patient
+        prestador = prestadores.get(int(evento.id_prestador))
         prestador_nome = str((prestador.apelido if prestador and prestador.apelido else None) or (prestador.nome if prestador else "") or "").strip()
         contexto = _build_template_context(evento, paciente, prestador_nome)
         mensagem = _render_template_mensagem(template_texto, contexto).strip()
@@ -1840,7 +1943,7 @@ def enviar_avisos_agendamento(
                 links_whatsapp.append(
                     {
                         "agenda_id": int(agenda_id),
-                        "paciente": str(contexto.get("pacientenome") or evento.nome or "").strip(),
+                        "paciente": str(contexto.get("pacientenome") or _agenda_event_snapshot_name(evento) or "").strip(),
                         "telefone": numero_exibicao,
                         "url": url,
                     }
@@ -1851,7 +1954,7 @@ def enviar_avisos_agendamento(
         "total_selecionados": len(selecionados),
         "enviados": int(enviados),
         "pendentes": int(pendentes),
-        "falhas": falhas,
+        "failures": falhas,
         "links_whatsapp": links_whatsapp,
     }
 
@@ -1861,7 +1964,17 @@ def google_agenda_status(
     current_user: Usuario = Depends(get_current_user),
 ):
     cfg = _google_calendar_cfg(current_user)
-    connected = bool(cfg.get("connected")) and bool(str(cfg.get("refresh_token") or "").strip() or str(cfg.get("access_token") or "").strip())
+    encrypted_access = str(cfg.get("access_token_enc") or "").strip()
+    encrypted_refresh = str(cfg.get("refresh_token_enc") or "").strip()
+    try:
+        valid_access = bool(encrypted_access and decrypt_google_token(encrypted_access))
+    except GoogleCalendarError:
+        valid_access = False
+    try:
+        valid_refresh = bool(encrypted_refresh and decrypt_google_token(encrypted_refresh))
+    except GoogleCalendarError:
+        valid_refresh = False
+    connected = bool(cfg.get("connected")) and bool(valid_access or valid_refresh)
     return {
         "connected": connected,
         "email": str(cfg.get("email") or "").strip(),
@@ -1869,26 +1982,57 @@ def google_agenda_status(
         "calendar_summary": str(cfg.get("calendar_summary") or "Agenda principal").strip(),
         "time_zone": str(cfg.get("time_zone") or "America/Sao_Paulo").strip() or "America/Sao_Paulo",
         "updated_at": str(cfg.get("updated_at") or "").strip(),
+        "requires_reconnect": bool(cfg.get("requires_reconnect")),
     }
 
 
 @router.get("/google-agenda/oauth/start")
 def google_agenda_oauth_start(
     current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
+    oauth_attempt_id = create_oauth_attempt_id()
+    oauth_logger.info(
+        "calendar_oauth_start_received oauth_attempt_id=%s user_id=%s clinica_id=%s",
+        oauth_attempt_id,
+        int(current_user.id),
+        int(current_user.clinica_id),
+    )
+    nonce = create_oauth_state(int(current_user.id), int(current_user.clinica_id))
     state = create_access_token(
         {
             "type": "google_calendar_oauth",
             "user_id": int(current_user.id),
             "clinica_id": int(current_user.clinica_id),
+            "nonce": nonce,
+            "oauth_attempt_id": oauth_attempt_id,
         },
         expires_minutes=15,
     )
+    prefs = _preferencias_dict_usuario(current_user)
+    prefs["google_calendar_oauth_state"] = {
+        "digest": oauth_state_digest(state),
+        "expires_at": (datetime.utcnow() + timedelta(minutes=10)).isoformat(),
+    }
+    _save_preferencias_dict_usuario(current_user, prefs)
+    db.add(current_user)
+    db.commit()
     try:
         auth_url = build_google_calendar_auth_url(state)
     except GoogleCalendarError as exc:
         raise HTTPException(status_code=exc.status_code, detail=exc.message) from exc
     return {"auth_url": auth_url}
+
+
+@router.post("/google-agenda/disconnect")
+def google_agenda_disconnect(
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    _google_calendar_mark_disconnected(current_user)
+    db.add(current_user)
+    db.commit()
+    return {"connected": False, "requires_reconnect": False}
 
 
 @router.get("/google-agenda/preview")
@@ -1905,9 +2049,11 @@ def google_agenda_preview(
     dt_fim = _parse_date(data_fim)
     if not dt_ini or not dt_fim:
         raise HTTPException(status_code=400, detail="Informe um período válido.")
-    if dt_fim < dt_ini:
-        raise HTTPException(status_code=400, detail="Período de exportação inválido.")
-    rows = _agenda_google_periodo_rows(
+    try:
+        validate_google_period(dt_ini, dt_fim)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    rows, truncated = _agenda_google_periodo_rows(
         db=db,
         clinica_id=int(current_user.clinica_id),
         dt_ini=dt_ini,
@@ -1915,8 +2061,28 @@ def google_agenda_preview(
         id_prestador=id_prestador,
         id_unidade=id_unidade,
         limit=limit,
+        include_truncation=True,
     )
-    return [_agenda_google_preview_item(evento, paciente) for evento, paciente, _ in rows]
+    if truncated:
+        raise HTTPException(status_code=422, detail="O período excede o limite de 10000 compromissos.")
+    tz = resolve_google_calendar_timezone(_google_calendar_cfg(current_user))
+    result = []
+    for evento, paciente, prestador in rows:
+        event_id, payload = _agenda_google_payload(
+            evento=evento,
+            paciente=paciente,
+            prestador=prestador,
+            timezone_name=tz,
+            clinica_id=int(current_user.clinica_id),
+        )
+        result.append({
+            "agenda_id": int(evento.id),
+            "event_id": event_id,
+            "eligible": True,
+            "reason": None,
+            "payload": payload,
+        })
+    return result
 
 
 @router.post("/google-agenda/exportar")
@@ -1929,13 +2095,26 @@ def google_agenda_exportar(
     dt_fim = _parse_date(payload.data_fim)
     if not dt_ini or not dt_fim:
         raise HTTPException(status_code=400, detail="Informe um período válido.")
-    if dt_fim < dt_ini:
-        raise HTTPException(status_code=400, detail="Período de exportação inválido.")
+    try:
+        validate_google_period(dt_ini, dt_fim)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     access_token, cfg = _google_calendar_ensure_access_token(current_user, db)
+    account_sub = str(cfg.get("account_sub") or "").strip()
+    if not account_sub:
+        raise HTTPException(status_code=400, detail="Conexão Google precisa ser renovada antes da sincronização.")
+    if not mapping_table_available(db):
+        raise HTTPException(status_code=503, detail="Sincronização Google ainda não está disponível neste banco.")
     calendar_id = str(cfg.get("calendar_id") or "primary").strip() or "primary"
-    tz = str(cfg.get("time_zone") or "America/Sao_Paulo").strip() or "America/Sao_Paulo"
-    rows = _agenda_google_periodo_rows(
+    tz = resolve_google_calendar_timezone(cfg)
+    destination = GoogleCalendarDestination(
+        clinica_id=int(current_user.clinica_id),
+        google_account_sub=account_sub,
+        calendar_id=calendar_id,
+        access_token=access_token,
+    )
+    rows, truncated = _agenda_google_periodo_rows(
         db=db,
         clinica_id=int(current_user.clinica_id),
         dt_ini=dt_ini,
@@ -1944,10 +2123,13 @@ def google_agenda_exportar(
         id_unidade=payload.id_unidade,
         itens_ids=payload.itens_ids or [],
         limit=10000,
+        include_truncation=True,
     )
+    if truncated:
+        raise HTTPException(status_code=422, detail="O período excede o limite de 10000 compromissos.")
 
     total = len(rows)
-    publicados = 0
+    created = updated = deleted = ignored = 0
     falhas: list[dict] = []
     for evento, paciente, prestador in rows:
         try:
@@ -1958,21 +2140,31 @@ def google_agenda_exportar(
                 timezone_name=tz,
                 clinica_id=int(current_user.clinica_id),
             )
-            upsert_google_calendar_event(
-                access_token=access_token,
-                calendar_id=calendar_id,
-                event_id=event_id,
-                payload=body,
-            )
-            publicados += 1
+            result = reconcile_item(db=db, destination=destination, evento=evento, payload=body)
+            if result.action == "created": created += 1
+            elif result.action == "updated": updated += 1
+            elif result.action == "deleted": deleted += 1
+            else: ignored += 1
         except GoogleCalendarError as exc:
-            falhas.append({"agenda_id": int(evento.id), "motivo": exc.message})
+            falhas.append({"agenda_id": int(evento.id), "code": "google_calendar_error", "message": "Falha na sincronização deste item."})
         except Exception as exc:
-            falhas.append({"agenda_id": int(evento.id), "motivo": str(exc)})
+            falhas.append({"agenda_id": int(evento.id), "code": "item_error", "message": "Falha na sincronização deste item."})
+
+    try:
+        cancelled = reconcile_cancellations(db=db, destination=destination)
+        deleted += len(cancelled)
+        physical = reconcile_physical_deletes(db=db, destination=destination)
+        deleted += len(physical)
+    except GoogleCalendarError:
+        falhas.append({"agenda_id": None, "code": "physical_delete_error", "message": "Falha na reconciliação de exclusões."})
 
     return {
         "total": total,
-        "publicados": int(publicados),
+        "created": created,
+        "updated": updated,
+        "deleted": deleted,
+        "ignored": ignored,
+        "failed": len(falhas),
         "falhas": falhas,
         "calendar_id": calendar_id,
     }
@@ -2630,62 +2822,79 @@ def listar_pacientes_agenda(
 
 @router.post("")
 def criar_agendamento(
+    request: Request,
     payload: AgendaPayload,
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    data = _parse_date(payload.data)
-    if not data:
-        raise HTTPException(status_code=400, detail="Informe uma data valida.")
-    hora_inicio = int(payload.hora_inicio or 0)
-    if hora_inicio <= 0:
-        raise HTTPException(status_code=400, detail="Informe horario inicial.")
-    hora_inicio, hora_fim_norm = _normalize_interval(hora_inicio, payload.hora_fim)
-    id_prestador = int(payload.id_prestador or 0) or int(current_user.prestador_id or 0)
-    id_unidade = int(payload.id_unidade or 0) or int(current_user.unidade_atendimento_id or 0)
-    if id_prestador <= 0:
-        raise HTTPException(status_code=400, detail="Informe o cirurgiao/prestador.")
-    if id_unidade <= 0:
-        raise HTTPException(status_code=400, detail="Informe a unidade.")
-    if _tem_conflito_intervalo(
-        db=db,
-        clinica_id=int(current_user.clinica_id),
-        id_prestador=id_prestador,
-        id_unidade=id_unidade,
-        data_base=data,
-        hora_inicio=hora_inicio,
-        hora_fim=hora_fim_norm,
-    ):
-        raise HTTPException(status_code=409, detail="Ja existe agendamento no horario informado.")
-    item = AgendaLegadoEvento(
-        clinica_id=current_user.clinica_id,
-        id_prestador=id_prestador,
-        id_unidade=id_unidade,
-        data=datetime.combine(data, time.min),
-        hora_inicio=hora_inicio,
-        hora_fim=hora_fim_norm,
-        sala=int(payload.sala) if payload.sala is not None else None,
-        tipo=int(payload.tipo) if payload.tipo is not None else None,
-        nro_pac=int(payload.nro_pac) if payload.nro_pac is not None else None,
-        nome=(payload.nome or "").strip(),
-        motivo=(payload.motivo or "").strip(),
-        status=int(payload.status) if payload.status is not None else None,
-        observ=(payload.observ or "").strip(),
-        tip_fone1=int(payload.tip_fone1) if payload.tip_fone1 is not None else None,
-        fone1=(payload.fone1 or "").strip(),
-        tip_fone2=int(payload.tip_fone2) if payload.tip_fone2 is not None else None,
-        fone2=(payload.fone2 or "").strip(),
-        tip_fone3=int(payload.tip_fone3) if payload.tip_fone3 is not None else None,
-        fone3=(payload.fone3 or "").strip(),
-        user_stamp_ins=int(current_user.id or 0),
-        time_stamp_ins=datetime.now(),
-        user_stamp_upd=int(current_user.id or 0),
-        time_stamp_upd=datetime.now(),
+    request_id = request.headers.get("X-Brana-Debug-Request-Id") or uuid.uuid4().hex[:12]
+    stage = "request_received"
+    started = monotonic_time.monotonic()
+    agenda_create_logger.info(
+        "AGENDA_CREATE request_id=%s stage=%s clinica_id=%s prestador_id=%s unidade_id=%s nro_pac=%s data=%s hora_inicio=%s hora_fim=%s tipo=%s",
+        request_id, stage, current_user.clinica_id, payload.id_prestador, payload.id_unidade,
+        payload.nro_pac, payload.data, payload.hora_inicio, payload.hora_fim, payload.tipo,
     )
-    db.add(item)
-    db.commit()
-    db.refresh(item)
-    return _to_dict(item)
+    try:
+        stage = "validation_started"
+        data = _parse_date(payload.data)
+        if not data:
+            raise HTTPException(status_code=400, detail="Informe uma data valida.")
+        hora_inicio = int(payload.hora_inicio or 0)
+        if hora_inicio <= 0:
+            raise HTTPException(status_code=400, detail="Informe horario inicial.")
+        hora_inicio, hora_fim_norm = _normalize_interval(hora_inicio, payload.hora_fim)
+        id_prestador = int(payload.id_prestador or 0) or int(current_user.prestador_id or 0)
+        id_unidade = int(payload.id_unidade or 0) or int(current_user.unidade_atendimento_id or 0)
+        if id_prestador <= 0:
+            raise HTTPException(status_code=400, detail="Informe o cirurgiao/prestador.")
+        if id_unidade <= 0:
+            raise HTTPException(status_code=400, detail="Informe a unidade.")
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=validation_ok elapsed_ms=%.1f", request_id, (monotonic_time.monotonic() - started) * 1000)
+        stage = "conflict_check_started"
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=%s", request_id, stage)
+        conflict = _tem_conflito_intervalo(
+            db=db, clinica_id=int(current_user.clinica_id), id_prestador=id_prestador,
+            id_unidade=id_unidade, data_base=data, hora_inicio=hora_inicio, hora_fim=hora_fim_norm,
+        )
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=conflict_check_finished elapsed_ms=%.1f conflict=%s", request_id, (monotonic_time.monotonic() - started) * 1000, conflict)
+        if conflict:
+            raise HTTPException(status_code=409, detail="Ja existe agendamento no horario informado.")
+        canonical_patient_id = _validate_patient_id(db, current_user.clinica_id, payload.patient_id)
+        item = AgendaLegadoEvento(
+            clinica_id=current_user.clinica_id, id_prestador=id_prestador, id_unidade=id_unidade,
+            data=datetime.combine(data, time.min), hora_inicio=hora_inicio, hora_fim=hora_fim_norm,
+            sala=int(payload.sala) if payload.sala is not None else None, tipo=int(payload.tipo) if payload.tipo is not None else None,
+            nro_pac=int(payload.nro_pac) if payload.nro_pac is not None else None, nome=(payload.nome or "").strip(),
+            patient_id=canonical_patient_id,
+            motivo=(payload.motivo or "").strip(), status=int(payload.status) if payload.status is not None else None,
+            observ=(payload.observ or "").strip(), tip_fone1=int(payload.tip_fone1) if payload.tip_fone1 is not None else None,
+            fone1=(payload.fone1 or "").strip(), tip_fone2=int(payload.tip_fone2) if payload.tip_fone2 is not None else None,
+            fone2=(payload.fone2 or "").strip(), tip_fone3=int(payload.tip_fone3) if payload.tip_fone3 is not None else None,
+            fone3=(payload.fone3 or "").strip(), user_stamp_ins=int(current_user.id or 0), time_stamp_ins=datetime.now(),
+            user_stamp_upd=int(current_user.id or 0), time_stamp_upd=datetime.now(),
+        )
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=orm_object_created", request_id)
+        db.add(item)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=flush_started", request_id)
+        db.flush()
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=flush_finished id=%s", request_id, item.id)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=commit_started", request_id)
+        db.commit()
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=commit_finished id=%s", request_id, item.id)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=refresh_started", request_id)
+        db.refresh(item)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=refresh_finished id=%s", request_id, item.id)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=response_serialization_started", request_id)
+        response = _to_dict(item)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=response_ready id=%s elapsed_ms=%.1f", request_id, item.id, (monotonic_time.monotonic() - started) * 1000)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=request_finished final_status=200 elapsed_ms=%.1f", request_id, (monotonic_time.monotonic() - started) * 1000)
+        return response
+    except Exception as exc:
+        status = getattr(exc, "status_code", 500)
+        agenda_create_logger.exception("AGENDA_CREATE request_id=%s stage=request_failed last_stage=%s final_status=%s exception_type=%s exception_message=%s elapsed_ms=%.1f", request_id, stage, status, type(exc).__name__, str(exc), (monotonic_time.monotonic() - started) * 1000)
+        agenda_create_logger.info("AGENDA_CREATE request_id=%s stage=request_finished final_status=%s elapsed_ms=%.1f", request_id, status, (monotonic_time.monotonic() - started) * 1000)
+        raise
 
 
 @router.put("/{item_id}")
@@ -2725,17 +2934,26 @@ def atualizar_agendamento(
     item.hora_fim = hora_fim_norm
     item.sala = int(payload.sala) if payload.sala is not None else None
     item.tipo = int(payload.tipo) if payload.tipo is not None else None
-    item.nro_pac = int(payload.nro_pac) if payload.nro_pac is not None else None
-    item.nome = (payload.nome or "").strip()
+    selected_patient = None
+    if payload.patient_id is not None:
+        item.patient_id = _validate_patient_id(db, current_user.clinica_id, payload.patient_id)
+        selected_patient = db.query(Paciente).filter(
+            Paciente.id == item.patient_id,
+            Paciente.clinica_id == int(current_user.clinica_id),
+        ).first()
+        if not selected_patient:
+            raise HTTPException(status_code=400, detail="Paciente inválido para a clínica atual.")
+    item.nro_pac = int(selected_patient.id) if selected_patient is not None else (int(payload.nro_pac) if payload.nro_pac is not None else None)
+    item.nome = (selected_patient.nome_completo or selected_patient.nome or "").strip() if selected_patient is not None else (payload.nome or "").strip()
     item.motivo = (payload.motivo or "").strip()
     item.status = int(payload.status) if payload.status is not None else None
     item.observ = (payload.observ or "").strip()
     item.tip_fone1 = int(payload.tip_fone1) if payload.tip_fone1 is not None else None
-    item.fone1 = (payload.fone1 or "").strip()
+    item.fone1 = (selected_patient.fone1 or "").strip() if selected_patient is not None else (payload.fone1 or "").strip()
     item.tip_fone2 = int(payload.tip_fone2) if payload.tip_fone2 is not None else None
-    item.fone2 = (payload.fone2 or "").strip()
+    item.fone2 = (selected_patient.fone2 or "").strip() if selected_patient is not None else (payload.fone2 or "").strip()
     item.tip_fone3 = int(payload.tip_fone3) if payload.tip_fone3 is not None else None
-    item.fone3 = (payload.fone3 or "").strip()
+    item.fone3 = (selected_patient.fone3 or "").strip() if selected_patient is not None else (payload.fone3 or "").strip()
     item.id_prestador = id_prestador
     item.id_unidade = id_unidade
     item.user_stamp_upd = int(current_user.id or 0)
@@ -2808,6 +3026,7 @@ def repetir_agendamento(
             sala=item_base.sala,
             tipo=item_base.tipo,
             nro_pac=item_base.nro_pac,
+            patient_id=item_base.patient_id,
             nome=(item_base.nome or "").strip(),
             motivo=(item_base.motivo or "").strip(),
             status=item_base.status,

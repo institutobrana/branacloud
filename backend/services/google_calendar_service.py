@@ -1,10 +1,19 @@
 import base64
 import json
 import os
+import secrets
 from datetime import datetime, timedelta, timezone
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlsplit
 from urllib.request import Request, urlopen
+from services.google_oauth_observability import oauth_logger
+from jose import JWTError, jwt
+
+try:
+    from cryptography.fernet import Fernet, InvalidToken
+except ImportError:  # pragma: no cover - dependency is declared in requirements
+    Fernet = None
+    InvalidToken = Exception
 
 
 GOOGLE_CALENDAR_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -17,13 +26,145 @@ GOOGLE_CALENDAR_SCOPES = (
     "https://www.googleapis.com/auth/calendar.events",
     "https://www.googleapis.com/auth/calendar.readonly",
 )
+GOOGLE_HTTP_TIMEOUT_SECONDS = 15
+GOOGLE_ID_TOKEN_CERTS_URL = "https://www.googleapis.com/oauth2/v3/certs"
+GOOGLE_ID_TOKEN_ISSUERS = {"https://accounts.google.com", "accounts.google.com"}
 
 
 class GoogleCalendarError(Exception):
-    def __init__(self, message: str, status_code: int = 400):
+    def __init__(self, message: str, status_code: int = 400, *, google_error_code=None,
+                 google_error_description_sanitized=None, response_content_type=None,
+                 response_json_parsed=None, google_error_fields_present=None,
+                 response_present=False, response_headers_present=False):
         super().__init__(message)
         self.message = message
         self.status_code = int(status_code)
+        self.google_error_code = google_error_code
+        self.google_error_description_sanitized = google_error_description_sanitized
+        self.response_content_type = response_content_type
+        self.response_json_parsed = response_json_parsed
+        self.google_error_fields_present = google_error_fields_present
+        self.response_present = response_present
+        self.response_headers_present = response_headers_present
+        self.detailed_marker_emitted = False
+
+
+def _token_cipher() -> Fernet:
+    key = str(os.getenv("GOOGLE_TOKEN_ENCRYPTION_KEY", "")).strip()
+    if not key or Fernet is None:
+        raise GoogleCalendarError("Criptografia dos tokens Google não configurada.", 503)
+    try:
+        return Fernet(key.encode("ascii"))
+    except Exception as exc:
+        raise GoogleCalendarError("Chave de criptografia Google inválida.", 503) from exc
+
+
+def encrypt_google_token(token: str) -> str:
+    value = str(token or "")
+    if not value:
+        return ""
+    return _token_cipher().encrypt(value.encode("utf-8")).decode("ascii")
+
+
+def decrypt_google_token(value: str) -> str:
+    raw = str(value or "")
+    if not raw:
+        return ""
+    try:
+        return _token_cipher().decrypt(raw.encode("ascii")).decode("utf-8")
+    except (InvalidToken, UnicodeError, ValueError) as exc:
+        raise GoogleCalendarError("Credencial Google protegida inválida.", 503) from exc
+
+
+def oauth_state_digest(state: str) -> str:
+    return __import__("hashlib").sha256(str(state or "").encode("utf-8")).hexdigest()
+
+
+def _safe_url_target(url: str) -> dict:
+    parts = urlsplit(str(url or ""))
+    return {"scheme": parts.scheme, "host": parts.hostname or "", "path": parts.path or "/"}
+
+
+def _token_breadcrumb(marker: str, oauth_attempt_id=None, **fields) -> None:
+    safe = [f"oauth_attempt_id={str(oauth_attempt_id or 'unknown')}" ]
+    for key, value in fields.items():
+        if value is not None:
+            safe.append(f"{key}={str(value).lower() if isinstance(value, bool) else value}")
+    oauth_logger.info("%s %s", marker, " ".join(safe))
+
+
+def _emit_token_exchange_error(exc: GoogleCalendarError, oauth_attempt_id=None) -> None:
+    if getattr(exc, "detailed_marker_emitted", False):
+        return
+    _token_breadcrumb(
+        "calendar_oauth_token_exchange_error", oauth_attempt_id,
+        http_status=exc.status_code,
+        error=exc.google_error_code or "unknown",
+        error_description=exc.google_error_description_sanitized or "",
+        response_content_type=exc.response_content_type or "unknown",
+        response_json_parsed=exc.response_json_parsed if exc.response_json_parsed is not None else False,
+        google_error_fields_present=exc.google_error_fields_present if exc.google_error_fields_present is not None else False,
+        exception_class=type(exc).__name__,
+    )
+    exc.detailed_marker_emitted = True
+
+
+def verify_google_id_token(id_token: str | None) -> dict:
+    token = str(id_token or "").strip()
+    if not token:
+        error = GoogleCalendarError("ID token Google ausente.", 400)
+        error.safe_category = "missing_id_token"
+        raise error
+    client_id, _, _ = get_google_calendar_settings()
+    if not client_id:
+        raise GoogleCalendarError("Google OAuth não configurado (GOOGLE_CLIENT_ID).", 503)
+
+    def fail(category: str, exc=None):
+        error = GoogleCalendarError("ID token Google inválido.", 400)
+        error.safe_category = category
+        if exc is not None:
+            error.__cause__ = exc
+        raise error from exc
+
+    try:
+        try:
+            header = jwt.get_unverified_header(token)
+        except Exception as exc:
+            fail("invalid_header", exc)
+        kid = str(header.get("kid") or "").strip()
+        if not kid:
+            fail("missing_kid")
+        if header.get("alg") != "RS256":
+            fail("signature_validation")
+        try:
+            with urlopen(GOOGLE_ID_TOKEN_CERTS_URL, timeout=GOOGLE_HTTP_TIMEOUT_SECONDS) as response:
+                certs = json.loads(response.read().decode("utf-8"))
+        except Exception as exc:
+            fail("jwks_fetch", exc)
+        key = next((item for item in (certs.get("keys") or []) if str(item.get("kid") or "") == kid), None)
+        if not key:
+            fail("kid_not_found")
+        try:
+            claims = jwt.decode(token, key, algorithms=["RS256"], audience=client_id,
+                                options={"require_sub": True, "require_exp": True, "require_aud": True, "require_iss": True})
+        except Exception as exc:
+            name = type(exc).__name__.lower()
+            if "audience" in name:
+                fail("audience_validation", exc)
+            if "issuer" in name:
+                fail("issuer_validation", exc)
+            if "expired" in name or "expiration" in name:
+                fail("expiration_validation", exc)
+            fail("signature_validation", exc)
+        if str(claims.get("iss") or "").strip() not in GOOGLE_ID_TOKEN_ISSUERS:
+            fail("issuer_validation")
+        if not str(claims.get("sub") or "").strip():
+            fail("missing_sub")
+        return claims
+    except GoogleCalendarError:
+        raise
+    except Exception as exc:
+        fail("unknown_validation_error", exc)
 
 
 def get_google_calendar_settings() -> tuple[str, str, str]:
@@ -92,7 +233,7 @@ def _http_json(
     return {}
 
 
-def exchange_google_calendar_code(code: str) -> dict:
+def exchange_google_calendar_code(code: str, *, oauth_attempt_id: str | None = None) -> dict:
     code = str(code or "").strip()
     if not code:
         raise GoogleCalendarError("Código OAuth ausente.", 400)

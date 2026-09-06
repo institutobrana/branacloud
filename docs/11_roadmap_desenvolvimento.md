@@ -6717,3 +6717,22 @@ Observacoes:
 - O contrato V9 de Ok/Cancelar/X está homologado: Ok salva e permanece aberto; Cancelar restaura o último baseline e permanece aberto; X é o único fechamento.
 - O registro atual dos contratos está em `docs/contrato_fechamento_opcoes_sistema_react.md`.
 - `SEC-001` permanece `PROVEN_NON_BLOCKER` / `LEGACY_NO_MODERN_CONSUMER`; isso não reabre o módulo.
+
+## Agenda Freeze — 2026-09-05 — estado integrado sobre o remoto
+
+- **AGENDA SEMANAL / DIÁRIA / CONTATOS:** `IMPLEMENTED` no snapshot congelado; a paridade de páginas, navegação, filtros, pesquisa, horários livres, avisos, toolbars e fluxo de eventos foi validada estaticamente no conjunto frontend transportado.
+- **CONFIGURAÇÃO DE HORÁRIOS:** `IMPLEMENTED` e preservada conforme o fechamento `T2B`; esta seção não reabre Prestadores nem altera seus contratos.
+- **INTEGRAÇÃO DE PACIENTES:** `IMPLEMENTED` com APIs versionadas de Pacientes (`listarPacientes`/`obterPaciente`), sem transporte da arquitetura dirty `features/menuPacientes`.
+- **EASYDENTAL / MIGRAÇÃO AGENDA:** `NOT_YET_RELEASED`; o freeze documenta o estado auditado, mas não declara nova migração executada nesta integração.
+- **AGENDA EVENT FLOW:** `IMPLEMENTED`; busca/seleção de paciente, montagem do rascunho, modais, listeners e callbacks foram reconstruídos no escopo Agenda e permanecem sujeitos à validação operacional futura.
+- **GOOGLE AGENDA UI:** `IMPLEMENTED` no frontend congelado; preview e infraestrutura local não equivalem a exportação real.
+- **GOOGLE OAUTH INFRASTRUCTURE:** `IMPLEMENTED`.
+- **GOOGLE TOKEN EXCHANGE:** `PROVEN_WORKING`; **GOOGLE TOKEN RESPONSE:** `PROVEN_VALID`.
+- **GOOGLE ID TOKEN REAL VALIDATION:** `BLOCKED`; `ROOT LOCATION = ID_TOKEN_VALIDATION`.
+- **GOOGLE OAUTH CONNECTION:** `BLOCKED_AT_ID_TOKEN_VALIDATION`.
+- **GOOGLE ACCOUNT SUB PERSISTED:** `NÃO`; **GOOGLE CONNECTION PERSISTED:** `NÃO`.
+- **GOOGLE EXPORT REAL:** `NOT_YET_RELEASED` / `GOOGLE_EXPORT_REAL_ENABLED = NÃO`.
+- **GOOGLE CALENDAR REAL WRITE:** `NÃO AUTORIZADO` / `GOOGLE_CALENDAR_WRITE_AUTHORIZED = NÃO`.
+- **GOOGLE SYNC CONTRACT:** documentado apenas como contrato conceitual congelado; `GOOGLE_SYNC_REAL_EXECUTION_CLAIMED = NÃO`.
+- **CLASSIFICAÇÃO DO FREEZE:** código e contratos Agenda estão `IMPLEMENTED`; evidências estáticas estão `TESTED`; o runtime local existente está `RUNTIME_VALIDATED`; a validação real do id_token e a escrita/exportação Google permanecem `BLOCKED` e `NOT_YET_RELEASED`.
+- Referências canônicas: `docs/agenda/AGENDA_FREEZE_2026-09-05.md` e commit de freeze `62cf1fa51f72c0be229458f18a6f543d7042ba48`; a contagem lógica histórica de 86 entradas não representa a contagem física de arquivos do commit.

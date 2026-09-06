@@ -18,6 +18,7 @@ from sqlalchemy import text
 from database import Base, SessionLocal, engine, ensure_user_auth_schema
 from models.access_profile import AccessProfile  # noqa: F401
 from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento  # noqa: F401
+from models.google_calendar_event_mapping import GoogleCalendarEventMapping  # noqa: F401
 from models.anamnese import AnamnesePergunta, AnamneseQuestionario  # noqa: F401
 from models.anamnese_resposta import AnamneseResposta  # noqa: F401
 from models.clinica import Clinica  # noqa: F401

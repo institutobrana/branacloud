@@ -47,8 +47,8 @@ export function agendaBloqueioNormalizeDateInput(value, referenceDate = dayjs())
 export function agendaBloqueioFormatDateForDisplay(value) {
   const text = String(value ?? '').trim();
   if (!text) return '';
-  const normalized = agendaBloqueioParseDateInput(text) || (dayjs(text).isValid() ? dayjs(text) : null);
-  return normalized ? dayjs(normalized).format('DD/MM/YYYY') : text;
+  const normalized = agendaBloqueioParseDateInput(text);
+  return normalized ? normalized.format('DD/MM/YYYY') : text;
 }
 
 export function agendaBloqueioFormatTimeForDisplay(value) {

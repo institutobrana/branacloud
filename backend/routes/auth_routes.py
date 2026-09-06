@@ -32,15 +32,21 @@ from services.email_service import EmailDeliveryError, send_verification_code
 from services.google_calendar_service import (
     GoogleCalendarError,
     decode_id_token_email,
+    verify_google_id_token,
     exchange_google_calendar_code,
     fetch_google_calendar_primary,
     token_expires_at_utc,
+    encrypt_google_token,
+    decrypt_google_token,
+    oauth_state_digest,
+    _emit_token_exchange_error,
 )
 from services.signup_service import criar_conta_saas
 from services.user_presence_service import mark_user_activity_fail_open
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+from services.google_oauth_observability import oauth_logger
 
 EMAIL_PATTERN = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 DISPOSABLE_DOMAINS = {
@@ -548,72 +554,132 @@ def google_calendar_callback(
     error: str | None = None,
     db: Session = Depends(get_db),
 ):
+    callback_stage = "received"
+    oauth_logger.info("calendar_oauth_callback_received")
     if error:
+        oauth_logger.info("calendar_oauth_google_error_received")
         return _popup_google_calendar_response("error", f"Falha na autorização Google: {error}")
 
-    state_payload = decode_token(str(state or "").strip()) if state else None
+    callback_stage = "state_decode"
+    oauth_logger.info("calendar_oauth_state_decode_started")
+    raw_state = str(state or "").strip()
+    state_payload = decode_token(raw_state) if raw_state else None
     if not isinstance(state_payload, dict):
+        oauth_logger.warning("calendar_oauth_callback_failed stage=%s exception_class=OAuthStateError safe_error_code=invalid_state", callback_stage)
         return _popup_google_calendar_response("error", "Estado OAuth inválido ou expirado.")
     if str(state_payload.get("type") or "") != "google_calendar_oauth":
+        oauth_logger.warning("calendar_oauth_callback_failed stage=%s exception_class=OAuthStateError safe_error_code=invalid_state_type", callback_stage)
         return _popup_google_calendar_response("error", "Estado OAuth inválido para Google Agenda.")
+    oauth_attempt_id = str(state_payload.get("oauth_attempt_id") or "").strip()
+    oauth_logger.info("calendar_oauth_callback_context_valid oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+    oauth_logger.info("calendar_oauth_state_valid oauth_attempt_id=%s", oauth_attempt_id or "unknown")
 
+    callback_stage = "user_context"
     user_id = int(state_payload.get("user_id") or 0)
     clinica_id = int(state_payload.get("clinica_id") or 0)
     if user_id <= 0 or clinica_id <= 0:
+        oauth_logger.warning("calendar_oauth_callback_failed stage=%s exception_class=OAuthStateError safe_error_code=invalid_context", callback_stage)
         return _popup_google_calendar_response("error", "Sessão OAuth inválida.")
-    if not code:
-        return _popup_google_calendar_response("error", "Código OAuth ausente.")
 
     usuario = (
         db.query(Usuario)
         .filter(Usuario.id == user_id, Usuario.clinica_id == clinica_id)
+        .with_for_update()
         .first()
     )
     if not usuario:
+        oauth_logger.warning("calendar_oauth_callback_failed oauth_attempt_id=%s stage=%s exception_class=UserContextError safe_error_code=user_not_found", oauth_attempt_id or "unknown", callback_stage)
         return _popup_google_calendar_response("error", "Usuário não encontrado para conexão Google.")
+    oauth_logger.info("calendar_oauth_user_context_resolved user_id=%s clinica_id=%s", user_id, clinica_id)
+    prefs = _load_user_prefs(usuario)
+    saved_state = prefs.get("google_calendar_oauth_state")
+    expires_at = str(saved_state.get("expires_at") or "") if isinstance(saved_state, dict) else ""
+    try:
+        state_expired = datetime.fromisoformat(expires_at) <= datetime.utcnow()
+    except Exception:
+        state_expired = True
+    if not isinstance(saved_state, dict) or saved_state.get("digest") != oauth_state_digest(raw_state) or state_expired:
+        oauth_logger.warning("calendar_oauth_callback_failed oauth_attempt_id=%s stage=state_consume exception_class=OAuthStateError safe_error_code=invalid_or_expired_state", oauth_attempt_id or "unknown")
+        return _popup_google_calendar_response("error", "Estado OAuth inválido ou expirado.")
+    prefs.pop("google_calendar_oauth_state", None)
+    usuario.preferencias_usuario_json = json.dumps(prefs, ensure_ascii=False)
+    db.add(usuario)
+    db.commit()
+    oauth_logger.info("calendar_oauth_state_consumed oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+    if not code:
+        oauth_logger.warning("calendar_oauth_callback_failed oauth_attempt_id=%s stage=state_consume exception_class=OAuthCodeError safe_error_code=missing_code", oauth_attempt_id or "unknown")
+        return _popup_google_calendar_response("error", "Código OAuth ausente.")
 
     try:
-        token_data = exchange_google_calendar_code(str(code or "").strip())
+        callback_stage = "token_exchange"
+        oauth_logger.info("calendar_oauth_token_exchange_started oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+        token_data = exchange_google_calendar_code(str(code or "").strip(), oauth_attempt_id=oauth_attempt_id) if oauth_attempt_id else exchange_google_calendar_code(str(code or "").strip())
+        oauth_logger.info("calendar_oauth_token_payload_accepted oauth_attempt_id=%s", oauth_attempt_id or "unknown")
         access_token = str(token_data.get("access_token") or "").strip()
         refresh_token = str(token_data.get("refresh_token") or "").strip()
         expires_in = int(token_data.get("expires_in") or 3600)
         scope = str(token_data.get("scope") or "").strip()
         id_token = str(token_data.get("id_token") or "").strip()
+        oauth_logger.info("calendar_oauth_id_token_validation_started oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+        try:
+            google_claims = verify_google_id_token(id_token) if id_token else {}
+            oauth_logger.info("calendar_oauth_id_token_validation_success oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+        except GoogleCalendarError as exc:
+            oauth_logger.error("calendar_oauth_id_token_validation_error oauth_attempt_id=%s stage=id_token_validation exception_class=%s sanitized_error_category=%s", oauth_attempt_id or "unknown", type(exc).__name__, getattr(exc, "safe_category", "google_calendar_error"))
+            raise
+        oauth_logger.info("calendar_oauth_token_exchange_success oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+        callback_stage = "calendar_lookup"
+        oauth_logger.info("calendar_oauth_calendar_lookup_started oauth_attempt_id=%s", oauth_attempt_id or "unknown")
         calendar = fetch_google_calendar_primary(access_token)
         calendar_id = str(calendar.get("id") or "primary").strip() or "primary"
         calendar_summary = str(calendar.get("summary") or "Agenda principal").strip()
         calendar_tz = str(calendar.get("timeZone") or "America/Sao_Paulo").strip()
-        email_google = decode_id_token_email(id_token) or str(usuario.email or "").strip().lower()
+        email_google = str(google_claims.get("email") or decode_id_token_email(id_token) or usuario.email or "").strip().lower()
+        account_sub = str(google_claims.get("sub") or "").strip()
+        if account_sub:
+            oauth_logger.info("calendar_oauth_sub_extraction_success oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+        else:
+            oauth_logger.error("calendar_oauth_sub_extraction_error oauth_attempt_id=%s stage=sub_extraction exception_class=MissingSubjectError sanitized_error_category=sub_absent", oauth_attempt_id or "unknown")
+        oauth_logger.info("calendar_oauth_calendar_lookup_success oauth_attempt_id=%s", oauth_attempt_id or "unknown")
 
         prefs = _load_user_prefs(usuario)
         cfg = prefs.get("google_calendar_sync") if isinstance(prefs.get("google_calendar_sync"), dict) else {}
         cfg = dict(cfg or {})
         if not refresh_token:
-            refresh_token = str(cfg.get("refresh_token") or "").strip()
+            refresh_token = decrypt_google_token(cfg.get("refresh_token_enc")) if cfg.get("refresh_token_enc") else ""
 
+        callback_stage = "token_encryption"
+        oauth_logger.info("calendar_oauth_token_encryption_started oauth_attempt_id=%s", oauth_attempt_id or "unknown")
         cfg.update(
             {
                 "connected": True,
                 "email": email_google,
+                "account_sub": account_sub,
                 "calendar_id": calendar_id,
                 "calendar_summary": calendar_summary,
                 "time_zone": calendar_tz,
-                "access_token": access_token,
-                "refresh_token": refresh_token,
+                "access_token_enc": encrypt_google_token(access_token),
+                "refresh_token_enc": encrypt_google_token(refresh_token),
                 "scope": scope,
                 "expires_at": token_expires_at_utc(expires_in),
                 "updated_at": datetime.utcnow().isoformat(),
             }
         )
         prefs["google_calendar_sync"] = cfg
+        callback_stage = "persistence"
+        oauth_logger.info("calendar_oauth_persistence_started oauth_attempt_id=%s", oauth_attempt_id or "unknown")
         usuario.preferencias_usuario_json = json.dumps(prefs, ensure_ascii=False)
         db.commit()
+        oauth_logger.info("calendar_oauth_persistence_success oauth_attempt_id=%s", oauth_attempt_id or "unknown")
+        oauth_logger.info("calendar_oauth_callback_complete oauth_attempt_id=%s", oauth_attempt_id or "unknown")
         return _popup_google_calendar_response("ok", f"Google Agenda conectado: {calendar_summary}.")
     except GoogleCalendarError as exc:
-        logger.error("Google Calendar OAuth callback error: %s", exc.message)
+        if callback_stage == "token_exchange":
+            _emit_token_exchange_error(exc, oauth_attempt_id)
+        oauth_logger.error("calendar_oauth_callback_failed oauth_attempt_id=%s stage=%s exception_class=%s safe_error_code=google_calendar_error external_http_status=%s", oauth_attempt_id or "unknown", callback_stage, type(exc).__name__, exc.status_code)
         return _popup_google_calendar_response("error", exc.message)
     except Exception as exc:
-        logger.exception("Falha inesperada no callback Google Calendar: %s", exc)
+        oauth_logger.error("calendar_oauth_callback_failed oauth_attempt_id=%s stage=%s exception_class=%s safe_error_code=unexpected_error", oauth_attempt_id or "unknown", callback_stage, type(exc).__name__)
         return _popup_google_calendar_response("error", "Falha inesperada ao conectar Google Agenda.")
 
 

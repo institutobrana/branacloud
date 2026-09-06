@@ -113,7 +113,7 @@ test('feature agenda configuracao nasce fora de Prestadores e com contrato compa
   assert.match(modalSource, /Cancela/);
   assert.match(modalSource, /Ok/);
   assert.match(modalSource, /const handleSave = async \(\) => \{[\s\S]*await save\(\);[\s\S]*\}/);
-  assert.doesNotMatch(modalSource, /handleSave = async \(\) => \{[\s\S]*onCancel\?\.\(\);[\s\S]*\}/);
+  assert.match(modalSource, /handleSave = async \(\) => \{[\s\S]*await save\(\);[\s\S]*onSaved\?\.\(saved\);[\s\S]*if \(closeOnSave\) onCancel\?\.\(\);[\s\S]*\}/);
   assert.match(modalSource, /const handleCancel = \(\) => \{[\s\S]*resetFromBase\(\);[\s\S]*onCancel\?\.\(\);[\s\S]*\}/);
   assert.match(modalSource, /const handleFooterCancel = \(\) => \{[\s\S]*resetFromBase\(\);[\s\S]*\}/);
   assert.match(modalSource, /<Button onClick=\{handleFooterCancel\}>Cancela<\/Button>/);
@@ -153,6 +153,12 @@ test('Agenda presentation colors use the full legacy palette with hex values', (
   assert.match(colorDropdownSource, /aria-expanded/);
   assert.match(colorDropdownSource, /aria-selected/);
   assert.match(colorDropdownSource, /▼/);
+});
+
+test('Duração da escala usa granularidade contínua de 5 a 60 minutos', () => {
+  assert.match(escalaSource, /max=\{60\}/);
+  assert.match(escalaSource, /step=\{1\}/);
+  assert.match(escalaSource, /setNumber\('duracao', value, 5, 60\)/);
 });
 
 test('Prestadores Toolbar liga Agenda ao handler externo e bloqueia sem selecao', () => {

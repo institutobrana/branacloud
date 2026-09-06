@@ -1,5 +1,5 @@
 import { Alert, Button, Tabs } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { BranaModal } from '../../components/BranaModal.jsx';
 import { AGENDA_CONFIGURACAO_TABS, AGENDA_CONFIGURACAO_TITLE } from './agendaConfiguracaoConstants.js';
@@ -46,6 +46,8 @@ export function AgendaConfiguracaoModal({
   open,
   context = null,
   onCancel,
+  onSaved,
+  closeOnSave = false,
 }) {
   const [activeTab, setActiveTab] = useState('escala');
   const {
@@ -63,9 +65,12 @@ export function AgendaConfiguracaoModal({
     bloqueiosError,
     reloadBloqueios,
   } = useAgendaConfiguracao(context, open);
+  const updateDraft = useCallback((patch) => {
+    setDraft((current) => ({ ...current, ...patch }));
+  }, [setDraft]);
   const tabItems = useMemo(
-    () => buildTabItems({ draft, updateDraft: setDraft, prestadorId, reloadBloqueios, bloqueios, bloqueiosLoading, bloqueiosError }),
-    [bloqueios, bloqueiosError, bloqueiosLoading, draft, prestadorId, reloadBloqueios, setDraft],
+    () => buildTabItems({ draft, updateDraft, prestadorId, reloadBloqueios, bloqueios, bloqueiosLoading, bloqueiosError }),
+    [bloqueios, bloqueiosError, bloqueiosLoading, draft, prestadorId, reloadBloqueios, updateDraft],
   );
   const prestadorNome = String(context?.selectedPrestadorSnapshot?.nome || '').trim();
   const prestadorCodigo = String(context?.selectedPrestadorSnapshot?.codigo || '').trim();
@@ -85,7 +90,9 @@ export function AgendaConfiguracaoModal({
   };
 
   const handleSave = async () => {
-    await save();
+    const saved = await save();
+    onSaved?.(saved);
+    if (closeOnSave) onCancel?.();
   };
 
   return (

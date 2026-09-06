@@ -155,8 +155,11 @@ export function AgendaBloqueiosTab({
           hora_fin: agendaBloqueioTimeToLegacyInt(requestPayload.hora_fin) || 0,
           msg_agenda: requestPayload.msg_agenda == null ? null : String(requestPayload.msg_agenda || '').trim(),
         });
-      const rows = await reloadBloqueios?.();
       const nextId = Number(saved?.id || 0) || Number(saved?.id_bloqueio || 0) || null;
+      const rows = await reloadBloqueios?.();
+      window.dispatchEvent(new CustomEvent('brana-agenda-bloqueios-changed', {
+        detail: { prestadorId, bloqueioId: nextId },
+      }));
       if (nextId) {
         setSelectedId(nextId);
       } else if (Array.isArray(rows) && rows.length) {
@@ -189,6 +192,9 @@ export function AgendaBloqueiosTab({
       setDeleting(true);
       await deleteAgendaBloqueio(prestadorId, bloqueioId);
       await reloadBloqueios?.();
+      window.dispatchEvent(new CustomEvent('brana-agenda-bloqueios-changed', {
+        detail: { prestadorId, bloqueioId },
+      }));
       setSelectedId(null);
       setDeleteConfirmOpen(false);
     } catch (error) {
