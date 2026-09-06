@@ -65,6 +65,8 @@ import { AgendaNoticeModal } from '../features/agendaSemanal/components/AgendaNo
 import { GoogleAgendaPublishModal } from '../features/agendaSemanal/components/GoogleAgendaPublishModal.jsx';
 import { AgendaContatosPage } from '../features/agendaContatos/AgendaContatosPage.jsx';
 import { AgendaContatosToolbar } from '../features/agendaContatos/components/AgendaContatosToolbar.jsx';
+import { ConveniosPlanosPage } from '../features/conveniosPlanos/ConveniosPlanosPage.jsx';
+import { ConveniosPlanosToolbar } from '../features/conveniosPlanos/components/ConveniosPlanosToolbar.jsx';
 import { EtiquetasPage } from '../features/etiquetas/components/EtiquetasPage.jsx';
 import { EtiquetasToolbar } from '../features/etiquetas/components/EtiquetasToolbar.jsx';
 
@@ -81,6 +83,7 @@ const contextualMenus = {
     { key: 'timeline-paciente', label: 'Timeline do paciente', disabled: true },
   ],
   cadastro: [
+    { key: 'convenios-planos', label: 'Convênios e planos' },
     { key: 'convenios', label: 'Convênios atendidos', disabled: true },
     { key: 'corpo-clinico', label: 'Corpo clínico' },
     { key: 'fornecedores', label: 'Fornecedores', disabled: true },
@@ -174,6 +177,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/adm/cobrancas`) return 'adm-cobrancas';
   if (path === `${base}/adm/auditoria`) return 'adm-auditoria';
   if (path === `${base}/pacientes`) return 'pacientes';
+  if (path === `${base}/cadastro/convenios-planos`) return 'convenios-planos';
   if (path === `${base}/ficha-clinica`) return 'ficha-clinica';
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
   if (path === `${base}/configuracoes/indices-financeiros`) return 'indices-financeiros';
@@ -213,6 +217,8 @@ function syncAppPath(screen) {
         ? `${adminPath()}/auditoria`
       : screen === 'pacientes'
         ? appPath('pacientes')
+      : screen === 'convenios-planos'
+        ? appPath('cadastro/convenios-planos')
       : screen === 'ficha-clinica'
         ? appPath('ficha-clinica')
       : screen === 'agenda-diaria'
@@ -265,6 +271,24 @@ function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
   const initialScreen = resolveScreenFromPath();
   const [screen, setScreen] = useState(initialScreen);
+  const [convenioModalOpen, setConvenioModalOpen] = useState(false);
+  const [convenioModalTab, setConvenioModalTab] = useState('principal');
+  const [convenioModalMode, setConvenioModalMode] = useState('new');
+  const [selectedConvenio, setSelectedConvenio] = useState(null);
+  const [selectedPlano, setSelectedPlano] = useState(null);
+  const openConvenioModal = () => {
+    setConvenioModalMode('new');
+    setSelectedConvenio(null);
+    setConvenioModalTab('principal');
+    setConvenioModalOpen(true);
+  };
+  const openEditConvenio = (record = selectedConvenio) => {
+    if (!record) return;
+    setConvenioModalMode('edit');
+    setSelectedConvenio(record);
+    setConvenioModalTab('principal');
+    setConvenioModalOpen(true);
+  };
   const [adminNavigationState, setAdminNavigationState] = useState(null);
   const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
@@ -733,7 +757,7 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-etiquetas' && screen !== 'prestadores' && screen !== 'agenda-configuracao' && screen !== 'agenda-semanal' && screen !== 'agenda-diaria' && screen !== 'agenda-contatos') {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'convenios-planos' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-etiquetas' && screen !== 'prestadores' && screen !== 'agenda-configuracao' && screen !== 'agenda-semanal' && screen !== 'agenda-diaria' && screen !== 'agenda-contatos') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -762,6 +786,11 @@ function AppContent() {
       return;
     }
     if (nextScreen === 'pacientes') {
+      setActiveGroupKey('cadastro');
+      setPanelGroupKey('cadastro');
+      return;
+    }
+    if (nextScreen === 'convenios-planos') {
       setActiveGroupKey('cadastro');
       setPanelGroupKey('cadastro');
       return;
@@ -883,6 +912,10 @@ function AppContent() {
     }
     if (groupKey === 'cadastro' && item?.key === 'pacientes' && !item?.disabled) {
       handleNavigate('pacientes');
+      return;
+    }
+    if (groupKey === 'cadastro' && item?.key === 'convenios-planos' && !item?.disabled) {
+      handleNavigate('convenios-planos');
       return;
     }
     if (groupKey === 'cadastro' && item?.key === 'corpo-clinico' && !item?.disabled) {
@@ -1107,6 +1140,19 @@ function AppContent() {
     if (screen === 'pacientes') {
       return <PacientesPage onBackHome={() => handleNavigate('dashboard')} />;
     }
+    if (screen === 'convenios-planos') {
+      return <ConveniosPlanosPage
+        convenioModalOpen={convenioModalOpen}
+        convenioModalMode={convenioModalMode}
+        convenioModalRecord={selectedConvenio}
+        convenioModalTab={convenioModalTab}
+        onCloseConvenioModal={() => setConvenioModalOpen(false)}
+        onConvenioModalTabChange={setConvenioModalTab}
+        onOpenEditConvenio={openEditConvenio}
+        onConvenioSelectionChange={setSelectedConvenio}
+        onPlanoSelectionChange={setSelectedPlano}
+      />;
+    }
     if (screen === 'ficha-clinica') {
       return <FichaClinicaPage onBackHome={() => handleNavigate('dashboard')} />;
     }
@@ -1215,6 +1261,8 @@ function AppContent() {
   }, [
     cenarioAnualOpenRequestId,
     dashboardVersion,
+    convenioModalOpen,
+    convenioModalTab,
     loading,
     materiaisEstoqueToolbarState,
     procedimentosGenericosEspecialidade,
@@ -1226,6 +1274,8 @@ function AppContent() {
     prestadoresState.loading,
     prestadoresState.selectedId,
     screen,
+    selectedConvenio,
+    selectedPlano,
     simbolosGraficosCreateOpen,
     user,
   ]);
@@ -1744,6 +1794,10 @@ function AppContent() {
             agendaContatosTopBar
           ) : screen === 'prestadores' ? (
             prestadoresTopBar
+          ) : screen === 'convenios-planos' ? (
+            <div className="brana-shell-band auxiliary-shell-band convenios-planos-shell-band" aria-label="Barra operacional de convênios e planos">
+              <ConveniosPlanosToolbar onNewConvenio={openConvenioModal} onEditConvenio={() => openEditConvenio()} onDeleteConvenio={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-delete'))} onCalendar={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-calendar'))} onNewPlano={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-new-plan'))} onEditPlano={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-edit-plan'))} onDeletePlano={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-delete-plan'))} hasSelection={Boolean(selectedConvenio)} hasPlanSelection={Boolean(selectedPlano)} />
+            </div>
           ) : screen === 'doencas-cid' ? (
             doencasCidTopBar
           ) : screen === 'medicamentos' ? (

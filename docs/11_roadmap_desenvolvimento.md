@@ -15,6 +15,21 @@ Este arquivo deve ser consultado antes de iniciar qualquer nova tarefa.
 ---
 # 11 - Roadmap de Desenvolvimento
 
+## Fechamento CP7 — Convênios e planos React
+
+- `FUNCTIONAL = COMPLETE`
+- `LEGACY_PARITY = PASS`
+- `CRUD_CONVENIO = COMPLETE`
+- `CRUD_PLANO = COMPLETE`
+- `CALENDARIO_FATURAMENTO = COMPLETE`
+- `LIGHT_MODE = PASS`
+- `DARK_MODE = PASS`
+- `RESPONSIVE = PASS`
+- `RUNTIME = PASS`
+- `BUILD = PASS`
+- `GITHUB_CLOSE = PENDING`
+- Contrato: [`docs/fechamento_convenios_planos_react_cp7.md`](fechamento_convenios_planos_react_cp7.md)
+
 ## Fechamento - Agenda de contatos no frontend React
 
 - O modulo `Agenda de contatos` foi concluido e homologado na entrada
