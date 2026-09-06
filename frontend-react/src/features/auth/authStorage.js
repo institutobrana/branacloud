@@ -1,9 +1,9 @@
-const TOKEN_KEY = 'brana_token';
+export const AUTH_TOKEN_STORAGE_KEY = 'brana_token';
 
 export function getToken() {
   if (typeof window === 'undefined') return '';
   try {
-    return window.localStorage.getItem(TOKEN_KEY) || '';
+    return window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || '';
   } catch {
     return '';
   }
@@ -12,13 +12,25 @@ export function getToken() {
 export function setToken(token) {
   if (typeof window === 'undefined') return;
   try {
-    if (token) window.localStorage.setItem(TOKEN_KEY, token);
-    else window.localStorage.removeItem(TOKEN_KEY);
+    if (token) window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+    else window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
   } catch {
-    // armazenamento indisponível; falha silenciosa para não quebrar o boot
+    // armazenamento indisponivel; falha silenciosa para nao quebrar o boot
   }
 }
 
 export function clearToken() {
   setToken('');
+}
+
+export function getAuthToken() {
+  return getToken();
+}
+
+export function setAuthToken(token) {
+  setToken(token);
+}
+
+export function clearAuthToken() {
+  clearToken();
 }

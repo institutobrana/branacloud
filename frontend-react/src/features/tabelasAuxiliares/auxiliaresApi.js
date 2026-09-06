@@ -58,6 +58,23 @@ export async function listarAuxiliares(tipo) {
   return Array.isArray(data) ? data.map(normalizeItem) : [];
 }
 
+export async function listarEspecialidadesAtivas() {
+  const data = await requestJson('/cadastros/auxiliares/especialidades-ativas', {
+    headers: getAuthHeaders(),
+  });
+  return Array.isArray(data)
+    ? data
+        .map((item) => ({
+          id: Number(item?.id || 0) || 0,
+          codigo: String(item?.codigo || '').trim(),
+          nome: String(item?.nome || '').trim(),
+          ordem: item?.ordem == null ? null : Number(item?.ordem || 0) || null,
+          imagem_indice: item?.imagem_indice == null ? null : Number(item?.imagem_indice || 0) || null,
+        }))
+        .filter((item) => item.codigo || item.nome)
+    : [];
+}
+
 export async function criarAuxiliar(payload) {
   const data = await requestJson('/cadastros/auxiliares', {
     method: 'POST',
