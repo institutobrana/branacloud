@@ -18,6 +18,14 @@ Antes de qualquer alteração em uma área do sistema, o Codex deve:
 
 ## 3. Contratos e regras globais obrigatórios
 
+### `docs/contrato_fechamento_agenda_contatos_frontend_react.md`
+- Funcao: registrar o contrato final do modulo React Agenda de contatos.
+- Quando consultar: antes de alterar a rota, toolbar, listagem, modal ou CRUD
+  de contatos de agenda.
+- Status: vigente.
+- Observacao: Imprime e Relatorio permanecem placeholders desabilitados ate
+  definicao futura de produto.
+
 ### `docs/regras_blindagem_correcoes_textuais_mojibake.md`
 - Função: blindar correções textuais, acentuação, mojibake, labels e strings visíveis.
 - Quando consultar: antes de qualquer ajuste de UI, texto, placeholder, mensagem ou símbolo.

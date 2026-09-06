@@ -15,6 +15,19 @@ Este arquivo deve ser consultado antes de iniciar qualquer nova tarefa.
 ---
 # 11 - Roadmap de Desenvolvimento
 
+## Fechamento - Agenda de contatos no frontend React
+
+- O modulo `Agenda de contatos` foi concluido e homologado na entrada
+  `Atendimento -> Agenda de contatos`, rota
+  `/app/atendimento/agenda-contatos`.
+- Novo, Alterar, duplo clique para edicao e Eliminar estao implementados; a
+  listagem possui filtros, pesquisa, contador e selecao.
+- O modal reutilizado possui as abas Principal e Detalhes, 29 campos, busca
+  automatica de CEP, visual light/dark e responsividade homologada pelo usuario.
+- Imprime e Relatorio permanecem placeholders desabilitados por decisao de
+  produto: `KEEP_PLACEHOLDER_UNTIL_USER_DEFINES`.
+- Contrato final: `docs/contrato_fechamento_agenda_contatos_frontend_react.md`.
+
 ## Objetivo
 
 Este documento registra o estado atual dos modulos do Brana Cloude com base no codigo existente em `backend/` e `frontend/`. Ele nao substitui o codigo como fonte da verdade; serve como mapa operacional para desenvolvedores e IAs entenderem o que ja existe, o que esta pendente e qual deve ser o proximo passo.

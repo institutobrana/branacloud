@@ -54,6 +54,11 @@ Cobre eventos, bloqueios, horarios livres, combos, status, prestadores, unidades
 
 Regras: agenda usa `clinica_id`; eventos podem ter repeticao; avisos dependem de modelos de documentos e dados do paciente/prestador; Google/WhatsApp dependem de variaveis externas.
 
+O modulo React de Agenda de contatos esta documentado em
+`docs/contrato_fechamento_agenda_contatos_frontend_react.md`, incluindo a rota
+`/app/atendimento/agenda-contatos`, o CRUD de contatos e os placeholders de
+Imprime e Relatorio.
+
 ## Financeiro
 
 Codigo: `backend/routes/financeiro_routes.py`, `backend/routes/indices_financeiros_routes.py`, `backend/routes/cenario_routes.py`, modelos `financeiro.py`, `indice_financeiro.py`, `cenario.py`.
