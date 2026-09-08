@@ -51,8 +51,10 @@ export function SharedDatePicker({ value, disabled, onChange }) {
   };
 
   const selectText = (event) => {
+    const input = event?.target;
+    if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) return;
     editingRef.current = true;
-    requestAnimationFrame(() => event.target.select());
+    requestAnimationFrame(() => input.select());
   };
 
   return <div ref={containerRef}>

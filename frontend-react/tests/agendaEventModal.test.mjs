@@ -7,8 +7,6 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const source = fs.readFileSync(path.join(here, '../src/features/agendaSemanal/components/AgendaEventModal.jsx'), 'utf8');
 const styles = fs.readFileSync(path.join(here, '../src/features/agendaSemanal/components/agendaEventModal.css'), 'utf8');
-const patientModal = fs.readFileSync(path.join(here, '../src/features/menuPacientes/components/MenuPacientesModal.jsx'), 'utf8');
-const patientsApi = fs.readFileSync(path.join(here, '../src/features/menuPacientes/api/menuPacientesApi.js'), 'utf8');
 
 test('modal novo mantém as duas abas e os campos do contrato legado', () => {
   for (const label of ['Dados do agendamento', 'Repete agendamento', 'Data', 'Horário', 'Duração', 'Sala', 'Situação', 'Assunto', 'Observações', 'Inclusão', 'Alteração']) {
@@ -55,11 +53,12 @@ test('situação usa o código canônico valor_int, não o id auxiliar', () => {
 
 test('pesquisa de pacientes é lazy e separada do gesto de abertura do editor', () => {
   assert.match(source, /patientSearchRequested/);
-  assert.match(source, /patientSearchRequested \? <AgendaPatientSearchModal/);
+  assert.match(source, /patientSearchRequested \? <Modal open title="Pesquisar paciente"/);
   assert.match(source, /onClick=\{\(\) => onPatientResolve\('ellipsis'\)\}/);
   assert.match(source, /<Button aria-label="Pesquisar paciente" disabled=\{compromisso\}/);
   assert.match(source, /onCancel=\{closePatientSearch\}/);
-  assert.match(patientModal, /Menu de pacientes/);
-  assert.match(patientsApi, /cadastros\/pacientes\/menu-options/);
-  assert.match(patientsApi, /cadastros\/pacientes\/menu\?/);
+  assert.match(source, /listarPacientes/);
+  assert.match(source, /obterPaciente/);
+  assert.match(source, /mapPatientToAgendaDraft/);
+  assert.doesNotMatch(source, /features\/menuPacientes/);
 });

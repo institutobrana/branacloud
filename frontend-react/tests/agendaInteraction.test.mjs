@@ -20,11 +20,14 @@ test('scheduler usa callbacks públicos e distingue clique simples de duplo cliq
   assert.match(scheduler, /mode: 'edicao'/);
 });
 
-test('editor é somente shell e cancela sem endpoints de escrita', () => {
+test('editor cancela sem disparar escrita e mantém escrita sob ação explícita', () => {
   assert.match(modal, /Edita agendamento/);
   assert.match(modal, /Editar agendamento/);
   assert.match(modal, /Cancela/);
-  assert.doesNotMatch(modal, /fetch|POST|PUT|PATCH|DELETE/);
+  assert.match(modal, /onClick=\{onCancel\}/);
+  assert.match(modal, /onClick=\{isNew \? submitNew : submitEdit\}/);
+  assert.match(modal, /onClick=\{requestDelete\}/);
+  assert.doesNotMatch(modal, /onClick=\{onCancel\}[^\n]*(createAgendaEvent|updateAgendaEvent|deleteAgendaEvent)/);
 });
 
 test('clínica reutiliza o detector de duplo clique para slots e eventos', () => {

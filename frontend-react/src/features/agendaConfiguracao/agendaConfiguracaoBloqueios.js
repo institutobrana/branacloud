@@ -135,5 +135,10 @@ export function agendaBloqueioTimeToLegacyInt(value) {
 }
 
 export function agendaBloqueioParseDateInput(value, referenceDate = dayjs()) {
+  const isoMatch = String(value ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoMatch) {
+    const [, year, month, day] = isoMatch;
+    return normalizeContaCorrenteDateInput(`${day}/${month}/${year}`, referenceDate);
+  }
   return normalizeContaCorrenteDateInput(value, referenceDate);
 }
