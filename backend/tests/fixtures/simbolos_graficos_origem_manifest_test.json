@@ -1,0 +1,85 @@
+{
+  "version": "g2b1c-test-v1",
+  "source_report": "TEST FIXTURE - origem simbolos graficos",
+  "generated_at": "2026-08-03T00:00:00Z",
+  "database": "brana_saas",
+  "schema": "public",
+  "table": "simbolo_grafico_catalogo",
+  "expected_total": 6,
+  "expected_origin_null": 6,
+  "category_totals": {
+    "catalogo_oficial": 2,
+    "seed_interno": 2,
+    "fixture_teste": 1,
+    "asset_auxiliar": 1
+  },
+  "records": [
+    {
+      "id": 1001,
+      "origem": "catalogo_oficial",
+      "rule_id": "R001",
+      "signature": "1001|1|1|sig-1001|A|1|1|True|0",
+      "expected_fields": {
+        "legacy_id": 1,
+        "clinica_id": 1,
+        "ativo": true
+      }
+    },
+    {
+      "id": 1002,
+      "origem": "catalogo_oficial",
+      "rule_id": "R001",
+      "signature": "1002|2|1|sig-1002|B|1|1|True|0",
+      "expected_fields": {
+        "legacy_id": 2,
+        "clinica_id": 1,
+        "ativo": true
+      }
+    },
+    {
+      "id": 1003,
+      "origem": "seed_interno",
+      "rule_id": "R002",
+      "signature": "1003|None|1|sig-1003|C|1|1|True|0",
+      "expected_fields": {
+        "legacy_id": null,
+        "clinica_id": 1,
+        "ativo": true
+      }
+    },
+    {
+      "id": 1004,
+      "origem": "seed_interno",
+      "rule_id": "R002",
+      "signature": "1004|None|1|sig-1004|D|1|1|True|0",
+      "expected_fields": {
+        "legacy_id": null,
+        "clinica_id": 1,
+        "ativo": true
+      }
+    },
+    {
+      "id": 1005,
+      "origem": "fixture_teste",
+      "rule_id": "R003",
+      "signature": "1005|None|1|sig-1005|teste simbolo react fixture|1|1|True|0",
+      "expected_fields": {
+        "legacy_id": null,
+        "clinica_id": 1,
+        "ativo": true
+      }
+    },
+    {
+      "id": 1006,
+      "origem": "asset_auxiliar",
+      "rule_id": "R004",
+      "signature": "1006|None|1|sig-1006|asset|1|1|True|1",
+      "expected_fields": {
+        "legacy_id": null,
+        "clinica_id": 1,
+        "ativo": true
+      }
+    }
+  ],
+  "manifest_checksum": "7c8568c91668ba12ec90fe7398564832a799091129ccb5e0c379e6bfcb688816"
+}
