@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
   AGENDA_FONTE_DEFAULTS,
@@ -92,4 +95,12 @@ test('helper de hora reproduz o contrato legado de digitação e blur', () => {
   assert.equal(normalizeAgendaHoraInput('12:60'), null);
   assert.equal(isValidAgendaHoraInput('20:15'), true);
   assert.equal(isValidAgendaHoraInput('20:75'), false);
+});
+
+test('atualização parcial da Escala preserva as demais chaves do draft', () => {
+  const modalPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/features/agendaConfiguracao/AgendaConfiguracaoModal.jsx');
+  const source = fs.readFileSync(modalPath, 'utf8');
+
+  assert.match(source, /setDraft\(\(current\) => \(\{ \.\.\.current, \.\.\.patch \}\)\)/);
+  assert.match(source, /buildTabItems\(\{ draft, updateDraft, prestadorId/);
 });

@@ -69,6 +69,7 @@ assert.equal(editPayloadWithQtd.qtd_sala, 7);
 assert.equal(editPayloadWithQtd.ativo, true);
 
 const modalSource = fs.readFileSync(path.resolve('src/features/unidadesAtendimento/components/UnidadeAtendimentoModal.jsx'), 'utf8');
+const deleteDialogSource = fs.readFileSync(path.resolve('src/features/unidadesAtendimento/components/UnidadeAtendimentoDeleteDialog.jsx'), 'utf8');
 const identSource = fs.readFileSync(path.resolve('src/features/unidadesAtendimento/components/UnidadeIdentificacaoSection.jsx'), 'utf8');
 const enderecoSource = fs.readFileSync(path.resolve('src/features/unidadesAtendimento/components/UnidadeEnderecoSection.jsx'), 'utf8');
 const phonesSource = fs.readFileSync(path.resolve('src/features/unidadesAtendimento/components/UnidadeTelefonesSection.jsx'), 'utf8');
@@ -107,5 +108,7 @@ assert.match(cssSource, /\.unidades-atendimento-phone-row/);
 assert.match(cssSource, /\.unidades-atendimento-divider/);
 assert.match(cssSource, /\.unidades-atendimento-wa-button/);
 assert.match(cssSource, /\.unidades-atendimento-field-status/);
+assert.match(deleteDialogSource, /Excluir unidade de atendimento/);
+assert.match(deleteDialogSource, /auxiliary-shell-button danger/);
 
 console.log('unidadesAtendimento.contract.test.mjs ok');

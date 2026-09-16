@@ -408,6 +408,63 @@ class FinanceiroPrestadorContractTests(unittest.TestCase):
         self.assertEqual(result["total_entrada"], 19.0)
         self.assertEqual(result["saldo"], 19.0)
 
+    def test_relatorio_cc_respeita_conta_clinica_e_prestador(self):
+        self._seed_lancamento(conta="CLINICA", prestador_id=None, valor=19.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=1, valor=33.0)
+        self._seed_lancamento(conta="CIRURGIAO", prestador_id=2, valor=77.0)
+
+        clinica = financeiro_routes.relatorio_conta_corrente(
+            conta="CLINICA",
+            prestador_id=2,
+            tipo_lancamento="",
+            grupo="",
+            tipo_grupo="",
+            categoria="",
+            situacao="",
+            forma_pagamento="",
+            referencia="",
+            complemento="",
+            documento="",
+            data_venc_ini="",
+            data_venc_fim="",
+            data_lanc_ini="",
+            data_lanc_fim="",
+            tributavel="todos",
+            ordem="Data",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual(len(clinica["itens"]), 1)
+        self.assertEqual(clinica["itens"][0]["conta"], "CLINICA")
+        self.assertEqual(clinica["total_credito"], 19.0)
+        self.assertEqual(clinica["saldo_final"], 19.0)
+
+        tel = financeiro_routes.relatorio_conta_corrente(
+            conta="CIRURGIAO",
+            prestador_id=1,
+            tipo_lancamento="",
+            grupo="",
+            tipo_grupo="",
+            categoria="",
+            situacao="",
+            forma_pagamento="",
+            referencia="",
+            complemento="",
+            documento="",
+            data_venc_ini="",
+            data_venc_fim="",
+            data_lanc_ini="",
+            data_lanc_fim="",
+            tributavel="todos",
+            ordem="Data",
+            current_user=self.current_user,
+            db=self.db,
+        )
+        self.assertEqual(len(tel["itens"]), 1)
+        self.assertEqual(tel["itens"][0]["conta"], "CIRURGIAO")
+        self.assertEqual(tel["total_credito"], 33.0)
+        self.assertEqual(tel["saldo_final"], 33.0)
+
 
 if __name__ == "__main__":
     unittest.main()

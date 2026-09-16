@@ -13,6 +13,7 @@ test('normalizeContaCorrenteDateInput resolves short values against an explicit 
 
 test('normalizeContaCorrenteDateInput preserves full valid dates and rejects invalid calendar values', () => {
   assert.equal(normalizeContaCorrenteDateInput('01/01/2026', referenceDate)?.format('DD/MM/YYYY'), '01/01/2026');
+  assert.equal(normalizeContaCorrenteDateInput('2026-08-22', referenceDate)?.format('DD/MM/YYYY'), '22/08/2026');
   assert.equal(normalizeContaCorrenteDateInput('29/02/2024', referenceDate)?.format('DD/MM/YYYY'), '29/02/2024');
   assert.equal(normalizeContaCorrenteDateInput('320126', referenceDate), null);
   assert.equal(normalizeContaCorrenteDateInput('011326', referenceDate), null);
@@ -30,5 +31,6 @@ test('normalizeContaCorrenteDateInput ignores empty and unsupported lengths with
 
 test('formatContaCorrenteDate returns the normalized display format', () => {
   assert.equal(formatContaCorrenteDate('010126'), '01/01/2026');
+  assert.equal(formatContaCorrenteDate('2026-08-22'), '22/08/2026');
   assert.equal(formatContaCorrenteDate('320126'), null);
 });

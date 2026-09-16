@@ -8,6 +8,7 @@ import { validateCenarioAnualPayload, validateCenarioAnualState } from '../src/f
 import { salvarCenarioAnual } from '../src/features/cenarioAnual/cenarioAnualApi.js';
 import {
   applyScenarioSaveResponse,
+  createSubmissionGate,
   hasScenarioFields,
   reloadCenarioAnualState,
   saveCenarioAnualState,
@@ -57,6 +58,59 @@ test('calculateFixedSummary aplica a regra do consultorio minimo efetivo', () =>
     total_minutos_fixo: 100800,
     total_turnos_fixo: 420,
   });
+});
+
+test('calculateFixedSummary preserva zero de consultorios', () => {
+  const summary = calculateFixedSummary({
+    meses_trabalhados: 10.5,
+    dias_uteis_mes: 20,
+    horas_atendimento_dia: 8,
+    num_consultorios: 0,
+  });
+
+  assert.deepEqual(summary, {
+    dias_uteis_ano: 210,
+    total_horas_fixo: 0,
+    total_minutos_fixo: 0,
+    total_turnos_fixo: 0,
+  });
+});
+
+test('calculateFlexibleSummary preserva zero de consultorios flexiveis', () => {
+  const summary = calculateFlexibleSummary({
+    meses_trabalhados: 10.5,
+    dias_uteis_mes: 20,
+    horas_atendimento_dia: 8,
+    num_consultorios_flex: 0,
+    manha_1: 4,
+    tarde_1: 5,
+    noite_1: 0,
+    dias_1: 30,
+    manha_2: 4,
+    tarde_2: 5,
+    noite_2: 0,
+    dias_2: 36,
+    manha_3: 4,
+    tarde_3: 5,
+    noite_3: 0,
+    dias_3: 35,
+    manha_4: 4,
+    tarde_4: 5,
+    noite_4: 0,
+    dias_4: 30,
+    manha_5: 4,
+    tarde_5: 5,
+    noite_5: 0,
+    dias_5: 30,
+    manha_6: 4,
+    tarde_6: 0,
+    noite_6: 0,
+    dias_6: 0,
+  });
+
+  assert.equal(summary.total_horas_flex, 0);
+  assert.equal(summary.total_minutos_flex, 0);
+  assert.equal(summary.total_turnos_flex, 0);
 });
 
 test('calculateFlexibleSummary fecha o print de referencia', () => {
@@ -159,6 +213,16 @@ test('validateCenarioAnualState bloqueia vazio, zero proibido, negativo e percen
   assert.equal(validDecimal.valid, true);
 });
 
+test('validateCenarioAnualState retorna mapa estavel de validationErrors', () => {
+  const invalid = validateCenarioAnualState({ ...structuredClone(referenceState), horas_atendimento_dia: 0 });
+  assert.equal(typeof invalid.errors, 'object');
+  assert.notEqual(invalid.errors.horas_atendimento_dia, undefined);
+  assert.equal(Object.keys(invalid.errors).length > 0, true);
+
+  const valid = validateCenarioAnualState(structuredClone(referenceState));
+  assert.deepEqual(valid.errors, {});
+});
+
 test('salvarCenarioAnual envia POST completo e preserva o payload', async () => {
   const originalFetch = global.fetch;
   let called = 0;
@@ -185,6 +249,75 @@ test('salvarCenarioAnual envia POST completo e preserva o payload', async () => 
   } finally {
     global.fetch = originalFetch;
   }
+});
+
+test('saveCenarioAnualState bloqueia segunda escrita enquanto a primeira permanece pendente', async () => {
+  const payload = buildCenarioAnualPayload(structuredClone(referenceState));
+  const submitLock = { current: false };
+  const activeSubmissionSignature = { current: '' };
+  const calls = [];
+  let resolveSave;
+
+  const save = async () => {
+    calls.push('save');
+    return new Promise((resolve) => {
+      resolveSave = resolve;
+    });
+  };
+
+  const firstPromise = saveCenarioAnualState({
+    state: structuredClone(referenceState),
+    validationErrors: {},
+    buildPayload: () => payload,
+    save,
+    submitLock,
+    activeSubmissionSignature,
+    setState: () => {},
+    setSaving: () => {},
+    setSaveError: () => {},
+    setSaveSuccess: () => {},
+  });
+
+  const secondAttempt = await saveCenarioAnualState({
+    state: structuredClone(referenceState),
+    validationErrors: {},
+    buildPayload: () => payload,
+    save,
+    submitLock,
+    activeSubmissionSignature,
+    setState: () => {},
+    setSaving: () => {},
+    setSaveError: () => {},
+    setSaveSuccess: () => {},
+  });
+
+  assert.equal(calls.length, 1);
+  assert.equal(secondAttempt.ok, false);
+  assert.equal(secondAttempt.reason, 'already_saving');
+
+  resolveSave({ detail: 'ok' });
+  await firstPromise;
+
+  const saveImmediate = async () => {
+    calls.push('save');
+    return { detail: 'ok' };
+  };
+
+  const thirdAttempt = await saveCenarioAnualState({
+    state: structuredClone(referenceState),
+    validationErrors: {},
+    buildPayload: () => payload,
+    save: saveImmediate,
+    submitLock,
+    activeSubmissionSignature,
+    setState: () => {},
+    setSaving: () => {},
+    setSaveError: () => {},
+    setSaveSuccess: () => {},
+  });
+
+  assert.equal(calls.length, 2);
+  assert.equal(thirdAttempt.ok, true);
 });
 
 test('carregarCenarioAnual classifica falha controlada de rede e de HTTP', async () => {
@@ -301,7 +434,7 @@ test('saveCenarioAnualState captura falha de POST, preserva o estado e permite n
 
   const failure = await saveCenarioAnualState({
     state,
-    validation: { valid: true, errors: {} },
+    validationErrors: {},
     save: failingSave,
     setState,
     setSaving,
@@ -322,7 +455,7 @@ test('saveCenarioAnualState captura falha de POST, preserva o estado e permite n
   let observedPayload = null;
   const success = await saveCenarioAnualState({
     state,
-    validation: { valid: true, errors: {} },
+    validationErrors: {},
     save: async (payload) => {
       attempts += 1;
       observedPayload = payload;
@@ -347,7 +480,7 @@ test('saveCenarioAnualState captura falha de POST, preserva o estado e permite n
   events.length = 0;
   const restored = await saveCenarioAnualState({
     state: { ...structuredClone(baselineScenario), ir: 10 },
-    validation: { valid: true, errors: {} },
+    validationErrors: {},
     save: async (payload) => {
       attempts += 1;
       observedPayload = payload;
@@ -377,7 +510,7 @@ test('saveCenarioAnualState bloqueia submissao concorrente enquanto o POST esta 
 
   const first = saveCenarioAnualState({
     state,
-    validation: { valid: true, errors: {} },
+    validationErrors: {},
     save: async (payload) => {
       firstSaveCalls += 1;
       events.push(['save', payload.ir]);
@@ -392,7 +525,7 @@ test('saveCenarioAnualState bloqueia submissao concorrente enquanto o POST esta 
 
   const second = await saveCenarioAnualState({
     state,
-    validation: { valid: true, errors: {} },
+    validationErrors: {},
     save: async () => {
       firstSaveCalls += 1;
       return { detail: 'unexpected' };
@@ -419,14 +552,13 @@ test('saveCenarioAnualState bloqueia submissao concorrente enquanto o POST esta 
 
   const retry = await saveCenarioAnualState({
     state: { ...state, ir: 12 },
-    validation: { valid: true, errors: {} },
+    validationErrors: {},
     save: async (payload) => {
       retryCalls += 1;
       events.push(['save-retry', payload.ir]);
       return { detail: 'Cenario salvo com sucesso.' };
     },
     submitLock,
-    lastSuccessfulSignature: { current: '' },
     setState: () => events.push(['setState-retry', true]),
     setSaving: (value) => events.push(['setSaving-retry', value]),
     setSaveError: (value) => events.push(['setSaveError-retry', value]),
@@ -438,11 +570,46 @@ test('saveCenarioAnualState bloqueia submissao concorrente enquanto o POST esta 
   assert.equal(retryCalls, 1);
 });
 
+test('createSubmissionGate bloqueia segunda entrada ate liberar a gate', () => {
+  const gate = createSubmissionGate();
+
+  assert.equal(gate.tryEnter(), true);
+  assert.equal(gate.tryEnter(), false);
+  gate.release();
+  assert.equal(gate.tryEnter(), true);
+  gate.release();
+});
+
+test('saveCenarioAnualState bloqueia payload idêntico enquanto a assinatura ativa está ocupada', async () => {
+  let saveCalls = 0;
+  const submitLock = { current: false };
+  const payloadSignature = JSON.stringify(buildCenarioAnualPayload({ ...structuredClone(baselineScenario), ir: 11 }));
+  const activeSubmissionSignature = { current: payloadSignature };
+  const result = await saveCenarioAnualState({
+    state: { ...structuredClone(baselineScenario), ir: 11 },
+    validationErrors: {},
+    submitLock,
+    activeSubmissionSignature,
+    save: async () => {
+      saveCalls += 1;
+      return { detail: 'unexpected' };
+    },
+    setState: () => {},
+    setSaving: () => {},
+    setSaveError: () => {},
+    setSaveSuccess: () => {},
+  });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'duplicate_payload');
+  assert.equal(saveCalls, 0);
+});
+
 test('saveCenarioAnualState bloqueia formulario invalido antes do POST', async () => {
   let saveCalls = 0;
   const result = await saveCenarioAnualState({
     state: { ...structuredClone(referenceState), horas_atendimento_dia: 0 },
-    validation: validateCenarioAnualState({ ...structuredClone(referenceState), horas_atendimento_dia: 0 }),
+    validationErrors: validateCenarioAnualState({ ...structuredClone(referenceState), horas_atendimento_dia: 0 }).errors,
     save: async () => {
       saveCalls += 1;
       return { detail: 'unexpected' };
