@@ -1,0 +1,17 @@
+﻿-- Script-modelo: restauracao isolada somente para analise, NAO EXECUTAR EM PRODUCAO.
+-- Fonte: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\Dados\eds70.bak
+-- Banco alvo: EDS70_RESTORE_ANAMNESE_READONLY
+-- Pasta temporaria: D:\BRANA ARQUIVOS\BRANA CLOUD\_TEMP_SQLSERVER_RESTORE\
+
+-- Nomes logicos obtidos via RESTORE FILELISTONLY:
+--   data: eds70dat
+--   log : eds70log
+
+-- Se o banco temporario ainda nao existir, restaurar em um ambiente isolado com nome unico.
+RESTORE DATABASE EDS70_RESTORE_ANAMNESE_READONLY
+FROM DISK = 'D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\Dados\eds70.bak'
+WITH
+  MOVE 'eds70dat' TO 'D:\BRANA ARQUIVOS\BRANA CLOUD\_TEMP_SQLSERVER_RESTORE\EDS70_RESTORE_ANAMNESE_READONLY.mdf',
+  MOVE 'eds70log'  TO 'D:\BRANA ARQUIVOS\BRANA CLOUD\_TEMP_SQLSERVER_RESTORE\EDS70_RESTORE_ANAMNESE_READONLY_log.ldf',
+  RECOVERY;
+GO

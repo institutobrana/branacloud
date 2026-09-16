@@ -1,0 +1,32 @@
+[
+  {
+    "path": "D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_full_20260313_234848\\extra_files\\dados.db",
+    "tables": [
+      "categoria_financeira",
+      "cenario",
+      "grupo_financeiro",
+      "item_auxiliar",
+      "lancamento",
+      "licencasistema",
+      "lista_material",
+      "listamaterial",
+      "material",
+      "procedimento",
+      "procedimento_material",
+      "procedimentomaterial",
+      "usuarios"
+    ],
+    "notes": [
+      {
+        "table": "usuarios",
+        "columns": [
+          "id",
+          "usuario",
+          "senha",
+          "codigo",
+          "online"
+        ]
+      }
+    ]
+  }
+]

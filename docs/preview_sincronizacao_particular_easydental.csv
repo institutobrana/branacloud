@@ -1,0 +1,10 @@
+codigo,nome_origem,nome_brana,igual,procedimento_id,tabela_id
+1010,Selante  por elemento,AplicaÆo de Fl£or Verniz - (por elemento),False,40713,18
+1020,Prótese adesiva metalo-cerâmica (1 elem),AplicaÆo de Selnate Oclusa Invasivo - (por elemento),False,40714,18
+1030,Raio X periapical,AplicaÆo T¢pica de Fl£or,False,40715,18
+1040,Tratamento de canal (Retratamento Trirradicular),Controle da Placa Bacteriana - (por sessÆo),False,40716,18
+1050,Apicectomia de anteriores,InstruÆo de Higiene Oral - (I.H.O.),False,40717,18
+1060,Aplicação terapêutica de flúor,Profilaxia - (Polimento com taa de borracha),False,40718,18
+1070,Prótese total acrílica,Profilaxia - (Ultrason e Jato de Bicarbonato),False,40719,18
+1080,Núcleo provisório,Teste de fluxo salivar,False,40720,18
+1090,Emergência,Teste de Risco de C rie,False,40721,18

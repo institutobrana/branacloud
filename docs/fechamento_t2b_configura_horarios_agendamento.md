@@ -57,6 +57,33 @@ A aba `Apresentação` configura as cores de pacientes particulares, pacientes d
 
 A aba `Visualização` controla os campos exibidos no agendamento. O catálogo real contém: Número do paciente, Número do prontuário, Nome do paciente, Matrícula, Convênio, Tabela, Fone 1, Fone 2, Fone 3 e Sala. Os defaults atuais são Número do paciente, Nome do paciente, Fone 1, Fone 2 e Sala.
 
+## ÂNCORA AGENDA — PRÉ-5F.4
+
+Data/hora: 2026-08-27T10:20:53-03:00  
+Branch: `modularizacao-segura-fase-1`  
+HEAD anterior: `49b00c62b3d04260283fe3ffcb7f0cf5f1ba1e11`  
+HEAD âncora: não criado; o worktree contém alterações de múltiplas frentes e não foi seguro fazer staging seletivo.
+
+Estado aprovado:
+
+- 5F.1 Escala: concluída; `duracao` configurável (5–60, step 1), `slotDuration`/`slotHeaderInterval` reais, horários de semana e dia independentes, refresh imediato e malha contínua. Baseline: `duracao=5`, `semana_horarios=12`, `dia_horarios=12`.
+- 5F.2 Bloqueios: concluída; fontes ativas `agenda_config_json.bloqueios_itens` e `agenda_legado_bloqueio`, união via `_merge_intervals()`, CRUD legado/React preservados, isolamento por prestador/unidade aprovado e sem evento visual artificial na Clínica.
+- 5F.3 Apresentação: concluída; Microsoft Sans Serif, 10pt, regular, texto preto; cores base Particular `#ffff00`, Convênio `#0000ff`, Compromisso `#00e5ef`; precedência status > tipo > configuração do prestador > fallback; Semana/Dia/Clínica aprovados.
+
+Arquivos relacionados: componentes e hooks de configuração, agenda React, adaptador/renderer de eventos e testes de contrato listados no histórico/diff local. Testes focados de Agenda: PASS. Build React: PASS. Runtime autenticado: PASS para login, shell, Semana, Dia, Clínica e abas Escala/Bloqueios/Apresentação.
+
+Próxima pendência: 5F.4 — reproduzir o conteúdo interno dos eventos conforme o legado. Commit: não criado. Push: não realizado.
+
+### Contrato 5F.4 — Visualização (auditoria pré-implementação)
+
+O legado usa `visualizacao_campos` com dez opções. Em Semana e Clínica, `agendaSemanaEventoTexto()` produz linhas: (1) hora + número/prontuário/matrícula selecionados; (2) nome; (3) telefones selecionados; (4) convênio/tabela/sala selecionados. No Dia, `agendaSemanaEventoTextoDia()` usa três colunas: paciente/horário, motivo e telefones. Linhas excedentes são recortadas por `overflow:hidden`/ellipsis; a geometria temporal não muda.
+
+O React anterior renderizava apenas nome, hora em eventos não curtos e telefone em eventos longos; não consumia `visualizacao_campos`, nem carregava prontuário, matrícula, convênio, tabela, sala e motivo para o conteúdo. A correção mínima é um helper puro único, consumido por Semana, Dia e Clínica, sem tocar na apresentação, geometria, bloqueios ou escala.
+
+### Fechamento consolidado da Fase 5F
+
+5F.1 Escala, 5F.2 Bloqueios, 5F.3 Apresentação e 5F.4 Visualização foram homologadas e congeladas. A Visualização foi comparada com o legado em eventos reais curto (5 min), médio (30 min) e longo (60 min), nos modos Semana, Dia e Clínica. O conteúdo, a ordem, o recorte por overflow e a geometria temporal foram preservados. A próxima frente, ainda não iniciada, é o duplo clique e o modal de agendamento.
+
 ## Persistência, Ok, Cancela e X
 
 Ao abrir, o hook resolve o `prestadorId` do contexto de abertura ou do usuário, carrega o registro e bloqueios, e cria um draft local. `Ok` envia uma única gravação da configuração em:
@@ -122,7 +149,7 @@ Falhas de infraestrutura conhecidas, como caminhos relativos duplicados `fronten
 
 ## Fechamento
 
-**FRENTE B — CONFIGURA HORÁRIOS DE AGENDAMENTO**
+**FRENTE B — CONFIGURA HORÁRIOS DE AGENDAMENTO**  
 **STATUS: FUNCIONALMENTE CONCLUÍDA E HOMOLOGADA**
 
 O cadastro/configuração de horários foi documentado separadamente de Prestadores. O documento não encerra Prestadores, Credenciamentos, Comissões, Unidades ou Motivos.

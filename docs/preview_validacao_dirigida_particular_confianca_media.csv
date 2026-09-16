@@ -1,0 +1,104 @@
+id_brana,codigo_brana,nome_brana,nroproctab,codconv,descricao_easy,nome_normalizado,especialidade_easy,especialidade_brana,simbolo_easy,simbolo_brana,preco_easy,preco_brana,forma_cobranca_easy,forma_cobranca_brana,status_easy,status_brana,observacoes,risco,classificacao_anterior,classificacao_final,acao_futura_permitida,acao_futura_bloqueada
+40558,6010,Alveoloplastica ou alveolotomia - (por sextante),2,6010,Alveoloplastica ou alveolotomia - (por sextante),alveoloplastica ou alveolotomia - (por sextante),06,06,57,57,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40561,6040,Cirurgia para Cisto de Desenvolvimento,5,6040,Cirurgia para Cisto de Desenvolvimento,cirurgia para cisto de desenvolvimento,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40562,6050,Cirurgia para Microstomia,6,6050,Cirurgia para Microstomia,cirurgia para microstomia,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40563,6060,Cirurgia para Osteoma e Odontoma,7,6060,Cirurgia para Osteoma e Odontoma,cirurgia para osteoma e odontoma,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40564,6070,Cirurgia para torus palatino unilateral,8,6070,Cirurgia para torus palatino unilateral,cirurgia para torus palatino unilateral,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40565,6080,Ciurgia para torus mandibular bilateral,9,6080,Ciurgia para torus mandibular bilateral,ciurgia para torus mandibular bilateral,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40567,6100,Cirurgia para torus palatino bilateral,11,6100,Cirurgia para torus palatino bilateral,cirurgia para torus palatino bilateral,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40569,6120,Drenagem de abcesso por via intra ou extra-oral,13,6120,Drenagem de abcesso por via intra ou extra-oral,drenagem de abcesso por via intra ou extra-oral,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40578,6210,Exodontia de incluso,22,6210,Exodontia de incluso,exodontia de incluso,,,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40579,6220,Exodontia de incluso impactado,23,6220,Exodontia de incluso impactado,exodontia de incluso impactado,,,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40580,6230,Exodontia de raiz residual,24,6230,Exodontia de raiz residual,exodontia de raiz residual,06,06,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40581,6240,Exodontia de raiz residual com retalho,25,6240,Exodontia de raiz residual com retalho,exodontia de raiz residual com retalho,,,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40582,6250,Exodontia de semi-incluso,26,6250,Exodontia de semi-incluso,exodontia de semi-incluso,,,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40583,6260,Exodontia + Enxerto + membrana,27,6260,Exodontia + Enxerto + membrana,exodontia + enxerto + membrana,06,06,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40584,6270,Exodontia simples - (Anteriores),28,6270,Exodontia simples - (Anteriores),exodontia simples - (anteriores),06,06,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40585,6280,Exodontia simples - (Posteriores),29,6280,Exodontia simples - (Posteriores),exodontia simples - (posteriores),06,06,13,13,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40592,6350,Tratamento de alveolite,36,6350,Tratamento de alveolite,tratamento de alveolite,06,06,57,57,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40593,6360,Tratamento de hemorragia,37,6360,Tratamento de hemorragia,tratamento de hemorragia,06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40597,5020,Capeamento pulpar,41,5020,Capeamento pulpar,capeamento pulpar,02,02,53,53,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40598,5030,Clareamento - (Caseiro),42,5030,Clareamento - (Caseiro),clareamento - (caseiro),,,31,31,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40599,5040,Clareamento - (Laser),43,5040,Clareamento - (Laser),clareamento - (laser),01,01,31,31,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40600,5050,Clareamento interno - (dentes desvitalizados),44,5050,Clareamento interno - (dentes desvitalizados),clareamento interno - (dentes desvitalizados),01,01,31,31,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40602,5070,Faceta em resina direta - (Dentes anteriores),46,5070,Faceta em resina direta - (Dentes anteriores),faceta em resina direta - (dentes anteriores),01,01,39,39,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40611,5150,Polimento e Acabamento,55,5150,Polimento e Acabamento,polimento e acabamento,04,04,59,59,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40624,4000,Apicectomia em Incisivos com enxerto leofilizado,68,4000,Apicectomia em Incisivos com enxerto leofilizado,apicectomia em incisivos com enxerto leofilizado,06,06,15,15,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40626,4020,Apicectomia em Incisivos curetagem apical,70,4020,Apicectomia em Incisivos curetagem apical,apicectomia em incisivos curetagem apical,06,06,15,15,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40627,4030,Apicectomia em Molares com enxerto leofilizado,71,4030,Apicectomia em Molares com enxerto leofilizado,apicectomia em molares com enxerto leofilizado,06,06,15,15,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40629,4050,Apicectomia em Molares curetagem apical,73,4050,Apicectomia em Molares curetagem apical,apicectomia em molares curetagem apical,06,06,15,15,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40633,4090,Clareamento Interno,77,4090,Clareamento Interno,clareamento interno,,,31,31,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40636,4120,Pulpotomia,80,4120,Pulpotomia,pulpotomia,05,05,48,48,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40640,4160,Retratamento de Canal - (Incisivos),84,4160,Retratamento de Canal - (Incisivos),retratamento de canal - (incisivos),03,03,12,12,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40641,4170,Retratamento de Canal - (Molares com 4 ou mais condutos),85,4170,Retratamento de Canal - (Molares com 4 ou mais condutos),retratamento de canal - (molares com 4 ou mais condutos),,,12,12,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40642,4180,Retratamento de Canal - (Molares),86,4180,Retratamento de Canal - (Molares),retratamento de canal - (molares),,,12,12,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40646,4220,Tratamento de Canal - (Incisivos),90,4220,Tratamento de Canal - (Incisivos),tratamento de canal - (incisivos),03,03,12,12,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40647,4230,Tratamento de Canal - (Molares com mais de 3 condutos),91,4230,Tratamento de Canal - (Molares com mais de 3 condutos),tratamento de canal - (molares com mais de 3 condutos),,,12,12,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40648,4240,Tratamento de Canal - (Molares),92,4240,Tratamento de Canal - (Molares),tratamento de canal - (molares),,,12,12,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40661,2090,Curativo,105,2090,Curativo,curativo,05,05,57,57,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40663,2110,Modelo de Estudo - (Superior e Infeiror),107,2110,Modelo de Estudo - (Superior e Infeiror),modelo de estudo - (superior e infeiror),07,07,41,41,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40664,2120,Radiografia Bite-Wing - (inter-proximal),108,2120,Radiografia Bite-Wing - (inter-proximal),radiografia bite-wing - (inter-proximal),11,11,11,11,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40665,2130,Radiografia Oclusal,109,2130,Radiografia Oclusal,radiografia oclusal,11,11,35,35,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40666,2140,Radiografia Periapical,110,2140,Radiografia Periapical,radiografia periapical,11,11,11,11,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40667,7040,Enxerto Osseo Particulado + Membrana colageno.,111,7040,Enxerto Osseo Particulado + Membrana colageno.,enxerto osseo particulado + membrana colageno.,04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40669,7010,Implante (RTG),113,7010,Implante (RTG),implante (rtg),13,13,9,9,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40674,3000,Abertura de implante - (Giro de retalho),118,3000,Abertura de implante - (Giro de retalho),abertura de implante - (giro de retalho),04,04,,,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40675,3010,Abertura de implante - (Osteotomia),119,3010,Abertura de implante - (Osteotomia),abertura de implante - (osteotomia),06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40676,3020,Abertura de implante - (Plastia),120,3020,Abertura de implante - (Plastia),abertura de implante - (plastia),06,06,17,17,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40677,3030,Abertura de implante mand. - (Enxerto Livre),121,3030,Abertura de implante mand. - (Enxerto Livre),abertura de implante mand. - (enxerto livre),04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40678,3040,Abertura de implante mand. - (Osteotomia e Livre),122,3040,Abertura de implante mand. - (Osteotomia e Livre),abertura de implante mand. - (osteotomia e livre),06,06,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40682,3080,Bridectomia,126,3080,Bridectomia,bridectomia,04,04,26,26,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40686,3120,Cirurgia para Rizectomia,130,3120,Cirurgia para Rizectomia,cirurgia para rizectomia,06,06,47,47,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40688,3140,Cirurgia Periodontal a retalho - (1 elemento),132,3140,Cirurgia Periodontal a retalho - (1 elemento),cirurgia periodontal a retalho - (1 elemento),04,04,17,17,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40689,3150,Cirurgia Periodontal a retalho - (por segmento),133,3150,Cirurgia Periodontal a retalho - (por segmento),cirurgia periodontal a retalho - (por segmento),04,04,17,17,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40690,3160,Cunha Distal ou Proximal,134,3160,Cunha Distal ou Proximal,cunha distal ou proximal,01,01,57,57,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40691,3170,Enxerto de Tecido Conjuntivo,135,3170,Enxerto de Tecido Conjuntivo,enxerto de tecido conjuntivo,04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40692,3180,Enxerto Gengival Livre,136,3180,Enxerto Gengival Livre,enxerto gengival livre,04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40694,3200,Enxerto Pediculado - (por elemento),138,3200,Enxerto Pediculado - (por elemento),enxerto pediculado - (por elemento),04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40695,3210,Enxerto por Tracionamento de Vestibulo - (por elemento),139,3210,Enxerto por Tracionamento de Vestibulo - (por elemento),enxerto por tracionamento de vestibulo - (por elemento),04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40696,3220,Enxerto por Tracionamento de Vestibulo - (por segmento),140,3220,Enxerto por Tracionamento de Vestibulo - (por segmento),enxerto por tracionamento de vestibulo - (por segmento),04,04,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40697,3230,Frenectomia labial inferior,141,3230,Frenectomia labial inferior,frenectomia labial inferior,04,04,26,26,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40698,3240,Frenectomia labial superior,142,3240,Frenectomia labial superior,frenectomia labial superior,04,04,26,26,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40701,3270,Frenotomia Lingual,145,3270,Frenotomia Lingual,frenotomia lingual,04,04,26,26,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40702,3280,Gengivectomia ou Gengivoplastia - (por elemento),146,3280,Gengivectomia ou Gengivoplastia - (por elemento),gengivectomia ou gengivoplastia - (por elemento),04,04,16,16,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40703,3290,Gengivectomia ou Gengivoplastia - (por segmento),147,3290,Gengivectomia ou Gengivoplastia - (por segmento),gengivectomia ou gengivoplastia - (por segmento),04,04,16,16,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40704,3300,Gengivectomia palatina / lingual - (por elemento),148,3300,Gengivectomia palatina / lingual - (por elemento),gengivectomia palatina / lingual - (por elemento),04,04,16,16,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40705,3310,Gengivectomia palatina / lingual - (por segmento),149,3310,Gengivectomia palatina / lingual - (por segmento),gengivectomia palatina / lingual - (por segmento),04,04,16,16,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40707,3330,Raspagem Sub-gengival e Curetagem de bolsa - (por segmento),151,3330,Raspagem Sub-gengival e Curetagem de bolsa - (por segmento),raspagem sub-gengival e curetagem de bolsa - (por segmento),04,04,18,18,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40708,3340,Raspagem Supra-gengival - (por segmento),152,3340,Raspagem Supra-gengival - (por segmento),raspagem supra-gengival - (por segmento),04,04,18,18,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40710,3360,Sepultamento Radicular - (por raiz),154,3360,Sepultamento Radicular - (por raiz),sepultamento radicular - (por raiz),04,04,57,57,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40711,3370,Ulectomia,155,3370,Ulectomia,ulectomia,04,04,51,51,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40719,1070,Profilaxia - (Ultrason e Jato de Bicarbonato),163,1070,Profilaxia - (Ultrason e Jato de Bicarbonato),profilaxia - (ultrason e jato de bicarbonato),08,08,8,8,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40720,1080,Teste de fluxo salivar,164,1080,Teste de fluxo salivar,teste de fluxo salivar,08,08,28,28,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40722,8000,Attachment,166,8000,Attachment,attachment,02,02,52,52,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40723,8010,Casquete de moldagem,167,8010,Casquete de moldagem,casquete de moldagem,02,02,56,56,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40725,8030,Coroa em Resina Prensada,169,8030,Coroa em Resina Prensada,coroa em resina prensada,02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40726,8040,Coroa em Resina Sinfony,170,8040,Coroa em Resina Sinfony,coroa em resina sinfony,01,01,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40727,8050,Coroa em Resina sob implante,171,8050,Coroa em Resina sob implante,coroa em resina sob implante,01,01,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40728,8060,Coroa Metal-free - (Cerampress),172,8060,Coroa Metal-free - (Cerampress),coroa metal-free - (cerampress),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40729,8070,Coroa Metal-free - (Inceram),173,8070,Coroa Metal-free - (Inceram),coroa metal-free - (inceram),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40730,8080,Coroa Metal-free - (Procera),174,8080,Coroa Metal-free - (Procera),coroa metal-free - (procera),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40731,8090,Coroa Metal-free - (Zirconia; Sistema CAD/CAM),175,8090,Coroa Metal-free - (Zirconia; Sistema CAD/CAM),coroa metal-free - (zirconia; sistema cad/cam),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40732,8100,Coroa Metal-free sob implante - (Cerampress),176,8100,Coroa Metal-free sob implante - (Cerampress),coroa metal-free sob implante - (cerampress),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40733,8110,Coroa Metal-free sob implante - (Inceram),177,8110,Coroa Metal-free sob implante - (Inceram),coroa metal-free sob implante - (inceram),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40734,8120,Coroa Metal-free sob implante - (Procera),178,8120,Coroa Metal-free sob implante - (Procera),coroa metal-free sob implante - (procera),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40735,8130,Coroa Metal-free sob implante - (Zirconia; Sistema CAD/CAM),179,8130,Coroa Metal-free sob implante - (Zirconia; Sistema CAD/CAM),coroa metal-free sob implante - (zirconia; sistema cad/cam),02,02,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40743,8500,E-MAX - Lente de contato,187,8500,E-MAX - Lente de contato,e-max - lente de contato,02,02,39,39,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40747,8220,Faceta em Porcelana,191,8220,Faceta em Porcelana,faceta em porcelana,01,01,39,39,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40748,8230,Faceta em Resina Acrilica,192,8230,Faceta em Resina Acrilica,faceta em resina acrilica,01,01,39,39,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40749,8240,Guia Cirurgico,193,8240,Guia Cirurgico,guia cirurgico,02,02,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40754,8290,Placa de mordida miorrelaxante,199,8290,Placa de mordida miorrelaxante,placa de mordida miorrelaxante,07,07,37,37,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40756,8305,Placa para Bruxismo Mista - (Erkoflex),201,8305,Placa para Bruxismo Mista - (Erkoflex),placa para bruxismo mista - (erkoflex),07,07,37,37,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40757,8310,Placa para Clareamento,202,8310,Placa para Clareamento,placa para clareamento,07,07,37,37,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40771,8291,Protetor bucal Playsafe,216,8291,Protetor bucal Playsafe,protetor bucal playsafe,07,07,37,37,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40873,8315,Placa para Ortose,318,8315,Placa para Ortose,placa para ortose,07,07,37,37,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40874,9000,Micro-agulhamento (Derma Roller),319,9000,Micro-agulhamento (Derma Roller),micro-agulhamento (derma roller),14,14,10,10,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40875,8292,Protetor bucal Playsafe Personalizado,320,8292,Protetor bucal Playsafe Personalizado,protetor bucal playsafe personalizado,07,07,37,37,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40876,7050,Levanto de seio maxilar,321,7050,Levanto de seio maxilar,levanto de seio maxilar,01,01,25,25,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40877,9010,Botox,322,9010,Botox,botox,14,14,43,43,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40879,9020,Preenchimento,324,9020,Preenchimento,preenchimento,14,14,10,10,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40882,9030,Lipo de papada,327,9030,Lipo de papada,lipo de papada,14,14,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40885,9050,Bichectomia,330,9050,Bichectomia,bichectomia,14,14,45,45,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40887,7023,Implante Cone Morse + Enxerto,332,7023,Implante Cone Morse + Enxerto,implante cone morse + enxerto,,,9,9,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40888,8482,E-MAX - Jaqueta pura em dissilicato,333,8482,E-MAX - Jaqueta pura em dissilicato,e-max - jaqueta pura em dissilicato,01,01,1,1,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply
+40889,2111,Foto extra-oral,334,2111,Foto extra-oral,foto extra-oral,14,14,43,43,,0.0,,,ativo,ativo,,baixo,M?DIA,MANTIDO_MEDIA,revisar,apply

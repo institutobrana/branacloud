@@ -1,0 +1,1106 @@
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\estrutura.txt
+MATCHES: Implante, anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  61: |   |   |           anamnese_perguntas.csv
+  62: |   |   |           anamnese_questionarios.csv
+  63: |   |   |           anamnese_respostas.csv
+  110: |   |               anamnese_perguntas.csv
+  111: |   |               anamnese_questionarios.csv
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\estrutura_eds70.txt
+MATCHES: Implante, Principal
+  718: |   |   arc_implante_i.bmp
+  719: |   |   arc_implante_s.bmp
+  1417: |       int_implante.bmp
+  1764: |   |   Contrato Implante.doc
+  1788: |   |   EXAME_SANGUE_IMPLANTE_BRANA.rtf
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\estrutura_precificacao.txt
+MATCHES: Implante, Principal, anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  164: |   |   |   interface_principal.py
+  194: |   |           interface_principal.cpython-310.pyc
+  415: |       |   int_implante.bmp
+  770: |       |       |   int_implante.bmp
+  3819: |           |   menu_principal.ui
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\estrutura_util.txt
+MATCHES: Implante
+  736: |   |   |   |   arc_implante_i.bmp
+  737: |   |   |   |   arc_implante_s.bmp
+  1376: |   |   |       int_implante.bmp
+  1555: |   |           Contrato Implante.doc
+  2376: |   |   |   |   arc_implante_i.bmp
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\main.py
+MATCHES: anamnese_perguntas
+  279:                     "ALTER TABLE IF EXISTS anamnese_perguntas "
+  285:                     "ALTER TABLE IF EXISTS anamnese_perguntas "
+  291:                     "ALTER TABLE IF EXISTS anamnese_perguntas "
+  297:                     "UPDATE anamnese_perguntas "
+  305:                     "ALTER TABLE IF EXISTS anamnese_perguntas "
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\clinic_id_swap_20260304_204058.json
+MATCHES: gleissontel@gmail.com
+  9:       "email": "gleissontel@gmail.com",
+  24:       "email": "gleissontel@gmail.com",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\LEIA_NO_PC_NOVO_ASSISTENTE.txt
+MATCHES: gleissontel@gmail.com, Principal
+  37: - Gleisson Tel | gleissontel@gmail.com | clinica_id 1 | admin
+  81: - Observacao: o gargalo principal para restaurar os dados nao e o backup, e sim ter Python + dependencias + PostgreSQL funcionando.
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\single_account_cleanup_20260304_203803.json
+MATCHES: gleissontel@gmail.com
+  3:   "owner_email": "gleissontel@gmail.com",
+  16:       "email": "gleissontel@gmail.com",
+  54:       "email": "gleissontel@gmail.com",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\clinicas.csv
+MATCHES: gleissontel@gmail.com
+  3: 1,Gleisson Tel,gleissontel@gmail.com,2026-03-10 18:24:01.40725,t,,2026-03-03 15:24:01.393095-03,DEMO 7 dias,,,,PARTICULAR
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\email_codes.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,gleissontel@gmail.com,signup,b4e18f274b320caa917bf6db867b171d7cca602787024831a7dfdca72c9c497e,2026-03-03 14:08:57.519207,f,2026-03-03 10:58:57.513179-03
+  3: 2,gleissontel@gmail.com,signup,6b1fa0ddade074d9f21f105333bd48995b28aa3a1611762d84b6638867d78175,2026-03-03 14:16:22.394852,f,2026-03-03 11:06:22.385664-03
+  4: 3,gleissontel@gmail.com,signup,bbdb68820bef3641c5e5bdd8dedc5f7ec0c11836b36c71344f9048d02aa71c86,2026-03-03 14:39:01.50305,f,2026-03-03 11:29:01.488212-03
+  5: 4,gleissontel@gmail.com,signup,4694993f8c3b9a111dfff97cec67a96f33f9d8f180be073c0fdf1f3fed3e532d,2026-03-03 14:39:55.520739,t,2026-03-03 11:29:55.518989-03
+  6: 7,gleissontel@gmail.com,signup,8b93c8a23c2927aab5423a747f8bff22aa8bbf651e615d569bb86b0620e9f6e9,2026-03-03 18:24:37.172861,t,2026-03-03 15:23:36.969086-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\item_auxiliar.csv
+MATCHES: Implante
+  1679: 1445,1,Fabricantes,21000,NEODENT - IMPLANTES
+  1693: 1459,1,Fabricantes,16021,SIN - IMPLANTES
+  1721: 1487,1,Fabricantes,21001,SYSTEX - IMPLANTES
+  2349: 1784,2,Fabricantes,21000,NEODENT - IMPLANTES
+  2363: 1798,2,Fabricantes,16021,SIN - IMPLANTES
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\lancamento.csv
+MATCHES: Implante
+  1513: 7868,1,292,IMPLALIFE IMPLANTES,320,2025-08-28,2025-08-28,debito,CLINICA,Aberto,Boleto bancário,2025-08-28,2026-01-25,,,,,0,0,1,1
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\material.csv
+MATCHES: Implante, Principal
+  71: 68,01680,Broca para Implante Lança 2.0,1,2,2,1,unidades,unidades,30,t,Custo com material
+  72: 69,01690,Broca para Implante Alvim 3.5,1,2,2,1,unidades,unidades,30,t,Custo com material
+  73: 70,01700,Broca para Implante Alvim 4.3,1,2,2,1,unidades,unidades,30,t,Custo com material
+  74: 71,01710,Broca para Implante Alvim 5.0,1,2,2,1,unidades,unidades,30,t,Custo com material
+  75: 72,01910,Broca para Implante Piloto 2/3,1,2,2,1,unidades,unidades,30,t,Custo com material
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\pacientes.csv
+MATCHES: gleissontel@gmail.com, Implante, Principal
+  428: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato no dia 12/06/15, paciente disse que vai agendar depois do dia 20, teve interesse nos implantes (600)\plain\f0\fs22\cf0\b . Jozi*12/06/15\par
+  430: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em  contato com a paciente para P.O (implante) esta disse estar tudo bem.\plain\f0\fs22\cf0\b  (Jozi) - 14/10/15\par
+  432: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato com a paciente para P.O (Implante), paciente disse que est\'e1 \'f3tima\plain\f0\fs22\cf0\b . (Jozi*) 04/02/16\par
+  440: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Paciente entrou em contato em 19/06/2018, disse que seu esposo est\'e1 adoentado e por isso ainda n\'e3o p\'f4de vir para fazer o implante, combinou que na semana que vem entra em contato para a
+  448: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0\b Protese sobre implante Dr combinou R$1200,00 cada. (Jozi*)30/11/2020\line \par
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\plataforma_auditoria.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,gleissontel@gmail.com,clinica_status_update,clinica,3,"{""ativo"": false, ""motivo"": """"}",127.0.0.1,2026-03-06 10:57:08.509526-03
+  3: 2,1,gleissontel@gmail.com,usuario_status_update,usuario,3,"{""ativo"": false, ""email"": ""wilker1983@gmail.com""}",127.0.0.1,2026-03-06 10:57:28.960366-03
+  4: 3,1,gleissontel@gmail.com,clinica_delete_definitivo,clinica,3,"{""clinica_id"": 3, ""clinica_nome"": ""Wilker"", ""clinica_email"": ""wilker1983@gmail.com"", ""usuarios_removidos"": 1}",127.0.0.1,2026-03-06 16:12:51.016505-03
+  5: 4,1,gleissontel@gmail.com,usuario_perfil_update,usuario,4,"{""is_admin"": true, ""email"": ""a.butarelo@gmail.com""}",127.0.0.1,2026-03-09 12:18:45.603784-03
+  6: 5,1,gleissontel@gmail.com,clinica_plano_update,clinica,4,"{""plano"": ""SUPERADMIN"", ""dias"": 36500, ""manter_ativo"": true, ""tipo_conta"": ""Super Admin"", ""trial_ate"": ""2126-02-16T20:12:27.065590""}",127.0.0.1,2026-03-12 17:12:27.05
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\procedimento.csv
+MATCHES: Implante
+  2: 561,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,2,1,,,,0,,0,f,f,,,
+  30: 589,29,IMPLANTE + BIOMATERIAL,90,2000,519.1850000000001,0,0,2,1,,,,0,,0,f,f,,,
+  31: 590,30,IMPLANTE OST,75,800,189.185,0,0,2,1,,,,0,,0,f,f,,,
+  32: 591,31,IMPLANTE+PROTOCOLO,240,8500,3614.92,2300,0,2,1,,,,0,,0,f,f,,,
+  112: 673,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,4,1,,,,0,,0,f,f,,,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\procedimento_generico.csv
+MATCHES: Implante
+  234: 231,0231,Implante agulhado (por trípode)
+  235: 232,0232,Implante justa-ósseo (por núcleo)
+  236: 233,0233,Implante laminado (por lâmina)
+  237: 234,0234,Implante osteointegrável
+  429: 425,0425,Reimplante de dente
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260313_234848\data\usuarios.csv
+MATCHES: gleissontel@gmail.com
+  3: 1,Gleisson Tel,gleissontel@gmail.com,$2b$12$FAyzSUGEx3PQL5wg5hbTmugmMqhlGDDwxAw0erlNbBUhDe5DW9L/q,t,1,t,,f
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\metadata.json
+MATCHES: anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  66:       "table_name": "anamnese_perguntas",
+  78:       "csv_path": "data/anamnese_perguntas.csv"
+  81:       "table_name": "anamnese_questionarios",
+  92:       "csv_path": "data/anamnese_questionarios.csv"
+  95:       "table_name": "anamnese_respostas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\agenda_legado_evento.csv
+MATCHES: Implante
+  393: 391,1,1,1,2016-12-05 00:00:00,30600000,32400000,3,1,231,Fatima Luzia Shumaher Frutuoso,Coroa Metalo-cerâmica sob implante no(s) dente(s) 22,8,"",1,17 - 3218-1069,2,"",4,17 - 99627-0086,,1,,,1,2016-12-05 08:41:31,1,2016-12-05 09:02:50
+  617: 615,1,1,1,2017-03-28 00:00:00,28800000,29700000,1,2,,"",CONFIRMAR MARCOS/ PEDIR IMPLANTE) OK**,,"",1,"",2,"",3,"",,1,,,257,2017-03-27 17:06:31,257,2017-03-28 08:57:43
+  626: 624,1,1,1,2017-04-03 00:00:00,28800000,29700000,3,1,953,José Roberto Caseri,DENTE DO IMPLANTE CAIU***,8,"ESPOSA DO PACIENTE DISSE QUE ELE ESTÁ NA INGLATERRA, E CHEGA NO DOMINGO, SEGUNDO ELA O DENTE DO IMPLANTE SAIU.",1,17 - 3512-7618,4,17 -
+  906: 903,1,1,1,2017-08-10 00:00:00,25500000,26400000,1,2,,"",IMPLANTE WALTER 120 DIAS***,,"",1,"",2,"",3,"",,1,,,257,2017-07-25 08:15:36,,
+  1138: 1137,1,1,1,2017-12-01 00:00:00,26100000,27000000,1,2,,"",90 DIAS IMPLANTE KELLY - AGENDAR PARA RX.OK,,"",1,"",2,"",3,"",,1,,,257,2017-11-10 10:20:45,257,2017-12-01 13:49:11
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\anamnese_questionarios.csv
+MATCHES: Principal
+  2: 1,2,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  3: 2,1,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  4: 3,4,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\clinicas.csv
+MATCHES: gleissontel@gmail.com
+  3: 1,Gleisson Tel,gleissontel@gmail.com,,DEMO 7 dias,,,,PARTICULAR,2026-03-10 18:24:01.40725,t,2026-03-03 15:24:01.393095-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\contato.csv
+MATCHES: Implante
+  30: 29,1,,DentFix - Implantes,Fornecedor,Reginaldo,,8,"","","","","","","",1,19 - 3584-4738,2,"",3,"",4,19 - 98269-0453,"","",t,t,"",,,,
+  67: 66,1,,SIN - Sistema de Implantes,Fornecedor,Marcelo,,8,"","","","","","","",1,0800 - 724-8510,2,16 - 9786-0384,3,"",4,17 - 7811-8307,"","",t,t,"",,,,
+  106: 105,1,,IMPLALIFE IMPLANTES,Fornecedor,Ivania,,10,"","","",São José do Rio Preto,"",SP,"",4,55 17 98152-9137,2,"",3,"",4,"","","",t,t,"",,,,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\doenca_cid.csv
+MATCHES: Implante, Principal
+  1106: 386071,1,C34.0,Brônquio principal,"",f,1075
+  2907: 387873,1,G13*,Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte,"",f,2877
+  5857: 390823,1,M96.6,"Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea","",f,5827
+  9395: 394363,1,T44,Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo,"",f,9367
+  9400: 394368,1,T44.4,Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte,"",f,9372
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\email_codes.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,gleissontel@gmail.com,signup,b4e18f274b320caa917bf6db867b171d7cca602787024831a7dfdca72c9c497e,2026-03-03 14:08:57.519207,f,2026-03-03 10:58:57.513179-03
+  3: 2,gleissontel@gmail.com,signup,6b1fa0ddade074d9f21f105333bd48995b28aa3a1611762d84b6638867d78175,2026-03-03 14:16:22.394852,f,2026-03-03 11:06:22.385664-03
+  4: 3,gleissontel@gmail.com,signup,bbdb68820bef3641c5e5bdd8dedc5f7ec0c11836b36c71344f9048d02aa71c86,2026-03-03 14:39:01.50305,f,2026-03-03 11:29:01.488212-03
+  5: 4,gleissontel@gmail.com,signup,4694993f8c3b9a111dfff97cec67a96f33f9d8f180be073c0fdf1f3fed3e532d,2026-03-03 14:39:55.520739,t,2026-03-03 11:29:55.518989-03
+  6: 7,gleissontel@gmail.com,signup,8b93c8a23c2927aab5423a747f8bff22aa8bbf651e615d569bb86b0620e9f6e9,2026-03-03 18:24:37.172861,t,2026-03-03 15:23:36.969086-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\item_auxiliar.csv
+MATCHES: Implante
+  1204: 1445,1,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1218: 1459,1,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+  1246: 1487,1,Fabricantes,21001,SYSTEX - IMPLANTES,,,f,,f,,f
+  1829: 1784,2,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1843: 1798,2,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\lancamento.csv
+MATCHES: Implante
+  1047: 7868,1,292,IMPLALIFE IMPLANTES,320,2025-08-28,2025-08-28,debito,CLINICA,Aberto,Boleto bancário,2025-08-28,2026-01-25,,,,,0,0,1,1
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\material.csv
+MATCHES: Implante, Principal
+  2: 3070,00001,IMPLANTE INDEX IMPLALIFE,1,95,95,"","",0,f,"",17
+  7: 3075,00006,KIT CIRURGICO PARA IMPLANTE,1,30,30,"","",0,f,"",17
+  85: 3180,01680,Broca para Implante Lança 2.0,1,2,2,"","",0,f,"",18
+  86: 3181,01690,Broca para Implante Alvim 3.5,1,2,2,"","",0,f,"",18
+  87: 3182,01700,Broca para Implante Alvim 4.3,1,2,2,"","",0,f,"",18
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\modelos_documento.csv
+MATCHES: Implante
+  30: 29,,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/base/outros/Contrato Implante.doc,t,f,base,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  105: 104,1,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/clinicas/1/outros/Contrato Implante.doc,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  119: 118,1,outros,outros:exame_sangue_implante_brana,EXAME_SANGUE_IMPLANTE_BRANA,EXAME_SANGUE_IMPLANTE_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/EXAME_SANGUE_IMPLANTE_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:
+  169: 168,1,outros,outros:termo_implante___sem_carga_brana,TERMO_IMPLANTE _ SEM_CARGA_BRANA,TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.2609
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\pacientes.csv
+MATCHES: gleissontel@gmail.com, Implante, Principal
+  428: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato no dia 12/06/15, paciente disse que vai agendar depois do dia 20, teve interesse nos implantes (600)\plain\f0\fs22\cf0\b . Jozi*12/06/15\par
+  430: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em  contato com a paciente para P.O (implante) esta disse estar tudo bem.\plain\f0\fs22\cf0\b  (Jozi) - 14/10/15\par
+  432: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato com a paciente para P.O (Implante), paciente disse que est\'e1 \'f3tima\plain\f0\fs22\cf0\b . (Jozi*) 04/02/16\par
+  440: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Paciente entrou em contato em 19/06/2018, disse que seu esposo est\'e1 adoentado e por isso ainda n\'e3o p\'f4de vir para fazer o implante, combinou que na semana que vem entra em contato para a
+  448: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0\b Protese sobre implante Dr combinou R$1200,00 cada. (Jozi*)30/11/2020\line \par
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\plano_odonto.csv
+MATCHES: Principal
+  2: 1,1,1,1,1,001,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 14:15:19.059829-03,,
+  3: 2,1,2,2,2,002,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  4: 3,1,3,3,3,003,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  5: 4,1,4,4,4,004,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,23/03/2026
+  6: 5,1,5,5,5,005,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\plataforma_auditoria.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,gleissontel@gmail.com,clinica_status_update,clinica,3,"{""ativo"": false, ""motivo"": """"}",127.0.0.1,2026-03-06 10:57:08.509526-03
+  3: 2,1,gleissontel@gmail.com,usuario_status_update,usuario,3,"{""ativo"": false, ""email"": ""wilker1983@gmail.com""}",127.0.0.1,2026-03-06 10:57:28.960366-03
+  4: 3,1,gleissontel@gmail.com,clinica_delete_definitivo,clinica,3,"{""clinica_id"": 3, ""clinica_nome"": ""Wilker"", ""clinica_email"": ""wilker1983@gmail.com"", ""usuarios_removidos"": 1}",127.0.0.1,2026-03-06 16:12:51.016505-03
+  5: 4,1,gleissontel@gmail.com,usuario_perfil_update,usuario,4,"{""is_admin"": true, ""email"": ""a.butarelo@gmail.com""}",127.0.0.1,2026-03-09 12:18:45.603784-03
+  6: 5,1,gleissontel@gmail.com,clinica_plano_update,clinica,4,"{""plano"": ""SUPERADMIN"", ""dias"": 36500, ""manter_ativo"": true, ""tipo_conta"": ""Super Admin"", ""trial_ate"": ""2126-02-16T20:12:27.065590""}",127.0.0.1,2026-03-12 17:12:27.05
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\prestador_odonto.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,1,,002,Gleisson Tel,,Cirurgião dentista,,,f,t,,,,,,,,,,,,,,,,1,,,,,gleissontel@gmail.com,,,,,,,,,,,,,,,,,,,,,,2026-03-24 06:23:58.250711-03,2026-03-29 15:21:33.585469-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\procedimento.csv
+MATCHES: Implante
+  10: 41006,7022,Implante ¢sseo integr vel - Cone Morse,0,0,0,0,0,33,,,int_implante.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-26,2,t,9
+  12: 41013,3030,Abertura de implante mand. - (Enxerto Livre),0,0,0,0,0,33,,,int_enxerto.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,25
+  13: 41014,3040,Abertura de implante mand. - (Osteotomia e Livre),0,0,0,0,0,33,,,int_cirur.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,45
+  21: 51886,5020,Reimplante de dente,0,0,0,0,0,47,01,425,int_implante.bmp,0,ELEMENTO_FACE,0,f,f,,,,1,t,9
+  29: 1065,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,3,,,,0,INTERVENCAO,0,f,f,,17/03/2026 11:23,17/03/2026 11:23,1,f,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\procedimento_generico.csv
+MATCHES: Implante
+  136: 231,0231,Implante agulhado (por trípode),0,int_implante.bmp,t,,,,13,0,f,1,0
+  137: 232,0232,Implante justa-ósseo (por núcleo),0,int_implante.bmp,t,,,,13,0,f,1,0
+  286: 233,0233,Implante laminado (por lâmina),90,int_implante.bmp,t,,2023-12-08,2023-12-08,13,0,f,1,0
+  336: 425,0425,Reimplante de dente,0,int_implante.bmp,t,,,,06,0,f,1,0
+  377: 234,0234,Implante osteointegrável,60,int_implante.bmp,t,,2016-08-19,2023-11-30,13,0,f,1,0
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\servico_protetico.csv
+MATCHES: Implante
+  30: 30,25,1,ACRILIZAÇÕES - Protocolo sobre 5 implantes,R$,2115,5
+  50: 50,25,1,CERÂMICA - Aplicação de porcelana sobre implante,R$,275,5
+  58: 58,25,1,METAL - Barra para overdentures sobre 4 implantes,R$,741,5
+  63: 63,25,1,METAL - Estrutura metálica sobre implante,R$,202.5,5
+  65: 65,25,1,METAL - Infra estrutura metálica sobre implante,R$,202.5,5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\simbolo_grafico_catalogo.csv
+MATCHES: Implante
+  6: 33,int_implante.bmp,Implante,6,2,1,int_implante.bmp,,,int_implante.bmp,2,t,9,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204101\data\usuarios.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,,Gleisson Tel,gleissontel@gmail.com,$2b$12$FAyzSUGEx3PQL5wg5hbTmugmMqhlGDDwxAw0erlNbBUhDe5DW9L/q,t,t,t,1,,,f,,,,,,,"{""agenda"": ""habilitado"", ""anamnese"": ""habilitado"", ""configuracao"": ""habilitado"", ""financeiro"": ""habilitado"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\metadata.json
+MATCHES: anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  66:       "table_name": "anamnese_perguntas",
+  78:       "csv_path": "data/anamnese_perguntas.csv"
+  81:       "table_name": "anamnese_questionarios",
+  92:       "csv_path": "data/anamnese_questionarios.csv"
+  95:       "table_name": "anamnese_respostas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\agenda_legado_evento.csv
+MATCHES: Implante
+  393: 391,1,1,1,2016-12-05 00:00:00,30600000,32400000,3,1,231,Fatima Luzia Shumaher Frutuoso,Coroa Metalo-cerâmica sob implante no(s) dente(s) 22,8,"",1,17 - 3218-1069,2,"",4,17 - 99627-0086,,1,,,1,2016-12-05 08:41:31,1,2016-12-05 09:02:50
+  617: 615,1,1,1,2017-03-28 00:00:00,28800000,29700000,1,2,,"",CONFIRMAR MARCOS/ PEDIR IMPLANTE) OK**,,"",1,"",2,"",3,"",,1,,,257,2017-03-27 17:06:31,257,2017-03-28 08:57:43
+  626: 624,1,1,1,2017-04-03 00:00:00,28800000,29700000,3,1,953,José Roberto Caseri,DENTE DO IMPLANTE CAIU***,8,"ESPOSA DO PACIENTE DISSE QUE ELE ESTÁ NA INGLATERRA, E CHEGA NO DOMINGO, SEGUNDO ELA O DENTE DO IMPLANTE SAIU.",1,17 - 3512-7618,4,17 -
+  906: 903,1,1,1,2017-08-10 00:00:00,25500000,26400000,1,2,,"",IMPLANTE WALTER 120 DIAS***,,"",1,"",2,"",3,"",,1,,,257,2017-07-25 08:15:36,,
+  1138: 1137,1,1,1,2017-12-01 00:00:00,26100000,27000000,1,2,,"",90 DIAS IMPLANTE KELLY - AGENDAR PARA RX.OK,,"",1,"",2,"",3,"",,1,,,257,2017-11-10 10:20:45,257,2017-12-01 13:49:11
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\anamnese_questionarios.csv
+MATCHES: Principal
+  2: 1,2,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  3: 2,1,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  4: 3,4,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\clinicas.csv
+MATCHES: gleissontel@gmail.com
+  3: 1,Gleisson Tel,gleissontel@gmail.com,,DEMO 7 dias,,,,PARTICULAR,2026-03-10 18:24:01.40725,t,2026-03-03 15:24:01.393095-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\contato.csv
+MATCHES: Implante
+  30: 29,1,,DentFix - Implantes,Fornecedor,Reginaldo,,8,"","","","","","","",1,19 - 3584-4738,2,"",3,"",4,19 - 98269-0453,"","",t,t,"",,,,
+  67: 66,1,,SIN - Sistema de Implantes,Fornecedor,Marcelo,,8,"","","","","","","",1,0800 - 724-8510,2,16 - 9786-0384,3,"",4,17 - 7811-8307,"","",t,t,"",,,,
+  106: 105,1,,IMPLALIFE IMPLANTES,Fornecedor,Ivania,,10,"","","",São José do Rio Preto,"",SP,"",4,55 17 98152-9137,2,"",3,"",4,"","","",t,t,"",,,,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\doenca_cid.csv
+MATCHES: Implante, Principal
+  1106: 386071,1,C34.0,Brônquio principal,"",f,1075
+  2907: 387873,1,G13*,Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte,"",f,2877
+  5857: 390823,1,M96.6,"Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea","",f,5827
+  9395: 394363,1,T44,Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo,"",f,9367
+  9400: 394368,1,T44.4,Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte,"",f,9372
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\email_codes.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,gleissontel@gmail.com,signup,b4e18f274b320caa917bf6db867b171d7cca602787024831a7dfdca72c9c497e,2026-03-03 14:08:57.519207,f,2026-03-03 10:58:57.513179-03
+  3: 2,gleissontel@gmail.com,signup,6b1fa0ddade074d9f21f105333bd48995b28aa3a1611762d84b6638867d78175,2026-03-03 14:16:22.394852,f,2026-03-03 11:06:22.385664-03
+  4: 3,gleissontel@gmail.com,signup,bbdb68820bef3641c5e5bdd8dedc5f7ec0c11836b36c71344f9048d02aa71c86,2026-03-03 14:39:01.50305,f,2026-03-03 11:29:01.488212-03
+  5: 4,gleissontel@gmail.com,signup,4694993f8c3b9a111dfff97cec67a96f33f9d8f180be073c0fdf1f3fed3e532d,2026-03-03 14:39:55.520739,t,2026-03-03 11:29:55.518989-03
+  6: 7,gleissontel@gmail.com,signup,8b93c8a23c2927aab5423a747f8bff22aa8bbf651e615d569bb86b0620e9f6e9,2026-03-03 18:24:37.172861,t,2026-03-03 15:23:36.969086-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\item_auxiliar.csv
+MATCHES: Implante
+  1204: 1445,1,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1218: 1459,1,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+  1246: 1487,1,Fabricantes,21001,SYSTEX - IMPLANTES,,,f,,f,,f
+  1829: 1784,2,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1843: 1798,2,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\lancamento.csv
+MATCHES: Implante
+  1047: 7868,1,292,IMPLALIFE IMPLANTES,320,2025-08-28,2025-08-28,debito,CLINICA,Aberto,Boleto bancário,2025-08-28,2026-01-25,,,,,0,0,1,1
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\material.csv
+MATCHES: Implante, Principal
+  2: 3070,00001,IMPLANTE INDEX IMPLALIFE,1,95,95,"","",0,f,"",17
+  7: 3075,00006,KIT CIRURGICO PARA IMPLANTE,1,30,30,"","",0,f,"",17
+  85: 3180,01680,Broca para Implante Lança 2.0,1,2,2,"","",0,f,"",18
+  86: 3181,01690,Broca para Implante Alvim 3.5,1,2,2,"","",0,f,"",18
+  87: 3182,01700,Broca para Implante Alvim 4.3,1,2,2,"","",0,f,"",18
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\modelos_documento.csv
+MATCHES: Implante
+  30: 29,,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/base/outros/Contrato Implante.doc,t,f,base,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  105: 104,1,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/clinicas/1/outros/Contrato Implante.doc,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  119: 118,1,outros,outros:exame_sangue_implante_brana,EXAME_SANGUE_IMPLANTE_BRANA,EXAME_SANGUE_IMPLANTE_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/EXAME_SANGUE_IMPLANTE_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:
+  169: 168,1,outros,outros:termo_implante___sem_carga_brana,TERMO_IMPLANTE _ SEM_CARGA_BRANA,TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.2609
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\pacientes.csv
+MATCHES: gleissontel@gmail.com, Implante, Principal
+  428: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato no dia 12/06/15, paciente disse que vai agendar depois do dia 20, teve interesse nos implantes (600)\plain\f0\fs22\cf0\b . Jozi*12/06/15\par
+  430: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em  contato com a paciente para P.O (implante) esta disse estar tudo bem.\plain\f0\fs22\cf0\b  (Jozi) - 14/10/15\par
+  432: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato com a paciente para P.O (Implante), paciente disse que est\'e1 \'f3tima\plain\f0\fs22\cf0\b . (Jozi*) 04/02/16\par
+  440: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Paciente entrou em contato em 19/06/2018, disse que seu esposo est\'e1 adoentado e por isso ainda n\'e3o p\'f4de vir para fazer o implante, combinou que na semana que vem entra em contato para a
+  448: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0\b Protese sobre implante Dr combinou R$1200,00 cada. (Jozi*)30/11/2020\line \par
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\plano_odonto.csv
+MATCHES: Principal
+  2: 1,1,1,1,1,001,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 14:15:19.059829-03,,
+  3: 2,1,2,2,2,002,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  4: 3,1,3,3,3,003,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  5: 4,1,4,4,4,004,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,23/03/2026
+  6: 5,1,5,5,5,005,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\plataforma_auditoria.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,gleissontel@gmail.com,clinica_status_update,clinica,3,"{""ativo"": false, ""motivo"": """"}",127.0.0.1,2026-03-06 10:57:08.509526-03
+  3: 2,1,gleissontel@gmail.com,usuario_status_update,usuario,3,"{""ativo"": false, ""email"": ""wilker1983@gmail.com""}",127.0.0.1,2026-03-06 10:57:28.960366-03
+  4: 3,1,gleissontel@gmail.com,clinica_delete_definitivo,clinica,3,"{""clinica_id"": 3, ""clinica_nome"": ""Wilker"", ""clinica_email"": ""wilker1983@gmail.com"", ""usuarios_removidos"": 1}",127.0.0.1,2026-03-06 16:12:51.016505-03
+  5: 4,1,gleissontel@gmail.com,usuario_perfil_update,usuario,4,"{""is_admin"": true, ""email"": ""a.butarelo@gmail.com""}",127.0.0.1,2026-03-09 12:18:45.603784-03
+  6: 5,1,gleissontel@gmail.com,clinica_plano_update,clinica,4,"{""plano"": ""SUPERADMIN"", ""dias"": 36500, ""manter_ativo"": true, ""tipo_conta"": ""Super Admin"", ""trial_ate"": ""2126-02-16T20:12:27.065590""}",127.0.0.1,2026-03-12 17:12:27.05
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\prestador_odonto.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,1,,002,Gleisson Tel,,Cirurgião dentista,,,f,t,,,,,,,,,,,,,,,,1,,,,,gleissontel@gmail.com,,,,,,,,,,,,,,,,,,,,,,2026-03-24 06:23:58.250711-03,2026-03-29 15:21:33.585469-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\procedimento.csv
+MATCHES: Implante
+  10: 41006,7022,Implante ¢sseo integr vel - Cone Morse,0,0,0,0,0,33,,,int_implante.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-26,2,t,9
+  12: 41013,3030,Abertura de implante mand. - (Enxerto Livre),0,0,0,0,0,33,,,int_enxerto.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,25
+  13: 41014,3040,Abertura de implante mand. - (Osteotomia e Livre),0,0,0,0,0,33,,,int_cirur.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,45
+  21: 51886,5020,Reimplante de dente,0,0,0,0,0,47,01,425,int_implante.bmp,0,ELEMENTO_FACE,0,f,f,,,,1,t,9
+  29: 1065,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,3,,,,0,INTERVENCAO,0,f,f,,17/03/2026 11:23,17/03/2026 11:23,1,f,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\procedimento_generico.csv
+MATCHES: Implante
+  136: 231,0231,Implante agulhado (por trípode),0,int_implante.bmp,t,,,,13,0,f,1,0
+  137: 232,0232,Implante justa-ósseo (por núcleo),0,int_implante.bmp,t,,,,13,0,f,1,0
+  286: 233,0233,Implante laminado (por lâmina),90,int_implante.bmp,t,,2023-12-08,2023-12-08,13,0,f,1,0
+  336: 425,0425,Reimplante de dente,0,int_implante.bmp,t,,,,06,0,f,1,0
+  377: 234,0234,Implante osteointegrável,60,int_implante.bmp,t,,2016-08-19,2023-11-30,13,0,f,1,0
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\servico_protetico.csv
+MATCHES: Implante
+  30: 30,25,1,ACRILIZAÇÕES - Protocolo sobre 5 implantes,R$,2115,5
+  50: 50,25,1,CERÂMICA - Aplicação de porcelana sobre implante,R$,275,5
+  58: 58,25,1,METAL - Barra para overdentures sobre 4 implantes,R$,741,5
+  63: 63,25,1,METAL - Estrutura metálica sobre implante,R$,202.5,5
+  65: 65,25,1,METAL - Infra estrutura metálica sobre implante,R$,202.5,5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\simbolo_grafico_catalogo.csv
+MATCHES: Implante
+  6: 33,int_implante.bmp,Implante,6,2,1,int_implante.bmp,,,int_implante.bmp,2,t,9,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260330_204513\data\usuarios.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,,Gleisson Tel,gleissontel@gmail.com,$2b$12$FAyzSUGEx3PQL5wg5hbTmugmMqhlGDDwxAw0erlNbBUhDe5DW9L/q,t,t,t,1,,,f,,,,,,,"{""agenda"": ""habilitado"", ""anamnese"": ""habilitado"", ""configuracao"": ""habilitado"", ""financeiro"": ""habilitado"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\metadata.json
+MATCHES: anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  80:       "table_name": "anamnese_perguntas",
+  92:       "csv_path": "data/anamnese_perguntas.csv"
+  95:       "table_name": "anamnese_questionarios",
+  106:       "csv_path": "data/anamnese_questionarios.csv"
+  109:       "table_name": "anamnese_respostas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\agenda_legado_evento.csv
+MATCHES: Implante
+  393: 391,1,1,1,2016-12-05 00:00:00,30600000,32400000,3,1,231,Fatima Luzia Shumaher Frutuoso,Coroa Metalo-cerâmica sob implante no(s) dente(s) 22,8,"",1,17 - 3218-1069,2,"",4,17 - 99627-0086,,1,,,1,2016-12-05 08:41:31,1,2016-12-05 09:02:50
+  617: 615,1,1,1,2017-03-28 00:00:00,28800000,29700000,1,2,,"",CONFIRMAR MARCOS/ PEDIR IMPLANTE) OK**,,"",1,"",2,"",3,"",,1,,,257,2017-03-27 17:06:31,257,2017-03-28 08:57:43
+  626: 624,1,1,1,2017-04-03 00:00:00,28800000,29700000,3,1,953,José Roberto Caseri,DENTE DO IMPLANTE CAIU***,8,"ESPOSA DO PACIENTE DISSE QUE ELE ESTÁ NA INGLATERRA, E CHEGA NO DOMINGO, SEGUNDO ELA O DENTE DO IMPLANTE SAIU.",1,17 - 3512-7618,4,17 -
+  906: 903,1,1,1,2017-08-10 00:00:00,25500000,26400000,1,2,,"",IMPLANTE WALTER 120 DIAS***,,"",1,"",2,"",3,"",,1,,,257,2017-07-25 08:15:36,,
+  1138: 1137,1,1,1,2017-12-01 00:00:00,26100000,27000000,1,2,,"",90 DIAS IMPLANTE KELLY - AGENDAR PARA RX.OK,,"",1,"",2,"",3,"",,1,,,257,2017-11-10 10:20:45,257,2017-12-01 13:49:11
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\anamnese_questionarios.csv
+MATCHES: Principal
+  2: 1,2,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  3: 2,1,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  4: 3,4,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\clinicas.csv
+MATCHES: gleissontel@gmail.com
+  4: 1,Instuto Brana - Odontologia,gleissontel@gmail.com,280.106.918-36,DEMO 7 dias,,,,PARTICULAR,2026-04-11 15:50:53.557578,t,2026-03-03 15:24:01.393095-03,"{""clinica"": {""nome"": ""Instuto Brana - Odontologia"", ""endereco"": ""Joaquim Mende
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\contato.csv
+MATCHES: Implante
+  30: 29,1,,DentFix - Implantes,Fornecedor,Reginaldo,,8,"","","","","","","",1,19 - 3584-4738,2,"",3,"",4,19 - 98269-0453,"","",t,t,"",,,,
+  67: 66,1,,SIN - Sistema de Implantes,Fornecedor,Marcelo,,8,"","","","","","","",1,0800 - 724-8510,2,16 - 9786-0384,3,"",4,17 - 7811-8307,"","",t,t,"",,,,
+  106: 105,1,,IMPLALIFE IMPLANTES,Fornecedor,Ivania,,10,"","","",São José do Rio Preto,"",SP,"",4,55 17 98152-9137,2,"",3,"",4,"","","",t,t,"",,,,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\doenca_cid.csv
+MATCHES: Implante, Principal
+  1106: 386071,1,C34.0,Brônquio principal,"",f,1075
+  2907: 387873,1,G13*,Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte,"",f,2877
+  5857: 390823,1,M96.6,"Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea","",f,5827
+  9395: 394363,1,T44,Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo,"",f,9367
+  9400: 394368,1,T44.4,Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte,"",f,9372
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\email_codes.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,gleissontel@gmail.com,signup,b4e18f274b320caa917bf6db867b171d7cca602787024831a7dfdca72c9c497e,2026-03-03 14:08:57.519207,f,2026-03-03 10:58:57.513179-03
+  3: 2,gleissontel@gmail.com,signup,6b1fa0ddade074d9f21f105333bd48995b28aa3a1611762d84b6638867d78175,2026-03-03 14:16:22.394852,f,2026-03-03 11:06:22.385664-03
+  4: 3,gleissontel@gmail.com,signup,bbdb68820bef3641c5e5bdd8dedc5f7ec0c11836b36c71344f9048d02aa71c86,2026-03-03 14:39:01.50305,f,2026-03-03 11:29:01.488212-03
+  5: 4,gleissontel@gmail.com,signup,4694993f8c3b9a111dfff97cec67a96f33f9d8f180be073c0fdf1f3fed3e532d,2026-03-03 14:39:55.520739,t,2026-03-03 11:29:55.518989-03
+  6: 7,gleissontel@gmail.com,signup,8b93c8a23c2927aab5423a747f8bff22aa8bbf651e615d569bb86b0620e9f6e9,2026-03-03 18:24:37.172861,t,2026-03-03 15:23:36.969086-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\item_auxiliar.csv
+MATCHES: Implante
+  1204: 1445,1,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1218: 1459,1,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+  1246: 1487,1,Fabricantes,21001,SYSTEX - IMPLANTES,,,f,,f,,f
+  1827: 1784,2,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1841: 1798,2,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\lancamento.csv
+MATCHES: Implante
+  1047: 7868,1,292,IMPLALIFE IMPLANTES,320,2025-08-28,2025-08-28,debito,CLINICA,Aberto,Boleto bancário,2025-08-28,2026-01-25,,,,,0,0,1,1
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\material.csv
+MATCHES: Implante, Principal
+  2: 3070,00001,IMPLANTE INDEX IMPLALIFE,1,95,95,"","",0,f,"",17
+  7: 3075,00006,KIT CIRURGICO PARA IMPLANTE,1,30,30,"","",0,f,"",17
+  85: 3180,01680,Broca para Implante Lança 2.0,1,2,2,"","",0,f,"",18
+  86: 3181,01690,Broca para Implante Alvim 3.5,1,2,2,"","",0,f,"",18
+  87: 3182,01700,Broca para Implante Alvim 4.3,1,2,2,"","",0,f,"",18
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\modelos_documento.csv
+MATCHES: Implante
+  30: 29,,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/base/outros/Contrato Implante.doc,t,f,base,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  105: 104,1,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/clinicas/1/outros/Contrato Implante.doc,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  119: 118,1,outros,outros:exame_sangue_implante_brana,EXAME_SANGUE_IMPLANTE_BRANA,EXAME_SANGUE_IMPLANTE_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/EXAME_SANGUE_IMPLANTE_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:
+  169: 168,1,outros,outros:termo_implante___sem_carga_brana,TERMO_IMPLANTE _ SEM_CARGA_BRANA,TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.2609
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\pacientes.csv
+MATCHES: gleissontel@gmail.com, Implante, Principal
+  428: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato no dia 12/06/15, paciente disse que vai agendar depois do dia 20, teve interesse nos implantes (600)\plain\f0\fs22\cf0\b . Jozi*12/06/15\par
+  430: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em  contato com a paciente para P.O (implante) esta disse estar tudo bem.\plain\f0\fs22\cf0\b  (Jozi) - 14/10/15\par
+  432: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato com a paciente para P.O (Implante), paciente disse que est\'e1 \'f3tima\plain\f0\fs22\cf0\b . (Jozi*) 04/02/16\par
+  440: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Paciente entrou em contato em 19/06/2018, disse que seu esposo est\'e1 adoentado e por isso ainda n\'e3o p\'f4de vir para fazer o implante, combinou que na semana que vem entra em contato para a
+  448: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0\b Protese sobre implante Dr combinou R$1200,00 cada. (Jozi*)30/11/2020\line \par
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\plano_odonto.csv
+MATCHES: Principal
+  2: 1,1,1,1,1,001,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 14:15:19.059829-03,,
+  3: 2,1,2,2,2,002,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  4: 3,1,3,3,3,003,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  5: 4,1,4,4,4,004,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,23/03/2026
+  6: 5,1,5,5,5,005,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\plataforma_auditoria.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,gleissontel@gmail.com,clinica_status_update,clinica,3,"{""ativo"": false, ""motivo"": """"}",127.0.0.1,2026-03-06 10:57:08.509526-03
+  3: 2,1,gleissontel@gmail.com,usuario_status_update,usuario,3,"{""ativo"": false, ""email"": ""wilker1983@gmail.com""}",127.0.0.1,2026-03-06 10:57:28.960366-03
+  4: 3,1,gleissontel@gmail.com,clinica_delete_definitivo,clinica,3,"{""clinica_id"": 3, ""clinica_nome"": ""Wilker"", ""clinica_email"": ""wilker1983@gmail.com"", ""usuarios_removidos"": 1}",127.0.0.1,2026-03-06 16:12:51.016505-03
+  5: 4,1,gleissontel@gmail.com,usuario_perfil_update,usuario,4,"{""is_admin"": true, ""email"": ""a.butarelo@gmail.com""}",127.0.0.1,2026-03-09 12:18:45.603784-03
+  6: 5,1,gleissontel@gmail.com,clinica_plano_update,clinica,4,"{""plano"": ""SUPERADMIN"", ""dias"": 36500, ""manter_ativo"": true, ""tipo_conta"": ""Super Admin"", ""trial_ate"": ""2126-02-16T20:12:27.065590""}",127.0.0.1,2026-03-12 17:12:27.05
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\prestador_odonto.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,1,10,002,Gleisson Tel,Tel,Cirurgião dentista,,,f,t,,,,,,,,,,,,,,07/04/2026,11/04/2026,1,,,,,gleissontel@gmail.com,institutobrana.com.br,,,,,,,,,,,,,,,,Escala 07:00-13:00 / 13:00-20:00,,,"{""manha_inicio"": ""07:00"", ""manha_fim"": ""13
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\procedimento.csv
+MATCHES: Implante
+  10: 41006,7022,Implante ¢sseo integr vel - Cone Morse,0,0,0,0,0,33,,,int_implante.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-26,2,t,9
+  12: 41013,3030,Abertura de implante mand. - (Enxerto Livre),0,0,0,0,0,33,,,int_enxerto.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,25
+  13: 41014,3040,Abertura de implante mand. - (Osteotomia e Livre),0,0,0,0,0,33,,,int_cirur.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,45
+  21: 51886,5020,Reimplante de dente,0,0,0,0,0,47,01,425,int_implante.bmp,0,ELEMENTO_FACE,0,f,f,,,,1,t,9
+  29: 1065,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,3,,,,0,INTERVENCAO,0,f,f,,17/03/2026 11:23,17/03/2026 11:23,1,f,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\procedimento_generico.csv
+MATCHES: Implante
+  136: 231,0231,Implante agulhado (por trípode),0,int_implante.bmp,t,,,,13,0,f,1,0
+  137: 232,0232,Implante justa-ósseo (por núcleo),0,int_implante.bmp,t,,,,13,0,f,1,0
+  286: 233,0233,Implante laminado (por lâmina),90,int_implante.bmp,t,,2023-12-08,2023-12-08,13,0,f,1,0
+  336: 425,0425,Reimplante de dente,0,int_implante.bmp,t,,,,06,0,f,1,0
+  377: 234,0234,Implante osteointegrável,60,int_implante.bmp,t,,2016-08-19,2023-11-30,13,0,f,1,0
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\servico_protetico.csv
+MATCHES: Implante
+  30: 30,25,1,ACRILIZAÇÕES - Protocolo sobre 5 implantes,R$,2115,5
+  50: 50,25,1,CERÂMICA - Aplicação de porcelana sobre implante,R$,275,5
+  58: 58,25,1,METAL - Barra para overdentures sobre 4 implantes,R$,741,5
+  63: 63,25,1,METAL - Estrutura metálica sobre implante,R$,202.5,5
+  65: 65,25,1,METAL - Infra estrutura metálica sobre implante,R$,202.5,5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\simbolo_grafico_catalogo.csv
+MATCHES: Implante
+  6: 33,int_implante.bmp,Implante,6,2,1,int_implante.bmp,,,int_implante.bmp,2,t,9,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_full_20260413_130945\data\usuarios.csv
+MATCHES: gleissontel@gmail.com
+  12: 1,1,Gleisson Tel,gleissontel@gmail.com,"$bcrypt-sha256$v=2,t=2b,r=12$3Vy0vz6BAFaOwHEqzeMpo.$JPpDSpooE/bH2t1IgGZtRm4M4A3imz2",t,t,t,1,Tel,Dentista (CD),f,1,,"{""menu_pacientes"":{""cir_menu_pac"":0,""status_menu_pac"":0,""visualizacao_menu_p
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\metadata.json
+MATCHES: anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  80:       "table_name": "anamnese_perguntas",
+  92:       "csv_path": "data/anamnese_perguntas.csv"
+  95:       "table_name": "anamnese_questionarios",
+  106:       "csv_path": "data/anamnese_questionarios.csv"
+  109:       "table_name": "anamnese_respostas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\agenda_legado_evento.csv
+MATCHES: Implante
+  393: 391,1,1,1,2016-12-05 00:00:00,30600000,32400000,3,1,231,Fatima Luzia Shumaher Frutuoso,Coroa Metalo-cerâmica sob implante no(s) dente(s) 22,8,"",1,17 - 3218-1069,2,"",4,17 - 99627-0086,,1,,,1,2016-12-05 08:41:31,1,2016-12-05 09:02:50
+  617: 615,1,1,1,2017-03-28 00:00:00,28800000,29700000,1,2,,"",CONFIRMAR MARCOS/ PEDIR IMPLANTE) OK**,,"",1,"",2,"",3,"",,1,,,257,2017-03-27 17:06:31,257,2017-03-28 08:57:43
+  626: 624,1,1,1,2017-04-03 00:00:00,28800000,29700000,3,1,953,José Roberto Caseri,DENTE DO IMPLANTE CAIU***,8,"ESPOSA DO PACIENTE DISSE QUE ELE ESTÁ NA INGLATERRA, E CHEGA NO DOMINGO, SEGUNDO ELA O DENTE DO IMPLANTE SAIU.",1,17 - 3512-7618,4,17 -
+  906: 903,1,1,1,2017-08-10 00:00:00,25500000,26400000,1,2,,"",IMPLANTE WALTER 120 DIAS***,,"",1,"",2,"",3,"",,1,,,257,2017-07-25 08:15:36,,
+  1138: 1137,1,1,1,2017-12-01 00:00:00,26100000,27000000,1,2,,"",90 DIAS IMPLANTE KELLY - AGENDAR PARA RX.OK,,"",1,"",2,"",3,"",,1,,,257,2017-11-10 10:20:45,257,2017-12-01 13:49:11
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\anamnese_questionarios.csv
+MATCHES: Principal
+  2: 1,2,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  3: 2,1,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  4: 3,4,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\clinicas.csv
+MATCHES: gleissontel@gmail.com
+  4: 1,Instuto Brana - Odontologia,gleissontel@gmail.com,280.106.918-36,DEMO 7 dias,,,,PARTICULAR,2026-04-11 15:50:53.557578,t,2026-03-03 15:24:01.393095-03,"{""clinica"": {""nome"": ""Instuto Brana - Odontologia"", ""endereco"": ""Joaquim Mende
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\contato.csv
+MATCHES: Implante
+  30: 29,1,,DentFix - Implantes,Fornecedor,Reginaldo,,8,"","","","","","","",1,19 - 3584-4738,2,"",3,"",4,19 - 98269-0453,"","",t,t,"",,,,
+  67: 66,1,,SIN - Sistema de Implantes,Fornecedor,Marcelo,,8,"","","","","","","",1,0800 - 724-8510,2,16 - 9786-0384,3,"",4,17 - 7811-8307,"","",t,t,"",,,,
+  106: 105,1,,IMPLALIFE IMPLANTES,Fornecedor,Ivania,,10,"","","",São José do Rio Preto,"",SP,"",4,55 17 98152-9137,2,"",3,"",4,"","","",t,t,"",,,,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\doenca_cid.csv
+MATCHES: Implante, Principal
+  1106: 386071,1,C34.0,Brônquio principal,"",f,1075
+  2907: 387873,1,G13*,Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte,"",f,2877
+  5857: 390823,1,M96.6,"Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea","",f,5827
+  9395: 394363,1,T44,Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo,"",f,9367
+  9400: 394368,1,T44.4,Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte,"",f,9372
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\email_codes.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,gleissontel@gmail.com,signup,b4e18f274b320caa917bf6db867b171d7cca602787024831a7dfdca72c9c497e,2026-03-03 14:08:57.519207,f,2026-03-03 10:58:57.513179-03
+  3: 2,gleissontel@gmail.com,signup,6b1fa0ddade074d9f21f105333bd48995b28aa3a1611762d84b6638867d78175,2026-03-03 14:16:22.394852,f,2026-03-03 11:06:22.385664-03
+  4: 3,gleissontel@gmail.com,signup,bbdb68820bef3641c5e5bdd8dedc5f7ec0c11836b36c71344f9048d02aa71c86,2026-03-03 14:39:01.50305,f,2026-03-03 11:29:01.488212-03
+  5: 4,gleissontel@gmail.com,signup,4694993f8c3b9a111dfff97cec67a96f33f9d8f180be073c0fdf1f3fed3e532d,2026-03-03 14:39:55.520739,t,2026-03-03 11:29:55.518989-03
+  6: 7,gleissontel@gmail.com,signup,8b93c8a23c2927aab5423a747f8bff22aa8bbf651e615d569bb86b0620e9f6e9,2026-03-03 18:24:37.172861,t,2026-03-03 15:23:36.969086-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\item_auxiliar.csv
+MATCHES: Implante
+  1204: 1445,1,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1218: 1459,1,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+  1246: 1487,1,Fabricantes,21001,SYSTEX - IMPLANTES,,,f,,f,,f
+  1829: 1784,2,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1843: 1798,2,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\lancamento.csv
+MATCHES: Implante
+  1047: 7868,1,292,IMPLALIFE IMPLANTES,320,2025-08-28,2025-08-28,debito,CLINICA,Aberto,Boleto bancário,2025-08-28,2026-01-25,,,,,0,0,1,1
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\material.csv
+MATCHES: Implante, Principal
+  2: 3070,00001,IMPLANTE INDEX IMPLALIFE,1,95,95,"","",0,f,"",17
+  7: 3075,00006,KIT CIRURGICO PARA IMPLANTE,1,30,30,"","",0,f,"",17
+  85: 3180,01680,Broca para Implante Lança 2.0,1,2,2,"","",0,f,"",18
+  86: 3181,01690,Broca para Implante Alvim 3.5,1,2,2,"","",0,f,"",18
+  87: 3182,01700,Broca para Implante Alvim 4.3,1,2,2,"","",0,f,"",18
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\modelos_documento.csv
+MATCHES: Implante
+  30: 29,,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/base/outros/Contrato Implante.doc,t,f,base,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  105: 104,1,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/clinicas/1/outros/Contrato Implante.doc,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  119: 118,1,outros,outros:exame_sangue_implante_brana,EXAME_SANGUE_IMPLANTE_BRANA,EXAME_SANGUE_IMPLANTE_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/EXAME_SANGUE_IMPLANTE_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:
+  169: 168,1,outros,outros:termo_implante___sem_carga_brana,TERMO_IMPLANTE _ SEM_CARGA_BRANA,TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.2609
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\pacientes.csv
+MATCHES: gleissontel@gmail.com, Implante, Principal
+  428: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato no dia 12/06/15, paciente disse que vai agendar depois do dia 20, teve interesse nos implantes (600)\plain\f0\fs22\cf0\b . Jozi*12/06/15\par
+  430: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em  contato com a paciente para P.O (implante) esta disse estar tudo bem.\plain\f0\fs22\cf0\b  (Jozi) - 14/10/15\par
+  432: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato com a paciente para P.O (Implante), paciente disse que est\'e1 \'f3tima\plain\f0\fs22\cf0\b . (Jozi*) 04/02/16\par
+  440: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Paciente entrou em contato em 19/06/2018, disse que seu esposo est\'e1 adoentado e por isso ainda n\'e3o p\'f4de vir para fazer o implante, combinou que na semana que vem entra em contato para a
+  448: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0\b Protese sobre implante Dr combinou R$1200,00 cada. (Jozi*)30/11/2020\line \par
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\plano_odonto.csv
+MATCHES: Principal
+  2: 1,1,1,1,1,001,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 14:15:19.059829-03,,
+  3: 2,1,2,2,2,002,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  4: 3,1,3,3,3,003,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  5: 4,1,4,4,4,004,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,23/03/2026
+  6: 5,1,5,5,5,005,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\plataforma_auditoria.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,gleissontel@gmail.com,clinica_status_update,clinica,3,"{""ativo"": false, ""motivo"": """"}",127.0.0.1,2026-03-06 10:57:08.509526-03
+  3: 2,1,gleissontel@gmail.com,usuario_status_update,usuario,3,"{""ativo"": false, ""email"": ""wilker1983@gmail.com""}",127.0.0.1,2026-03-06 10:57:28.960366-03
+  4: 3,1,gleissontel@gmail.com,clinica_delete_definitivo,clinica,3,"{""clinica_id"": 3, ""clinica_nome"": ""Wilker"", ""clinica_email"": ""wilker1983@gmail.com"", ""usuarios_removidos"": 1}",127.0.0.1,2026-03-06 16:12:51.016505-03
+  5: 4,1,gleissontel@gmail.com,usuario_perfil_update,usuario,4,"{""is_admin"": true, ""email"": ""a.butarelo@gmail.com""}",127.0.0.1,2026-03-09 12:18:45.603784-03
+  6: 5,1,gleissontel@gmail.com,clinica_plano_update,clinica,4,"{""plano"": ""SUPERADMIN"", ""dias"": 36500, ""manter_ativo"": true, ""tipo_conta"": ""Super Admin"", ""trial_ate"": ""2126-02-16T20:12:27.065590""}",127.0.0.1,2026-03-12 17:12:27.05
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\prestador_odonto.csv
+MATCHES: gleissontel@gmail.com
+  5: 1,1,1,9,002,Gleisson Tel,Tel,Cirurgião dentista,,,f,t,,,,,,,,,,,,,,,,1,,,,,gleissontel@gmail.com,institutobrana.com.br,,,,,,,,,,,,,,,,,,,"{""manha_inicio"": ""07:00"", ""manha_fim"": ""12:00"", ""tarde_inicio"": ""12:00"", ""tarde_fim"": ""
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\procedimento.csv
+MATCHES: Implante
+  10: 41006,7022,Implante ¢sseo integr vel - Cone Morse,0,0,0,0,0,33,,,int_implante.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-26,2,t,9
+  12: 41013,3030,Abertura de implante mand. - (Enxerto Livre),0,0,0,0,0,33,,,int_enxerto.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,25
+  13: 41014,3040,Abertura de implante mand. - (Osteotomia e Livre),0,0,0,0,0,33,,,int_cirur.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,45
+  21: 51886,5020,Reimplante de dente,0,0,0,0,0,47,01,425,int_implante.bmp,0,ELEMENTO_FACE,0,f,f,,,,1,t,9
+  29: 1065,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,3,,,,0,INTERVENCAO,0,f,f,,17/03/2026 11:23,17/03/2026 11:23,1,f,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\procedimento_generico.csv
+MATCHES: Implante
+  136: 231,0231,Implante agulhado (por trípode),0,int_implante.bmp,t,,,,13,0,f,1,0
+  137: 232,0232,Implante justa-ósseo (por núcleo),0,int_implante.bmp,t,,,,13,0,f,1,0
+  286: 233,0233,Implante laminado (por lâmina),90,int_implante.bmp,t,,2023-12-08,2023-12-08,13,0,f,1,0
+  336: 425,0425,Reimplante de dente,0,int_implante.bmp,t,,,,06,0,f,1,0
+  377: 234,0234,Implante osteointegrável,60,int_implante.bmp,t,,2016-08-19,2023-11-30,13,0,f,1,0
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\servico_protetico.csv
+MATCHES: Implante
+  30: 30,25,1,ACRILIZAÇÕES - Protocolo sobre 5 implantes,R$,2115,5
+  50: 50,25,1,CERÂMICA - Aplicação de porcelana sobre implante,R$,275,5
+  58: 58,25,1,METAL - Barra para overdentures sobre 4 implantes,R$,741,5
+  63: 63,25,1,METAL - Estrutura metálica sobre implante,R$,202.5,5
+  65: 65,25,1,METAL - Infra estrutura metálica sobre implante,R$,202.5,5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\simbolo_grafico_catalogo.csv
+MATCHES: Implante
+  6: 33,int_implante.bmp,Implante,6,2,1,int_implante.bmp,,,int_implante.bmp,2,t,9,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\brana_saas_to_render_20260406\data\usuarios.csv
+MATCHES: gleissontel@gmail.com
+  3: 1,1,Gleisson Tel,gleissontel@gmail.com,$2b$12$FAyzSUGEx3PQL5wg5hbTmugmMqhlGDDwxAw0erlNbBUhDe5DW9L/q,t,t,t,1,Tel,Cirurgião dentista,f,1,,,,"{""headerText"":"""",""printLogo"":true,""logoPath"":""CABEÇALHO.bmp"",""logoDataUrl"":""data:image/b
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\metadata.json
+MATCHES: anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  80:       "table_name": "anamnese_perguntas",
+  92:       "csv_path": "data/anamnese_perguntas.csv"
+  95:       "table_name": "anamnese_questionarios",
+  106:       "csv_path": "data/anamnese_questionarios.csv"
+  109:       "table_name": "anamnese_respostas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\agenda_legado_evento.csv
+MATCHES: Implante
+  396: 42123,1,1,1,2016-12-05 00:00:00,30600000,32400000,3,1,231,Fatima Luzia Shumaher Frutuoso,Coroa Metalo-cerâmica sob implante no(s) dente(s) 22,8,"",1,17 - 3218-1069,2,"",4,17 - 99627-0086,,1,,,1,2016-12-05 08:41:31,1,2016-12-05 09:02:50
+  621: 42347,1,1,1,2017-03-28 00:00:00,28800000,29700000,1,2,,"",CONFIRMAR MARCOS/ PEDIR IMPLANTE) OK**,,"",1,"",2,"",3,"",,1,,,257,2017-03-27 17:06:31,257,2017-03-28 08:57:43
+  631: 42356,1,1,1,2017-04-03 00:00:00,28800000,29700000,3,1,953,José Roberto Caseri,DENTE DO IMPLANTE CAIU***,8,"ESPOSA DO PACIENTE DISSE QUE ELE ESTÁ NA INGLATERRA, E CHEGA NO DOMINGO, SEGUNDO ELA O DENTE DO IMPLANTE SAIU.",1,17 - 3512-7618,4,17
+  912: 42635,1,1,1,2017-08-10 00:00:00,25500000,26400000,1,2,,"",IMPLANTE WALTER 120 DIAS***,,"",1,"",2,"",3,"",,1,,,257,2017-07-25 08:15:36,,
+  1147: 42869,1,1,1,2017-12-01 00:00:00,26100000,27000000,1,2,,"",90 DIAS IMPLANTE KELLY - AGENDAR PARA RX.OK,,"",1,"",2,"",3,"",,1,,,257,2017-11-10 10:20:45,257,2017-12-01 13:49:11
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\anamnese_questionarios.csv
+MATCHES: Principal
+  2: 1,2,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  3: 2,1,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  4: 3,4,Principal,t,1,2026-03-17 21:09:36.226119-03,2026-03-17 21:09:36.226119-03
+  5: 4,5,Principal,t,1,2026-04-13 14:04:23.766037-03,2026-04-13 14:04:23.766037-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\clinicas.csv
+MATCHES: gleissontel@gmail.com
+  4: 1,Instuto Brana - Odontologia,gleissontel@gmail.com,280.106.918-36,DEMO 7 dias,,,,PARTICULAR,2026-04-11 15:50:53.557578,t,2026-03-03 15:24:01.393095-03,"{""clinica"": {""nome"": ""Instuto Brana - Odontologia"", ""endereco"": ""Joaquim Mende
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\contato.csv
+MATCHES: Implante
+  30: 29,1,,DentFix - Implantes,Fornecedor,Reginaldo,,8,"","","","","","","",1,19 - 3584-4738,2,"",3,"",4,19 - 98269-0453,"","",t,t,"",,,,
+  67: 66,1,,SIN - Sistema de Implantes,Fornecedor,Marcelo,,8,"","","","","","","",1,0800 - 724-8510,2,16 - 9786-0384,3,"",4,17 - 7811-8307,"","",t,t,"",,,,
+  106: 105,1,,IMPLALIFE IMPLANTES,Fornecedor,Ivania,,10,"","","",São José do Rio Preto,"",SP,"",4,55 17 98152-9137,2,"",3,"",4,"","","",t,t,"",,,,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\doenca_cid.csv
+MATCHES: Implante, Principal
+  1082: 14901048,5,C34.0,Brônquio principal,"",f,1075
+  2890: 14902849,5,G13*,Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte,"",f,2877
+  5847: 14905799,5,M96.6,"Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea","",f,5827
+  9396: 14909337,5,T44,Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo,"",f,9367
+  9401: 14909342,5,T44.4,Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte,"",f,9372
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\email_codes.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,gleissontel@gmail.com,signup,b4e18f274b320caa917bf6db867b171d7cca602787024831a7dfdca72c9c497e,2026-03-03 14:08:57.519207,f,2026-03-03 10:58:57.513179-03
+  3: 2,gleissontel@gmail.com,signup,6b1fa0ddade074d9f21f105333bd48995b28aa3a1611762d84b6638867d78175,2026-03-03 14:16:22.394852,f,2026-03-03 11:06:22.385664-03
+  4: 3,gleissontel@gmail.com,signup,bbdb68820bef3641c5e5bdd8dedc5f7ec0c11836b36c71344f9048d02aa71c86,2026-03-03 14:39:01.50305,f,2026-03-03 11:29:01.488212-03
+  5: 4,gleissontel@gmail.com,signup,4694993f8c3b9a111dfff97cec67a96f33f9d8f180be073c0fdf1f3fed3e532d,2026-03-03 14:39:55.520739,t,2026-03-03 11:29:55.518989-03
+  6: 7,gleissontel@gmail.com,signup,8b93c8a23c2927aab5423a747f8bff22aa8bbf651e615d569bb86b0620e9f6e9,2026-03-03 18:24:37.172861,t,2026-03-03 15:23:36.969086-03
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\item_auxiliar.csv
+MATCHES: Implante
+  1204: 1445,1,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1218: 1459,1,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+  1246: 1487,1,Fabricantes,21001,SYSTEX - IMPLANTES,,,f,,f,,f
+  1827: 1784,2,Fabricantes,21000,NEODENT - IMPLANTES,,,f,,f,,f
+  1841: 1798,2,Fabricantes,16021,SIN - IMPLANTES,,,f,,f,,f
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\lancamento.csv
+MATCHES: Implante
+  1047: 7868,1,292,IMPLALIFE IMPLANTES,320,2025-08-28,2025-08-28,debito,CLINICA,Aberto,Boleto bancário,2025-08-28,2026-01-25,,,,,0,0,1,1
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\material.csv
+MATCHES: Implante, Principal
+  72: 3885,01680,Broca para Implante Lança 2.0,1,2,2,"","",0,f,"",22
+  73: 3886,01690,Broca para Implante Alvim 3.5,1,2,2,"","",0,f,"",22
+  74: 3887,01700,Broca para Implante Alvim 4.3,1,2,2,"","",0,f,"",22
+  75: 3888,01710,Broca para Implante Alvim 5.0,1,2,2,"","",0,f,"",22
+  76: 3889,01910,Broca para Implante Piloto 2/3,1,2,2,"","",0,f,"",22
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\modelos_documento.csv
+MATCHES: Implante
+  30: 29,,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/base/outros/Contrato Implante.doc,t,f,base,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  105: 104,1,outros,outros:contrato_implante,Contrato Implante,Contrato Implante.doc,.doc,saas/storage/modelos/clinicas/1/outros/Contrato Implante.doc,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:56:27.260953-03
+  119: 118,1,outros,outros:exame_sangue_implante_brana,EXAME_SANGUE_IMPLANTE_BRANA,EXAME_SANGUE_IMPLANTE_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/EXAME_SANGUE_IMPLANTE_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.260953-03,2026-03-29 18:
+  169: 168,1,outros,outros:termo_implante___sem_carga_brana,TERMO_IMPLANTE _ SEM_CARGA_BRANA,TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,.rtf,saas/storage/modelos/clinicas/1/outros/TERMO_IMPLANTE _ SEM_CARGA_BRANA.rtf,t,f,clinica,2026-03-29 18:56:27.2609
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\pacientes.csv
+MATCHES: gleissontel@gmail.com, Implante, Principal
+  23: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato no dia 12/06/15, paciente disse que vai agendar depois do dia 20, teve interesse nos implantes (600)\plain\f0\fs22\cf0\b . Jozi*12/06/15\par
+  25: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em  contato com a paciente para P.O (implante) esta disse estar tudo bem.\plain\f0\fs22\cf0\b  (Jozi) - 14/10/15\par
+  27: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Entrei em contato com a paciente para P.O (Implante), paciente disse que est\'e1 \'f3tima\plain\f0\fs22\cf0\b . (Jozi*) 04/02/16\par
+  35: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0 Paciente entrou em contato em 19/06/2018, disse que seu esposo est\'e1 adoentado e por isso ainda n\'e3o p\'f4de vir para fazer o implante, combinou que na semana que vem entra em contato para a
+  43: \qj\li0\fi0\ri0\sb0\sl\sa0 \plain\f0\fs22\cf0\b Protese sobre implante Dr combinou R$1200,00 cada. (Jozi*)30/11/2020\line \par
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\plano_odonto.csv
+MATCHES: Principal
+  2: 1,1,1,1,1,001,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 14:15:19.059829-03,,
+  3: 2,1,2,2,2,002,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  4: 3,1,3,3,3,003,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+  5: 4,1,4,4,4,004,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,23/03/2026
+  6: 5,1,5,5,5,005,Principal,,f,2026-03-23 14:15:19.059829-03,2026-03-23 16:35:14.145547-03,19/10/2005,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\plataforma_auditoria.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,gleissontel@gmail.com,clinica_status_update,clinica,3,"{""ativo"": false, ""motivo"": """"}",127.0.0.1,2026-03-06 10:57:08.509526-03
+  3: 2,1,gleissontel@gmail.com,usuario_status_update,usuario,3,"{""ativo"": false, ""email"": ""wilker1983@gmail.com""}",127.0.0.1,2026-03-06 10:57:28.960366-03
+  4: 3,1,gleissontel@gmail.com,clinica_delete_definitivo,clinica,3,"{""clinica_id"": 3, ""clinica_nome"": ""Wilker"", ""clinica_email"": ""wilker1983@gmail.com"", ""usuarios_removidos"": 1}",127.0.0.1,2026-03-06 16:12:51.016505-03
+  5: 4,1,gleissontel@gmail.com,usuario_perfil_update,usuario,4,"{""is_admin"": true, ""email"": ""a.butarelo@gmail.com""}",127.0.0.1,2026-03-09 12:18:45.603784-03
+  6: 5,1,gleissontel@gmail.com,clinica_plano_update,clinica,4,"{""plano"": ""SUPERADMIN"", ""dias"": 36500, ""manter_ativo"": true, ""tipo_conta"": ""Super Admin"", ""trial_ate"": ""2126-02-16T20:12:27.065590""}",127.0.0.1,2026-03-12 17:12:27.05
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\prestador_odonto.csv
+MATCHES: gleissontel@gmail.com
+  2: 1,1,1,10,002,Gleisson Tel,Tel,Cirurgião dentista,,,f,t,,,,,,,,,,,,,,07/04/2026,11/04/2026,1,,,,,gleissontel@gmail.com,institutobrana.com.br,,,,,,,,,,,,,,,,Escala 07:00-13:00 / 13:00-20:00,,,"{""manha_inicio"": ""07:00"", ""manha_fim"": ""13
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\procedimento.csv
+MATCHES: Implante
+  10: 41006,7022,Implante ¢sseo integr vel - Cone Morse,0,0,0,0,0,33,,,int_implante.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-26,2,t,9
+  12: 41013,3030,Abertura de implante mand. - (Enxerto Livre),0,0,0,0,0,33,,,int_enxerto.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,25
+  13: 41014,3040,Abertura de implante mand. - (Osteotomia e Livre),0,0,0,0,0,33,,,int_cirur.bmp,0,ELEMENTO_FACE,0,t,f,,2016-08-19,2022-05-24,2,t,45
+  21: 51886,5020,Reimplante de dente,0,0,0,0,0,47,01,425,int_implante.bmp,0,ELEMENTO_FACE,0,f,f,,,,1,t,9
+  34: 1065,1,ABERTURA IMPLANTE,45,300,34.334999999999994,0,0,3,,,,0,INTERVENCAO,0,f,f,,17/03/2026 11:23,17/03/2026 11:23,1,f,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\procedimento_generico.csv
+MATCHES: Implante
+  136: 231,0231,Implante agulhado (por trípode),0,int_implante.bmp,t,,,,13,0,f,1,0
+  137: 232,0232,Implante justa-ósseo (por núcleo),0,int_implante.bmp,t,,,,13,0,f,1,0
+  286: 233,0233,Implante laminado (por lâmina),90,int_implante.bmp,t,,2023-12-08,2023-12-08,13,0,f,1,0
+  336: 425,0425,Reimplante de dente,0,int_implante.bmp,t,,,,06,0,f,1,0
+  377: 234,0234,Implante osteointegrável,60,int_implante.bmp,t,,2016-08-19,2023-11-30,13,0,f,1,0
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\servico_protetico.csv
+MATCHES: Implante
+  30: 30,25,1,ACRILIZAÇÕES - Protocolo sobre 5 implantes,R$,2115,5
+  50: 50,25,1,CERÂMICA - Aplicação de porcelana sobre implante,R$,275,5
+  58: 58,25,1,METAL - Barra para overdentures sobre 4 implantes,R$,741,5
+  63: 63,25,1,METAL - Estrutura metálica sobre implante,R$,202.5,5
+  65: 65,25,1,METAL - Infra estrutura metálica sobre implante,R$,202.5,5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\simbolo_grafico_catalogo.csv
+MATCHES: Implante
+  6: 33,int_implante.bmp,Implante,6,2,1,int_implante.bmp,,,int_implante.bmp,2,t,9,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\backups\pre_delete_clinicas_2_5_20260413_142730\data\usuarios.csv
+MATCHES: gleissontel@gmail.com
+  14: 1,1,Gleisson Tel,gleissontel@gmail.com,"$bcrypt-sha256$v=2,t=2b,r=12$3Vy0vz6BAFaOwHEqzeMpo.$JPpDSpooE/bH2t1IgGZtRm4M4A3imz2",t,t,t,1,Tel,Dentista (CD),f,1,,"{""menu_pacientes"":{""cir_menu_pac"":0,""status_menu_pac"":0,""visualizacao_menu_p
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\data\snapshot_medicamentos_pos_apply_clinica1.json
+MATCHES: gleissontel@gmail.com
+  2:   "email_alvo": "gleissontel@gmail.com",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\data\snapshot_medicamentos_pre_apply_clinica1.json
+MATCHES: gleissontel@gmail.com
+  2:   "email_alvo": "gleissontel@gmail.com",
+  6:     "email": "gleissontel@gmail.com",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\models\anamnese.py
+MATCHES: anamnese_questionarios, anamnese_perguntas
+  9:     __tablename__ = "anamnese_questionarios"
+  26:     __tablename__ = "anamnese_perguntas"
+  38:     questionario_id = Column(Integer, ForeignKey("anamnese_questionarios.id"), nullable=False, index=True)
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\models\anamnese_resposta.py
+MATCHES: anamnese_questionarios, anamnese_perguntas, anamnese_respostas
+  8:     __tablename__ = "anamnese_respostas"
+  21:     questionario_id = Column(Integer, ForeignKey("anamnese_questionarios.id"), nullable=False, index=True)
+  22:     pergunta_id = Column(Integer, ForeignKey("anamnese_perguntas.id"), nullable=False, index=True)
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\routes\agenda_legado_routes.py
+MATCHES: Principal
+  1615:         "calendar_summary": str(cfg.get("calendar_summary") or "Agenda principal").strip(),
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\routes\auth_routes.py
+MATCHES: Principal
+  548:         calendar_summary = str(calendar.get("summary") or "Agenda principal").strip()
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\routes\tratamentos_routes.py
+MATCHES: Principal
+  266:         fallback = (clinica_nome or "").strip() or "Unidade principal"
+  552:             "unidade_atendimento": (clinica_nome or "Unidade principal"),
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\aplicar_compatibilidade_schema.py
+MATCHES: anamnese_perguntas
+  1089:         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ADD COLUMN IF NOT EXISTS tipo_pergunta INTEGER"))
+  1090:         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ADD COLUMN IF NOT EXISTS tipo_resposta INTEGER"))
+  1091:         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ADD COLUMN IF NOT EXISTS mensagem_alerta VARCHAR(255)"))
+  1094:                 "UPDATE anamnese_perguntas "
+  1100:         conn.execute(text("ALTER TABLE IF EXISTS anamnese_perguntas ALTER COLUMN tipo_pergunta SET DEFAULT 1"))
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\aplicar_schema_anamnese_etapa1.py
+MATCHES: anamnese_perguntas
+  29:                 "ALTER TABLE IF EXISTS anamnese_perguntas "
+  35:                 "ALTER TABLE IF EXISTS anamnese_perguntas "
+  41:                 "ALTER TABLE IF EXISTS anamnese_perguntas "
+  47:                 "UPDATE anamnese_perguntas "
+  55:                 "ALTER TABLE IF EXISTS anamnese_perguntas "
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\easy_simbolos_catalogo_atual_snapshot.json
+MATCHES: Implante
+  116:     "descricao": "Implante",
+  117:     "icone": "int_implante.bmp",
+  118:     "bitmap1": "int_implante.bmp",
+  125:     "codigo": "int_implante.bmp",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\export_seed_modelo.py
+MATCHES: gleissontel@gmail.com
+  5:     python saas/backend/scripts/export_seed_modelo.py --email gleissontel@gmail.com
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\mapa_conta_modelo.py
+MATCHES: gleissontel@gmail.com, anamnese_questionarios, anamnese_perguntas
+  5:     python backend/scripts/mapa_conta_modelo.py --email gleissontel@gmail.com
+  46:     "anamnese_questionarios",
+  47:     "anamnese_perguntas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\mapa_criacao_conta.py
+MATCHES: Principal, anamnese_questionarios, anamnese_perguntas
+  283:     - classificacao_principal: esperado | opcional | nao_deveria_popular
+  305:         "anamnese_questionarios",
+  306:         "anamnese_perguntas",
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_agenda_config_easy_para_saas.py
+MATCHES: gleissontel@gmail.com
+  301:     parser.add_argument("--email", help="E-mail do dono da clinica SaaS (ex: gleissontel@gmail.com).")
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_anamnese_easy_para_saas.py
+MATCHES: gleissontel@gmail.com
+  8: - Destino SaaS: clinica por email (gleissontel@gmail.com)
+  302:     parser.add_argument("--clinica-email", default="gleissontel@gmail.com")
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_config_relatorios_easy.py
+MATCHES: gleissontel@gmail.com
+  235:     parser.add_argument("--email", default="gleissontel@gmail.com", help="E-mail do dono da clinica SaaS.")
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_convenios_planos_easy.py
+MATCHES: gleissontel@gmail.com
+  18: TARGET_EMAIL_DEFAULT = "gleissontel@gmail.com"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_indices_financeiros_easy.py
+MATCHES: gleissontel@gmail.com
+  175:     parser.add_argument("--email", default="gleissontel@gmail.com", help="E-mail do dono da clinica SaaS.")
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_medicamentos_easy_para_saas.py
+MATCHES: gleissontel@gmail.com
+  31: DEFAULT_EMAIL = "gleissontel@gmail.com"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_pacientes_gleisson.py
+MATCHES: gleissontel@gmail.com
+  29: TARGET_EMAIL = "gleissontel@gmail.com"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_particular_gleisson.py
+MATCHES: gleissontel@gmail.com
+  22: TARGET_EMAIL = "gleissontel@gmail.com"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_prestadores_easy_para_saas.py
+MATCHES: gleissontel@gmail.com
+  163:     parser.add_argument("--email", help="E-mail do dono da clinica SaaS (ex: gleissontel@gmail.com).")
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_tabelas_procedimentos_easy.py
+MATCHES: gleissontel@gmail.com
+  24: TARGET_EMAIL_DEFAULT = "gleissontel@gmail.com"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\migrar_usuarios_easy_para_saas.py
+MATCHES: gleissontel@gmail.com
+  275:     parser.add_argument("--email", help="E-mail do dono da clinica SaaS (ex: gleissontel@gmail.com).")
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\remover_conta_teste.py
+MATCHES: Principal
+  136:         # Regra principal: clinica_id direto.
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_export_eds70\AGENDA.csv
+MATCHES: Implante
+  392: 1;1;2016-12-05 00:00:00;30600000;32400000;3;1;231;Fatima Luzia Shumaher Frutuoso;Coroa Metalo-cerâmica sob implante no(s) dente(s) 22;8;;1;17 - 3218-1069;2;;4;17 - 99627-0086;;1;;;1;2016-12-05 08:41:31;1;2016-12-05 09:02:50
+  616: 1;1;2017-03-28 00:00:00;28800000;29700000;1;2;;;CONFIRMAR MARCOS/ PEDIR IMPLANTE) OK**;;;1;;2;;3;;;1;;;257;2017-03-27 17:06:31;257;2017-03-28 08:57:43
+  625: 1;1;2017-04-03 00:00:00;28800000;29700000;3;1;953;José Roberto Caseri;DENTE DO IMPLANTE CAIU***;8;ESPOSA DO PACIENTE DISSE QUE ELE ESTÁ NA INGLATERRA, E CHEGA NO DOMINGO, SEGUNDO ELA O DENTE DO IMPLANTE SAIU.;1;17 - 3512-7618;4;17 - 99151-1
+  904: 1;1;2017-08-10 00:00:00;25500000;26400000;1;2;;;IMPLANTE WALTER 120 DIAS***;;;1;;2;;3;;;1;;;257;2017-07-25 08:15:36;;
+  1138: 1;1;2017-12-01 00:00:00;26100000;27000000;1;2;;;90 DIAS IMPLANTE KELLY - AGENDAR PARA RX.OK;;;1;;2;;3;;;1;;;257;2017-11-10 10:20:45;257;2017-12-01 13:49:11
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_export_eds70\CID_ITEM.csv
+MATCHES: Implante, Principal
+  1076: 1075;C34.0;Brônquio principal;0;
+  2878: 2877;G13*;Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte;0;
+  5856: 5854;M96.6;Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea;0;
+  9396: 9394;T44;Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo;0;
+  9401: 9399;T44.4;Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte;0;
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_export_eds70\CONTATO.csv
+MATCHES: Implante
+  40: 30;DentFix - Implantes;;;;;;;;1;19 - 3584-4738;2;;3;;4;19 - 98269-0453;2;;8;Reginaldo;;;-1;-1;;;;;;;;;;;
+  77: 68;SIN - Sistema de Implantes;;;;;;;;1;0800 - 724-8510;2;16 - 9786-0384;3;;4;17 - 7811-8307;2;;8;Marcelo;;;-1;-1;;;;;;;;;;;
+  119: 111;IMPLALIFE IMPLANTES;;;;;São José do Rio Preto;SP;;4;55 17 98152-9137;2;;3;;4;;2;;10;Ivania;;;-1;-1;;;;;;;;;;;
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_export_eds70\CTRLPROTETICO.csv
+MATCHES: Implante, Principal
+  23: 13;4;62;1;11;;255;112.0;2011-01-12 00:00:00;2011-01-14 00:00:00;1;;Vita;;-1;2;"Fazer metal sob implante usando ucla A.R Standard + parafuso de fixação quadrado do LAB.
+  138: 52;4;60;1;124;;255;250.0;2016-05-18 00:00:00;2016-05-20 00:00:00;2;;Vita;;-1;2;"Els 26 e 27 - Fazer estrutura metálica sobre implante.
+  205: 74;4;60;1;211;;255;100.0;2015-10-26 00:00:00;2015-10-29 00:00:00;1;;Vita;;-1;2;"Fazer: Estrutura metálica sob implante no el. 16.
+  248: 93;4;60;1;214;;255;114.0;2015-08-21 00:00:00;2015-08-27 00:00:00;1;;Vita;;-1;2;"FAZER: EL. 17 - FAZER ESTRUTURA METALICA SOB IMPLANTE.
+  318: 113;4;60;1;17;434;255;375.0;2016-09-20 00:00:00;2016-09-22 00:00:00;3;;Vita;;-1;2;"ELS- 13 - 16 : FAZER ESTRUTURA METÁLICA SOBRE IMPLANTE (SENDO EL 14 PÔNTICO)
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_export_eds70\TAB_PRT_ITEM.csv
+MATCHES: Implante
+  30: 4;27;ACRILIZAÇÕES - Protocolo sobre 5 implantes;255;2115.0;5
+  50: 4;47;CERÂMICA - Aplicação de porcelana sobre implante;255;275.0;5
+  58: 4;55;METAL - Barra para overdentures sobre 4 implantes;255;741.0;5
+  63: 4;60;METAL - Estrutura metálica sobre implante;255;202.5;5
+  65: 4;62;METAL - Infra estrutura metálica sobre implante;255;202.5;5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_export_eds70\_columns.csv
+MATCHES: Principal
+  858: eds70;dbo;VW_TISS_GUIA_COB;NR_GUIA_PRINCIPAL;10;;YES;varchar;10;10;;;;;;;iso_1;;;Latin1_General_CI_AS;;;
+  926: eds70;dbo;VW_TISS_GUIA_SOL;NR_GUIA_PRINCIPAL;9;;YES;varchar;10;10;;;;;;;iso_1;;;Latin1_General_CI_AS;;;
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_migracao_eds70\cid_migracao.csv
+MATCHES: Implante, Principal
+  1076: C34.0;Brônquio principal;;0
+  2878: G13*;Atrofias sistêmicas que afetam principalmente o sistema nervoso central em doenças classificadas em outra parte;;0
+  5828: M96.6;Fratura de osso subsequente a implante ortopédico, prótese articular ou placa óssea;;0
+  9368: T44;Intoxicação por drogas que afetam principalmente o sistema nervoso autônomo;;0
+  9373: T44.4;Agonistas principalmente alfa-adrenorreceptores não classificados em outra parte;;0
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_migracao_eds70\contatos_migracao.csv
+MATCHES: Implante
+  30: DentFix - Implantes;Fornecedor;Reginaldo;;8;;;;;;;;1;19 - 3584-4738;2;;3;;4;19 - 98269-0453;;;1;1;
+  67: SIN - Sistema de Implantes;Fornecedor;Marcelo;;8;;;;;;;;1;0800 - 724-8510;2;16 - 9786-0384;3;;4;17 - 7811-8307;;;1;1;
+  106: IMPLALIFE IMPLANTES;Fornecedor;Ivania;;10;;;;São José do Rio Preto;;SP;;4;55 17 98152-9137;2;;3;;4;;;;1;1;
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\scripts\_migracao_eds70\servicos_protetico_migracao.csv
+MATCHES: Implante
+  30: BORGES - Prótese Odontológica;ACRILIZAÇÕES - Protocolo sobre 5 implantes;R$;2115.0;5
+  50: BORGES - Prótese Odontológica;CERÂMICA - Aplicação de porcelana sobre implante;R$;275.0;5
+  58: BORGES - Prótese Odontológica;METAL - Barra para overdentures sobre 4 implantes;R$;741.0;5
+  63: BORGES - Prótese Odontológica;METAL - Estrutura metálica sobre implante;R$;202.5;5
+  65: BORGES - Prótese Odontológica;METAL - Infra estrutura metálica sobre implante;R$;202.5;5
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\security\superadmin.py
+MATCHES: gleissontel@gmail.com
+  8:         or "gleissontel@gmail.com"
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\seeds\procedimentos_genericos.py
+MATCHES: Implante
+  2769:   'descricao': 'Implante agulhado (por trípode)',
+  2774:   'simbolo_grafico': 'int_implante.bmp',
+  2781:   'descricao': 'Implante justa-ósseo (por núcleo)',
+  2786:   'simbolo_grafico': 'int_implante.bmp',
+  2793:   'descricao': 'Implante laminado (por lâmina)',
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\seeds\procedimentos_padrao.py
+MATCHES: Implante
+  11:   'nome': 'ABERTURA IMPLANTE',
+  571:   'nome': 'IMPLANTE + BIOMATERIAL',
+  591:   'nome': 'IMPLANTE OST',
+  611:   'nome': 'IMPLANTE+PROTOCOLO',
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\seeds\simbolos_graficos.py
+MATCHES: Implante
+  113:   'codigo': 'int_implante.bmp',
+  114:   'descricao': 'Implante',
+  118:   'bitmap1': 'int_implante.bmp',
+  121:   'icone': 'int_implante.bmp',
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\backend\services\signup_service.py
+MATCHES: Principal, anamnese_perguntas
+  142: ANAMNESE_QUESTIONARIO_PADRAO = "Principal"
+  143: ANAMNESE_PERGUNTAS_PADRAO = [
+  1994:     for texto in ANAMNESE_PERGUNTAS_PADRAO:
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\app.js
+MATCHES: gleissontel@gmail.com, Principal
+  11: const m={btnOpen:document.getElementById("btn-open-materiais"),cboListas:document.getElementById("materiais-cbo-listas"),cboClassificacao:document.getElementById("materiais-cbo-classificacao"),btnNovaTabela:document.getElementById("materiai
+  627: // seleciona e abre a acao principal de edicao, sem redesenhar a tabela inteira entre cliques.
+  656: async function materiaisAbrirModal(item){materialModalId=item?item.id:null;m.modalTitle.textContent="Novo Material";await materiaisCarregarCombosModal();materiaisSetModalTab("principal");m.txtNome.value=item?item.nome:"";m.txtPreco.value=it
+  669: function materiaisSetModalTab(tab){const detalhes=tab==="detalhes";if(m.tabBtnPrincipal)m.tabBtnPrincipal.classList.toggle("active",!detalhes);if(m.tabBtnDetalhes)m.tabBtnDetalhes.classList.toggle("active",detalhes);if(m.tabPrincipal)m.tabP
+  1294:   {id:"cabecalho",label:"Cabeçalho principal",preview:"Cabeçalho principal"},
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\app_backup_check.js
+MATCHES: gleissontel@gmail.com, Principal
+  11: const m={btnOpen:document.getElementById("btn-open-materiais"),cboListas:document.getElementById("materiais-cbo-listas"),cboClassificacao:document.getElementById("materiais-cbo-classificacao"),btnNovaTabela:document.getElementById("materiai
+  213: // seleciona e abre a acao principal de edicao, sem redesenhar a tabela inteira entre cliques.
+  242: async function materiaisAbrirModal(item){materialModalId=item?item.id:null;m.modalTitle.textContent="Novo Material";await materiaisCarregarCombosModal();materiaisSetModalTab("principal");m.txtNome.value=item?item.nome:"";m.txtPreco.value=it
+  255: function materiaisSetModalTab(tab){const detalhes=tab==="detalhes";if(m.tabBtnPrincipal)m.tabBtnPrincipal.classList.toggle("active",!detalhes);if(m.tabBtnDetalhes)m.tabBtnDetalhes.classList.toggle("active",detalhes);if(m.tabPrincipal)m.tabP
+  861:   {id:"cabecalho",label:"CabeÃ§alho principal",preview:"CabeÃ§alho principal"},
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\app_from_fullbackup_check.js
+MATCHES: gleissontel@gmail.com, Principal
+  11: const m={btnOpen:document.getElementById("btn-open-materiais"),cboListas:document.getElementById("materiais-cbo-listas"),cboClassificacao:document.getElementById("materiais-cbo-classificacao"),btnNovaTabela:document.getElementById("materiai
+  213: // seleciona e abre a acao principal de edicao, sem redesenhar a tabela inteira entre cliques.
+  242: async function materiaisAbrirModal(item){materialModalId=item?item.id:null;m.modalTitle.textContent="Novo Material";await materiaisCarregarCombosModal();materiaisSetModalTab("principal");m.txtNome.value=item?item.nome:"";m.txtPreco.value=it
+  255: function materiaisSetModalTab(tab){const detalhes=tab==="detalhes";if(m.tabBtnPrincipal)m.tabBtnPrincipal.classList.toggle("active",!detalhes);if(m.tabBtnDetalhes)m.tabBtnDetalhes.classList.toggle("active",detalhes);if(m.tabPrincipal)m.tabP
+  861:   {id:"cabecalho",label:"CabeÃ§alho principal",preview:"CabeÃ§alho principal"},
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\index.html
+MATCHES: Principal
+  3426:             <button id="materiais-modal-tab-principal-btn" class="modal-tab-btn active" type="button">Principal</button>
+  3430:         <div id="materiais-modal-tab-principal" class="materiais-modal-stack">
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\prestadores_agenda_refino.js
+MATCHES: Principal
+  155:   function normalizeAgendaPrincipal() {
+  585:     normalizeAgendaPrincipal();
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\prestadores_override.js
+MATCHES: Principal
+  25: function prestTelefonePrincipal(item,chave){return String(item?.[chave]||"").trim()}
+  28: function prestFiltrarLista(){const esp=String(prestCfg?.cboEspecialidade?.value||"").trim();const nome=(prestCfg?.txtNome?.value||"").trim().toLowerCase();return prestadoresCache.filter(item=>{const especialidades=prestEspecialidadesTexto(i
+  29: function prestRender(){if(!prestCfg)return;const lista=prestFiltrarLista();prestCfg.tbody.innerHTML=lista.map((item,idx)=>`<tr data-id="${item.id}" class="${Number(item.id||0)===Number(prestadorSelId)?"selected":""}"><td>${esc(prestFmtCodig
+  77: function prestNormalizarPrincipalModalV2(){
+  92: async function prestCarregarCombosPrincipal(base){if(!prestCfg?.modal)return;const m=prestCfg.modal;const [sexosAux,cbosAux]=await Promise.all([prestCarregarAuxTipoLista("Sexo"),prestCarregarAuxTipoLista("CBO-S")]);const sexos=Array.isArray
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\frontend\prototipos\editor-textos-next\README.md
+MATCHES: Principal
+  19: 8. Area principal de edicao de documento.
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\cryptography\hazmat\primitives\serialization\ssh.py
+MATCHES: Principal
+  900:         _valid_principals: list[bytes],
+  921:         self._valid_principals = _valid_principals
+  956:     def valid_principals(self) -> list[bytes]:
+  957:         return self._valid_principals
+  1069:         principals, rest = _get_sshstr(rest)
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\jose\jwt.py
+MATCHES: Principal
+  338:     intended for.  Each principal intended to process the JWT MUST
+  339:     identify itself with a value in the audience claim.  If the principal
+  373:     The "iss" (issuer) claim identifies the principal that issued the
+  394:     The "sub" (subject) claim identifies the principal that is the
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\oscrypto\_win\tls.py
+MATCHES: Principal
+  820:                 if result == Secur32Const.SEC_E_WRONG_PRINCIPAL:
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\oscrypto\_win\_secur32.py
+MATCHES: Principal
+  83:     SEC_E_WRONG_PRINCIPAL = 0x80090322  # Domain name mismatch
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\oscrypto\_win\_secur32_cffi.py
+MATCHES: Principal
+  101:     SECURITY_STATUS AcquireCredentialsHandleW(SEC_WCHAR *pszPrincipal, SEC_WCHAR *pszPackage, ULONG fCredentialUse,
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\pip\_vendor\chardet\metadata\languages.py
+MATCHES: Principal
+  175:         wiki_start_pages=["Wikipédia:Accueil_principal", "Bœuf (animal)"],
+  209:         wiki_start_pages=["Pagina_principale"],
+  259:         wiki_start_pages=["Wikipédia:Página_principal"],
+  267:         wiki_start_pages=["Pagina_principală"],
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\reportlab\lib\fontfinder.py
+MATCHES: Principal
+  30: - the principal file (.pfb for type 1 fonts), and the metrics file if appropriate
+
+FILE: D:\BRANA ARQUIVOS\PROJETO_PRECIFICACAO_LEGADO\saas\venv_saas\Lib\site-packages\reportlab\lib\normalDate.py
+MATCHES: Principal
+  80:     integer value is used principally for storage and to simplify

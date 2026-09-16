@@ -1,0 +1,6 @@
+categoria,caminho_local,quantidade,tamanho_total,extensoes,tabela_relacionada,coluna_relacionada,necessario_em_runtime,incluido_imagem_docker,precisa_persistencia,destino_aws_recomendado
+ESTATICO_VERSIONADO,storage/modelos/base,59,632818,.doc;.dot;.mod;.rec;.rtf;.txt,,,Imagem Docker e repo,Sim,Nao,Docker image + repo
+DOCUMENTO_CLINICO,storage/modelos/clinicas,260,176214165,.bmp;.doc;.docx;.dot;.dotm;.dotx;.json;.mod;.rec;.rtf;.thmx;.tmp;.txt;.xsl,,,Persistente por clinica,Nao,Sim,S3 ou EFS com isolamento por clinica
+ESTATICO_VERSIONADO,assets,1519,7231009,.bmp;.db;.gif;.ico;.png;.svg,,,Imagem Docker,Sim,Nao,Docker image
+ESTATICO_VERSIONADO,frontend-react/public/assets,424,1250820,.bmp;.png,,,Frontend build/public,Sim,Nao,Frontend build/Docker image
+ARQUIVO_TEMPORARIO,uploads,0,0,,,,Efemero,Nao,Nao,N/A

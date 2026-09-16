@@ -1,0 +1,2209 @@
+{
+  "metadata": {
+    "campos_permitidos": [
+      "nome",
+      "especialidade",
+      "simbolo",
+      "preco",
+      "forma_cobranca",
+      "observacoes",
+      "status"
+    ],
+    "campos_protegidos": [
+      "id",
+      "tabela_id",
+      "codigo",
+      "procedimento_generico_id",
+      "materiais_vinculados",
+      "fases_vinculadas",
+      "historicos",
+      "chaves_estrangeiras"
+    ],
+    "clinica_id": 1,
+    "sha256_origem": "3aef143b20cdbcf3926eea541ea0ef1909c0bb76ad158099eea004c926dc89b8",
+    "tabela_codigo": 4,
+    "tabela_id": 18,
+    "tabela_nome": "PARTICULAR",
+    "total_apto": 64,
+    "total_bloqueado": 272,
+    "total_media_positiva": 0
+  },
+  "registros": [
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 223,
+        "especialidade": "07",
+        "nome": "Aparelho Autoligado (Arcada Inferior)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelho Autoligado (Arcada Inferior)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 223,
+      "divergencias": [],
+      "id_brana": 40778,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelho Autoligado (Arcada Inferior)",
+      "nome_easy": "Aparelho Autoligado (Arcada Inferior)",
+      "nroproctab_easy": 223,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 224,
+        "especialidade": "07",
+        "nome": "Aparelho Autoligado (Arcada Superior)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelho Autoligado (Arcada Superior)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 224,
+      "divergencias": [],
+      "id_brana": 40779,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelho Autoligado (Arcada Superior)",
+      "nome_easy": "Aparelho Autoligado (Arcada Superior)",
+      "nroproctab_easy": 224,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 226,
+        "especialidade": "07",
+        "nome": "Aparelho em uma arcada conjugado c/ ap. auxiliar",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelho em uma arcada conjugado c/ ap. auxiliar"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 226,
+      "divergencias": [],
+      "id_brana": 40781,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelho em uma arcada conjugado c/ ap. auxiliar",
+      "nome_easy": "Aparelho em uma arcada conjugado c/ ap. auxiliar",
+      "nroproctab_easy": 226,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 227,
+        "especialidade": "07",
+        "nome": "Aparelho extra bucal",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelho extra bucal"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 227,
+      "divergencias": [],
+      "id_brana": 40782,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelho extra bucal",
+      "nome_easy": "Aparelho extra bucal",
+      "nroproctab_easy": 227,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 234,
+        "especialidade": "07",
+        "nome": "Aparelho Ortopedico",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelho Ortopedico"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 234,
+      "divergencias": [],
+      "id_brana": 40789,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelho Ortopedico",
+      "nome_easy": "Aparelho Ortopedico",
+      "nroproctab_easy": 234,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 235,
+        "especialidade": "07",
+        "nome": "Aparelho removivel",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelho removivel"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 235,
+      "divergencias": [],
+      "id_brana": 40790,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelho removivel",
+      "nome_easy": "Aparelho removivel",
+      "nroproctab_easy": 235,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 236,
+        "especialidade": "07",
+        "nome": "Aparelhos auxiliares (extra-oral, \"Bumper\", etc)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Aparelhos auxiliares (extra-oral, \"Bumper\", etc)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 236,
+      "divergencias": [],
+      "id_brana": 40791,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Aparelhos auxiliares (extra-oral, \"Bumper\", etc)",
+      "nome_easy": "Aparelhos auxiliares (extra-oral, \"Bumper\", etc)",
+      "nroproctab_easy": 236,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 237,
+        "especialidade": "07",
+        "nome": "Arco Palatino",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Arco Palatino"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 237,
+      "divergencias": [],
+      "id_brana": 40792,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Arco Palatino",
+      "nome_easy": "Arco Palatino",
+      "nroproctab_easy": 237,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 238,
+        "especialidade": "07",
+        "nome": "Ativador de Haulp",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Ativador de Haulp"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 238,
+      "divergencias": [],
+      "id_brana": 40793,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Ativador de Haulp",
+      "nome_easy": "Ativador de Haulp",
+      "nroproctab_easy": 238,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 239,
+        "especialidade": "07",
+        "nome": "Ativador de Rossi",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Ativador de Rossi"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 239,
+      "divergencias": [],
+      "id_brana": 40794,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Ativador de Rossi",
+      "nome_easy": "Ativador de Rossi",
+      "nroproctab_easy": 239,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 241,
+        "especialidade": "07",
+        "nome": "Bandagem (Tubo bracket)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 21
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bandagem (Tubo bracket)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 241,
+      "divergencias": [],
+      "id_brana": 40796,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bandagem (Tubo bracket)",
+      "nome_easy": "Bandagem (Tubo bracket)",
+      "nroproctab_easy": 241,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 242,
+        "especialidade": "07",
+        "nome": "Bandagem (Tubo duplo)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 21
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bandagem (Tubo duplo)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 242,
+      "divergencias": [],
+      "id_brana": 40797,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bandagem (Tubo duplo)",
+      "nome_easy": "Bandagem (Tubo duplo)",
+      "nroproctab_easy": 242,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 243,
+        "especialidade": "07",
+        "nome": "Bandagem (Tubo simples)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 21
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bandagem (Tubo simples)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 243,
+      "divergencias": [],
+      "id_brana": 40798,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bandagem (Tubo simples)",
+      "nome_easy": "Bandagem (Tubo simples)",
+      "nroproctab_easy": 243,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 244,
+        "especialidade": "07",
+        "nome": "Bandagem (Tubo triplo)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 21
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bandagem (Tubo triplo)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 244,
+      "divergencias": [],
+      "id_brana": 40799,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bandagem (Tubo triplo)",
+      "nome_easy": "Bandagem (Tubo triplo)",
+      "nroproctab_easy": 244,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 245,
+        "especialidade": "07",
+        "nome": "Barra Transpalatina",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Barra Transpalatina"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 245,
+      "divergencias": [],
+      "id_brana": 40800,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Barra Transpalatina",
+      "nome_easy": "Barra Transpalatina",
+      "nroproctab_easy": 245,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 247,
+        "especialidade": "07",
+        "nome": "Bio-ajustador - Tecnica MD3",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bio-ajustador - Tecnica MD3"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 247,
+      "divergencias": [],
+      "id_brana": 40802,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bio-ajustador - Tecnica MD3",
+      "nome_easy": "Bio-ajustador - Tecnica MD3",
+      "nroproctab_easy": 247,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 248,
+        "especialidade": "07",
+        "nome": "Bionator - Super",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bionator - Super"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 248,
+      "divergencias": [],
+      "id_brana": 40803,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bionator - Super",
+      "nome_easy": "Bionator - Super",
+      "nroproctab_easy": 248,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 249,
+        "especialidade": "07",
+        "nome": "Bionator de Balters - Classe I",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bionator de Balters - Classe I"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 249,
+      "divergencias": [],
+      "id_brana": 40804,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bionator de Balters - Classe I",
+      "nome_easy": "Bionator de Balters - Classe I",
+      "nroproctab_easy": 249,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 250,
+        "especialidade": "07",
+        "nome": "Bionator de Balters - Classe II",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bionator de Balters - Classe II"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 250,
+      "divergencias": [],
+      "id_brana": 40805,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bionator de Balters - Classe II",
+      "nome_easy": "Bionator de Balters - Classe II",
+      "nroproctab_easy": 250,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 251,
+        "especialidade": "07",
+        "nome": "Bionator de Balters - Classe III",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bionator de Balters - Classe III"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 251,
+      "divergencias": [],
+      "id_brana": 40806,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bionator de Balters - Classe III",
+      "nome_easy": "Bionator de Balters - Classe III",
+      "nroproctab_easy": 251,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 252,
+        "especialidade": "07",
+        "nome": "Blinler - A",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Blinler - A"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 252,
+      "divergencias": [],
+      "id_brana": 40807,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Blinler - A",
+      "nome_easy": "Blinler - A",
+      "nroproctab_easy": 252,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 253,
+        "especialidade": "07",
+        "nome": "Blinler - B",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Blinler - B"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 253,
+      "divergencias": [],
+      "id_brana": 40808,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Blinler - B",
+      "nome_easy": "Blinler - B",
+      "nroproctab_easy": 253,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 254,
+        "especialidade": "07",
+        "nome": "Blinler - C",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Blinler - C"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 254,
+      "divergencias": [],
+      "id_brana": 40809,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Blinler - C",
+      "nome_easy": "Blinler - C",
+      "nroproctab_easy": 254,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 256,
+        "especialidade": "07",
+        "nome": "Bracket (Bracket 0,18\" x 0,25\")",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bracket (Bracket 0,18\" x 0,25\")"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 256,
+      "divergencias": [],
+      "id_brana": 40811,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bracket (Bracket 0,18\" x 0,25\")",
+      "nome_easy": "Bracket (Bracket 0,18\" x 0,25\")",
+      "nroproctab_easy": 256,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 257,
+        "especialidade": "07",
+        "nome": "Bracket (Bracket 0,18\" x 0,30\")",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bracket (Bracket 0,18\" x 0,30\")"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 257,
+      "divergencias": [],
+      "id_brana": 40812,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bracket (Bracket 0,18\" x 0,30\")",
+      "nome_easy": "Bracket (Bracket 0,18\" x 0,30\")",
+      "nroproctab_easy": 257,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 258,
+        "especialidade": "07",
+        "nome": "Bracket (Bracket 0,22\" x 0,28\")",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bracket (Bracket 0,22\" x 0,28\")"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 258,
+      "divergencias": [],
+      "id_brana": 40813,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bracket (Bracket 0,22\" x 0,28\")",
+      "nome_easy": "Bracket (Bracket 0,22\" x 0,28\")",
+      "nroproctab_easy": 258,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 259,
+        "especialidade": "07",
+        "nome": "Bracket (Bracket Straight-Wire)",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 22
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Bracket (Bracket Straight-Wire)"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 259,
+      "divergencias": [],
+      "id_brana": 40814,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Bracket (Bracket Straight-Wire)",
+      "nome_easy": "Bracket (Bracket Straight-Wire)",
+      "nroproctab_easy": 259,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 262,
+        "especialidade": "07",
+        "nome": "Disjuntor de Hass",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Disjuntor de Hass"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 262,
+      "divergencias": [],
+      "id_brana": 40817,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Disjuntor de Hass",
+      "nome_easy": "Disjuntor de Hass",
+      "nroproctab_easy": 262,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 263,
+        "especialidade": "07",
+        "nome": "Disjuntor de Hirax",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Disjuntor de Hirax"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 263,
+      "divergencias": [],
+      "id_brana": 40818,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Disjuntor de Hirax",
+      "nome_easy": "Disjuntor de Hirax",
+      "nroproctab_easy": 263,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 264,
+        "especialidade": "07",
+        "nome": "Disjuntor Hirax RC",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Disjuntor Hirax RC"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 264,
+      "divergencias": [],
+      "id_brana": 40819,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Disjuntor Hirax RC",
+      "nome_easy": "Disjuntor Hirax RC",
+      "nroproctab_easy": 264,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 265,
+        "especialidade": "07",
+        "nome": "Disjuntor MC Namara - Resina",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Disjuntor MC Namara - Resina"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 265,
+      "divergencias": [],
+      "id_brana": 40820,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Disjuntor MC Namara - Resina",
+      "nome_easy": "Disjuntor MC Namara - Resina",
+      "nroproctab_easy": 265,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 266,
+        "especialidade": "07",
+        "nome": "Disjuntor MC Namara com Hirax",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Disjuntor MC Namara com Hirax"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 266,
+      "divergencias": [],
+      "id_brana": 40821,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Disjuntor MC Namara com Hirax",
+      "nome_easy": "Disjuntor MC Namara com Hirax",
+      "nroproctab_easy": 266,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 267,
+        "especialidade": "07",
+        "nome": "Disjuntor Omar Gabriel",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Disjuntor Omar Gabriel"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 267,
+      "divergencias": [],
+      "id_brana": 40822,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Disjuntor Omar Gabriel",
+      "nome_easy": "Disjuntor Omar Gabriel",
+      "nroproctab_easy": 267,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 269,
+        "especialidade": "07",
+        "nome": "Djuntor palatino",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Djuntor palatino"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 269,
+      "divergencias": [],
+      "id_brana": 40824,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Djuntor palatino",
+      "nome_easy": "Djuntor palatino",
+      "nroproctab_easy": 269,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 271,
+        "especialidade": "07",
+        "nome": "Frankel - Classe I",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Frankel - Classe I"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 271,
+      "divergencias": [],
+      "id_brana": 40826,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Frankel - Classe I",
+      "nome_easy": "Frankel - Classe I",
+      "nroproctab_easy": 271,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 272,
+        "especialidade": "07",
+        "nome": "Frankel - Classe II",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Frankel - Classe II"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 272,
+      "divergencias": [],
+      "id_brana": 40827,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Frankel - Classe II",
+      "nome_easy": "Frankel - Classe II",
+      "nroproctab_easy": 272,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 273,
+        "especialidade": "07",
+        "nome": "Frankel - Classe III",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Frankel - Classe III"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 273,
+      "divergencias": [],
+      "id_brana": 40828,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Frankel - Classe III",
+      "nome_easy": "Frankel - Classe III",
+      "nroproctab_easy": 273,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 274,
+        "especialidade": "07",
+        "nome": "Frankel - Mordida Aberta",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Frankel - Mordida Aberta"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 274,
+      "divergencias": [],
+      "id_brana": 40829,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Frankel - Mordida Aberta",
+      "nome_easy": "Frankel - Mordida Aberta",
+      "nroproctab_easy": 274,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 275,
+        "especialidade": "07",
+        "nome": "Grade palatina fixa",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Grade palatina fixa"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 275,
+      "divergencias": [],
+      "id_brana": 40830,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Grade palatina fixa",
+      "nome_easy": "Grade palatina fixa",
+      "nroproctab_easy": 275,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 277,
+        "especialidade": "07",
+        "nome": "Klammt - Classe I",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Klammt - Classe I"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 277,
+      "divergencias": [],
+      "id_brana": 40832,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Klammt - Classe I",
+      "nome_easy": "Klammt - Classe I",
+      "nroproctab_easy": 277,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 278,
+        "especialidade": "07",
+        "nome": "Klammt - Classe II",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Klammt - Classe II"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 278,
+      "divergencias": [],
+      "id_brana": 40833,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Klammt - Classe II",
+      "nome_easy": "Klammt - Classe II",
+      "nroproctab_easy": 278,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 279,
+        "especialidade": "07",
+        "nome": "Klammt - Classe III",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Klammt - Classe III"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 279,
+      "divergencias": [],
+      "id_brana": 40834,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Klammt - Classe III",
+      "nome_easy": "Klammt - Classe III",
+      "nroproctab_easy": 279,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 280,
+        "especialidade": "07",
+        "nome": "Lip Bumper",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Lip Bumper"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 280,
+      "divergencias": [],
+      "id_brana": 40835,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Lip Bumper",
+      "nome_easy": "Lip Bumper",
+      "nroproctab_easy": 280,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 283,
+        "especialidade": "07",
+        "nome": "Mentoneira",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Mentoneira"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 283,
+      "divergencias": [],
+      "id_brana": 40838,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Mentoneira",
+      "nome_easy": "Mentoneira",
+      "nroproctab_easy": 283,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 284,
+        "especialidade": "07",
+        "nome": "Ortopedia funcional dos maxilares",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 39
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Ortopedia funcional dos maxilares"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 284,
+      "divergencias": [],
+      "id_brana": 40839,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Ortopedia funcional dos maxilares",
+      "nome_easy": "Ortopedia funcional dos maxilares",
+      "nroproctab_easy": 284,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 285,
+        "especialidade": "07",
+        "nome": "Palatina ou arco lingual",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Palatina ou arco lingual"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 285,
+      "divergencias": [],
+      "id_brana": 40840,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Palatina ou arco lingual",
+      "nome_easy": "Palatina ou arco lingual",
+      "nroproctab_easy": 285,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 286,
+        "especialidade": "07",
+        "nome": "Placa 7/7",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa 7/7"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 286,
+      "divergencias": [],
+      "id_brana": 40841,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa 7/7",
+      "nome_easy": "Placa 7/7",
+      "nroproctab_easy": 286,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 287,
+        "especialidade": "07",
+        "nome": "Placa acoplada ao uso de arco extra bucal",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa acoplada ao uso de arco extra bucal"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 287,
+      "divergencias": [],
+      "id_brana": 40842,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa acoplada ao uso de arco extra bucal",
+      "nome_easy": "Placa acoplada ao uso de arco extra bucal",
+      "nroproctab_easy": 287,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 288,
+        "especialidade": "07",
+        "nome": "Placa ativa com molas",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa ativa com molas"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 288,
+      "divergencias": [],
+      "id_brana": 40843,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa ativa com molas",
+      "nome_easy": "Placa ativa com molas",
+      "nroproctab_easy": 288,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 292,
+        "especialidade": "07",
+        "nome": "Placa com arco de controle dos caninos",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa com arco de controle dos caninos"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 292,
+      "divergencias": [],
+      "id_brana": 40847,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa com arco de controle dos caninos",
+      "nome_easy": "Placa com arco de controle dos caninos",
+      "nroproctab_easy": 292,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 293,
+        "especialidade": "07",
+        "nome": "Placa com arco seccionado para uso elasticos",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa com arco seccionado para uso elasticos"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 293,
+      "divergencias": [],
+      "id_brana": 40848,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa com arco seccionado para uso elasticos",
+      "nome_easy": "Placa com arco seccionado para uso elasticos",
+      "nroproctab_easy": 293,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 294,
+        "especialidade": "07",
+        "nome": "Placa com plano de mordida inclinado",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa com plano de mordida inclinado"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 294,
+      "divergencias": [],
+      "id_brana": 40849,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa com plano de mordida inclinado",
+      "nome_easy": "Placa com plano de mordida inclinado",
+      "nroproctab_easy": 294,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 295,
+        "especialidade": "07",
+        "nome": "Placa com plano de mordida posterior",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa com plano de mordida posterior"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 295,
+      "divergencias": [],
+      "id_brana": 40850,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa com plano de mordida posterior",
+      "nome_easy": "Placa com plano de mordida posterior",
+      "nroproctab_easy": 295,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 296,
+        "especialidade": "07",
+        "nome": "Placa com plano reto anterior",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa com plano reto anterior"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 296,
+      "divergencias": [],
+      "id_brana": 40851,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa com plano reto anterior",
+      "nome_easy": "Placa com plano reto anterior",
+      "nroproctab_easy": 296,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 299,
+        "especialidade": "07",
+        "nome": "Placa de Eschler",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa de Eschler"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 299,
+      "divergencias": [],
+      "id_brana": 40854,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa de Eschler",
+      "nome_easy": "Placa de Eschler",
+      "nroproctab_easy": 299,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 301,
+        "especialidade": "07",
+        "nome": "Placa de Hawley",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa de Hawley"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 301,
+      "divergencias": [],
+      "id_brana": 40856,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa de Hawley",
+      "nome_easy": "Placa de Hawley",
+      "nroproctab_easy": 301,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 302,
+        "especialidade": "07",
+        "nome": "Placa de Hawley invertido",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa de Hawley invertido"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 302,
+      "divergencias": [],
+      "id_brana": 40857,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa de Hawley invertido",
+      "nome_easy": "Placa de Hawley invertido",
+      "nroproctab_easy": 302,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 303,
+        "especialidade": "07",
+        "nome": "Placa de Mills",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa de Mills"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 303,
+      "divergencias": [],
+      "id_brana": 40858,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa de Mills",
+      "nome_easy": "Placa de Mills",
+      "nroproctab_easy": 303,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 305,
+        "especialidade": "07",
+        "nome": "Placa de Roberts",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa de Roberts"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 305,
+      "divergencias": [],
+      "id_brana": 40860,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa de Roberts",
+      "nome_easy": "Placa de Roberts",
+      "nroproctab_easy": 305,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 308,
+        "especialidade": "07",
+        "nome": "Placa labial ativa",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Placa labial ativa"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 308,
+      "divergencias": [],
+      "id_brana": 40863,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Placa labial ativa",
+      "nome_easy": "Placa labial ativa",
+      "nroproctab_easy": 308,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 311,
+        "especialidade": "07",
+        "nome": "Planas Compostas",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Planas Compostas"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 311,
+      "divergencias": [],
+      "id_brana": 40866,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Planas Compostas",
+      "nome_easy": "Planas Compostas",
+      "nroproctab_easy": 311,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 312,
+        "especialidade": "07",
+        "nome": "Planas Simples",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Planas Simples"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 312,
+      "divergencias": [],
+      "id_brana": 40867,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Planas Simples",
+      "nome_easy": "Planas Simples",
+      "nroproctab_easy": 312,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 314,
+        "especialidade": "07",
+        "nome": "Spling Retainer 3/3 4/4",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 39
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Spling Retainer 3/3 4/4"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 314,
+      "divergencias": [],
+      "id_brana": 40869,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Spling Retainer 3/3 4/4",
+      "nome_easy": "Spling Retainer 3/3 4/4",
+      "nroproctab_easy": 314,
+      "status": "apto"
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "campos_atuais": {
+        "codigo": 315,
+        "especialidade": "07",
+        "nome": "Twin Black",
+        "preco": 0.0,
+        "simbolo_grafico_legacy_id": 37
+      },
+      "campos_preservados": [
+        "id",
+        "tabela_id",
+        "codigo",
+        "procedimento_generico_id",
+        "materiais_vinculados",
+        "fases_vinculadas",
+        "historicos",
+        "chaves_estrangeiras"
+      ],
+      "campos_propostos": {
+        "nome": "Twin Black"
+      },
+      "codconv_easy": "",
+      "codigo_brana_atual": 315,
+      "divergencias": [],
+      "id_brana": 40870,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "metodo_match": "nome_exato + NROPROCTAB",
+      "nivel_confianca": "ALTA",
+      "nome_brana_atual": "Twin Black",
+      "nome_easy": "Twin Black",
+      "nroproctab_easy": 315,
+      "status": "apto"
+    }
+  ]
+}

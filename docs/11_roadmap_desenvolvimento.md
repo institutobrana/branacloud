@@ -15,6 +15,19 @@ Este arquivo deve ser consultado antes de iniciar qualquer nova tarefa.
 ---
 # 11 - Roadmap de Desenvolvimento
 
+## Fechamento - Agenda de contatos no frontend React
+
+- O modulo `Agenda de contatos` foi concluido e homologado na entrada
+  `Atendimento -> Agenda de contatos`, rota
+  `/app/atendimento/agenda-contatos`.
+- Novo, Alterar, duplo clique para edicao e Eliminar estao implementados; a
+  listagem possui filtros, pesquisa, contador e selecao.
+- O modal reutilizado possui as abas Principal e Detalhes, 29 campos, busca
+-  automatica de CEP, visual light/dark e responsividade homologada pelo usuario.
+- Imprime e Relatorio permanecem placeholders desabilitados por decisao de
+  produto: `KEEP_PLACEHOLDER_UNTIL_USER_DEFINES`.
+- Contrato final: `docs/contrato_fechamento_agenda_contatos_frontend_react.md`.
+
 ## Fechamento H.CLOSE.1 - Historico do paciente
 
 - A aba Historico da Ficha Pessoal foi congelada como baseline homologada em 2026-08-26, com toolbar, grade, insercao/edicao inline, Propriedades, cor, auditoria, ordenacao e Delete estabilizado.
@@ -691,6 +704,23 @@ Observacoes:
 
 ## Modulo: Agenda
 
+### Fases 5F — status de execução
+
+- 5F.1 — Escala: CONCLUÍDA.
+- 5F.2 — Bloqueios: CONCLUÍDA.
+- 5F.3 — Apresentação: CONCLUÍDA.
+- 5F.4 — Visualização: EM ANDAMENTO; implementação não concluída nesta âncora.
+- Próximo objetivo: reproduzir o conteúdo interno dos eventos conforme o frontend legado, preservando Escala, Bloqueios e Apresentação.
+
+### Fechamento consolidado da Fase 5F
+
+- 5F — Configuração e Renderização da Agenda: CONCLUÍDA E CONGELADA.
+- 5F.1 — Escala: CONCLUÍDA.
+- 5F.2 — Bloqueios: CONCLUÍDA.
+- 5F.3 — Apresentação: CONCLUÍDA.
+- 5F.4 — Visualização: CONCLUÍDA.
+- Próxima frente: duplo clique em horário livre/agendamento existente e modal de agendamento; NÃO INICIADA.
+
 Status: EM DESENVOLVIMENTO
 
 Fases:
@@ -701,6 +731,36 @@ Fases:
 [Ã¢ï¿½â¬] Fase 4 - Frontend possui tela e chamadas para agenda, repeticao, combos e filtros.
 [Ã¢ï¿½â¬] Fase 5 - Integracao Google Calendar presente em rotas e servicos.
 [ ] Fase 6 - Criar testes de repeticao, horarios livres e tenant.
+
+Fechamento da frente Repete agendamento:
+
+* Repeticao diaria, semanal e mensal, sobreposicao e normalizacao de ocorrencia gerada no domingo para segunda homologadas manualmente.
+* Testes permanentes de configuracao, API e modal: 15 PASS, 0 FAIL; build PASS.
+* Laboratorio temporario C2/R12/R12E removido, sem rota DEV ou referencias executaveis residuais.
+* Frente pronta para fechamento Git posterior.
+
+Fechamento da frente Menu de contexto / botão direito:
+
+* Funcionalidade React concluída, com Novo, Editar, exclusão direta, Repetir, placeholders, seleção e suporte diário/semanal.
+* Visual React em light/dark mode homologado; testes automatizados: 19 PASS, 0 FAIL; build PASS.
+* Homologação manual PASS; laboratório temporário C2/R12/R12E removido.
+* Frente COMPLETE, RUNTIME PASS e contrato FROZEN; pronta para fechamento Git posterior.
+
+Fechamento da frente Barra horizontal — botão Calendário:
+
+* Funcionalidade COMPLETE; calendário mensal React com navegação de mês/ano e seleção de data compartilhado pela Agenda Diária e Semanal.
+* Regra congelada: `CURRENT_DATE_RULE = FOCAL_DATE, NOT WEEK_START`; locale pt-BR PASS.
+* Runtime PASS; DAILY PASS; WEEKLY PASS; LIGHT PASS; DARK PASS.
+* Homologação manual PASS; testes automatizados 3 PASS; build PASS.
+
+Fechamento da frente Barra horizontal — botão Paciente:
+
+* Botão Paciente COMPLETE/FROZEN; ação compartilhada entre Agenda Diária e Agenda Semanal.
+* Modal `Pesquisa agendamentos`, filtros, GET `/agenda-legado`, seleção, Edita, duplo clique e reset/reabertura foram implementados e homologados em runtime.
+* Tabela React homologada com colunas centralizadas, máximo visual de 10 linhas com scroll interno, e resolução `id_prestador → prestador_apelido` por lookup bulk tenant-scoped.
+* Runtime PASS; visual light/dark PASS; homologação manual PASS. Documento: `docs/fechamento_agenda_botao_paciente.md`.
+* Agenda geral permanece IN DEVELOPMENT; outras frentes e botões continuam pendentes.
+* Frente FROZEN e pronta para fechamento Git posterior. O módulo Agenda permanece em desenvolvimento.
 
 Proximo passo:
 
@@ -6722,3 +6782,41 @@ Observacoes:
 - O contrato preserva `matricula`, `extra`, catálogos textuais, CEP comercial, autocompletes livres, CPF do responsável, `extra.horario_trab`, flags booleanas, limpeza de palavras-chave e valores históricos fora de catálogo.
 - Documento consolidado: `docs/fechamento_dados_complementares_paciente_react_dc_close_1.md`.
 - Permanecem futuras e não bloqueantes a modernização de vínculos/IDs, o estudo `Paciente.apelido` versus `extra.apelido` e a paridade adicional com EasyDental.
+
+## Fechamento AN.CLOSE — Ficha Pessoal / Anotações
+
+- **CONCLUÍDA / HOMOLOGADA / FECHADA** — a aba `Ficha Pessoal -> Anotações` foi implementada no React com TipTap, toolbar de formatação, alinhamentos, marcadores, tabela e clipboard.
+- O conteúdo novo é sanitizado, usa o marcador `BRANA_ANOTACOES_HTML_V1`, hidrata no editor e participa do botão global `Grava` pelo payload geral de pacientes.
+- A persistência de anotação nova foi confirmada manualmente pelo usuário em runtime HTTPS LAN.
+- Os 1.356 registros RTF existentes permanecem preservados, sem conversão, migração ou alteração. A migração futura será feita diretamente do EasyDental em frente separada.
+- Documento consolidado: `docs/fechamento_ficha_pessoal_anotacoes_an_close.md`.
+
+## Fechamento HOR-5 — Agenda / botão Horário
+
+- **COMPLETE / FROZEN / HOMOLOGADO** — `Agenda → toolbar horizontal → Horário → Pesquisa horarios livres` foi implementado, validado em runtime e homologado manualmente pelo operador.
+- O contrato congelado cobre Dia + Semana compartilhados, filtros, datas, pesquisa real, resultados, seleção, Edita..., duplo clique, retorno após Cancelar, arquitetura visual React baseada no legado e scroll interno.
+- O módulo Agenda como um todo permanece **IN DEVELOPMENT**.
+- Documento consolidado: `docs/fechamento_agenda_botao_horario.md`.
+
+## Fechamento atual — Opções do sistema (React)
+
+- `Configuração → Opções do sistema`: **COMPLETE / ENCERRADO FUNCIONALMENTE**.
+- `SYSTEM_OPTIONS_FINAL_AUDIT = COMPLETE`, `RUNTIME = PASS`, `FINAL_BLOCKERS = 0` e `OPEN_CRITICAL_QUESTIONS = 0`.
+- As cinco abas foram auditadas: Clínica `8/8`, Financeiro `11/11`, Segurança `3/3`, Data `5/5` e Avançado `10/10`, sem divergências funcionais.
+- O contrato V9 de Ok/Cancelar/X está homologado: Ok salva e permanece aberto; Cancelar restaura o último baseline e permanece aberto; X é o único fechamento.
+- O registro atual dos contratos está em `docs/contrato_fechamento_opcoes_sistema_react.md`.
+- `SEC-001` permanece `PROVEN_NON_BLOCKER` / `LEGACY_NO_MODERN_CONSUMER`; isso não reabre o módulo.
+
+## Fechamento CP7 — Cadastro / Convênios e planos React
+
+- **FUNCTIONAL = COMPLETE** — Convênios e planos React encerrado em
+  `/app/cadastro/convenios-planos`.
+- **LEGACY_PARITY = PASS** — comparação React/legado concluída.
+- **CRUD_CONVENIO = COMPLETE**.
+- **CRUD_PLANO = COMPLETE**.
+- **CALENDARIO_FATURAMENTO = COMPLETE**.
+- **LIGHT_MODE = PASS** e **DARK_MODE = PASS**.
+- **RESPONSIVE = PASS** nas larguras homologadas.
+- **RUNTIME = PASS** e **BUILD = PASS**.
+- **GITHUB_CLOSE = PENDING** até a conclusão do isolamento, diff e commit.
+- Contrato corrente: `docs/fechamento_convenios_planos_react_cp7.md`.

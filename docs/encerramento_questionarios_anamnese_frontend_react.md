@@ -240,3 +240,11 @@ A impressao deve ser tratada como nova frente, com auditoria propria e contrato 
 - rollback preparado: `default-brana-hml-backend:16`;
 - `Imprime` permanece desabilitado;
 - nenhum rollback foi necessario.
+
+## 25. Fechamento ANA.1R
+
+- a geometria horizontal universal da Anamnese foi preservada;
+- a homologacao visual autenticada manual do usuario confirmou a padronizacao entre questionarios;
+- o instrumento temporario de geometria foi removido integralmente;
+- a ausencia de sessao autenticada controlavel pelo agente nao e pendencia funcional;
+- ANA.1R encerrada, sem save, dirty state, PUT, POST ou DELETE.

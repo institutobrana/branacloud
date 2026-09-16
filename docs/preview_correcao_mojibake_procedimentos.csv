@@ -1,0 +1,361 @@
+procedimento_id,clinica_id,tabela_id,tabela_codigo,tabela_nome,codigo,nome_atual,nome_origem,categoria,chave_origem,caracteres_suspeitos,motivo,diferente
+51867,1,47,5,CAIXA ECONOMICA FEDERAL,5001,Consulta,Consulta,A,5:5001,,texto atual coincide com a fonte,False
+51868,1,47,5,CAIXA ECONOMICA FEDERAL,5002,Controle de placa bacteriana,Controle de placa bacteriana,A,5:5002,,texto atual coincide com a fonte,False
+51869,1,47,5,CAIXA ECONOMICA FEDERAL,5003,Falta,Falta,A,5:5003,,texto atual coincide com a fonte,False
+51870,1,47,5,CAIXA ECONOMICA FEDERAL,5004,Modelos de estudo,Modelos de estudo,A,5:5004,,texto atual coincide com a fonte,False
+51871,1,47,5,CAIXA ECONOMICA FEDERAL,5005,Perícia,Perícia,A,5:5005,,texto atual coincide com a fonte,False
+51872,1,47,5,CAIXA ECONOMICA FEDERAL,5006,Profilaxia,Profilaxia,A,5:5006,,texto atual coincide com a fonte,False
+51873,1,47,5,CAIXA ECONOMICA FEDERAL,5007,Urgência,Urgência,A,5:5007,,texto atual coincide com a fonte,False
+51874,1,47,5,CAIXA ECONOMICA FEDERAL,5008,Alveoloplastia,Alveoloplastia,A,5:5008,,texto atual coincide com a fonte,False
+51875,1,47,5,CAIXA ECONOMICA FEDERAL,5009,Biópsia incisional,Biópsia incisional,A,5:5009,,texto atual coincide com a fonte,False
+51876,1,47,5,CAIXA ECONOMICA FEDERAL,5010,Crurgia de tumores intra-ósseos,Crurgia de tumores intra-ósseos,A,5:5010,,texto atual coincide com a fonte,False
+51877,1,47,5,CAIXA ECONOMICA FEDERAL,5011,Correção de bridas musculares,Correção de bridas musculares,A,5:5011,,texto atual coincide com a fonte,False
+51878,1,47,5,CAIXA ECONOMICA FEDERAL,5012,Drenagem extra-oral de abscesso,Drenagem extra-oral de abscesso,A,5:5012,,texto atual coincide com a fonte,False
+51879,1,47,5,CAIXA ECONOMICA FEDERAL,5013,Excisão de lesão da mucosa oral,Excisão de lesão da mucosa oral,A,5:5013,,texto atual coincide com a fonte,False
+51880,1,47,5,CAIXA ECONOMICA FEDERAL,5014,Exodontia,Exodontia,A,5:5014,,texto atual coincide com a fonte,False
+51881,1,47,5,CAIXA ECONOMICA FEDERAL,5015,Exodontia - via não alveolar,Exodontia - via não alveolar,A,5:5015,,texto atual coincide com a fonte,False
+51882,1,47,5,CAIXA ECONOMICA FEDERAL,5016,Frenectomia lingual,Frenectomia lingual,A,5:5016,,texto atual coincide com a fonte,False
+51883,1,47,5,CAIXA ECONOMICA FEDERAL,5017,Frenectomia labial,Frenectomia labial,A,5:5017,,texto atual coincide com a fonte,False
+51884,1,47,5,CAIXA ECONOMICA FEDERAL,5018,Laçamento de dentes inclusos para ortodontia,Laçamento de dentes inclusos para ortodontia,A,5:5018,,texto atual coincide com a fonte,False
+51885,1,47,5,CAIXA ECONOMICA FEDERAL,5019,Redução de tuberosidade maxilar,Redução de tuberosidade maxilar,A,5:5019,,texto atual coincide com a fonte,False
+51886,1,47,5,CAIXA ECONOMICA FEDERAL,5020,Reimplante de dente,Reimplante de dente,A,5:5020,,texto atual coincide com a fonte,False
+51887,1,47,5,CAIXA ECONOMICA FEDERAL,5021,Remoção de dentes retidos,Remoção de dentes retidos,A,5:5021,,texto atual coincide com a fonte,False
+51888,1,47,5,CAIXA ECONOMICA FEDERAL,5022,Remoção de sialolito - via oral,Remoção de sialolito - via oral,A,5:5022,,texto atual coincide com a fonte,False
+51889,1,47,5,CAIXA ECONOMICA FEDERAL,5023,Remoção de tórus mandibular ou palatino,Remoção de tórus mandibular ou palatino,A,5:5023,,texto atual coincide com a fonte,False
+51890,1,47,5,CAIXA ECONOMICA FEDERAL,5024,Sulcoplastia,Sulcoplastia,A,5:5024,,texto atual coincide com a fonte,False
+51891,1,47,5,CAIXA ECONOMICA FEDERAL,5025,Sutura de ferida na mucosa oral,Sutura de ferida na mucosa oral,A,5:5025,,texto atual coincide com a fonte,False
+51892,1,47,5,CAIXA ECONOMICA FEDERAL,5026,Tratamento cirúrgico de fístula buco-sinusal,Tratamento cirúrgico de fístula buco-sinusal,A,5:5026,,texto atual coincide com a fonte,False
+51893,1,47,5,CAIXA ECONOMICA FEDERAL,5027,Tratamento de lesão cística-enucleação,Tratamento de lesão cística-enucleação,A,5:5027,,texto atual coincide com a fonte,False
+51894,1,47,5,CAIXA ECONOMICA FEDERAL,5028,Trat. de lesão cística-marsup. ou enucl. final,Trat. de lesão cística-marsup. ou enucl. final,A,5:5028,,texto atual coincide com a fonte,False
+51895,1,47,5,CAIXA ECONOMICA FEDERAL,5029,Ulectomia,Ulectomia,A,5:5029,,texto atual coincide com a fonte,False
+51896,1,47,5,CAIXA ECONOMICA FEDERAL,5030,Restauração de ionômero de vidro - classe V,Restauração de ionômero de vidro - classe V,A,5:5030,,texto atual coincide com a fonte,False
+51897,1,47,5,CAIXA ECONOMICA FEDERAL,5031,Pino de retenção pré-fabricado,Pino de retenção pré-fabricado,A,5:5031,,texto atual coincide com a fonte,False
+51898,1,47,5,CAIXA ECONOMICA FEDERAL,5032,"Restauração em res. comp. - classes I, III, IV e V","Restauração em res. comp. - classes I, III, IV e V",A,5:5032,,texto atual coincide com a fonte,False
+51899,1,47,5,CAIXA ECONOMICA FEDERAL,5033,Restauração em res. composta - classe II e reconst,Restauração em res. composta - classe II e reconst,A,5:5033,,texto atual coincide com a fonte,False
+51900,1,47,5,CAIXA ECONOMICA FEDERAL,5034,Restauração a amálgama - 1 face,Restauração a amálgama - 1 face,A,5:5034,,texto atual coincide com a fonte,False
+51901,1,47,5,CAIXA ECONOMICA FEDERAL,5035,Restauração a amálgama - 2 faces,Restauração a amálgama - 2 faces,A,5:5035,,texto atual coincide com a fonte,False
+51902,1,47,5,CAIXA ECONOMICA FEDERAL,5036,Restauração a amálgama - 3 faces,Restauração a amálgama - 3 faces,A,5:5036,,texto atual coincide com a fonte,False
+51903,1,47,5,CAIXA ECONOMICA FEDERAL,5037,Restauração a amálgama - 4 faces ou mais,Restauração a amálgama - 4 faces ou mais,A,5:5037,,texto atual coincide com a fonte,False
+51904,1,47,5,CAIXA ECONOMICA FEDERAL,5038,Apicetomia - incisivos e caninos,Apicetomia - incisivos e caninos,A,5:5038,,texto atual coincide com a fonte,False
+51905,1,47,5,CAIXA ECONOMICA FEDERAL,5039,Apicetomia - molares e pré-molares,Apicetomia - molares e pré-molares,A,5:5039,,texto atual coincide com a fonte,False
+51906,1,47,5,CAIXA ECONOMICA FEDERAL,5040,Apicetomia c/ obtur. retróg. - incisivos e caninos,Apicetomia c/ obtur. retróg. - incisivos e caninos,A,5:5040,,texto atual coincide com a fonte,False
+51907,1,47,5,CAIXA ECONOMICA FEDERAL,5041,Apicetomia c/ obtur. retróg. - molares e pré-molar,Apicetomia c/ obtur. retróg. - molares e pré-molar,A,5:5041,,texto atual coincide com a fonte,False
+51908,1,47,5,CAIXA ECONOMICA FEDERAL,5042,Apicificação ou tratamento a longo termo,Apicificação ou tratamento a longo termo,A,5:5042,,texto atual coincide com a fonte,False
+51909,1,47,5,CAIXA ECONOMICA FEDERAL,5043,Clareamento ou recromia,Clareamento ou recromia,A,5:5043,,texto atual coincide com a fonte,False
+51910,1,47,5,CAIXA ECONOMICA FEDERAL,5044,Remoção de núcleo intrarradicular,Remoção de núcleo intrarradicular,A,5:5044,,texto atual coincide com a fonte,False
+51911,1,47,5,CAIXA ECONOMICA FEDERAL,5045,Retratamento endodôntico - incisivos e caninos,Retratamento endodôntico - incisivos e caninos,A,5:5045,,texto atual coincide com a fonte,False
+51912,1,47,5,CAIXA ECONOMICA FEDERAL,5046,Retratamento endodôntico - pré-molares,Retratamento endodôntico - pré-molares,A,5:5046,,texto atual coincide com a fonte,False
+51913,1,47,5,CAIXA ECONOMICA FEDERAL,5047,Retratamento endodôntico - molares,Retratamento endodôntico - molares,A,5:5047,,texto atual coincide com a fonte,False
+51914,1,47,5,CAIXA ECONOMICA FEDERAL,5048,Tratamento de perfuração,Tratamento de perfuração,A,5:5048,,texto atual coincide com a fonte,False
+51915,1,47,5,CAIXA ECONOMICA FEDERAL,5049,Tratamento endodôntico - incisivos e caninos,Tratamento endodôntico - incisivos e caninos,A,5:5049,,texto atual coincide com a fonte,False
+51916,1,47,5,CAIXA ECONOMICA FEDERAL,5050,Tratamento endodôntico - pré-molares,Tratamento endodôntico - pré-molares,A,5:5050,,texto atual coincide com a fonte,False
+51917,1,47,5,CAIXA ECONOMICA FEDERAL,5051,Tratamento endodôntico - molares,Tratamento endodôntico - molares,A,5:5051,,texto atual coincide com a fonte,False
+51918,1,47,5,CAIXA ECONOMICA FEDERAL,5052,Adequação de meio bucal,Adequação de meio bucal,A,5:5052,,texto atual coincide com a fonte,False
+51919,1,47,5,CAIXA ECONOMICA FEDERAL,5053,Aplicação de cariostático,Aplicação de cariostático,A,5:5053,,texto atual coincide com a fonte,False
+51920,1,47,5,CAIXA ECONOMICA FEDERAL,5054,Aplicação tópica de flúor com profilaxia,Aplicação tópica de flúor com profilaxia,A,5:5054,,texto atual coincide com a fonte,False
+51921,1,47,5,CAIXA ECONOMICA FEDERAL,5055,Aplicação de selante,Aplicação de selante,A,5:5055,,texto atual coincide com a fonte,False
+51922,1,47,5,CAIXA ECONOMICA FEDERAL,5056,Condicionamento do paciente,Condicionamento do paciente,A,5:5056,,texto atual coincide com a fonte,False
+51923,1,47,5,CAIXA ECONOMICA FEDERAL,5057,Coroa de aço ou policarbonato p/ dentes decíduos,Coroa de aço ou policarbonato p/ dentes decíduos,A,5:5057,,texto atual coincide com a fonte,False
+51924,1,47,5,CAIXA ECONOMICA FEDERAL,5058,Desgaste seletivo,Desgaste seletivo,A,5:5058,,texto atual coincide com a fonte,False
+51925,1,47,5,CAIXA ECONOMICA FEDERAL,5059,Exodontia de dentes decíduos,Exodontia de dentes decíduos,A,5:5059,,texto atual coincide com a fonte,False
+51926,1,47,5,CAIXA ECONOMICA FEDERAL,5060,Pulpotomia,Pulpotomia,A,5:5060,,texto atual coincide com a fonte,False
+51927,1,47,5,CAIXA ECONOMICA FEDERAL,5061,Tratamento endodôntico em dentes decíduos,Tratamento endodôntico em dentes decíduos,A,5:5061,,texto atual coincide com a fonte,False
+51928,1,47,5,CAIXA ECONOMICA FEDERAL,5062,Ântero-posterior e lateral de crânio e ossos face,Ântero-posterior e lateral de crânio e ossos face,A,5:5062,Â,texto atual coincide com a fonte,False
+51929,1,47,5,CAIXA ECONOMICA FEDERAL,5063,Cefalométrica sem traçado,Cefalométrica sem traçado,A,5:5063,,texto atual coincide com a fonte,False
+51930,1,47,5,CAIXA ECONOMICA FEDERAL,5064,Cefalométrica com 1 traçado,Cefalométrica com 1 traçado,A,5:5064,,texto atual coincide com a fonte,False
+51931,1,47,5,CAIXA ECONOMICA FEDERAL,5065,Cefalométrica com 2 ou mais traçados,Cefalométrica com 2 ou mais traçados,A,5:5065,,texto atual coincide com a fonte,False
+51932,1,47,5,CAIXA ECONOMICA FEDERAL,5066,Documentação ortodôntica,Documentação ortodôntica,A,5:5066,,texto atual coincide com a fonte,False
+51933,1,47,5,CAIXA ECONOMICA FEDERAL,5067,Fotos,Fotos,A,5:5067,,texto atual coincide com a fonte,False
+51934,1,47,5,CAIXA ECONOMICA FEDERAL,5068,Interproximal (bite-wing),Interproximal (bite-wing),A,5:5068,,texto atual coincide com a fonte,False
+51935,1,47,5,CAIXA ECONOMICA FEDERAL,5069,Modelos ortodônticos,Modelos ortodônticos,A,5:5069,,texto atual coincide com a fonte,False
+51936,1,47,5,CAIXA ECONOMICA FEDERAL,5070,Oclusal,Oclusal,A,5:5070,,texto atual coincide com a fonte,False
+51937,1,47,5,CAIXA ECONOMICA FEDERAL,5071,Panormica,Panorâmica,C,5:5071,,diferenca nao atribuivel com seguranca a encoding,True
+51938,1,47,5,CAIXA ECONOMICA FEDERAL,5072,Periapical,Periapical,A,5:5072,,texto atual coincide com a fonte,False
+51939,1,47,5,CAIXA ECONOMICA FEDERAL,5073,Radiografia de ATM,Radiografia de ATM,A,5:5073,,texto atual coincide com a fonte,False
+51940,1,47,5,CAIXA ECONOMICA FEDERAL,5074,Slides,Slides,A,5:5074,,texto atual coincide com a fonte,False
+51941,1,47,5,CAIXA ECONOMICA FEDERAL,5075,Ajuste oclusal,Ajuste oclusal,A,5:5075,,texto atual coincide com a fonte,False
+51942,1,47,5,CAIXA ECONOMICA FEDERAL,5076,Aumento de coroa clínica c/ osteotomia,Aumento de coroa clínica c/ osteotomia,A,5:5076,,texto atual coincide com a fonte,False
+51943,1,47,5,CAIXA ECONOMICA FEDERAL,5077,Cirurgia periodontal a retalho c/ ou s/ osteotomia,Cirurgia periodontal a retalho c/ ou s/ osteotomia,A,5:5077,,texto atual coincide com a fonte,False
+51944,1,47,5,CAIXA ECONOMICA FEDERAL,5078,Cunha proximal,Cunha proximal,A,5:5078,,texto atual coincide com a fonte,False
+51945,1,47,5,CAIXA ECONOMICA FEDERAL,5079,Dessensibilização dentária,Dessensibilização dentária,A,5:5079,,texto atual coincide com a fonte,False
+51946,1,47,5,CAIXA ECONOMICA FEDERAL,5080,Enxerto gengival livre,Enxerto gengival livre,A,5:5080,,texto atual coincide com a fonte,False
+51947,1,47,5,CAIXA ECONOMICA FEDERAL,5081,Enxerto pediculado,Enxerto pediculado,A,5:5081,,texto atual coincide com a fonte,False
+51948,1,47,5,CAIXA ECONOMICA FEDERAL,5082,Gengivectomia ou gengivoplastia (até 3 elementos),Gengivectomia ou gengivoplastia (até 3 elementos),A,5:5082,,texto atual coincide com a fonte,False
+51949,1,47,5,CAIXA ECONOMICA FEDERAL,5083,Gengivectomia ou gengivoplastia (por segmento),Gengivectomia ou gengivoplastia (por segmento),A,5:5083,,texto atual coincide com a fonte,False
+51950,1,47,5,CAIXA ECONOMICA FEDERAL,5084,Imobilização dentária,Imobilização dentária,A,5:5084,,texto atual coincide com a fonte,False
+51951,1,47,5,CAIXA ECONOMICA FEDERAL,5085,Odontossecção c/ ou s/ amputação radicular,Odontossecção c/ ou s/ amputação radicular,A,5:5085,,texto atual coincide com a fonte,False
+51952,1,47,5,CAIXA ECONOMICA FEDERAL,5086,Raspagem coron ria e polimento,Raspagem coronária e polimento,C,5:5086,,diferenca nao atribuivel com seguranca a encoding,True
+51953,1,47,5,CAIXA ECONOMICA FEDERAL,5087,"Raspagem de c lculo, polimento e curetagem ...","Raspagem de cálculo, polimento e curetagem ...",C,5:5087,,diferenca nao atribuivel com seguranca a encoding,True
+51954,1,47,5,CAIXA ECONOMICA FEDERAL,5088,Técnicas regenerativas,Técnicas regenerativas,A,5:5088,,texto atual coincide com a fonte,False
+51955,1,48,10,EASY - PARTICULAR,1001,Coroa metalo-cermica,,E,10:1001,,sem correspondente unico na fonte,True
+51956,1,48,10,EASY - PARTICULAR,1002,Coroa metalo-pl stica,,E,10:1002,,sem correspondente unico na fonte,True
+51957,1,48,10,EASY - PARTICULAR,1003,Coroa Isosit,,E,10:1003,,sem correspondente unico na fonte,True
+51958,1,48,10,EASY - PARTICULAR,1004,Coroa met lica total,,E,10:1004,,sem correspondente unico na fonte,True
+51959,1,48,10,EASY - PARTICULAR,1005,RestauraÆo met lica-fundida (Liga de Ouro),,E,10:1005,Æ ,sem correspondente unico na fonte,True
+51960,1,48,10,EASY - PARTICULAR,1006,RestauraÆo met lica-fundida (Liga de Prata),,E,10:1006,Æ ,sem correspondente unico na fonte,True
+51961,1,48,10,EASY - PARTICULAR,1007,RestauraÆo met lica-fundida (Duracast),,E,10:1007,Æ ,sem correspondente unico na fonte,True
+51962,1,48,10,EASY - PARTICULAR,1008,RestauraÆo met lica-fundida (Inlay/ Onlay),,E,10:1008,Æ ,sem correspondente unico na fonte,True
+51963,1,48,10,EASY - PARTICULAR,1009,RestauraÆo met lica-fundida Cermica/Inlay/Onlay,,E,10:1009,Æ ,sem correspondente unico na fonte,True
+51964,1,48,10,EASY - PARTICULAR,1010,Selante por elemento,,E,10:1010,,sem correspondente unico na fonte,True
+51965,1,48,10,EASY - PARTICULAR,1011,RestauraÆo de am lgama,,E,10:1011,Æ ,sem correspondente unico na fonte,True
+51966,1,48,10,EASY - PARTICULAR,1012,RestauraÆo de resina fotopolimeriz vel,,E,10:1012,Æ ,sem correspondente unico na fonte,True
+51967,1,48,10,EASY - PARTICULAR,1013,RestauraÆo de ionmero de vidro,,E,10:1013,Æ  ,sem correspondente unico na fonte,True
+51968,1,48,10,EASY - PARTICULAR,1014,RestauraÆo de resina foto (ngulo incisal ),,E,10:1014,Æ ,sem correspondente unico na fonte,True
+51969,1,48,10,EASY - PARTICULAR,1015,RestauraÆo de resina foto (2 ngulos incisais),,E,10:1015,Æ ,sem correspondente unico na fonte,True
+51970,1,48,10,EASY - PARTICULAR,1016,Pr¢tese parcial fixa metalo-cermica,,E,10:1016,¢,sem correspondente unico na fonte,True
+51971,1,48,10,EASY - PARTICULAR,1017,Prótese parcial fixa metalo-plástica,,E,10:1017,,sem correspondente unico na fonte,True
+51972,1,48,10,EASY - PARTICULAR,1018,Pr¢tese parcial fixa isosit,,E,10:1018,¢,sem correspondente unico na fonte,True
+51973,1,48,10,EASY - PARTICULAR,1019,Pr¢tese parcial remov¡vel,,E,10:1019,¢ ¡,sem correspondente unico na fonte,True
+51974,1,48,10,EASY - PARTICULAR,1020,Pr¢tese adesiva metalo-cermica (1 elem),,E,10:1020,¢,sem correspondente unico na fonte,True
+51975,1,48,10,EASY - PARTICULAR,1021,Pr¢tese adesiva metalo-pl stica (1 elem),,E,10:1021,¢,sem correspondente unico na fonte,True
+51976,1,48,10,EASY - PARTICULAR,1022,Pr¢tese adesiva metalo-cermica (2 elem),,E,10:1022,¢,sem correspondente unico na fonte,True
+51977,1,48,10,EASY - PARTICULAR,1023,Pr¢tese adesiva metalo- pl stica (2 elem),,E,10:1023,¢,sem correspondente unico na fonte,True
+51978,1,48,10,EASY - PARTICULAR,1024,Profilaxia (AplicaÆo de Profident),,E,10:1024,Æ ,sem correspondente unico na fonte,True
+51979,1,48,10,EASY - PARTICULAR,1025,Profilaxia (Polimento Coron rio),,E,10:1025,,sem correspondente unico na fonte,True
+51980,1,48,10,EASY - PARTICULAR,1026,Profilaxia (AplicaÆo de Remineralizador),,E,10:1026,Æ ,sem correspondente unico na fonte,True
+51981,1,48,10,EASY - PARTICULAR,1027,Implante osteointegr vel,,E,10:1027,,sem correspondente unico na fonte,True
+51982,1,48,10,EASY - PARTICULAR,1028,Consulta para oramento/exame cl¡nico,,E,10:1028, ¡,sem correspondente unico na fonte,True
+51983,1,48,10,EASY - PARTICULAR,1029,Consulta para emergncia,,E,10:1029,,sem correspondente unico na fonte,True
+51984,1,48,10,EASY - PARTICULAR,1030,Raio X periapical,,E,10:1030,,sem correspondente unico na fonte,True
+51985,1,48,10,EASY - PARTICULAR,1031,Raio X interproximal,,E,10:1031,,sem correspondente unico na fonte,True
+51986,1,48,10,EASY - PARTICULAR,1032,Tratamento de canal unirradicular BIO,,E,10:1032,,sem correspondente unico na fonte,True
+51987,1,48,10,EASY - PARTICULAR,1033,Tratamento de canal unirradicular NECRO,,E,10:1033,,sem correspondente unico na fonte,True
+51988,1,48,10,EASY - PARTICULAR,1034,Tratamento de canal birradicular BIO,,E,10:1034,,sem correspondente unico na fonte,True
+51989,1,48,10,EASY - PARTICULAR,1035,Tratamento de canal birradicular NECRO,,E,10:1035,,sem correspondente unico na fonte,True
+51990,1,48,10,EASY - PARTICULAR,1036,Tratamento de canal trirradicular BIO,,E,10:1036,,sem correspondente unico na fonte,True
+51991,1,48,10,EASY - PARTICULAR,1037,Tratamento de canal trirradicular NECRO,,E,10:1037,,sem correspondente unico na fonte,True
+51992,1,48,10,EASY - PARTICULAR,1038,Tratamento de canal (Retratamento Unirradicular),,E,10:1038,,sem correspondente unico na fonte,True
+51993,1,48,10,EASY - PARTICULAR,1039,Tratamento de canal (Retratamento Birradicular),,E,10:1039,,sem correspondente unico na fonte,True
+51994,1,48,10,EASY - PARTICULAR,1040,Tratamento de canal (Retratamento Trirradicular),,E,10:1040,,sem correspondente unico na fonte,True
+51995,1,48,10,EASY - PARTICULAR,1041,Tratamento de canal (Pulpotomia),,E,10:1041,,sem correspondente unico na fonte,True
+51996,1,48,10,EASY - PARTICULAR,1042,Exodontia simples,,E,10:1042,,sem correspondente unico na fonte,True
+51997,1,48,10,EASY - PARTICULAR,1043,Exodontia de semi-incluso,,E,10:1043,,sem correspondente unico na fonte,True
+51998,1,48,10,EASY - PARTICULAR,1044,Exodontia de incluso,,E,10:1044,,sem correspondente unico na fonte,True
+51999,1,48,10,EASY - PARTICULAR,1045,Exodontia de incluso impactado,,E,10:1045,,sem correspondente unico na fonte,True
+52000,1,48,10,EASY - PARTICULAR,1046,Exodontia de raiz residual,,E,10:1046,,sem correspondente unico na fonte,True
+52001,1,48,10,EASY - PARTICULAR,1047,Exodontia de dec¡duo,,E,10:1047,¡,sem correspondente unico na fonte,True
+52002,1,48,10,EASY - PARTICULAR,1048,N£cleo met lico fundido,,E,10:1048,,sem correspondente unico na fonte,True
+52003,1,48,10,EASY - PARTICULAR,1049,N£cleo de preenchimento (am lgama/ resina),,E,10:1049,,sem correspondente unico na fonte,True
+52004,1,48,10,EASY - PARTICULAR,1050,Apicectomia de anteriores,,E,10:1050,,sem correspondente unico na fonte,True
+52005,1,48,10,EASY - PARTICULAR,1051,Apicectomia de posteriores,,E,10:1051,,sem correspondente unico na fonte,True
+52006,1,48,10,EASY - PARTICULAR,1052,Apicectomia de anteriores + retr¢grada,,E,10:1052,¢,sem correspondente unico na fonte,True
+52007,1,48,10,EASY - PARTICULAR,1053,Apicectomia de posteriores + retr¢grada,,E,10:1053,¢,sem correspondente unico na fonte,True
+52008,1,48,10,EASY - PARTICULAR,1054,Gengivectomia (Gengivectomia 1/2 arco),,E,10:1054,,sem correspondente unico na fonte,True
+52009,1,48,10,EASY - PARTICULAR,1055,Retalho (Cirurgia a retalho),,E,10:1055,,sem correspondente unico na fonte,True
+52010,1,48,10,EASY - PARTICULAR,1056,Raspagem subgengival para grupo de dentes,,E,10:1056,,sem correspondente unico na fonte,True
+52011,1,48,10,EASY - PARTICULAR,1057,Raspagem supragengival para grupo de dentes,,E,10:1057,,sem correspondente unico na fonte,True
+52012,1,48,10,EASY - PARTICULAR,1058,Mantenedor de espao acr¡lico,,E,10:1058, ¡,sem correspondente unico na fonte,True
+52013,1,48,10,EASY - PARTICULAR,1059,AplicaÆo t¢pica de fl£or,,E,10:1059,¢ Æ ,sem correspondente unico na fonte,True
+52014,1,48,10,EASY - PARTICULAR,1060,AplicaÆo teraputica de fl£or,,E,10:1060,Æ  ,sem correspondente unico na fonte,True
+52015,1,48,10,EASY - PARTICULAR,1061,Bandagem (Tubo simples),,E,10:1061,,sem correspondente unico na fonte,True
+52016,1,48,10,EASY - PARTICULAR,1062,Bandagem (Tubo duplo),,E,10:1062,,sem correspondente unico na fonte,True
+52017,1,48,10,EASY - PARTICULAR,1063,Bandagem (Tubo triplo),,E,10:1063,,sem correspondente unico na fonte,True
+52018,1,48,10,EASY - PARTICULAR,1064,Bandagem (Tubo bracket),,E,10:1064,,sem correspondente unico na fonte,True
+52019,1,48,10,EASY - PARTICULAR,1065,"Bracket (Bracket 0,18"" x 0,25"")",,E,10:1065,,sem correspondente unico na fonte,True
+52020,1,48,10,EASY - PARTICULAR,1066,"Bracket (Bracket 0,18"" x 0,30"")",,E,10:1066,,sem correspondente unico na fonte,True
+52021,1,48,10,EASY - PARTICULAR,1067,"Bracket (Bracket 0,22"" x 0,28"")",,E,10:1067,,sem correspondente unico na fonte,True
+52022,1,48,10,EASY - PARTICULAR,1068,Bracket (Bracket Straight-Wire),,E,10:1068,,sem correspondente unico na fonte,True
+52023,1,48,10,EASY - PARTICULAR,1069,ManutenÆo de aparelho ortodntico,,E,10:1069,Æ  ,sem correspondente unico na fonte,True
+52024,1,48,10,EASY - PARTICULAR,1070,Pr¢tese total acr¡lica,,E,10:1070,¢ ¡,sem correspondente unico na fonte,True
+52025,1,48,10,EASY - PARTICULAR,1071,Enxerto gengival,,E,10:1071,,sem correspondente unico na fonte,True
+52026,1,48,10,EASY - PARTICULAR,1072,Frenectomia labial superior,,E,10:1072,,sem correspondente unico na fonte,True
+52027,1,48,10,EASY - PARTICULAR,1073,Frenectomia labial inferior,,E,10:1073,,sem correspondente unico na fonte,True
+52028,1,48,10,EASY - PARTICULAR,1074,Frenectomia lingual,,E,10:1074,,sem correspondente unico na fonte,True
+52029,1,48,10,EASY - PARTICULAR,1075,Raspagem subgengival para toda a boca,,E,10:1075,,sem correspondente unico na fonte,True
+52030,1,48,10,EASY - PARTICULAR,1076,Raspagem supragengival para toda a boca,,E,10:1076,,sem correspondente unico na fonte,True
+52031,1,48,10,EASY - PARTICULAR,1077,Ensino de higiene oral,,E,10:1077,,sem correspondente unico na fonte,True
+52032,1,48,10,EASY - PARTICULAR,1078,Provis¢rio para grupo de dentes,,E,10:1078,¢,sem correspondente unico na fonte,True
+52033,1,48,10,EASY - PARTICULAR,1079,Coroa provis¢ria,,E,10:1079,¢,sem correspondente unico na fonte,True
+52034,1,48,10,EASY - PARTICULAR,1080,N£cleo provis¢rio,,E,10:1080,¢,sem correspondente unico na fonte,True
+52035,1,48,10,EASY - PARTICULAR,1081,Branqueamento,,E,10:1081,,sem correspondente unico na fonte,True
+52036,1,48,10,EASY - PARTICULAR,1082,Ajustes de pr¢tese,,E,10:1082,¢,sem correspondente unico na fonte,True
+52037,1,48,10,EASY - PARTICULAR,1083,Raio X panormico,,E,10:1083,,sem correspondente unico na fonte,True
+52038,1,48,10,EASY - PARTICULAR,1084,Raio X lateral,,E,10:1084,,sem correspondente unico na fonte,True
+52039,1,48,10,EASY - PARTICULAR,1085,Raio X oclusal,,E,10:1085,,sem correspondente unico na fonte,True
+52040,1,48,10,EASY - PARTICULAR,1086,Raio X mÆo e punho,,E,10:1086,Æ,sem correspondente unico na fonte,True
+52041,1,48,10,EASY - PARTICULAR,1087,Placa de mordida,,E,10:1087,,sem correspondente unico na fonte,True
+52042,1,48,10,EASY - PARTICULAR,1088,Raio X Bite-Wing,,E,10:1088,,sem correspondente unico na fonte,True
+52043,1,48,10,EASY - PARTICULAR,1089,Faceta de porcelana,,E,10:1089,,sem correspondente unico na fonte,True
+52044,1,48,10,EASY - PARTICULAR,1090,Emergncia,,E,10:1090,,sem correspondente unico na fonte,True
+52045,1,48,10,EASY - PARTICULAR,1091,Modelo de estudo,,E,10:1091,,sem correspondente unico na fonte,True
+52046,1,48,10,EASY - PARTICULAR,1092,Reembasamento,,E,10:1092,,sem correspondente unico na fonte,True
+52047,1,48,10,EASY - PARTICULAR,1093,Fotos,,E,10:1093,,sem correspondente unico na fonte,True
+52048,1,48,10,EASY - PARTICULAR,1094,Desgaste seletivo,,E,10:1094,,sem correspondente unico na fonte,True
+52049,1,48,10,EASY - PARTICULAR,1095,Cirurgia,,E,10:1095,,sem correspondente unico na fonte,True
+52050,1,48,10,EASY - PARTICULAR,1096,Odonto-secÆo,,E,10:1096,Æ ,sem correspondente unico na fonte,True
+52051,1,48,10,EASY - PARTICULAR,1097,Rizectomia,,E,10:1097,,sem correspondente unico na fonte,True
+52052,1,48,10,EASY - PARTICULAR,1098,Pulpotomia,,E,10:1098,,sem correspondente unico na fonte,True
+52053,1,48,10,EASY - PARTICULAR,1099,Aumento de coroa cl¡nica,,E,10:1099,¡,sem correspondente unico na fonte,True
+52054,1,48,10,EASY - PARTICULAR,1100,TunelizaÆo,,E,10:1100,Æ ,sem correspondente unico na fonte,True
+52055,1,48,10,EASY - PARTICULAR,1101,Ulectomia,,E,10:1101,,sem correspondente unico na fonte,True
+52056,1,48,10,EASY - PARTICULAR,1102,Attachment,,E,10:1102,,sem correspondente unico na fonte,True
+52057,1,48,10,EASY - PARTICULAR,1103,Capeamento,,E,10:1103,,sem correspondente unico na fonte,True
+52058,1,48,10,EASY - PARTICULAR,1104,Per¡cia,,E,10:1104,¡,sem correspondente unico na fonte,True
+52059,1,48,10,EASY - PARTICULAR,1105,Controle de placa bacteriana,,E,10:1105,,sem correspondente unico na fonte,True
+52060,1,48,10,EASY - PARTICULAR,1106,Conserto de pr¢tese,,E,10:1106,¢,sem correspondente unico na fonte,True
+52061,1,48,10,EASY - PARTICULAR,1107,RestauraÆo MOD Am lgama,,E,10:1107,Æ ,sem correspondente unico na fonte,True
+52062,1,48,10,EASY - PARTICULAR,1108,RestauraÆo MO Am lgama,,E,10:1108,Æ ,sem correspondente unico na fonte,True
+52063,1,48,10,EASY - PARTICULAR,1109,RestauraÆo DO Am lgama,,E,10:1109,Æ ,sem correspondente unico na fonte,True
+52064,1,48,10,EASY - PARTICULAR,1110,RestauraÆo DO Resina,,E,10:1110,Æ ,sem correspondente unico na fonte,True
+52065,1,48,10,EASY - PARTICULAR,1111,RestauraÆo MOD Resina,,E,10:1111,Æ ,sem correspondente unico na fonte,True
+52066,1,48,10,EASY - PARTICULAR,1112,RestauraÆo MO Resina,,E,10:1112,Æ ,sem correspondente unico na fonte,True
+52067,1,49,11,UNIMED - ODONTO,1,Acompanhamento de Tratamento/Procedimento Cirurgico,Acompanhamento de Tratamento/Procedimento Cirurgico,A,11:1,,texto atual coincide com a fonte,False
+52068,1,49,11,UNIMED - ODONTO,2,Alveoloplastia,Alveoloplastia,A,11:2,,texto atual coincide com a fonte,False
+52069,1,49,11,UNIMED - ODONTO,3,AmputaÆo Radicular com ObturaÆo Retr¢grada,Amputação Radicular com Obturação Retrógrada,B,11:3,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52070,1,49,11,UNIMED - ODONTO,4,AmputaÆo Radicular sem ObturaÆo Retr¢grada,Amputação Radicular sem Obturação Retrógrada,B,11:4,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52071,1,49,11,UNIMED - ODONTO,5,Apicetomia - dente birradicular com obturaÆo ret¢grada,Apicetomia - dente birradicular com obturação retógrada,B,11:5,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52072,1,49,11,UNIMED - ODONTO,6,Apicetomia - dente birradicular sem obturaÆo retr¢grada,Apicetomia - dente birradicular sem obturação retrógrada,B,11:6,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52073,1,49,11,UNIMED - ODONTO,7,Apicetomia - dente unirradicular com obturaÆo retr¢grada,Apicetomia - dente unirradicular com obturação retrógrada,B,11:7,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52074,1,49,11,UNIMED - ODONTO,8,Apicetomia - dente unirradicular sem obturaÆo retr¢grada,Apicetomia - dente unirradicular sem obturação retrógrada,B,11:8,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52075,1,49,11,UNIMED - ODONTO,9,Apicetomia - dentes multirradiculares com obturaÆo retr¢grada,Apicetomia - dentes multirradiculares com obturação retrógrada,B,11:9,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52076,1,49,11,UNIMED - ODONTO,10,Apicetomia - dentes multirradiculares sem obturaÆo ret¢grada,Apicetomia - dentes multirradiculares sem obturação retógrada,B,11:10,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52077,1,49,11,UNIMED - ODONTO,11,Aprofundamento de Vest¡bulo,Aprofundamento de Vestíbulo,B,11:11,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52078,1,49,11,UNIMED - ODONTO,12,Bi¢psia da Boca,Biópsia da Boca,B,11:12,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52079,1,49,11,UNIMED - ODONTO,13,Bi¢psia da L¡ngua,Biópsia da Língua,B,11:13,¢ ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52080,1,49,11,UNIMED - ODONTO,14,Bi¢psia da Mand¡bula,Biópsia da Mandíbula,B,11:14,¢ ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52081,1,49,11,UNIMED - ODONTO,15,Bi¢psia da Maxila,Biópsia da Maxila,B,11:15,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52082,1,49,11,UNIMED - ODONTO,16,Bi¢psia de Glndula Salivar,Biópsia de Glândula Salivar,B,11:16,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52083,1,49,11,UNIMED - ODONTO,17,Bi¢psia do L bio,Biópsia do Lábio,B,11:17,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52084,1,49,11,UNIMED - ODONTO,18,Bridectomia,Bridectomia,A,11:18,,texto atual coincide com a fonte,False
+52085,1,49,11,UNIMED - ODONTO,19,Bridotomia,Bridotomia,A,11:19,,texto atual coincide com a fonte,False
+52086,1,49,11,UNIMED - ODONTO,20,Cirugia para T¢rus Mandibular Unilateral,Cirugia para Tórus Mandibular Unilateral,B,11:20,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52087,1,49,11,UNIMED - ODONTO,21,Cirurgia para Exostose Maxilar,Cirurgia para Exostose Maxilar,A,11:21,,texto atual coincide com a fonte,False
+52088,1,49,11,UNIMED - ODONTO,22,Cirurgia para T¢rus Madibular Bilateral,Cirurgia para Tórus Madibular Bilateral,B,11:22,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52089,1,49,11,UNIMED - ODONTO,24,Exrese de Lipoma na RegiÆo Bucomaxilofacial,Exérese de Lipoma na Região Bucomaxilofacial,B,11:24,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52090,1,49,11,UNIMED - ODONTO,25,Exrese ou ExcisÆo de C lculo Salivar,Exérese ou Excisão de Cálculo Salivar,B,11:25,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52091,1,49,11,UNIMED - ODONTO,26,Exrese ou ExcisÆo de Cistos Odontol¢gicos,Exérese ou Excisão de Cistos Odontológicos,B,11:26,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52092,1,49,11,UNIMED - ODONTO,27,Exrese ou ExcisÆo de Mucocele,Exérese ou Excisão de Mucocele,B,11:27,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52093,1,49,11,UNIMED - ODONTO,28,Exrese ou ExcisÆo de Rnula,Exérese ou Excisão de Rânula,B,11:28,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52094,1,49,11,UNIMED - ODONTO,30,Exodontia de Permanente por indicaÆo ortodontica/prottica,Exodontia de Permanente por indicação ortodontica/protética,B,11:30,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52095,1,49,11,UNIMED - ODONTO,31,Exodontia de Raiz Residual,Exodontia de Raiz Residual,A,11:31,,texto atual coincide com a fonte,False
+52096,1,49,11,UNIMED - ODONTO,32,Exodontia Simples de Permanente,Exodontia Simples de Permanente,A,11:32,,texto atual coincide com a fonte,False
+52097,1,49,11,UNIMED - ODONTO,33,Frenulectomia Labial,Frenulectomia Labial,A,11:33,,texto atual coincide com a fonte,False
+52098,1,49,11,UNIMED - ODONTO,34,Frenulectomia Lingual,Frenulectomia Lingual,A,11:34,,texto atual coincide com a fonte,False
+52099,1,49,11,UNIMED - ODONTO,35,Frenulotomia Labial,Frenulotomia Labial,A,11:35,,texto atual coincide com a fonte,False
+52100,1,49,11,UNIMED - ODONTO,36,Frenulotomia Lingual,Frenulotomia Lingual,A,11:36,,texto atual coincide com a fonte,False
+52101,1,49,11,UNIMED - ODONTO,37,PunÆo aspirativa na regiÆo Bucomaxilofacial,Punção aspirativa na região Bucomaxilofacial,B,11:37,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52102,1,49,11,UNIMED - ODONTO,38,ReconstruÆo de Sulco gengivo - labial,Reconstrução de Sulco gengivo - labial,B,11:38,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52103,1,49,11,UNIMED - ODONTO,39,ReduÆo Cruenta de Fratura Alvolo-dent ria,Redução Cruenta de Fratura Alvéolo-dentária,B,11:39,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52104,1,49,11,UNIMED - ODONTO,40,ReduÆo Incruenta de Fratura Alvolo-dent ria,Redução Incruenta de Fratura Alvéolo-dentária,B,11:40,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52105,1,49,11,UNIMED - ODONTO,41,RemoÆo de Dentes Inclusos/Impactados,Remoção de Dentes Inclusos/Impactados,B,11:41,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52106,1,49,11,UNIMED - ODONTO,42,RemoÆo de Dentes Semi - Inclusos/Impactados,Remoção de Dentes Semi - Inclusos/Impactados,B,11:42,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52107,1,49,11,UNIMED - ODONTO,43,Retirada de Corpo Estranho Oroantral ou Oronasal da RegiÆo Bucomaxilofacial,Retirada de Corpo Estranho Oroantral ou Oronasal da Região Bucomaxilofacial,B,11:43,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52108,1,49,11,UNIMED - ODONTO,44,Tracionamento Cir£rgico com Finalidade Ortodntica,Tracionamento Cirúrgico com Finalidade Ortodôntica,B,11:44,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52109,1,49,11,UNIMED - ODONTO,45,Tratamento Cir£rgico de F¡stula Buconasal,Tratamento Cirúrgico de Fístula Buconasal,B,11:45,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52110,1,49,11,UNIMED - ODONTO,46,Tratamento Cir£rgico de F¡stula Buco-sinusal,Tratamento Cirúrgico de Fístula Buco-sinusal,B,11:46,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52111,1,49,11,UNIMED - ODONTO,47,Tratamento Cir£rgico de Hiperplasias de Tecidos àsseos/Cartilaginosos na RegiÆo Bucomaxilofacial,Tratamento Cirúrgico de Hiperplasias de Tecidos Ósseos/Cartilaginosos na Região Bucomaxilofacial,B,11:47,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52112,1,49,11,UNIMED - ODONTO,48,Tratamento Cirurgico de Tumores Benignos de Tecidos Moles da RegiÆo Bucomaxilofacial,Tratamento Cirurgico de Tumores Benignos de Tecidos Moles da Região Bucomaxilofacial,B,11:48,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52113,1,49,11,UNIMED - ODONTO,49,Tratamento Cirurgico de Tumores Benignos dos Tecidos àsseos/Cartilaginosos na RegÆo Bucomaxilofacial,Tratamento Cirurgico de Tumores Benignos dos Tecidos Ósseos/Cartilaginosos na Regão Bucomaxilofacial,B,11:49,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52114,1,49,11,UNIMED - ODONTO,50,Tratamento Cir£rgico para Tumores Odontognicos Benignos - sem reconstruÆo,Tratamento Cirúrgico para Tumores Odontogênicos Benignos - sem reconstrução,B,11:50,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52115,1,49,11,UNIMED - ODONTO,51,Ulotomia,Ulotomia,A,11:51,,texto atual coincide com a fonte,False
+52116,1,49,11,UNIMED - ODONTO,52,Ajuste Oclusal por Desgaste Seletivo,Ajuste Oclusal por Desgaste Seletivo,A,11:52,,texto atual coincide com a fonte,False
+52117,1,49,11,UNIMED - ODONTO,53,Cirurgia para T¢rus Palatino,Cirurgia para Tórus Palatino,B,11:53,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52118,1,49,11,UNIMED - ODONTO,54,Coroa Total Metalo Pl stica - cermero,Coroa Total Metalo Plástica - cerômero,B,11:54,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52119,1,49,11,UNIMED - ODONTO,55,DessensibilizaÆo Dentaria,Dessensibilização Dentaria,B,11:55,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52120,1,49,11,UNIMED - ODONTO,56,Faceta Direta em Resina Fotopolimeriz vel,Faceta Direta em Resina Fotopolimerizável,C,11:56,,diferenca nao atribuivel com seguranca a encoding,True
+52121,1,49,11,UNIMED - ODONTO,57,RemineralizaÆo,Remineralização,B,11:57,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52122,1,49,11,UNIMED - ODONTO,58,RestauraÆo Atraum tica em Dente Permanente,Restauração Atraumática em Dente Permanente,B,11:58,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52123,1,49,11,UNIMED - ODONTO,59,RestauraÆo com Ionmero de Vidro - 4 faces,Restauração com Ionômero de Vidro - 4 faces,B,11:59,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52124,1,49,11,UNIMED - ODONTO,60,RestauraÆo em Am lgama - 1 face,Restauração em Amálgama - 1 face,B,11:60,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52125,1,49,11,UNIMED - ODONTO,61,RestauraÆo em Am lgama - 2 faces,Restauração em Amálgama - 2 faces,B,11:61,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52126,1,49,11,UNIMED - ODONTO,62,RestauraÆo em Am lgama - 3 faces,Restauração em Amálgama - 3 faces,B,11:62,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52127,1,49,11,UNIMED - ODONTO,63,RestauraÆo em Am lgama - 4 faces,Restauração em Amálgama - 4 faces,B,11:63,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52128,1,49,11,UNIMED - ODONTO,64,RestauraÆo em Resina Fotopolimeriz vel - 1 face,Restauração em Resina Fotopolimerizável - 1 face,B,11:64,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52129,1,49,11,UNIMED - ODONTO,65,RestauraÆo em Resina Fotopolimeriz vel - 2 faces,Restauração em Resina Fotopolimerizável - 2 faces,B,11:65,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52130,1,49,11,UNIMED - ODONTO,66,RestauraÆo em Resina Fotopolimeriz vel - 3 faces,Restauração em Resina Fotopolimerizável - 3 faces,B,11:66,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52131,1,49,11,UNIMED - ODONTO,67,RestauraÆo em Resina Fotopolimeriz vel - 4 faces,Restauração em Resina Fotopolimerizável - 4 faces,B,11:67,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52132,1,49,11,UNIMED - ODONTO,68,RestauraÆo Tempor ria/tratamento expectante,Restauração Temporária/tratamento expectante,B,11:68,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52133,1,49,11,UNIMED - ODONTO,69,Tratamento Cir£rgico de Bridas constritivas da regiÆo Bucomaxilofacial.,Tratamento Cirúrgico de Bridas constritivas da região Bucomaxilofacial.,B,11:69,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52134,1,49,11,UNIMED - ODONTO,70,Tratamento Cir£rgico de Hiperplasias de Tecidos Moles na RegiÆo Bucomaxilofacial,Tratamento Cirúrgico de Hiperplasias de Tecidos Moles na Região Bucomaxilofacial,B,11:70,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52135,1,49,11,UNIMED - ODONTO,71,Ulectomia,Ulectomia,A,11:71,,texto atual coincide com a fonte,False
+52136,1,49,11,UNIMED - ODONTO,72,Capeamento Pulpar Direto,Capeamento Pulpar Direto,A,11:72,,texto atual coincide com a fonte,False
+52137,1,49,11,UNIMED - ODONTO,73,Clareamento de Dente Desvitalizado,Clareamento de Dente Desvitalizado,A,11:73,,texto atual coincide com a fonte,False
+52138,1,49,11,UNIMED - ODONTO,74,Preparo para N£cleo Intrarradicular,Preparo para Núcleo Intrarradicular,C,11:74,,diferenca nao atribuivel com seguranca a encoding,True
+52139,1,49,11,UNIMED - ODONTO,75,Pulpotomia,Pulpotomia,A,11:75,,texto atual coincide com a fonte,False
+52140,1,49,11,UNIMED - ODONTO,76,RemoÆo de Corpo Restranho Intra-canal,Remoção de Corpo Restranho Intra-canal,B,11:76,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52141,1,49,11,UNIMED - ODONTO,77,RemoÆo de N£cleo Intrarradicular,Remoção de Núcleo Intrarradicular,B,11:77,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52142,1,49,11,UNIMED - ODONTO,78,Retratamento Endodntico Birradicular,Retratamento Endodôntico Birradicular,B,11:78,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52143,1,49,11,UNIMED - ODONTO,79,Retratamento Endodntico Multirradicular,Retratamento Endodôntico Multirradicular,B,11:79,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52144,1,49,11,UNIMED - ODONTO,80,Retratamento Endodntico Unirradicular,Retratamento Endodôntico Unirradicular,B,11:80,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52145,1,49,11,UNIMED - ODONTO,81,Tratamento de PerfuraÆo Endodntica,Tratamento de Perfuração Endodôntica,B,11:81,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52146,1,49,11,UNIMED - ODONTO,82,Tratamento Endodntico Birradicular,Tratamento Endodôntico Birradicular,B,11:82,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52147,1,49,11,UNIMED - ODONTO,83,Tratamento Endodntico de Dente com Rizognese Incompleta,Tratamento Endodôntico de Dente com Rizogênese Incompleta,B,11:83, ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52148,1,49,11,UNIMED - ODONTO,84,Tratamento Endodntico Multirradicular,Tratamento Endodôntico Multirradicular,B,11:84,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52149,1,49,11,UNIMED - ODONTO,85,Tratamento Endodntico Unirradicular,Tratamento Endodôntico Unirradicular,B,11:85,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52150,1,49,11,UNIMED - ODONTO,86,Consulta Odontologica,Consulta Odontologica,A,11:86,,texto atual coincide com a fonte,False
+52151,1,49,11,UNIMED - ODONTO,87,Consulta Odontol¢gica de urgncia,Consulta Odontológica de urgência,B,11:87,¢ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52152,1,49,11,UNIMED - ODONTO,88,Consulta Odontol¢gica de Urgncia 24 horas,Consulta Odontológica de Urgência 24 horas,B,11:88,¢ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52153,1,49,11,UNIMED - ODONTO,89,Consulta Odontol¢gica inicial,Consulta Odontológica inicial,B,11:89,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52154,1,49,11,UNIMED - ODONTO,90,Controle de Biofilme (Placa Bacteriana),Controle de Biofilme (Placa Bacteriana),A,11:90,,texto atual coincide com a fonte,False
+52155,1,49,11,UNIMED - ODONTO,91,Controle de C rie incipiente,Controle de Cárie incipiente,C,11:91,,diferenca nao atribuivel com seguranca a encoding,True
+52156,1,49,11,UNIMED - ODONTO,92,Profilaxia: polimento coron rio,Profilaxia: polimento coronário,C,11:92,,diferenca nao atribuivel com seguranca a encoding,True
+52157,1,49,11,UNIMED - ODONTO,93,RemoÆo dos Fatores de RetenÆo do Biofilme Dental (placa bacteriana),Remoção dos Fatores de Retenção do Biofilme Dental (placa bacteriana),B,11:93,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52158,1,49,11,UNIMED - ODONTO,94,AplicaÆo de Car¡ost tico,Aplicação de Caríostático,B,11:94,Æ  ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52159,1,49,11,UNIMED - ODONTO,95,AplicaÆo de Selante - tcnica invasiva,Aplicação de Selante - técnica invasiva,B,11:95,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52160,1,49,11,UNIMED - ODONTO,96,AplicaÆo de Selante de f¢ssulas e fissuras,Aplicação de Selante de fóssulas e fissuras,B,11:96,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52161,1,49,11,UNIMED - ODONTO,97,Atividade Educativa para pais e/ou cuidadores,Atividade Educativa para pais e/ou cuidadores,A,11:97,,texto atual coincide com a fonte,False
+52162,1,49,11,UNIMED - ODONTO,98,Condicionamento em Odontologia,Condicionamento em Odontologia,A,11:98,,texto atual coincide com a fonte,False
+52163,1,49,11,UNIMED - ODONTO,99,Condicionamento em Odontologia para Pacientes com necessidades especiais.,Condicionamento em Odontologia para Pacientes com necessidades especiais.,A,11:99,,texto atual coincide com a fonte,False
+52164,1,49,11,UNIMED - ODONTO,100,Coroa de Acetato em Dente Dec¡duo,Coroa de Acetato em Dente Decíduo,B,11:100,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52165,1,49,11,UNIMED - ODONTO,101,Coroa de Ao em Dente Dec¡duo,Coroa de Aço em Dente Decíduo,B,11:101, ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52166,1,49,11,UNIMED - ODONTO,102,Coroa de Policarbonato em Dentes Dec¡duos,Coroa de Policarbonato em Dentes Decíduos,B,11:102,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52167,1,49,11,UNIMED - ODONTO,103,Exodontia Simples de Dec¡duo,Exodontia Simples de Decíduo,B,11:103,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52168,1,49,11,UNIMED - ODONTO,104,Mantenedor de Espao Fixo,Mantenedor de Espaço Fixo,B,11:104,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52169,1,49,11,UNIMED - ODONTO,105,Mantenedor de Espao Remov¡vel,Mantenedor de Espaço Removível,B,11:105, ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52170,1,49,11,UNIMED - ODONTO,106,Pulpotomia em Dentes Dec¡duos,Pulpotomia em Dentes Decíduos,B,11:106,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52171,1,49,11,UNIMED - ODONTO,107,RestauraÆo Atraum tica em Dente Dec¡duo,Restauração Atraumática em Dente Decíduo,B,11:107,Æ  ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52172,1,49,11,UNIMED - ODONTO,108,RestauraÆo com Ionmero de Vidro - 1 face,Restauração com Ionômero de Vidro - 1 face,B,11:108,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52173,1,49,11,UNIMED - ODONTO,109,RestauraÆo com Ionmero de Vidro - 2 faces,Restauração com Ionômero de Vidro - 2 faces,B,11:109,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52174,1,49,11,UNIMED - ODONTO,110,RestauraÆo com Ionmero de Vidro - 3 faces,Restauração com Ionômero de Vidro - 3 faces,B,11:110,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52175,1,49,11,UNIMED - ODONTO,111,Teste de Fluxo Salivar,Teste de Fluxo Salivar,A,11:111,,texto atual coincide com a fonte,False
+52176,1,49,11,UNIMED - ODONTO,112,Tratamento Endodntico em Dente Dec¡duo,Tratamento Endodôntico em Dente Decíduo,B,11:112, ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52177,1,49,11,UNIMED - ODONTO,113,Aumento de Coroa Cl¡nica,Aumento de Coroa Clínica,B,11:113,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52178,1,49,11,UNIMED - ODONTO,114,Cunha Proximal,Cunha Proximal,A,11:114,,texto atual coincide com a fonte,False
+52179,1,49,11,UNIMED - ODONTO,115,Enxerto Conjuntivo Subeptelial,Enxerto Conjuntivo Subeptelial,A,11:115,,texto atual coincide com a fonte,False
+52180,1,49,11,UNIMED - ODONTO,116,Enxerto Gengival Livre,Enxerto Gengival Livre,A,11:116,,texto atual coincide com a fonte,False
+52181,1,49,11,UNIMED - ODONTO,117,Gengivectomia,Gengivectomia,A,11:117,,texto atual coincide com a fonte,False
+52182,1,49,11,UNIMED - ODONTO,118,Gengivoplastia,Gengivoplastia,A,11:118,,texto atual coincide com a fonte,False
+52183,1,49,11,UNIMED - ODONTO,120,ImobilizaÆo Dent ria em Dentes Dec¡duos,Imobilização Dentária em Dentes Decíduos,B,11:120,Æ  ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52184,1,49,11,UNIMED - ODONTO,121,ImobilizaÆo Dentaria em Dentes Permanentes,Imobilização Dentaria em Dentes Permanentes,B,11:121,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52185,1,49,11,UNIMED - ODONTO,122,Odonto-secÆo,Odonto-secção,B,11:122,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52186,1,49,11,UNIMED - ODONTO,123,Raspagem Subgengival/ Alisamento Radicular,Raspagem Subgengival/ Alisamento Radicular,A,11:123,,texto atual coincide com a fonte,False
+52187,1,49,11,UNIMED - ODONTO,124,Raspagem Supragengival,Raspagem Supragengival,A,11:124,,texto atual coincide com a fonte,False
+52188,1,49,11,UNIMED - ODONTO,125,AplicaÆo T¢pica de Fl£or,Aplicação Tópica de Flúor,B,11:125,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52189,1,49,11,UNIMED - ODONTO,126,Atividade Educativa em Sa£de Bucal,Atividade Educativa em Saúde Bucal,C,11:126,,diferenca nao atribuivel com seguranca a encoding,True
+52190,1,49,11,UNIMED - ODONTO,127,Ajuste Oclusal por Acrscimo,Ajuste Oclusal por Acréscimo,B,11:127,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52191,1,49,11,UNIMED - ODONTO,128,Coroa Provis¢ria com Pino,Coroa Provisória com Pino,B,11:128,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52192,1,49,11,UNIMED - ODONTO,129,Coroa Provis¢ria sem Pino,Coroa Provisória sem Pino,B,11:129,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52193,1,49,11,UNIMED - ODONTO,130,Coroa Total Acr¡lica Prensada,Coroa Total Acrílica Prensada,B,11:130,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52194,1,49,11,UNIMED - ODONTO,131,Coroa Total Metalo Pl stica - resina acr¡lica,Coroa Total Metalo Plástica - resina acrílica,B,11:131,¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52195,1,49,11,UNIMED - ODONTO,132,Coroa Total em Cermero (dentes anteriores),Coroa Total em Cerômero (dentes anteriores),B,11:132,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52196,1,49,11,UNIMED - ODONTO,133,Coroa Total Met lica,Coroa Total Metálica,C,11:133,,diferenca nao atribuivel com seguranca a encoding,True
+52197,1,49,11,UNIMED - ODONTO,134,Faceta em Cermero,Faceta em Cerômero,B,11:134,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52198,1,49,11,UNIMED - ODONTO,135,N£cleo de Preenchimento,Núcleo de Preenchimento,C,11:135,,diferenca nao atribuivel com seguranca a encoding,True
+52199,1,49,11,UNIMED - ODONTO,136,N£cleo Met lico Fundido,Núcleo Metálico Fundido,C,11:136,,diferenca nao atribuivel com seguranca a encoding,True
+52200,1,49,11,UNIMED - ODONTO,137,Pino pr-fabricado,Pino pré-fabricado,B,11:137,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52201,1,49,11,UNIMED - ODONTO,138,Provis¢rio para Faceta,Provisório para Faceta,B,11:138,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52202,1,49,11,UNIMED - ODONTO,139,Provis¢rio para inlay/onlay (cermero),Provisório para inlay/onlay (cerômero),B,11:139,¢ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52203,1,49,11,UNIMED - ODONTO,140,Provis¢rio para RestauraÆo Met lica Fundida,Provisório para Restauração Metálica Fundida,B,11:140,¢ Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52204,1,49,11,UNIMED - ODONTO,141,RestauraÆo em Cermero - inlay,Restauração em Cerômero - inlay,B,11:141,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52205,1,49,11,UNIMED - ODONTO,142,RestauraÆo em Cermero - onlay,Restauração em Cerômero - onlay,B,11:142,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52206,1,49,11,UNIMED - ODONTO,143,RestauraÆo Met lica Fundida,Restauração Metálica Fundida,B,11:143,Æ ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52207,1,49,11,UNIMED - ODONTO,144,Diagn¢stico e Planejamento para Tratamento Odontol¢gico,Diagnóstico e Planejamento para Tratamento Odontológico,B,11:144,¢,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52208,1,49,11,UNIMED - ODONTO,145,ManutenÆo de Aparelho Ortodntico - Aparelho Ortopdico,Manutenção de Aparelho Ortodôntico - Aparelho Ortopédico,B,11:145,Æ   ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52209,1,49,11,UNIMED - ODONTO,146,ManutenÆo de Aparelho Ortodntico - Aparelho Fixo Met lico,Manutenção de Aparelho Ortodôntico - Aparelho Fixo Metálico,B,11:146,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52210,1,49,11,UNIMED - ODONTO,147,ManutenÆo de Aparelho Ortodntico - Aparelho Remov¡vel,Manutenção de Aparelho Ortodôntico - Aparelho Removível,B,11:147,Æ   ¡,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52211,1,49,11,UNIMED - ODONTO,148,Radiografia Periapical,Radiografia Periapical,A,11:148,,texto atual coincide com a fonte,False
+52212,1,49,11,UNIMED - ODONTO,149,Radiografia Interproximal - Bite Wing,Radiografia Interproximal - Bite Wing,A,11:149,,texto atual coincide com a fonte,False
+52213,1,49,11,UNIMED - ODONTO,150,Radiografia Oclusal,Radiografia Oclusal,A,11:150,,texto atual coincide com a fonte,False
+52214,1,49,11,UNIMED - ODONTO,151,Levantamento Radiogr fico (Exame Radiodntico),Levantamento Radiográfico (Exame Radiodôntico),B,11:151,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52215,1,49,11,UNIMED - ODONTO,152,Radiografia Panormica de Mand/Maxila (Ortopantomografia),Radiografia Panorâmica de Mand/Maxila (Ortopantomografia),C,11:152,,diferenca editorial ou sufixo numerico,True
+52216,1,49,11,UNIMED - ODONTO,153,Radiografia panormica de Mand/Maxila (Ortopantomografia) com Traado Cefalomtrico,Radiografia panorâmica de Mand/Maxila (Ortopantomografia) com Traçado Cefalométrico,B,11:153, ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52217,1,49,11,UNIMED - ODONTO,154,Radiografia da ATM,Radiografia da ATM,A,11:154,,texto atual coincide com a fonte,False
+52218,1,49,11,UNIMED - ODONTO,155,Radiografia da MÆo e Punho - Carpal,Radiografia da Mão e Punho - Carpal,B,11:155,Æ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52219,1,49,11,UNIMED - ODONTO,156,Telerradiografia,Telerradiografia,A,11:156,,texto atual coincide com a fonte,False
+52220,1,49,11,UNIMED - ODONTO,157,Telerradiografia com Traado Cefalomtrico,Telerradiografia com Traçado Cefalométrico,B,11:157, ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52221,1,49,11,UNIMED - ODONTO,158,Tcnica de LocalizaÆo Radiogr fica,Técnica de Localização Radiográfica,B,11:158,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52222,1,49,11,UNIMED - ODONTO,159,DocumentaÆo Ortodntica Completa,Documentação Ortodôntica Completa,B,11:159,Æ  ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52223,1,49,11,UNIMED - ODONTO,160,Fotografia,Fotografia,A,11:160,,texto atual coincide com a fonte,False
+52224,1,49,11,UNIMED - ODONTO,161,Modelos Ortodnticos,Modelos Ortodônticos,B,11:161,,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52225,1,49,11,UNIMED - ODONTO,162,Traado Cefalomtrico,Traçado Cefalométrico,B,11:162, ,nome atual contem marcador de mojibake e a fonte fornece o nome correto,True
+52226,1,49,11,UNIMED - ODONTO,163,Pacote Periodontal B sico,Pacote Periodontal Básico,C,11:163,,diferenca nao atribuivel com seguranca a encoding,True

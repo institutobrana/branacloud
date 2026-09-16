@@ -1,0 +1,91 @@
+﻿Tabelas identificadas:
+- dbo._STATUS_PACIENTE
+- dbo._TIPO_USUARIO
+- dbo.ANAMNESE_PERG
+- dbo.ANAMNESE_QUEST
+- dbo.ANAMNESE_RESP
+- dbo.CCPACIENTE
+- dbo.TMP_PARTICIPACAO
+- dbo.USUARIO
+- dbo.USUARIO_FUNCAO
+- dbo.USUARIO_MODULO
+- dbo.USUARIO_PERFIL
+
+Colunas identificadas:
+- dbo.AGENDA.NROPAC (int) nullable=True
+- dbo.ANAMNESE_PERG.NROQUE (int) nullable=False
+- dbo.ANAMNESE_PERG.NROPER (int) nullable=False
+- dbo.ANAMNESE_PERG.TEXPER (varchar) nullable=True
+- dbo.ANAMNESE_PERG.TIPRES (smallint) nullable=True
+- dbo.ANAMNESE_PERG.TIPPER (smallint) nullable=True
+- dbo.ANAMNESE_PERG.TEXMEN (varchar) nullable=True
+- dbo.ANAMNESE_QUEST.NROQUE (int) nullable=False
+- dbo.ANAMNESE_QUEST.NOME (varchar) nullable=False
+- dbo.ANAMNESE_RESP.NROPAC (int) nullable=False
+- dbo.ANAMNESE_RESP.NROQUE (int) nullable=False
+- dbo.ANAMNESE_RESP.NROPER (int) nullable=False
+- dbo.ANAMNESE_RESP.RESPOSTA (smallint) nullable=True
+- dbo.ANAMNESE_RESP.COMPLEM (varchar) nullable=True
+- dbo.ARCADA.NROPAC (int) nullable=False
+- dbo.CATALOGO.NROPAC (int) nullable=False
+- dbo.CCCIRURGIAO.NROCCPAC (int) nullable=True
+- dbo.CCPACIENTE.NROPAC (int) nullable=False
+- dbo.CONTATO.EMAIL (varchar) nullable=True
+- dbo.CONVENIO.EMAIL_CONTATO (varchar) nullable=True
+- dbo.CONVENIO.EMAIL_TECNICO (varchar) nullable=True
+- dbo.CTRLPROTETICO.NROPAC (int) nullable=False
+- dbo.CTRLPROTETICO.NROINTPAC (int) nullable=True
+- dbo.CUSTOMDATA.NROPAC (int) nullable=False
+- dbo.CUSTOMDATA.NROINTPAC (int) nullable=True
+- dbo.CUSTOMMEMO.NROPAC (int) nullable=False
+- dbo.CUSTOMMEMO.NROINTPAC (int) nullable=True
+- dbo.DEL_AGENDA.NROPAC (int) nullable=True
+- dbo.DENTE.NROPAC (int) nullable=False
+- dbo.DENTE.NROINTPAC (int) nullable=False
+- dbo.EXAMEPERIO.NROPAC (int) nullable=False
+- dbo.FACE.NROPAC (int) nullable=False
+- dbo.FACE.NROINTPAC (int) nullable=False
+- dbo.HISTORICO.NROPAC (int) nullable=False
+- dbo.HISTORICO.NROINTPAC (int) nullable=True
+- dbo.INTERVENCAO.NROPAC (int) nullable=False
+- dbo.INTERVENCAO.NROINTPAC (int) nullable=False
+- dbo.INTERVENCAO.VALOR_PACIENTE (money) nullable=True
+- dbo.INTERVENCAO.VALOR_TAB_PAC (money) nullable=True
+- dbo.ITEMPERIO.NROPAC (int) nullable=False
+- dbo.LOG_DOCUMENTO.NROPAC (int) nullable=False
+- dbo.PESSOAL.NROPAC (int) nullable=False
+- dbo.PESSOAL.CORRESPONDENCIA (smallint) nullable=True
+- dbo.PESSOAL.EMAIL (varchar) nullable=True
+- dbo.PLACA.NROPAC (int) nullable=False
+- dbo.PRESTADOR.EMAIL (varchar) nullable=True
+- dbo.RECIBO.NROPAC (int) nullable=True
+- dbo.RECIBO.CPFPAC (varchar) nullable=True
+- dbo.REST_TERAPEUTICA.ID_PACIENTE (int) nullable=False
+- dbo.RETORNO.NROPAC (int) nullable=False
+- dbo.TAB_PRC_ITEM.VALOR_PACIENTE (money) nullable=True
+- dbo.TMP_CONTAS.NROPAC (int) nullable=True
+- dbo.TMP_CONTAS.NOMEPAC (varchar) nullable=True
+- dbo.TRATAMENTO.NROPAC (int) nullable=False
+- dbo.UNIDADE.EMAIL (varchar) nullable=True
+
+ANAMNESE_QUEST -> questionarios
+ANAMNESE_PERG  -> perguntas
+ANAMNESE_RESP  -> respostas
+
+Questionarios encontrados: 5
+Perguntas encontradas: 130
+Resumos de respostas: 118
+
+Questionarios:
+- EDS70 (eds70.bak / eds70dat.mdf) | id=1 | nome=Principal                               
+- EDS70 (eds70.bak / eds70dat.mdf) | id=2 | nome=Implante                                
+- EDS70 (eds70.bak / eds70dat.mdf) | id=3 | nome=Ficha complementar                      
+- EDS70 (eds70.bak / eds70dat.mdf) | id=4 | nome=Anamnese de Saúde
+- EDS70 (eds70.bak / eds70dat.mdf) | id=5 | nome=Anamnese pessoal
+
+Perguntas por questionario:
+- Anamnese de Saúde: 55 perguntas
+- Anamnese pessoal: 16 perguntas
+- Ficha complementar                      : 12 perguntas
+- Implante                                : 12 perguntas
+- Principal                               : 35 perguntas

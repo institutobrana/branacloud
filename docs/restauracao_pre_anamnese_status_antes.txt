@@ -1,0 +1,4 @@
+?? docs/anamnese_regressao_subetapa_1_namespace_passivo.md
+?? docs/anamnese_subetapa_0_mapeamento_monolitico.md
+?? docs/anamnese_subetapa_1_namespace_passivo.md
+?? docs/recomendacao_proximo_modulo_pos_procedimentos_genericos.md

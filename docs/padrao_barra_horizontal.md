@@ -1,6 +1,10 @@
-# Padrão de Barra Horizontal
+# CONTRATO OFICIAL — SHELL PADRÃO DOS MÓDULOS REACT DO BRANA CLOUD
 
-Padrão oficial de integração da barra horizontal com a barra lateral no novo frontend React do Brana Cloud.
+**STATUS: CANÔNICO**
+**Versão do contrato:** 1.0
+**Última consolidação:** 2026-08-25
+
+Este é o único contrato canônico do shell visual dos módulos React do Brana Cloud. Deve ser consultado sempre que uma feature nova precisar de rota, rail, banda horizontal, toolbar ou área de conteúdo dentro do shell global. Este documento prevalece sobre descrições paralelas do mesmo padrão.
 
 ## Objetivo
 
@@ -396,3 +400,142 @@ Mas não devem alterar o contrato estrutural do shell.
 - `frontend-react/src/features/servicosProtetico/components/ServicosProteticoToolbar.jsx`
 - `frontend-react/src/features/servicosProtetico/components/ProteticoSelect.jsx`
 - `frontend-react/src/features/servicosProtetico/servicosProtetico.css`
+
+## Contrato visual canônico
+
+```text
+HEADER GLOBAL
+────────────────────────────────────────────────────────────
+
+┌──────────────── BANDA HORIZONTAL DA FEATURE ──────────────
+│
+│
+RAIL                  CONTEÚDO DA FEATURE
+│
+│
+```
+
+O header global branco, o rail lateral e a banda da feature são partes do shell. Rail e banda devem formar visualmente um L único, sem gap, deslocamento ou segunda barra. A banda ocupa a largura útil do shell e é o local oficial para comandos, filtros, combos, spinboxes e navegação da feature.
+
+### Banda vazia
+
+Sem comandos **não significa sem banda**. O contrato é:
+
+```text
+sem comandos = banda horizontal vazia, porém preservada
+```
+
+Uma banda vazia não pode colapsar em uma linha fina. O mecanismo compartilhado atual é `.auxiliary-shell-band-empty`, com `min-height: 44px`, derivado do padrão de aproximadamente 7px de padding superior + 30px de estrutura útil + 7px de padding inferior. Features não devem copiar `44px` em CSS próprio; devem reutilizar essa classe compartilhada ou a infraestrutura oficial equivalente.
+
+## Elementos oficiais e responsabilidades
+
+| Elemento | Arquivo | Responsabilidade |
+|---|---|---|
+| `App.jsx` | `frontend-react/src/app/App.jsx` | Resolve tela/rota, menu, active state e injeta a banda da feature no shell. |
+| `BranaActionTopbar` | `frontend-react/src/layout/BranaActionTopbar.jsx` | Header global e ações globais da sessão. |
+| `BranaIconRail` | `frontend-react/src/layout/BranaIconRail.jsx` | Rail lateral e grupos principais. |
+| `BranaContextPanel` | `frontend-react/src/layout/BranaContextPanel.jsx` | Submenu/contexto do grupo ativo. |
+| `BranaWorkspace` | `frontend-react/src/layout/BranaWorkspace.jsx` | Área onde o conteúdo da feature é montado. |
+| `.brana-shell-band` | `frontend-react/src/styles/globals.css` | Base estrutural da banda. |
+| `.auxiliary-shell-band` | `frontend-react/src/styles/globals.css` | Banda oficial de módulos auxiliares, com background, alinhamento e padding. |
+| `.auxiliary-shell-band-empty` | `frontend-react/src/styles/globals.css` | Preserva a altura da banda quando não há comandos. |
+| `auxiliaryTopBar` | `frontend-react/src/app/App.jsx` | Condições e composição das bandas das features. |
+
+### Separação de responsabilidades
+
+O shell global é responsável por header, rail, banda, geometria, L, offset do painel e posicionamento da workspace. A Page/feature é responsável somente pelo conteúdo funcional, grid, tabela, calendário, formulário, cards, modais e componentes próprios. A Page não controla a geometria global e não reconstrói o L.
+
+Quando houver toolbar real, o fluxo será:
+
+```text
+App/Shell
+  ↓
+brana-shell-band / auxiliary-shell-band
+  ↓
+Toolbar da feature
+```
+
+A toolbar contém composição visual e callbacks. Fetch, regra de negócio e persistência ficam em hooks/services/API da feature. Nunca criar uma toolbar duplicada dentro da Page.
+
+## Shell inicial vazio
+
+Quando a solicitação for somente criar rota + shell, a área de conteúdo deve permanecer vazia. Não adicionar automaticamente título, subtítulo, “Em desenvolvimento”, card, calendário fake, tabela fake, dados fake ou placeholder grande.
+
+O título `Agenda semanal` foi removido da implementação homologada da página vazia porque não faz parte do shell base. Um título só pode existir se fizer parte do desenho funcional aprovado da feature.
+
+## Referências complementares homologadas
+
+Há dois casos de referência para o mesmo contrato estrutural:
+
+```text
+Atendimento → Agenda semanal
+  → banda oficial vazia, conteúdo vazio
+
+Tabelas → Serviços de Protético
+  → banda oficial com toolbar e comandos reais
+```
+
+A Agenda não é dona do contrato; ela é apenas a homologação recente do shell vazio. Serviços de Protético é a referência de banda com conteúdo.
+
+## Como solicitar o Shell Padrão em novos módulos
+
+Use exatamente a frase:
+
+```text
+Monte o shell padrão com barra horizontal para o módulo <NOME>.
+```
+
+Essa solicitação significa:
+
+1. localizar e usar o mecanismo oficial de rota e menu;
+2. integrar a feature ao shell global;
+3. preservar header global e rail;
+4. criar ou ativar a banda horizontal oficial;
+5. manter a banda visível mesmo vazia;
+6. garantir o L único;
+7. manter a área de conteúdo vazia no shell inicial;
+8. não criar título provisório;
+9. não criar toolbar interna;
+10. não implementar comandos ou funcionalidades não solicitados;
+11. validar visualmente em runtime quando aplicável.
+
+Se hoje for necessário adicionar uma condição em `auxiliaryTopBar`, ela deve ser localizada em `App.jsx`, como ocorre com as demais features. Não criar registry paralelo, novo sistema de roteamento ou geometria local.
+
+## Checklist oficial de homologação
+
+```text
+[ ] Header global preservado
+[ ] Rail lateral preservado
+[ ] Banda horizontal visível
+[ ] Banda com altura padrão
+[ ] Banda vazia não colapsa
+[ ] Rail + banda formam L único
+[ ] Banda ocupa largura útil
+[ ] Nenhuma toolbar interna duplicada
+[ ] Área de conteúdo vazia no shell inicial
+[ ] Nenhum título provisório
+[ ] Nenhum dado fake
+[ ] Nenhum CSS exclusivo desnecessário
+[ ] Menu funciona
+[ ] Rota funciona
+[ ] Active state correto
+[ ] Build passa
+[ ] Runtime visual passa quando aplicável
+[ ] Console sem erro novo relevante
+[ ] Feature de referência não sofreu regressão
+```
+
+## Regras de CSS e evolução
+
+- Preferir as classes globais oficiais do shell.
+- Não reproduzir a geometria compartilhada em CSS de feature.
+- Não usar `!important` ou hacks de posicionamento sem contrato explícito.
+- Não alterar altura do rail ou da banda para acomodar uma feature.
+- Não criar `height: 44px` específico de módulo.
+- Se uma necessidade não couber no contrato, documentá-la antes de alterar o shell global.
+
+## Dívida técnica registrada
+
+O `auxiliaryTopBar` ainda é uma cadeia condicional em `App.jsx`. Esta Fase não cria registry nem refatora o App. Uma futura refatoração poderá centralizar o registro de bandas, desde que preserve este contrato e seja tratada como mudança arquitetural independente.
+
+**CONTRATO SHELL PADRÃO = CANÔNICO**

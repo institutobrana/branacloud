@@ -175,3 +175,22 @@
 - `qtd_sala` seguiu fora da UI e sem envio artificial por padrao.
 - O botao `Elimina` permanece fora de escopo funcional.
 - A validacao foi repetida com `unidadesAtendimento.contract.test.mjs`, `unidadesAtendimento.routing.test.mjs` e `npm run build`.
+
+## Fechamento tecnico da Etapa 3
+
+- A exclusao protegida foi integrada ao backend com bloqueio de unidade principal, ultima unidade e dependencias operacionais.
+- O shell do React agora recebe o estado de selecao da feature para habilitar `Elimina` somente quando ha item selecionado.
+- O modal de confirmacao de exclusao foi adicionado de forma modular, sem mexer no shell em `L`, na rota, no menu, na tabela ou no cadastro.
+- A validacao backend de exclusao passou em `backend/tests/test_unidades_atendimento_delete.py`.
+- Os testes de frontend de contrato e roteamento seguiram verdes.
+- O build do frontend React concluiu com sucesso.
+
+## Regresso da tela branca e correcao minima
+
+- Sintoma observado: ao abrir `/app/configuracoes/unidades-atendimento`, a aplicacao ficou em branco apesar da rota correta na barra de endereco.
+- Causa exata: o hook `useUnidadesAtendimento` passou a calcular `deleteDisabledReason` antes da declaracao de `selectedItem`, causando `ReferenceError` por acesso temporal morto no render inicial.
+- Arquivo e linha da causa: `frontend-react/src/features/unidadesAtendimento/hooks/useUnidadesAtendimento.js`, bloco entre as linhas `157` e `173` no estado anterior da regressao.
+- Correcao aplicada: a declaracao de `selectedItem` foi movida para antes de `deleteDisabledReason`, preservando o contrato existente sem alterar backend, tela ou fluxo de exclusao.
+- Teste de regressao: o arquivo `frontend-react/tests/unidadesAtendimento.routing.test.mjs` passou a validar que `selectedItem` aparece no hook antes de `deleteDisabledReason`.
+- Validacao no navegador: com a sessao autenticada de teste, a rota voltou a renderizar a pagina, exibindo a tabela e a toolbar.
+- Exclusao nao executada nesta correcao: o fluxo de exclusao permaneceu apenas preparado, sem acionar `DELETE`.

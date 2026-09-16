@@ -1,0 +1,32 @@
+[
+  {
+    "zip": "D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_full_20260330_204101.zip",
+    "interesting_members": [
+      "data/anamnese_questionarios.csv"
+    ]
+  },
+  {
+    "zip": "D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_full_20260330_204513.zip",
+    "interesting_members": [
+      "data/anamnese_questionarios.csv"
+    ]
+  },
+  {
+    "zip": "D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_full_20260413_130945.zip",
+    "interesting_members": [
+      "data/anamnese_questionarios.csv"
+    ]
+  },
+  {
+    "zip": "D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\brana_saas_to_render_20260406.zip",
+    "interesting_members": [
+      "data/anamnese_questionarios.csv"
+    ]
+  },
+  {
+    "zip": "D:\\BRANA ARQUIVOS\\PROJETO_PRECIFICACAO_LEGADO\\saas\\backend\\backups\\pre_delete_clinicas_2_5_20260413_142730.zip",
+    "interesting_members": [
+      "data/anamnese_questionarios.csv"
+    ]
+  }
+]

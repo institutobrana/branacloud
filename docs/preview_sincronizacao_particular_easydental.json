@@ -1,0 +1,1883 @@
+{
+  "clinica_id": 1,
+  "table_code": 4,
+  "total_brana": 336,
+  "total_origem": 112,
+  "identicos": 0,
+  "divergentes": 9,
+  "somente_origem": 103,
+  "somente_brana": 327,
+  "matches": [
+    {
+      "codigo": 1010,
+      "nome_origem": "Selante  por elemento",
+      "nome_brana": "AplicaÆo de Fl£or Verniz - (por elemento)",
+      "igual": false,
+      "procedimento_id": 40713,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1020,
+      "nome_origem": "Prótese adesiva metalo-cerâmica (1 elem)",
+      "nome_brana": "AplicaÆo de Selnate Oclusa Invasivo - (por elemento)",
+      "igual": false,
+      "procedimento_id": 40714,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1030,
+      "nome_origem": "Raio X periapical",
+      "nome_brana": "AplicaÆo T¢pica de Fl£or",
+      "igual": false,
+      "procedimento_id": 40715,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1040,
+      "nome_origem": "Tratamento de canal (Retratamento Trirradicular)",
+      "nome_brana": "Controle da Placa Bacteriana - (por sessÆo)",
+      "igual": false,
+      "procedimento_id": 40716,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1050,
+      "nome_origem": "Apicectomia de anteriores",
+      "nome_brana": "InstruÆo de Higiene Oral - (I.H.O.)",
+      "igual": false,
+      "procedimento_id": 40717,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1060,
+      "nome_origem": "Aplicação terapêutica de flúor",
+      "nome_brana": "Profilaxia - (Polimento com taa de borracha)",
+      "igual": false,
+      "procedimento_id": 40718,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1070,
+      "nome_origem": "Prótese total acrílica",
+      "nome_brana": "Profilaxia - (Ultrason e Jato de Bicarbonato)",
+      "igual": false,
+      "procedimento_id": 40719,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1080,
+      "nome_origem": "Núcleo provisório",
+      "nome_brana": "Teste de fluxo salivar",
+      "igual": false,
+      "procedimento_id": 40720,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1090,
+      "nome_origem": "Emergência",
+      "nome_brana": "Teste de Risco de C rie",
+      "igual": false,
+      "procedimento_id": 40721,
+      "tabela_id": 18
+    }
+  ],
+  "identical_rows": [],
+  "divergent_rows": [
+    {
+      "codigo": 1010,
+      "nome_origem": "Selante  por elemento",
+      "nome_brana": "AplicaÆo de Fl£or Verniz - (por elemento)",
+      "igual": false,
+      "procedimento_id": 40713,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1020,
+      "nome_origem": "Prótese adesiva metalo-cerâmica (1 elem)",
+      "nome_brana": "AplicaÆo de Selnate Oclusa Invasivo - (por elemento)",
+      "igual": false,
+      "procedimento_id": 40714,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1030,
+      "nome_origem": "Raio X periapical",
+      "nome_brana": "AplicaÆo T¢pica de Fl£or",
+      "igual": false,
+      "procedimento_id": 40715,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1040,
+      "nome_origem": "Tratamento de canal (Retratamento Trirradicular)",
+      "nome_brana": "Controle da Placa Bacteriana - (por sessÆo)",
+      "igual": false,
+      "procedimento_id": 40716,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1050,
+      "nome_origem": "Apicectomia de anteriores",
+      "nome_brana": "InstruÆo de Higiene Oral - (I.H.O.)",
+      "igual": false,
+      "procedimento_id": 40717,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1060,
+      "nome_origem": "Aplicação terapêutica de flúor",
+      "nome_brana": "Profilaxia - (Polimento com taa de borracha)",
+      "igual": false,
+      "procedimento_id": 40718,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1070,
+      "nome_origem": "Prótese total acrílica",
+      "nome_brana": "Profilaxia - (Ultrason e Jato de Bicarbonato)",
+      "igual": false,
+      "procedimento_id": 40719,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1080,
+      "nome_origem": "Núcleo provisório",
+      "nome_brana": "Teste de fluxo salivar",
+      "igual": false,
+      "procedimento_id": 40720,
+      "tabela_id": 18
+    },
+    {
+      "codigo": 1090,
+      "nome_origem": "Emergência",
+      "nome_brana": "Teste de Risco de C rie",
+      "igual": false,
+      "procedimento_id": 40721,
+      "tabela_id": 18
+    }
+  ],
+  "only_source_rows": [
+    {
+      "codigo": 1001,
+      "nome_origem": "Coroa metalo-cerâmica"
+    },
+    {
+      "codigo": 1002,
+      "nome_origem": "Coroa metalo-plástica"
+    },
+    {
+      "codigo": 1003,
+      "nome_origem": "Coroa Isosit"
+    },
+    {
+      "codigo": 1004,
+      "nome_origem": "Coroa metálica total"
+    },
+    {
+      "codigo": 1005,
+      "nome_origem": "Restauração metálica-fundida (Liga de Ouro)"
+    },
+    {
+      "codigo": 1006,
+      "nome_origem": "Restauração metálica-fundida (Liga de Prata)"
+    },
+    {
+      "codigo": 1007,
+      "nome_origem": "Restauração metálica-fundida (Duracast)"
+    },
+    {
+      "codigo": 1008,
+      "nome_origem": "Restauração metálica-fundida (Inlay/ Onlay)"
+    },
+    {
+      "codigo": 1009,
+      "nome_origem": "Restauração metálica-fundida Cerâmica/Inlay/Onlay"
+    },
+    {
+      "codigo": 1011,
+      "nome_origem": "Restauração de amálgama"
+    },
+    {
+      "codigo": 1012,
+      "nome_origem": "Restauração de resina  fotopolimerizável"
+    },
+    {
+      "codigo": 1013,
+      "nome_origem": "Restauração de ionômero de vidro"
+    },
+    {
+      "codigo": 1014,
+      "nome_origem": "Restauração de resina foto (ângulo incisal )"
+    },
+    {
+      "codigo": 1015,
+      "nome_origem": "Restauração de resina foto (2 ângulos incisais)"
+    },
+    {
+      "codigo": 1016,
+      "nome_origem": "Prótese parcial fixa metalo-cerâmica"
+    },
+    {
+      "codigo": 1017,
+      "nome_origem": "Prótese parcial fixa metalo-plástica"
+    },
+    {
+      "codigo": 1018,
+      "nome_origem": "Prótese parcial fixa isosit"
+    },
+    {
+      "codigo": 1019,
+      "nome_origem": "Prótese parcial removível"
+    },
+    {
+      "codigo": 1021,
+      "nome_origem": "Prótese adesiva metalo-plástica (1 elem)"
+    },
+    {
+      "codigo": 1022,
+      "nome_origem": "Prótese adesiva metalo-cerâmica (2 elem)"
+    },
+    {
+      "codigo": 1023,
+      "nome_origem": "Prótese adesiva metalo- plástica (2 elem)"
+    },
+    {
+      "codigo": 1024,
+      "nome_origem": "Profilaxia (Aplicação de Profident)"
+    },
+    {
+      "codigo": 1025,
+      "nome_origem": "Profilaxia (Polimento Coronário)"
+    },
+    {
+      "codigo": 1026,
+      "nome_origem": "Profilaxia (Aplicação de Remineralizador)"
+    },
+    {
+      "codigo": 1027,
+      "nome_origem": "Implante osteointegrável"
+    },
+    {
+      "codigo": 1028,
+      "nome_origem": "Consulta para orçamento/exame clínico"
+    },
+    {
+      "codigo": 1029,
+      "nome_origem": "Consulta para emergência"
+    },
+    {
+      "codigo": 1031,
+      "nome_origem": "Raio X interproximal"
+    },
+    {
+      "codigo": 1032,
+      "nome_origem": "Tratamento de canal unirradicular BIO"
+    },
+    {
+      "codigo": 1033,
+      "nome_origem": "Tratamento de canal unirradicular NECRO"
+    },
+    {
+      "codigo": 1034,
+      "nome_origem": "Tratamento de canal birradicular BIO"
+    },
+    {
+      "codigo": 1035,
+      "nome_origem": "Tratamento de canal birradicular NECRO"
+    },
+    {
+      "codigo": 1036,
+      "nome_origem": "Tratamento de canal trirradicular BIO"
+    },
+    {
+      "codigo": 1037,
+      "nome_origem": "Tratamento de canal trirradicular NECRO"
+    },
+    {
+      "codigo": 1038,
+      "nome_origem": "Tratamento de canal (Retratamento Unirradicular)"
+    },
+    {
+      "codigo": 1039,
+      "nome_origem": "Tratamento de canal (Retratamento Birradicular)"
+    },
+    {
+      "codigo": 1041,
+      "nome_origem": "Tratamento de canal (Pulpotomia)"
+    },
+    {
+      "codigo": 1042,
+      "nome_origem": "Exodontia simples"
+    },
+    {
+      "codigo": 1043,
+      "nome_origem": "Exodontia de semi-incluso"
+    },
+    {
+      "codigo": 1044,
+      "nome_origem": "Exodontia de incluso"
+    },
+    {
+      "codigo": 1045,
+      "nome_origem": "Exodontia de incluso impactado"
+    },
+    {
+      "codigo": 1046,
+      "nome_origem": "Exodontia de raiz residual"
+    },
+    {
+      "codigo": 1047,
+      "nome_origem": "Exodontia de decíduo"
+    },
+    {
+      "codigo": 1048,
+      "nome_origem": "Núcleo metálico fundido"
+    },
+    {
+      "codigo": 1049,
+      "nome_origem": "Núcleo de preenchimento (amálgama/ resina)"
+    },
+    {
+      "codigo": 1051,
+      "nome_origem": "Apicectomia de posteriores"
+    },
+    {
+      "codigo": 1052,
+      "nome_origem": "Apicectomia de anteriores + retrógrada"
+    },
+    {
+      "codigo": 1053,
+      "nome_origem": "Apicectomia de posteriores + retrógrada"
+    },
+    {
+      "codigo": 1054,
+      "nome_origem": "Gengivectomia (Gengivectomia 1/2 arco)"
+    },
+    {
+      "codigo": 1055,
+      "nome_origem": "Retalho (Cirurgia a retalho)"
+    },
+    {
+      "codigo": 1056,
+      "nome_origem": "Raspagem subgengival para grupo de dentes"
+    },
+    {
+      "codigo": 1057,
+      "nome_origem": "Raspagem supragengival para grupo de dentes"
+    },
+    {
+      "codigo": 1058,
+      "nome_origem": "Mantenedor de espaço acrílico"
+    },
+    {
+      "codigo": 1059,
+      "nome_origem": "Aplicação tópica de flúor"
+    },
+    {
+      "codigo": 1061,
+      "nome_origem": "Bandagem (Tubo simples)"
+    },
+    {
+      "codigo": 1062,
+      "nome_origem": "Bandagem (Tubo duplo)"
+    },
+    {
+      "codigo": 1063,
+      "nome_origem": "Bandagem (Tubo triplo)"
+    },
+    {
+      "codigo": 1064,
+      "nome_origem": "Bandagem (Tubo bracket)"
+    },
+    {
+      "codigo": 1065,
+      "nome_origem": "Bracket (Bracket 0,18\" x 0,25\")"
+    },
+    {
+      "codigo": 1066,
+      "nome_origem": "Bracket (Bracket 0,18\" x 0,30\")"
+    },
+    {
+      "codigo": 1067,
+      "nome_origem": "Bracket (Bracket 0,22\" x 0,28\")"
+    },
+    {
+      "codigo": 1068,
+      "nome_origem": "Bracket (Bracket Straight-Wire)"
+    },
+    {
+      "codigo": 1069,
+      "nome_origem": "Manutenção de aparelho ortodôntico"
+    },
+    {
+      "codigo": 1071,
+      "nome_origem": "Enxerto gengival"
+    },
+    {
+      "codigo": 1072,
+      "nome_origem": "Frenectomia labial superior"
+    },
+    {
+      "codigo": 1073,
+      "nome_origem": "Frenectomia labial inferior"
+    },
+    {
+      "codigo": 1074,
+      "nome_origem": "Frenectomia lingual"
+    },
+    {
+      "codigo": 1075,
+      "nome_origem": "Raspagem subgengival para toda a boca"
+    },
+    {
+      "codigo": 1076,
+      "nome_origem": "Raspagem supragengival para toda a boca"
+    },
+    {
+      "codigo": 1077,
+      "nome_origem": "Ensino de higiene oral"
+    },
+    {
+      "codigo": 1078,
+      "nome_origem": "Provisório para grupo de dentes"
+    },
+    {
+      "codigo": 1079,
+      "nome_origem": "Coroa provisória"
+    },
+    {
+      "codigo": 1081,
+      "nome_origem": "Branqueamento"
+    },
+    {
+      "codigo": 1082,
+      "nome_origem": "Ajustes de prótese"
+    },
+    {
+      "codigo": 1083,
+      "nome_origem": "Raio X panorâmico"
+    },
+    {
+      "codigo": 1084,
+      "nome_origem": "Raio X lateral"
+    },
+    {
+      "codigo": 1085,
+      "nome_origem": "Raio X oclusal"
+    },
+    {
+      "codigo": 1086,
+      "nome_origem": "Raio X mão e punho"
+    },
+    {
+      "codigo": 1087,
+      "nome_origem": "Placa de mordida"
+    },
+    {
+      "codigo": 1088,
+      "nome_origem": "Raio X Bite-Wing"
+    },
+    {
+      "codigo": 1089,
+      "nome_origem": "Faceta de porcelana"
+    },
+    {
+      "codigo": 1091,
+      "nome_origem": "Modelo de estudo"
+    },
+    {
+      "codigo": 1092,
+      "nome_origem": "Reembasamento"
+    },
+    {
+      "codigo": 1093,
+      "nome_origem": "Fotos"
+    },
+    {
+      "codigo": 1094,
+      "nome_origem": "Desgaste seletivo"
+    },
+    {
+      "codigo": 1095,
+      "nome_origem": "Cirurgia"
+    },
+    {
+      "codigo": 1096,
+      "nome_origem": "Odonto-secção"
+    },
+    {
+      "codigo": 1097,
+      "nome_origem": "Rizectomia"
+    },
+    {
+      "codigo": 1098,
+      "nome_origem": "Pulpotomia"
+    },
+    {
+      "codigo": 1099,
+      "nome_origem": "Aumento de coroa clínica"
+    },
+    {
+      "codigo": 1100,
+      "nome_origem": "Tunelização"
+    },
+    {
+      "codigo": 1101,
+      "nome_origem": "Ulectomia"
+    },
+    {
+      "codigo": 1102,
+      "nome_origem": "Attachment"
+    },
+    {
+      "codigo": 1103,
+      "nome_origem": "Capeamento"
+    },
+    {
+      "codigo": 1104,
+      "nome_origem": "Perícia"
+    },
+    {
+      "codigo": 1105,
+      "nome_origem": "Controle de placa bacteriana"
+    },
+    {
+      "codigo": 1106,
+      "nome_origem": "Conserto de prótese"
+    },
+    {
+      "codigo": 1107,
+      "nome_origem": "Restauração MOD Amálgama"
+    },
+    {
+      "codigo": 1108,
+      "nome_origem": "Restauração MO Amálgama"
+    },
+    {
+      "codigo": 1109,
+      "nome_origem": "Restauração DO Amálgama"
+    },
+    {
+      "codigo": 1110,
+      "nome_origem": "Restauração DO Resina"
+    },
+    {
+      "codigo": 1111,
+      "nome_origem": "Restauração MOD Resina"
+    },
+    {
+      "codigo": 1112,
+      "nome_origem": "Restauração MO Resina"
+    }
+  ],
+  "only_brana_rows": [
+    {
+      "codigo": 223,
+      "nome_brana": "Aparelho Autoligado (Arcada Inferior)"
+    },
+    {
+      "codigo": 224,
+      "nome_brana": "Aparelho Autoligado (Arcada Superior)"
+    },
+    {
+      "codigo": 225,
+      "nome_brana": "Aparelho de contenÆo"
+    },
+    {
+      "codigo": 226,
+      "nome_brana": "Aparelho em uma arcada conjugado c/ ap. auxiliar"
+    },
+    {
+      "codigo": 227,
+      "nome_brana": "Aparelho extra bucal"
+    },
+    {
+      "codigo": 228,
+      "nome_brana": "Aparelho Ortodntico Esttico em Porcelana - (Arcada Inferior)"
+    },
+    {
+      "codigo": 229,
+      "nome_brana": "Aparelho Ortodntico Esttico em Porcelana - (Arcada Superior)"
+    },
+    {
+      "codigo": 230,
+      "nome_brana": "Aparelho Ortodntico Esttico em Zafira - (Arcada Inferior)"
+    },
+    {
+      "codigo": 231,
+      "nome_brana": "Aparelho Ortodntico Esttico em Zafira - (Arcada Superior)"
+    },
+    {
+      "codigo": 232,
+      "nome_brana": "Aparelho Ortodntico Fixo - (Arcada Inferior)"
+    },
+    {
+      "codigo": 233,
+      "nome_brana": "Aparelho Ortodntico Fixo - (Arcada Superior)"
+    },
+    {
+      "codigo": 234,
+      "nome_brana": "Aparelho Ortopedico"
+    },
+    {
+      "codigo": 235,
+      "nome_brana": "Aparelho removivel"
+    },
+    {
+      "codigo": 236,
+      "nome_brana": "Aparelhos auxiliares (extra-oral, \"Bumper\", etc)"
+    },
+    {
+      "codigo": 237,
+      "nome_brana": "Arco Palatino"
+    },
+    {
+      "codigo": 238,
+      "nome_brana": "Ativador de Haulp"
+    },
+    {
+      "codigo": 239,
+      "nome_brana": "Ativador de Rossi"
+    },
+    {
+      "codigo": 240,
+      "nome_brana": "Ativador de Zurick - Su¡a"
+    },
+    {
+      "codigo": 241,
+      "nome_brana": "Bandagem (Tubo bracket)"
+    },
+    {
+      "codigo": 242,
+      "nome_brana": "Bandagem (Tubo duplo)"
+    },
+    {
+      "codigo": 243,
+      "nome_brana": "Bandagem (Tubo simples)"
+    },
+    {
+      "codigo": 244,
+      "nome_brana": "Bandagem (Tubo triplo)"
+    },
+    {
+      "codigo": 245,
+      "nome_brana": "Barra Transpalatina"
+    },
+    {
+      "codigo": 246,
+      "nome_brana": "Bi-hlice"
+    },
+    {
+      "codigo": 247,
+      "nome_brana": "Bio-ajustador - Tecnica MD3"
+    },
+    {
+      "codigo": 248,
+      "nome_brana": "Bionator - Super"
+    },
+    {
+      "codigo": 249,
+      "nome_brana": "Bionator de Balters - Classe I"
+    },
+    {
+      "codigo": 250,
+      "nome_brana": "Bionator de Balters - Classe II"
+    },
+    {
+      "codigo": 251,
+      "nome_brana": "Bionator de Balters - Classe III"
+    },
+    {
+      "codigo": 252,
+      "nome_brana": "Blinler - A"
+    },
+    {
+      "codigo": 253,
+      "nome_brana": "Blinler - B"
+    },
+    {
+      "codigo": 254,
+      "nome_brana": "Blinler - C"
+    },
+    {
+      "codigo": 255,
+      "nome_brana": "BotÆo de Nance"
+    },
+    {
+      "codigo": 256,
+      "nome_brana": "Bracket (Bracket 0,18\" x 0,25\")"
+    },
+    {
+      "codigo": 257,
+      "nome_brana": "Bracket (Bracket 0,18\" x 0,30\")"
+    },
+    {
+      "codigo": 258,
+      "nome_brana": "Bracket (Bracket 0,22\" x 0,28\")"
+    },
+    {
+      "codigo": 259,
+      "nome_brana": "Bracket (Bracket Straight-Wire)"
+    },
+    {
+      "codigo": 260,
+      "nome_brana": "ContenÆo Fixa Lingual"
+    },
+    {
+      "codigo": 261,
+      "nome_brana": "ContenÆo m¢vel - (Placa de acet to)"
+    },
+    {
+      "codigo": 262,
+      "nome_brana": "Disjuntor de Hass"
+    },
+    {
+      "codigo": 263,
+      "nome_brana": "Disjuntor de Hirax"
+    },
+    {
+      "codigo": 264,
+      "nome_brana": "Disjuntor Hirax RC"
+    },
+    {
+      "codigo": 265,
+      "nome_brana": "Disjuntor MC Namara - Resina"
+    },
+    {
+      "codigo": 266,
+      "nome_brana": "Disjuntor MC Namara com Hirax"
+    },
+    {
+      "codigo": 267,
+      "nome_brana": "Disjuntor Omar Gabriel"
+    },
+    {
+      "codigo": 268,
+      "nome_brana": "Distabilizador Pendex com Pndulo"
+    },
+    {
+      "codigo": 269,
+      "nome_brana": "Djuntor palatino"
+    },
+    {
+      "codigo": 270,
+      "nome_brana": "DocumentaÆo ortodntica"
+    },
+    {
+      "codigo": 271,
+      "nome_brana": "Frankel - Classe I"
+    },
+    {
+      "codigo": 272,
+      "nome_brana": "Frankel - Classe II"
+    },
+    {
+      "codigo": 273,
+      "nome_brana": "Frankel - Classe III"
+    },
+    {
+      "codigo": 274,
+      "nome_brana": "Frankel - Mordida Aberta"
+    },
+    {
+      "codigo": 275,
+      "nome_brana": "Grade palatina fixa"
+    },
+    {
+      "codigo": 276,
+      "nome_brana": "Grade palatina m¢vel"
+    },
+    {
+      "codigo": 277,
+      "nome_brana": "Klammt - Classe I"
+    },
+    {
+      "codigo": 278,
+      "nome_brana": "Klammt - Classe II"
+    },
+    {
+      "codigo": 279,
+      "nome_brana": "Klammt - Classe III"
+    },
+    {
+      "codigo": 280,
+      "nome_brana": "Lip Bumper"
+    },
+    {
+      "codigo": 281,
+      "nome_brana": "Mantenedor de espao"
+    },
+    {
+      "codigo": 282,
+      "nome_brana": "ManutenÆo ortodntico - (Mensal)"
+    },
+    {
+      "codigo": 283,
+      "nome_brana": "Mentoneira"
+    },
+    {
+      "codigo": 284,
+      "nome_brana": "Ortopedia funcional dos maxilares"
+    },
+    {
+      "codigo": 285,
+      "nome_brana": "Palatina ou arco lingual"
+    },
+    {
+      "codigo": 286,
+      "nome_brana": "Placa 7/7"
+    },
+    {
+      "codigo": 287,
+      "nome_brana": "Placa acoplada ao uso de arco extra bucal"
+    },
+    {
+      "codigo": 288,
+      "nome_brana": "Placa ativa com molas"
+    },
+    {
+      "codigo": 289,
+      "nome_brana": "Placa com arco ala dupla para expanÆo Y"
+    },
+    {
+      "codigo": 290,
+      "nome_brana": "Placa com arco de contenÆo cont¡nua"
+    },
+    {
+      "codigo": 291,
+      "nome_brana": "Placa com arco de contenÆo de Baag"
+    },
+    {
+      "codigo": 292,
+      "nome_brana": "Placa com arco de controle dos caninos"
+    },
+    {
+      "codigo": 293,
+      "nome_brana": "Placa com arco seccionado para uso elasticos"
+    },
+    {
+      "codigo": 294,
+      "nome_brana": "Placa com plano de mordida inclinado"
+    },
+    {
+      "codigo": 295,
+      "nome_brana": "Placa com plano de mordida posterior"
+    },
+    {
+      "codigo": 296,
+      "nome_brana": "Placa com plano reto anterior"
+    },
+    {
+      "codigo": 297,
+      "nome_brana": "Placa de Apnia"
+    },
+    {
+      "codigo": 298,
+      "nome_brana": "Placa de ativaÆo mandibular"
+    },
+    {
+      "codigo": 299,
+      "nome_brana": "Placa de Eschler"
+    },
+    {
+      "codigo": 300,
+      "nome_brana": "Placa de expansÆo para mordida cruzada"
+    },
+    {
+      "codigo": 301,
+      "nome_brana": "Placa de Hawley"
+    },
+    {
+      "codigo": 302,
+      "nome_brana": "Placa de Hawley invertido"
+    },
+    {
+      "codigo": 303,
+      "nome_brana": "Placa de Mills"
+    },
+    {
+      "codigo": 304,
+      "nome_brana": "Placa de ocupaÆo lingual"
+    },
+    {
+      "codigo": 305,
+      "nome_brana": "Placa de Roberts"
+    },
+    {
+      "codigo": 306,
+      "nome_brana": "Placa dupla de avano - Piamant"
+    },
+    {
+      "codigo": 307,
+      "nome_brana": "Placa interceptora de h bito"
+    },
+    {
+      "codigo": 308,
+      "nome_brana": "Placa labial ativa"
+    },
+    {
+      "codigo": 309,
+      "nome_brana": "Placa mantenedora de espao."
+    },
+    {
+      "codigo": 310,
+      "nome_brana": "Placa recuperadora de espao"
+    },
+    {
+      "codigo": 311,
+      "nome_brana": "Planas Compostas"
+    },
+    {
+      "codigo": 312,
+      "nome_brana": "Planas Simples"
+    },
+    {
+      "codigo": 313,
+      "nome_brana": "Quadri-hlice"
+    },
+    {
+      "codigo": 314,
+      "nome_brana": "Spling Retainer 3/3 4/4"
+    },
+    {
+      "codigo": 315,
+      "nome_brana": "Twin Black"
+    },
+    {
+      "codigo": 316,
+      "nome_brana": "Vilma Simäes - SN1, SN2, SN3, SN4, SN5"
+    },
+    {
+      "codigo": 317,
+      "nome_brana": "Vilma Simäes - SN6, SN7"
+    },
+    {
+      "codigo": 323,
+      "nome_brana": "Alinhadores Estticos"
+    },
+    {
+      "codigo": 336,
+      "nome_brana": "RemoÆo de aparelho ortodontico fixo."
+    },
+    {
+      "codigo": 1000,
+      "nome_brana": "AplicaÆo de Cariost tico - (sessÆo)"
+    },
+    {
+      "codigo": 2000,
+      "nome_brana": "CimentaÆo de Coroa Total Definitiva"
+    },
+    {
+      "codigo": 2010,
+      "nome_brana": "CimentaÆo de Coroa Total Provis¢ria"
+    },
+    {
+      "codigo": 2011,
+      "nome_brana": "CimentaÆo adesiva"
+    },
+    {
+      "codigo": 2020,
+      "nome_brana": "CimentaÆo de N£cleo Met lico Fundido"
+    },
+    {
+      "codigo": 2030,
+      "nome_brana": "CimentaÆo de Pr¢tese Parcial Fixa"
+    },
+    {
+      "codigo": 2040,
+      "nome_brana": "Consulta de adaptaÆo Psicol¢gica"
+    },
+    {
+      "codigo": 2050,
+      "nome_brana": "Consulta de Emergncia"
+    },
+    {
+      "codigo": 2060,
+      "nome_brana": "Consulta de Emergncia - (S bado, Domingo e Feriado)"
+    },
+    {
+      "codigo": 2070,
+      "nome_brana": "Consulta de Emergncia Noturna - (22:00 s 06:00 hs)"
+    },
+    {
+      "codigo": 2080,
+      "nome_brana": "Consulta Inicial para Exame cl¡nico"
+    },
+    {
+      "codigo": 2081,
+      "nome_brana": "Consulta de ReavaliaÆo Cl¡nica"
+    },
+    {
+      "codigo": 2090,
+      "nome_brana": "Curativo"
+    },
+    {
+      "codigo": 2100,
+      "nome_brana": "Exame para Per¡cia Inicial e Final"
+    },
+    {
+      "codigo": 2110,
+      "nome_brana": "Modelo de Estudo - (Superior e Infeiror)"
+    },
+    {
+      "codigo": 2111,
+      "nome_brana": "Foto extra-oral"
+    },
+    {
+      "codigo": 2120,
+      "nome_brana": "Radiografia Bite-Wing - (inter-proximal)"
+    },
+    {
+      "codigo": 2130,
+      "nome_brana": "Radiografia Oclusal"
+    },
+    {
+      "codigo": 2140,
+      "nome_brana": "Radiografia Periapical"
+    },
+    {
+      "codigo": 3000,
+      "nome_brana": "Abertura de implante - (Giro de retalho)"
+    },
+    {
+      "codigo": 3010,
+      "nome_brana": "Abertura de implante - (Osteotomia)"
+    },
+    {
+      "codigo": 3020,
+      "nome_brana": "Abertura de implante - (Plastia)"
+    },
+    {
+      "codigo": 3030,
+      "nome_brana": "Abertura de implante mand. - (Enxerto Livre)"
+    },
+    {
+      "codigo": 3040,
+      "nome_brana": "Abertura de implante mand. - (Osteotomia e Livre)"
+    },
+    {
+      "codigo": 3050,
+      "nome_brana": "Aumento de Coroa Cl¡nica - (Osteotomia e deslize apical)"
+    },
+    {
+      "codigo": 3060,
+      "nome_brana": "Aumento de Coroa Cl¡nica - (Osteotomia)"
+    },
+    {
+      "codigo": 3070,
+      "nome_brana": "Aumento de Coroa Cl¡nica - (Plastia)"
+    },
+    {
+      "codigo": 3080,
+      "nome_brana": "Bridectomia"
+    },
+    {
+      "codigo": 3090,
+      "nome_brana": "Cirurgia para colagem de botÆo Ortodntico"
+    },
+    {
+      "codigo": 3100,
+      "nome_brana": "Cirurgia para colagem de botÆo Ortodntico com osteotomia"
+    },
+    {
+      "codigo": 3110,
+      "nome_brana": "Cirurgia para Odonto-secÆo - (por elemento)"
+    },
+    {
+      "codigo": 3120,
+      "nome_brana": "Cirurgia para Rizectomia"
+    },
+    {
+      "codigo": 3130,
+      "nome_brana": "Enxerto de conjuntivo / tunelizaÆo"
+    },
+    {
+      "codigo": 3140,
+      "nome_brana": "Cirurgia Periodontal a retalho - (1 elemento)"
+    },
+    {
+      "codigo": 3150,
+      "nome_brana": "Cirurgia Periodontal a retalho - (por segmento)"
+    },
+    {
+      "codigo": 3160,
+      "nome_brana": "Cunha Distal ou Proximal"
+    },
+    {
+      "codigo": 3170,
+      "nome_brana": "Enxerto de Tecido Conjuntivo"
+    },
+    {
+      "codigo": 3180,
+      "nome_brana": "Enxerto Gengival Livre"
+    },
+    {
+      "codigo": 3190,
+      "nome_brana": "Enxerto Osseo RTG - (RegeneraÆo Tecidual Guiada)"
+    },
+    {
+      "codigo": 3200,
+      "nome_brana": "Enxerto Pediculado - (por elemento)"
+    },
+    {
+      "codigo": 3210,
+      "nome_brana": "Enxerto por Tracionamento de Vestibulo - (por elemento)"
+    },
+    {
+      "codigo": 3220,
+      "nome_brana": "Enxerto por Tracionamento de Vestibulo - (por segmento)"
+    },
+    {
+      "codigo": 3230,
+      "nome_brana": "Frenectomia labial inferior"
+    },
+    {
+      "codigo": 3240,
+      "nome_brana": "Frenectomia labial superior"
+    },
+    {
+      "codigo": 3250,
+      "nome_brana": "Frenotomia L bial Inferior"
+    },
+    {
+      "codigo": 3260,
+      "nome_brana": "Frenotomia L bial Superior"
+    },
+    {
+      "codigo": 3270,
+      "nome_brana": "Frenotomia Lingual"
+    },
+    {
+      "codigo": 3280,
+      "nome_brana": "Gengivectomia ou Gengivoplastia - (por elemento)"
+    },
+    {
+      "codigo": 3290,
+      "nome_brana": "Gengivectomia ou Gengivoplastia - (por segmento)"
+    },
+    {
+      "codigo": 3300,
+      "nome_brana": "Gengivectomia palatina / lingual - (por elemento)"
+    },
+    {
+      "codigo": 3310,
+      "nome_brana": "Gengivectomia palatina / lingual - (por segmento)"
+    },
+    {
+      "codigo": 3320,
+      "nome_brana": "ManutenÆo Periodontal - (por sessÆo)"
+    },
+    {
+      "codigo": 3330,
+      "nome_brana": "Raspagem Sub-gengival e Curetagem de bolsa - (por segmento)"
+    },
+    {
+      "codigo": 3340,
+      "nome_brana": "Raspagem Supra-gengival - (por segmento)"
+    },
+    {
+      "codigo": 3350,
+      "nome_brana": "RemoÆo de Fatores de RetenÆo - (por segmento)"
+    },
+    {
+      "codigo": 3360,
+      "nome_brana": "Sepultamento Radicular - (por raiz)"
+    },
+    {
+      "codigo": 3370,
+      "nome_brana": "Ulectomia"
+    },
+    {
+      "codigo": 4000,
+      "nome_brana": "Apicectomia em Incisivos com enxerto leofilizado"
+    },
+    {
+      "codigo": 4010,
+      "nome_brana": "Apicectomia em Incisivos com obturaÆo retr¢grada"
+    },
+    {
+      "codigo": 4020,
+      "nome_brana": "Apicectomia em Incisivos curetagem apical"
+    },
+    {
+      "codigo": 4030,
+      "nome_brana": "Apicectomia em Molares com enxerto leofilizado"
+    },
+    {
+      "codigo": 4040,
+      "nome_brana": "Apicectomia em Molares com obturaÆo retr¢grada"
+    },
+    {
+      "codigo": 4050,
+      "nome_brana": "Apicectomia em Molares curetagem apical"
+    },
+    {
+      "codigo": 4060,
+      "nome_brana": "Apicectomia em Pr-molares com enxerto leofilizado"
+    },
+    {
+      "codigo": 4070,
+      "nome_brana": "Apicectomia em Pr-molares com obturaÆo retr¢grada"
+    },
+    {
+      "codigo": 4080,
+      "nome_brana": "Apicectomia em Pr-molares curetagem apical"
+    },
+    {
+      "codigo": 4090,
+      "nome_brana": "Clareamento Interno"
+    },
+    {
+      "codigo": 4100,
+      "nome_brana": "DesobturaÆo de canal"
+    },
+    {
+      "codigo": 4110,
+      "nome_brana": "Preparo para N£cleo intra-radicular"
+    },
+    {
+      "codigo": 4120,
+      "nome_brana": "Pulpotomia"
+    },
+    {
+      "codigo": 4130,
+      "nome_brana": "Reimplante dentes avuls. trauma + ap. contenÆo"
+    },
+    {
+      "codigo": 4140,
+      "nome_brana": "RemoÆo de Coroal Total"
+    },
+    {
+      "codigo": 4150,
+      "nome_brana": "RemoÆo de n£cleo intraradicular"
+    },
+    {
+      "codigo": 4160,
+      "nome_brana": "Retratamento de Canal - (Incisivos)"
+    },
+    {
+      "codigo": 4170,
+      "nome_brana": "Retratamento de Canal - (Molares com 4 ou mais condutos)"
+    },
+    {
+      "codigo": 4180,
+      "nome_brana": "Retratamento de Canal - (Molares)"
+    },
+    {
+      "codigo": 4190,
+      "nome_brana": "Retratamento de Canal - (Pr-molares)"
+    },
+    {
+      "codigo": 4200,
+      "nome_brana": "Tratamento cirurgico de lesÆo endo-perio - (Curetagem)"
+    },
+    {
+      "codigo": 4210,
+      "nome_brana": "Tratamento cirurgico de lesÆo endo-perio com enxerto leofilizado"
+    },
+    {
+      "codigo": 4220,
+      "nome_brana": "Tratamento de Canal - (Incisivos)"
+    },
+    {
+      "codigo": 4230,
+      "nome_brana": "Tratamento de Canal - (Molares com mais de 3 condutos)"
+    },
+    {
+      "codigo": 4240,
+      "nome_brana": "Tratamento de Canal - (Molares)"
+    },
+    {
+      "codigo": 4250,
+      "nome_brana": "Tratamento de Canal - (Pr-molares)"
+    },
+    {
+      "codigo": 4260,
+      "nome_brana": "Tratamento de dentes c/ rizogenese incompleta - (Por sessÆo)"
+    },
+    {
+      "codigo": 4270,
+      "nome_brana": "Tratamento de Trepanaäes / Perfuraäes"
+    },
+    {
+      "codigo": 5000,
+      "nome_brana": "AdequaÆo de meio bucal"
+    },
+    {
+      "codigo": 5010,
+      "nome_brana": "Ajuste oclusal - (por sessÆo)"
+    },
+    {
+      "codigo": 5020,
+      "nome_brana": "Capeamento pulpar"
+    },
+    {
+      "codigo": 5030,
+      "nome_brana": "Clareamento - (Caseiro)"
+    },
+    {
+      "codigo": 5040,
+      "nome_brana": "Clareamento - (Laser)"
+    },
+    {
+      "codigo": 5050,
+      "nome_brana": "Clareamento interno - (dentes desvitalizados)"
+    },
+    {
+      "codigo": 5060,
+      "nome_brana": "DessensibilizaÆo dent ria - (por elemento)"
+    },
+    {
+      "codigo": 5070,
+      "nome_brana": "Faceta em resina direta - (Dentes anteriores)"
+    },
+    {
+      "codigo": 5080,
+      "nome_brana": "ImobilizaÆo dent ria com resina fotopolimeriz vel"
+    },
+    {
+      "codigo": 5090,
+      "nome_brana": "ImobilizaÆo dent ria (esplintagem)"
+    },
+    {
+      "codigo": 5100,
+      "nome_brana": "N£cleo de preenchimento em ionmetro de vidro"
+    },
+    {
+      "codigo": 5110,
+      "nome_brana": "N£cleo de preenchimento em resina"
+    },
+    {
+      "codigo": 5120,
+      "nome_brana": "N£cleo fibra de vidro"
+    },
+    {
+      "codigo": 5121,
+      "nome_brana": "N£cleo de preenchimento"
+    },
+    {
+      "codigo": 5130,
+      "nome_brana": "N£cleo met lico pr-fabricado"
+    },
+    {
+      "codigo": 5140,
+      "nome_brana": "N£cleo rosqueavel - (Roach)"
+    },
+    {
+      "codigo": 5150,
+      "nome_brana": "Polimento e Acabamento"
+    },
+    {
+      "codigo": 5160,
+      "nome_brana": "ReconstruÆo em Resina Direta - (+ de 3 Faces)"
+    },
+    {
+      "codigo": 5170,
+      "nome_brana": "RestauraÆo de Am lgama - 1 face"
+    },
+    {
+      "codigo": 5180,
+      "nome_brana": "RestauraÆo de Am lgama - 2 faces"
+    },
+    {
+      "codigo": 5190,
+      "nome_brana": "RestauraÆo de Am lgama - 3 faces"
+    },
+    {
+      "codigo": 5200,
+      "nome_brana": "Procedimento 5200"
+    },
+    {
+      "codigo": 5210,
+      "nome_brana": "RestauraÆo em Resina Direta - (1 Face)"
+    },
+    {
+      "codigo": 5220,
+      "nome_brana": "RestauraÆo em Resina Direta - (2 Faces)"
+    },
+    {
+      "codigo": 5230,
+      "nome_brana": "RestauraÆo em Resina Direta - (3 Faces)"
+    },
+    {
+      "codigo": 5240,
+      "nome_brana": "RestauraÆo em Resina Direta - (Classe IV)"
+    },
+    {
+      "codigo": 5250,
+      "nome_brana": "RestauraÆo em Resina Direta - (Classe V)"
+    },
+    {
+      "codigo": 5260,
+      "nome_brana": "RestauraÆo tempor ria (IRM ou similar)"
+    },
+    {
+      "codigo": 5270,
+      "nome_brana": "Tratamento Expectante com H. C lcio"
+    },
+    {
+      "codigo": 6000,
+      "nome_brana": "Alveoloplastia ou alveolotomia - (at 3 elementos)"
+    },
+    {
+      "codigo": 6010,
+      "nome_brana": "Alveoloplastica ou alveolotomia - (por sextante)"
+    },
+    {
+      "codigo": 6020,
+      "nome_brana": "Bi¢psia"
+    },
+    {
+      "codigo": 6030,
+      "nome_brana": "Cirurgia de Hipertrofia de L bio"
+    },
+    {
+      "codigo": 6040,
+      "nome_brana": "Cirurgia para Cisto de Desenvolvimento"
+    },
+    {
+      "codigo": 6050,
+      "nome_brana": "Cirurgia para Microstomia"
+    },
+    {
+      "codigo": 6060,
+      "nome_brana": "Cirurgia para Osteoma e Odontoma"
+    },
+    {
+      "codigo": 6070,
+      "nome_brana": "Cirurgia para torus palatino unilateral"
+    },
+    {
+      "codigo": 6080,
+      "nome_brana": "Ciurgia para torus mandibular bilateral"
+    },
+    {
+      "codigo": 6090,
+      "nome_brana": "Ciurgia para t¢rus mandibular unilateral"
+    },
+    {
+      "codigo": 6100,
+      "nome_brana": "Cirurgia para torus palatino bilateral"
+    },
+    {
+      "codigo": 6110,
+      "nome_brana": "CorreÆo de bridas musculares"
+    },
+    {
+      "codigo": 6120,
+      "nome_brana": "Drenagem de abcesso por via intra ou extra-oral"
+    },
+    {
+      "codigo": 6130,
+      "nome_brana": "Cirurgia explorat¢ria"
+    },
+    {
+      "codigo": 6140,
+      "nome_brana": "ExcisÆo de glndula par¢tida"
+    },
+    {
+      "codigo": 6150,
+      "nome_brana": "ExcisÆo de glndula sublingual"
+    },
+    {
+      "codigo": 6160,
+      "nome_brana": "ExcisÆo de glndula submandibular"
+    },
+    {
+      "codigo": 6170,
+      "nome_brana": "ExcisÆo de Mucocele"
+    },
+    {
+      "codigo": 6180,
+      "nome_brana": "ExcisÆo de rnula"
+    },
+    {
+      "codigo": 6190,
+      "nome_brana": "ExcisÆo de tumores odontognicos at 3 cm"
+    },
+    {
+      "codigo": 6200,
+      "nome_brana": "Exodontia de dec¡duos"
+    },
+    {
+      "codigo": 6210,
+      "nome_brana": "Exodontia de incluso"
+    },
+    {
+      "codigo": 6220,
+      "nome_brana": "Exodontia de incluso impactado"
+    },
+    {
+      "codigo": 6230,
+      "nome_brana": "Exodontia de raiz residual"
+    },
+    {
+      "codigo": 6240,
+      "nome_brana": "Exodontia de raiz residual com retalho"
+    },
+    {
+      "codigo": 6250,
+      "nome_brana": "Exodontia de semi-incluso"
+    },
+    {
+      "codigo": 6260,
+      "nome_brana": "Exodontia + Enxerto + membrana"
+    },
+    {
+      "codigo": 6270,
+      "nome_brana": "Exodontia simples - (Anteriores)"
+    },
+    {
+      "codigo": 6280,
+      "nome_brana": "Exodontia simples - (Posteriores)"
+    },
+    {
+      "codigo": 6290,
+      "nome_brana": "Fraturas alvdio-dent rias - reduÆo cruenta"
+    },
+    {
+      "codigo": 6300,
+      "nome_brana": "MarzupializaÆo de cisto"
+    },
+    {
+      "codigo": 6310,
+      "nome_brana": "ReconstruÆo parcial do l bio traumatizado"
+    },
+    {
+      "codigo": 6320,
+      "nome_brana": "ReconstruÆo total do l bio traumatizado"
+    },
+    {
+      "codigo": 6330,
+      "nome_brana": "Suturas m£ltiplas da face ou l bio"
+    },
+    {
+      "codigo": 6340,
+      "nome_brana": "Suturas simples da face ou l bio"
+    },
+    {
+      "codigo": 6350,
+      "nome_brana": "Tratamento de alveolite"
+    },
+    {
+      "codigo": 6360,
+      "nome_brana": "Tratamento de hemorragia"
+    },
+    {
+      "codigo": 6370,
+      "nome_brana": "Tratamento cir£rgico do l bio leporino"
+    },
+    {
+      "codigo": 7000,
+      "nome_brana": "Implante - (tcnica de Sammers)"
+    },
+    {
+      "codigo": 7010,
+      "nome_brana": "Implante (RTG)"
+    },
+    {
+      "codigo": 7020,
+      "nome_brana": "Implante ¢sseo integr vel - Standard"
+    },
+    {
+      "codigo": 7021,
+      "nome_brana": "Implante ¢sseo integr vel - H. Interno"
+    },
+    {
+      "codigo": 7022,
+      "nome_brana": "Implante ¢sseo integr vel - Cone Morse"
+    },
+    {
+      "codigo": 7023,
+      "nome_brana": "Implante Cone Morse + Enxerto"
+    },
+    {
+      "codigo": 7030,
+      "nome_brana": "RemoÆo de implante"
+    },
+    {
+      "codigo": 7040,
+      "nome_brana": "Enxerto Osseo Particulado + Membrana colageno."
+    },
+    {
+      "codigo": 7050,
+      "nome_brana": "Levanto de seio maxilar"
+    },
+    {
+      "codigo": 7060,
+      "nome_brana": "Implante Zigom tico"
+    },
+    {
+      "codigo": 7070,
+      "nome_brana": "RegeneraÆo ¢ssea guiada - ROG"
+    },
+    {
+      "codigo": 8000,
+      "nome_brana": "Attachment"
+    },
+    {
+      "codigo": 8010,
+      "nome_brana": "Casquete de moldagem"
+    },
+    {
+      "codigo": 8020,
+      "nome_brana": "Conserto de Pr¢tese Total e Parcial"
+    },
+    {
+      "codigo": 8030,
+      "nome_brana": "Coroa em Resina Prensada"
+    },
+    {
+      "codigo": 8040,
+      "nome_brana": "Coroa em Resina Sinfony"
+    },
+    {
+      "codigo": 8050,
+      "nome_brana": "Coroa em Resina sob implante"
+    },
+    {
+      "codigo": 8060,
+      "nome_brana": "Coroa Metal-free - (Cerampress)"
+    },
+    {
+      "codigo": 8070,
+      "nome_brana": "Coroa Metal-free - (Inceram)"
+    },
+    {
+      "codigo": 8080,
+      "nome_brana": "Coroa Metal-free - (Procera)"
+    },
+    {
+      "codigo": 8090,
+      "nome_brana": "Coroa Metal-free - (Zirconia; Sistema CAD/CAM)"
+    },
+    {
+      "codigo": 8100,
+      "nome_brana": "Coroa Metal-free sob implante - (Cerampress)"
+    },
+    {
+      "codigo": 8110,
+      "nome_brana": "Coroa Metal-free sob implante - (Inceram)"
+    },
+    {
+      "codigo": 8120,
+      "nome_brana": "Coroa Metal-free sob implante - (Procera)"
+    },
+    {
+      "codigo": 8130,
+      "nome_brana": "Coroa Metal-free sob implante - (Zirconia; Sistema CAD/CAM)"
+    },
+    {
+      "codigo": 8140,
+      "nome_brana": "Coroa metalo-cermica"
+    },
+    {
+      "codigo": 8150,
+      "nome_brana": "Coroa Metalo-cermica sob implante"
+    },
+    {
+      "codigo": 8151,
+      "nome_brana": "MunhÆo Universal - CM"
+    },
+    {
+      "codigo": 8160,
+      "nome_brana": "Coroa Provis¢ria Imediata"
+    },
+    {
+      "codigo": 8161,
+      "nome_brana": "Coroa Provis¢ria de Onlay / Inlay"
+    },
+    {
+      "codigo": 8170,
+      "nome_brana": "Coroa Provis¢ria de Laborat¢rio sob implante"
+    },
+    {
+      "codigo": 8171,
+      "nome_brana": "Coroa Provis¢ria Imediata sob implante"
+    },
+    {
+      "codigo": 8180,
+      "nome_brana": "Coroa met lica total"
+    },
+    {
+      "codigo": 8190,
+      "nome_brana": "Coroa Provis¢ria de Laborat¢rio"
+    },
+    {
+      "codigo": 8200,
+      "nome_brana": "Enceramento de diagn¢stico - (por elemento)"
+    },
+    {
+      "codigo": 8210,
+      "nome_brana": "Enceramento de diagn¢stico por elemento sob implante"
+    },
+    {
+      "codigo": 8220,
+      "nome_brana": "Faceta em Porcelana"
+    },
+    {
+      "codigo": 8230,
+      "nome_brana": "Faceta em Resina Acrilica"
+    },
+    {
+      "codigo": 8240,
+      "nome_brana": "Guia Cirurgico"
+    },
+    {
+      "codigo": 8250,
+      "nome_brana": "Jig ou Front-Plat"
+    },
+    {
+      "codigo": 8260,
+      "nome_brana": "N£cleo Met lico-fundido"
+    },
+    {
+      "codigo": 8261,
+      "nome_brana": "N£cleo Met lico fundido bi-partido"
+    },
+    {
+      "codigo": 8270,
+      "nome_brana": "N£cleo Metal-free esttico"
+    },
+    {
+      "codigo": 8290,
+      "nome_brana": "Placa de mordida miorrelaxante"
+    },
+    {
+      "codigo": 8291,
+      "nome_brana": "Protetor bucal Playsafe"
+    },
+    {
+      "codigo": 8292,
+      "nome_brana": "Protetor bucal Playsafe Personalizado"
+    },
+    {
+      "codigo": 8300,
+      "nome_brana": "Placa para Bruxismo Acr¡lica"
+    },
+    {
+      "codigo": 8305,
+      "nome_brana": "Placa para Bruxismo Mista - (Erkoflex)"
+    },
+    {
+      "codigo": 8310,
+      "nome_brana": "Placa para Clareamento"
+    },
+    {
+      "codigo": 8315,
+      "nome_brana": "Placa para Ortose"
+    },
+    {
+      "codigo": 8320,
+      "nome_brana": "Pr¢tese Parcial Fixa Adesiva Metal-free"
+    },
+    {
+      "codigo": 8330,
+      "nome_brana": "Pr¢tese Parcial Fixa Acrilica sob Implante"
+    },
+    {
+      "codigo": 8340,
+      "nome_brana": "Pr¢tese Parcial Fixa Metalo-cermica - (1 Pntico)"
+    },
+    {
+      "codigo": 8350,
+      "nome_brana": "Pr¢tese Parcial Fixa Metalo-cermica - (2 Pnticos)"
+    },
+    {
+      "codigo": 8360,
+      "nome_brana": "Pr¢tese Parcial Fixa Metalo-plastica - (1 Pntico)"
+    },
+    {
+      "codigo": 8361,
+      "nome_brana": "Pr¢tese Parcial Fixa Metalo-plastica - (2 Pnticos)"
+    },
+    {
+      "codigo": 8370,
+      "nome_brana": "Pr¢tese Parcial Fixa Provis¢ria - (1 Pntico)"
+    },
+    {
+      "codigo": 8380,
+      "nome_brana": "Pr¢tese Parcial Remov¡vel - (Importada) / (por arcada)"
+    },
+    {
+      "codigo": 8390,
+      "nome_brana": "Pr¢tese Parcial Remov¡vel - (por arcada)"
+    },
+    {
+      "codigo": 8400,
+      "nome_brana": "Pr¢tese Parcial Remov¡vel Provis¢ria - (por arcada)"
+    },
+    {
+      "codigo": 8410,
+      "nome_brana": "Pr¢tese Total - (Importada) / (por arcada)"
+    },
+    {
+      "codigo": 8420,
+      "nome_brana": "Pr¢tese Total - (por arcada)"
+    },
+    {
+      "codigo": 8430,
+      "nome_brana": "Pr¢tese Total Imediada - (por arcada)"
+    },
+    {
+      "codigo": 8440,
+      "nome_brana": "Pr¢tese Protocolo"
+    },
+    {
+      "codigo": 8450,
+      "nome_brana": "Reembasamento de Coroa Provis¢ria"
+    },
+    {
+      "codigo": 8460,
+      "nome_brana": "Reembasamento Pr¢tese Total ou Parcial"
+    },
+    {
+      "codigo": 8470,
+      "nome_brana": "RestauraÆo Met lica Fundida - RMF"
+    },
+    {
+      "codigo": 8480,
+      "nome_brana": "RestauraÆo Onlay / Inlay em Porcelana"
+    },
+    {
+      "codigo": 8481,
+      "nome_brana": "E-MAX - RestauraÆo Onlay / Inlay em Dissilicato de l¡tio"
+    },
+    {
+      "codigo": 8482,
+      "nome_brana": "E-MAX - Jaqueta pura em dissilicato"
+    },
+    {
+      "codigo": 8490,
+      "nome_brana": "RestauraÆo Onlay / Inlay em Ceromero"
+    },
+    {
+      "codigo": 8500,
+      "nome_brana": "E-MAX - Lente de contato"
+    },
+    {
+      "codigo": 9000,
+      "nome_brana": "Micro-agulhamento (Derma Roller)"
+    },
+    {
+      "codigo": 9010,
+      "nome_brana": "Botox"
+    },
+    {
+      "codigo": 9020,
+      "nome_brana": "Preenchimento"
+    },
+    {
+      "codigo": 9030,
+      "nome_brana": "Lipo de papada"
+    },
+    {
+      "codigo": 9040,
+      "nome_brana": "Fios de sustentaÆo"
+    },
+    {
+      "codigo": 9050,
+      "nome_brana": "Bichectomia"
+    }
+  ]
+}

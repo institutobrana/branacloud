@@ -1,0 +1,6 @@
+﻿"fonte","tabela_origem","id_origem","nome","clinica_id_origem","conta_id_origem","email_relacionado","status","ordem","created_at","updated_at","observacoes"
+"EDS70 (eds70.bak / eds70dat.mdf)","ANAMNESE_QUEST","1","Principal                               ","","","gleissontel@gmail.com","","1","","","Origem SQL Server EDS70; tabela sem clinica_id explícito."
+"EDS70 (eds70.bak / eds70dat.mdf)","ANAMNESE_QUEST","2","Implante                                ","","","gleissontel@gmail.com","","2","","","Origem SQL Server EDS70; tabela sem clinica_id explícito."
+"EDS70 (eds70.bak / eds70dat.mdf)","ANAMNESE_QUEST","3","Ficha complementar                      ","","","gleissontel@gmail.com","","3","","","Origem SQL Server EDS70; tabela sem clinica_id explícito."
+"EDS70 (eds70.bak / eds70dat.mdf)","ANAMNESE_QUEST","4","Anamnese de Saúde","","","gleissontel@gmail.com","","4","","","Origem SQL Server EDS70; tabela sem clinica_id explícito."
+"EDS70 (eds70.bak / eds70dat.mdf)","ANAMNESE_QUEST","5","Anamnese pessoal","","","gleissontel@gmail.com","","5","","","Origem SQL Server EDS70; tabela sem clinica_id explícito."

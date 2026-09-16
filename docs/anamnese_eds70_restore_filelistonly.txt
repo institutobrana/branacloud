@@ -1,0 +1,5 @@
+﻿
+LogicalName PhysicalName                Type FileGroupName       Size        MaxSize FileId CreateLSN DropLSN UniqueId                            
+----------- ------------                ---- -------------       ----        ------- ------ --------- ------- --------                            
+eds70dat    C:\EDS70\dados\eds70dat.mdf D    PRIMARY       2109210624 35184372080640      1         0       0 00000000-0000-0000-0000-000000000000
+eds70log    C:\EDS70\dados\eds70log.ldf L                     5242880 35184372080640      2         0       0 00000000-0000-0000-0000-000000000000

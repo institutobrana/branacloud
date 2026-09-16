@@ -1,0 +1,38 @@
+[
+  {
+    "source_id_origem": 2,
+    "nome": "Implante",
+    "future_questionario_id_estimated": 3,
+    "ordem": 2,
+    "clinica_id_destino": 1,
+    "status_destino": true,
+    "sql_preview": "-- INSERT INTO anamnese_questionarios (clinica_id, nome, ativo, ordem, criado_em, atualizado_em)\\n-- VALUES (1, 'Implante', TRUE, 2, NOW(), NOW());"
+  },
+  {
+    "source_id_origem": 3,
+    "nome": "Ficha complementar",
+    "future_questionario_id_estimated": 4,
+    "ordem": 3,
+    "clinica_id_destino": 1,
+    "status_destino": true,
+    "sql_preview": "-- INSERT INTO anamnese_questionarios (clinica_id, nome, ativo, ordem, criado_em, atualizado_em)\\n-- VALUES (1, 'Ficha complementar', TRUE, 3, NOW(), NOW());"
+  },
+  {
+    "source_id_origem": 4,
+    "nome": "Anamnese de Saúde",
+    "future_questionario_id_estimated": 5,
+    "ordem": 4,
+    "clinica_id_destino": 1,
+    "status_destino": true,
+    "sql_preview": "-- INSERT INTO anamnese_questionarios (clinica_id, nome, ativo, ordem, criado_em, atualizado_em)\\n-- VALUES (1, 'Anamnese de Saúde', TRUE, 4, NOW(), NOW());"
+  },
+  {
+    "source_id_origem": 5,
+    "nome": "Anamnese pessoal",
+    "future_questionario_id_estimated": 6,
+    "ordem": 5,
+    "clinica_id_destino": 1,
+    "status_destino": true,
+    "sql_preview": "-- INSERT INTO anamnese_questionarios (clinica_id, nome, ativo, ordem, criado_em, atualizado_em)\\n-- VALUES (1, 'Anamnese pessoal', TRUE, 5, NOW(), NOW());"
+  }
+]

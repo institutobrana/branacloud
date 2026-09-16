@@ -5,7 +5,8 @@
 O Brana Cloude e uma aplicacao web monolitica em dois blocos:
 
 - Backend FastAPI em `backend/`.
-- Frontend estatico em `frontend/`, servido pelo backend.
+- Frontend legado estatico em `frontend/`, servido pelo backend em `/app`, `/frontend` e temporariamente `/legado`.
+- Frontend React em `frontend-react/`, compilado para `frontend-react/dist` e servido pelo backend em `/react`.
 
 O banco e PostgreSQL via SQLAlchemy. A autenticacao usa JWT. A separacao por clinica usa `clinica_id`.
 
@@ -24,7 +25,7 @@ Responsabilidades:
 - Configurar CORS local.
 - Adicionar `TenantMiddleware` e `TrialMiddleware`.
 - Montar `/frontend` e `/desktop-assets`.
-- Servir `/app`, `/`, `/favicon.ico` e `/health`.
+- Servir `/app`, `/frontend`, `/legado`, `/react`, `/`, `/favicon.ico` e `/health`.
 
 ## Frontend
 
@@ -44,8 +45,8 @@ O frontend chama a API na mesma origem. O token e salvo em `localStorage` como `
 
 ## Fluxo de dados
 
-1. Usuario acessa `/app`.
-2. Backend entrega HTML/JS/CSS.
+1. Usuario acessa `/app` ou `/react`.
+2. Backend entrega o HTML do frontend correspondente.
 3. Frontend chama `POST /login`.
 4. Backend valida usuario no PostgreSQL.
 5. Backend gera JWT com `user_id`, `clinica_id` e `is_admin`.

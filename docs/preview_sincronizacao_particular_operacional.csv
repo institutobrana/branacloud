@@ -1,0 +1,339 @@
+codigo,easy_nome,easy_especialidade,easy_simbolo,easy_preco,easy_forma_cobranca,easy_observacoes,easy_status,brana_nome,brana_especialidade,brana_simbolo,brana_preco,brana_forma_cobranca,brana_observacoes,brana_status,classificacao,divergencias,acao_futura_sugerida,motivo,nivel_seguranca
+1,Alveoloplastia ou alveolotomia - (até 3 elementos),6,57,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+2,Alveoloplastica ou alveolotomia - (por sextante),6,57,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+3,Biópsia,6,45,600.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+4,Cirurgia de Hipertrofia de Lábio,6,45,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+5,Cirurgia para Cisto de Desenvolvimento,6,45,550.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+6,Cirurgia para Microstomia,6,45,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+7,Cirurgia para Osteoma e Odontoma,6,45,572.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+8,Cirurgia para torus palatino unilateral,6,45,374.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+9,Ciurgia para torus mandibular bilateral,6,45,693.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+10,Ciurgia para tórus mandibular unilateral,6,45,440.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+11,Cirurgia para torus palatino bilateral,6,45,693.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+12,Correção de bridas musculares,6,26,385.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+13,Drenagem de abcesso por via intra ou extra-oral,6,45,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+14,Cirurgia exploratória,6,45,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+15,Excisão de glândula parótida,6,45,605.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+16,Excisão de glândula sublingual,6,45,605.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+17,Excisão de glândula submandibular,6,45,605.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+18,Excisão de Mucocele,6,45,800.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+19,Excisão de rânula,6,45,440.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+20,Excisão de tumores odontogênicos até 3 cm,6,45,748.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+21,Exodontia de decíduos,6,13,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+22,Exodontia de incluso,6,13,800.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+23,Exodontia de incluso impactado,6,13,800.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+24,Exodontia de raiz residual,6,13,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+25,Exodontia de raiz residual com retalho,6,13,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+26,Exodontia de semi-incluso,6,13,450.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+27,Exodontia + Enxerto + membrana,6,13,1100.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+28,Exodontia simples - (Anteriores),6,13,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+29,Exodontia simples - (Posteriores),6,13,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+30,Fraturas alvédio-dentárias - redução cruenta,6,45,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+31,Marzupialização de cisto,6,45,440.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+32,Reconstrução parcial do lábio traumatizado,6,45,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+33,Reconstrução total do lábio traumatizado,6,45,770.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+34,Suturas múltiplas da face ou lábio,6,45,605.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+35,Suturas simples da face ou lábio,6,45,315.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+36,Tratamento de alveolite,6,57,250.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+37,Tratamento de hemorragia,6,45,315.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+38,Tratamento cirúrgico do lábio leporino,6,45,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+39,Adequação de meio bucal,1,28,250.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+40,Ajuste oclusal - (por sessão),1,32,100.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+41,Capeamento pulpar,1,53,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+42,Clareamento - (Caseiro),12,31,400.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+43,Clareamento - (Laser),12,31,750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+44,Clareamento interno - (dentes desvitalizados),12,31,1000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+45,Dessensibilização dentária - (por elemento),1,58,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+46,Faceta em resina direta - (Dentes anteriores),1,39,750.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+47,Imobilização dentária com resina fotopolimerizável,1,58,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+48,Imobilização dentária (esplintagem),1,57,450.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+49,Núcleo de preenchimento,1,14,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+50,Núcleo de preenchimento em ionômetro de vidro,1,14,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+51,Núcleo de preenchimento em resina,1,14,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+52,Núcleo fibra de vidro,1,14,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+53,Núcleo metálico pré-fabricado,1,14,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+54,Núcleo rosqueavel - (Roach),1,14,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+55,Polimento e Acabamento,1,59,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+56,Reconstrução em Resina Direta - (+ de 3 Faces),1,4,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+57,Restauração de Amálgama - 1 face,1,4,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+58,Restauração de Amálgama - 2 faces,1,4,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+59,Restauração de Amálgama - 3 faces,1,4,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+60,"
+
+Restauração de ionômero de vidro - classe V",1,4,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+61,Restauração em Resina Direta - (1 Face),1,4,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+62,Restauração em Resina Direta - (2 Faces),1,4,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+63,Restauração em Resina Direta - (3 Faces),1,4,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+64,Restauração em Resina Direta - (Classe IV),1,4,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+65,Restauração em Resina Direta - (Classe V),1,4,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+66,Restauração temporária (IRM ou similar),1,4,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+67,Tratamento Expectante com H. Cálcio,1,57,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+68,Apicectomia em Incisivos com enxerto leofilizado,3,15,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+69,Apicectomia em Incisivos com obturação retrógrada,3,15,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+70,Apicectomia em Incisivos curetagem apical,3,15,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+71,Apicectomia em Molares com enxerto leofilizado,3,15,2000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+72,Apicectomia em Molares com obturação retrógrada,3,15,2300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+73,Apicectomia em Molares curetagem apical,3,15,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+74,Apicectomia em Pré-molares com enxerto leofilizado,3,15,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+75,Apicectomia em Pré-molares com obturação retrógrada,3,15,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+76,Apicectomia em Pré-molares curetagem apical,3,15,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+77,Clareamento Interno,12,31,1000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+78,Desobturação de canal,3,57,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+79,Preparo para Núcleo intra-radicular,3,57,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+80,Pulpotomia,3,48,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+81,Reimplante dentes avuls. trauma + ap. contenção,3,9,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+82,Remoção de Coroal Total,3,57,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+83,Remoção de núcleo intraradicular,3,57,500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+84,Retratamento de Canal - (Incisivos),3,12,650.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+85,Retratamento de Canal - (Molares com 4 ou mais condutos),3,12,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+86,Retratamento de Canal - (Molares),3,12,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+87,Retratamento de Canal - (Pré-molares),3,12,900.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+88,Tratamento cirurgico de lesão endo-perio - (Curetagem),3,45,315.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+89,Tratamento cirurgico de lesão endo-perio com enxerto leofilizado,3,25,627.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+90,Tratamento de Canal - (Incisivos),3,12,500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+91,Tratamento de Canal - (Molares com mais de 3 condutos),3,12,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+92,Tratamento de Canal - (Molares),3,12,1000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+93,Tratamento de Canal - (Pré-molares),3,12,700.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+94,Tratamento de dentes c/ rizogenese incompleta - (Por sessão),3,57,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+95,Tratamento de Trepanações / Perfurações,3,12,1000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+96,Cimentação de Coroa Total Definitiva,5,1,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+97,Cimentação de Coroa Total Provisória,5,30,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+98,Cimentação de Núcleo Metálico Fundido,5,14,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+99,Cimentação de Prótese Parcial Fixa,5,7,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+100,Consulta de adaptação Psicológica,5,10,110.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+101,Consulta de Emergência,5,40,450.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+102,"Consulta de Emergência - (Sábado, Domingo e Feriado)",5,40,450.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+103,Consulta de Emergência Noturna - (22:00 às 06:00 hs),5,40,450.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+104,Consulta Inicial para Exame clínico,5,10,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+105,Curativo,5,57,100.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+106,Exame para Perícia Inicial e Final,5,54,150.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+107,Modelo de Estudo - (Superior e Infeiror),5,41,110.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+108,Radiografia Bite-Wing - (inter-proximal),5,11,35.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+109,Radiografia Oclusal,5,35,150.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+110,Radiografia Periapical,5,11,35.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+111,Enxerto Osseo Particulado + Membrana colageno.,13,25,1500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+112,Implante - (técnica de Sammers),13,9,1540.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+113,Implante (RTG),13,9,1980.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+114,Implante ósseo integrável - Cone Morse,13,9,1760.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+115,Implante ósseo integrável - H. Interno,13,9,1540.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+116,Implante ósseo integrável - Standard,13,9,1210.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+117,Remoção de implante,13,9,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+118,Abertura de implante - (Giro de retalho),4,17,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+119,Abertura de implante - (Osteotomia),4,45,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+120,Abertura de implante - (Plastia),4,17,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+121,Abertura de implante mand. - (Enxerto Livre),4,25,500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+122,Abertura de implante mand. - (Osteotomia e Livre),4,45,627.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+123,Aumento de Coroa Clínica - (Osteotomia e deslize apical),4,49,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+124,Aumento de Coroa Clínica - (Osteotomia),4,49,315.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+125,Aumento de Coroa Clínica - (Plastia),4,49,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+126,Bridectomia,4,26,380.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+127,Cirurgia para colagem de botão Ortodôntico,4,45,600.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+128,Cirurgia para colagem de botão Ortodôntico com osteotomia,4,45,600.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+129,Cirurgia para Odonto-secção - (por elemento),4,46,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+130,Cirurgia para Rizectomia,4,47,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+131,Enxerto de conjuntivo / tunelização,4,25,1500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+132,Cirurgia Periodontal a retalho - (1 elemento),4,17,500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+133,Cirurgia Periodontal a retalho - (por segmento),4,17,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+134,Cunha Distal ou Proximal,4,57,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+135,Enxerto de Tecido Conjuntivo,4,25,1500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+136,Enxerto Gengival Livre,4,25,1500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+137,Enxerto Osseo RTG - (Regeneração Tecidual Guiada),4,25,880.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+138,Enxerto Pediculado - (por elemento),4,25,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+139,Enxerto por Tracionamento de Vestibulo - (por elemento),4,25,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+140,Enxerto por Tracionamento de Vestibulo - (por segmento),4,25,450.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+141,Frenectomia labial inferior,4,26,750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+142,Frenectomia labial superior,4,26,750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+143,Frenotomia Lábial Inferior,4,26,750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+144,Frenotomia Lábial Superior,4,26,750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+145,Frenotomia Lingual,4,26,750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+146,Gengivectomia ou Gengivoplastia - (por elemento),4,16,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+147,Gengivectomia ou Gengivoplastia - (por segmento),4,16,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+148,Gengivectomia palatina / lingual - (por elemento),4,16,300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+149,Gengivectomia palatina / lingual - (por segmento),4,16,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+150,Manutenção Periodontal - (por sessão),4,58,110.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+151,Raspagem Sub-gengival e Curetagem de bolsa - (por segmento),4,18,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+152,Raspagem Supra-gengival - (por segmento),4,18,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+153,Remoção de Fatores de Retenção - (por segmento),4,58,150.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+154,Sepultamento Radicular - (por raiz),4,57,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+155,Ulectomia,4,51,250.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+156,Aplicação de Cariostático - (sessão),8,28,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+157,Aplicação de Flúor Verniz - (por elemento),8,20,200.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+158,Aplicação de Selnate Oclusa Invasivo - (por elemento),8,3,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+159,Aplicação Tópica de Flúor,8,20,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+160,Controle da Placa Bacteriana - (por sessão),8,55,250.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+161,Instrução de Higiene Oral - (I.H.O.),8,28,250.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+162,Profilaxia - (Polimento com taça de borracha),8,8,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+163,Profilaxia - (Ultrason e Jato de Bicarbonato),8,8,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+164,Teste de fluxo salivar,8,28,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+165,Teste de Risco de Cárie,8,28,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+166,Attachment,2,52,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+167,Casquete de moldagem,2,56,50.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+168,Conserto de Prótese Total e Parcial,2,56,330.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+169,Coroa em Resina Prensada,2,1,250.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+170,Coroa em Resina Sinfony,2,1,650.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+171,Coroa em Resina sob implante,2,1,935.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+172,Coroa Metal-free - (Cerampress),2,1,1265.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+173,Coroa Metal-free - (Inceram),2,1,1265.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+174,Coroa Metal-free - (Procera),2,1,1375.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+175,Coroa Metal-free - (Zirconia; Sistema CAD/CAM),2,1,1900.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+176,Coroa Metal-free sob implante - (Cerampress),2,1,1870.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+177,Coroa Metal-free sob implante - (Inceram),2,1,1760.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+178,Coroa Metal-free sob implante - (Procera),2,1,1870.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+179,Coroa Metal-free sob implante - (Zirconia; Sistema CAD/CAM),2,1,2090.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+180,Coroa metalo-cerâmica,2,1,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+181,Coroa Metalo-cerâmica sob implante,2,1,2100.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+182,Coroa Provisória Imediata,2,30,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+183,Coroa Provisória de Onlay / Inlay,2,2,350.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+184,Coroa Provisória de Laboratório sob implante,2,30,750.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+185,Coroa metálica total,2,1,715.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+186,Coroa Provisória de Laboratório,2,1,500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+187,E-MAX - Lente de contato,2,39,2300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+188,E-MAX - Restauração Onlay / Inlay em Dissilicato de lítio,2,2,2300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+189,Enceramento de diagnóstico - (por elemento),1,41,100.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+190,Enceramento de diagnóstico por elemento sob implante,2,1,100.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+191,Faceta em Porcelana,2,39,1900.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+192,Faceta em Resina Acrilica,2,39,1000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+193,Guia Cirurgico,2,45,500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+194,Jig ou Front-Platô,2,37,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+195,Munhão Universal - CM,2,14,385.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+196,Núcleo Metal-free estético,2,14,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+197,Núcleo Metálico-fundido,2,14,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+199,Placa de mordida miorrelaxante,2,37,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+200,Placa para Bruxismo Acrílica,2,37,550.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+201,Placa para Bruxismo Mista - (Erkoflex),2,37,1000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+202,Placa para Clareamento,2,37,250.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+203,Prótese Parcial Fixa Adesiva Metal-free,2,7,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+204,Prótese Parcial Fixa Acrilica sob Implante,2,7,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+205,Prótese Parcial Fixa Metalo-cerâmica - (1 Pôntico),2,5,1500.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+206,Prótese Parcial Fixa Metalo-cerâmica - (2 Pônticos),2,5,3960.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+207,Prótese Parcial Fixa Metalo-plastica - (1 Pôntico),2,5,3000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+208,Prótese Parcial Fixa Metalo-plastica - (2 Pônticos),2,5,3000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+209,Prótese Parcial Fixa Provisória - (1 Pôntico),2,5,650.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+210,Prótese Parcial Removível - (Importada)  /  (por arcada),2,6,2200.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+211,Prótese Parcial Removível - (por arcada),2,6,1500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+212,Prótese Parcial Removível Provisória - (por arcada),2,6,650.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+213,Prótese Total - (Importada) / (por arcada),2,24,2750.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+214,Prótese Total - (por arcada),2,24,1650.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+215,Prótese Total Imediada - (por arcada),2,24,1210.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+216,Protetor bucal Playsafe,2,37,700.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+217,Prótese Protocolo,2,24,10000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+218,Reembasamento de Coroa Provisória,2,57,150.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+219,Reembasamento Prótese Total ou Parcial,2,42,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+220,Restauração Metálica Fundida - RMF,2,2,700.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+221,Restauração Onlay / Inlay em Porcelana,2,2,1200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+222,Restauração Onlay / Inlay em Ceromero,2,2,1000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+223,Aparelho Autoligado (Arcada Inferior),7,22,175.0,2,,False,Aparelho Autoligado (Arcada Inferior),07,22,0.0,INTERVENCAO,,False,A,"['preco', 'forma_cobranca']",revisar divergencias,campos divergentes,alto
+224,Aparelho Autoligado (Arcada Superior),7,22,175.0,2,,False,Aparelho Autoligado (Arcada Superior),07,22,0.0,INTERVENCAO,,False,A,"['preco', 'forma_cobranca']",revisar divergencias,campos divergentes,alto
+225,Aparelho de contenção,7,37,0.0,2,,False,Aparelho de contenÆo,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+226,Aparelho em uma arcada conjugado c/ ap. auxiliar,7,22,0.0,2,,False,Aparelho em uma arcada conjugado c/ ap. auxiliar,07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+227,Aparelho extra bucal,7,37,0.0,2,,False,Aparelho extra bucal,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+228,Aparelho Ortodôntico Estético em Porcelana - (Arcada Inferior),7,22,150.0,2,,False,Aparelho Ortodntico Esttico em Porcelana - (Arcada Inferior),07,22,0.0,INTERVENCAO,,False,C,"['nome', 'preco', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+229,Aparelho Ortodôntico Estético em Porcelana - (Arcada Superior),7,22,150.0,2,,False,Aparelho Ortodntico Esttico em Porcelana - (Arcada Superior),07,22,0.0,INTERVENCAO,,False,C,"['nome', 'preco', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+230,Aparelho Ortodôntico Estético em Zafira - (Arcada Inferior),7,22,0.0,2,,False,Aparelho Ortodntico Esttico em Zafira - (Arcada Inferior),07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+231,Aparelho Ortodôntico Estético em Zafira - (Arcada Superior),7,22,0.0,2,,False,Aparelho Ortodntico Esttico em Zafira - (Arcada Superior),07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+232,Aparelho Ortodôntico Fixo - (Arcada Inferior),7,22,0.0,2,,False,Aparelho Ortodntico Fixo - (Arcada Inferior),07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+233,Aparelho Ortodôntico Fixo - (Arcada Superior),7,22,0.0,2,,False,Aparelho Ortodntico Fixo - (Arcada Superior),07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+234,Aparelho Ortopedico,7,22,0.0,2,,False,Aparelho Ortopedico,07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+235,Aparelho removivel,7,37,150.0,2,,False,Aparelho removivel,07,37,0.0,INTERVENCAO,,False,A,"['preco', 'forma_cobranca']",revisar divergencias,campos divergentes,alto
+236,"Aparelhos auxiliares (extra-oral, ""Bumper"", etc)",7,37,0.0,2,,False,"Aparelhos auxiliares (extra-oral, ""Bumper"", etc)",07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+237,Arco Palatino,7,37,0.0,2,,False,Arco Palatino,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+238,Ativador de Haulp,7,22,0.0,2,,False,Ativador de Haulp,07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+239,Ativador de Rossi,7,22,0.0,2,,False,Ativador de Rossi,07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+240,Ativador de Zurick - Suíça,7,22,0.0,2,,False,Ativador de Zurick - Su¡a,07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+241,Bandagem (Tubo bracket),7,21,0.0,2,,False,Bandagem (Tubo bracket),07,21,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+242,Bandagem (Tubo duplo),7,21,0.0,2,,False,Bandagem (Tubo duplo),07,21,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+243,Bandagem (Tubo simples),7,21,0.0,2,,False,Bandagem (Tubo simples),07,21,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+244,Bandagem (Tubo triplo),7,21,0.0,2,,False,Bandagem (Tubo triplo),07,21,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+245,Barra Transpalatina,7,22,0.0,2,,False,Barra Transpalatina,07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+246,Bi-hélice,7,37,0.0,2,,False,Bi-hlice,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+247,Bio-ajustador - Tecnica MD3,7,37,0.0,2,,False,Bio-ajustador - Tecnica MD3,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+248,Bionator - Super,7,37,0.0,2,,False,Bionator - Super,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+249,Bionator de Balters - Classe I,7,37,0.0,2,,False,Bionator de Balters - Classe I,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+250,Bionator de Balters - Classe II,7,37,0.0,2,,False,Bionator de Balters - Classe II,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+251,Bionator de Balters - Classe III,7,37,0.0,2,,False,Bionator de Balters - Classe III,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+252,Blinler - A,7,37,0.0,2,,False,Blinler - A,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+253,Blinler - B,7,37,0.0,2,,False,Blinler - B,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+254,Blinler - C,7,37,0.0,2,,False,Blinler - C,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+255,Botão de Nance,7,22,0.0,2,,False,BotÆo de Nance,07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+256,"Bracket (Bracket 0,18"" x 0,25"")",7,22,0.0,2,,False,"Bracket (Bracket 0,18"" x 0,25"")",07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+257,"Bracket (Bracket 0,18"" x 0,30"")",7,22,0.0,2,,False,"Bracket (Bracket 0,18"" x 0,30"")",07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+258,"Bracket (Bracket 0,22"" x 0,28"")",7,22,0.0,2,,False,"Bracket (Bracket 0,22"" x 0,28"")",07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+259,Bracket (Bracket Straight-Wire),7,22,0.0,2,,False,Bracket (Bracket Straight-Wire),07,22,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+260,Contenção Fixa Lingual,7,29,0.0,2,,False,ContenÆo Fixa Lingual,01,29,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+261,Contenção móvel - (Placa de acetáto),7,37,200.0,2,,False,ContenÆo m¢vel - (Placa de acet to),07,37,0.0,INTERVENCAO,,False,C,"['nome', 'preco', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+262,Disjuntor de Hass,7,37,0.0,2,,False,Disjuntor de Hass,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+263,Disjuntor de Hirax,7,37,0.0,2,,False,Disjuntor de Hirax,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+264,Disjuntor Hirax RC,7,37,0.0,2,,False,Disjuntor Hirax RC,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+265,Disjuntor MC Namara - Resina,7,37,0.0,2,,False,Disjuntor MC Namara - Resina,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+266,Disjuntor MC Namara com Hirax,7,37,0.0,2,,False,Disjuntor MC Namara com Hirax,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+267,Disjuntor Omar Gabriel,7,37,0.0,2,,False,Disjuntor Omar Gabriel,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+268,Distabilizador Pendex com Pêndulo,7,37,0.0,2,,False,Distabilizador Pendex com Pndulo,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+269,Djuntor palatino,7,37,0.0,2,,False,Djuntor palatino,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+270,Documentação ortodôntica,7,43,0.0,2,,False,DocumentaÆo ortodntica,07,43,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+271,Frankel - Classe I,7,37,0.0,2,,False,Frankel - Classe I,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+272,Frankel - Classe II,7,37,0.0,2,,False,Frankel - Classe II,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+273,Frankel - Classe III,7,37,0.0,2,,False,Frankel - Classe III,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+274,Frankel - Mordida Aberta,7,37,0.0,2,,False,Frankel - Mordida Aberta,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+275,Grade palatina fixa,7,37,0.0,2,,False,Grade palatina fixa,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+276,Grade palatina móvel,7,37,0.0,2,,False,Grade palatina m¢vel,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+277,Klammt - Classe I,7,37,0.0,2,,False,Klammt - Classe I,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+278,Klammt - Classe II,7,37,0.0,2,,False,Klammt - Classe II,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+279,Klammt - Classe III,7,37,0.0,2,,False,Klammt - Classe III,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+280,Lip Bumper,7,37,0.0,2,,False,Lip Bumper,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+281,Mantenedor de espaço,7,19,0.0,2,,False,Mantenedor de espao,09,19,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+282,Manutenção ortodôntico - (Mensal),7,23,80.0,2,,False,ManutenÆo ortodntico - (Mensal),07,23,0.0,INTERVENCAO,,False,C,"['nome', 'preco', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+283,Mentoneira,7,37,0.0,2,,False,Mentoneira,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+284,Ortopedia funcional dos maxilares,7,39,0.0,2,,False,Ortopedia funcional dos maxilares,07,39,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+285,Palatina ou arco lingual,7,37,0.0,2,,False,Palatina ou arco lingual,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+286,Placa 7/7,7,37,0.0,2,,False,Placa 7/7,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+287,Placa acoplada ao uso de arco extra bucal,7,37,0.0,2,,False,Placa acoplada ao uso de arco extra bucal,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+288,Placa ativa com molas,7,37,0.0,2,,False,Placa ativa com molas,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+289,Placa com arco alça dupla para expanção Y,7,37,0.0,2,,False,Placa com arco ala dupla para expanÆo Y,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+290,Placa com arco de contenção contínua,7,37,0.0,2,,False,Placa com arco de contenÆo cont¡nua,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+291,Placa com arco de contenção de Baag,7,37,0.0,2,,False,Placa com arco de contenÆo de Baag,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+292,Placa com arco de controle dos caninos,7,37,0.0,2,,False,Placa com arco de controle dos caninos,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+293,Placa com arco seccionado para uso elasticos,7,37,0.0,2,,False,Placa com arco seccionado para uso elasticos,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+294,Placa com plano de mordida inclinado,7,37,0.0,2,,False,Placa com plano de mordida inclinado,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+295,Placa com plano de mordida posterior,7,37,0.0,2,,False,Placa com plano de mordida posterior,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+296,Placa com plano reto anterior,7,37,0.0,2,,False,Placa com plano reto anterior,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+297,Placa de Apnéia,7,37,0.0,2,,False,Placa de Apnia,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+298,Placa de ativação mandibular,7,37,0.0,2,,False,Placa de ativaÆo mandibular,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+299,Placa de Eschler,7,37,0.0,2,,False,Placa de Eschler,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+300,Placa de expansão para mordida cruzada,7,37,0.0,2,,False,Placa de expansÆo para mordida cruzada,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+301,Placa de Hawley,7,37,0.0,2,,False,Placa de Hawley,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+302,Placa de Hawley invertido,7,37,0.0,2,,False,Placa de Hawley invertido,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+303,Placa de Mills,7,37,0.0,2,,False,Placa de Mills,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+304,Placa de ocupação lingual,7,37,0.0,2,,False,Placa de ocupaÆo lingual,01,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+305,Placa de Roberts,7,37,0.0,2,,False,Placa de Roberts,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+306,Placa dupla de avanço - Piamant,7,37,0.0,2,,False,Placa dupla de avano - Piamant,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+307,Placa interceptora de hábito,7,37,0.0,2,,False,Placa interceptora de h bito,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+308,Placa labial ativa,7,37,0.0,2,,False,Placa labial ativa,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+309,Placa mantenedora de espaço.,7,19,0.0,2,,False,Placa mantenedora de espao.,09,19,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+310,Placa recuperadora de espaço,7,19,0.0,2,,False,Placa recuperadora de espao,09,19,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+311,Planas Compostas,7,37,0.0,2,,False,Planas Compostas,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+312,Planas Simples,7,37,0.0,2,,False,Planas Simples,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+313,Quadri-hélice,7,37,0.0,2,,False,Quadri-hlice,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+314,Spling Retainer 3/3   4/4,7,39,0.0,2,,False,Spling Retainer 3/3 4/4,07,39,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+315,Twin Black,7,37,0.0,2,,False,Twin Black,07,37,0.0,INTERVENCAO,,False,A,['forma_cobranca'],revisar divergencias,campos divergentes,alto
+316,"Vilma Simões - SN1, SN2, SN3, SN4, SN5",7,37,0.0,2,,False,"Vilma Simäes - SN1, SN2, SN3, SN4, SN5",07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+317,"Vilma Simões - SN6, SN7",7,37,0.0,2,,False,"Vilma Simäes - SN6, SN7",07,37,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+318,Placa para Ortose,2,37,660.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+319,Micro-agulhamento (Derma Roller),14,10,600.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+320,Protetor bucal Playsafe Personalizado,2,37,950.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+321,Levanto de seio maxilar,13,25,3500.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+322,Botox,14,43,1200.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+323,Alinhadores Estéticos,7,22,0.0,2,,False,Alinhadores Estticos,07,22,0.0,INTERVENCAO,,False,C,"['nome', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+324,Preenchimento,14,10,2000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+325,Consulta de Reavaliação Clínica,5,10,350.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+326,Implante Zigomático,13,9,3000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+327,Lipo de papada,14,45,2000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+328,Coroa Provisória Imediata sob implante,2,30,650.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+329,Fios de sustentação,14,45,1200.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+330,Bichectomia,14,45,1200.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+331,Cimentação adesiva,5,1,200.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+332,Implante Cone Morse + Enxerto,13,9,2000.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+333,E-MAX - Jaqueta pura em dissilicato,2,1,2300.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+334,Foto extra-oral,5,43,0.0,2,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+335,Núcleo Metálico fundido bi-partido,2,14,450.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo
+336,Remoção de aparelho ortodontico fixo.,7,37,350.0,2,,False,RemoÆo de aparelho ortodontico fixo.,07,37,0.0,INTERVENCAO,,False,C,"['nome', 'preco', 'forma_cobranca']",revisar divergencias,nome divergente,medio
+337,Regeneração óssea guiada - ROG,13,25,5000.0,1,,False,,,,,,,,D,['somente_easy'],avaliar inclusao no Brana,nao existe correspondencia no Brana,baixo

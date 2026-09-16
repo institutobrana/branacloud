@@ -83,35 +83,41 @@ Estrutura esperada da janela:
 ### 7.1 Primeira linha
 
 - `Inicio:`
-  - campo de data;
+  - campo de data com digitacao e calendario popup;
   - valor padrao: data atual;
-  - formato visual: `dd/mm/aaaa`.
+  - formato visual: `dd/mm/aaaa`;
+  - comportamento: aceita digitação válida, botão de calendário e atalhos `F4` / `Alt+Seta para baixo`.
 - `Finalizacao:`
   - campo de data;
   - valor padrao vazio.
 - `Situacao:`
   - combo;
-  - valor padrao: `Aberto`.
+  - valor padrao: `Aberto`;
+  - ao selecionar `Finalizado`, o campo `Finalizacao` recebe a data vigente.
 
 ### 7.2 Segunda linha
 
 - `Tabela principal:`
   - combo;
-  - valor padrao visual: `PARTICULAR`.
+  - valor padrao visual: preferencia do usuario em `Preferências > Geral > Tabela de intervenções padrão para novos cadastros`, com fallback `PARTICULAR`;
+  - lista completa de tabelas permanece disponivel para troca manual.
 - `Indice:`
   - combo;
-  - valor padrao visual: `R$`.
+  - valor padrao visual: `R$`;
+  - lista visual: `R$`, `UHO`, `UPO`, `USO`, conforme índices financeiros da clínica.
 - `Cirurgiao responsavel:`
   - combo;
-  - valor padrao deve vir do prestador/usuario atual quando houver fonte segura;
+  - lista de prestadores ativos da clinica, com ou sem vinculo operacional a usuario;
+  - valor padrao deve vir do prestador ativo vinculado ao usuario atual quando houver fonte segura;
   - quando nao houver fonte segura, manter fallback visual documentado.
 
 ### 7.3 Terceira linha
 
 - `Unidade de atendimento:`
   - combo largo;
-  - valor padrao deve vir da clinica/unidade atual quando houver fonte segura;
-  - quando nao houver fonte segura, manter fallback visual documentado.
+  - lista de unidades ativas do cadastro;
+  - valor padrao deve vir da unidade vinculada ao usuario atual quando houver fonte segura;
+  - quando nao houver vinculo, selecionar a primeira unidade ativa ou manter fallback visual documentado.
 
 ### 7.4 Area de observacoes
 
@@ -128,6 +134,13 @@ Estrutura esperada da janela:
 - `Alteracao:`
   - campo visual de data/hora;
   - fundo ciano/turquesa conforme referencia.
+
+Regra operacional agora adotada no Brana Cloude:
+
+- ambos os campos abrem vazios;
+- o botao `Ok` grava o tratamento e preenche `Inclusao` com `DD/MM/AAAA - apelido` na primeira gravacao;
+- o mesmo botao `Ok`, em uma gravacao posterior do mesmo tratamento, atualiza `Alteracao` com `DD/MM/AAAA - apelido`;
+- `Inclusao` nao e sobrescrita por atualizacoes posteriores.
 
 ### 7.6 Secao Novo tratamento
 
@@ -175,20 +188,20 @@ O que ainda precisa de inventario fino antes de implementar:
 
 - dados do paciente atual;
 - dados da clinica/unidade atual;
-- catalogo de usuarios/prestadores ativos;
+- catalogo de prestadores ativos da clinica, com preferencia para o vinculo operacional ao usuario atual quando existir;
 - catalogo de tabelas e indices;
 - catalogo de convenios e planos;
 - tratamento anterior quando houver copia.
 
 ### 9.2 Campos da aba Principal
 
-- `Inicio` -> data atual;
-- `Finalizacao` -> vazio;
-- `Situacao` -> `Aberto`;
-- `Tabela principal` -> `PARTICULAR`;
-- `Indice` -> `R$`;
-- `Cirurgiao responsavel` -> usuario/prestador atual quando existir fonte segura;
-- `Unidade de atendimento` -> unidade atual quando existir fonte segura;
+- `Inicio` -> data atual, com validação local e calendário popup;
+- `Finalizacao` -> vazio, com validação local e calendário popup; ao virar `Finalizado`, recebe a data vigente;
+- `Situacao` -> `Aberto` (com lista `Aberto`, `Finalizado`, `Interrompido`);
+- `Tabela principal` -> preferencia do usuario em `Preferências > Geral > Tabela de intervenções padrão para novos cadastros`, com fallback `PARTICULAR`;
+- `Indice` -> `R$` (com lista `R$`, `UHO`, `UPO`, `USO`);
+- `Cirurgiao responsavel` -> prestador ativo da clinica, com selecao preferencial do prestador vinculado ao usuario atual quando houver; caso nao haja, continua listado e selecionavel como prestador ativo sem vinculo;
+- `Unidade de atendimento` -> unidade ativa do cadastro, com preferencia para a unidade vinculada ao usuario atual quando existir;
 - `Observacoes` -> vazio;
 - `Inclusao` -> valor visual de auditoria;
 - `Alteracao` -> valor visual de auditoria;
@@ -207,17 +220,18 @@ O que ainda precisa de inventario fino antes de implementar:
 - `Sinais clinicos doenca periodontal` -> combo;
 - `Alteracao dos tecidos moles` -> combo;
 - `N da guia de tratamento` -> campo de texto;
-- `Data da autorizacao` -> campo de data;
+- `Data da autorizacao` -> campo de data com validação local e calendário popup;
 - `Senha de autorizacao` -> campo de texto;
-- `Validade da senha` -> campo de data.
+- `Validade da senha` -> campo de data com validação local e calendário popup.
 
 ## 10. Comportamento dos botoes
 
 ### 10.1 Ok
 
-- em etapa futura, devera validar os campos necessarios;
-- em etapa futura, devera criar ou salvar o tratamento;
-- nesta etapa, o comportamento real nao sera implementado.
+- valida os campos necessarios de forma minima para permitir a persistencia;
+- cria o tratamento na primeira gravacao;
+- atualiza o mesmo tratamento em gravacoes posteriores enquanto a janela estiver aberta;
+- preenche os campos de auditoria conforme a regra operacional acima.
 
 ### 10.2 Cancela
 
@@ -276,7 +290,9 @@ Esta primeira etapa futura de implementacao visual deve respeitar:
 
 - o menu `Tratamento -> Novo tratamento` aciona a janela;
 - `Cancela` fecha sem salvar;
-- `Ok` permanece sem gravacao nesta primeira etapa visual;
+- `Ok` grava ou atualiza o tratamento;
+- `Inclusao` permanece vazia ate a primeira gravacao;
+- `Alteracao` permanece vazia ate haver atualizacao posterior;
 - a aba Convenio permanece controlada como pendencia documental;
 - a tela nao altera outros modulos;
 - a tela nao gera escrita em banco;
@@ -320,4 +336,3 @@ Relacao entre os dois:
 Proxima etapa recomendada:
 
 - implementacao visual isolada do modal `Novo tratamento`, acionado por `Tratamento -> Novo tratamento`, sem alterar o comportamento clinico real nesta fase inicial.
-

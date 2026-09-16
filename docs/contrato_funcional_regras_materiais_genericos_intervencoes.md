@@ -235,6 +235,10 @@ O erro `Tabela de procedimentos nao encontrada.` nao pode aparecer em vinculo va
 ### 9.37 Erro de gravacao do generico
 O erro `Falha ao gravar materiais do procedimento.` precisa ser tratado em correcao separada, mas sem violar este contrato.
 
+### 9.38 Estado transitório de origem
+O marcador `herdado` pode existir apenas como estado transitório de composição antes do save.
+Após a materialização e reabertura, os materiais passam a ser tratados como vínculos comuns do procedimento, sem bloqueio permanente por origem e sem badge persistente na interface.
+
 ## 10. Regras que nunca podem ser violadas
 
 - material proprio da Intervencao atual nunca perde prioridade;
@@ -453,3 +457,23 @@ Auditar a origem da lista, sem alterar codigo, validando em leitura:
 - se a lista herdada vem vazia quando o generico nao possui materiais;
 - se a lista final respeita proprio + herdado somente da origem atual.
 
+## 17. Microetapa complementar validada
+
+Na validacao real complementar do procedimento `66929 / TESTE HERANCA MATERIAL`, foi confirmado que:
+
+- o DELETE de `00130` no endpoint `/api/procedimentos/66929/materiais-vinculados/por-codigo/00130` retornou `200`;
+- a leitura posterior de `GET /api/procedimentos/66929` voltou a exibir `00130` com `origem = herdado`;
+- a quantidade reaparecida foi `20`;
+- nao houve duplicidade de linha;
+- o generico `82` permaneceu intacto;
+- o painel financeiro seguiu coerente com a recomposicao.
+
+## 18. Confirmacao do modal de desvinculacao
+
+O modal de confirmacao do botao `Desvincular material` passou a seguir o contrato visual validado:
+
+- `Nao` fecha o modal sem requisicao;
+- `Sim` dispara um unico `DELETE` real;
+- a mensagem usa o nome real do material selecionado;
+- nao ha uso de `window.confirm`, `alert` ou `prompt`;
+- a selecao continua coerente apos a resposta.

@@ -1,0 +1,6 @@
+tabela,coluna,tipo_de_referencia,quantidade_total,validas,quebradas,caminhos_absolutos_windows,caminhos_relativos,tratamento_recomendado,bloqueia_migracao
+modelos_documento,caminho_arquivo,ARQUIVO_DOCUMENTO,187,187,0,0,187,normalizar caminhos relativos e mover base est?tica para S3/EFS apenas se houver upload real,NAO
+simbolo_grafico_catalogo,imagem_custom,IMAGEM_CLINICA,7,7,0,0,0,manter data URI na base ou externalizar apenas se necess?rio,NAO
+etiqueta_modelo,modelo_documento_id,MODELO_DE_DOCUMENTO,33,33,0,0,0,mantido em banco; referenciacao por FK,NAO
+item_auxiliar,imagem_indice,REFERENCIA_TECNICA,0,0,0,0,0,nenhuma a??o,NAO
+lancamento,documento,DOCUMENTO_CLINICO,0,0,0,0,0,nenhuma a??o,NAO

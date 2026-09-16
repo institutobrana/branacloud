@@ -1,0 +1,14 @@
+﻿
+schema_name table_name      
+----------- ----------      
+dbo         _STATUS_PACIENTE
+dbo         _TIPO_USUARIO   
+dbo         ANAMNESE_PERG   
+dbo         ANAMNESE_QUEST  
+dbo         ANAMNESE_RESP   
+dbo         CCPACIENTE      
+dbo         TMP_PARTICIPACAO
+dbo         USUARIO         
+dbo         USUARIO_FUNCAO  
+dbo         USUARIO_MODULO  
+dbo         USUARIO_PERFIL

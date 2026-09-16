@@ -1,0 +1,3836 @@
+{
+  "metadata": {
+    "clinica_id": 1,
+    "criterios_promocao": [
+      "unicidade_nome",
+      "especialidade_compativel",
+      "simbolo_compativel",
+      "forma_cobranca_compativel",
+      "status_compativel",
+      "evidencia_auxiliar_consistente",
+      "sem_conflito_vinculos",
+      "sem_mojibake"
+    ],
+    "sha256_origem": "3aef143b20cdbcf3926eea541ea0ef1909c0bb76ad158099eea004c926dc89b8",
+    "tabela_codigo": 4,
+    "tabela_id": 18,
+    "tabela_nome": "PARTICULAR",
+    "total_bloqueado_conflito": 0,
+    "total_inicial_media": 103,
+    "total_mantido_media": 103,
+    "total_promovido_alta": 0
+  },
+  "registros": [
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6010",
+      "codigo_brana": 6010,
+      "descricao_easy": "Alveoloplastica ou alveolotomia - (por sextante)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40558,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Alveoloplastica ou alveolotomia - (por sextante)",
+      "nome_normalizado": "alveoloplastica ou alveolotomia - (por sextante)",
+      "nroproctab": 2,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 57,
+      "simbolo_easy": 57,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6040",
+      "codigo_brana": 6040,
+      "descricao_easy": "Cirurgia para Cisto de Desenvolvimento",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40561,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia para Cisto de Desenvolvimento",
+      "nome_normalizado": "cirurgia para cisto de desenvolvimento",
+      "nroproctab": 5,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6050",
+      "codigo_brana": 6050,
+      "descricao_easy": "Cirurgia para Microstomia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40562,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia para Microstomia",
+      "nome_normalizado": "cirurgia para microstomia",
+      "nroproctab": 6,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6060",
+      "codigo_brana": 6060,
+      "descricao_easy": "Cirurgia para Osteoma e Odontoma",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40563,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia para Osteoma e Odontoma",
+      "nome_normalizado": "cirurgia para osteoma e odontoma",
+      "nroproctab": 7,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6070",
+      "codigo_brana": 6070,
+      "descricao_easy": "Cirurgia para torus palatino unilateral",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40564,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia para torus palatino unilateral",
+      "nome_normalizado": "cirurgia para torus palatino unilateral",
+      "nroproctab": 8,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6080",
+      "codigo_brana": 6080,
+      "descricao_easy": "Ciurgia para torus mandibular bilateral",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40565,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Ciurgia para torus mandibular bilateral",
+      "nome_normalizado": "ciurgia para torus mandibular bilateral",
+      "nroproctab": 9,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6100",
+      "codigo_brana": 6100,
+      "descricao_easy": "Cirurgia para torus palatino bilateral",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40567,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia para torus palatino bilateral",
+      "nome_normalizado": "cirurgia para torus palatino bilateral",
+      "nroproctab": 11,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6120",
+      "codigo_brana": 6120,
+      "descricao_easy": "Drenagem de abcesso por via intra ou extra-oral",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40569,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Drenagem de abcesso por via intra ou extra-oral",
+      "nome_normalizado": "drenagem de abcesso por via intra ou extra-oral",
+      "nroproctab": 13,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6210",
+      "codigo_brana": 6210,
+      "descricao_easy": "Exodontia de incluso",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40578,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia de incluso",
+      "nome_normalizado": "exodontia de incluso",
+      "nroproctab": 22,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6220",
+      "codigo_brana": 6220,
+      "descricao_easy": "Exodontia de incluso impactado",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40579,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia de incluso impactado",
+      "nome_normalizado": "exodontia de incluso impactado",
+      "nroproctab": 23,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6230",
+      "codigo_brana": 6230,
+      "descricao_easy": "Exodontia de raiz residual",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40580,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia de raiz residual",
+      "nome_normalizado": "exodontia de raiz residual",
+      "nroproctab": 24,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6240",
+      "codigo_brana": 6240,
+      "descricao_easy": "Exodontia de raiz residual com retalho",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40581,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia de raiz residual com retalho",
+      "nome_normalizado": "exodontia de raiz residual com retalho",
+      "nroproctab": 25,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6250",
+      "codigo_brana": 6250,
+      "descricao_easy": "Exodontia de semi-incluso",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40582,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia de semi-incluso",
+      "nome_normalizado": "exodontia de semi-incluso",
+      "nroproctab": 26,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6260",
+      "codigo_brana": 6260,
+      "descricao_easy": "Exodontia + Enxerto + membrana",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40583,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia + Enxerto + membrana",
+      "nome_normalizado": "exodontia + enxerto + membrana",
+      "nroproctab": 27,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6270",
+      "codigo_brana": 6270,
+      "descricao_easy": "Exodontia simples - (Anteriores)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40584,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia simples - (Anteriores)",
+      "nome_normalizado": "exodontia simples - (anteriores)",
+      "nroproctab": 28,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6280",
+      "codigo_brana": 6280,
+      "descricao_easy": "Exodontia simples - (Posteriores)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40585,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Exodontia simples - (Posteriores)",
+      "nome_normalizado": "exodontia simples - (posteriores)",
+      "nroproctab": 29,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 13,
+      "simbolo_easy": 13,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6350",
+      "codigo_brana": 6350,
+      "descricao_easy": "Tratamento de alveolite",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40592,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Tratamento de alveolite",
+      "nome_normalizado": "tratamento de alveolite",
+      "nroproctab": 36,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 57,
+      "simbolo_easy": 57,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "6360",
+      "codigo_brana": 6360,
+      "descricao_easy": "Tratamento de hemorragia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40593,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Tratamento de hemorragia",
+      "nome_normalizado": "tratamento de hemorragia",
+      "nroproctab": 37,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "5020",
+      "codigo_brana": 5020,
+      "descricao_easy": "Capeamento pulpar",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40597,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Capeamento pulpar",
+      "nome_normalizado": "capeamento pulpar",
+      "nroproctab": 41,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 53,
+      "simbolo_easy": 53,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "5030",
+      "codigo_brana": 5030,
+      "descricao_easy": "Clareamento - (Caseiro)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40598,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Clareamento - (Caseiro)",
+      "nome_normalizado": "clareamento - (caseiro)",
+      "nroproctab": 42,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 31,
+      "simbolo_easy": 31,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "5040",
+      "codigo_brana": 5040,
+      "descricao_easy": "Clareamento - (Laser)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40599,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Clareamento - (Laser)",
+      "nome_normalizado": "clareamento - (laser)",
+      "nroproctab": 43,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 31,
+      "simbolo_easy": 31,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "5050",
+      "codigo_brana": 5050,
+      "descricao_easy": "Clareamento interno - (dentes desvitalizados)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40600,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Clareamento interno - (dentes desvitalizados)",
+      "nome_normalizado": "clareamento interno - (dentes desvitalizados)",
+      "nroproctab": 44,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 31,
+      "simbolo_easy": 31,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "5070",
+      "codigo_brana": 5070,
+      "descricao_easy": "Faceta em resina direta - (Dentes anteriores)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40602,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Faceta em resina direta - (Dentes anteriores)",
+      "nome_normalizado": "faceta em resina direta - (dentes anteriores)",
+      "nroproctab": 46,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 39,
+      "simbolo_easy": 39,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "5150",
+      "codigo_brana": 5150,
+      "descricao_easy": "Polimento e Acabamento",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40611,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Polimento e Acabamento",
+      "nome_normalizado": "polimento e acabamento",
+      "nroproctab": 55,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 59,
+      "simbolo_easy": 59,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4000",
+      "codigo_brana": 4000,
+      "descricao_easy": "Apicectomia em Incisivos com enxerto leofilizado",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40624,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Apicectomia em Incisivos com enxerto leofilizado",
+      "nome_normalizado": "apicectomia em incisivos com enxerto leofilizado",
+      "nroproctab": 68,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 15,
+      "simbolo_easy": 15,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4020",
+      "codigo_brana": 4020,
+      "descricao_easy": "Apicectomia em Incisivos curetagem apical",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40626,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Apicectomia em Incisivos curetagem apical",
+      "nome_normalizado": "apicectomia em incisivos curetagem apical",
+      "nroproctab": 70,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 15,
+      "simbolo_easy": 15,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4030",
+      "codigo_brana": 4030,
+      "descricao_easy": "Apicectomia em Molares com enxerto leofilizado",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40627,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Apicectomia em Molares com enxerto leofilizado",
+      "nome_normalizado": "apicectomia em molares com enxerto leofilizado",
+      "nroproctab": 71,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 15,
+      "simbolo_easy": 15,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4050",
+      "codigo_brana": 4050,
+      "descricao_easy": "Apicectomia em Molares curetagem apical",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40629,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Apicectomia em Molares curetagem apical",
+      "nome_normalizado": "apicectomia em molares curetagem apical",
+      "nroproctab": 73,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 15,
+      "simbolo_easy": 15,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4090",
+      "codigo_brana": 4090,
+      "descricao_easy": "Clareamento Interno",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40633,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Clareamento Interno",
+      "nome_normalizado": "clareamento interno",
+      "nroproctab": 77,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 31,
+      "simbolo_easy": 31,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4120",
+      "codigo_brana": 4120,
+      "descricao_easy": "Pulpotomia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "05",
+      "especialidade_easy": "05",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40636,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Pulpotomia",
+      "nome_normalizado": "pulpotomia",
+      "nroproctab": 80,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 48,
+      "simbolo_easy": 48,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4160",
+      "codigo_brana": 4160,
+      "descricao_easy": "Retratamento de Canal - (Incisivos)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "03",
+      "especialidade_easy": "03",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40640,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Retratamento de Canal - (Incisivos)",
+      "nome_normalizado": "retratamento de canal - (incisivos)",
+      "nroproctab": 84,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 12,
+      "simbolo_easy": 12,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4170",
+      "codigo_brana": 4170,
+      "descricao_easy": "Retratamento de Canal - (Molares com 4 ou mais condutos)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40641,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Retratamento de Canal - (Molares com 4 ou mais condutos)",
+      "nome_normalizado": "retratamento de canal - (molares com 4 ou mais condutos)",
+      "nroproctab": 85,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 12,
+      "simbolo_easy": 12,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4180",
+      "codigo_brana": 4180,
+      "descricao_easy": "Retratamento de Canal - (Molares)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40642,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Retratamento de Canal - (Molares)",
+      "nome_normalizado": "retratamento de canal - (molares)",
+      "nroproctab": 86,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 12,
+      "simbolo_easy": 12,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4220",
+      "codigo_brana": 4220,
+      "descricao_easy": "Tratamento de Canal - (Incisivos)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "03",
+      "especialidade_easy": "03",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40646,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Tratamento de Canal - (Incisivos)",
+      "nome_normalizado": "tratamento de canal - (incisivos)",
+      "nroproctab": 90,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 12,
+      "simbolo_easy": 12,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4230",
+      "codigo_brana": 4230,
+      "descricao_easy": "Tratamento de Canal - (Molares com mais de 3 condutos)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40647,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Tratamento de Canal - (Molares com mais de 3 condutos)",
+      "nome_normalizado": "tratamento de canal - (molares com mais de 3 condutos)",
+      "nroproctab": 91,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 12,
+      "simbolo_easy": 12,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "4240",
+      "codigo_brana": 4240,
+      "descricao_easy": "Tratamento de Canal - (Molares)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40648,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Tratamento de Canal - (Molares)",
+      "nome_normalizado": "tratamento de canal - (molares)",
+      "nroproctab": 92,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 12,
+      "simbolo_easy": 12,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "2090",
+      "codigo_brana": 2090,
+      "descricao_easy": "Curativo",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "05",
+      "especialidade_easy": "05",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40661,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Curativo",
+      "nome_normalizado": "curativo",
+      "nroproctab": 105,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 57,
+      "simbolo_easy": 57,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "2110",
+      "codigo_brana": 2110,
+      "descricao_easy": "Modelo de Estudo - (Superior e Infeiror)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40663,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Modelo de Estudo - (Superior e Infeiror)",
+      "nome_normalizado": "modelo de estudo - (superior e infeiror)",
+      "nroproctab": 107,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 41,
+      "simbolo_easy": 41,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "2120",
+      "codigo_brana": 2120,
+      "descricao_easy": "Radiografia Bite-Wing - (inter-proximal)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "11",
+      "especialidade_easy": "11",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40664,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Radiografia Bite-Wing - (inter-proximal)",
+      "nome_normalizado": "radiografia bite-wing - (inter-proximal)",
+      "nroproctab": 108,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 11,
+      "simbolo_easy": 11,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "2130",
+      "codigo_brana": 2130,
+      "descricao_easy": "Radiografia Oclusal",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "11",
+      "especialidade_easy": "11",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40665,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Radiografia Oclusal",
+      "nome_normalizado": "radiografia oclusal",
+      "nroproctab": 109,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 35,
+      "simbolo_easy": 35,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "2140",
+      "codigo_brana": 2140,
+      "descricao_easy": "Radiografia Periapical",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "11",
+      "especialidade_easy": "11",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40666,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Radiografia Periapical",
+      "nome_normalizado": "radiografia periapical",
+      "nroproctab": 110,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 11,
+      "simbolo_easy": 11,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "7040",
+      "codigo_brana": 7040,
+      "descricao_easy": "Enxerto Osseo Particulado + Membrana colageno.",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40667,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Enxerto Osseo Particulado + Membrana colageno.",
+      "nome_normalizado": "enxerto osseo particulado + membrana colageno.",
+      "nroproctab": 111,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "7010",
+      "codigo_brana": 7010,
+      "descricao_easy": "Implante (RTG)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "13",
+      "especialidade_easy": "13",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40669,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Implante (RTG)",
+      "nome_normalizado": "implante (rtg)",
+      "nroproctab": 113,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 9,
+      "simbolo_easy": 9,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3000",
+      "codigo_brana": 3000,
+      "descricao_easy": "Abertura de implante - (Giro de retalho)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40674,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Abertura de implante - (Giro de retalho)",
+      "nome_normalizado": "abertura de implante - (giro de retalho)",
+      "nroproctab": 118,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": null,
+      "simbolo_easy": null,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3010",
+      "codigo_brana": 3010,
+      "descricao_easy": "Abertura de implante - (Osteotomia)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40675,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Abertura de implante - (Osteotomia)",
+      "nome_normalizado": "abertura de implante - (osteotomia)",
+      "nroproctab": 119,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3020",
+      "codigo_brana": 3020,
+      "descricao_easy": "Abertura de implante - (Plastia)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40676,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Abertura de implante - (Plastia)",
+      "nome_normalizado": "abertura de implante - (plastia)",
+      "nroproctab": 120,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 17,
+      "simbolo_easy": 17,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3030",
+      "codigo_brana": 3030,
+      "descricao_easy": "Abertura de implante mand. - (Enxerto Livre)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40677,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Abertura de implante mand. - (Enxerto Livre)",
+      "nome_normalizado": "abertura de implante mand. - (enxerto livre)",
+      "nroproctab": 121,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3040",
+      "codigo_brana": 3040,
+      "descricao_easy": "Abertura de implante mand. - (Osteotomia e Livre)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40678,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Abertura de implante mand. - (Osteotomia e Livre)",
+      "nome_normalizado": "abertura de implante mand. - (osteotomia e livre)",
+      "nroproctab": 122,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3080",
+      "codigo_brana": 3080,
+      "descricao_easy": "Bridectomia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40682,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Bridectomia",
+      "nome_normalizado": "bridectomia",
+      "nroproctab": 126,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 26,
+      "simbolo_easy": 26,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3120",
+      "codigo_brana": 3120,
+      "descricao_easy": "Cirurgia para Rizectomia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "06",
+      "especialidade_easy": "06",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40686,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia para Rizectomia",
+      "nome_normalizado": "cirurgia para rizectomia",
+      "nroproctab": 130,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 47,
+      "simbolo_easy": 47,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3140",
+      "codigo_brana": 3140,
+      "descricao_easy": "Cirurgia Periodontal a retalho - (1 elemento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40688,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia Periodontal a retalho - (1 elemento)",
+      "nome_normalizado": "cirurgia periodontal a retalho - (1 elemento)",
+      "nroproctab": 132,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 17,
+      "simbolo_easy": 17,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3150",
+      "codigo_brana": 3150,
+      "descricao_easy": "Cirurgia Periodontal a retalho - (por segmento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40689,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cirurgia Periodontal a retalho - (por segmento)",
+      "nome_normalizado": "cirurgia periodontal a retalho - (por segmento)",
+      "nroproctab": 133,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 17,
+      "simbolo_easy": 17,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3160",
+      "codigo_brana": 3160,
+      "descricao_easy": "Cunha Distal ou Proximal",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40690,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Cunha Distal ou Proximal",
+      "nome_normalizado": "cunha distal ou proximal",
+      "nroproctab": 134,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 57,
+      "simbolo_easy": 57,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3170",
+      "codigo_brana": 3170,
+      "descricao_easy": "Enxerto de Tecido Conjuntivo",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40691,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Enxerto de Tecido Conjuntivo",
+      "nome_normalizado": "enxerto de tecido conjuntivo",
+      "nroproctab": 135,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3180",
+      "codigo_brana": 3180,
+      "descricao_easy": "Enxerto Gengival Livre",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40692,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Enxerto Gengival Livre",
+      "nome_normalizado": "enxerto gengival livre",
+      "nroproctab": 136,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3200",
+      "codigo_brana": 3200,
+      "descricao_easy": "Enxerto Pediculado - (por elemento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40694,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Enxerto Pediculado - (por elemento)",
+      "nome_normalizado": "enxerto pediculado - (por elemento)",
+      "nroproctab": 138,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3210",
+      "codigo_brana": 3210,
+      "descricao_easy": "Enxerto por Tracionamento de Vestibulo - (por elemento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40695,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Enxerto por Tracionamento de Vestibulo - (por elemento)",
+      "nome_normalizado": "enxerto por tracionamento de vestibulo - (por elemento)",
+      "nroproctab": 139,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3220",
+      "codigo_brana": 3220,
+      "descricao_easy": "Enxerto por Tracionamento de Vestibulo - (por segmento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40696,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Enxerto por Tracionamento de Vestibulo - (por segmento)",
+      "nome_normalizado": "enxerto por tracionamento de vestibulo - (por segmento)",
+      "nroproctab": 140,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3230",
+      "codigo_brana": 3230,
+      "descricao_easy": "Frenectomia labial inferior",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40697,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Frenectomia labial inferior",
+      "nome_normalizado": "frenectomia labial inferior",
+      "nroproctab": 141,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 26,
+      "simbolo_easy": 26,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3240",
+      "codigo_brana": 3240,
+      "descricao_easy": "Frenectomia labial superior",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40698,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Frenectomia labial superior",
+      "nome_normalizado": "frenectomia labial superior",
+      "nroproctab": 142,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 26,
+      "simbolo_easy": 26,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3270",
+      "codigo_brana": 3270,
+      "descricao_easy": "Frenotomia Lingual",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40701,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Frenotomia Lingual",
+      "nome_normalizado": "frenotomia lingual",
+      "nroproctab": 145,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 26,
+      "simbolo_easy": 26,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3280",
+      "codigo_brana": 3280,
+      "descricao_easy": "Gengivectomia ou Gengivoplastia - (por elemento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40702,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Gengivectomia ou Gengivoplastia - (por elemento)",
+      "nome_normalizado": "gengivectomia ou gengivoplastia - (por elemento)",
+      "nroproctab": 146,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 16,
+      "simbolo_easy": 16,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3290",
+      "codigo_brana": 3290,
+      "descricao_easy": "Gengivectomia ou Gengivoplastia - (por segmento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40703,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Gengivectomia ou Gengivoplastia - (por segmento)",
+      "nome_normalizado": "gengivectomia ou gengivoplastia - (por segmento)",
+      "nroproctab": 147,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 16,
+      "simbolo_easy": 16,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3300",
+      "codigo_brana": 3300,
+      "descricao_easy": "Gengivectomia palatina / lingual - (por elemento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40704,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Gengivectomia palatina / lingual - (por elemento)",
+      "nome_normalizado": "gengivectomia palatina / lingual - (por elemento)",
+      "nroproctab": 148,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 16,
+      "simbolo_easy": 16,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3310",
+      "codigo_brana": 3310,
+      "descricao_easy": "Gengivectomia palatina / lingual - (por segmento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40705,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Gengivectomia palatina / lingual - (por segmento)",
+      "nome_normalizado": "gengivectomia palatina / lingual - (por segmento)",
+      "nroproctab": 149,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 16,
+      "simbolo_easy": 16,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3330",
+      "codigo_brana": 3330,
+      "descricao_easy": "Raspagem Sub-gengival e Curetagem de bolsa - (por segmento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40707,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Raspagem Sub-gengival e Curetagem de bolsa - (por segmento)",
+      "nome_normalizado": "raspagem sub-gengival e curetagem de bolsa - (por segmento)",
+      "nroproctab": 151,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 18,
+      "simbolo_easy": 18,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3340",
+      "codigo_brana": 3340,
+      "descricao_easy": "Raspagem Supra-gengival - (por segmento)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40708,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Raspagem Supra-gengival - (por segmento)",
+      "nome_normalizado": "raspagem supra-gengival - (por segmento)",
+      "nroproctab": 152,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 18,
+      "simbolo_easy": 18,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3360",
+      "codigo_brana": 3360,
+      "descricao_easy": "Sepultamento Radicular - (por raiz)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40710,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Sepultamento Radicular - (por raiz)",
+      "nome_normalizado": "sepultamento radicular - (por raiz)",
+      "nroproctab": 154,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 57,
+      "simbolo_easy": 57,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "3370",
+      "codigo_brana": 3370,
+      "descricao_easy": "Ulectomia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "04",
+      "especialidade_easy": "04",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40711,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Ulectomia",
+      "nome_normalizado": "ulectomia",
+      "nroproctab": 155,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 51,
+      "simbolo_easy": 51,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "1070",
+      "codigo_brana": 1070,
+      "descricao_easy": "Profilaxia - (Ultrason e Jato de Bicarbonato)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "08",
+      "especialidade_easy": "08",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40719,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Profilaxia - (Ultrason e Jato de Bicarbonato)",
+      "nome_normalizado": "profilaxia - (ultrason e jato de bicarbonato)",
+      "nroproctab": 163,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 8,
+      "simbolo_easy": 8,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "1080",
+      "codigo_brana": 1080,
+      "descricao_easy": "Teste de fluxo salivar",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "08",
+      "especialidade_easy": "08",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40720,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Teste de fluxo salivar",
+      "nome_normalizado": "teste de fluxo salivar",
+      "nroproctab": 164,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 28,
+      "simbolo_easy": 28,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8000",
+      "codigo_brana": 8000,
+      "descricao_easy": "Attachment",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40722,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Attachment",
+      "nome_normalizado": "attachment",
+      "nroproctab": 166,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 52,
+      "simbolo_easy": 52,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8010",
+      "codigo_brana": 8010,
+      "descricao_easy": "Casquete de moldagem",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40723,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Casquete de moldagem",
+      "nome_normalizado": "casquete de moldagem",
+      "nroproctab": 167,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 56,
+      "simbolo_easy": 56,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8030",
+      "codigo_brana": 8030,
+      "descricao_easy": "Coroa em Resina Prensada",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40725,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa em Resina Prensada",
+      "nome_normalizado": "coroa em resina prensada",
+      "nroproctab": 169,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8040",
+      "codigo_brana": 8040,
+      "descricao_easy": "Coroa em Resina Sinfony",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40726,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa em Resina Sinfony",
+      "nome_normalizado": "coroa em resina sinfony",
+      "nroproctab": 170,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8050",
+      "codigo_brana": 8050,
+      "descricao_easy": "Coroa em Resina sob implante",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40727,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa em Resina sob implante",
+      "nome_normalizado": "coroa em resina sob implante",
+      "nroproctab": 171,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8060",
+      "codigo_brana": 8060,
+      "descricao_easy": "Coroa Metal-free - (Cerampress)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40728,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free - (Cerampress)",
+      "nome_normalizado": "coroa metal-free - (cerampress)",
+      "nroproctab": 172,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8070",
+      "codigo_brana": 8070,
+      "descricao_easy": "Coroa Metal-free - (Inceram)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40729,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free - (Inceram)",
+      "nome_normalizado": "coroa metal-free - (inceram)",
+      "nroproctab": 173,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8080",
+      "codigo_brana": 8080,
+      "descricao_easy": "Coroa Metal-free - (Procera)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40730,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free - (Procera)",
+      "nome_normalizado": "coroa metal-free - (procera)",
+      "nroproctab": 174,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8090",
+      "codigo_brana": 8090,
+      "descricao_easy": "Coroa Metal-free - (Zirconia; Sistema CAD/CAM)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40731,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free - (Zirconia; Sistema CAD/CAM)",
+      "nome_normalizado": "coroa metal-free - (zirconia; sistema cad/cam)",
+      "nroproctab": 175,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8100",
+      "codigo_brana": 8100,
+      "descricao_easy": "Coroa Metal-free sob implante - (Cerampress)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40732,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free sob implante - (Cerampress)",
+      "nome_normalizado": "coroa metal-free sob implante - (cerampress)",
+      "nroproctab": 176,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8110",
+      "codigo_brana": 8110,
+      "descricao_easy": "Coroa Metal-free sob implante - (Inceram)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40733,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free sob implante - (Inceram)",
+      "nome_normalizado": "coroa metal-free sob implante - (inceram)",
+      "nroproctab": 177,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8120",
+      "codigo_brana": 8120,
+      "descricao_easy": "Coroa Metal-free sob implante - (Procera)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40734,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free sob implante - (Procera)",
+      "nome_normalizado": "coroa metal-free sob implante - (procera)",
+      "nroproctab": 178,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8130",
+      "codigo_brana": 8130,
+      "descricao_easy": "Coroa Metal-free sob implante - (Zirconia; Sistema CAD/CAM)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40735,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Coroa Metal-free sob implante - (Zirconia; Sistema CAD/CAM)",
+      "nome_normalizado": "coroa metal-free sob implante - (zirconia; sistema cad/cam)",
+      "nroproctab": 179,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8500",
+      "codigo_brana": 8500,
+      "descricao_easy": "E-MAX - Lente de contato",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40743,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "E-MAX - Lente de contato",
+      "nome_normalizado": "e-max - lente de contato",
+      "nroproctab": 187,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 39,
+      "simbolo_easy": 39,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8220",
+      "codigo_brana": 8220,
+      "descricao_easy": "Faceta em Porcelana",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40747,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Faceta em Porcelana",
+      "nome_normalizado": "faceta em porcelana",
+      "nroproctab": 191,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 39,
+      "simbolo_easy": 39,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8230",
+      "codigo_brana": 8230,
+      "descricao_easy": "Faceta em Resina Acrilica",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40748,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Faceta em Resina Acrilica",
+      "nome_normalizado": "faceta em resina acrilica",
+      "nroproctab": 192,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 39,
+      "simbolo_easy": 39,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8240",
+      "codigo_brana": 8240,
+      "descricao_easy": "Guia Cirurgico",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "02",
+      "especialidade_easy": "02",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40749,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Guia Cirurgico",
+      "nome_normalizado": "guia cirurgico",
+      "nroproctab": 193,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8290",
+      "codigo_brana": 8290,
+      "descricao_easy": "Placa de mordida miorrelaxante",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40754,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Placa de mordida miorrelaxante",
+      "nome_normalizado": "placa de mordida miorrelaxante",
+      "nroproctab": 199,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 37,
+      "simbolo_easy": 37,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8305",
+      "codigo_brana": 8305,
+      "descricao_easy": "Placa para Bruxismo Mista - (Erkoflex)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40756,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Placa para Bruxismo Mista - (Erkoflex)",
+      "nome_normalizado": "placa para bruxismo mista - (erkoflex)",
+      "nroproctab": 201,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 37,
+      "simbolo_easy": 37,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8310",
+      "codigo_brana": 8310,
+      "descricao_easy": "Placa para Clareamento",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40757,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Placa para Clareamento",
+      "nome_normalizado": "placa para clareamento",
+      "nroproctab": 202,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 37,
+      "simbolo_easy": 37,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8291",
+      "codigo_brana": 8291,
+      "descricao_easy": "Protetor bucal Playsafe",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40771,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Protetor bucal Playsafe",
+      "nome_normalizado": "protetor bucal playsafe",
+      "nroproctab": 216,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 37,
+      "simbolo_easy": 37,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8315",
+      "codigo_brana": 8315,
+      "descricao_easy": "Placa para Ortose",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40873,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Placa para Ortose",
+      "nome_normalizado": "placa para ortose",
+      "nroproctab": 318,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 37,
+      "simbolo_easy": 37,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "9000",
+      "codigo_brana": 9000,
+      "descricao_easy": "Micro-agulhamento (Derma Roller)",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "14",
+      "especialidade_easy": "14",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40874,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Micro-agulhamento (Derma Roller)",
+      "nome_normalizado": "micro-agulhamento (derma roller)",
+      "nroproctab": 319,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 10,
+      "simbolo_easy": 10,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8292",
+      "codigo_brana": 8292,
+      "descricao_easy": "Protetor bucal Playsafe Personalizado",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "07",
+      "especialidade_easy": "07",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40875,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Protetor bucal Playsafe Personalizado",
+      "nome_normalizado": "protetor bucal playsafe personalizado",
+      "nroproctab": 320,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 37,
+      "simbolo_easy": 37,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "7050",
+      "codigo_brana": 7050,
+      "descricao_easy": "Levanto de seio maxilar",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40876,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Levanto de seio maxilar",
+      "nome_normalizado": "levanto de seio maxilar",
+      "nroproctab": 321,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 25,
+      "simbolo_easy": 25,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "9010",
+      "codigo_brana": 9010,
+      "descricao_easy": "Botox",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "14",
+      "especialidade_easy": "14",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40877,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Botox",
+      "nome_normalizado": "botox",
+      "nroproctab": 322,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 43,
+      "simbolo_easy": 43,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "9020",
+      "codigo_brana": 9020,
+      "descricao_easy": "Preenchimento",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "14",
+      "especialidade_easy": "14",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40879,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Preenchimento",
+      "nome_normalizado": "preenchimento",
+      "nroproctab": 324,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 10,
+      "simbolo_easy": 10,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "9030",
+      "codigo_brana": 9030,
+      "descricao_easy": "Lipo de papada",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "14",
+      "especialidade_easy": "14",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40882,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Lipo de papada",
+      "nome_normalizado": "lipo de papada",
+      "nroproctab": 327,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "9050",
+      "codigo_brana": 9050,
+      "descricao_easy": "Bichectomia",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "14",
+      "especialidade_easy": "14",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40885,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Bichectomia",
+      "nome_normalizado": "bichectomia",
+      "nroproctab": 330,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 45,
+      "simbolo_easy": 45,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "7023",
+      "codigo_brana": 7023,
+      "descricao_easy": "Implante Cone Morse + Enxerto",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": null,
+      "especialidade_easy": null,
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40887,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Implante Cone Morse + Enxerto",
+      "nome_normalizado": "implante cone morse + enxerto",
+      "nroproctab": 332,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 9,
+      "simbolo_easy": 9,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "8482",
+      "codigo_brana": 8482,
+      "descricao_easy": "E-MAX - Jaqueta pura em dissilicato",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "01",
+      "especialidade_easy": "01",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40888,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "E-MAX - Jaqueta pura em dissilicato",
+      "nome_normalizado": "e-max - jaqueta pura em dissilicato",
+      "nroproctab": 333,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 1,
+      "simbolo_easy": 1,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    },
+    {
+      "acao_futura_bloqueada": "apply",
+      "acao_futura_permitida": "revisar",
+      "classificacao_anterior": "M?DIA",
+      "classificacao_final": "MANTIDO_MEDIA",
+      "codconv": "2111",
+      "codigo_brana": 2111,
+      "descricao_easy": "Foto extra-oral",
+      "divergencias": [
+        "codigo_nro"
+      ],
+      "especialidade_brana": "14",
+      "especialidade_easy": "14",
+      "evidencias_favoraveis": [
+        "nome_unico",
+        "correspondencia_semantica"
+      ],
+      "forma_cobranca_brana": null,
+      "forma_cobranca_easy": null,
+      "id_brana": 40889,
+      "justificativa": "nome preservado como chave semantica; codigo varia entre CODCONV e NROPROCTAB conforme presenca de CODCONV",
+      "nome_brana": "Foto extra-oral",
+      "nome_normalizado": "foto extra-oral",
+      "nroproctab": 334,
+      "observacoes": null,
+      "preco_brana": 0.0,
+      "preco_easy": null,
+      "risco": "baixo",
+      "simbolo_brana": 43,
+      "simbolo_easy": 43,
+      "status_brana": "ativo",
+      "status_easy": "ativo",
+      "vinculos": {
+        "possui_vinculos": false,
+        "tipos": []
+      }
+    }
+  ]
+}

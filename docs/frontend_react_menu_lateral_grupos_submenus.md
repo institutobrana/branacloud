@@ -164,3 +164,11 @@ Nesta etapa a shell do `frontend-react` foi reorganizada para um modelo de naveg
 - validar visualmente a abertura do painel contextual;
 - refinar espaços e quebra de texto, se necessário;
 - seguir para a próxima tela funcional somente após estabilizar este padrão de navegação.
+
+## Atualizacao 2026-07-14
+
+- `Cenario anual` foi adicionado ao submenu `Configuracao` com destino funcional no `frontend-react`.
+- A ordem textual dos submenus foi mantida em listas explicitas e ajustada para ordem alfabetica em portugues.
+- A coluna vertical de icones principais continua na mesma ordem funcional.
+- Itens desabilitados permanecem desabilitados.
+- A validacao funcional completa do navegador depende da execucao manual nesta sessao.

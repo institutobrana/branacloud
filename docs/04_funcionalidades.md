@@ -46,6 +46,19 @@ Gerencia prestadores odontologicos, tipos, credenciamentos, comissoes, convenios
 
 Regras: prestadores podem se relacionar com usuarios; comissoes e credenciamentos dependem de convenios, planos e procedimentos; filtros por clinica sao obrigatorios.
 
+### Fechamento atual — Convênios e planos React
+
+O módulo React está funcionalmente encerrado em
+`/app/cadastro/convenios-planos`, com CRUD de convênios, CRUD de planos,
+calendário de faturamento, duplo clique, CEP autofill, master-detail,
+responsividade e temas light/dark validados. O contrato detalhado está em
+`docs/fechamento_convenios_planos_react_cp7.md`.
+
+As rotas usam `require_module_access("configuracao")` e filtram por
+`current_user.clinica_id`. O calendário usa `convenio_row_id`, datas em
+`dd/mm/aaaa`, múltiplas linhas e fechamento pelo X; não há geração financeira
+automática comprovada.
+
 ## Agenda
 
 Codigo: `backend/routes/agenda_legado_routes.py`, `backend/routes/agenda_contatos_routes.py`, `backend/services/google_calendar_service.py`.
@@ -53,6 +66,11 @@ Codigo: `backend/routes/agenda_legado_routes.py`, `backend/routes/agenda_contato
 Cobre eventos, bloqueios, horarios livres, combos, status, prestadores, unidades, pacientes, contatos de agenda, avisos e Google Calendar.
 
 Regras: agenda usa `clinica_id`; eventos podem ter repeticao; avisos dependem de modelos de documentos e dados do paciente/prestador; Google/WhatsApp dependem de variaveis externas.
+
+O modulo React de Agenda de contatos esta documentado em
+`docs/contrato_fechamento_agenda_contatos_frontend_react.md`, incluindo a rota
+`/app/atendimento/agenda-contatos`, o CRUD de contatos e os placeholders de
+Imprime e Relatorio.
 
 ## Financeiro
 

@@ -478,3 +478,9 @@ Iniciar a Fase 0 visual e estrutural do ADM React, antes de conectar qualquer mÃ
 - O modal usa somente a cobranca selecionada ja carregada no frontend.
 - Nao foi criada rota, endpoint, requisicao adicional, backend, migration, seed ou integracao financeira.
 - `payload_json` permanece fora do escopo.
+## Atualizacao - ADM Auditoria auditoria inicial
+
+- A frente `ADM -> Auditoria` foi aberta para auditoria documental e tecnica em 2026-07-23.
+- O legado atual indica uma listagem read-only com cinco colunas e sem botoes.
+- A tabela real `plataforma_auditoria` confirma campos de ator, alvo, detalhes, IP e timestamp.
+- O React ainda esta em placeholder e deve permanecer assim ate o contrato da Fase 1 fechar.

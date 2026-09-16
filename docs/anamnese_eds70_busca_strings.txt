@@ -1,0 +1,23 @@
+﻿Pesquisa textual em ANAMNESE_QUEST:
+- Principal                               
+- Implante                                
+- Ficha complementar                      
+- Anamnese de Saúde
+- Anamnese pessoal
+
+Pesquisa textual em ANAMNESE_PERG (amostras):
+- Q1 P1: Está bem de saúde no momento?
+- Q1 P2: Quando fez seu último tratamento médico?
+- Q1 P3: Está atualmente em tratamento médico?
+- Q1 P4: Apresenta alergia a  medicamentos? Quais?
+- Q1 P5: Possui alguma doença grave? Qual?
+- Q1 P6: Está tomando algum medicamento? Qual?
+- Q1 P7: Quando fez seu último tratamento dentário?
+- Q1 P8: Sente dificuldade em abrir a boca
+- Q1 P9: Range os dentes à noite?
+- Q1 P10: Aperta os dentes costumeiramente?
+- Q1 P11: Alguma complicação durante tratamento odontológico?
+- Q1 P12: Tem sinusite?
+
+Evidencia do email da conta:
+- gleissontel@gmail.com detectado nas varreduras binárias do .bak/.mdf e associado ao contexto do legado EDS70.

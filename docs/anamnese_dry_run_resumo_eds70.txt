@@ -1,0 +1,35 @@
+DRY-RUN EDS70 -> PostgreSQL (sem escrita)
+Timestamp: 2026-05-15T09:51:51.550948+00:00
+
+Usuario localizado: gleissontel@gmail.com | clinica_id=1 | nome=Gleisson Tel
+Questionarios atuais no PostgreSQL (clinica 1): 1
+Perguntas atuais no Principal: 17
+Respostas agrupadas por questionario_id: 1
+ALERTA: respostas com questionario_id sem questionario atual: [3]
+
+Questionarios ausentes previstos para importacao futura:
+- Implante -> futuro_id_estimado=3 ordem=2
+- Ficha complementar -> futuro_id_estimado=4 ordem=3
+- Anamnese de Saúde -> futuro_id_estimado=5 ordem=4
+- Anamnese pessoal -> futuro_id_estimado=6 ordem=5
+
+Perguntas previstas por questionario ausente:
+- Implante: 12
+- Ficha complementar: 12
+- Anamnese de Saude: 0
+- Anamnese pessoal: 16
+
+Principal - comparacao:
+- PostgreSQL atual: 17 perguntas
+- EDS70: 35 perguntas
+- faltantes no atual: 18
+- divergencias de texto/ordem: 0
+
+Validacoes:
+- CSV questionarios: OK (5 linhas)
+- CSV perguntas: OK (130 linhas)
+- CSV resumo respostas: OK (118 linhas)
+- questionarios ausentes presentes no CSV: OK
+- questionarios ausentes ausentes no PostgreSQL atual: OK
+
+Nenhum INSERT/UPDATE/DELETE foi executado.
