@@ -659,6 +659,7 @@
     .editor-textos-open-delete-details{font:12px Tahoma,sans-serif;line-height:1.5}
     .editor-textos-open-delete-details .row{display:grid;grid-template-columns:130px 1fr;gap:8px}
     .editor-textos-open-delete-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:10px}
+    #editor-textos-new-backdrop{z-index:1315}
     .editor-textos-new-modal{width:min(360px,94vw);background:#f6f6f4;border:1px solid #bfc9d6;padding:10px;box-sizing:border-box}
     .editor-textos-new-group{border:1px solid #c7ced8;background:#fff;padding:8px}
     .editor-textos-new-option{display:flex;align-items:center;gap:6px;margin-bottom:6px}

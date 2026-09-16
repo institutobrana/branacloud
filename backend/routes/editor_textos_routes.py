@@ -41,6 +41,7 @@ from services.receituario_pdf_template_service import (
     ReceituarioPdfTemplateError,
     generate_receituario_acroform_pdf_bytes,
 )
+from services.model_document_storage import resolve_model_file_info as shared_resolve_model_file_info
 
 logger = logging.getLogger("brana.editor_textos")
 
@@ -1416,6 +1417,10 @@ def _choose_recursive_candidate(candidatos: list[dict]) -> dict | None:
 
 
 def _resolve_model_file_info(item: ModeloDocumento) -> dict:
+    return shared_resolve_model_file_info(item)
+
+
+def _legacy_resolve_model_file_info(item: ModeloDocumento) -> dict:
     original_path = _safe_relative_path(str(getattr(item, "caminho_arquivo", "") or ""))
     original_size = _model_file_size(original_path)
     fallback_reason = "caminho_original_vazio"
