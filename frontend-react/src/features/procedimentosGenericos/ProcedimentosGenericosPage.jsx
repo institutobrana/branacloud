@@ -5,6 +5,8 @@ import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
 import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
 import { listarProcedimentosGenericos, listarProcedimentosGenericosEspecialidades } from './procedimentosGenericosApi.js';
+import { ProcedimentoGenericoFasesModal } from './ProcedimentoGenericoFasesModal.jsx';
+import { ProcedimentoGenericoMateriaisModal } from './ProcedimentoGenericoMateriaisModal.jsx';
 import { ProcedimentoGenericoModal } from './ProcedimentoGenericoModal.jsx';
 
 function statusDot(inativo) {
@@ -28,6 +30,10 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
   const [modalMode, setModalMode] = useState('novo');
   const [modalItemId, setModalItemId] = useState(null);
   const [modalFocusToken, setModalFocusToken] = useState(0);
+  const [fasesOpen, setFasesOpen] = useState(false);
+  const [fasesItemId, setFasesItemId] = useState(null);
+  const [materiaisOpen, setMateriaisOpen] = useState(false);
+  const [materiaisItemId, setMateriaisItemId] = useState(null);
 
   const selectedItem = useMemo(() => items.find((item) => item.id === selectedId) || null, [items, selectedId]);
 
@@ -84,6 +90,60 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
     setModalOpen(true);
     setModalFocusToken((current) => current + 1);
   }, [novoProcedimentoToken]);
+
+  const openNewModal = () => {
+    setModalMode('novo');
+    setModalItemId(null);
+    setModalOpen(true);
+    setModalFocusToken((current) => current + 1);
+  };
+
+  const openEditModal = () => {
+    if (!selectedItem) {
+      message.warning('Selecione um registro para alterar.');
+      return;
+    }
+    setModalMode('editar');
+    setModalItemId(selectedItem.id);
+    setModalOpen(true);
+    setModalFocusToken((current) => current + 1);
+  };
+
+  const openFasesModal = () => {
+    if (!selectedItem) {
+      message.warning('Selecione um registro para configurar fases.');
+      return;
+    }
+    setFasesItemId(selectedItem.id);
+    setFasesOpen(true);
+  };
+
+  const openMateriaisModal = () => {
+    if (!selectedItem) {
+      message.warning('Selecione um registro para configurar materiais.');
+      return;
+    }
+    setMateriaisItemId(selectedItem.id);
+    setMateriaisOpen(true);
+  };
+
+  useEffect(() => {
+    const onToolbarAction = (event) => {
+      const action = String(event?.detail?.action || '').trim();
+      if (action === 'novo') {
+        openNewModal();
+      } else if (action === 'alterar') {
+        openEditModal();
+      } else if (action === 'fases') {
+        openFasesModal();
+      } else if (action === 'materiais') {
+        openMateriaisModal();
+      }
+    };
+
+    window.addEventListener('brana-procedimentos-genericos-toolbar-action', onToolbarAction);
+    return () => window.removeEventListener('brana-procedimentos-genericos-toolbar-action', onToolbarAction);
+  }, [selectedItem]);
 
   const sortedItems = useMemo(() => {
     const nextItems = [...items];
@@ -191,6 +251,30 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
         itemId={modalItemId}
         focusToken={modalFocusToken}
         onClose={() => setModalOpen(false)}
+        onSaved={() => {
+          void loadItems();
+        }}
+      />
+
+      <ProcedimentoGenericoFasesModal
+        open={fasesOpen}
+        procedureId={fasesItemId}
+        onClose={() => {
+          setFasesOpen(false);
+          setFasesItemId(null);
+        }}
+        onSaved={() => {
+          void loadItems();
+        }}
+      />
+
+      <ProcedimentoGenericoMateriaisModal
+        open={materiaisOpen}
+        procedureId={materiaisItemId}
+        onClose={() => {
+          setMateriaisOpen(false);
+          setMateriaisItemId(null);
+        }}
         onSaved={() => {
           void loadItems();
         }}

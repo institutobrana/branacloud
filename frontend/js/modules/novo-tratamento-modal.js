@@ -11,6 +11,10 @@
   let visible = false;
   let elements = null;
   let loadSeq = 0;
+  let datePickerState = null;
+  let currentPacienteId = 0;
+  let currentTratamentoId = 0;
+  let saveInProgress = false;
 
   function todayBR() {
     return new Date().toLocaleDateString("pt-BR");
@@ -37,6 +41,20 @@
     return String(value ?? "").replace(/\D+/g, "").slice(0, 8);
   }
 
+  function coercePositiveInt(value) {
+    const n = Number(String(value ?? "").trim());
+    return Number.isInteger(n) && n > 0 ? n : null;
+  }
+
+  function pad2(value) {
+    return String(value ?? "").padStart(2, "0");
+  }
+
+  function formatDateBrFromDate(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+    return `${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}/${date.getFullYear()}`;
+  }
+
   function formatDateBr(value) {
     const raw = String(value ?? "").trim();
     if (!raw) return "";
@@ -55,6 +73,37 @@
     return raw;
   }
 
+  function parseBrDate(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return null;
+    const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (iso) {
+      const year = Number(iso[1]);
+      const month = Number(iso[2]);
+      const day = Number(iso[3]);
+      const date = new Date(year, month - 1, day);
+      if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) return date;
+      return null;
+    }
+    const br = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (br) {
+      const day = Number(br[1]);
+      const month = Number(br[2]);
+      const year = Number(br[3]);
+      const date = new Date(year, month - 1, day);
+      if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) return date;
+      return null;
+    }
+    const digits = onlyDigits(raw);
+    if (digits.length !== 8) return null;
+    const day = Number(digits.slice(0, 2));
+    const month = Number(digits.slice(2, 4));
+    const year = Number(digits.slice(4, 8));
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) return date;
+    return null;
+  }
+
   function normalizeDateInput(value) {
     const digits = onlyDigits(value);
     const dd = digits.slice(0, 2);
@@ -63,6 +112,162 @@
     if (digits.length <= 2) return dd;
     if (digits.length <= 4) return `${dd}/${mm}`;
     return `${dd}/${mm}/${yyyy}`;
+  }
+
+  function syncDateFieldValue(input, date) {
+    if (!input) return "";
+    const formatted = date ? formatDateBrFromDate(date) : "";
+    input.value = formatted;
+    input.dataset.ntLastValidDate = formatted;
+    return formatted;
+  }
+
+  function commitDateFieldValue(input) {
+    if (!input) return "";
+    const value = toText(input.value);
+    if (!value) {
+      input.dataset.ntLastValidDate = "";
+      return "";
+    }
+    const parsed = parseBrDate(value);
+    if (parsed) {
+      return syncDateFieldValue(input, parsed);
+    }
+    const fallback = toText(input.dataset.ntLastValidDate);
+    if (fallback) {
+      input.value = fallback;
+      return fallback;
+    }
+    input.value = "";
+    input.dataset.ntLastValidDate = "";
+    return "";
+  }
+
+  function getDatePicker() {
+    if (datePickerState?.root) return datePickerState;
+    const root = document.createElement("div");
+    root.id = "nt-date-picker";
+    root.className = "nt-date-picker hidden";
+    root.setAttribute("role", "dialog");
+    root.setAttribute("aria-label", "Selecionar data");
+    root.innerHTML = `
+      <div class="nt-date-picker-head">
+        <button type="button" class="nt-date-nav" data-nt-date-nav="-1" aria-label="Mês anterior">v</button>
+        <div class="nt-date-label"></div>
+        <button type="button" class="nt-date-nav" data-nt-date-nav="1" aria-label="Próximo mês">v</button>
+      </div>
+      <div class="nt-date-weekdays"></div>
+      <div class="nt-date-grid"></div>
+      <div class="nt-date-actions">
+        <button type="button" class="nt-date-action" data-nt-date-today>Hoje</button>
+        <button type="button" class="nt-date-action" data-nt-date-clear>Limpar</button>
+      </div>
+    `;
+    document.body.appendChild(root);
+    datePickerState = {
+      root,
+      label: root.querySelector(".nt-date-label"),
+      weekdays: root.querySelector(".nt-date-weekdays"),
+      grid: root.querySelector(".nt-date-grid"),
+      monthDate: new Date(),
+      selectedDate: null,
+      input: null,
+      visible: false,
+    };
+    return datePickerState;
+  }
+
+  function closeDatePicker() {
+    const picker = datePickerState;
+    if (!picker?.root) return;
+    picker.root.classList.add("hidden");
+    picker.root.style.visibility = "";
+    picker.root.style.left = "";
+    picker.root.style.top = "";
+    picker.visible = false;
+    picker.input = null;
+  }
+
+  function renderDatePickerGrid() {
+    const picker = getDatePicker();
+    if (!picker?.root) return;
+    const monthDate = picker.monthDate instanceof Date ? picker.monthDate : new Date();
+    const year = monthDate.getFullYear();
+    const month = monthDate.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startIndex = (firstDay.getDay() + 6) % 7;
+    const labels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
+    picker.label.textContent = monthDate.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+    picker.weekdays.innerHTML = labels.map((label) => `<span>${label}</span>`).join("");
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
+    const selected = picker.selectedDate instanceof Date ? picker.selectedDate : null;
+    const selectedKey = selected ? `${selected.getFullYear()}-${pad2(selected.getMonth() + 1)}-${pad2(selected.getDate())}` : "";
+    const cells = [];
+    for (let i = 0; i < startIndex; i += 1) cells.push(`<span class="nt-date-empty" aria-hidden="true"></span>`);
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const date = new Date(year, month, day);
+      const key = `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+      const classes = ["nt-date-cell"];
+      if (key === todayKey) classes.push("today");
+      if (key === selectedKey) classes.push("selected");
+      cells.push(`<button type="button" class="${classes.join(" ")}" data-nt-date-value="${key}">${day}</button>`);
+    }
+    picker.grid.innerHTML = cells.join("");
+  }
+
+  function positionDatePicker(input) {
+    const picker = getDatePicker();
+    if (!picker?.root || !input) return;
+    const rect = input.getBoundingClientRect();
+    const margin = 8;
+    const width = Math.min(272, window.innerWidth - margin * 2);
+    picker.root.style.width = `${width}px`;
+    picker.root.style.left = `${Math.max(margin, Math.min(rect.left, window.innerWidth - width - margin))}px`;
+    picker.root.style.top = `${Math.min(rect.bottom + 4, Math.max(margin, window.innerHeight - 268))}px`;
+  }
+
+  function openDatePicker(input) {
+    if (!input) return;
+    const picker = getDatePicker();
+    picker.input = input;
+    picker.selectedDate = parseBrDate(input.value) || parseBrDate(input.dataset.ntLastValidDate) || new Date();
+    picker.monthDate = new Date(picker.selectedDate.getFullYear(), picker.selectedDate.getMonth(), 1);
+    renderDatePickerGrid();
+    picker.root.classList.remove("hidden");
+    picker.root.style.visibility = "hidden";
+    picker.visible = true;
+    positionDatePicker(input);
+    picker.root.style.visibility = "visible";
+  }
+
+  function handleDatePickerNavigation(step) {
+    const picker = datePickerState;
+    if (!picker?.input) return;
+    picker.monthDate = new Date(picker.monthDate.getFullYear(), picker.monthDate.getMonth() + step, 1);
+    renderDatePickerGrid();
+    positionDatePicker(picker.input);
+  }
+
+  function setDateFromPicker(value) {
+    const picker = datePickerState;
+    if (!picker?.input || !value) return;
+    const isoParts = String(value).split("-");
+    if (isoParts.length !== 3) return;
+    const year = Number(isoParts[0]);
+    const month = Number(isoParts[1]);
+    const day = Number(isoParts[2]);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return;
+    syncDateFieldValue(picker.input, date);
+    picker.input.dispatchEvent(new Event("input", { bubbles: true }));
+    picker.input.dispatchEvent(new Event("change", { bubbles: true }));
+    closeDatePicker();
+    try {
+      picker.input.focus();
+    } catch {}
   }
 
   function readAuthToken() {
@@ -95,7 +300,7 @@
       situacao: "Aberto",
       tabelaPrincipal: "PARTICULAR",
       indice: "R$",
-      cirurgiaoResponsavel: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
+      cirurgiaoResponsavel: "",
       unidadeAtendimento: resolveSessionText(["unidade_atendimento_nome", "clinica_nome", "nome_clinica"], "Instituto Brana - Odontologia"),
       observacoes: "",
       inclusao: "",
@@ -105,9 +310,9 @@
       copiarIntervencoes: false,
       convenio: "particular",
       tipoAtendimento: "Tratamento Odontológico",
-      cirurgiaoContratado: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
-      cirurgiaoSolicitante: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
-      cirurgiaoExecutante: resolveSessionText(["prestador_nome", "apelido", "nome"], "Tel"),
+      cirurgiaoContratado: "",
+      cirurgiaoSolicitante: "",
+      cirurgiaoExecutante: "",
       sinaisClinicos: 3,
       alteracaoTecidos: 3,
       numeroGuia: "",
@@ -164,6 +369,27 @@
       .nt-conv input,.nt-conv select{width:100%;height:24px;box-sizing:border-box;border:1px solid #bac2cc;background:#fff;padding:0 6px;font:12px Tahoma,Arial,sans-serif;color:#111}
       .nt-conv .nt-soft{background:#fefefe}
       .nt-pane .nt-conv .nt-slim{height:24px}
+      .nt-date-field{position:relative}
+      .nt-date-field input{padding-right:28px}
+      .nt-date-toggle{position:absolute;right:1px;top:1px;width:22px;height:22px;border:0;border-left:1px solid #bac2cc;background:#f4f4f4;color:#111;font:700 11px Tahoma,Arial,sans-serif;cursor:pointer;padding:0;line-height:1}
+      .nt-date-toggle:hover{background:#ececec}
+      .nt-date-field.with-toggle input{padding-right:28px}
+      .nt-date-picker{position:fixed;z-index:6000;width:272px;background:#efefef;border:1px solid #9ea5ae;box-shadow:0 4px 18px rgba(0,0,0,.2);padding:8px;box-sizing:border-box;font:12px Tahoma,Arial,sans-serif;color:#111}
+      .nt-date-picker.hidden{display:none}
+      .nt-date-picker-head{display:grid;grid-template-columns:24px 1fr 24px;gap:6px;align-items:center;margin-bottom:6px}
+      .nt-date-label{font:700 12px Tahoma,Arial,sans-serif;text-align:center;text-transform:capitalize}
+      .nt-date-nav{height:24px;border:1px solid #aeb3bb;background:#fafafa;cursor:pointer;font:700 12px Tahoma,Arial,sans-serif;line-height:1;color:#111}
+      .nt-date-weekdays,.nt-date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+      .nt-date-weekdays span{height:20px;display:flex;align-items:center;justify-content:center;font:12px Tahoma,Arial,sans-serif;color:#444}
+      .nt-date-grid{margin-top:2px}
+      .nt-date-empty,.nt-date-cell{height:24px}
+      .nt-date-cell{border:1px solid #d0d4db;background:#fff;cursor:pointer;font:12px Tahoma,Arial,sans-serif;color:#111;padding:0}
+      .nt-date-cell:hover{background:#dfefff}
+      .nt-date-cell.today{border-color:#3c7dc9}
+      .nt-date-cell.selected{background:#2c7be5;color:#fff;border-color:#1d5fb0}
+      .nt-date-actions{display:flex;justify-content:space-between;gap:6px;margin-top:8px}
+      .nt-date-action{flex:1;height:24px;border:1px solid #aeb3bb;background:#fafafa;cursor:pointer;font:12px Tahoma,Arial,sans-serif;color:#111}
+      .nt-date-action:hover{background:#ececec}
       .nt-focus-ring:focus{outline:1px dotted #333;outline-offset:-2px}
     `;
     document.head.appendChild(style);
@@ -189,23 +415,61 @@
 
   function setDateFieldValue(el, value) {
     if (!el) return;
-    el.value = formatDateBr(value);
+    const parsed = parseBrDate(value);
+    if (parsed) {
+      syncDateFieldValue(el, parsed);
+      return;
+    }
+    const formatted = formatDateBr(value);
+    el.value = formatted;
+    el.dataset.ntLastValidDate = parsed ? formatted : "";
   }
 
-  function bindDateMask(input) {
-    if (!input || input.dataset.ntDateMaskBound === "1") return;
-    input.dataset.ntDateMaskBound = "1";
+  function bindDateField(input, toggle) {
+    if (!input || input.dataset.ntDateFieldBound === "1") return;
+    input.dataset.ntDateFieldBound = "1";
     input.addEventListener("input", () => {
       const normalized = normalizeDateInput(input.value);
       if (input.value !== normalized) input.value = normalized;
+      const parsed = parseBrDate(input.value);
+      if (parsed) input.dataset.ntLastValidDate = formatDateBrFromDate(parsed);
     });
     input.addEventListener("blur", () => {
-      input.value = normalizeDateInput(input.value);
+      commitDateFieldValue(input);
     });
     input.addEventListener("paste", () => {
       setTimeout(() => {
         input.value = normalizeDateInput(input.value);
+        const parsed = parseBrDate(input.value);
+        if (parsed) input.dataset.ntLastValidDate = formatDateBrFromDate(parsed);
       }, 0);
+    });
+    input.addEventListener("keydown", (ev) => {
+      if (ev.key === "ArrowDown" && ev.altKey) {
+        ev.preventDefault();
+        openDatePicker(input);
+      }
+      if (ev.key === "F4") {
+        ev.preventDefault();
+        openDatePicker(input);
+      }
+    });
+    if (toggle) {
+      toggle.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        openDatePicker(input);
+      });
+    }
+  }
+
+  function bindSituacaoField(select, finalizacaoInput) {
+    if (!select || select.dataset.ntSituacaoBound === "1") return;
+    select.dataset.ntSituacaoBound = "1";
+    select.addEventListener("change", () => {
+      const value = toText(select.value).toLowerCase();
+      if (value === "finalizado" && finalizacaoInput) {
+        setDateFieldValue(finalizacaoInput, todayBR());
+      }
     });
   }
 
@@ -245,6 +509,89 @@
     applySelectSelection(select, selected);
   }
 
+  function getSelectedOptionLabel(select) {
+    if (!select) return "";
+    const opt = select.options?.[select.selectedIndex];
+    return toText(opt?.textContent || opt?.label || opt?.value || "");
+  }
+
+  function getSelectedOptionValue(select) {
+    if (!select) return "";
+    return toText(select.value);
+  }
+
+  function applyAuditFieldsFromTratamento(tratamento) {
+    const cfg = getElements();
+    if (!cfg || !tratamento || typeof tratamento !== "object") return;
+    setFieldValue(cfg.inclusao, tratamento.inclusao ?? "");
+    setFieldValue(cfg.alteracao, tratamento.alteracao ?? "");
+  }
+
+  function setSavingState(isSaving) {
+    saveInProgress = !!isSaving;
+    const cfg = getElements();
+    if (!cfg?.backdrop) return;
+    const okBtn = cfg.backdrop.querySelector('[data-nt-action="ok"]');
+    if (okBtn) {
+      okBtn.disabled = saveInProgress;
+      okBtn.textContent = saveInProgress ? "Gravando..." : "Ok";
+    }
+  }
+
+  function buildSavePayload() {
+    const cfg = getElements();
+    if (!cfg) return null;
+    const pacienteId = Number(currentPacienteId || 0) || 0;
+    if (pacienteId <= 0) return null;
+
+    const dataInicio = commitDateFieldValue(cfg.inicio);
+    const dataFinalizacao = commitDateFieldValue(cfg.finalizacao);
+    const dataAutorizacao = commitDateFieldValue(cfg.convAutorizacao);
+    const validadeSenha = commitDateFieldValue(cfg.convValidade);
+    const situacao = toText(getSelectedOptionValue(cfg.situacao) || cfg.situacao?.value || "");
+    const tabelaCodigo = getSelectedOptionValue(cfg.tabela);
+    const indice = getSelectedOptionValue(cfg.indice);
+    const cirurgiaoResponsavelId = getSelectedOptionValue(cfg.cirurgiao);
+    const unidadeAtendimento = getSelectedOptionLabel(cfg.unidade);
+    const arcadaPredominante = getSelectedOptionValue(cfg.arcada) || getSelectedOptionLabel(cfg.arcada);
+    const convenioValue = getSelectedOptionValue(cfg.convConvenio);
+    const convenioNome = getSelectedOptionLabel(cfg.convConvenio);
+    const tipoAtendimento = getSelectedOptionValue(cfg.convTipo);
+    const cirurgiaoContratadoId = getSelectedOptionValue(cfg.convContratado);
+    const cirurgiaoSolicitanteId = getSelectedOptionValue(cfg.convSolicitante);
+    const cirurgiaoExecutanteId = getSelectedOptionValue(cfg.convExecutante);
+    const sinais = getSelectedOptionValue(cfg.convSinais);
+    const tecidos = getSelectedOptionValue(cfg.convTecidos);
+
+    return {
+      paciente_id: pacienteId,
+      data_inicio: dataInicio,
+      data_finalizacao: dataFinalizacao,
+      situacao: situacao || "Aberto",
+      tabela_codigo: tabelaCodigo || null,
+      indice: indice || null,
+      cirurgiao_responsavel_id: cirurgiaoResponsavelId || null,
+      unidade_atendimento: unidadeAtendimento,
+      observacoes: toText(cfg.observacoes.value),
+      arcada_predominante: arcadaPredominante,
+      copiar_de: "",
+      copiar_intervencoes: !!cfg.copiar.checked,
+      convenio_nome: convenioNome,
+      id_convenio: convenioValue && /^\d+$/.test(convenioValue) ? Number(convenioValue) : null,
+      tipo_atendimento_tiss_id: tipoAtendimento || null,
+      cirurgiao_contratado_id: cirurgiaoContratadoId || null,
+      cirurgiao_solicitante_id: cirurgiaoSolicitanteId || null,
+      cirurgiao_executante_id: cirurgiaoExecutanteId || null,
+      sinais_doenca_periodontal: sinais || null,
+      alteracao_tecidos: tecidos || null,
+      numero_guia: toText(cfg.convGuia.value),
+      data_autorizacao: dataAutorizacao,
+      senha_autorizacao: toText(cfg.convSenha.value),
+      validade_senha: validadeSenha,
+      extra: {},
+    };
+  }
+
   function esc(value) {
     return String(value ?? "")
       .replace(/&/g, "&amp;")
@@ -273,12 +620,38 @@
     return data || null;
   }
 
+  async function loadGeneralPreferences() {
+    const token = readAuthToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const res = await fetch("/preferences/general", {
+      method: "GET",
+      headers,
+    });
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {}
+    if (!res.ok) {
+      throw new Error(toText(data?.detail, "Falha ao carregar preferencias gerais."));
+    }
+    return data || null;
+  }
+
   function applyPayload(rawPayload) {
     const cfg = getElements();
     if (!cfg) return;
     const payload = rawPayload && typeof rawPayload === "object" ? rawPayload : {};
     const defaults = payload.defaults && typeof payload.defaults === "object" ? payload.defaults : {};
     const fallback = resolveDefaults();
+    const generalPrefs = payload.general_preferences && typeof payload.general_preferences === "object" ? payload.general_preferences : {};
+    const generalValues = generalPrefs.values && typeof generalPrefs.values === "object" ? generalPrefs.values : {};
+    const generalTabelas = Array.isArray(generalPrefs.options?.tabelas_intervencoes) ? generalPrefs.options.tabelas_intervencoes : [];
+    const tabelaPreferidaId = coercePositiveInt(generalValues.tabela_padrao_id);
+    const tabelaPreferidaCodigo = (() => {
+      if (!tabelaPreferidaId) return null;
+      const match = generalTabelas.find((item) => Number(item?.id || 0) === tabelaPreferidaId);
+      return coercePositiveInt(match?.codigo);
+    })();
     const tabelas = Array.isArray(payload.tabelas) && payload.tabelas.length
       ? payload.tabelas
       : [
@@ -289,13 +662,17 @@
       ? payload.indices
       : [
           { id: "R$", sigla: "R$", nome: "Reais" },
-          { id: "US$", sigla: "US$", nome: "Dolar" },
+          { id: "UHO", sigla: "UHO", nome: "Unid. Honorario" },
+          { id: "UPO", sigla: "UPO", nome: "Unid. Procedimento Odontologico" },
+          { id: "USO", sigla: "USO", nome: "Unid. Servico" },
         ];
     const cirurgioes = Array.isArray(payload.cirurgioes) && payload.cirurgioes.length
       ? payload.cirurgioes
-      : [
-          { id: fallback.cirurgiaoResponsavel, nome: fallback.cirurgiaoResponsavel },
-        ];
+      : fallback.cirurgiaoResponsavel
+        ? [
+            { id: fallback.cirurgiaoResponsavel, nome: fallback.cirurgiaoResponsavel },
+          ]
+        : [];
     const unidades = Array.isArray(payload.unidades) && payload.unidades.length
       ? payload.unidades
       : [
@@ -334,31 +711,62 @@
     ];
 
     setDateFieldValue(cfg.inicio, defaults.data_inicio ?? fallback.inicio);
-    setFieldValue(cfg.finalizacao, defaults.data_finalizacao ?? fallback.finalizacao);
+    setDateFieldValue(cfg.finalizacao, defaults.data_finalizacao ?? fallback.finalizacao);
     setFieldValue(cfg.observacoes, defaults.observacoes ?? fallback.observacoes);
     setFieldValue(cfg.inclusao, defaults.inclusao ?? fallback.inclusao);
     setFieldValue(cfg.alteracao, defaults.alteracao ?? fallback.alteracao);
     setFieldValue(cfg.idade, defaults.idade_texto ?? defaults.idade ?? fallback.idade);
     cfg.copiar.checked = !!(defaults.copiar_intervencoes ?? fallback.copiarIntervencoes);
     setFieldValue(cfg.convGuia, defaults.numero_guia ?? fallback.numeroGuia);
-    setFieldValue(cfg.convAutorizacao, defaults.data_autorizacao ?? fallback.dataAutorizacao);
+    setDateFieldValue(cfg.convAutorizacao, defaults.data_autorizacao ?? fallback.dataAutorizacao);
     setFieldValue(cfg.convSenha, defaults.senha_autorizacao ?? fallback.senhaAutorizacao);
-    setFieldValue(cfg.convValidade, defaults.validade_senha ?? fallback.validadeSenha);
+    setDateFieldValue(cfg.convValidade, defaults.validade_senha ?? fallback.validadeSenha);
 
-    setSelectOptions(cfg.situacao, payload.situacoes || ["Aberto", "Finalizado", "Cancelado"], defaults.situacao ?? fallback.situacao);
-    setSelectOptions(cfg.tabela, tabelas, defaults.tabela_codigo ?? fallback.tabelaPrincipal, (value, item) => item.label || item.value);
-    setSelectOptions(cfg.indice, indices, defaults.indice ?? fallback.indice, (value, item) => item.label || item.value);
-    setSelectOptions(cfg.cirurgiao, cirurgioes, defaults.cirurgiao_responsavel_id ?? fallback.cirurgiaoResponsavel, (value, item) => item.label || item.value);
+    setSelectOptions(cfg.situacao, payload.situacoes || ["Aberto", "Finalizado", "Interrompido"], defaults.situacao ?? fallback.situacao);
+    setSelectOptions(
+      cfg.tabela,
+      tabelas,
+      tabelaPreferidaCodigo ?? defaults.tabela_codigo ?? fallback.tabelaPrincipal,
+      (value, item) => item.label || item.value,
+    );
+    setSelectOptions(cfg.indice, indices, defaults.indice ?? fallback.indice, (value, item) => {
+      const rawSigla = toText(value?.sigla ?? value?.label ?? value?.nome ?? "");
+      return rawSigla || item.label || item.value;
+    });
+    setSelectOptions(
+      cfg.cirurgiao,
+      cirurgioes,
+      defaults.cirurgiao_responsavel_id ?? fallback.cirurgiaoResponsavel,
+      (value, item) => toText(value?.apelido ?? value?.nome ?? value?.label ?? item.label ?? item.value),
+    );
     setSelectOptions(cfg.unidade, unidades, defaults.unidade_atendimento ?? fallback.unidadeAtendimento, (value, item) => item.label || item.value);
     setSelectOptions(cfg.arcada, arcadas, defaults.arcada_predominante ?? fallback.arcadaPredominante, (value, item) => item.label || item.value);
 
     setSelectOptions(cfg.convConvenio, convenios, defaults.convenio ?? fallback.convenio, (value, item) => item.label || item.value);
     setSelectOptions(cfg.convTipo, tiposTiss, defaults.tipo_atendimento_tiss_id ?? fallback.tipoAtendimento, (value, item) => item.label || item.value);
-    setSelectOptions(cfg.convContratado, cirurgioes, defaults.cirurgiao_contratado_id ?? fallback.cirurgiaoContratado, (value, item) => item.label || item.value);
-    setSelectOptions(cfg.convSolicitante, cirurgioes, defaults.cirurgiao_solicitante_id ?? fallback.cirurgiaoSolicitante, (value, item) => item.label || item.value);
-    setSelectOptions(cfg.convExecutante, cirurgioes, defaults.cirurgiao_executante_id ?? fallback.cirurgiaoExecutante, (value, item) => item.label || item.value);
+    setSelectOptions(
+      cfg.convContratado,
+      cirurgioes,
+      defaults.cirurgiao_contratado_id ?? fallback.cirurgiaoContratado,
+      (value, item) => toText(value?.apelido ?? value?.nome ?? value?.label ?? item.label ?? item.value),
+    );
+    setSelectOptions(
+      cfg.convSolicitante,
+      cirurgioes,
+      defaults.cirurgiao_solicitante_id ?? fallback.cirurgiaoSolicitante,
+      (value, item) => toText(value?.apelido ?? value?.nome ?? value?.label ?? item.label ?? item.value),
+    );
+    setSelectOptions(
+      cfg.convExecutante,
+      cirurgioes,
+      defaults.cirurgiao_executante_id ?? fallback.cirurgiaoExecutante,
+      (value, item) => toText(value?.apelido ?? value?.nome ?? value?.label ?? item.label ?? item.value),
+    );
     setSelectOptions(cfg.convSinais, sinais, defaults.sinais_doenca_periodontal ?? fallback.sinaisClinicos, (value, item) => item.label || item.value);
     setSelectOptions(cfg.convTecidos, tecidos, defaults.alteracao_tecidos ?? fallback.alteracaoTecidos, (value, item) => item.label || item.value);
+    if (payload.tratamento && typeof payload.tratamento === "object") {
+      applyAuditFieldsFromTratamento(payload.tratamento);
+    }
   }
 
   function buildHtml() {
@@ -375,14 +783,20 @@
           </div>
           <div class="nt-body">
             <section class="nt-pane active" data-nt-pane="principal">
-              <div class="nt-grid-top">
-                <div class="nt-field">
-                  <label for="nt-inicio">Início:</label>
-                  <input id="nt-inicio" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="off">
-                </div>
+                <div class="nt-grid-top">
+                  <div class="nt-field">
+                    <label for="nt-inicio">Início:</label>
+                    <div class="nt-date-field with-toggle">
+                      <input id="nt-inicio" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="off">
+                      <button id="nt-inicio-toggle" class="nt-date-toggle nt-focus-ring" type="button" aria-label="Abrir calendário">v</button>
+                    </div>
+                  </div>
                 <div class="nt-field">
                   <label for="nt-finalizacao">Finalização:</label>
-                  <input id="nt-finalizacao" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10">
+                  <div class="nt-date-field with-toggle">
+                    <input id="nt-finalizacao" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="off">
+                    <button id="nt-finalizacao-toggle" class="nt-date-toggle nt-focus-ring" type="button" aria-label="Abrir calendário">v</button>
+                  </div>
                 </div>
                 <div class="nt-field">
                   <label for="nt-situacao">Situação:</label>
@@ -484,7 +898,10 @@
                   </div>
                   <div class="nt-field">
                     <label for="nt-conv-autorizacao">Data da autorização:</label>
-                    <input id="nt-conv-autorizacao" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10">
+                    <div class="nt-date-field with-toggle">
+                      <input id="nt-conv-autorizacao" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="off">
+                      <button id="nt-conv-autorizacao-toggle" class="nt-date-toggle nt-focus-ring" type="button" aria-label="Abrir calendário">v</button>
+                    </div>
                   </div>
                 </div>
                 <div class="nt-conv-two">
@@ -494,7 +911,10 @@
                   </div>
                   <div class="nt-field">
                     <label for="nt-conv-validade">Validade da senha:</label>
-                    <input id="nt-conv-validade" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10">
+                    <div class="nt-date-field with-toggle">
+                      <input id="nt-conv-validade" class="nt-focus-ring" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="off">
+                      <button id="nt-conv-validade-toggle" class="nt-date-toggle nt-focus-ring" type="button" aria-label="Abrir calendário">v</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -520,7 +940,9 @@
       tabs: [],
       panes: [],
       inicio: document.getElementById("nt-inicio"),
+      inicioToggle: document.getElementById("nt-inicio-toggle"),
       finalizacao: document.getElementById("nt-finalizacao"),
+      finalizacaoToggle: document.getElementById("nt-finalizacao-toggle"),
       situacao: document.getElementById("nt-situacao"),
       tabela: document.getElementById("nt-tabela"),
       indice: document.getElementById("nt-indice"),
@@ -541,14 +963,20 @@
       convTecidos: document.getElementById("nt-conv-tecidos"),
       convGuia: document.getElementById("nt-conv-guia"),
       convAutorizacao: document.getElementById("nt-conv-autorizacao"),
+      convAutorizacaoToggle: document.getElementById("nt-conv-autorizacao-toggle"),
       convSenha: document.getElementById("nt-conv-senha"),
       convValidade: document.getElementById("nt-conv-validade"),
+      convValidadeToggle: document.getElementById("nt-conv-validade-toggle"),
     };
     if (elements.backdrop) {
       elements.tabs = Array.from(elements.backdrop.querySelectorAll("[data-nt-tab]"));
       elements.panes = Array.from(elements.backdrop.querySelectorAll("[data-nt-pane]"));
     }
-    bindDateMask(elements?.inicio);
+    bindDateField(elements?.inicio, elements?.inicioToggle);
+    bindDateField(elements?.finalizacao, elements?.finalizacaoToggle);
+    bindDateField(elements?.convAutorizacao, elements?.convAutorizacaoToggle);
+    bindDateField(elements?.convValidade, elements?.convValidadeToggle);
+    bindSituacaoField(elements?.situacao, elements?.finalizacao);
     return elements;
   }
 
@@ -617,10 +1045,59 @@
   function close() {
     const cfg = getElements();
     if (!cfg?.backdrop) return;
+    closeDatePicker();
     cfg.backdrop.classList.add("hidden");
     cfg.backdrop.setAttribute("aria-hidden", "true");
     visible = false;
     loadSeq += 1;
+    currentPacienteId = 0;
+  }
+
+  async function handleSave() {
+    const cfg = getElements();
+    if (!cfg) return;
+    if (saveInProgress) return;
+    const payload = buildSavePayload();
+    if (!payload) {
+      alert("Selecione um paciente para gravar o tratamento.");
+      return;
+    }
+    setSavingState(true);
+    let saved = false;
+    try {
+      const token = readAuthToken();
+      const isUpdate = currentTratamentoId > 0;
+      const url = isUpdate ? `/tratamentos/${encodeURIComponent(String(currentTratamentoId))}` : "/tratamentos/novo";
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+      const res = await fetch(url, {
+        method: isUpdate ? "PUT" : "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {}
+      if (!res.ok) {
+        throw new Error(toText(data?.detail, "Falha ao gravar o tratamento."));
+      }
+      const tratamento = data?.tratamento && typeof data.tratamento === "object" ? data.tratamento : null;
+      currentTratamentoId = Number(tratamento?.id || 0) || 0;
+      applyAuditFieldsFromTratamento(tratamento);
+      setSavingState(false);
+      saved = true;
+      return;
+    } catch (err) {
+      console.warn(`[${MODULE_NAME}]`, err);
+      alert(toText(err?.message, "Falha ao gravar o tratamento."));
+    } finally {
+      if (!saved) {
+        setSavingState(false);
+      }
+    }
   }
 
   async function loadAndApplyContext(context = {}) {
@@ -628,14 +1105,22 @@
     if (!cfg) return;
     const seq = ++loadSeq;
     const pacienteId = resolvePacienteId(context);
+    currentPacienteId = pacienteId;
     if (pacienteId <= 0) {
       applyPayload(null);
       return;
     }
     try {
-      const payload = await loadPayloadForPaciente(pacienteId);
+      const [payload, generalPreferences] = await Promise.allSettled([
+        loadPayloadForPaciente(pacienteId),
+        loadGeneralPreferences(),
+      ]);
       if (seq !== loadSeq) return;
-      applyPayload(payload);
+      const merged = payload.status === "fulfilled" ? (payload.value || {}) : {};
+      if (generalPreferences.status === "fulfilled" && generalPreferences.value) {
+        merged.general_preferences = generalPreferences.value;
+      }
+      applyPayload(merged);
     } catch (err) {
       console.warn(`[${MODULE_NAME}]`, err);
       if (seq !== loadSeq) return;
@@ -646,6 +1131,8 @@
   function open(context = {}) {
     const cfg = ensureMounted();
     if (!cfg?.backdrop) return;
+    currentTratamentoId = 0;
+    setSavingState(false);
     setTab(TAB_PRINCIPAL);
     cfg.backdrop.classList.remove("hidden");
     cfg.backdrop.setAttribute("aria-hidden", "false");
@@ -668,6 +1155,7 @@
     cfg.backdrop.addEventListener("click", (ev) => {
       const target = ev.target;
       if (target === cfg.backdrop) {
+        closeDatePicker();
         close();
         return;
       }
@@ -680,6 +1168,12 @@
       if (!actionBtn || !cfg.backdrop.contains(actionBtn)) return;
       const action = String(actionBtn.dataset.ntAction || "").trim();
       if (action === "close" || action === "cancel" || action === "ok") {
+        if (action === "ok") {
+          ev.preventDefault();
+          void handleSave();
+          return;
+        }
+        closeDatePicker();
         close();
       }
     });
@@ -688,7 +1182,73 @@
       if (!visible) return;
       if (ev.key === "Escape") {
         ev.preventDefault();
+        closeDatePicker();
         close();
+        return;
+      }
+      if (datePickerState?.visible && ev.key === "PageUp") {
+        ev.preventDefault();
+        handleDatePickerNavigation(-1);
+      }
+      if (datePickerState?.visible && ev.key === "PageDown") {
+        ev.preventDefault();
+        handleDatePickerNavigation(1);
+      }
+      if (datePickerState?.visible && (ev.key === "ArrowLeft" || ev.key === "ArrowRight")) {
+        ev.preventDefault();
+        const step = ev.key === "ArrowLeft" ? -1 : 1;
+        const next = new Date(datePickerState.selectedDate || new Date());
+        next.setDate(next.getDate() + step);
+        datePickerState.selectedDate = next;
+        datePickerState.monthDate = new Date(next.getFullYear(), next.getMonth(), 1);
+        renderDatePickerGrid();
+        positionDatePicker(datePickerState.input);
+      }
+    });
+
+    document.addEventListener("pointerdown", (ev) => {
+      const picker = datePickerState;
+      if (!picker?.visible) return;
+      const target = ev.target;
+      if (picker.root.contains(target) || picker.input?.contains(target) || target === cfg.inicioToggle) return;
+      closeDatePicker();
+    });
+
+    document.addEventListener("click", (ev) => {
+      const picker = datePickerState;
+      if (!picker?.visible) return;
+      const target = ev.target;
+      const dayBtn = target.closest?.("[data-nt-date-value]");
+      if (dayBtn && picker.root.contains(dayBtn)) {
+        ev.preventDefault();
+        setDateFromPicker(dayBtn.dataset.ntDateValue);
+        return;
+      }
+      const navBtn = target.closest?.("[data-nt-date-nav]");
+      if (navBtn && picker.root.contains(navBtn)) {
+        ev.preventDefault();
+        const step = Number(navBtn.dataset.ntDateNav || 0);
+        handleDatePickerNavigation(step);
+        return;
+      }
+      if (target.closest?.("[data-nt-date-today]")) {
+        ev.preventDefault();
+        const now = new Date();
+        setDateFromPicker(`${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`);
+        return;
+      }
+      if (target.closest?.("[data-nt-date-clear]")) {
+        ev.preventDefault();
+        if (picker.input) {
+          picker.input.value = "";
+          picker.input.dataset.ntLastValidDate = "";
+          picker.input.dispatchEvent(new Event("input", { bubbles: true }));
+          picker.input.dispatchEvent(new Event("change", { bubbles: true }));
+          try {
+            picker.input.focus();
+          } catch {}
+        }
+        closeDatePicker();
       }
     });
   }

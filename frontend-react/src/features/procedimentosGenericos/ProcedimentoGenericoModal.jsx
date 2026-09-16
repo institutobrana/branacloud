@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Form, Input, Modal, Select, Tabs, Table, Typography, message } from 'antd';
+import { Button, Checkbox, Form, Input, Select, Tabs, Table, Typography, message } from 'antd';
+import { BranaModal } from '../../components/BranaModal.jsx';
 import {
   carregarCenarioProcedimentoGenerico,
   listarProcedimentosGenericosEspecialidades,
@@ -117,6 +118,74 @@ function findSimboloByValue(items, valor) {
   }) || null;
 }
 
+function resolveSimboloSelectValue(simbolos, state) {
+  const rawValue = String(state?.simbolo_grafico || '').trim();
+  const legacyId = String(state?.simbolo_grafico_legacy_id || '').trim();
+  if (!rawValue && !legacyId) return undefined;
+
+  const matchedByRaw = rawValue ? findSimboloByValue(simbolos, rawValue) : null;
+  if (matchedByRaw) return resolveSimboloValue(matchedByRaw);
+
+  const matchedByLegacyId = legacyId ? findSimboloByValue(simbolos, legacyId) : null;
+  if (matchedByLegacyId) return resolveSimboloValue(matchedByLegacyId);
+
+  return undefined;
+}
+
+function resolvePreviewFileName(fileName) {
+  const normalized = String(fileName || '').trim();
+  const aliasMap = {
+    'int_restdo.bmp': 'int_RestDO.bmp',
+    'int_restmo.bmp': 'int_RestMO.bmp',
+    'int_restmod.bmp': 'int_RestMOD.bmp',
+  };
+  return aliasMap[normalized.toLowerCase()] || normalized;
+}
+
+function SymbolPreview({ simbolos, state }) {
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const value = String(state.simbolo_grafico_legacy_id || state.simbolo_grafico || '').trim();
+
+  useEffect(() => {
+    setCandidateIndex(0);
+  }, [value]);
+
+  const candidates = useMemo(() => {
+    if (!value) return [];
+    const item = findSimboloByValue(simbolos, value);
+    const rawSrc = String(item?.imagem_url || '').trim();
+    const nomeArquivo = rawSrc.split('/').filter(Boolean).pop() || '';
+    const fallback = String(item?.icone || item?.bitmap1 || item?.bitmap2 || item?.bitmap3 || '').trim();
+    const codigo = String(item?.codigo || value || '').trim();
+    const fileName = resolvePreviewFileName(nomeArquivo || fallback || codigo);
+    if (!fileName) return [];
+
+    const next = [];
+    if (rawSrc && !rawSrc.includes('/desktop-assets/easy/')) next.push(rawSrc);
+    if (/^sim_/i.test(fileName)) {
+      next.push(`/assets/easy/${fileName}`);
+    } else if (/^esp_/i.test(fileName)) {
+      next.push(`/assets/fichaClinica/odontograma/especialidades/${fileName}`);
+    } else {
+      next.push(`/assets/easy/${fileName}`);
+      next.push(`/assets/fichaClinica/odontograma/procedimentos/${fileName}`);
+    }
+    return Array.from(new Set(next.filter(Boolean)));
+  }, [simbolos, value]);
+
+  const src = candidates[candidateIndex] || '';
+  if (!src) return null;
+
+  return (
+    <img
+      src={src}
+      alt=""
+      className="procedimento-generico-symbol-preview-img"
+      onError={() => setCandidateIndex((current) => Math.min(current + 1, Math.max(candidates.length - 1, 0)))}
+    />
+  );
+}
+
 export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, onClose, onSaved, focusToken }) {
   const [form] = Form.useForm();
   const [activeKey, setActiveKey] = useState('principal');
@@ -209,7 +278,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       descricao: state.descricao,
       especialidade: state.especialidade || undefined,
       peso: state.peso,
-      simbolo_grafico: state.simbolo_grafico || undefined,
+      simbolo_grafico: resolveSimboloSelectValue(simbolos, state),
       simbolo_grafico_legacy_id: state.simbolo_grafico_legacy_id || undefined,
       observacoes: state.observacoes,
       inativo: state.inativo,
@@ -217,17 +286,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       custo_lab: state.custo_lab,
     };
     form.setFieldsValue(nextValues);
-  }, [form, open, state]);
-
-  const symbolPreview = useMemo(() => {
-    const value = String(state.simbolo_grafico_legacy_id || state.simbolo_grafico || '').trim();
-    if (!value) return null;
-    const item = findSimboloByValue(simbolos, value);
-    const codigo = String(item?.codigo || value).trim();
-    const src = String(item?.imagem_url || '').trim() || (codigo ? `/desktop-assets/easy/${codigo}` : '');
-    if (!src) return null;
-    return <img src={src} alt="" className="procedimento-generico-symbol-preview-img" />;
-  }, [simbolos, state.simbolo_grafico, state.simbolo_grafico_legacy_id]);
+  }, [form, open, state, simbolos]);
 
   const vinculos = Array.isArray(state.vinculos) ? state.vinculos : [];
 
@@ -318,7 +377,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
   ];
 
   return (
-    <Modal
+    <BranaModal
       open={open}
       centered
       width={modalWidth}
@@ -328,7 +387,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       className={`procedimento-generico-modal is-tab-${activeKey}`}
       confirmLoading={saving}
     >
-      <div className="procedimento-generico-modal-header">
+      <div className="procedimento-generico-modal-header brana-modal-section">
         <Typography.Title level={3} className="procedimento-generico-modal-title">
           {title}
         </Typography.Title>
@@ -343,14 +402,18 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             key: 'principal',
             label: 'Principal',
             children: (
-              <Form form={form} layout="vertical" className="procedimento-generico-modal-form">
-                <div className="procedimento-generico-principal-grid">
-                  <div className="procedimento-generico-symbol-box">{symbolPreview}</div>
+              <Form form={form} layout="vertical" className="procedimento-generico-modal-form brana-form-surface">
+                <div className="procedimento-generico-principal-top brana-modal-section">
+                  <div className="procedimento-generico-symbol-box brana-preview-surface">
+                    <SymbolPreview simbolos={simbolos} state={state} />
+                  </div>
 
-                  <Form.Item name="descricao" label="Nome do procedimento genérico:" rules={[{ required: true, message: 'Informe o nome do procedimento genérico.' }]}>
+                  <Form.Item name="descricao" label="Nome do procedimento genérico:" rules={[{ required: true, message: 'Informe o nome do procedimento genérico.' }]} className="procedimento-generico-title-field">
                     <Input value={state.descricao} onChange={(event) => updateField('descricao', event.target.value)} />
                   </Form.Item>
+                </div>
 
+                <div className="procedimento-generico-principal-body brana-tab-content">
                   <div className="procedimento-generico-principal-row">
                     <Form.Item name="codigo" label="Código genérico:" rules={[{ required: true, message: 'Informe o código genérico.' }]}>
                       <Input value={state.codigo} onChange={(event) => updateField('codigo', event.target.value)} />
@@ -379,11 +442,11 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                           label: String(item?.descricao || item?.nome || '').trim() || String(item?.codigo || '').trim(),
                           value: resolveSimboloValue(item),
                         }))}
-                        value={state.simbolo_grafico || undefined}
                         onChange={(value) => {
                           const selected = findSimboloByValue(simbolos, value);
-                          updateField('simbolo_grafico', value || '');
+                          updateField('simbolo_grafico', String(selected?.codigo || '').trim());
                           updateField('simbolo_grafico_legacy_id', Number(selected?.legacy_id || 0) || null);
+                          form.setFieldValue('simbolo_grafico', value || undefined);
                         }}
                       />
                     </Form.Item>
@@ -414,13 +477,13 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                   </Form.Item>
 
                   <div className="procedimento-generico-dates procedimento-generico-wide">
-                    <div className="procedimento-generico-date-field">
+                    <div className="procedimento-generico-date-field brana-modal-meta-row">
                       <span>Inclusão:</span>
-                      <div className="procedimento-generico-date-box">{state.data_inclusao || ' '}</div>
+                      <div className="procedimento-generico-date-box brana-readonly-surface">{state.data_inclusao || ' '}</div>
                     </div>
-                    <div className="procedimento-generico-date-field">
+                    <div className="procedimento-generico-date-field brana-modal-meta-row">
                       <span>Alteração:</span>
-                      <div className="procedimento-generico-date-box">{state.data_alteracao || ' '}</div>
+                      <div className="procedimento-generico-date-box brana-readonly-surface">{state.data_alteracao || ' '}</div>
                     </div>
                   </div>
                 </div>
@@ -431,7 +494,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             key: 'custos',
             label: 'Custos diretos',
             children: (
-              <div className="procedimento-generico-costs">
+              <div className="procedimento-generico-costs brana-tab-content">
                 {custoRows.map((row) => (
                   <div className="procedimento-generico-cost-row" key={row.key}>
                     <span className="procedimento-generico-cost-label">{row.label}</span>
@@ -449,7 +512,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             key: 'vinculos',
             label: 'Vínculos',
             children: (
-              <div className="procedimento-generico-links">
+              <div className="procedimento-generico-links brana-tab-content">
                 <div className="procedimento-generico-links-table">
                   <Table
                     rowKey={(record) => `${record.tabela_id}-${record.codigo}-${record.nome}`}
@@ -468,12 +531,12 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
         ]}
       />
 
-      <div className="procedimento-generico-modal-actions">
+      <div className="procedimento-generico-modal-actions brana-modal-section">
         <Button type="primary" loading={saving} onClick={() => void handleSave()}>
           Ok
         </Button>
         <Button onClick={onClose}>Cancela</Button>
       </div>
-    </Modal>
+    </BranaModal>
   );
 }

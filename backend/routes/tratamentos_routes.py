@@ -201,6 +201,7 @@ def _listar_tabelas(db: Session, clinica_id: int) -> list[dict]:
         payload.append(
             {
                 "id": int(t.codigo or 0),
+                "row_id": int(t.id),
                 "nome": (t.nome or "").strip() or f"Tabela {int(t.codigo or 0)}",
                 "indice_id": int(indice_id),
                 "indice_sigla": str(indice_item["sigla"]),
@@ -354,16 +355,21 @@ def _listar_unidades(db: Session, clinica_id: int) -> list[dict]:
 def _listar_convenios(db: Session, clinica_id: int, paciente: Paciente) -> list[dict]:
     out: list[dict] = [{"id": "particular", "nome": "Particular"}]
     vistos: set[str] = {"particular|particular"}
+    ids_vistos: set[str] = set()
 
     def _add(conv_id: str | int | None, nome: str):
         nome_txt = (nome or "").strip()
         if not nome_txt:
             return
         id_txt = str(conv_id if conv_id is not None else nome_txt).strip()
+        if id_txt.isdigit() and id_txt in ids_vistos:
+            return
         chave = f"{id_txt.lower()}|{_norm(nome_txt)}"
         if chave in vistos:
             return
         vistos.add(chave)
+        if id_txt.isdigit():
+            ids_vistos.add(id_txt)
         out.append({"id": id_txt, "nome": nome_txt})
 
     convenios = (
@@ -375,8 +381,6 @@ def _listar_convenios(db: Session, clinica_id: int, paciente: Paciente) -> list[
     for item in convenios:
         _add(int(item.source_id), (item.nome or "").strip())
 
-    if paciente.id_convenio is not None:
-        _add(int(paciente.id_convenio), f"Convenio {int(paciente.id_convenio)}")
     extra = dict(paciente.source_payload or {})
     conv_nome = str(extra.get("convenio_nome") or "").strip()
     if conv_nome:
@@ -655,9 +659,7 @@ def carregar_combos_novo_tratamento(
                     "ativo": True,
                 }
                 unidades = [unidade_default, *[x for x in unidades if int(x.get("row_id") or 0) != int(unidade_default_row.id)]]
-    if unidade_default is None and unidades:
-        unidade_default = unidades[0]
-    unidade_default_value = str(unidade_default.get("nome") or unidade_default.get("descricao") or "") if unidade_default else ""
+    unidade_default_value = str(unidade_default.get("value") or "") if unidade_default else ""
 
     tipos_tiss = _listar_tipos_atendimento_tiss(db)
     tipo_tiss_default = int(tipos_tiss[0]["id"]) if tipos_tiss else 1

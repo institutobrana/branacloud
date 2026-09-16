@@ -149,3 +149,30 @@ export async function listarSimbolosGraficoGenericos() {
   });
   return Array.isArray(data) ? data : [];
 }
+
+export async function listarAuxiliaresPorTipo(tipo) {
+  const search = new URLSearchParams();
+  search.set('tipo', String(tipo || '').trim());
+  const data = await requestJson(`/cadastros/auxiliares?${search.toString()}`, {
+    headers: getAuthHeaders(),
+  });
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listarMateriaisListas() {
+  const data = await requestJson('/materiais/listas', {
+    headers: getAuthHeaders(),
+  });
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listarMateriaisPorLista({ listaId, q = '', classificacao = '__todos__' }) {
+  const search = new URLSearchParams();
+  search.set('lista_id', String(listaId || 0));
+  search.set('q', String(q || ''));
+  search.set('classificacao', String(classificacao || '__todos__'));
+  const data = await requestJson(`/materiais?${search.toString()}`, {
+    headers: getAuthHeaders(),
+  });
+  return Array.isArray(data) ? data : [];
+}

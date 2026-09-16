@@ -9,6 +9,7 @@ class SimboloGrafico(Base):
     id = Column(Integer, primary_key=True, index=True)
     clinica_id = Column(Integer, ForeignKey("clinicas.id", ondelete="CASCADE"), nullable=True, index=True)
     legacy_id = Column(Integer, nullable=True, index=True)
+    origem = Column(String(40), nullable=True)
     codigo = Column(String(30), nullable=False, index=True)
     descricao = Column(String(120), nullable=False)
     especialidade = Column(Integer, nullable=True)
