@@ -1,1 +1,0 @@
-Não esqueça do seu dentista no próximo dia <<Agenda.Data>> às <<Agenda.Hora>>.
