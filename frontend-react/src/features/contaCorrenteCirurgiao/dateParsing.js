@@ -38,6 +38,11 @@ export function normalizeContaCorrenteDateInput(value, referenceDate = dayjs()) 
     return directParsed;
   }
 
+  const isoParsed = parseStrictDate(rawValue, 'YYYY-MM-DD');
+  if (isoParsed.isValid()) {
+    return isoParsed;
+  }
+
   if (compact.length === 2) {
     const { month, year } = getReferenceParts(referenceDate);
     const parsedWithReference = parseStrictDate(`${compact}/${month}/${year}`, FULL_DATE_FORMAT);

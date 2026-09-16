@@ -7,7 +7,13 @@ export function calculateFixedSummary(values) {
   const diasMes = toNumber(values.dias_uteis_mes);
   const diasAno = meses * diasMes;
   const horasDia = toNumber(values.horas_atendimento_dia);
-  const consultorios = Math.max(1, Math.trunc(toNumber(values.num_consultorios) || 1));
+  const rawConsultorios = values?.num_consultorios;
+  const consultorios = rawConsultorios === null || rawConsultorios === undefined || rawConsultorios === ''
+    ? 1
+    : (() => {
+        const parsed = Number(rawConsultorios);
+        return Number.isFinite(parsed) ? Math.trunc(parsed) : 1;
+      })();
   const totalHoras = horasDia * diasAno * consultorios;
 
   return {
@@ -29,7 +35,13 @@ export function formatFixedSummaryValue(field, value) {
 }
 
 export function calculateFlexibleSummary(values) {
-  const consultorios = Math.max(1, Math.trunc(toNumber(values.num_consultorios_flex) || 1));
+  const rawConsultorios = values?.num_consultorios_flex;
+  const consultorios = rawConsultorios === null || rawConsultorios === undefined || rawConsultorios === ''
+    ? 1
+    : (() => {
+        const parsed = Number(rawConsultorios);
+        return Number.isFinite(parsed) ? Math.trunc(parsed) : 1;
+      })();
   let totalHorasFlex = 0;
 
   for (const index of CENARIO_ANUAL_DAY_INDEXES) {

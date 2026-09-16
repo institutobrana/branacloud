@@ -306,6 +306,7 @@ def listar_lancamentos(
 @router.get("/relatorio-cc")
 def relatorio_conta_corrente(
     conta: str = Query(default=""),
+    prestador_id: int | None = Query(default=None),
     tipo_lancamento: str = Query(default=""),
     grupo: str = Query(default=""),
     tipo_grupo: str = Query(default=""),
@@ -333,6 +334,18 @@ def relatorio_conta_corrente(
 
     if (conta or "").strip():
         query = query.filter(Lancamento.conta.in_(_conta_variantes(conta)))
+
+    prestador = _prestador_da_clinica_or_404(db, current_user.clinica_id, prestador_id)
+    conta_norm = _normalizar_conta(conta)
+    if conta_norm == CONTA_CIRURGIAO and prestador is not None:
+        if int(current_user.prestador_id or 0) == int(prestador.id):
+            query = query.filter(
+                (Lancamento.prestador_id.is_(None)) | (Lancamento.prestador_id == prestador.id)
+            )
+        else:
+            query = query.filter(Lancamento.prestador_id == prestador.id)
+    elif conta_norm == CONTA_CLINICA:
+        query = query.filter(Lancamento.conta.in_(_conta_variantes(CONTA_CLINICA)))
 
     if (tipo_lancamento or "").strip():
         tipo_norm = _norm(tipo_lancamento)

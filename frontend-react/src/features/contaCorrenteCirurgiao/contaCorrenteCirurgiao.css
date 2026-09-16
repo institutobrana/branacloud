@@ -364,7 +364,7 @@
   min-width: 100px;
 }
 
-.conta-corrente-cirurgiao-total-saldo.is-negative strong {
+.conta-corrente-cirurgiao-total-saldo.is-negative .conta-corrente-cirurgiao-total-amount {
   color: #c0362c;
 }
 
@@ -1090,24 +1090,138 @@
 }
 
 :root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-thead > tr > th {
-  color: var(--brana-text-inverse);
+  background: #17212b;
+  color: #e8eef5;
+  border-bottom-color: rgba(148, 163, 184, 0.28);
 }
 
 :root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-tbody > tr:hover > td {
-  background: var(--brana-surface-table-row-hover);
+  background: #213041 !important;
 }
 
 :root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .users-table-row-selected > td {
-  background: var(--brana-surface-table-row-selected) !important;
-  color: var(--brana-text-on-selected) !important;
+  background: #154b4f !important;
+  color: #edfdfa !important;
 }
 
 :root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .brana-table-row-even > td {
-  background: var(--brana-surface-table-row);
+  background: #1a2430 !important;
+  color: #e5edf5 !important;
 }
 
 :root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .brana-table-row-odd > td {
-  background: var(--brana-surface-card);
+  background: #141d26 !important;
+  color: #e5edf5 !important;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-tbody > tr > td {
+  background-clip: padding-box;
+  background: #142225 !important;
+  border-bottom-color: rgba(148, 163, 184, 0.18) !important;
+  color: #e5edf5 !important;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-tbody > tr.brana-table-row-even > td {
+  background: #1a2430 !important;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-tbody > tr.brana-table-row-odd > td {
+  background: #141d26 !important;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-tbody > tr.users-table-row-selected > td {
+  background: #154b4f !important;
+  color: #edfdfa !important;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-container,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-content,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-placeholder,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-empty,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-empty-description,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-body,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-body table,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-tbody,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .ant-table-row {
+  background: #142225;
+  color: #e5edf5;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .conta-corrente-cirurgiao-cell-debit {
+  color: #ff8f8a;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .conta-corrente-cirurgiao-cell-credit {
+  color: #c7f9ff;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .conta-corrente-cirurgiao-row-debit td {
+  background: #241a1c;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .conta-corrente-cirurgiao-row-debit:hover td {
+  background: #2e2225;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .conta-corrente-cirurgiao-row-debit td *,
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-table .conta-corrente-cirurgiao-row-debit td .ant-typography {
+  color: #ffb8b3;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-totals {
+  background: #17212b;
+  border-color: rgba(148, 163, 184, 0.24);
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-content {
+  background: #17212b !important;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 24px 48px rgba(2, 6, 23, 0.5);
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-header {
+  background: #17212b !important;
+  border-bottom-color: rgba(148, 163, 184, 0.18);
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-body {
+  background: #142225;
+  color: #e5edf5;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-footer {
+  background: #17212b !important;
+  border-top-color: rgba(148, 163, 184, 0.18);
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-title {
+  color: #eef5fb;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-close {
+  color: #c6d6e2;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-modal .ant-modal-close:hover {
+  color: #f5fbff;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-total + .conta-corrente-cirurgiao-total::before {
+  background: rgba(148, 163, 184, 0.28);
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-total-currency {
+  color: #d9e3ec;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-total-amount {
+  background: #34d7df;
+  color: #081521;
+}
+
+:root[data-brana-theme='dark'] .conta-corrente-cirurgiao-total-saldo.is-negative .conta-corrente-cirurgiao-total-amount {
+  color: #ff7b72;
 }
 
 @media (max-width: 1366px) {

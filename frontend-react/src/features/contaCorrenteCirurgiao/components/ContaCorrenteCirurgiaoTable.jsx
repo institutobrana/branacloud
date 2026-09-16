@@ -110,10 +110,10 @@ export function ContaCorrenteCirurgiaoTable({
           {
             key: 'lancamento',
             title: 'Lançamento',
-            dataIndex: 'categoria_nome',
+            dataIndex: 'data_lancamento',
             width: 180,
             onHeaderCell: () => ({ className: 'conta-corrente-cirurgiao-th-center' }),
-            render: (value) => <span title={value || ''}>{value || '-'}</span>,
+            render: (value) => <span title={formatDate(value) || ''}>{formatDate(value) || '-'}</span>,
           },
           {
             key: 'historico',

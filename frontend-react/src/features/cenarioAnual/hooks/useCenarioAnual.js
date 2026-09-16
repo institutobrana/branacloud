@@ -70,6 +70,31 @@ function buildPayloadSignature(payload) {
   }
 }
 
+function getValidationErrors(values) {
+  const validation = validateCenarioAnualState(values);
+  return validation?.errors && typeof validation.errors === 'object' ? validation.errors : {};
+}
+
+function hasValidationErrors(validationErrors) {
+  return Object.keys(validationErrors || {}).length > 0;
+}
+
+export function createSubmissionGate() {
+  return {
+    pending: false,
+    tryEnter() {
+      if (this.pending) {
+        return false;
+      }
+      this.pending = true;
+      return true;
+    },
+    release() {
+      this.pending = false;
+    },
+  };
+}
+
 export async function reloadCenarioAnualState({
   load = carregarCenarioAnual,
   build = buildState,
@@ -98,22 +123,21 @@ export async function reloadCenarioAnualState({
 
 export async function saveCenarioAnualState({
   state,
-  validation,
+  validationErrors = {},
   validatePayload = validateCenarioAnualPayload,
   buildPayload = buildCenarioAnualPayload,
   save = salvarCenarioAnual,
   submitLock = { current: false },
   activeSubmissionSignature = { current: '' },
-  lastSuccessfulSignature = { current: '' },
   setState = () => {},
   setSaving = () => {},
   setSaveError = () => {},
   setSaveSuccess = () => {},
 } = {}) {
-  if (!validation?.valid) {
-    const message = validation?.message || 'Corrija os campos destacados antes de salvar.';
+  if (hasValidationErrors(validationErrors)) {
+    const message = 'Corrija os campos destacados antes de salvar.';
     setSaveError(message);
-    return { ok: false, reason: 'invalid_form', message, errors: validation?.errors || {} };
+    return { ok: false, reason: 'invalid_form', message, errors: validationErrors };
   }
 
   if (submitLock.current) {
@@ -122,7 +146,7 @@ export async function saveCenarioAnualState({
 
   const payload = buildPayload(state);
   const payloadSignature = buildPayloadSignature(payload);
-  if (activeSubmissionSignature.current === payloadSignature || lastSuccessfulSignature.current === payloadSignature) {
+  if (activeSubmissionSignature.current === payloadSignature) {
     return { ok: false, reason: 'duplicate_payload' };
   }
 
@@ -135,30 +159,21 @@ export async function saveCenarioAnualState({
 
   submitLock.current = true;
   activeSubmissionSignature.current = payloadSignature;
-  lastSuccessfulSignature.current = payloadSignature;
   setSaving(true);
   setSaveError('');
   setSaveSuccess('');
 
-  let succeeded = false;
   try {
     const response = await save(payload);
     setState((current) => applyScenarioSaveResponse(current, response));
-    succeeded = true;
     setSaveSuccess('Cenário anual salvo com sucesso.');
     return { ok: true, payload, response };
   } catch (err) {
-    lastSuccessfulSignature.current = '';
     setSaveError(err?.message || 'Falha ao salvar cenário anual.');
     return { ok: false, error: err, payload };
   } finally {
     activeSubmissionSignature.current = '';
-    if (!succeeded) {
-      lastSuccessfulSignature.current = '';
-    }
-    setTimeout(() => {
-      submitLock.current = false;
-    }, 0);
+    submitLock.current = false;
     setSaving(false);
   }
 }
@@ -173,7 +188,7 @@ export function useCenarioAnual() {
   const [loaded, setLoaded] = useState(false);
   const saveLockRef = useRef(false);
   const activeSubmissionSignatureRef = useRef('');
-  const lastSuccessfulSignatureRef = useRef('');
+  const pendingSubmissionGateRef = useRef(createSubmissionGate());
   const didLoadRef = useRef(false);
 
   const reload = useCallback(async () => {
@@ -204,7 +219,7 @@ export function useCenarioAnual() {
   }), [state]);
 
   const flexSummary = useMemo(() => calculateFlexibleSummary(state), [state]);
-  const validation = useMemo(() => validateCenarioAnualState(state), [state]);
+  const validationErrors = useMemo(() => getValidationErrors(state), [state]);
 
   const updateField = (field, value) => {
     setSaveError('');
@@ -227,24 +242,33 @@ export function useCenarioAnual() {
   };
 
   const save = async () => {
+    const gate = pendingSubmissionGateRef.current;
+    if (!gate.tryEnter()) {
+      return { ok: false, reason: 'already_saving' };
+    }
+
     if (!loaded || loading || saving) {
+      gate.release();
       return { ok: false, reason: 'not_ready' };
     }
 
-    return saveCenarioAnualState({
-      state,
-      validation,
-      validatePayload: validateCenarioAnualPayload,
-      buildPayload: buildCenarioAnualPayload,
-      save: salvarCenarioAnual,
-      submitLock: saveLockRef,
-      activeSubmissionSignature: activeSubmissionSignatureRef,
-      lastSuccessfulSignature: lastSuccessfulSignatureRef,
-      setState,
-      setSaving,
-      setSaveError,
-      setSaveSuccess,
-    });
+    try {
+      return await saveCenarioAnualState({
+        state,
+        validationErrors,
+        validatePayload: validateCenarioAnualPayload,
+        buildPayload: buildCenarioAnualPayload,
+        save: salvarCenarioAnual,
+        submitLock: saveLockRef,
+        activeSubmissionSignature: activeSubmissionSignatureRef,
+        setState,
+        setSaving,
+        setSaveError,
+        setSaveSuccess,
+      });
+    } finally {
+      gate.release();
+    }
   };
 
   return {
@@ -260,10 +284,8 @@ export function useCenarioAnual() {
     saveSuccess,
     loaded,
     reload,
-    validationErrors: validation.errors,
-    validationValid: validation.valid,
-    validationMessage: validation.message,
-    canSave: loaded && !loading && !saving,
+    validationErrors,
+    canSave: loaded && !loading && !saving && !hasValidationErrors(validationErrors),
     canCalculate: false,
     buildPayload: () => buildCenarioAnualPayload(state),
     save,

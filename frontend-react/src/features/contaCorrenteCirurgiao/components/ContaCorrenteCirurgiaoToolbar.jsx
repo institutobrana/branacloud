@@ -35,7 +35,7 @@ export function ContaCorrenteCirurgiaoToolbar({
           <DeleteOutlined /> Elimina
         </button>
         <button type="button" className="auxiliary-shell-button" onClick={() => onPrint?.()}>
-          <FileTextOutlined /> Imprime
+          <FileTextOutlined /> Relatório
         </button>
         <span className="conta-corrente-cirurgiao-toolbar-divider" aria-hidden="true" />
       </div>
