@@ -30,4 +30,4 @@ class GoogleHttpMatrixTests(unittest.TestCase):
                 calls.append(1); raise HTTPError("https://google.test", status, "x", {}, None)
             with patch("services.google_calendar_service.urlopen", side_effect=fake):
                 with self.assertRaises(GoogleCalendarError): _http_json("GET", "https://google.test")
-            self.assertEqual(len(calls), 1)
+        self.assertEqual(len(calls), 1)

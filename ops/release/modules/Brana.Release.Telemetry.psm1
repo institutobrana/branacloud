@@ -464,6 +464,7 @@ function Get-BranaCanaryTelemetry {
         $fixture | Add-Member -NotePropertyName publicTargetRevisionConfirmed -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $fixture.Targets -Name 'PublicTargetRevisionConfirmed')) -Force
         $fixture | Add-Member -NotePropertyName publicTargetRevisionInferred -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $fixture.Targets -Name 'PublicTargetRevisionInferred')) -Force
         $fixture | Add-Member -NotePropertyName activeTaskDefinition -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $fixture.Service -Name 'TaskDefinition')) -Force
+        $fixture | Add-Member -NotePropertyName rolloutState -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $fixture.Service -Name 'RolloutState')) -Force
         return $fixture
     }
 
@@ -1073,6 +1074,7 @@ function Get-BranaCanaryTelemetry {
     $result | Add-Member -NotePropertyName publicTargetRevisionInferred -NotePropertyValue ([bool](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicTargetRevisionInferred')) -Force
     $result | Add-Member -NotePropertyName warnings -NotePropertyValue @($telemetry.Warnings) -Force
     $result | Add-Member -NotePropertyName activeTaskDefinition -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'TaskDefinition')) -Force
+    $result | Add-Member -NotePropertyName rolloutState -NotePropertyValue ([string](Get-BranaTelemetryValue -InputObject $result.Service -Name 'RolloutState')) -Force
     $result | Add-Member -NotePropertyName unHealthyHostCount -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Targets -Name 'PublicUnhealthyHostCount')) -Force
     $result | Add-Member -NotePropertyName healthStatusCode -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Http -Name 'HealthStatusCode')) -Force
     $result | Add-Member -NotePropertyName appStatusCode -NotePropertyValue ([int](Get-BranaTelemetryValue -InputObject $result.Http -Name 'AppStatusCode')) -Force

@@ -524,16 +524,20 @@ def decode_id_token_email(id_token: str | None) -> str:
 def verify_google_id_token(id_token: str | None) -> dict:
     token = str(id_token or "").strip()
     if not token:
-        raise GoogleCalendarError("ID token Google ausente.", 400)
+        error = GoogleCalendarError("ID token Google ausente.", 400)
+        error.safe_category = "missing_id_token"
+        raise error
     client_id, _, _ = get_google_calendar_settings()
     if not client_id:
         raise GoogleCalendarError("Google OAuth não configurado (GOOGLE_CLIENT_ID).", 503)
+
     def fail(category: str, exc=None):
         error = GoogleCalendarError("ID token Google inválido.", 400)
         error.safe_category = category
         if exc is not None:
             error.__cause__ = exc
         raise error from exc
+
     try:
         try:
             header = jwt.get_unverified_header(token)
@@ -549,8 +553,7 @@ def verify_google_id_token(id_token: str | None) -> dict:
                 certs = json.loads(response.read().decode("utf-8"))
         except Exception as exc:
             fail("jwks_fetch", exc)
-        jwk = (certs.get("keys") or [])
-        key = next((item for item in jwk if str(item.get("kid") or "") == kid), None)
+        key = next((item for item in (certs.get("keys") or []) if str(item.get("kid") or "") == kid), None)
         if not key:
             fail("kid_not_found")
         try:

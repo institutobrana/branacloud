@@ -26,6 +26,14 @@ Antes de qualquer alteraÃ§Ã£o em uma Ã¡rea do sistema, o Codex deve:
 - Observacao: Imprime e Relatorio permanecem placeholders desabilitados ate
   definicao futura de produto.
 
+### `docs/contrato_fechamento_agenda_contatos_frontend_react.md`
+- Funcao: registrar o contrato final do modulo React Agenda de contatos.
+- Quando consultar: antes de alterar a rota, toolbar, listagem, modal ou CRUD
+  de contatos de agenda.
+- Status: vigente.
+- Observacao: Imprime e Relatorio permanecem placeholders desabilitados ate
+  definicao futura de produto.
+
 ### `docs/regras_blindagem_correcoes_textuais_mojibake.md`
 - FunÃ§Ã£o: blindar correÃ§Ãµes textuais, acentuaÃ§Ã£o, mojibake, labels e strings visÃ­veis.
 - Quando consultar: antes de qualquer ajuste de UI, texto, placeholder, mensagem ou sÃ­mbolo.

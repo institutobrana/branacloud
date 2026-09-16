@@ -8,6 +8,7 @@ from html import escape
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import quote
+from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
@@ -2808,7 +2809,11 @@ def criar_agendamento(
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    stage = "request_received"
+    started = monotonic()
+    oauth_logger.info("agenda_create stage=%s", stage)
     try:
+        stage = "validation_started"
         data = _parse_date(payload.data)
         if not data:
             raise HTTPException(status_code=400, detail="Informe uma data valida.")
@@ -2822,10 +2827,14 @@ def criar_agendamento(
             raise HTTPException(status_code=400, detail="Informe o cirurgiao/prestador.")
         if id_unidade <= 0:
             raise HTTPException(status_code=400, detail="Informe a unidade.")
+        oauth_logger.info("agenda_create stage=validation_ok elapsed_ms=%.1f", (monotonic() - started) * 1000)
+        stage = "conflict_check_started"
+        oauth_logger.info("agenda_create stage=%s", stage)
         conflict = _tem_conflito_intervalo(
             db=db, clinica_id=int(current_user.clinica_id), id_prestador=id_prestador,
             id_unidade=id_unidade, data_base=data, hora_inicio=hora_inicio, hora_fim=hora_fim_norm,
         )
+        oauth_logger.info("agenda_create stage=conflict_check_finished elapsed_ms=%.1f conflict=%s", (monotonic() - started) * 1000, bool(conflict))
         if conflict:
             raise HTTPException(status_code=409, detail="Ja existe agendamento no horario informado.")
         canonical_patient_id = _validate_patient_id(db, current_user.clinica_id, payload.patient_id)
@@ -2843,12 +2852,17 @@ def criar_agendamento(
             user_stamp_upd=int(current_user.id or 0), time_stamp_upd=datetime.now(),
         )
         db.add(item)
+        oauth_logger.info("agenda_create stage=flush_started")
         db.flush()
+        oauth_logger.info("agenda_create stage=flush_finished")
         db.commit()
+        oauth_logger.info("agenda_create stage=commit_finished")
         db.refresh(item)
+        oauth_logger.info("agenda_create stage=response_ready elapsed_ms=%.1f", (monotonic() - started) * 1000)
         response = _to_dict(item)
         return response
-    except Exception:
+    except Exception as exc:
+        oauth_logger.exception("agenda_create stage=%s final_status=%s exception_type=%s elapsed_ms=%.1f", stage, getattr(exc, "status_code", 500), type(exc).__name__, (monotonic() - started) * 1000)
         raise
 
 

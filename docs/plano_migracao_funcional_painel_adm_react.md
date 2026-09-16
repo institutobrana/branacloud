@@ -484,3 +484,17 @@ Iniciar a Fase 0 visual e estrutural do ADM React, antes de conectar qualquer m�
 - O legado atual indica uma listagem read-only com cinco colunas e sem botoes.
 - A tabela real `plataforma_auditoria` confirma campos de ator, alvo, detalhes, IP e timestamp.
 - O React ainda esta em placeholder e deve permanecer assim ate o contrato da Fase 1 fechar.
+
+# Fechamento — Senha interna
+
+Status: **COMPLETE / HOMOLOGADO LOCALMENTE**.
+
+- Backend: COMPLETE (`POST /auth/internal-password/change`).
+- Frontend React: COMPLETE (Topbar → Alterar senha interna).
+- Testes unitários e regressões: PASS.
+- Integração PostgreSQL isolado: PASS.
+- Runtime, light, dark e responsivo: PASS.
+- Homologação real reversível: PASS; senha original restaurada: SIM.
+- GitHub: PENDING nesta etapa; AWS: NÃO PUBLICADO.
+
+Separação oficial: Usuários altera a senha de login (`Usuario.senha_hash`); Topbar altera a senha interna (`Usuario.senha_interna_hash`). O fallback para `senha_hash` só ocorre quando `senha_interna_hash` é nula, como compatibilidade legada.

@@ -55,7 +55,6 @@ function uniqueFamilies(values) {
   }
   return result;
 }
-
 function sortFamilies(values) {
   return [...values].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }

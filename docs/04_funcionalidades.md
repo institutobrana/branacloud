@@ -40,6 +40,14 @@ Regras: toda busca, detalhe, edicao e exclusao deve filtrar por `current_user.cl
 
 ## Prestadores, convenios e planos
 
+### Fechamento atual de Convenios e planos (React)
+
+O módulo está funcionalmente encerrado na rota `/app/cadastro/convenios-planos`.
+O contrato consolidado de CRUD de convênio, plano e calendário de faturamento
+está em [`docs/fechamento_convenios_planos_react_cp7.md`](fechamento_convenios_planos_react_cp7.md).
+O estado de fechamento é `FUNCTIONAL = COMPLETE`, `LEGACY_PARITY = PASS`,
+`BUILD = PASS`, `RUNTIME = PASS` e `GITHUB_CLOSE = PENDING`.
+
 Codigo: `backend/routes/prestadores_routes.py`, `backend/routes/convenios_planos_routes.py`, modelos `prestador_odonto.py`, `convenio_odonto.py`.
 
 Gerencia prestadores odontologicos, tipos, credenciamentos, comissoes, convenios, planos e calendarios de faturamento.

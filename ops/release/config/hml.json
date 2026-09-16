@@ -24,7 +24,7 @@
   "httpProbeTimeoutSeconds": 10,
   "telemetryMaxAttempts": 2,
   "telemetryBackoffSeconds": 2,
-  "rollbackTaskDefinition": "default-brana-hml-backend:23",
+  "rollbackTaskDefinition": "default-brana-hml-backend:24",
   "requireCleanClone": true,
   "requireImageDigest": true,
   "requireZeroElb503": true,

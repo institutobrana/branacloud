@@ -2,7 +2,6 @@ import os
 import unittest
 from unittest.mock import patch
 
-from models.clinica import Clinica  # noqa: F401
 from models.google_calendar_event_mapping import GoogleCalendarEventMapping
 from services import google_calendar_service as service
 
