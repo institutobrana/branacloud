@@ -1891,7 +1891,9 @@ if(typeof agendaSemanaRenderEventos==="function"){
     agendaSemanaAviso.tbody.innerHTML=agendaSemanaAviso.rows.map((row,idx)=>{
       const selected=idx===agendaSemanaAviso.selectedIdx?" selected":"";
       const okMark=row?.ok?"✔":"";
-      return `<tr data-idx="${idx}" class="${selected}"><td>${esc(agendaSemanaAvisoDataBr(row?.data))}</td><td>${esc(String(row?.hora||""))}</td><td>${esc(String(row?.paciente||""))}</td><td>${esc(String(row?.contato||""))}</td><td class="agenda-semana-aviso-ok-cell">${esc(okMark)}</td></tr>`;
+      const blocked=!row?.ok;
+      const patientLabel=blocked&&row?.block_reason?`${String(row?.paciente||"")} — ${String(row.block_reason)}`:String(row?.paciente||"");
+      return `<tr data-idx="${idx}" class="${selected}${blocked?" blocked":""}"><td>${esc(agendaSemanaAvisoDataBr(row?.data))}</td><td>${esc(String(row?.hora||""))}</td><td>${esc(patientLabel)}</td><td>${esc(String(row?.contato||""))}</td><td class="agenda-semana-aviso-ok-cell" aria-disabled="${blocked?"true":"false"}">${esc(okMark)}</td></tr>`;
     }).join("")||'<tr class="agenda-semana-aviso-empty"><td colspan="5"></td></tr>';
     agendaSemanaAvisoAtualizarColunaContato();
     agendaSemanaAvisoAtualizarBotoes();
@@ -2007,10 +2009,11 @@ if(typeof agendaSemanaRenderEventos==="function"){
       const tr=ev.target.closest("tr[data-idx]");
       if(!tr)return;
       const idx=Math.max(0,Number(tr.dataset.idx||0)||0);
+      const clickedRow=agendaSemanaAviso.rows[idx];
+      if(clickedRow&&!clickedRow.ok)return;
       agendaSemanaAviso.selectedIdx=idx;
       if(ev.target.closest(".agenda-semana-aviso-ok-cell")){
-        const row=agendaSemanaAviso.rows[idx];
-        if(row)row.ok=!row.ok;
+        if(clickedRow)clickedRow.ok=!clickedRow.ok;
       }
       agendaSemanaAvisoRenderRows(agendaSemanaAviso.rows);
     });
@@ -2053,6 +2056,8 @@ if(typeof agendaSemanaRenderEventos==="function"){
         .agenda-semana-aviso-grid th,.agenda-semana-aviso-grid td{height:22px;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid #e7ebf0}
         .agenda-semana-aviso-grid th{background:#eceff3;font:700 12px Tahoma,sans-serif;text-align:left;border-bottom:1px solid #c8d0da}
         .agenda-semana-aviso-grid tr.selected{background:#2a72c9;color:#fff}
+        .agenda-semana-aviso-grid tr.blocked{color:#777;background:#f3f3f3}
+        .agenda-semana-aviso-grid tr.blocked.selected{color:#777;background:#e7e7e7}
         .agenda-semana-aviso-grid tr.agenda-semana-aviso-empty td{height:286px;border-bottom:none}
         .agenda-semana-aviso-grid .agenda-semana-aviso-ok-cell{text-align:center;font-weight:700;cursor:pointer}
         .agenda-semana-aviso-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}

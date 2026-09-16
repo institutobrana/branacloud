@@ -201,8 +201,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
-        padding: 10px 14px;
+        gap: 10px;
+        padding: 6px 10px 7px;
         background: #ffffff;
         border-bottom: 1px solid var(--line);
         position: sticky;
@@ -212,7 +212,7 @@
       .toolbar-left {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 2px;
       }
       .toolbar-right {
         display: flex;
@@ -227,20 +227,32 @@
         min-width: 140px;
       }
       .toolbar-btn {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 8px;
-        margin: 2px;
-        width: 56px;
-        height: 56px;
+        background: linear-gradient(180deg, #fafafa 0%, #ececec 100%);
+        border: 1px solid #c7c7c7;
+        border-radius: 2px;
+        padding: 1px;
+        margin: 0;
+        width: 26px;
+        height: 26px;
         display: grid;
         place-items: center;
         box-sizing: border-box;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
       }
       .toolbar-btn img {
-        width: 48px;
-        height: 48px;
+        width: 21px;
+        height: 21px;
+      }
+      .toolbar-btn.toolbar-btn-final {
+        width: 26px;
+        height: 26px;
+        padding: 1px;
+        margin: 0;
+        border-radius: 2px;
+      }
+      .toolbar-btn.toolbar-btn-final img {
+        width: 21px;
+        height: 21px;
       }
       .toolbar-btn svg {
         width: 32px;
@@ -248,8 +260,8 @@
         display: block;
       }
       .toolbar-btn:hover {
-        background: #f0fdfa;
-        border: 2px solid #2dd4bf;
+        background: linear-gradient(180deg, #f8fcff 0%, #e4f2ff 100%);
+        border: 1px solid #6aa9e9;
         color: #0f766e;
       }
       .toolbar-btn.exit {
@@ -2687,21 +2699,6 @@
 
       <div class="toolbar-bar">
         <div class="toolbar-left">
-          <button id="btn-open-cenario" class="toolbar-btn" type="button" title="Configuração de Cenário Anual">
-            <img src="/desktop-assets/cenario.png" alt="">
-          </button>
-          <button id="btn-open-materiais" class="toolbar-btn" type="button" title="Tabela de materiais">
-            <img src="/desktop-assets/tabela.png" alt="">
-          </button>
-          <button id="btn-open-procedimentos" class="toolbar-btn" type="button" title="Configura tabela de preços">
-            <img src="/desktop-assets/procedimentos.png" alt="">
-          </button>
-          <button class="toolbar-btn" type="button" data-modulo="Conta corrente" title="Conta corrente">
-            <img src="/desktop-assets/CC.png" alt="">
-          </button>
-          <button id="btn-open-dashboard" class="toolbar-btn" type="button" title="Dashboard">
-            <img src="/desktop-assets/dashboard.png" alt="">
-          </button>
         </div>
         <div class="toolbar-right">
           <div class="toolbar-user">
@@ -2719,6 +2716,8 @@
           </button>
         </div>
       </div>
+
+      <div id="brana-paciente-em-uso-anchor"></div>
 
       <main class="workspace">
         <section id="workspace-empty" class="panel">
@@ -3934,15 +3933,19 @@
     <script src="/frontend/js/modules/preferencias-opcoes-sistema.js"></script>
     <script src="/frontend/js/modules/users-admin-modal-visual.js"></script>
     <script src="/frontend/js/modules/tabela-proteticos-helpers.js"></script>
-    <script src="/frontend/js/modules/editor_textos_bootstrap.js"></script>
+    <script src="/frontend/js/modules/editor_textos_bootstrap.js?v=20260615-newtexto-overlay1"></script>
+    <script src="/frontend/js/modules/paciente-em-uso-header.js?v=20260615-paciente-header1"></script>
     <script src="/frontend/js/modules/agenda-contatos-telefones.js"></script>
     <script src="/frontend/js/modules/agenda-contatos-listagem.js"></script>
     <script src="/frontend/js/modules/agenda-principal-legado-utils.js"></script>
     <script src="/frontend/js/modules/agenda-principal-semana-utils.js"></script>
+    <script src="/frontend/js/modules/quadro-de-avisos.js?v=20260616-qav4"></script>
     <script src="/frontend/js/modules/ficha-pessoal-aba-historico-propriedades-da-linha.js"></script>
     <script src="/frontend/js/modules/ficha-pessoal-aba-historico.js"></script>
     <script src="/frontend/js/modules/novo-tratamento-modal.js"></script>
-    <script src="/frontend/app.js?v=20260513-medicamentos-sub1"></script>
+    <script src="/frontend/js/modules/prontuario.js?v=20260615-prontuario1"></script>
+    <script src="/frontend/app.js?v=20260616-login-qav1"></script>
+    <script src="/frontend/js/modules/toolbar-principal-primeira-onda.js?v=20260615-toolbar-final20a"></script>
     <script src="/frontend/easy_font_dialog.js?v=20260330-pref-amb-font3"></script>
     <script src="/frontend/prestadores_override.js?v=20260407-prest-agenda-persist2"></script>
     <script src="/frontend/prestadores_agenda_hotfix.js?v=20260329-prest-agenda-hotfix-restore7"></script>
@@ -3950,17 +3953,10 @@
     <script src="/frontend/prestadores_agenda_refino.js?v=20260329-prest-agenda-refino25"></script>
     <script src="/frontend/prestadores_agenda_fonte_color_patch.js?v=20260328-prest-agenda-fonte-color4"></script>
     <script src="/frontend/prestadores_agenda_utf_fix.js?v=20260328-prest-agenda-utf-fix2"></script>
-    <script src="/frontend/js/modules/odontograma-v1-layout.js?v=20260604-odonto-v1-layout1"></script>
-    <script src="/frontend/js/modules/odontograma-v1-shell.js?v=20260604-odonto-v1-shell1"></script>
+    <script src="/frontend/js/modules/odontograma-v1-layout.js?v=20260619-odonto-v1-layout3"></script>
+    <script src="/frontend/js/modules/odontograma-v1-shell.js?v=20260622-odonto-v1-shell8"></script>
     <script src="/frontend/js/modules/odontograma-v1-paciente-search.js?v=20260604-odonto-v1-paciente-search1"></script>
-    <script src="/frontend/js/modules/odontograma-v1-arcada-render.js?v=20260604-odonto-v1-arcada1"></script>
-    <script src="/frontend/js/modules/odontograma-v1.js?v=20260604-odonto-v1-frontend1"></script>
+    <script src="/frontend/js/modules/odontograma-v1-arcada-render.js?v=20260619-odonto-v1-arcada3"></script>
+    <script src="/frontend/js/modules/odontograma-v1.js?v=20260622-odonto-v1-frontend4"></script>
   </body>
 </html>
-
-
-
-
-
-
-

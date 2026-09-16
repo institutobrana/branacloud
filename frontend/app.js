@@ -2997,10 +2997,10 @@ function sysOptRenderSelects(){
     });
   };
   const renderIndiceRelatorio=el=>{
-    procPreencherSelect(el,indices,{
+    procPreencherSelect(el,[{id:255},{id:0}],{
       placeholder:null,
       valueFrom:(item)=>item?.id??"",
-      labelFrom:(item)=>item?.id===255?"Moeda corrente":`${item?.sigla??""} - ${item?.nome??""}`
+      labelFrom:(item)=>item?.id===255?"Moeda corrente":"Índice padrão"
     });
   };
   if(sysOptCfg.cboFinIndicePadrao)renderIndice(sysOptCfg.cboFinIndicePadrao);
@@ -5844,12 +5844,14 @@ function fichaPayloadAtual(){
 function fichaAplicarPaciente(item){
   if(!ficha||!item)return;
   const extra=item.extra||{};
+  const nomeExibicao=String(extra.PRINOM||extra.NOMRES||item.nome_completo||`${item.nome||""} ${item.sobrenome||""}`||item.nome||"").trim();
+  const codigoExibicao=String(item.codigo??item.cod_paciente??item.codPaciente??item.numero??"").trim();
   fichaInativoAtual=!!item.inativo;
   fichaPacienteAtualId=Number(item.id||0)||null;
-  fichaCodigoUltimoResolvido=String(item.codigo??"").trim();
-  const nomeCompleto=String(item.nome_completo||`${item.nome||""} ${item.sobrenome||""}`).trim();
+  fichaCodigoUltimoResolvido=codigoExibicao;
+  const nomeCompleto=nomeExibicao;
   ficha.titulo.textContent=nomeCompleto?`Ficha pessoal - ${nomeCompleto}`:"Ficha pessoal -";
-  ficha.codigo.value=String(item.codigo??"");
+  ficha.codigo.value=codigoExibicao;
   if(ficha.nome)ficha.nome.value=item.nome||"";
   if(ficha.sobrenome)ficha.sobrenome.value=item.sobrenome||"";
   if(ficha.nascimento)ficha.nascimento.value=fichaIsoToInput(item.data_nascimento);
@@ -12352,20 +12354,13 @@ async function carregarSessao(){
       return;
     }
     if(typeof window!=="undefined"){
-      const abrirOdontoInicial=typeof window.abrirTelaPrincipalOdontologicaNoWorkspace==="function"
-        ? window.abrirTelaPrincipalOdontologicaNoWorkspace
+      const abrirOdontoV1=window.BranaOdontogramaV1Module&&typeof window.BranaOdontogramaV1Module.abrir==="function"
+        ? window.BranaOdontogramaV1Module.abrir
         : null;
-      if(abrirOdontoInicial){
+      if(abrirOdontoV1){
         try{
-          const resultadoOdonto=await Promise.resolve(abrirOdontoInicial({origem:"workspace-principal",modo:"visual-estatico"}));
-          if(!(resultadoOdonto&&resultadoOdonto.ok)&&window.BranaOdontogramaV1Module&&typeof window.BranaOdontogramaV1Module.abrir==="function"){
-            window.BranaOdontogramaV1Module.abrir();
-          }
-        }catch{
-          if(window.BranaOdontogramaV1Module&&typeof window.BranaOdontogramaV1Module.abrir==="function"){
-            try{window.BranaOdontogramaV1Module.abrir()}catch{}
-          }
-        }
+          abrirOdontoV1();
+        }catch{}
       }
     }
     if(window.BranaQuadroAvisosModule?.abrirAposLoginSeConfigurado){
