@@ -80,6 +80,7 @@ saas/backend/reports/
 *.bak-sync-combo
 *backup_check.js
 *from_fullbackup_check.js
+backend/snapshots/
 
 # IDE / SO
 .vscode/
@@ -103,6 +104,7 @@ local_bridge/.env
 !storage/modelos/
 !storage/modelos/clinicas/
 !storage/modelos/clinicas/**
+storage/modelos/clinicas/**
 
 # Documento específico importante
 !Textos/
@@ -111,4 +113,26 @@ local_bridge/.env
 
 # Temporario do Google Drive / upload
 .tmp.driveupload/
+.runtime_tmp/
 _referencias_privadas/
+# Higienizacao 2026-07-27: artefatos locais regeneraveis
+.tmp-*
+.tmp_*
+.tmp.playwright/
+.tmp_chrome_profile/
+.tmp_chrome_profile_*/
+.tmp_video_frames/
+.tmp_video_frames_*/
+*.err
+
+# Higienizacao 2026-07-27: artefatos temporarios do frontend React
+frontend-react/.tmp-*
+frontend-react/.tmp_*
+frontend-react/.tmp_chrome_profile*/
+frontend-react/node_modules/
+frontend-react/plano-contas-headless*.png
+
+# Higienizacao 2026-07-27: task definitions locais
+._ecs_td.json
+.taskdef.new.json
+.taskdef.registered.json

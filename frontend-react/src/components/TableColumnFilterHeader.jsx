@@ -3,6 +3,7 @@ import { Button, Dropdown, Input, Space, Typography } from 'antd';
 
 export function TableColumnFilterHeader({
   label,
+  dataColumnKey,
   activeSort,
   onSortAsc,
   onSortDesc,
@@ -86,6 +87,7 @@ export function TableColumnFilterHeader({
           type="button"
           className={`auxiliary-filter-trigger${activeFilter ? ' is-active' : ''}`}
           aria-label={`Abrir filtro de ${label}`}
+          data-column-key={dataColumnKey || label}
         >
           <FilterOutlined />
         </button>

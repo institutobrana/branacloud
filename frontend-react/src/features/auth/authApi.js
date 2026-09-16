@@ -1,4 +1,5 @@
 import { buildApiUrl } from '../../services/api.js';
+import { getAuthToken } from './authStorage.js';
 
 async function requestJson(path, options = {}) {
   let response;
@@ -29,6 +30,22 @@ async function requestJson(path, options = {}) {
   }
 
   return data;
+}
+
+function normalizeAuthResponse(data) {
+  const accessToken = String(data?.access_token || '').trim();
+  if (!accessToken) {
+    const error = new Error('Resposta de renovacao sem access_token.');
+    error.status = 502;
+    error.data = data;
+    throw error;
+  }
+
+  return {
+    accessToken,
+    tokenType: String(data?.token_type || 'bearer'),
+    expiresIn: Number.isFinite(Number(data?.expires_in)) ? Number(data.expires_in) : 0,
+  };
 }
 
 function normalizeLoginCredentials(credentials = {}) {
@@ -73,4 +90,12 @@ export async function logout(token) {
       Authorization: `Bearer ${token}`,
     },
   });
+}
+
+export async function renewAuthToken(token = getAuthToken()) {
+  const data = await requestJson('/auth/renew', {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  return normalizeAuthResponse(data);
 }

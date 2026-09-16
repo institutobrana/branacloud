@@ -40,7 +40,7 @@ export function getAppBasePath(pathname) {
 export function appPath(suffix = '', basePath = getAppBasePath()) {
   const base = normalizePrefix(basePath);
   const normalizedSuffix = String(suffix || '').replace(/^\/+/, '');
-  return normalizedSuffix ? `${base}/${normalizedSuffix}` : base;
+  return normalizedSuffix ? `${base}/${normalizedSuffix}` : `${base}/`;
 }
 
 export function loginPath(basePath = getAppBasePath()) {

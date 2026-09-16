@@ -3,6 +3,7 @@ import { Alert, Button, Card, Checkbox, Form, Input, Space, Typography, message 
 import { LockOutlined, MailOutlined, LoginOutlined } from '@ant-design/icons';
 
 import { useAuth } from './useAuth.js';
+import { appPath } from '../../app/basePath.js';
 import './login.css';
 
 export function LoginPage() {
@@ -12,7 +13,7 @@ export function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      window.location.replace('/app');
+      window.location.replace(appPath());
     }
   }, [isAuthenticated]);
 
@@ -21,7 +22,7 @@ export function LoginPage() {
     try {
       await signIn(values);
       message.success('Login realizado com sucesso.');
-      window.location.replace('/app');
+      window.location.replace(appPath());
     } catch (err) {
       message.error(err?.message || error || 'Falha ao autenticar.');
     } finally {

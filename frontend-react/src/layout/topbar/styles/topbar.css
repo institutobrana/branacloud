@@ -1,0 +1,27 @@
+.brana-action-topbar { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:10px; align-items:center; padding:5px 10px; border-bottom:1px solid var(--brana-border-subtle); background:var(--brana-surface-topbar); box-shadow:0 8px 18px rgba(0,75,37,.06); }
+.brana-action-topbar-brand { display:grid; grid-template-columns:36px minmax(0,1fr); gap:8px; align-items:center; min-width:0; width:172px; }
+.brana-action-topbar-logo { display:block; width:auto; height:32px; max-width:36px; object-fit:contain; }
+.brana-action-topbar-brand-copy { display:flex; flex-direction:column; gap:2px; min-width:0; line-height:1.08; }
+.brana-action-topbar-brand-name { display:block; font-size:17px; font-weight:800; letter-spacing:.01em; color:var(--brana-brand-primary); white-space:nowrap; }
+.brana-action-topbar-center { display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
+.brana-action-topbar-toolbar { display:flex; align-items:center; gap:7px; min-width:0; flex-wrap:nowrap; }
+.brana-action-topbar-group { display:inline-flex; align-items:center; gap:3px !important; flex-wrap:nowrap; }
+.brana-action-topbar-divider { width:1px; height:22px; margin:0 2px 0 1px; background:var(--brana-divider); flex:0 0 auto; }
+.brana-action-topbar-search-wrap { display:flex; align-items:center; min-width:220px; max-width:320px; width:280px; flex:1; }
+.brana-action-button { width:30px; height:30px; border:0; color:var(--brana-brand-primary); background:transparent; box-shadow:none; display:inline-grid; place-items:center; border-radius:4px; padding:0; }
+.brana-action-button .ant-btn-icon { color:var(--brana-brand-primary); font-size:20px; line-height:1; }
+.brana-action-button .brana-topbar-icon { display:block; width:20px; height:20px; flex:0 0 auto; }
+.brana-action-button:hover { color:var(--brana-brand-primary-hover); background:rgba(22,170,161,.08); }
+.brana-action-topbar-session { color:inherit; display:flex; align-items:center; gap:10px; justify-content:flex-end; white-space:nowrap; min-width:178px; border:0; background:transparent; padding:0; cursor:pointer; }
+.brana-action-topbar-session .anticon, .brana-action-topbar-user-more, .brana-action-topbar-search .anticon { color:var(--brana-brand-primary); }
+.brana-action-topbar-user-meta { display:inline-flex; align-items:center; gap:8px; min-width:0; }
+.brana-action-topbar-user { max-width:150px; overflow:hidden; text-overflow:ellipsis; color:var(--brana-text-inverse); font-weight:600; font-size:11px; }
+.brana-action-topbar-user-more { color:var(--brana-text-inverse); }
+.brana-action-topbar .ant-input-affix-wrapper { border-color:var(--brana-border-default); box-shadow:none; background:var(--brana-surface-topbar); height:28px; border-radius:6px; }
+.brana-action-topbar .ant-input-affix-wrapper:focus, .brana-action-topbar .ant-input-affix-wrapper-focused { border-color:var(--brana-brand-primary-hover); box-shadow:0 0 0 2px var(--brana-focus-ring); }
+.brana-action-topbar .ant-input-prefix { color:var(--brana-brand-primary-hover); }
+.brana-action-topbar-search { width:100%; }
+@media (max-width:768px) { .brana-action-topbar { grid-template-columns:1fr; } .brana-action-topbar-center { flex-direction:column; align-items:stretch; } .brana-action-topbar-toolbar { overflow-x:auto; padding-bottom:2px; } .brana-action-topbar-search-wrap { flex-direction:column; align-items:stretch; min-width:0; } }
+:root[data-brana-theme='dark'] .brana-action-topbar { border-bottom-color:var(--brana-divider); background:var(--brana-surface-topbar); }
+:root[data-brana-theme='dark'] .brana-action-topbar-brand-name, :root[data-brana-theme='dark'] .brana-action-button, :root[data-brana-theme='dark'] .brana-action-button .ant-btn-icon, :root[data-brana-theme='dark'] .brana-action-topbar-session .anticon, :root[data-brana-theme='dark'] .brana-action-topbar-user-more, :root[data-brana-theme='dark'] .brana-action-topbar-search .anticon { color:var(--brana-text-inverse); }
+:root[data-brana-theme='dark'] .brana-action-button:hover { color:var(--brana-text-inverse); background:var(--brana-brand-primary-hover); }
