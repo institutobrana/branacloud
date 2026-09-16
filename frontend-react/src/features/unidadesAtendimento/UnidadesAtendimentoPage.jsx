@@ -1,6 +1,7 @@
 import { Alert, Typography } from 'antd';
 import { useEffect } from 'react';
 
+import { UnidadeAtendimentoDeleteDialog } from './components/UnidadeAtendimentoDeleteDialog.jsx';
 import { UnidadesAtendimentoTable } from './components/UnidadesAtendimentoTable.jsx';
 import { UnidadeAtendimentoModal } from './components/UnidadeAtendimentoModal.jsx';
 import { useUnidadesAtendimento } from './hooks/useUnidadesAtendimento.js';
@@ -25,11 +26,19 @@ export function UnidadesAtendimentoPage() {
     modalError,
     modalValues,
     nextCodeLoading,
+    deleteDialogOpen,
+    deleteLoading,
+    deleteError,
+    deleteTarget,
+    deleteDisabledReason,
     comboOptions,
     ufOptions,
     openCreateModal,
     openEditModal,
+    openDeleteDialog,
     closeModal,
+    closeDeleteDialog,
+    confirmDelete,
     submitModal,
   } = useUnidadesAtendimento();
 
@@ -43,11 +52,26 @@ export function UnidadesAtendimentoPage() {
         if (!selectedItem) return;
         openEditModal(selectedItem);
       }
+      if (action === 'eliminar') {
+        if (!selectedItem) return;
+        openDeleteDialog(selectedItem);
+      }
     };
 
     window.addEventListener('brana-unidades-atendimento-toolbar-action', onToolbarAction);
     return () => window.removeEventListener('brana-unidades-atendimento-toolbar-action', onToolbarAction);
-  }, [openCreateModal, openEditModal, selectedItem]);
+  }, [openCreateModal, openDeleteDialog, openEditModal, selectedItem]);
+
+  useEffect(() => {
+    const detail = {
+      selectedItemId: selectedItem?.id ?? null,
+      loading,
+      deleting: deleteLoading,
+      deleteDisabledReason,
+      hasSelection: Boolean(selectedItem),
+    };
+    window.dispatchEvent(new CustomEvent('brana-unidades-atendimento-state', { detail }));
+  }, [deleteDisabledReason, deleteLoading, loading, selectedItem?.id]);
 
   const footerLabel = `${items.length} ${items.length === 1 ? 'unidade' : 'unidades'}`;
 
@@ -84,6 +108,14 @@ export function UnidadesAtendimentoPage() {
         ufOptions={ufOptions}
         onCancel={closeModal}
         onSubmit={submitModal}
+      />
+      <UnidadeAtendimentoDeleteDialog
+        open={deleteDialogOpen}
+        loading={deleteLoading}
+        error={deleteError}
+        target={deleteTarget}
+        onCancel={closeDeleteDialog}
+        onConfirm={confirmDelete}
       />
     </div>
   );

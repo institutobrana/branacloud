@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   atualizarUnidadeAtendimento,
   criarUnidadeAtendimento,
+  excluirUnidadeAtendimento,
   listarAuxiliaresPorTipo,
   listarUnidadesAtendimento,
   obterProximoCodigoUnidadeAtendimento,
@@ -62,6 +63,10 @@ export function useUnidadesAtendimento() {
   const [modalError, setModalError] = useState('');
   const [modalValues, setModalValues] = useState(EMPTY_UNIDADE_ATENDIMENTO_FORM);
   const [nextCodeLoading, setNextCodeLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [comboOptions, setComboOptions] = useState({
     logradouroOptions: [],
     bairroOptions: [],
@@ -154,6 +159,19 @@ export function useUnidadesAtendimento() {
     [items, selectedId],
   );
 
+  const deleteDisabledReason = useMemo(() => {
+    if (loading) {
+      return 'Carregando unidades...';
+    }
+    if (deleteLoading) {
+      return 'Excluindo unidade...';
+    }
+    if (!selectedItem) {
+      return 'Selecione uma unidade para excluir.';
+    }
+    return '';
+  }, [deleteLoading, loading, selectedItem]);
+
   const openCreateModal = useCallback(async () => {
     setModalMode('create');
     setModalValues(EMPTY_UNIDADE_ATENDIMENTO_FORM);
@@ -180,6 +198,13 @@ export function useUnidadesAtendimento() {
     setModalOpen(true);
   }, []);
 
+  const openDeleteDialog = useCallback((item) => {
+    if (!item?.id) return;
+    setDeleteTarget(item);
+    setDeleteError('');
+    setDeleteDialogOpen(true);
+  }, []);
+
   const closeModal = useCallback(() => {
     if (modalSaving) return;
     setModalOpen(false);
@@ -187,6 +212,43 @@ export function useUnidadesAtendimento() {
     setModalValues(EMPTY_UNIDADE_ATENDIMENTO_FORM);
     setModalMode('create');
   }, [modalSaving]);
+
+  const closeDeleteDialog = useCallback(() => {
+    if (deleteLoading) return;
+    setDeleteDialogOpen(false);
+    setDeleteError('');
+    setDeleteTarget(null);
+  }, [deleteLoading]);
+
+  const confirmDelete = useCallback(async () => {
+    if (!deleteTarget?.id) return { valid: false, error: 'Selecione uma unidade valida.' };
+    setDeleteLoading(true);
+    setDeleteError('');
+    const previousItems = items.slice();
+    const deletedId = Number(deleteTarget.id);
+    const previousIndex = previousItems.findIndex((item) => Number(item.id) === deletedId);
+
+    try {
+      await excluirUnidadeAtendimento(deleteTarget.id);
+      await loadItems();
+
+      const nextItems = previousItems.filter((item) => Number(item.id) !== deletedId);
+      const nextSelected = nextItems[previousIndex] || nextItems[previousIndex - 1] || nextItems[0] || null;
+      setSelectedId(nextSelected?.id ?? null);
+
+      setDeleteDialogOpen(false);
+      setDeleteTarget(null);
+      message.success('Unidade excluida com sucesso.');
+      return { valid: true };
+    } catch (err) {
+      const nextError = err?.message || 'Falha ao excluir unidade de atendimento.';
+      setDeleteError(nextError);
+      message.error(nextError);
+      return { valid: false, error: nextError };
+    } finally {
+      setDeleteLoading(false);
+    }
+  }, [deleteTarget, items, loadItems]);
 
   const submitModal = useCallback(async (values) => {
     const validation = validateUnidadeAtendimentoValues(values);
@@ -257,11 +319,19 @@ export function useUnidadesAtendimento() {
     modalError,
     modalValues,
     nextCodeLoading,
+    deleteDialogOpen,
+    deleteLoading,
+    deleteError,
+    deleteTarget,
+    deleteDisabledReason,
     comboOptions,
     ufOptions: UNIDADE_ATENDIMENTO_UFS,
     openCreateModal,
     openEditModal,
+    openDeleteDialog,
     closeModal,
+    closeDeleteDialog,
+    confirmDelete,
     submitModal,
     reload: loadItems,
   };

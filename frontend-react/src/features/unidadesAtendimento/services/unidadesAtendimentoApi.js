@@ -136,6 +136,22 @@ export async function atualizarUnidadeAtendimento(rowId, payload) {
   return data ? normalizeUnidadeAtendimento(data) : null;
 }
 
+export async function excluirUnidadeAtendimento(rowId) {
+  const id = Number(rowId || 0) || 0;
+  if (!id) {
+    const error = new Error('Selecione uma unidade valida.');
+    error.status = 400;
+    throw error;
+  }
+
+  return requestJson(`/cadastros/unidades-atendimento/${encodeURIComponent(String(id))}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
 export async function listarAuxiliaresPorTipo(tipo) {
   const value = String(tipo ?? '').trim();
   if (!value) return [];

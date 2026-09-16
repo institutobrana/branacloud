@@ -9,6 +9,7 @@ from database import get_db
 from models.unidade_atendimento import UnidadeAtendimento
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
+from services.unidades_atendimento.deletion_service import excluir_unidade_atendimento
 
 router = APIRouter(
     prefix="/cadastros/unidades-atendimento",
@@ -284,6 +285,5 @@ def excluir(
     db: Session = Depends(get_db),
 ):
     item = _or_404(db, current_user.clinica_id, row_id)
-    db.delete(item)
-    db.commit()
-    return {"detail": "Unidade excluida."}
+    result = excluir_unidade_atendimento(db, current_user.clinica_id, item)
+    return {"detail": result.detail}
