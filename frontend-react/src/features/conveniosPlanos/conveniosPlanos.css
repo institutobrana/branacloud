@@ -1,0 +1,159 @@
+.convenios-planos-page { width: 100%; min-width: 0; }
+.convenios-planos-card { height: 100%; }
+.convenios-planos-section { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.convenios-planos-detail { margin-top: 20px; }
+.convenios-planos-table-shell {
+  width: min(68vw, 860px);
+  max-width: calc(100% - 120px);
+  min-width: 860px;
+  margin-inline: auto;
+}
+.convenios-planos-table-frame { display: grid; grid-template-rows: auto auto; width: 100%; border: 1px solid var(--brana-border-subtle); border-radius: 10px; overflow: hidden; background: var(--brana-surface-card); }
+.convenios-planos-table-grid { width: 100%; min-width: 0; }
+.convenios-planos-table .ant-table-container { border-radius: 0; overflow: hidden; }
+.convenios-planos-table .ant-table-cell { vertical-align: middle; }
+.convenios-planos-table .ant-table-thead > tr > th, .convenios-planos-table .ant-table-tbody > tr > td, .convenios-planos-table .ant-table-selection-column { padding-top: 0 !important; padding-bottom: 0 !important; }
+.convenios-planos-table .ant-table-thead > tr > th { height: 32px; min-height: 32px; font-size: 11px; line-height: 1; }
+.convenios-planos-table .ant-table-tbody > tr > td { height: 32px; min-height: 32px; max-height: 32px; line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.convenios-planos-table .ant-table-selection-column { width: 28px !important; min-width: 28px !important; max-width: 28px !important; }
+.convenios-planos-table .ant-table-cell-scrollbar { box-shadow: none; }
+.convenios-planos-table .ant-table-content, .convenios-planos-table .ant-table-body { scrollbar-gutter: stable; }
+.convenios-planos-table-footer { display: flex; align-items: center; justify-content: flex-start; width: 100%; min-height: 24px; padding: 2px 10px 0; border-top: 1px solid var(--brana-border-subtle); background: var(--brana-surface-card); color: var(--brana-text-secondary); font-size: 12px; line-height: 1.2; }
+.convenios-planos-count { color: var(--brana-text-secondary, #697586); font-size: 12px; }
+.convenios-planos-toolbar { width: 100%; min-width: 0; }
+.convenios-planos-toolbar .servicos-protetico-toolbar-actions { width: 100%; overflow-x: auto; }
+.convenios-planos-toolbar-divider { width: 1px; height: 24px; background: var(--brana-border, #d9dee7); margin: 0 2px; }
+.convenios-planos-retry { border: 0; background: transparent; color: inherit; text-decoration: underline; cursor: pointer; }
+@media (max-width: 768px) { .convenios-planos-toolbar .servicos-protetico-toolbar-actions { gap: 5px; } }
+
+@media (max-width: 1280px) {
+  .convenios-planos-table-shell {
+    width: min(74vw, 860px);
+    min-width: 680px;
+  }
+}
+
+@media (max-width: 900px) {
+  .convenios-planos-table-shell {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+.convenios-planos-convenio-modal-root .ant-modal-content,
+.convenios-planos-convenio-modal-root .ant-modal-header,
+.convenios-planos-convenio-modal-root .ant-modal-body,
+.convenios-planos-convenio-modal-root .ant-modal-footer {
+  background: #f5f0e6;
+}
+.convenios-planos-convenio-modal-root .ant-modal-content,
+.convenios-planos-convenio-modal-root .ant-modal-header,
+.convenios-planos-convenio-modal-root .ant-modal-body {
+  background: #f5f0e6 !important;
+}
+.convenios-planos-convenio-modal-root.ant-modal-root .ant-modal-content { border-radius: 4px !important; overflow: hidden; }
+.convenios-planos-convenio-modal-root .ant-modal-body { padding: 8px 10px 10px; }
+.convenios-planos-convenio-modal-root .ant-modal-header { padding: 10px 14px 8px; }
+.convenios-planos-convenio-modal-root .ant-modal-title { font-size: 15px; line-height: 20px; color: var(--brana-text-primary); }
+.convenios-planos-convenio-modal-root .ant-modal-close { top: 8px; right: 10px; width: 26px; height: 26px; }
+.convenios-planos-convenio-modal-tabs.ant-tabs { min-height: 0; }
+.convenios-planos-convenio-modal-tabs .ant-tabs-nav { margin: 0 0 3px; min-height: 42px; }
+.convenios-planos-convenio-modal-tabs .ant-tabs-nav-list { gap: 2px; align-items: flex-end; }
+.convenios-planos-convenio-modal-tabs .ant-tabs-tab { min-width: 104px; height: 38px; padding: 0 14px; border: 1px solid transparent; border-radius: 2px 2px 0 0; background: var(--brana-surface-panel); margin: 0 2px 0 0; justify-content: center; font-size: 12px; line-height: 18px; box-sizing: border-box; }
+.convenios-planos-convenio-modal-tabs .ant-tabs-tab.ant-tabs-tab-active { background: #f5f0e6; border-color: var(--brana-border-subtle); border-bottom-color: #f5f0e6; height: 38px; }
+.convenios-planos-convenio-modal-tabs .ant-tabs-ink-bar { background: var(--brana-teal); height: 2px; }
+.convenios-planos-convenio-modal-tabs .ant-tabs-content-holder { padding-top: 1px; min-height: 0; }
+.convenios-planos-convenio-modal-pane { display: flex; flex-direction: column; gap: 3px; }
+.convenios-planos-convenio-modal-field { display:flex; flex-direction:column; gap:2px; min-width:0; color:var(--brana-text-primary); font-size:11px; line-height:14px; }
+.convenios-planos-convenio-modal-field > .ant-input, .convenios-planos-convenio-modal-field > .ant-select { width:100%; }
+.convenios-planos-convenio-modal-field .ant-input, .convenios-planos-convenio-modal-field .ant-select-selector { min-height:25px !important; height:25px !important; font-size:11px; }
+.convenios-planos-convenio-modal-field .ant-input { padding-top:3px; padding-bottom:3px; }
+.convenios-planos-convenio-modal-field .ant-select-selection-item, .convenios-planos-convenio-modal-field .ant-select-selection-placeholder { line-height:23px !important; font-size:11px; }
+.convenios-planos-convenio-modal-field .ant-input { padding-top:2px; padding-bottom:2px; }
+.convenios-planos-convenio-modal-readonly .ant-input { background:#54e5e9 !important; border-color:rgba(0, 0, 0, .08) !important; color:#0f172a !important; }
+.convenios-planos-convenio-modal-lookup-error { margin-bottom:0; font-size:11px; }
+.convenios-planos-convenio-modal-cep-feedback { min-height:16px; color:var(--brana-text-secondary); font-size:11px; line-height:14px; }
+.convenios-planos-convenio-modal-cep-error { color:var(--brana-danger, #a8071a); }
+.convenios-planos-plano-modal-root .ant-modal-content,
+.convenios-planos-plano-modal-root .ant-modal-header,
+.convenios-planos-plano-modal-root .ant-modal-body,
+.convenios-planos-plano-modal-root .ant-modal-footer { background: #f5f0e6; }
+.convenios-planos-plano-modal-root .ant-modal-content { border-radius: 4px !important; overflow: hidden; }
+.convenios-planos-plano-modal-root .ant-modal-header { padding: 10px 14px 8px; }
+.convenios-planos-plano-modal-root .ant-modal-body { padding: 10px 14px 8px; }
+.convenios-planos-plano-modal-root .ant-modal-footer { padding: 7px 14px 9px; }
+.convenios-planos-plano-modal-pane { gap: 6px; }
+:root[data-brana-theme='dark'] .convenios-planos-plano-modal-root .ant-modal-content,
+:root[data-brana-theme='dark'] .convenios-planos-plano-modal-root .ant-modal-header,
+:root[data-brana-theme='dark'] .convenios-planos-plano-modal-root .ant-modal-body,
+:root[data-brana-theme='dark'] .convenios-planos-plano-modal-root .ant-modal-footer { background: var(--brana-surface-panel) !important; }
+.convenios-planos-convenio-modal-grid-row { display: flex; gap: 6px; align-items: stretch; min-width: 0; }
+.convenios-planos-convenio-modal-grid-row > * { min-width: 0; }
+.convenio-row-two-columns > * { flex: 1 1 0; }
+.convenios-planos-convenio-modal-details-pane > .convenios-planos-convenio-modal-field { width: 100%; }
+.convenios-planos-convenio-modal-details-pane .ant-input, .convenios-planos-convenio-modal-details-pane .ant-select, .convenios-planos-convenio-modal-details-pane .ant-select-selector { width: 100%; }
+.convenios-planos-convenio-modal-details-pane textarea.ant-input { height: auto !important; min-height: 0 !important; resize: vertical; }
+.convenios-planos-convenio-modal-details-pane > .ant-checkbox-wrapper { color: var(--brana-text-primary); font-size: 11px; line-height: 22px; }
+.convenios-planos-convenio-modal-placeholder { display: flex; align-items: flex-end; min-height: 32px; padding: 4px 6px; border: 1px dashed var(--brana-border-subtle); border-radius: 6px; background: var(--brana-surface-subtle, var(--brana-surface-card)); color: var(--brana-text-secondary); font-size: 11px; }
+.convenio-row-code-name > :first-child { flex: 0 0 110px; }
+.convenio-row-code-name > :last-child { flex: 1; }
+.convenio-row-company > :first-child { flex: 1; }
+.convenio-row-company > :last-child { flex: 0 0 160px; }
+.convenio-row-address > :nth-child(1) { flex: 0 0 120px; }
+.convenio-row-address > :nth-child(2) { flex: 1; }
+.convenio-row-address > :nth-child(3) { flex: 0 0 54px; }
+.convenio-row-address > :nth-child(4) { flex: 0 0 160px; }
+.convenio-row-location > :nth-child(1) { flex: 0 0 165px; }
+.convenio-row-location > :nth-child(2) { flex: 1; }
+.convenio-row-location > :nth-child(3) { flex: 0 0 95px; }
+.convenio-row-location > :nth-child(4) { flex: 0 0 62px; }
+.convenios-planos-convenio-modal-divider { margin-top: 1px; border-top: 1px solid var(--brana-border-subtle); }
+.convenios-planos-convenio-modal-phone-header, .convenios-planos-convenio-modal-phone-row { display: grid; grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr) 24px; gap: 6px; align-items: center; }
+.convenios-planos-convenio-modal-phone-header { color: var(--brana-text-secondary); font-size: 11px; font-weight: 600; }
+.convenios-planos-convenio-modal-phone-row .convenios-planos-convenio-modal-placeholder { min-height: 28px; }
+.convenios-planos-convenio-modal-phone-icon { width: 25px; height: 24px; display: grid; place-items: center; color: #389e0d; font-size: 16px; line-height: 1; text-align: center; }
+.convenio-row-timestamps > * { flex: 1; }
+.convenios-planos-convenio-modal-details > * { flex: 1; }
+.convenios-planos-convenio-modal-textarea-placeholder { min-height: 112px; align-items: flex-start; }
+.convenios-planos-convenio-modal-checkbox-placeholder { min-height: auto; border: 0; padding: 0; background: transparent; }
+.convenios-planos-convenio-modal-root.ant-modal-root .ant-modal-footer { padding: 7px 14px 9px; background: #f5f0e6 !important; }
+.convenios-planos-convenio-modal-footer { display: flex; justify-content: flex-end; gap: 6px; }
+
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-root .ant-modal-content,
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-root .ant-modal-header,
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-root .ant-modal-body,
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-root .ant-modal-footer {
+  background: #142225 !important;
+}
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  background: #142225;
+  border-bottom-color: #142225;
+}
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-readonly .ant-input { background:#34d7df !important; border-color:rgba(196, 235, 228, .32) !important; color:#071719 !important; }
+:root[data-brana-theme='dark'] .convenios-planos-convenio-modal-root.ant-modal-root .ant-modal-content { border-radius: 4px !important; }
+@media (max-width: 680px) {
+  .convenios-planos-convenio-modal-root .ant-modal { max-width: calc(100vw - 24px) !important; }
+  .convenios-planos-convenio-modal-grid-row { flex-wrap: wrap; }
+  .convenios-planos-convenio-modal-grid-row > * { flex-basis: calc(50% - 5px) !important; }
+  .convenios-planos-convenio-modal-phone-header, .convenios-planos-convenio-modal-phone-row { grid-template-columns: 92px minmax(0, 1fr) minmax(0, 1fr) 20px; gap: 6px; }
+}
+.convenios-planos-calendar-modal-root .ant-modal-content, .convenios-planos-calendar-modal-root .ant-modal-header, .convenios-planos-calendar-modal-root .ant-modal-body { background: #f5f0e6 !important; }
+.convenios-planos-calendar-modal-root .ant-modal-content { border-radius: 4px !important; }
+.convenios-planos-calendar-modal-root .ant-modal-body { padding: 10px 14px 8px; }
+.convenios-planos-calendar-toolbar { display:flex; align-items:center; gap:6px; margin-bottom:10px; }
+.convenios-planos-calendar-toolbar .convenios-planos-toolbar-divider { flex:1; }
+.convenios-planos-calendar-toolbar .auxiliary-shell-button { color: var(--brana-text-primary) !important; background: var(--brana-surface-panel) !important; border: 1px solid var(--brana-border-strong) !important; border-radius: 6px; padding: 4px 10px; font-weight: 600; }
+.convenios-planos-calendar-toolbar .auxiliary-shell-button:hover:not(:disabled) { color: var(--brana-text-primary) !important; border-color: var(--brana-accent) !important; background: var(--brana-surface-hover) !important; }
+.convenios-planos-calendar-toolbar .auxiliary-shell-button:disabled { color: var(--brana-text-secondary) !important; background: var(--brana-surface-muted) !important; border-color: var(--brana-border-subtle) !important; opacity: .85; }
+.convenios-planos-calendar-filter { display:flex; align-items:center; gap:8px; margin:6px 0 10px; }
+.convenios-planos-calendar-filter label { color:var(--brana-text-primary); font-size:12px; font-weight:600; white-space:nowrap; }
+.convenios-planos-calendar-convenio-select { min-width:240px; }
+.convenios-planos-calendar-convenio-select .ant-select-selector { min-height:28px !important; height:28px !important; border:1px solid var(--brana-border-strong) !important; border-radius:6px !important; background:var(--brana-surface-panel) !important; color:var(--brana-text-primary) !important; font:inherit !important; }
+.convenios-planos-calendar-convenio-select .ant-select-selection-item { line-height:26px !important; color:var(--brana-text-primary) !important; }
+.convenios-planos-calendar-convenio-select.ant-select-focused .ant-select-selector { outline:2px solid color-mix(in srgb, var(--brana-accent) 35%, transparent); outline-offset:1px; }
+.convenios-planos-calendar-table { margin-bottom:8px; }
+.convenios-planos-calendar-new-modal-root .ant-modal-content, .convenios-planos-calendar-new-modal-root .ant-modal-header, .convenios-planos-calendar-new-modal-root .ant-modal-body, .convenios-planos-calendar-new-modal-root .ant-modal-footer { background:#f5f0e6 !important; }
+.convenios-planos-calendar-new-modal-root .ant-modal-content { border-radius:4px !important; }
+.convenios-planos-calendar-new-form { display:flex; flex-direction:column; gap:6px; }
+:root[data-brana-theme='dark'] .convenios-planos-calendar-modal-root .ant-modal-content, :root[data-brana-theme='dark'] .convenios-planos-calendar-modal-root .ant-modal-header, :root[data-brana-theme='dark'] .convenios-planos-calendar-modal-root .ant-modal-body, :root[data-brana-theme='dark'] .convenios-planos-calendar-new-modal-root .ant-modal-content, :root[data-brana-theme='dark'] .convenios-planos-calendar-new-modal-root .ant-modal-header, :root[data-brana-theme='dark'] .convenios-planos-calendar-new-modal-root .ant-modal-body, :root[data-brana-theme='dark'] .convenios-planos-calendar-new-modal-root .ant-modal-footer { background: var(--brana-surface-panel) !important; }
