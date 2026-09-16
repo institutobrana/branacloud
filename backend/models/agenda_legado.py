@@ -17,6 +17,7 @@ class AgendaLegadoEvento(Base):
     sala = Column(SmallInteger, nullable=True)
     tipo = Column(Integer, nullable=True)
     nro_pac = Column(Integer, nullable=True)
+    patient_id = Column(Integer, ForeignKey("pacientes.id", ondelete="SET NULL"), nullable=True, index=True)
     nome = Column(String(120), nullable=True)
     motivo = Column(Text, nullable=True)
     status = Column(Integer, nullable=True)
