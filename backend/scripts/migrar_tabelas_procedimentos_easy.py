@@ -111,7 +111,7 @@ def _run_osql_query(query: str) -> list[str]:
         "-Q",
         f"SET NOCOUNT ON {query}",
     ]
-    completed = subprocess.run(cmd, capture_output=True, text=True, encoding="latin-1", errors="ignore", check=True)
+    completed = subprocess.run(cmd, capture_output=True, text=True, encoding="cp850", errors="replace", check=True)
     lines: list[str] = []
     for raw in completed.stdout.splitlines():
         line = raw.rstrip()

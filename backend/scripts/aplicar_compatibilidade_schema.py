@@ -826,6 +826,7 @@ def aplicar_compatibilidade_schema() -> None:
         conn.execute(text("CREATE INDEX IF NOT EXISTS ix_doenca_cid_codigo ON doenca_cid (codigo)"))
         conn.execute(text("ALTER TABLE simbolo_grafico_catalogo ADD COLUMN IF NOT EXISTS legacy_id INTEGER"))
         conn.execute(text("ALTER TABLE simbolo_grafico_catalogo ADD COLUMN IF NOT EXISTS clinica_id INTEGER"))
+        conn.execute(text("ALTER TABLE simbolo_grafico_catalogo ADD COLUMN IF NOT EXISTS origem VARCHAR(40)"))
         conn.execute(text("ALTER TABLE simbolo_grafico_catalogo ADD COLUMN IF NOT EXISTS imagem_custom TEXT"))
         conn.execute(text("CREATE INDEX IF NOT EXISTS ix_simbolo_grafico_catalogo_clinica_id ON simbolo_grafico_catalogo (clinica_id)"))
         conn.execute(text("CREATE INDEX IF NOT EXISTS ix_simbolo_grafico_catalogo_legacy_id ON simbolo_grafico_catalogo (legacy_id)"))
