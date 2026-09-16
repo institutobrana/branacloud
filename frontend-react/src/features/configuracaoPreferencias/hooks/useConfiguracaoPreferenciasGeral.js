@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { getGeneralPreferences, updateGeneralPreferences } from '../api/configuracaoPreferenciasApi.js';
 import { buildGeneralPayload, normalizeGeneralValues } from '../utils/configuracaoPreferenciasNormalizers.js';
 
-export function useConfiguracaoPreferenciasGeral(open) {
+export function useConfiguracaoPreferenciasGeral(open, targetUser) {
+  const targetUserId = Number(targetUser?.id || 0) || null;
   const [values, setValues] = useState(() => normalizeGeneralValues());
   const [options, setOptions] = useState({ tabelas_intervencoes: [], convenios: [] });
   const [user, setUser] = useState(null);
@@ -15,7 +16,7 @@ export function useConfiguracaoPreferenciasGeral(open) {
     let cancelled = false;
     setLoading(true);
     setError('');
-    getGeneralPreferences().then((data) => {
+    getGeneralPreferences(targetUserId).then((data) => {
       if (cancelled) return;
       setValues(normalizeGeneralValues(data?.values));
       setOptions(data?.options || {});
@@ -23,20 +24,20 @@ export function useConfiguracaoPreferenciasGeral(open) {
     }).catch((err) => { if (!cancelled) setError(err.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [open]);
+  }, [open, targetUserId]);
 
   const update = useCallback((patch) => setValues((current) => ({ ...current, ...patch })), []);
   const save = useCallback(async () => {
     setSaving(true); setError('');
     try {
-      const data = await updateGeneralPreferences(buildGeneralPayload(values));
+      const data = await updateGeneralPreferences(buildGeneralPayload(values), targetUserId);
       setValues(normalizeGeneralValues(data?.values));
       setOptions(data?.options || options);
       setUser(data?.user || user);
       return data;
     } catch (err) { setError(err.message); throw err; }
     finally { setSaving(false); }
-  }, [options, user, values]);
+  }, [options, targetUserId, user, values]);
 
   return { values, options, user, loading, saving, error, update, save };
 }

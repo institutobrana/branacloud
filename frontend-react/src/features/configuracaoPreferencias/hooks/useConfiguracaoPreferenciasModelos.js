@@ -11,7 +11,8 @@ function normalize(values) {
   return FIELDS.reduce((result, field) => ({ ...result, [field]: values?.[field] ?? null }), {});
 }
 
-export function useConfiguracaoPreferenciasModelos(open) {
+export function useConfiguracaoPreferenciasModelos(open, targetUser) {
+  const targetUserId = Number(targetUser?.id || 0) || null;
   const [values, setValues] = useState(() => normalize());
   const [options, setOptions] = useState({});
   const [user, setUser] = useState(null);
@@ -23,7 +24,7 @@ export function useConfiguracaoPreferenciasModelos(open) {
     if (!open) return undefined;
     let cancelled = false;
     setLoading(true); setError('');
-    getModelPreferences().then((data) => {
+    getModelPreferences(targetUserId).then((data) => {
       if (cancelled) return;
       setValues(normalize(data?.values));
       setOptions(data?.options || {});
@@ -31,18 +32,18 @@ export function useConfiguracaoPreferenciasModelos(open) {
     }).catch((err) => { if (!cancelled) setError(err.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [open]);
+  }, [open, targetUserId]);
 
   const update = useCallback((patch) => setValues((current) => ({ ...current, ...patch })), []);
   const save = useCallback(async () => {
     setSaving(true); setError('');
     try {
-      const data = await updateModelPreferences(values);
+      const data = await updateModelPreferences(values, targetUserId);
       setValues(normalize(data?.values));
       setOptions(data?.options || options);
       return data;
     } catch (err) { setError(err.message); throw err; }
     finally { setSaving(false); }
-  }, [options, values]);
+  }, [options, targetUserId, values]);
   return { values, options, user, loading, saving, error, update, save };
 }

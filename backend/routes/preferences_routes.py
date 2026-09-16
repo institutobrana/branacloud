@@ -1,5 +1,6 @@
 import json
 import re
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -14,6 +15,7 @@ from models.procedimento_tabela import ProcedimentoTabela
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
 from security.system_accounts import is_system_user
+from services.model_document_storage import visible_model_overrides
 
 router = APIRouter(
     prefix="/preferences",
@@ -257,6 +259,66 @@ class ReportConfigUpdateRequest(BaseModel):
     config: dict = Field(default_factory=dict)
 
 
+REPORT_OPTIONS_CONTRACT_VERSION = 1
+REPORT_OPTIONS_CONTRACT_NAMESPACE = "relatorio_conta_corrente_cirurgiao"
+REPORT_OPTIONS_SELECTED_FIELDS = [
+    "categoria",
+    "cirurgiao",
+    "complemento",
+    "credito",
+    "data",
+    "debito",
+    "grupo",
+    "historico",
+    "lancamento",
+    "numero_documento",
+    "pagamento",
+    "referencia",
+    "saldo",
+]
+REPORT_OPTIONS_SELECTED_FIELDS_SET = set(REPORT_OPTIONS_SELECTED_FIELDS)
+REPORT_OPTIONS_DEFAULT_SELECTED_FIELDS = ["data", "historico", "debito"]
+REPORT_OPTIONS_DEFAULT_REPORT_NAME = "Relatório de contas do cirurgião"
+REPORT_OPTIONS_OUTPUTS = {"tela", "arquivo", "pdf", "html", "rtf", "xls", "txt", "csv", "imprimir"}
+REPORT_OPTIONS_ORIENTATIONS = {"retrato", "paisagem"}
+REPORT_OPTIONS_LABEL_ALIASES = {
+    "categoria": "categoria",
+    "cirurgião": "cirurgiao",
+    "cirurgiao": "cirurgiao",
+    "complemento": "complemento",
+    "crédito": "credito",
+    "credito": "credito",
+    "data": "data",
+    "débito": "debito",
+    "debito": "debito",
+    "grupo": "grupo",
+    "histórico": "historico",
+    "historico": "historico",
+    "lançamento": "lancamento",
+    "lancamento": "lancamento",
+    "nº documento": "numero_documento",
+    "n° documento": "numero_documento",
+    "n documento": "numero_documento",
+    "numero documento": "numero_documento",
+    "pagamento": "pagamento",
+    "referência": "referencia",
+    "referencia": "referencia",
+    "saldo": "saldo",
+}
+
+
+class ContaCorrenteCirurgiaoReportOptionsPreferences(BaseModel):
+    version: int = 1
+    selectedFields: list[str] = Field(default_factory=list)
+    reportName: str = REPORT_OPTIONS_DEFAULT_REPORT_NAME
+    output: Literal["tela", "arquivo", "pdf", "html", "rtf", "xls", "txt", "csv", "imprimir"] = "tela"
+    orientation: Literal["retrato", "paisagem"] = "paisagem"
+
+
+class ContaCorrenteCirurgiaoReportOptionsUpdateRequest(ContaCorrenteCirurgiaoReportOptionsPreferences):
+    pass
+
+
 def _clean_text(value: str | None, max_len: int | None = None) -> str:
     txt = " ".join(str(value or "").split()).strip()
     if not txt:
@@ -392,6 +454,7 @@ def _catalogo_modelos_para_usuario(db: Session, usuario: Usuario, tipo_modelo: s
         )
         .all()
     )
+    rows = visible_model_overrides(rows, usuario.clinica_id)
     options = [{"id": None, "nome": ""}]
     for item in rows:
         origem = "Clínica" if item.clinica_id == usuario.clinica_id else "Base"
@@ -716,6 +779,94 @@ def _sanitize_report_config(values: dict) -> dict:
         "paperSource": _clean_text(data.get("paperSource"), 60),
         "printerOrientation": _clean_text(data.get("printerOrientation"), 20),
     }
+
+
+def _normalize_report_options_selected_fields(values) -> list[str]:
+    if values is None:
+        return list(REPORT_OPTIONS_DEFAULT_SELECTED_FIELDS)
+    if not isinstance(values, list):
+        return list(REPORT_OPTIONS_DEFAULT_SELECTED_FIELDS)
+
+    normalized: list[str] = []
+    for raw_value in values:
+        key = str(raw_value or "").strip().lower()
+        key = REPORT_OPTIONS_LABEL_ALIASES.get(key, key)
+        if key not in REPORT_OPTIONS_SELECTED_FIELDS_SET:
+            continue
+        if key in normalized:
+            continue
+        normalized.append(key)
+    return normalized
+
+
+def _normalize_report_options_payload(values: dict | None, *, default_on_missing: bool) -> dict:
+    data = values if isinstance(values, dict) else {}
+    namespace_exists = isinstance(values, dict)
+    selected_fields_raw = data.get("selectedFields") if "selectedFields" in data else None
+
+    if not namespace_exists and default_on_missing:
+        return {
+            "version": REPORT_OPTIONS_CONTRACT_VERSION,
+            "selectedFields": list(REPORT_OPTIONS_DEFAULT_SELECTED_FIELDS),
+            "reportName": REPORT_OPTIONS_DEFAULT_REPORT_NAME,
+            "output": "tela",
+            "orientation": "paisagem",
+        }
+
+    selected_fields = _normalize_report_options_selected_fields(selected_fields_raw)
+    report_name = _clean_text(data.get("reportName"), 180)
+    if not report_name:
+        report_name = REPORT_OPTIONS_DEFAULT_REPORT_NAME
+
+    output = str(data.get("output") or "tela").strip().lower()
+    if output not in REPORT_OPTIONS_OUTPUTS:
+        output = "tela"
+
+    orientation = str(data.get("orientation") or "paisagem").strip().lower()
+    if orientation not in REPORT_OPTIONS_ORIENTATIONS:
+        orientation = "paisagem"
+
+    version_raw = data.get("version", REPORT_OPTIONS_CONTRACT_VERSION)
+    try:
+        version = int(version_raw)
+    except Exception:
+        version = REPORT_OPTIONS_CONTRACT_VERSION
+    if version < 1:
+        version = REPORT_OPTIONS_CONTRACT_VERSION
+
+    return {
+        "version": version,
+        "selectedFields": selected_fields,
+        "reportName": report_name,
+        "output": output,
+        "orientation": orientation,
+    }
+
+
+def _load_report_options_preferences(usuario: Usuario) -> dict | None:
+    prefs = _load_preferences_json(usuario)
+    values = prefs.get(REPORT_OPTIONS_CONTRACT_NAMESPACE)
+    if values is None:
+        return None
+    return values if isinstance(values, dict) else {}
+
+
+def _build_report_options_payload(usuario: Usuario) -> dict:
+    stored = _load_report_options_preferences(usuario)
+    if stored is None:
+        return _normalize_report_options_payload(None, default_on_missing=True)
+    normalized = _normalize_report_options_payload(stored, default_on_missing=False)
+    if not normalized["selectedFields"] and isinstance(stored, dict) and "selectedFields" in stored and stored.get("selectedFields") == []:
+        normalized["selectedFields"] = []
+    return normalized
+
+
+def _save_report_options_preferences(usuario: Usuario, payload: dict) -> dict:
+    normalized = _normalize_report_options_payload(payload, default_on_missing=True)
+    prefs = _load_preferences_json(usuario)
+    prefs[REPORT_OPTIONS_CONTRACT_NAMESPACE] = normalized
+    usuario.preferencias_usuario_json = _dump_preferences_json(prefs)
+    return normalized
 
 
 def _build_general_payload(db: Session, usuario: Usuario) -> dict:
@@ -1117,5 +1268,27 @@ def update_report_config(
             "nome": usuario.nome,
             "apelido": (usuario.apelido or usuario.nome or "").strip(),
         },
+        "config": config,
+    }
+
+
+@router.get("/report-options/conta-corrente-cirurgiao")
+def get_report_options_conta_corrente_cirurgiao(
+    current_user: Usuario = Depends(get_current_user),
+):
+    return _build_report_options_payload(current_user)
+
+
+@router.patch("/report-options/conta-corrente-cirurgiao")
+def update_report_options_conta_corrente_cirurgiao(
+    payload: ContaCorrenteCirurgiaoReportOptionsUpdateRequest,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    config = _save_report_options_preferences(current_user, payload.model_dump())
+    db.commit()
+    db.refresh(current_user)
+    return {
+        "detail": "Preferencia do relatorio atualizada com sucesso.",
         "config": config,
     }

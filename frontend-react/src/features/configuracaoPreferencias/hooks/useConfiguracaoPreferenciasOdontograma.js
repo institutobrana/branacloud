@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { getOdontogramPreferences, updateOdontogramPreferences } from '../api/configuracaoPreferenciasApi.js';
 import { normalizeOdontogram, buildOdontogramPayload } from '../utils/odontogramaNormalizers.js';
 
-export function useConfiguracaoPreferenciasOdontograma(open) {
+export function useConfiguracaoPreferenciasOdontograma(open, targetUser) {
+  const targetUserId = Number(targetUser?.id || 0) || null;
   const [values, setValues] = useState(() => normalizeOdontogram());
   const [options, setOptions] = useState({ especialidades: [], filtros: [] });
   const [user, setUser] = useState(null);
@@ -14,7 +15,7 @@ export function useConfiguracaoPreferenciasOdontograma(open) {
     if (!open) return undefined;
     let cancelled = false;
     setLoading(true); setError('');
-    getOdontogramPreferences().then((data) => {
+    getOdontogramPreferences(targetUserId).then((data) => {
       if (cancelled) return;
       setValues(normalizeOdontogram(data?.values));
       setOptions(data?.options || { especialidades: [], filtros: [] });
@@ -22,20 +23,20 @@ export function useConfiguracaoPreferenciasOdontograma(open) {
     }).catch((err) => { if (!cancelled) setError(err.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [open]);
+  }, [open, targetUserId]);
 
   const update = useCallback((patch) => setValues((current) => ({ ...current, ...patch })), []);
   const save = useCallback(async () => {
     setSaving(true); setError('');
     try {
-      const data = await updateOdontogramPreferences(buildOdontogramPayload(values));
+      const data = await updateOdontogramPreferences(buildOdontogramPayload(values), targetUserId);
       setValues(normalizeOdontogram(data?.values));
       setOptions(data?.options || options);
       setUser(data?.user || user);
       return data;
     } catch (err) { setError(err.message); throw err; }
     finally { setSaving(false); }
-  }, [options, user, values]);
+  }, [options, targetUserId, user, values]);
 
   return { values, options, user, loading, saving, error, update, save };
 }

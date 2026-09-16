@@ -1,5 +1,6 @@
-import { Avatar, Button, Checkbox, Input, Modal, Select, Tabs, Typography, message } from 'antd';
+import { Avatar, Button, Checkbox, Input, Select, Tabs, Typography, message } from 'antd';
 import { CameraOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { BranaModal } from '../../components/BranaModal.jsx';
 import './preferenciasUsuario.css';
 
 const moduloAberturaOptions = [
@@ -244,7 +245,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
   return (
     <>
       {contextHolder}
-      <Modal
+      <BranaModal
         open={open}
         onCancel={onClose}
         footer={null}
@@ -256,7 +257,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
         title={<span className="preferencias-classic-title">Configurações e preferências de {titleName}</span>}
         className="preferencias-modal"
       >
-        <div className="preferencias-classic-window">
+        <div className="preferencias-classic-window brana-modal-section">
           <Tabs defaultActiveKey="geral" type="card" className="preferencias-classic-tabs" items={tabItems} />
 
           <div className="preferencias-footer-shell">
@@ -268,7 +269,7 @@ export function PreferenciasUsuarioModal({ open, userName, onClose }) {
             </div>
           </div>
         </div>
-      </Modal>
+      </BranaModal>
     </>
   );
 }
