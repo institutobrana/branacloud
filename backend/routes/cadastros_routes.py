@@ -24,11 +24,13 @@ from models.procedimento_generico import (
 from models.procedimento_tabela import ProcedimentoTabela
 from models.prestador_odonto import PrestadorOdonto
 from models.simbolo_grafico import SimboloGrafico
+from models.tiss_tipo_tabela import TissTipoTabela  # noqa: F401 - garante resolucao dos mappers do ProcedimentoTabela
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
 from services.plano_contas_system_groups import is_system_protected_group_name
 from services.procedimentos_legado_service import carregar_metadados_genericos_legado
 from services.signup_service import garantir_auxiliares_raw_clinica
+from services.cep.service import CepLookupError, lookup_cep
 from services.simbolos_service import (
     carregar_codigos_catalogo_oficial,
     carregar_codigos_genericos,
@@ -764,8 +766,9 @@ def listar_simbolos_graficos(
         if scope_norm == "catalogo":
             legacy_id = int(getattr(row, "legacy_id", 0) or 0)
             # Catalogo oficial da tela "Configura simbolos": somente os 81 itens
-            # vindos do snapshot EasyDental (_SIMBOLO_ODONTO).
-            if legacy_catalogo and legacy_id not in legacy_catalogo:
+            # vindos do snapshot EasyDental (_SIMBOLO_ODONTO) + simbolos criados
+            # pelo usuario no React.
+            if legacy_catalogo and legacy_id not in legacy_catalogo and not _simbolo_usuario_no_catalogo(row):
                 continue
         else:
             codigo_key = codigo.lower()
@@ -825,6 +828,11 @@ def _simbolo_eh_oficial(item: SimboloGrafico) -> bool:
     return not legacy_catalogo or legacy_id in legacy_catalogo
 
 
+def _simbolo_usuario_no_catalogo(item: SimboloGrafico) -> bool:
+    origem = str(getattr(item, "origem", "") or "").strip().lower()
+    return origem == "simbolo_usuario"
+
+
 def _simbolo_nome_ativo_existe(
     db: Session,
     clinica_id: int,
@@ -874,6 +882,7 @@ def criar_simbolo_grafico(
     item = SimboloGrafico(
         clinica_id=int(current_user.clinica_id),
         legacy_id=None,
+        origem="simbolo_usuario",
         codigo=codigo,
         descricao=descricao[:120],
         especialidade=payload.especialidade,
@@ -1129,6 +1138,9 @@ def _paciente_menu_status_code(p: Paciente) -> int:
 def _paciente_menu_status_texto_norm(p: Paciente) -> str:
     txt = _norm(str(p.status or ""))
     if txt:
+        labels = {1: "inativo", 2: "ativo", 3: "em tratamento", 4: "faleceu"}
+        if txt.isdigit() and int(txt) in labels:
+            return labels[int(txt)]
         return txt
     code = _paciente_menu_status_code(p)
     if code == 2:
@@ -1138,6 +1150,16 @@ def _paciente_menu_status_texto_norm(p: Paciente) -> str:
     if code == 4:
         return "faleceu"
     return "inativo"
+
+
+def _paciente_menu_status_label(p: Paciente) -> str:
+    labels = {1: "Inativo", 2: "Ativo", 3: "Em tratamento", 4: "Faleceu"}
+    raw = str(p.status or "").strip()
+    if raw.isdigit() and int(raw) in labels:
+        return labels[int(raw)]
+    if raw:
+        return raw
+    return labels.get(_paciente_menu_status_code(p), "")
 
 
 def _paciente_menu_status_aux_id(item_id: int) -> int:
@@ -1775,7 +1797,7 @@ def listar_pacientes_menu_options(
             {"id": 0, "label": "<<Todos>>"},
             *[
                 {
-                    "id": int(item.id or 0),
+                    "id": int(item.source_id or 0),
                     "label": (item.nome or "").strip() or f"Prestador {item.id}",
                 }
                 for item in prestadores
@@ -1826,6 +1848,13 @@ def listar_pacientes_menu(
         .filter(Paciente.clinica_id == current_user.clinica_id)
         .all()
     )
+    prestador_por_id = {
+        int(item.source_id): str(item.nome or '').strip()
+        for item in db.query(PrestadorOdonto)
+        .filter(PrestadorOdonto.clinica_id == current_user.clinica_id)
+        .all()
+        if item.source_id is not None
+    }
 
     filtrados: list[Paciente] = []
     for p in pacientes:
@@ -1870,10 +1899,7 @@ def listar_pacientes_menu(
             if not nome_norm.startswith(letra):
                 continue
         if termo_norm:
-            # Legacy-like hybrid search:
-            # - numeric input: search by patient number prefix
-            # - text input: search by patient name prefix
-            if termo_norm.isdigit():
+            if pesquisa_id == 2:
                 cod = _norm(str(p.codigo or ""))
                 if not cod.startswith(termo_norm):
                     continue
@@ -1906,11 +1932,26 @@ def listar_pacientes_menu(
                 "valor_coluna2": str(getattr(p, "_menu_col2", str(int(p.codigo or 0)))),
                 "status": _paciente_menu_status_code(p),
                 "id_prestador": _paciente_menu_source_int(p, "ID_PRESTADOR", 0),
+                "telefone1": str(p.fone1 or "").strip(),
+                "prestador": prestador_por_id.get(_paciente_menu_source_int(p, "ID_PRESTADOR", 0), ""),
+                "situacao": _paciente_menu_status_label(p),
                 "nome_paciente": (p.nome_completo or " ".join(x for x in [p.nome or "", p.sobrenome or ""] if x.strip())).strip(),
             }
             for p in pagina
         ],
     }
+
+
+@router.get("/cep/{cep}", dependencies=[DEP_PROCEDIMENTOS])
+def consultar_cep(
+    cep: str,
+    current_user: Usuario = Depends(get_current_user),
+):
+    del current_user
+    try:
+        return lookup_cep(cep)
+    except CepLookupError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @router.get("/pacientes", dependencies=[DEP_PROCEDIMENTOS])
@@ -1956,6 +1997,37 @@ def listar_pacientes(
             "inativo": bool(x.inativo),
         }
         for x in itens
+    ]
+
+
+@router.get("/pacientes/sugestoes-sobrenome", dependencies=[DEP_PROCEDIMENTOS])
+def listar_sugestoes_por_sobrenome(
+    sobrenome: str = Query(default=""),
+    limit: int = Query(default=15, ge=1, le=20),
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    referencia = (sobrenome or "").strip()
+    if len(referencia) < 2:
+        return []
+
+    itens = (
+        db.query(Paciente.id, Paciente.nome_completo, Paciente.sobrenome)
+        .filter(
+            Paciente.clinica_id == current_user.clinica_id,
+            func.lower(func.trim(Paciente.sobrenome)) == func.lower(referencia),
+        )
+        .order_by(Paciente.nome_completo.asc(), Paciente.id.asc())
+        .limit(int(limit))
+        .all()
+    )
+    return [
+        {
+            "id": item.id,
+            "nome_completo": item.nome_completo or "",
+            "sobrenome": item.sobrenome or "",
+        }
+        for item in itens
     ]
 
 

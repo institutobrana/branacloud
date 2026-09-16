@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { BranaThemeModeProvider, useBranaThemeMode } from '../theme/branaThemeMode.jsx';
 import { getBranaTheme } from '../theme/branaTheme.js';
 import { BranaIconRail, branaMainGroups } from '../layout/BranaIconRail.jsx';
-import { BranaActionTopbar } from '../layout/BranaActionTopbar.jsx';
+import { BranaActionTopbar } from '../layout/topbar/index.js';
 import { BranaContextPanel } from '../layout/BranaContextPanel.jsx';
 import { BranaWorkspace } from '../layout/BranaWorkspace.jsx';
 import { LoginPage } from '../features/auth/LoginPage.jsx';
@@ -15,7 +15,9 @@ import { AdminRoutes } from '../features/admin/AdminRoutes.jsx';
 import { adminPath } from '../features/admin/adminRoutes.js';
 import { appPath, getAppBasePath, isUnderAppBase, loginPath } from './basePath.js';
 import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/DashboardPage.jsx';
-import { FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
+import { FichaClinicaContextBar, FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
+import { MenuPacientesModal } from '../features/menuPacientes/components/MenuPacientesModal.jsx';
+import { PatientInUseProvider, usePatientInUse } from '../shared/patientInUse/PatientInUseContext.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
 import { ProcedimentosPage } from '../features/procedimentos/ProcedimentosPage.jsx';
@@ -30,6 +32,12 @@ import { ServicosProteticoPage } from '../features/servicosProtetico/ServicosPro
 import { ServicosProteticoToolbar } from '../features/servicosProtetico/components/ServicosProteticoToolbar.jsx';
 import { PreferenciasUsuarioModal } from '../features/preferencias/PreferenciasUsuarioModal.jsx';
 import { ConfiguracaoPreferenciasModal } from '../features/configuracaoPreferencias/components/ConfiguracaoPreferenciasModal.jsx';
+import { ReportSettingsModal } from '../features/relatoriosConfiguracao/components/ReportSettingsModal.jsx';
+import '../features/relatoriosConfiguracao/styles/report-settings.css';
+import { OpcoesSistemaModal } from '../features/opcoesSistema/components/OpcoesSistemaModal.jsx';
+import { AlterarSenhaFlow } from '../features/alterarSenha/index.js';
+import { UsuariosPage } from '../features/usuarios/components/UsuariosPage.jsx';
+import { UsuariosToolbar } from '../features/usuarios/components/UsuariosToolbar.jsx';
 import { CenarioAnualPage } from '../features/cenarioAnual/CenarioAnualPage.jsx';
 import { IndicesFinanceirosToolbar } from '../features/indicesFinanceiros/components/IndicesFinanceirosToolbar.jsx';
 import { IndicesFinanceirosPage } from '../features/indicesFinanceiros/IndicesFinanceirosPage.jsx';
@@ -57,13 +65,27 @@ import { SimbolosGraficosPage } from '../features/simbolosGraficos/SimbolosGrafi
 import { SimbolosGraficosToolbar } from '../features/simbolosGraficos/components/SimbolosGraficosToolbar.jsx';
 import { PrestadorCredenciamentosModal } from '../features/prestadoresCredenciamentos/PrestadorCredenciamentosModal.jsx';
 import { PrestadorComissoesModal } from '../features/prestadoresComissoes/PrestadorComissoesModal.jsx';
+import { AgendaSemanalPage } from '../features/agendaSemanal/AgendaSemanalPage.jsx';
+import { AgendaDiariaPage } from '../features/agendaDiaria/AgendaDiariaPage.jsx';
+import { AgendaSemanalToolbar } from '../features/agendaSemanal/components/AgendaSemanalToolbar.jsx';
+import { AgendaSearchModal } from '../features/agendaSemanal/components/AgendaSearchModal.jsx';
+import { AgendaFreeSlotsModal } from '../features/agendaSemanal/components/AgendaFreeSlotsModal.jsx';
+import { AgendaNoticeModal } from '../features/agendaSemanal/components/AgendaNoticeModal.jsx';
+import { GoogleAgendaPublishModal } from '../features/agendaSemanal/components/GoogleAgendaPublishModal.jsx';
 import { EtiquetasPage } from '../features/etiquetas/components/EtiquetasPage.jsx';
 import { EtiquetasToolbar } from '../features/etiquetas/components/EtiquetasToolbar.jsx';
+import { AgendaContatosPage } from '../features/agendaContatos/AgendaContatosPage.jsx';
+import { AgendaContatosToolbar } from '../features/agendaContatos/components/AgendaContatosToolbar.jsx';
+import { ConveniosPlanosPage } from '../features/conveniosPlanos/ConveniosPlanosPage.jsx';
+import { ConveniosPlanosToolbar } from '../features/conveniosPlanos/components/ConveniosPlanosToolbar.jsx';
+import { EditorTextosPage } from '../features/editorTextos/EditorTextosPage.jsx';
+import { EditorTextosPrimaryToolbar } from '../features/editorTextos/components/EditorTextosPrimaryToolbar.jsx';
 
 const contextualMenus = {
   atendimento: [
-    { key: 'agenda-diaria', label: 'Agenda diária', disabled: true },
-    { key: 'agenda-semanal', label: 'Agenda semanal', disabled: true },
+    { key: 'agenda-diaria', label: 'Agenda diária' },
+    { key: 'agenda-semanal', label: 'Agenda semanal' },
+    { key: 'agenda-contatos', label: 'Agenda de contatos' },
     { key: 'retornos', label: 'Controle de retornos', disabled: true },
     { key: 'documentos', label: 'Documentos', disabled: true },
     { key: 'ficha-clinica', label: 'Ficha clínica', disabled: true },
@@ -72,7 +94,7 @@ const contextualMenus = {
     { key: 'timeline-paciente', label: 'Timeline do paciente', disabled: true },
   ],
   cadastro: [
-    { key: 'convenios', label: 'Convênios atendidos', disabled: true },
+    { key: 'convenios-planos', label: 'Convênios e planos' },
     { key: 'corpo-clinico', label: 'Corpo clínico' },
     { key: 'fornecedores', label: 'Fornecedores', disabled: true },
     { key: 'pacientes', label: 'Pacientes' },
@@ -107,8 +129,9 @@ const contextualMenus = {
   ],
   configuracao: [
     { key: 'agendas', label: 'Agenda' },
-    { key: 'configuracao-etiquetas', label: 'Etiquetas' },
     { key: 'configuracao-preferencias', label: 'Preferências' },
+    { key: 'configuracao-etiquetas', label: 'Etiquetas' },
+    { key: 'configuracao-relatorios', label: 'Relatórios' },
     { key: 'campos-livres', label: 'Campos livres', disabled: true },
     { key: 'cenario-anual', label: 'Cenário anual' },
     { key: 'indices-financeiros', label: 'Índices financeiros' },
@@ -120,13 +143,13 @@ const contextualMenus = {
     { key: 'tabelas-auxiliares', label: 'Tabelas auxiliares' },
     { key: 'taxas-cobranca', label: 'Taxas de cobrança', disabled: true },
     { key: 'unidades-atendimento', label: 'Unidades de atendimento' },
-    { key: 'usuarios', label: 'Usuários do sistema', disabled: true },
+    { key: 'usuarios', label: 'Usuários do sistema' },
   ],
   ferramentas: [
     { key: 'assinatura-eletronica', label: 'Assinatura eletrônica', disabled: true },
     { key: 'crm-vendas', label: 'CRM de vendas', disabled: true },
     { key: 'dashboard', label: 'Dashboard', disabled: true },
-    { key: 'editor-textos', label: 'Editor de textos', disabled: true },
+    { key: 'editor-textos', label: 'Editor de textos' },
     { key: 'exportacao-dados', label: 'Exportação de dados', disabled: true },
     { key: 'gerenciar-avisos', label: 'Gerenciar avisos', disabled: true },
     { key: 'mala-direta', label: 'Mala direta', disabled: true },
@@ -165,16 +188,23 @@ function resolveScreenFromPath() {
   if (path === `${base}/adm/cobrancas`) return 'adm-cobrancas';
   if (path === `${base}/adm/auditoria`) return 'adm-auditoria';
   if (path === `${base}/pacientes`) return 'pacientes';
+  if (path === `${base}/cadastro/convenios-planos`) return 'convenios-planos';
   if (path === `${base}/ficha-clinica`) return 'ficha-clinica';
+  if (path === `${base}/atendimento/agenda-diaria`) return 'agenda-diaria';
+  if (path === `${base}/atendimento/agenda-semanal`) return 'agenda-semanal';
+  if (path === `${base}/atendimento/agenda-contatos`) return 'agenda-contatos';
   if (path === `${base}/cenario-anual`) return 'cenario-anual';
   if (path === `${base}/configuracoes/indices-financeiros`) return 'indices-financeiros';
   if (path === `${base}/configuracoes/plano-de-contas`) return 'plano-contas';
-  if (path === `${base}/configuracoes/etiquetas`) return 'configuracao-etiquetas';
   if (path === `${base}/configuracoes/agendas`) return 'agenda-configuracao';
   if (path === `${base}/configuracoes/simbolos-graficos`) return 'simbolos-graficos';
   if (path === `${base}/configuracoes/unidades-atendimento`) return 'unidades-atendimento';
   if (path === `${base}/configuracoes/questionarios-anamnese`) return 'questionarios-anamnese';
   if (path === `${base}/configuracoes/preferencias`) return 'configuracao-preferencias';
+  if (path === `${base}/configuracoes/relatorios`) return 'configuracao-relatorios';
+  if (path === `${base}/configuracoes/etiquetas`) return 'configuracao-etiquetas';
+  if (path === `${base}/configuracoes/usuarios`) return 'usuarios';
+  if (path === `${base}/configuracoes/opcoes-sistema`) return 'opcoes-sistema';
   if (path === `${base}/financeiro/conta-corrente-cirurgiao`) return 'conta-corrente-cirurgiao';
   if (path === `${base}/cadastro/corpo-clinico`) return 'prestadores';
   if (path === `${base}/tabelas-auxiliares`) return 'tabelas-auxiliares';
@@ -184,6 +214,7 @@ function resolveScreenFromPath() {
   if (path === `${base}/tabelas/doencas-cid`) return 'doencas-cid';
   if (path === `${base}/tabelas/medicamentos`) return 'medicamentos';
   if (path === `${base}/tabelas/servicos-protetico`) return 'servicos-protetico';
+  if (path === `${base}/ferramentas/editor-textos`) return 'editor-textos';
   return 'dashboard';
 }
 
@@ -201,8 +232,16 @@ function syncAppPath(screen) {
         ? `${adminPath()}/auditoria`
       : screen === 'pacientes'
         ? appPath('pacientes')
+      : screen === 'convenios-planos'
+        ? appPath('cadastro/convenios-planos')
       : screen === 'ficha-clinica'
         ? appPath('ficha-clinica')
+      : screen === 'agenda-diaria'
+        ? appPath('atendimento/agenda-diaria')
+      : screen === 'agenda-semanal'
+        ? appPath('atendimento/agenda-semanal')
+      : screen === 'agenda-contatos'
+        ? appPath('atendimento/agenda-contatos')
       : screen === 'cenario-anual'
           ? appPath('cenario-anual')
           : screen === 'indices-financeiros'
@@ -219,8 +258,14 @@ function syncAppPath(screen) {
             ? appPath('configuracoes/questionarios-anamnese')
           : screen === 'configuracao-preferencias'
             ? appPath('configuracoes/preferencias')
+          : screen === 'configuracao-relatorios'
+            ? appPath('configuracoes/relatorios')
           : screen === 'configuracao-etiquetas'
             ? appPath('configuracoes/etiquetas')
+          : screen === 'opcoes-sistema'
+            ? appPath('configuracoes/opcoes-sistema')
+          : screen === 'usuarios'
+            ? appPath('configuracoes/usuarios')
           : screen === 'conta-corrente-cirurgiao'
             ? appPath('financeiro/conta-corrente-cirurgiao')
           : screen === 'prestadores'
@@ -239,6 +284,8 @@ function syncAppPath(screen) {
               ? appPath('tabelas/medicamentos')
             : screen === 'servicos-protetico'
               ? appPath('tabelas/servicos-protetico')
+            : screen === 'editor-textos'
+              ? appPath('ferramentas/editor-textos')
             : appPath();
   if ((window.location.pathname || '/') === nextPath) return;
   window.history.pushState({ screen }, '', nextPath);
@@ -249,6 +296,24 @@ function AppContent() {
   const { user, isAuthenticated, loading, signOut } = useAuth();
   const initialScreen = resolveScreenFromPath();
   const [screen, setScreen] = useState(initialScreen);
+  const [convenioModalOpen, setConvenioModalOpen] = useState(false);
+  const [convenioModalTab, setConvenioModalTab] = useState('principal');
+  const [convenioModalMode, setConvenioModalMode] = useState('new');
+  const [selectedConvenio, setSelectedConvenio] = useState(null);
+  const [selectedPlano, setSelectedPlano] = useState(null);
+  const openConvenioModal = () => {
+    setConvenioModalMode('new');
+    setSelectedConvenio(null);
+    setConvenioModalTab('principal');
+    setConvenioModalOpen(true);
+  };
+  const openEditConvenio = (record = selectedConvenio) => {
+    if (!record) return;
+    setConvenioModalMode('edit');
+    setSelectedConvenio(record);
+    setConvenioModalTab('principal');
+    setConvenioModalOpen(true);
+  };
   const [adminNavigationState, setAdminNavigationState] = useState(null);
   const [dashboardVersion, setDashboardVersion] = useState(0);
   const [railExpanded, setRailExpanded] = useState(false);
@@ -280,6 +345,24 @@ function AppContent() {
     selectedProteticoId: null,
     loading: false,
   });
+  const [agendaSemanalToolbarState, setAgendaSemanalToolbarState] = useState({
+    especialidades: [{ value: '', label: 'Todas' }],
+    prestadores: [{ value: '', label: 'Todos' }],
+    unidades: [{ value: '', label: 'Todas' }],
+    selected: { especialidade: '', prestadorId: '', unidadeId: '' },
+    loading: true,
+    error: '',
+  });
+  const [agendaContatosToolbarState, setAgendaContatosToolbarState] = useState({ types: [], tipo: '', busca: '', selectedId: null });
+  const [agendaSearchOpen, setAgendaSearchOpen] = useState(false);
+  const [agendaFreeSlotsOpen, setAgendaFreeSlotsOpen] = useState(false);
+  const [agendaNoticeOpen, setAgendaNoticeOpen] = useState(false);
+  const [googleAgendaPublishOpen, setGoogleAgendaPublishOpen] = useState(false);
+  useEffect(() => {
+    const onState = (event) => setAgendaContatosToolbarState((current) => ({ ...current, ...(event.detail || {}) }));
+    window.addEventListener('brana-agenda-contatos-state', onState);
+    return () => window.removeEventListener('brana-agenda-contatos-state', onState);
+  }, []);
   const [pacientesToolbarState, setPacientesToolbarState] = useState({
     loading: true,
     optionsLoading: true,
@@ -301,12 +384,30 @@ function AppContent() {
     },
   });
   const [fichaPessoalOpen, setFichaPessoalOpen] = useState(false);
+  const [fichaNewPatientContext, setFichaNewPatientContext] = useState(false);
+  const [newPatientDecision, setNewPatientDecision] = useState(null);
   const [fichaPessoalPatientId, setFichaPessoalPatientId] = useState(null);
   const [fichaPessoalMode, setFichaPessoalMode] = useState('new');
+  const { patient: patientInUse, setPatient: setPatientInUse, clearPatient: clearPatientInUse } = usePatientInUse();
+  const [patientMenuOpen, setPatientMenuOpen] = useState(false);
+  const [pendingFichaNewTreatment, setPendingFichaNewTreatment] = useState(false);
+  const [fichaNewTreatmentOpen, setFichaNewTreatmentOpen] = useState(false);
+  const patientEntryPromptedRef = useRef(false);
 
   const openNewPatient = () => {
     setFichaPessoalPatientId(null);
     setFichaPessoalMode('new');
+    setFichaPessoalOpen(true);
+    setFichaNewPatientContext(false);
+  };
+
+  const openNewPatientFromFicha = () => {
+    setPendingFichaNewTreatment(false);
+    setFichaNewTreatmentOpen(false);
+    setPatientMenuOpen(false);
+    setFichaPessoalPatientId(null);
+    setFichaPessoalMode('new');
+    setFichaNewPatientContext(true);
     setFichaPessoalOpen(true);
   };
 
@@ -322,6 +423,7 @@ function AppContent() {
     setFichaPessoalOpen(false);
     setFichaPessoalPatientId(null);
     setFichaPessoalMode('new');
+    setFichaNewPatientContext(false);
   };
   const [doencasCidToolbarState, setDoencasCidToolbarState] = useState({
     selectedId: null,
@@ -409,6 +511,23 @@ function AppContent() {
       }),
     });
   };
+  const openAgendaConfiguracaoFromAgenda = ({ prestadorId: requestedId, prestadorNome } = {}) => {
+    const selectedId = requestedId || agendaSemanalToolbarState.selected?.prestadorId;
+    const selected = agendaSemanalToolbarState.prestadores?.find(
+      (item) => String(item.value) === String(selectedId),
+    );
+    const prestadorId = Number(selectedId || 0) || null;
+    if (!prestadorId || (!selected && !prestadorNome)) return;
+    setAgendaConfiguracaoState({
+      open: true,
+      context: buildAgendaConfiguracaoContext({
+        source: 'agenda',
+        prestadorId,
+        allowPrestadorChange: false,
+        selectedPrestadorSnapshot: { id: prestadorId, nome: selected?.label || prestadorNome },
+      }),
+    });
+  };
   const closeDeletePrestador = () => {
     setPrestadorDeleteState((current) => {
       if (current.loading) return current;
@@ -433,6 +552,7 @@ function AppContent() {
   };
   const [activeGroupKey, setActiveGroupKey] = useState(() => {
     if (initialScreen === 'adm' || initialScreen === 'adm-clinicas' || initialScreen === 'adm-usuarios' || initialScreen === 'adm-cobrancas' || initialScreen === 'adm-auditoria') return 'adm';
+    if (initialScreen === 'agenda-diaria' || initialScreen === 'agenda-semanal') return 'atendimento';
     if (initialScreen === 'pacientes') return 'cadastro';
     if (initialScreen === 'procedimentos') return 'tabelas';
     if (initialScreen === 'procedimentos-genericos') return 'tabelas';
@@ -444,16 +564,19 @@ function AppContent() {
     if (initialScreen === 'cenario-anual') return 'configuracao';
     if (initialScreen === 'indices-financeiros') return 'configuracao';
     if (initialScreen === 'plano-contas') return 'configuracao';
-    if (initialScreen === 'configuracao-etiquetas') return 'configuracao';
     if (initialScreen === 'conta-corrente-cirurgiao') return 'financeiro';
     if (initialScreen === 'simbolos-graficos') return 'configuracao';
     if (initialScreen === 'unidades-atendimento') return 'configuracao';
     if (initialScreen === 'questionarios-anamnese') return 'configuracao';
-    if (initialScreen === 'configuracao-preferencias') return 'configuracao';
+    if (initialScreen === 'configuracao-preferencias' || initialScreen === 'configuracao-relatorios' || initialScreen === 'opcoes-sistema' || initialScreen === 'usuarios') return 'configuracao';
     return 'atendimento';
   });
   const [panelGroupKey, setPanelGroupKey] = useState(() => '');
+  const [usuariosToolbarState, setUsuariosToolbarState] = useState({ hasSelection: false, loading: true });
   const [preferenciasOpen, setPreferenciasOpen] = useState(false);
+  const [alterarSenhaOpen, setAlterarSenhaOpen] = useState(false);
+  const [usuariosPreferenciasContext, setUsuariosPreferenciasContext] = useState(null);
+  const [usuariosReportsContext, setUsuariosReportsContext] = useState(null);
   const [contaCorrenteLaunchModal, setContaCorrenteLaunchModal] = useState({ open: false, type: 'debito', mode: 'create' });
   const [pesquisaFluxoCaixaModalOpen, setPesquisaFluxoCaixaModalOpen] = useState(false);
   const [pesquisaFluxoCaixaModalTab, setPesquisaFluxoCaixaModalTab] = useState('geral');
@@ -470,6 +593,37 @@ function AppContent() {
     { key: 'adm-cobrancas', label: 'Cobranças' },
     { key: 'adm-auditoria', label: 'Auditoria' },
   ]), []);
+
+  useEffect(() => {
+    const onUsuariosToolbarState = (event) => setUsuariosToolbarState((current) => ({ ...current, ...(event.detail || {}) }));
+    window.addEventListener('brana-usuarios-toolbar-state', onUsuariosToolbarState);
+    return () => window.removeEventListener('brana-usuarios-toolbar-state', onUsuariosToolbarState);
+  }, []);
+
+  useEffect(() => {
+    const restoreFreeSlots = () => setAgendaFreeSlotsOpen(true);
+    window.addEventListener('brana-agenda-free-slot-cancelled', restoreFreeSlots);
+    return () => window.removeEventListener('brana-agenda-free-slot-cancelled', restoreFreeSlots);
+  }, []);
+
+  useEffect(() => {
+    const onAgendaFiltersState = (event) => {
+      const detail = event?.detail || {};
+      setAgendaSemanalToolbarState((current) => ({
+        ...current,
+        ...detail,
+        selected: { ...current.selected, ...(detail.selected || {}) },
+      }));
+    };
+    window.addEventListener('brana-agenda-filters-state', onAgendaFiltersState);
+    return () => window.removeEventListener('brana-agenda-filters-state', onAgendaFiltersState);
+  }, []);
+
+  useEffect(() => {
+    const openSearch = () => setAgendaSearchOpen(true);
+    window.addEventListener('brana-agenda-patient-search', openSearch);
+    return () => window.removeEventListener('brana-agenda-patient-search', openSearch);
+  }, []);
 
   useEffect(() => {
     if (screen !== 'agenda-configuracao') return;
@@ -717,7 +871,19 @@ function AppContent() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-etiquetas' && screen !== 'prestadores') {
+    if (screen !== 'ficha-clinica') {
+      patientEntryPromptedRef.current = false;
+      setPatientMenuOpen(false);
+      return;
+    }
+    if (!patientInUse && !patientEntryPromptedRef.current) {
+      patientEntryPromptedRef.current = true;
+      setPatientMenuOpen(true);
+    }
+  }, [patientInUse, screen]);
+
+  useEffect(() => {
+    if (screen !== 'adm' && screen !== 'adm-clinicas' && screen !== 'adm-usuarios' && screen !== 'adm-cobrancas' && screen !== 'adm-auditoria' && screen !== 'pacientes' && screen !== 'dashboard' && screen !== 'ficha-clinica' && screen !== 'agenda-diaria' && screen !== 'agenda-semanal' && screen !== 'agenda-contatos' && screen !== 'convenios-planos' && screen !== 'tabelas-auxiliares' && screen !== 'procedimentos' && screen !== 'procedimentos-genericos' && screen !== 'materiais-estoque' && screen !== 'doencas-cid' && screen !== 'medicamentos' && screen !== 'servicos-protetico' && screen !== 'editor-textos' && screen !== 'cenario-anual' && screen !== 'indices-financeiros' && screen !== 'plano-contas' && screen !== 'conta-corrente-cirurgiao' && screen !== 'simbolos-graficos' && screen !== 'unidades-atendimento' && screen !== 'questionarios-anamnese' && screen !== 'configuracao-preferencias' && screen !== 'configuracao-etiquetas' && screen !== 'configuracao-relatorios' && screen !== 'opcoes-sistema' && screen !== 'usuarios' && screen !== 'prestadores') {
       setScreen('dashboard');
     }
   }, [screen]);
@@ -729,8 +895,14 @@ function AppContent() {
       ? branaMainGroups.find((item) => item.key === panelGroupKey)
       : null;
 
-  const handleNavigate = (nextScreen) => {
+  const performNavigate = (navigationTarget, navigationOptions = {}) => {
+    if (!navigationTarget) return;
+    const nextScreen = typeof navigationTarget === 'string' ? navigationTarget : navigationTarget.screen;
     if (!nextScreen) return;
+    if (nextScreen === 'alterar-senha') {
+      setAlterarSenhaOpen(true);
+      return;
+    }
     setScreen(nextScreen);
     syncAppPath(nextScreen);
     if (nextScreen === 'adm' || nextScreen === 'adm-clinicas' || nextScreen === 'adm-usuarios' || nextScreen === 'adm-cobrancas' || nextScreen === 'adm-auditoria') {
@@ -746,6 +918,17 @@ function AppContent() {
       return;
     }
     if (nextScreen === 'pacientes') {
+      setActiveGroupKey('cadastro');
+      setPanelGroupKey(navigationOptions.source === 'topbar' || navigationTarget?.intent === 'new-patient' ? '' : 'cadastro');
+      if (navigationTarget?.intent === 'new-patient') openNewPatient();
+      return;
+    }
+    if (nextScreen === 'agenda-contatos') {
+      setActiveGroupKey('atendimento');
+      setPanelGroupKey('atendimento');
+      return;
+    }
+    if (nextScreen === 'convenios-planos') {
       setActiveGroupKey('cadastro');
       setPanelGroupKey('cadastro');
       return;
@@ -763,6 +946,11 @@ function AppContent() {
     if (nextScreen === 'servicos-protetico') {
       setActiveGroupKey('tabelas');
       setPanelGroupKey('');
+      return;
+    }
+    if (nextScreen === 'editor-textos') {
+      setActiveGroupKey('ferramentas');
+      setPanelGroupKey(navigationOptions.source === 'topbar' ? '' : 'ferramentas');
       return;
     }
     if (nextScreen === 'prestadores') {
@@ -796,7 +984,32 @@ function AppContent() {
       setPanelGroupKey('configuracao');
       return;
     }
+    if (nextScreen === 'agenda-semanal') {
+      setActiveGroupKey('atendimento');
+      setPanelGroupKey(navigationOptions.source === 'topbar' ? '' : 'atendimento');
+      return;
+    }
+    if (nextScreen === 'conta-corrente-cirurgiao') {
+      setActiveGroupKey('financeiro');
+      setPanelGroupKey(navigationOptions.source === 'topbar' ? '' : 'financeiro');
+      return;
+    }
+    if (nextScreen === 'agenda-diaria') {
+      setActiveGroupKey('atendimento');
+      setPanelGroupKey('atendimento');
+      return;
+    }
     if (nextScreen === 'questionarios-anamnese') {
+      setActiveGroupKey('configuracao');
+      setPanelGroupKey('configuracao');
+      return;
+    }
+    if (nextScreen === 'configuracao-preferencias' || nextScreen === 'configuracao-etiquetas' || nextScreen === 'opcoes-sistema' || nextScreen === 'usuarios') {
+      setActiveGroupKey('configuracao');
+      setPanelGroupKey('configuracao');
+      return;
+    }
+    if (nextScreen === 'configuracao-relatorios') {
       setActiveGroupKey('configuracao');
       setPanelGroupKey('configuracao');
       return;
@@ -809,6 +1022,23 @@ function AppContent() {
     if (nextScreen === 'ficha-clinica') {
       setActiveGroupKey('atendimento');
     }
+  };
+
+  const handleNavigate = (navigationTarget, navigationOptions = {}) => {
+    if (!navigationTarget) return;
+    const nextScreen = typeof navigationTarget === 'string' ? navigationTarget : navigationTarget.screen;
+    if (!nextScreen || nextScreen === 'alterar-senha' || screen !== 'editor-textos' || nextScreen === 'editor-textos') {
+      performNavigate(navigationTarget, navigationOptions);
+      return;
+    }
+    const event = new CustomEvent('brana-editor-textos-before-leave', {
+      detail: {
+        prevented: false,
+        continueNavigation: () => performNavigate(navigationTarget, navigationOptions),
+      },
+    });
+    window.dispatchEvent(event);
+    if (!event.detail.prevented) performNavigate(navigationTarget, navigationOptions);
   };
 
   const handleAdminNavigate = (nextScreen, navigationState = null) => {
@@ -860,8 +1090,24 @@ function AppContent() {
       handleNavigate(item?.key || 'adm');
       return;
     }
+    if (groupKey === 'atendimento' && item?.key === 'agenda-semanal' && !item?.disabled) {
+      handleNavigate('agenda-semanal');
+      return;
+    }
+    if (groupKey === 'ferramentas' && item?.key === 'editor-textos' && !item?.disabled) {
+      handleNavigate('editor-textos');
+      return;
+    }
+    if (groupKey === 'atendimento' && item?.key === 'agenda-diaria' && !item?.disabled) {
+      handleNavigate('agenda-diaria');
+      return;
+    }
     if (groupKey === 'cadastro' && item?.key === 'pacientes' && !item?.disabled) {
       handleNavigate('pacientes');
+      return;
+    }
+    if (groupKey === 'cadastro' && item?.key === 'convenios-planos' && !item?.disabled) {
+      handleNavigate('convenios-planos');
       return;
     }
     if (groupKey === 'cadastro' && item?.key === 'corpo-clinico' && !item?.disabled) {
@@ -902,6 +1148,26 @@ function AppContent() {
     }
     if (groupKey === 'configuracao' && item?.key === 'configuracao-etiquetas' && !item?.disabled) {
       handleNavigate('configuracao-etiquetas');
+      return;
+    }
+    if (groupKey === 'configuracao' && item?.key === 'relatorios' && !item?.disabled) {
+      handleNavigate('configuracao-relatorios');
+      return;
+    }
+    if (groupKey === 'configuracao' && item?.key === 'configuracao-relatorios' && !item?.disabled) {
+      handleNavigate('configuracao-relatorios');
+      return;
+    }
+    if (groupKey === 'relatorios' && item?.key === 'configuracao-relatorios' && !item?.disabled) {
+      handleNavigate('configuracao-relatorios');
+      return;
+    }
+    if (groupKey === 'configuracao' && item?.key === 'opcoes-sistema' && !item?.disabled) {
+      handleNavigate('opcoes-sistema');
+      return;
+    }
+    if (groupKey === 'configuracao' && item?.key === 'usuarios' && !item?.disabled) {
+      handleNavigate('usuarios');
       return;
     }
     if (groupKey === 'configuracao' && item?.key === 'agendas' && !item?.disabled) {
@@ -949,94 +1215,8 @@ function AppContent() {
       handleNavigate('ficha-clinica');
       return;
     }
-    message.info('Funcionalidade em breve.');
-  };
-
-  const handleToolbarAction = async (actionKey) => {
-    if (actionKey === 'dashboard') {
-      handleNavigate('dashboard');
-      return;
-    }
-    if (actionKey === 'anamnese') {
-      handleNavigate('questionarios-anamnese');
-      return;
-    }
-    if (actionKey === 'cadastro-pacientes') {
-      handleNavigate('pacientes');
-      return;
-    }
-    if (actionKey === 'paciente') {
-      handleNavigate('pacientes');
-      return;
-    }
-    if (actionKey === 'ficha-clinica') {
-      handleNavigate('ficha-clinica');
-      return;
-    }
-    if (actionKey === 'tabelas-auxiliares') {
-      handleNavigate('tabelas-auxiliares');
-      return;
-    }
-    if (actionKey === 'cenario-anual') {
-      setCenarioAnualOpenRequestId((current) => current + 1);
-      handleNavigate('cenario-anual');
-      return;
-    }
-    if (actionKey === 'indices-financeiros') {
-      handleNavigate('indices-financeiros');
-      return;
-    }
-    if (actionKey === 'plano-contas') {
-      handleNavigate('plano-contas');
-      return;
-    }
-    if (actionKey === 'simbolos-graficos') {
-      handleNavigate('simbolos-graficos');
-      return;
-    }
-    if (actionKey === 'unidades-atendimento') {
-      handleNavigate('unidades-atendimento');
-      return;
-    }
-    if (actionKey === 'questionarios-anamnese') {
-      handleNavigate('questionarios-anamnese');
-      return;
-    }
-    if (actionKey === 'prestadores') {
-      handleNavigate('prestadores');
-      return;
-    }
-    if (actionKey === 'procedimentos-genericos') {
-      setProcedimentosGenericosNovoToken((current) => current + 1);
-      handleNavigate('procedimentos-genericos');
-      return;
-    }
-    if (actionKey === 'procedimentos') {
-      handleNavigate('procedimentos');
-      return;
-    }
-    if (actionKey === 'materiais-estoque') {
-      handleNavigate('materiais-estoque');
-      return;
-    }
-    if (actionKey === 'doencas-cid') {
-      handleNavigate('doencas-cid');
-      return;
-    }
-    if (actionKey === 'medicamentos') {
-      handleNavigate('medicamentos');
-      return;
-    }
-    if (actionKey === 'servicos-protetico') {
-      handleNavigate('servicos-protetico');
-      return;
-    }
-    message.info('Funcionalidade em breve.');
-  };
-
-  const handleUserMenuAction = async (key) => {
-    if (key === 'preferencias') {
-      setPreferenciasOpen(true);
+    if (groupKey === 'atendimento' && item?.key === 'agenda-contatos' && !item?.disabled) {
+      handleNavigate('agenda-contatos');
       return;
     }
     message.info('Funcionalidade em breve.');
@@ -1069,6 +1249,9 @@ function AppContent() {
     if (screen === 'adm-usuarios') {
       return renderAdminRoutes('users');
     }
+    if (screen === 'usuarios') {
+      return <UsuariosPage onOpenPreferences={(targetUser) => setUsuariosPreferenciasContext({ targetUser, origin: 'usuarios' })} onOpenReports={(targetUser) => setUsuariosReportsContext({ targetUser, origin: 'usuarios' })} />;
+    }
     if (screen === 'adm-cobrancas') {
       return renderAdminRoutes('billing');
     }
@@ -1078,8 +1261,30 @@ function AppContent() {
     if (screen === 'pacientes') {
       return <PacientesPage onBackHome={() => handleNavigate('dashboard')} onOpenExisting={openExistingPatient} />;
     }
+    if (screen === 'convenios-planos') {
+      return <ConveniosPlanosPage
+        convenioModalOpen={convenioModalOpen}
+        convenioModalMode={convenioModalMode}
+        convenioModalRecord={selectedConvenio}
+        convenioModalTab={convenioModalTab}
+        onCloseConvenioModal={() => setConvenioModalOpen(false)}
+        onConvenioModalTabChange={setConvenioModalTab}
+        onOpenEditConvenio={openEditConvenio}
+        onConvenioSelectionChange={setSelectedConvenio}
+        onPlanoSelectionChange={setSelectedPlano}
+      />;
+    }
     if (screen === 'ficha-clinica') {
-      return <FichaClinicaPage onBackHome={() => handleNavigate('dashboard')} />;
+      return <FichaClinicaPage onBackHome={() => handleNavigate('dashboard')} onRequestPatientSelection={() => setPatientMenuOpen(true)} openNovoTratamento={fichaNewTreatmentOpen} onCloseNovoTratamento={() => { setFichaNewTreatmentOpen(false); setPendingFichaNewTreatment(false); }} />;
+    }
+    if (screen === 'agenda-semanal') {
+      return <AgendaSemanalPage />;
+    }
+    if (screen === 'agenda-diaria') {
+      return <AgendaDiariaPage />;
+    }
+    if (screen === 'agenda-contatos') {
+      return <AgendaContatosPage />;
     }
     if (screen === 'tabelas-auxiliares') {
       return <TiposIndicacaoPage />;
@@ -1134,10 +1339,13 @@ function AppContent() {
     if (screen === 'questionarios-anamnese') {
       return <QuestionariosAnamnesePage onToolbarChange={setQuestionariosToolbar} />;
     }
+    if (screen === 'usuarios') {
+      return <UsuariosPage onOpenPreferences={(targetUser) => setUsuariosPreferenciasContext({ targetUser, origin: 'usuarios' })} />;
+    }
     if (screen === 'configuracao-etiquetas') {
       return <EtiquetasPage />;
     }
-    if (screen === 'configuracao-preferencias') {
+    if (screen === 'configuracao-preferencias' || screen === 'configuracao-relatorios' || screen === 'opcoes-sistema') {
       return <div className="brana-empty-state" aria-hidden="true" />;
     }
     if (screen === 'agenda-configuracao') {
@@ -1176,15 +1384,24 @@ function AppContent() {
     if (screen === 'medicamentos') {
       return <MedicamentosPageNew />;
     }
+    if (screen === 'configuracao-etiquetas') {
+      return <EtiquetasPage />;
+    }
     if (screen === 'servicos-protetico') {
       return <ServicosProteticoPage />;
+    }
+    if (screen === 'editor-textos') {
+      return <EditorTextosPage />;
     }
     return <DashboardPage key={dashboardVersion} />;
   }, [
     cenarioAnualOpenRequestId,
     contaCorrente,
+    convenioModalOpen,
+    convenioModalTab,
     dashboardVersion,
     fichaPessoalOpen,
+    fichaNewTreatmentOpen,
     loading,
     materiaisEstoqueToolbarState,
     procedimentosGenericosEspecialidade,
@@ -1200,7 +1417,21 @@ function AppContent() {
     user,
   ]);
 
-  const auxiliaryTopBar = useMemo(() => {
+  const auxiliaryTopBarContent = useMemo(() => {
+    if (screen === 'editor-textos') {
+      return (
+        <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional do Editor de Textos">
+          <EditorTextosPrimaryToolbar enabledActions={{ abrir: true, salvar: true, 'salvar-como': true, pagina: true }} onAction={(action) => window.dispatchEvent(new CustomEvent('brana-editor-textos-action', { detail: { action } }))} />
+        </div>
+      );
+    }
+    if (screen === 'usuarios') {
+      return (
+        <div className="brana-shell-band auxiliary-shell-band usuarios-shell-band" aria-label="Barra operacional do módulo Usuários">
+          <UsuariosToolbar hasSelection={usuariosToolbarState.hasSelection} selectedUser={usuariosToolbarState.selectedUser} loading={usuariosToolbarState.loading} />
+        </div>
+      );
+    }
     if (screen === 'unidades-atendimento') {
       return (
         <div className="brana-shell-band auxiliary-shell-band unidades-atendimento-shell-band" aria-label="Barra operacional de unidades de atendimento">
@@ -1506,6 +1737,47 @@ function AppContent() {
     );
   }, [screen, servicosProteticoToolbarState]);
 
+  const agendaSemanalTopBar = useMemo(() => {
+    if (screen !== 'agenda-semanal' && screen !== 'agenda-diaria') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da Agenda">
+        <AgendaSemanalToolbar
+          state={agendaSemanalToolbarState}
+          onConfigure={openAgendaConfiguracaoFromAgenda}
+          onPatient={() => window.dispatchEvent(new CustomEvent('brana-agenda-patient-search'))}
+          onHour={() => setAgendaFreeSlotsOpen(true)}
+          onNotice={() => setAgendaNoticeOpen(true)}
+          onPublish={() => setGoogleAgendaPublishOpen(true)}
+        />
+      </div>
+    );
+  }, [screen, agendaSemanalToolbarState]);
+
+  const agendaContatosTopBar = useMemo(() => {
+    if (screen !== 'agenda-contatos') return null;
+    return (
+      <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional da Agenda de contatos">
+        <AgendaContatosToolbar
+          types={agendaContatosToolbarState.types}
+          tipo={agendaContatosToolbarState.tipo}
+          busca={agendaContatosToolbarState.busca}
+          selectedId={agendaContatosToolbarState.selectedId}
+          onTipoChange={() => {}}
+          onBuscaChange={() => {}}
+        />
+      </div>
+    );
+  }, [screen, agendaContatosToolbarState]);
+
+  const agendaDiariaTopBar = useMemo(() => {
+    if (screen !== 'agenda-diaria') return null;
+
+    return (
+      <div className="brana-shell-band auxiliary-shell-band auxiliary-shell-band-empty" aria-label="Barra operacional da Agenda diária" />
+    );
+  }, [screen, usuariosToolbarState.hasSelection, usuariosToolbarState.loading, usuariosToolbarState.selectedUser]);
+
   const pacientesTopBar = useMemo(() => {
     if (screen !== 'pacientes') return null;
 
@@ -1534,14 +1806,6 @@ function AppContent() {
 
   const prestadoresTopBar = useMemo(() => {
     if (screen !== 'prestadores') return null;
-
-    if (prestadoresFilterDebug) {
-      // TEMP DEBUG — remover após diagnóstico do filtro de Prestadores
-      console.info('[PRESTADORES_FILTER_DEBUG] APP_TO_PAGE', {
-        itemsCount: prestadoresState.items.length,
-        codes: prestadoresState.items.map((item) => String(item?.codigo ?? '').trim()),
-      });
-    }
 
     return (
       <div className="brana-shell-band auxiliary-shell-band materiais-estoque-shell-band" aria-label="Barra operacional de corpo clínico">
@@ -1694,13 +1958,15 @@ function AppContent() {
             user={user}
             onSignOut={signOut}
             loading={loading}
-            onPlaceholderAction={handleToolbarAction}
-            onUserMenuAction={handleUserMenuAction}
+            onNavigate={handleNavigate}
+            onPlaceholder={() => message.info('Funcionalidade em breve.')}
+            onUserNavigate={handleNavigate}
+            onUserPlaceholder={() => message.info('Funcionalidade em breve.')}
           />
         </div>
 
         <div
-          className={`brana-shell-body${panelGroup ? ' has-panel' : ''}`}
+          className={`brana-shell-body${panelGroup ? ' has-panel' : ''}${screen === 'ficha-clinica' ? ' ficha-clinica-shell-body' : ''}`}
         >
           {screen === 'dashboard' ? (
             <div className="brana-shell-corner" aria-hidden="true" />
@@ -1713,8 +1979,8 @@ function AppContent() {
             </div>
           ) : screen === 'adm' || screen === 'adm-clinicas' || screen === 'adm-usuarios' || screen === 'adm-cobrancas' || screen === 'adm-auditoria' ? (
             adminTopBar
-          ) : screen === 'tabelas-auxiliares' || screen === 'unidades-atendimento' ? (
-            auxiliaryTopBar
+          ) : screen === 'tabelas-auxiliares' || screen === 'unidades-atendimento' || screen === 'usuarios' || screen === 'editor-textos' ? (
+            auxiliaryTopBarContent
           ) : screen === 'procedimentos-genericos' ? (
             procedimentosGenericosTopBar
           ) : screen === 'procedimentos' ? (
@@ -1723,8 +1989,30 @@ function AppContent() {
             materiaisEstoqueTopBar
           ) : screen === 'servicos-protetico' ? (
             servicosProteticoTopBar
+          ) : screen === 'agenda-semanal' || screen === 'agenda-diaria' ? (
+            agendaSemanalTopBar
+          ) : screen === 'ficha-clinica' ? (
+            <div className="brana-shell-band auxiliary-shell-band ficha-clinica-shell-band" aria-label="Barra operacional da Ficha Clínica">
+          <FichaClinicaContextBar onRequestNewPatient={openNewPatientFromFicha} onOpenPersonalRecord={(patient) => openExistingPatient(patient?.id)} onCloseFichaClinica={() => { setPatientMenuOpen(false); clearPatientInUse(); }} onRequestPatientSelection={() => setPatientMenuOpen(true)} onRequestNewTreatment={() => {
+            setFichaNewPatientContext(false);
+            setFichaPessoalOpen(false);
+            if (patientInUse) {
+              setPendingFichaNewTreatment(false);
+              setFichaNewTreatmentOpen(true);
+            } else {
+              setPendingFichaNewTreatment(true);
+              setPatientMenuOpen(true);
+            }
+          }} />
+            </div>
+          ) : screen === 'agenda-contatos' ? (
+            agendaContatosTopBar
           ) : screen === 'pacientes' ? (
             pacientesTopBar
+          ) : screen === 'convenios-planos' ? (
+            <div className="brana-shell-band auxiliary-shell-band convenios-planos-shell-band" aria-label="Barra operacional de convênios e planos">
+              <ConveniosPlanosToolbar onNewConvenio={openConvenioModal} onEditConvenio={() => openEditConvenio()} onDeleteConvenio={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-delete'))} onCalendar={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-calendar'))} onNewPlano={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-new-plan'))} onEditPlano={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-edit-plan'))} onDeletePlano={() => window.dispatchEvent(new CustomEvent('brana-convenios-planos-delete-plan'))} hasSelection={Boolean(selectedConvenio)} hasPlanSelection={Boolean(selectedPlano)} />
+            </div>
           ) : screen === 'prestadores' ? (
             prestadoresTopBar
           ) : screen === 'doencas-cid' ? (
@@ -1742,9 +2030,11 @@ function AppContent() {
           ) : screen === 'questionarios-anamnese' ? (
             questionariosTopBar
           ) : screen === 'configuracao-etiquetas' ? (
-            auxiliaryTopBar
+            auxiliaryTopBarContent
           ) : screen === 'configuracao-preferencias' ? (
             <div className="brana-shell-band auxiliary-shell-band auxiliary-shell-band-empty" aria-label="Barra operacional de Configuração e Preferências" />
+          ) : screen === 'opcoes-sistema' || screen === 'usuarios' ? (
+            <div className="brana-shell-band auxiliary-shell-band auxiliary-shell-band-empty" aria-label="Barra operacional de Opções do sistema" />
           ) : null}
           <BranaIconRail
             activeKey={activeKey}
@@ -1768,10 +2058,71 @@ function AppContent() {
           />
           <BranaWorkspace>{activePage}</BranaWorkspace>
           <FichaPessoalModal
-            open={fichaPessoalOpen && screen === 'pacientes'}
+            open={fichaPessoalOpen && (screen === 'pacientes' || screen === 'ficha-clinica' || fichaNewPatientContext)}
             patientId={fichaPessoalPatientId}
             mode={fichaPessoalMode}
             onClose={closeFichaPessoal}
+            onSaved={(saved) => {
+              if (fichaPessoalMode === 'existing' && saved) setPatientInUse(saved);
+            }}
+            onCreated={(created) => {
+              closeFichaPessoal();
+              setNewPatientDecision(created);
+            }}
+          />
+          <Modal
+            open={Boolean(newPatientDecision)}
+            title="Paciente cadastrado com sucesso"
+            footer={null}
+            onCancel={() => setNewPatientDecision(null)}
+            maskClosable={false}
+            centered
+          >
+            <p>Deseja abrir o novo paciente na Ficha Clínica?</p>
+            <div className="brana-new-patient-decision-actions">
+              <Button type="primary" onClick={() => { setPatientInUse(newPatientDecision); setNewPatientDecision(null); }}>Abrir novo paciente</Button>
+              <Button onClick={() => setNewPatientDecision(null)}>{patientInUse ? 'Manter paciente atual' : 'Continuar sem paciente'}</Button>
+            </div>
+          </Modal>
+          <MenuPacientesModal
+            open={screen === 'ficha-clinica' && patientMenuOpen}
+            onCancel={() => setPatientMenuOpen(false)}
+            onSelect={(patient) => {
+              setPatientInUse(patient);
+              setPatientMenuOpen(false);
+              if (pendingFichaNewTreatment) {
+                setFichaNewTreatmentOpen(true);
+                setPendingFichaNewTreatment(false);
+              }
+            }}
+          />
+          <AgendaSearchModal
+            open={agendaSearchOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+            onClose={() => setAgendaSearchOpen(false)}
+            onEdit={(item) => window.dispatchEvent(new CustomEvent('brana-agenda-search-edit', { detail: item }))}
+          />
+          <AgendaNoticeModal
+            open={agendaNoticeOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+            onClose={() => setAgendaNoticeOpen(false)}
+            providerId={agendaSemanalToolbarState.selected.prestadorId}
+          />
+          <GoogleAgendaPublishModal
+            open={googleAgendaPublishOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+            onClose={() => setGoogleAgendaPublishOpen(false)}
+            providerId={agendaSemanalToolbarState.selected.prestadorId}
+            unitId={agendaSemanalToolbarState.selected.unidadeId}
+          />
+          <AgendaFreeSlotsModal
+            open={agendaFreeSlotsOpen && (screen === 'agenda-semanal' || screen === 'agenda-diaria')}
+            onClose={() => setAgendaFreeSlotsOpen(false)}
+            providers={agendaSemanalToolbarState.prestadores}
+            units={agendaSemanalToolbarState.unidades}
+            providerId={agendaSemanalToolbarState.selected.prestadorId}
+            unitId={agendaSemanalToolbarState.selected.unidadeId}
+            onEdit={(item) => {
+              setAgendaFreeSlotsOpen(false);
+              window.dispatchEvent(new CustomEvent('brana-agenda-free-slot-edit', { detail: item }));
+            }}
           />
         </div>
         <PrestadorModal
@@ -1796,6 +2147,11 @@ function AppContent() {
         <AgendaConfiguracaoModal
           open={agendaConfiguracaoState.open || screen === 'agenda-configuracao'}
           context={agendaConfiguracaoState.context}
+          onSaved={(saved) => {
+            if (agendaConfiguracaoState.context?.source === 'agenda') {
+              window.dispatchEvent(new CustomEvent('brana-agenda-config-saved', { detail: saved }));
+            }
+          }}
           onCancel={() => {
             if (agendaConfiguracaoState.context?.source === 'configuracoes') {
               handleNavigate('dashboard');
@@ -1819,8 +2175,25 @@ function AppContent() {
           onClose={() => setPreferenciasOpen(false)}
         />
         <ConfiguracaoPreferenciasModal
-          open={screen === 'configuracao-preferencias'}
+          open={screen === 'configuracao-preferencias' || Boolean(usuariosPreferenciasContext)}
+          targetUser={usuariosPreferenciasContext?.targetUser || null}
+          origin={usuariosPreferenciasContext?.origin || 'menu'}
+          onClose={() => {
+            if (usuariosPreferenciasContext) setUsuariosPreferenciasContext(null);
+            else handleNavigate('dashboard');
+          }}
+        />
+        <ReportSettingsModal open={screen === 'configuracao-relatorios'} onClose={() => handleNavigate('dashboard')} targetUser={null} origin="configuracao" />
+        <ReportSettingsModal open={Boolean(usuariosReportsContext)} onClose={() => setUsuariosReportsContext(null)} targetUser={usuariosReportsContext?.targetUser || null} origin="usuarios" />
+        <OpcoesSistemaModal
+          open={screen === 'opcoes-sistema'}
           onClose={() => handleNavigate('dashboard')}
+          onOpenPermissions={() => handleNavigate('usuarios')}
+        />
+        <AlterarSenhaFlow
+          open={alterarSenhaOpen}
+          user={user}
+          onClose={() => setAlterarSenhaOpen(false)}
         />
         <InsereLancamentoModal
           open={contaCorrenteLaunchModal.open}
@@ -1899,7 +2272,9 @@ function BranaAppThemeProvider() {
   return (
     <ConfigProvider theme={getBranaTheme(themeMode)}>
       <AuthProvider>
-        <AppContent />
+        <PatientInUseProvider>
+          <AppContent />
+        </PatientInUseProvider>
       </AuthProvider>
     </ConfigProvider>
   );

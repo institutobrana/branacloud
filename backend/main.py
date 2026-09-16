@@ -18,6 +18,7 @@ from sqlalchemy import text
 from database import Base, SessionLocal, engine, ensure_user_auth_schema
 from models.access_profile import AccessProfile  # noqa: F401
 from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento  # noqa: F401
+from models.google_calendar_event_mapping import GoogleCalendarEventMapping  # noqa: F401
 from models.anamnese import AnamnesePergunta, AnamneseQuestionario  # noqa: F401
 from models.anamnese_resposta import AnamneseResposta  # noqa: F401
 from models.clinica import Clinica  # noqa: F401
@@ -50,6 +51,7 @@ from models.procedimento_tabela import ProcedimentoTabela  # noqa: F401
 from models.procedimento import ProcedimentoFase  # noqa: F401
 from models.quadro_avisos import QuadroAviso  # noqa: F401
 from models.tratamento import Tratamento  # noqa: F401
+from models.historico_paciente import HistoricoPaciente  # noqa: F401
 from models.tiss_tipo_tabela import TissTipoTabela  # noqa: F401
 from models.tiss_tipo_atendimento import TissTipoAtendimento, seed_tiss_tipo_atendimento  # noqa: F401
 from models.unidade_atendimento import UnidadeAtendimento  # noqa: F401
@@ -81,6 +83,7 @@ from routes.preferences_routes import router as preferences_router
 from routes.system_options_routes import router as system_options_router
 from routes.proteticos_routes import router as proteticos_router
 from routes.tratamentos_routes import router as tratamentos_router
+from routes.historico_paciente_routes import router as historico_paciente_router
 from routes.superadmin_routes import router as superadmin_router
 from routes.user_admin_routes import router as user_admin_router
 from routes.unidades_atendimento_routes import router as unidades_atendimento_router
@@ -209,6 +212,12 @@ def _garantir_colunas_criticas_simbolos() -> None:
                 text(
                     "ALTER TABLE IF EXISTS simbolo_grafico_catalogo "
                     "ADD COLUMN IF NOT EXISTS legacy_id INTEGER"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE IF EXISTS simbolo_grafico_catalogo "
+                    "ADD COLUMN IF NOT EXISTS origem VARCHAR(40)"
                 )
             )
             conn.execute(
@@ -467,6 +476,7 @@ app.include_router(preferences_router)
 app.include_router(system_options_router)
 app.include_router(proteticos_router)
 app.include_router(tratamentos_router)
+app.include_router(historico_paciente_router)
 app.include_router(superadmin_router)
 app.include_router(user_admin_router)
 
@@ -591,5 +601,3 @@ def health():
         "schema_bootstrap_enabled": RUN_SCHEMA_BOOTSTRAP,
         "runtime_bootstrap_enabled": RUN_RUNTIME_BOOTSTRAP,
     }
-
-
