@@ -4,6 +4,54 @@
   min-width: 0;
 }
 
+.brana-shell-band.ficha-clinica-shell-band { background: transparent; color: #20252b; padding-top: 0; padding-bottom: 0; }
+.brana-shell-band.ficha-clinica-shell-band::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--brana-rail-width, 72px); background: var(--brana-surface-sidebar); pointer-events: none; }
+.ficha-clinica-context-bar { display: inline-flex; align-items: center; gap: 12px; max-width: 100%; min-width: 0; padding: 0; background: transparent; }
+.ficha-clinica-shell-body > .brana-icon-rail { height: auto; min-height: 100%; }
+.ficha-clinica-shell-body { background: #f5f0e6; }
+
+.novo-tratamento-modal .ant-modal-content,
+.novo-tratamento-modal .ant-modal-header,
+.novo-tratamento-modal .ant-modal-body,
+.novo-tratamento-modal .ant-modal-footer { background: #f5f0e6 !important; color: var(--brana-text-primary); }
+.novo-tratamento-modal .ant-modal-content { border-radius: 4px; overflow: hidden; }
+.novo-tratamento-modal .ant-modal-header { padding: 10px 14px 8px; }
+.novo-tratamento-modal .ant-modal-body { padding: 8px 14px 6px; }
+.novo-tratamento-modal .ant-tabs { min-height: 0; }
+.novo-tratamento-modal .ant-tabs-nav { margin: 0 0 3px; min-height: 42px; }
+.novo-tratamento-modal .ant-tabs-nav-list { gap: 2px; }
+.novo-tratamento-modal .ant-tabs-tab { min-width: 104px; height: 38px; padding: 0 14px; border-radius: 2px 2px 0 0; justify-content: center; box-sizing: border-box; }
+.novo-tratamento-modal .ant-tabs-tab-active { background: #f5f0e6; }
+.novo-tratamento-modal .ant-tabs-ink-bar { background: var(--brana-teal); height: 2px; }
+.novo-tratamento-modal .ant-tabs-content-holder { padding-top: 1px; }
+.novo-tratamento-pane { display: grid; gap: 8px; color: var(--brana-text-primary); }
+.novo-tratamento-grid { display: grid; gap: 8px; }
+.novo-tratamento-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.novo-tratamento-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.novo-tratamento-grid.one { grid-template-columns: 1fr; }
+.novo-tratamento-field { display: flex; min-width: 0; flex-direction: column; gap: 2px; font-size: 11px; line-height: 14px; }
+.novo-tratamento-field .ant-input,
+.novo-tratamento-field .ant-select { width: 100%; }
+.novo-tratamento-field .ant-input,
+.novo-tratamento-field .ant-select-selector { min-height: 28px; height: 28px; font-size: 12px; }
+.novo-tratamento-field textarea.ant-input { height: 58px; resize: none; }
+.novo-tratamento-readonly-cyan.ant-input { background: #54e5e9; border-color: rgba(0, 0, 0, .08); color: #0f172a; }
+.novo-tratamento-section-title { border-top: 1px solid var(--brana-border-subtle); padding-top: 7px; font-size: 12px; }
+.novo-tratamento-footer { display: flex; justify-content: flex-end; gap: 6px; }
+@media (max-width: 620px) { .novo-tratamento-modal .ant-modal { max-width: 96vw; margin: 12px auto; } .novo-tratamento-grid.three { grid-template-columns: 1fr; } }
+.brana-new-patient-decision-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.ficha-clinica-patient-context { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; min-width: 250px; }
+.ficha-clinica-patient-context-data { display: grid; gap: 0; min-width: 0; line-height: 1.05; }
+.ficha-clinica-patient-context-data .ant-typography { white-space: nowrap; }
+.ficha-clinica-patient-context-data .ant-typography:last-child { font-size: 11px; }
+.ficha-clinica-context-bar .ant-avatar { width: 44px !important; height: 44px !important; line-height: 44px !important; }
+.ficha-clinica-action-bar { flex: 0 1 auto; min-width: 0; }
+.ficha-clinica-action-bar .ficha-clinica-odontogram-toolbar { width: auto; max-width: none; margin: 0; padding: 0; justify-content: flex-start; }
+.ficha-clinica-action-bar .ficha-clinica-odontogram-toolbar-button { width: 30px; min-width: 30px; height: 30px; }
+.ficha-clinica-action-bar .ficha-clinica-odontogram-toolbar-icon { width: 24px; height: 24px; object-fit: contain; }
+.ficha-clinica-action-bar .ficha-clinica-odontogram-toolbar-button-menu .ficha-clinica-odontogram-toolbar-icon { width: 30px; height: 30px; }
+.ficha-clinica-action-bar .ficha-clinica-odontogram-toolbar-button-financeiro .ficha-clinica-odontogram-toolbar-icon { width: 30px; height: 30px; }
+
 .ficha-clinica-stage {
   display: grid;
   grid-template-columns: minmax(620px, 688px) minmax(0, 1fr) 198px;
@@ -107,7 +155,7 @@
 
 .ficha-clinica-odontogram-frame {
   flex: 0 0 auto;
-  min-height: 286px;
+  min-height: 212px;
   padding: 3px 6px 4px;
   border-radius: 0;
   display: flex;
@@ -119,18 +167,83 @@
   box-shadow: none;
 }
 
-.ficha-clinica-odontogram-frame::after {
-  content: '';
-  position: absolute;
-  left: -1px;
-  bottom: -10px;
-  width: 20px;
-  height: 13px;
-  background: #ffffff;
-  border: 1px solid #d8dde2;
-  border-top: 0;
-  border-right: 0;
-  border-radius: 0 0 0 8px;
+.ficha-clinica-odontogram-frame {
+  overflow-x: auto;
+}
+
+.ficha-clinica-upper-odontogram-panel {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 0 14px 6px;
+  border: 0 none;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f5f0e6;
+  color: var(--brana-text-primary);
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs {
+  min-height: 0;
+  background: #f5f0e6;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-nav {
+  margin: 0 0 3px;
+  min-height: 38px;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-nav-list {
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-tab {
+  min-width: 84px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 0 0 12px 12px !important;
+  background: var(--brana-surface-panel);
+  margin: 0 2px 0 0;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-tab.ant-tabs-tab-active {
+  height: 30px;
+  background: #f5f0e6;
+  border: 0.8px solid rgb(217, 223, 212);
+  border-top-color: #f5f0e6 !important;
+  border-bottom-color: rgb(217, 223, 212) !important;
+  color: rgb(22, 51, 40) !important;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-tab-btn {
+  color: rgb(82, 98, 106);
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: rgb(22, 51, 40);
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-tab:not(.ant-tabs-tab-active) {
+  background: rgb(255, 255, 255);
+  border: 0.8px solid rgb(212, 217, 219);
+  color: rgb(82, 98, 106) !important;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-ink-bar {
+  height: 2px;
+  background: var(--brana-teal);
+  top: auto !important;
+  bottom: 0 !important;
+}
+
+.ficha-clinica-upper-odontogram-panel .ant-tabs-content-holder {
+  padding-top: 1px;
+  min-height: 0;
 }
 
 .ficha-clinica-tooth-grid {
@@ -807,6 +920,30 @@
   line-height: 1;
 }
 
+.ficha-clinica-patient-context-arrow {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+
+.ficha-clinica-patient-context-arrow-button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ficha-clinica-patient-context-arrow-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .ficha-clinica-calendar {
   padding: 6px 8px 0;
 }
@@ -1137,19 +1274,21 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  width: 100%;
-  min-width: 0;
+  width: 576px;
+  min-width: 576px;
+  flex: 0 0 576px;
+  margin-inline: auto;
   padding-top: 0;
   justify-content: center;
 }
 
 .ficha-clinica-odontogram-teeth-row {
   display: grid;
-  grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 1px;
+  grid-template-columns: repeat(16, 36px);
+  gap: 0;
   align-items: end;
   justify-items: center;
-  padding-inline: 1px;
+  padding-inline: 0;
 }
 
 .ficha-clinica-odontogram-tooth-shell {
@@ -1165,7 +1304,7 @@
 
 .ficha-clinica-odontogram-tooth {
   display: block;
-  width: 100%;
+  width: 32px;
   height: 100%;
   object-fit: contain;
   border-radius: 0;
@@ -1181,9 +1320,9 @@
 
 .ficha-clinica-odontogram-number-row {
   display: grid;
-  grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 1px;
-  padding: 0 1px;
+  grid-template-columns: repeat(16, 36px);
+  gap: 0;
+  padding: 0;
   color: #9aa0a6;
   font-size: 9px;
   line-height: 1;
@@ -1197,12 +1336,12 @@
 
 .ficha-clinica-odontogram-face-row {
   display: grid;
-  grid-template-columns: repeat(16, minmax(0, 1fr));
-  gap: 1px;
+  grid-template-columns: repeat(16, 36px);
+  gap: 0;
   align-items: center;
   justify-items: center;
   min-height: 18px;
-  padding: 0 1px;
+  padding: 0;
 }
 
 .ficha-clinica-odontogram-face {
@@ -1228,7 +1367,7 @@
   }
 
   .ficha-clinica-odontogram-frame {
-    min-height: 268px;
+    min-height: 212px;
   }
 
   .ficha-clinica-patient-rail {
@@ -1248,7 +1387,7 @@
   }
 
   .ficha-clinica-odontogram-tooth {
-    width: 100%;
+    width: 32px;
     height: 100%;
   }
 
@@ -1265,5 +1404,21 @@
   .ficha-clinica-odontogram-face {
     width: clamp(18px, 2.8vw, 22px);
     height: clamp(18px, 2.8vw, 22px);
+  }
+}
+
+/* Keep the fixed clinical canvas compact while retaining the desktop columns. */
+@media (max-width: 1400px) and (min-width: 769px) {
+  .ficha-clinica-stage {
+    grid-template-columns: 618px minmax(0, 1fr) 198px;
+  }
+
+  .ficha-clinica-stage.is-patient-rail-collapsed {
+    grid-template-columns: 618px minmax(0, 1fr) 44px;
+  }
+
+  .ficha-clinica-odontogram-board {
+    width: 618px;
+    max-width: 618px;
   }
 }

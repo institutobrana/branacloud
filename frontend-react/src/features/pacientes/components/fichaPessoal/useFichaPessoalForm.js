@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { buscarContatosIndicacao, buscarPacientesIndicacao, buscarSugestoesPorSobrenome, createPaciente, deletePaciente, listarAuxiliarFicha, listarConveniosPlanosCombos, listarOpcoesFichaPaciente, listarPrestadoresFicha, listarTiposIndicacao, listarUnidadesFicha, lookupCep, obterPreferenciasGerais, obterProximoCodigoPaciente, updatePaciente } from './fichaPessoalApi.js';
 import { obterPaciente } from '../../pacientesApi.js';
 import { EMPTY_COMPLEMENTARY, normalizeComplementary } from './dadosComplementares/dadosComplementaresOptions.js';
+import { isLegacyRtf } from './anotacoes/anotacoesContent.js';
 
 const today = () => dayjs().format('DD/MM/YYYY');
 
@@ -11,7 +12,7 @@ const initialForm = () => ({
   cpf: '', rg: '', tipoIndicacao: '', indicadoPor: '', correspondencia: '', endereco: '', complemento: '', bairro: '',
   cidade: 'São José do Rio Preto', cep: '', uf: 'SP', email: '', matricula: '', complementares: { ...EMPTY_COMPLEMENTARY },
   tipo_fone1: 'Residencial', fone1: '', tipo_fone2: 'Comercial', fone2: '', tipo_fone3: 'Celular', fone3: '', tipo_fone4: 'Recado', fone4: '',
-  id_convenio: null, id_plano: null, carteira: '', validade: null, tabela: null, cns: '', fotoDataUrl: '', fotoNome: '', proximoRetorno: '?', inclusao: today(), alteracao: today(),
+  id_convenio: null, id_plano: null, carteira: '', validade: null, tabela: null, cns: '', anotacoes: '', fotoDataUrl: '', fotoNome: '', proximoRetorno: '?', inclusao: today(), alteracao: today(),
 });
 
 function displayDate(value) {
@@ -50,6 +51,7 @@ function mapExistingPaciente(item, current) {
     validade: item.data_validade_plano || null,
     tabela: item.tabela_codigo ?? null,
     cns: item.cns || '', matricula: item.matricula || '',
+    anotacoes: item.anotacoes || '',
     complementares: { ...normalizeComplementary(item.extra), matricula: item.matricula || '' },
     fotoDataUrl: item.extra?.foto_data_url || '',
     fotoNome: item.extra?.foto_nome || '',
@@ -65,7 +67,7 @@ function comparableForm(form) {
     cpf: form.cpf || '', rg: form.rg || '', tipoIndicacao: form.tipoIndicacao || '', indicadoPor: form.indicadoPor || '', correspondencia: form.correspondencia || '',
     endereco: form.endereco || '', complemento: form.complemento || '', bairro: form.bairro || '', cidade: form.cidade || '', cep: form.cep || '', uf: form.uf || '', email: form.email || '',
     tipo_fone1: form.tipo_fone1 || '', fone1: form.fone1 || '', tipo_fone2: form.tipo_fone2 || '', fone2: form.fone2 || '', tipo_fone3: form.tipo_fone3 || '', fone3: form.fone3 || '', tipo_fone4: form.tipo_fone4 || '', fone4: form.fone4 || '',
-    id_convenio: form.id_convenio ?? null, id_plano: form.id_plano ?? null, validade: form.validade?.format?.('YYYY-MM-DD') || form.validade || '', tabela: form.tabela ?? null, cns: form.cns || '', matricula: form.matricula || '', complementares: form.complementares || {}, fotoDataUrl: form.fotoDataUrl || '', fotoNome: form.fotoNome || '',
+    id_convenio: form.id_convenio ?? null, id_plano: form.id_plano ?? null, validade: form.validade?.format?.('YYYY-MM-DD') || form.validade || '', tabela: form.tabela ?? null, cns: form.cns || '', anotacoes: form.anotacoes || '', matricula: form.matricula || '', complementares: form.complementares || {}, fotoDataUrl: form.fotoDataUrl || '', fotoNome: form.fotoNome || '',
   };
 }
 
@@ -81,7 +83,7 @@ export function buildPacientePayload(form) {
     tipo_fone1: form.tipo_fone1 || null, fone1: form.fone1 || null, tipo_fone2: form.tipo_fone2 || null, fone2: form.fone2 || null,
     tipo_fone3: form.tipo_fone3 || null, fone3: form.fone3 || null, tipo_fone4: form.tipo_fone4 || null, fone4: form.fone4 || null,
     id_convenio: form.id_convenio || null, id_plano: form.id_plano || null, data_validade_plano: dateValue(form.validade), tabela_codigo: form.tabela || null, cns: form.cns || null,
-    matricula: form.matricula || null,
+    matricula: form.matricula || null, anotacoes: form.anotacoes || null,
     extra: { ...(form.complementares || {}), foto_data_url: form.fotoDataUrl || null, foto_nome: form.fotoNome || null },
   };
 }

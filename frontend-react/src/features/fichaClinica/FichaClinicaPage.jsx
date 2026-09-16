@@ -1,6 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
-import { Button, Card, Empty, Space, Table, Tabs, Tag, Typography, message } from 'antd';
+import { Avatar, Button, Card, Dropdown, Empty, Space, Table, Tabs, Tag, Typography, message } from 'antd';
+import { appPath } from '../../app/basePath.js';
 import {
+  CalendarOutlined,
   DollarOutlined,
   FileTextOutlined,
   FilterOutlined,
@@ -18,9 +20,10 @@ import {
   DeleteOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { usePatientInUse } from '../../shared/patientInUse/PatientInUseContext.jsx';
+import { calculatePatientAge } from '../../shared/patientInUse/patientInUseUtils.js';
+import { NovoTratamentoModal } from './NovoTratamentoModal.jsx';
 import './fichaClinica.css';
-
-const SELECTED_PATIENT_KEY = 'brana.fichaClinica.pacienteEmUso';
 
 function formatNomeCompleto(item) {
   const nomeCompleto = String(item?.nome_completo || '').trim();
@@ -43,31 +46,6 @@ function getStatusColor(item) {
   if (status.includes('inativo')) return 'default';
   if (status.includes('bloq')) return 'volcano';
   return 'green';
-}
-
-function readStoredPatient() {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem(SELECTED_PATIENT_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-function storeSelectedPatient(paciente) {
-  if (typeof window === 'undefined') return;
-  try {
-    if (!paciente) {
-      window.sessionStorage.removeItem(SELECTED_PATIENT_KEY);
-      return;
-    }
-    window.sessionStorage.setItem(SELECTED_PATIENT_KEY, JSON.stringify(paciente));
-  } catch {
-    // estado visual continua funcionando mesmo sem persistencia
-  }
 }
 
 function buildPatientSummary(paciente) {
@@ -226,25 +204,25 @@ function ToothGrid() {
   );
 }
 
-const odontogramAssetBase = '/assets/fichaClinica/odontograma';
+const odontogramAssetBase = appPath('assets/fichaClinica/odontograma');
 const odontogramTeethAssetBase = `${odontogramAssetBase}/dentes-limpos`;
 const odontogramFaceImage = `${odontogramAssetBase}/arc_faces.bmp`;
-const odontogramToolbarAssetBase = '/assets/fichaClinica/toolbar';
-const fichaClinicaUiAssetBase = '/assets/images';
-const fichaClinicaPanelAssetBase = `${fichaClinicaUiAssetBase}`;
+const odontogramToolbarAssetBase = appPath('assets/fichaClinica/toolbar');
+const odontogramEasyAssetBase = appPath('assets/easy');
+const odontogramProcedureEasyAssets = new Set(['int_placa.bmp', 'int_protese.bmp', 'int_raspger.bmp']);
 const odontogramNumberLabels = ['8', '7', '6', '5', '4', '3', '2', '1', '1', '2', '3', '4', '5', '6', '7', '8'];
 const odontogramUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const odontogramLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
 
 const odontogramToolbarItems = [
-  { key: 'novo', label: 'Novo', image: `${odontogramToolbarAssetBase}/ico_dashboard_novo.png` },
-  { key: 'pesquisa', label: 'Pesquisa', image: `${odontogramToolbarAssetBase}/ico_odontograma_toolbar_prc_lupa.png` },
+  { key: 'novo', label: 'Novo', image: `${odontogramToolbarAssetBase}/ico_novo_paciente_transp.png` },
+  { key: 'pesquisa', label: 'Pesquisa', image: `${odontogramToolbarAssetBase}/ico_ficha_pesquisar.png` },
   { key: 'divisor-busca', type: 'divider' },
-  { key: 'filtro', label: 'Filtro', image: `${odontogramToolbarAssetBase}/ico_filter.png` },
+  { key: 'filtro', label: 'Filtro', image: `${odontogramToolbarAssetBase}/ico_filtro.PNG` },
   { key: 'selecao', label: 'Selecao', image: `${odontogramToolbarAssetBase}/ico_select.png` },
   { key: 'trocar', label: 'Trocar', image: `${odontogramToolbarAssetBase}/ico_trocar.png` },
   { key: 'divisor-acoes', type: 'divider' },
-  { key: 'menu', label: 'Menu', image: `${odontogramToolbarAssetBase}/ico_menu_odontograma.png` },
+  { key: 'menu', label: 'Menu', image: `${odontogramToolbarAssetBase}/ico_tabelas_auxiliares.PNG` },
   { key: 'financeiro', label: 'Financeiro', image: `${odontogramToolbarAssetBase}/ico_orcamento.png` },
   { key: 'imprimir', label: 'Imprimir', image: `${odontogramToolbarAssetBase}/ico_odonto_imprime.png` },
 ];
@@ -524,10 +502,16 @@ function ClinicSpecialtyButton({ category, active, onClick }) {
 }
 
 function ClinicProcedureIconImage({ asset, image, label }) {
+  const procedureImage = image || (
+    odontogramProcedureEasyAssets.has(asset)
+      ? `${odontogramEasyAssetBase}/${asset}`
+      : `${odontogramProcedureAssetBase}/${asset}`
+  );
+
   return (
     <img
       className="ficha-clinica-procedure-icon-image"
-      src={image || `${odontogramProcedureAssetBase}/${asset}`}
+      src={procedureImage}
       alt=""
       aria-hidden="true"
       title={label}
@@ -637,8 +621,32 @@ function ToothGridImage() {
   );
 }
 
-export function FichaClinicaPage({ onBackHome }) {
-  const [selectedPatient, setSelectedPatient] = useState(() => readStoredPatient());
+function UpperOdontogramPanel() {
+  return (
+    <div className="ficha-clinica-upper-odontogram-panel" aria-label="Painel do odontograma">
+      <Tabs
+        activeKey="empty"
+        type="card"
+        tabPosition="bottom"
+        animated={false}
+        items={[
+          {
+            key: 'empty',
+            label: <span aria-label="Odontograma sem tratamento" />,
+            children: (
+              <div className="ficha-clinica-odontogram-frame">
+                <ToothGridImage />
+              </div>
+            ),
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
+export function FichaClinicaPage({ onBackHome, onRequestPatientSelection, openNovoTratamento = false, onCloseNovoTratamento }) {
+  const { patient: selectedPatient, clearPatient } = usePatientInUse();
   const [activeTab, setActiveTab] = useState('tratamento');
   const [activeClinicCategory, setActiveClinicCategory] = useState('cirur');
   const [isPatientRailCollapsed, setIsPatientRailCollapsed] = useState(false);
@@ -664,8 +672,7 @@ export function FichaClinicaPage({ onBackHome }) {
   };
 
   const handleClearPatient = () => {
-    setSelectedPatient(null);
-    storeSelectedPatient(null);
+    clearPatient();
     message.info('Paciente em uso limpo.');
   };
 
@@ -799,14 +806,11 @@ export function FichaClinicaPage({ onBackHome }) {
   ];
 
   return (
+    <>
     <div className="ficha-clinica-page">
       <div className={`ficha-clinica-stage${isPatientRailCollapsed ? ' is-patient-rail-collapsed' : ''}`}>
         <section className="ficha-clinica-board ficha-clinica-odontogram-board">
-          <OdontogramToolbar onAction={handlePlaceholderAction} />
-
-          <div className="ficha-clinica-odontogram-frame">
-            <ToothGridImage />
-          </div>
+          <UpperOdontogramPanel />
 
           <ClinicProcedureRail category={activeProcedureCategory} />
 
@@ -895,12 +899,17 @@ export function FichaClinicaPage({ onBackHome }) {
             title={isPatientRailCollapsed ? 'Expandir painel lateral' : 'Recolher painel lateral'}
             onClick={togglePatientRail}
           >
-            <img
-              className={`ficha-clinica-patient-rail-toggle-icon${isPatientRailCollapsed ? ' is-collapsed' : ''}`}
-              src={`${fichaClinicaUiAssetBase}/ico_seta_painel_lateral.png`}
-              alt=""
-              aria-hidden="true"
-            />
+            {isPatientRailCollapsed ? (
+              <RightOutlined
+                className="ficha-clinica-patient-rail-toggle-icon is-collapsed"
+                aria-hidden="true"
+              />
+            ) : (
+              <LeftOutlined
+                className="ficha-clinica-patient-rail-toggle-icon"
+                aria-hidden="true"
+              />
+            )}
           </button>
           <div className="ficha-clinica-patient-rail-collapsed-strip" aria-hidden={!isPatientRailCollapsed}>
             <button
@@ -909,7 +918,7 @@ export function FichaClinicaPage({ onBackHome }) {
               onClick={togglePatientRail}
               title="Expandir lateral e visualizar calendario"
             >
-              <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_calendario.svg`} alt="" aria-hidden="true" />
+              <CalendarOutlined aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -917,7 +926,7 @@ export function FichaClinicaPage({ onBackHome }) {
               onClick={() => handlePlaceholderAction('Buscar paciente')}
               title="Buscar paciente"
             >
-              <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_search.svg`} alt="" aria-hidden="true" />
+              <SearchOutlined aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -925,7 +934,7 @@ export function FichaClinicaPage({ onBackHome }) {
               onClick={() => handlePlaceholderAction('Novo atendimento lateral')}
               title="Novo atendimento"
             >
-              <img src={`${fichaClinicaPanelAssetBase}/ico_ficha_clinica_painel_novo.svg`} alt="" aria-hidden="true" />
+              <PlusOutlined aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -993,7 +1002,7 @@ export function FichaClinicaPage({ onBackHome }) {
           </div>
 
           <div className="ficha-clinica-patient-actions">
-            <Button icon={<SearchOutlined />} onClick={() => handlePlaceholderAction('Buscar paciente')}>
+            <Button icon={<SearchOutlined />} onClick={() => onRequestPatientSelection?.()}>
               Buscar paciente
             </Button>
             <Button icon={<TeamOutlined />} onClick={handleClearPatient} disabled={!selectedPatient}>
@@ -1021,26 +1030,100 @@ export function FichaClinicaPage({ onBackHome }) {
         </aside>
       </div>
     </div>
+    <NovoTratamentoModal open={openNovoTratamento && Boolean(selectedPatient)} patient={selectedPatient} onClose={onCloseNovoTratamento} />
+    </>
   );
 }
 
-function OdontogramToolbar({ onAction }) {
+export function FichaClinicaContextBar({ onRequestNewPatient, onRequestPatientSelection, onRequestNewTreatment, onOpenPersonalRecord, onCloseFichaClinica }) {
+  const { patient } = usePatientInUse();
+  const patientLabel = patient ? formatNomeCompleto(patient) || `Paciente ${patient.id ?? ''}`.trim() : 'Nenhum paciente em uso';
+  const handleAction = (label) => {
+    if (!patient) {
+      message.info('Selecione um paciente para abrir este fluxo.');
+      return;
+    }
+    message.info(`${label}: fluxo em implantacao no Brana Cloude.`);
+  };
+  return (
+    <div className="ficha-clinica-context-bar">
+      <div className="ficha-clinica-patient-context">
+        <Avatar size={48} src={patient?.extra?.foto_data_url || undefined} icon={<TeamOutlined />} alt="Foto do paciente" />
+        <div className="ficha-clinica-patient-context-data">
+          <Typography.Text strong>{patientLabel}</Typography.Text>
+          <Typography.Text type="secondary">
+            {patient
+              ? `${patient.codigo ?? patient.id ?? '-'} | ${calculatePatientAge(patient.data_nascimento) || 'Idade não informada'} | ${formatTelefone(patient) || 'Telefone não informado'}`
+              : 'Nenhum paciente em uso'}
+          </Typography.Text>
+        </div>
+        <Dropdown
+          trigger={['click']}
+          placement="bottomLeft"
+          menu={{
+            items: [
+              { key: 'open-personal-record', label: 'Abre ficha pessoal' },
+              { key: 'close-ficha-clinica', label: 'Fecha ficha clínica' },
+            ],
+            onClick: ({ key }) => {
+              if (key === 'open-personal-record') onOpenPersonalRecord?.(patient);
+              if (key === 'close-ficha-clinica') onCloseFichaClinica?.();
+            },
+          }}
+        >
+          <button
+            type="button"
+            className="ficha-clinica-patient-context-arrow-button"
+            aria-label="Menu contextual do paciente"
+            title="Menu contextual do paciente"
+          >
+            <img className="ficha-clinica-patient-context-arrow" src="/app/assets/fichaClinica/icon_combo.png" alt="" aria-hidden="true" />
+          </button>
+        </Dropdown>
+      </div>
+      <div className="ficha-clinica-action-bar">
+        <OdontogramToolbar onAction={handleAction} onRequestNewPatient={onRequestNewPatient} onRequestNewTreatment={onRequestNewTreatment} onRequestPatientSelection={onRequestPatientSelection} />
+      </div>
+    </div>
+  );
+}
+
+function OdontogramToolbar({ onAction, onRequestNewPatient, onRequestNewTreatment, onRequestPatientSelection }) {
+  const newPatientMenu = {
+    items: [
+      { key: 'new-patient', label: 'Novo paciente' },
+      { key: 'new-treatment', label: 'Novo tratamento' },
+    ],
+    onClick: ({ key }) => {
+      if (key === 'new-patient') onRequestNewPatient?.();
+      if (key === 'new-treatment') onRequestNewTreatment?.();
+    },
+  };
+
   return (
     <div className="ficha-clinica-odontogram-toolbar" role="toolbar" aria-label="Ferramentas do odontograma">
       {odontogramToolbarItems.map((item) =>
         item.type === 'divider' ? (
           <span key={item.key} className="ficha-clinica-odontogram-toolbar-divider" aria-hidden="true" />
         ) : (
-          <button
-            key={item.key}
-            type="button"
-            className="ficha-clinica-odontogram-toolbar-button"
-            title={item.label}
-            aria-label={item.label}
-            onClick={() => onAction?.(item.label)}
-          >
-            <img className="ficha-clinica-odontogram-toolbar-icon" src={item.image} alt="" aria-hidden="true" />
-          </button>
+          item.key === 'novo' ? (
+            <Dropdown key={item.key} menu={newPatientMenu} trigger={['click']} placement="bottomLeft">
+              <button type="button" className="ficha-clinica-odontogram-toolbar-button ficha-clinica-odontogram-toolbar-button-novo" title="Novo paciente/tratamento" aria-label="Novo paciente/tratamento">
+                <img className="ficha-clinica-odontogram-toolbar-icon" src={item.image} alt="" aria-hidden="true" />
+              </button>
+            </Dropdown>
+          ) : (
+            <button
+              key={item.key}
+              type="button"
+              className={`ficha-clinica-odontogram-toolbar-button ficha-clinica-odontogram-toolbar-button-${item.key}`}
+              title={item.key === 'pesquisa' ? 'Pesquisar paciente' : item.label}
+              aria-label={item.key === 'pesquisa' ? 'Pesquisar paciente' : item.label}
+              onClick={() => (item.key === 'pesquisa' ? onRequestPatientSelection?.() : onAction?.(item.label))}
+            >
+              <img className="ficha-clinica-odontogram-toolbar-icon" src={item.image} alt="" aria-hidden="true" />
+            </button>
+          )
         ),
       )}
     </div>

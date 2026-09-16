@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { Button } from 'antd';
+import { isGravaDisabled } from './fichaPessoalToolbarState.js';
 import {
   AppstoreOutlined,
   DeleteOutlined,
@@ -37,7 +38,7 @@ export function FichaPessoalToolbar({ onClose, onSave, onDelete, saving, deletin
             htmlType="button"
             size="small"
             className={`ficha-pessoal-toolbar-button${iconOnly ? ' is-icon-only' : ''}`}
-            disabled={label === 'Grava' ? saving || (!isNew && !dirty) : label === 'Elimina' ? deleting || isNew : true}
+            disabled={label === 'Grava' ? isGravaDisabled({ saving, isNew, dirty }) : label === 'Elimina' ? deleting || isNew : true}
             loading={label === 'Grava' ? saving : label === 'Elimina' ? deleting : false}
             onClick={label === 'Grava' ? onSave : label === 'Elimina' ? onDelete : undefined}
             aria-label={ariaLabel}

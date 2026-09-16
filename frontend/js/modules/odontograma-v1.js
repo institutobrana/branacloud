@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   "use strict";
 
   const MODULE_NAME = "BranaOdontogramaV1";
@@ -12,6 +12,15 @@
     tratamentos: [],
     statusLookup: [],
     resumo: null,
+    catalogoInferior: {
+      tabelas: [],
+      especialidades: [],
+      procedimentos: [],
+      simbolos: [],
+      tabelaSelecionadaId: "",
+      especialidadeSelecionada: "",
+      carregado: false,
+    },
     selectedTreatmentId: 0,
     loading: false,
     error: "",
@@ -38,12 +47,81 @@
   }
 
   function getPacienteId() {
-    if (state.paciente?.id) return num(state.paciente.id);
+    const snapshot = getPacienteSnapshot();
+    if (snapshot?.id) return num(snapshot.id);
     return 0;
   }
 
   function getPacienteSnapshot() {
-    return state.paciente || null;
+    if (state.paciente && num(state.paciente.id)) {
+      return state.paciente;
+    }
+    const header = typeof window !== "undefined" ? window.BranaPacienteEmUsoHeaderV1 : null;
+    if (header && typeof header.getSources === "function") {
+      const source = header.getSources();
+      if (source && num(source.id)) {
+        return source;
+      }
+    }
+    try {
+      const fichaAtualId = typeof window !== "undefined" && typeof window.fichaPacienteAtualId !== "undefined"
+        ? window.fichaPacienteAtualId
+        : (typeof fichaPacienteAtualId !== "undefined" ? fichaPacienteAtualId : 0);
+      if (num(fichaAtualId)) {
+        const fichaObj = typeof window !== "undefined" && window.ficha ? window.ficha : (typeof ficha !== "undefined" ? ficha : null);
+        const codigoFicha = String(
+          typeof window !== "undefined" && typeof window.fichaCodigoUltimoResolvido !== "undefined"
+            ? window.fichaCodigoUltimoResolvido
+            : (typeof fichaCodigoUltimoResolvido !== "undefined"
+              ? fichaCodigoUltimoResolvido
+              : fichaObj?.codigo?.value || "")
+        ).trim();
+        const nomeFicha = String(
+          fichaObj?.titulo?.textContent ||
+          fichaObj?.nome?.value ||
+          ""
+        ).replace(/^Ficha pessoal\s*-\s*/i, "").trim();
+        if (codigoFicha || nomeFicha) {
+          return {
+            id: num(fichaAtualId),
+            codigo: codigoFicha,
+            nome: nomeFicha,
+            source: "ficha",
+          };
+        }
+      }
+    } catch {}
+    try {
+      if (typeof document !== "undefined") {
+        const headerEl = document.getElementById("brana-paciente-em-uso-header");
+        const headerText = String(headerEl?.textContent || "").trim();
+        const matchCodigo = headerText.match(/#\s*(\d{1,10})/);
+        const matchNome = headerText.replace(/\s+/g, " ").replace(/^Paciente:\s*/i, "").replace(/^#\s*\d{1,10}\s*-\s*/i, "").trim();
+        if (matchCodigo) {
+          return {
+            id: num(matchCodigo[1]),
+            codigo: String(matchCodigo[1]),
+            nome: matchNome,
+            source: "header-dom",
+          };
+        }
+      }
+    } catch {}
+    try {
+      if (typeof document !== "undefined") {
+        const bodyText = String(document.body?.innerText || "");
+        const match = bodyText.match(/PACIENTE:\s*#?\s*(\d{1,10})\s*\n\s*([^\n]+)\s*\n\s*ProntuÃ¡rio/i);
+        if (match) {
+          return {
+            id: num(match[1]),
+            codigo: String(match[1]),
+            nome: String(match[2] || "").trim(),
+            source: "body-text",
+          };
+        }
+      }
+    } catch {}
+    return null;
   }
 
   function getExtraValor(paciente, key) {
@@ -60,23 +138,209 @@
   }
 
   function formatPacienteLabel(paciente) {
-    if (!paciente) return "Paciente não carregado";
+    if (!paciente) return "Paciente nÃ£o carregado";
+    const extra = paciente.extra && typeof paciente.extra === "object" ? paciente.extra : {};
     const codigo = String(paciente.codigo ?? "").trim();
-    const nomeCompleto = String(paciente.nome_completo || "").trim();
+    const nomeCompleto = String(extra.PRINOM || extra.NOMRES || paciente.nome_completo || "").trim();
     const nome = nomeCompleto || String(`${paciente.nome || ""} ${paciente.sobrenome || ""}`).trim();
     const base = [codigo ? `#${codigo}` : "", nome].filter(Boolean).join(" - ");
     return base || `Paciente #${num(paciente.id) || "-"}`;
   }
+  function formatDateBr(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "â€”";
+    const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) return `${match[3]}/${match[2]}/${match[1]}`;
+    return raw;
+  }
+
+  function calcIdade(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "â€”";
+    const parsed = new Date(raw);
+    if (Number.isNaN(parsed.getTime())) return "â€”";
+    const now = new Date();
+    let idade = now.getFullYear() - parsed.getFullYear();
+    const m = now.getMonth() - parsed.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < parsed.getDate())) idade -= 1;
+    return idade >= 0 ? `${idade} ano${idade === 1 ? "" : "s"}` : "â€”";
+  }
+
+  function readPacienteField(paciente, key, fallback = "â€”") {
+    const extra = paciente?.extra && typeof paciente.extra === "object" ? paciente.extra : {};
+    const value =
+      paciente?.[key] ??
+      extra[key] ??
+      extra[String(key).toUpperCase()] ??
+      extra[String(key).toLowerCase()] ??
+      "";
+    const text = String(value ?? "").trim();
+    return text || fallback;
+  }
 
   function formatTratamentoLabel(item) {
     if (!item) return "";
-    const numero = num(item.nrotra);
     const data = String(item.data_inicio_br || "").trim();
-    const situacao = String(item.situacao || "").trim();
-    const partes = [`Tratamento ${numero || item.id}`];
-    if (data) partes.push(data);
-    if (situacao) partes.push(situacao);
-    return partes.join(" - ");
+    const numero = num(item.nrotra);
+    if (data) return data;
+    if (numero) return `Tratamento ${numero}`;
+    return `Tratamento ${num(item.id) || ""}`;
+  }
+
+  function resolveCatalogoTabelaSelecionada(tabelas = [], paciente = null) {
+    const tabelasValidas = Array.isArray(tabelas) ? tabelas : [];
+    if (!tabelasValidas.length) return "";
+    const pacienteTabela = String(
+      paciente?.tabela_codigo ??
+      paciente?.extra?.NROTAB ??
+      paciente?.extra?.tabela_codigo ??
+      ""
+    ).trim();
+    if (pacienteTabela && tabelasValidas.some((item) => String(item.id || "").trim() === pacienteTabela)) {
+      return pacienteTabela;
+    }
+    const selecionada = String(state.catalogoInferior?.tabelaSelecionadaId || "").trim();
+    if (selecionada && tabelasValidas.some((item) => String(item.id || "").trim() === selecionada)) {
+      return selecionada;
+    }
+    const primeira = String(tabelasValidas[0]?.id || "").trim();
+    return primeira;
+  }
+
+  function resolveCatalogoEspecialidadeSelecionada(especialidades = []) {
+    const itens = Array.isArray(especialidades) ? especialidades : [];
+    if (!itens.length) return "";
+    const preferida = String(state.catalogoInferior?.especialidadeSelecionada || "").trim();
+    if (preferida && itens.some((item) => String(item.codigo || "").trim() === preferida)) {
+      return preferida;
+    }
+    const primeira = String(itens[0]?.codigo || "").trim();
+    return primeira;
+  }
+
+  function normalizeCatalogoOptions(items = [], labelKey = "nome") {
+    return Array.isArray(items) ? items.filter(Boolean) : [];
+  }
+
+  async function loadCatalogoInferior(force = false) {
+    const paciente = state.paciente || null;
+    const currentKey = [
+      num(paciente?.id || 0),
+      String(paciente?.tabela_codigo ?? paciente?.extra?.NROTAB ?? "").trim(),
+      String(state.catalogoInferior?.tabelaSelecionadaId || "").trim(),
+      String(state.catalogoInferior?.especialidadeSelecionada || "").trim(),
+    ].join("|");
+    if (!force && state.catalogoInferior?.carregado && state.catalogoInferior?.cacheKey === currentKey) {
+      renderLowerCatalog();
+      return true;
+    }
+
+    const [filtrosResp, simbolosResp, prefsResp] = await Promise.all([
+      requestJson("GET", "/procedimentos/filtros", undefined, true),
+      requestJson("GET", "/cadastros/simbolos-graficos?scope=procedimentos", undefined, true),
+      requestJson("GET", "/preferences/odontogram", undefined, true).catch(() => ({ res: { ok: false }, data: null })),
+    ]);
+
+    const filtros = filtrosResp?.res?.ok && filtrosResp.data && typeof filtrosResp.data === "object" ? filtrosResp.data : {};
+    const tabelas = normalizeCatalogoOptions(Array.isArray(filtros.tabelas) ? filtros.tabelas : []);
+    const especialidades = normalizeCatalogoOptions(Array.isArray(filtros.especialidades) ? filtros.especialidades : []);
+    const simbolos = simbolosResp?.res?.ok && Array.isArray(simbolosResp.data) ? simbolosResp.data : [];
+    const tabelaSelecionadaId = resolveCatalogoTabelaSelecionada(tabelas, paciente);
+    const preferenciaEspecialidade = String(prefsResp?.data?.values?.especialidade_mais_utilizada || "").trim();
+    let especialidadeSelecionada = resolveCatalogoEspecialidadeSelecionada(especialidades);
+    if (preferenciaEspecialidade && especialidades.some((item) => String(item.codigo || "").trim() === preferenciaEspecialidade)) {
+      especialidadeSelecionada = preferenciaEspecialidade;
+    }
+
+    const qs = new URLSearchParams();
+    if (tabelaSelecionadaId) qs.set("tabela_id", tabelaSelecionadaId);
+    if (especialidadeSelecionada) qs.set("especialidade", especialidadeSelecionada);
+    const procResp = await requestJson("GET", `/procedimentos?${qs.toString()}`, undefined, true);
+    let procedimentos = procResp?.res?.ok && Array.isArray(procResp.data) ? procResp.data : [];
+    if (!procedimentos.length && especialidadeSelecionada) {
+      const fallbackQs = new URLSearchParams();
+      if (tabelaSelecionadaId) fallbackQs.set("tabela_id", tabelaSelecionadaId);
+      const fallbackResp = await requestJson("GET", `/procedimentos?${fallbackQs.toString()}`, undefined, true).catch(() => null);
+      procedimentos = fallbackResp?.res?.ok && Array.isArray(fallbackResp.data) ? fallbackResp.data : procedimentos;
+    }
+
+    state.catalogoInferior = {
+      tabelas,
+      especialidades,
+      procedimentos,
+      simbolos,
+      tabelaSelecionadaId,
+      especialidadeSelecionada,
+      carregado: true,
+      cacheKey: currentKey,
+    };
+    renderLowerCatalog();
+    return true;
+  }
+
+  function renderLowerOption(selectEl, items, getValue, getLabel, selectedValue, placeholder = "") {
+    if (!selectEl) return;
+    const options = [];
+    if (placeholder) {
+      options.push(`<option value="">${escHtml(placeholder)}</option>`);
+    }
+    (Array.isArray(items) ? items : []).forEach((item) => {
+      const value = String(getValue(item) ?? "").trim();
+      const label = String(getLabel(item) ?? "").trim();
+      const selected = value && String(selectedValue || "").trim() === value ? " selected" : "";
+      options.push(`<option value="${escHtml(value)}"${selected}>${escHtml(label)}</option>`);
+    });
+    selectEl.innerHTML = options.join("");
+    if (selectedValue) selectEl.value = String(selectedValue);
+  }
+
+  function renderContextSummary() {
+    const cfg = getPanelElements();
+    const paciente = state.paciente || null;
+    const tratamento = Array.isArray(state.tratamentos)
+      ? state.tratamentos.find((item) => num(item.id) === num(state.selectedTreatmentId)) || null
+      : null;
+    const pacienteLabel = paciente ? formatPacienteLabel(paciente) : "Sem paciente selecionado.";
+    const tratamentoLabel = tratamento ? formatTratamentoLabel(tratamento) : "Sem tratamento selecionado.";
+    const observacoes = String(tratamento?.observacoes || state.resumo?.observacoes || "").trim();
+    const ultimaVisita = formatDateBr(
+      state.resumo?.ultima_visita ||
+      state.resumo?.ultima_visita_br ||
+      paciente?.ultima_visita ||
+      paciente?.data_ultima_visita ||
+      ""
+    );
+    const proximaVisita = formatDateBr(
+      state.resumo?.proxima_visita ||
+      state.resumo?.proxima_visita_br ||
+      paciente?.proxima_visita ||
+      paciente?.data_proxima_visita ||
+      ""
+    );
+    const tabela = String(
+      paciente?.tabela_nome ||
+      paciente?.tabela_descricao ||
+      paciente?.extra?.NROTAB ||
+      paciente?.tabela_codigo ||
+      ""
+    ).trim() || "â€”";
+
+    if (cfg.contextPaciente) cfg.contextPaciente.textContent = pacienteLabel;
+    if (cfg.contextIdade) cfg.contextIdade.textContent = calcIdade(paciente?.data_nascimento);
+    if (cfg.contextUltimaVisita) cfg.contextUltimaVisita.textContent = ultimaVisita;
+    if (cfg.contextProximaVisita) cfg.contextProximaVisita.textContent = proximaVisita;
+    if (cfg.contextFone1) cfg.contextFone1.textContent = readPacienteField(paciente, "fone1");
+    if (cfg.contextFone2) cfg.contextFone2.textContent = readPacienteField(paciente, "fone2");
+    if (cfg.contextFone3) cfg.contextFone3.textContent = readPacienteField(paciente, "fone3");
+    if (cfg.contextEmail) cfg.contextEmail.textContent = readPacienteField(paciente, "email");
+    if (cfg.contextMatricula) cfg.contextMatricula.textContent = readPacienteField(paciente, "matricula");
+    if (cfg.contextProntuario) cfg.contextProntuario.textContent = readPacienteField(paciente, "cod_prontuario");
+    if (cfg.contextTabela) cfg.contextTabela.textContent = tabela;
+    if (cfg.contextTratamento) cfg.contextTratamento.textContent = tratamentoLabel;
+    if (cfg.contextObservacoes) cfg.contextObservacoes.textContent = observacoes || "Sem observaÃ§Ãµes";
+    if (cfg.contextImagens) cfg.contextImagens.textContent = "Imagens";
+    if (cfg.contextDocumentos) cfg.contextDocumentos.textContent = "Documentos";
+    if (cfg.contextAgenda) cfg.contextAgenda.textContent = "Agenda";
   }
 
   function ensureStyle() {
@@ -84,7 +348,7 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      .odonto-v1-panel{width:min(1240px,100%);min-height:0;box-sizing:border-box;padding:10px 10px 12px;background:#fff;border:1px solid #cfd8e3;font:12px Tahoma,sans-serif;color:#111}
+      .odonto-v1-panel{width:100%;min-height:0;box-sizing:border-box;padding:10px 10px 12px;background:#fff;border:1px solid #cfd8e3;font:12px Tahoma,sans-serif;color:#111}
       .odonto-v1-toolbar{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-bottom:8px}
       .odonto-v1-toolbar-left{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;align-items:end}
       .odonto-v1-field{display:grid;gap:4px}
@@ -100,7 +364,7 @@
       .odonto-v1-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
       .odonto-v1-chip{display:inline-flex;gap:6px;align-items:center;padding:3px 8px;border:1px solid #d7dfe8;border-radius:999px;background:#fff;color:#314052;white-space:nowrap}
       .odonto-v1-chip strong{font-weight:700}
-      .odonto-v1-main{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:10px;min-height:0}
+      .odonto-v1-main{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:10px;min-height:0}
       .odonto-v1-card{display:grid;grid-template-rows:auto 1fr;border:1px solid #cfd8e3;background:#fff;min-height:0}
       .odonto-v1-card-title{padding:7px 10px;border-bottom:1px solid #dbe3ec;background:#f5f7fb;font:700 12px Tahoma,sans-serif;color:#243244}
       .odonto-v1-card-body{padding:8px;min-height:0;overflow:auto}
@@ -133,6 +397,16 @@
       .odonto-v1-interv-meta{display:flex;gap:12px;flex-wrap:wrap;font:11px Tahoma,sans-serif;color:#4b5563}
       .odonto-v1-interv-meta strong{color:#243244}
       .odonto-v1-interv-obs{font:12px Tahoma,sans-serif;color:#1f2937;line-height:1.35;background:#fbfcfe;border:1px solid #edf2f7;padding:6px 8px}
+      .odonto-v1-interv-table{width:100%;border-collapse:collapse;table-layout:fixed;font:12px Tahoma,sans-serif;background:#fff}
+      .odonto-v1-interv-table th,.odonto-v1-interv-table td{padding:2px 4px;border-bottom:1px solid #d7dfe7;border-right:1px solid #e7edf4;vertical-align:top;background:#fff;box-sizing:border-box;line-height:1.1}
+      .odonto-v1-interv-table th:last-child,.odonto-v1-interv-table td:last-child{border-right:none}
+      .odonto-v1-interv-table thead th{background:#f2f6fb;font:700 10px Tahoma,sans-serif;color:#243444;white-space:nowrap;letter-spacing:.01em}
+      .odonto-v1-interv-table tbody tr:nth-child(even) td{background:#fbfdff}
+      .odonto-v1-interv-table tbody tr:hover td{background:#eef5ff}
+      .odonto-v1-interv-table th:nth-child(1),.odonto-v1-interv-table td:nth-child(1){width:90px;white-space:nowrap}
+      .odonto-v1-interv-table th:nth-child(2),.odonto-v1-interv-table td:nth-child(2){width:130px;white-space:nowrap}
+      .odonto-v1-interv-table th:nth-child(3),.odonto-v1-interv-table td:nth-child(3){width:130px;white-space:nowrap}
+      .odonto-v1-interv-table th:nth-child(4),.odonto-v1-interv-table td:nth-child(4){width:auto;word-break:break-word;overflow-wrap:anywhere}
       @media (max-width: 1180px){
         .odonto-v1-main{grid-template-columns:1fr}
         .odonto-v1-arcada-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -176,43 +450,7 @@
               window.BranaPacienteEmUsoHeaderV1?.sync?.(state.paciente);
             } catch {}
           })
-          .catch((err) => console.warn("Falha ao carregar cabeçalho de paciente em uso.", err));
-      }
-    } catch {}
-    try {
-      const searchModule = window.BranaOdontoPacienteSearchV1;
-      if (searchModule && typeof searchModule.mount === "function" && cfg.paciente) {
-        searchModule.mount(cfg.paciente, {
-          currentPatient: state.paciente,
-          initialQuery: "",
-          onSelect: async (item) => {
-            const paciente = item || null;
-            state.paciente = paciente;
-            state.tratamentos = [];
-            state.statusLookup = [];
-            state.resumo = null;
-            state.selectedTreatmentId = 0;
-            state.error = "";
-            state.notice = "";
-            renderSummaryHeader();
-            if (!paciente) {
-              renderEmpty("Selecione um paciente para carregar o odontograma.");
-              return null;
-            }
-            if (typeof fichaAplicarPaciente === "function") {
-              const result = fichaAplicarPaciente(paciente);
-              if (result && typeof result.then === "function") {
-                await result;
-              }
-            } else if (typeof fichaCarregarPacientePorId === "function") {
-              const result = fichaCarregarPacientePorId(num(paciente.id), true);
-              if (result && typeof result.then === "function") {
-                await result;
-              }
-            }
-            return paciente;
-          },
-        });
+          .catch((err) => console.warn("Falha ao carregar cabeÃ§alho de paciente em uso.", err));
       }
     } catch {}
     if (!state.uiBound && typeof shell.bindControls === "function") {
@@ -229,6 +467,15 @@
           state.selectedTreatmentId = selected;
           void loadResumo(true);
         },
+      });
+      const cfg = getPanelElements();
+      cfg.lowerTabela?.addEventListener("change", async () => {
+        state.catalogoInferior.tabelaSelecionadaId = String(cfg.lowerTabela?.value || "").trim();
+        await loadCatalogoInferior(true);
+      });
+      cfg.lowerEspecialidade?.addEventListener("change", async () => {
+        state.catalogoInferior.especialidadeSelecionada = String(cfg.lowerEspecialidade?.value || "").trim();
+        await loadCatalogoInferior(true);
       });
       state.uiBound = true;
     }
@@ -248,6 +495,11 @@
 
   function renderSummaryHeader() {
     const cfg = getPanelElements();
+    if (cfg.paciente) {
+      const pacienteLabel = state.paciente ? formatPacienteLabel(state.paciente) : "Sem paciente selecionado.";
+      cfg.paciente.textContent = pacienteLabel;
+      cfg.paciente.title = pacienteLabel;
+    }
     if (window.BranaOdontoPacienteSearchV1 && typeof window.BranaOdontoPacienteSearchV1.setCurrentPatient === "function") {
       window.BranaOdontoPacienteSearchV1.setCurrentPatient(state.paciente);
     }
@@ -263,8 +515,9 @@
     }
     if (cfg.resumoContagem) {
       const total = num(state.resumo?.contagem_intervencoes);
-      cfg.resumoContagem.textContent = `${total} intervenção(ões).`;
+      cfg.resumoContagem.textContent = `${total} intervenções.`;
     }
+    renderContextSummary();
   }
 
   function renderLegend() {
@@ -272,7 +525,7 @@
     if (!cfg.legend) return;
     const itens = Array.isArray(state.statusLookup) ? state.statusLookup : [];
     if (!itens.length) {
-      cfg.legend.innerHTML = '<div class="odonto-v1-empty">Nenhum status disponível.</div>';
+      cfg.legend.innerHTML = '<span class="odonto-v1-muted odonto-v1-small">Sem status disponível.</span>';
       return;
     }
     cfg.legend.innerHTML = itens
@@ -294,6 +547,7 @@
         emptyMessage: "Nenhum slot de arcada encontrado para o tratamento selecionado.",
         superiorLabel: "Arcada superior",
         inferiorLabel: "Arcada inferior",
+        intervencoes: Array.isArray(state.resumo?.intervencoes) ? state.resumo.intervencoes : [],
       });
       return;
     }
@@ -315,8 +569,8 @@
               <span>#${escHtml(slot)}</span>
               <span class="odonto-v1-muted">${escHtml(tipo)}</span>
             </div>
-            <div class="odonto-v1-slot-body">${escHtml(dente || "—")}</div>
-            <div class="odonto-v1-slot-foot">${escHtml(observacao || "Sem observação")}</div>
+            <div class="odonto-v1-slot-body">${escHtml(dente || "â€”")}</div>
+            <div class="odonto-v1-slot-foot">${escHtml(observacao || "Sem observaÃ§Ã£o")}</div>
           </div>`;
       })
       .join("")}</div>`;
@@ -329,7 +583,7 @@
     if (face.face_oclusal) flags.push("O");
     if (face.face_vestibular) flags.push("V");
     if (face.face_lingual) flags.push("L");
-    return flags.length ? flags.join(" ") : "—";
+    return flags.length ? flags.join(" ") : "â€”";
   }
 
   function renderIntervencoes() {
@@ -340,57 +594,159 @@
       cfg.intervencoes.innerHTML = '<div class="odonto-v1-empty">Nenhuma intervenção encontrada para o tratamento selecionado.</div>';
       return;
     }
-    const cards = itens
+    const rows = itens
       .map((item) => {
-        const status = item.status?.descricao || item.status?.codigo || "-";
-        const statusBase = String(item.status?.codigo || item.status?.descricao || "status").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-        const statusClass = `is-${statusBase || "status"}`;
-        const denteTexto = Array.isArray(item.dentes) && item.dentes.length
+        const status = String(item.status?.descricao || item.status?.codigo || "-").trim();
+        const dentes = Array.isArray(item.dentes) && item.dentes.length
           ? item.dentes.map((dente) => String(dente.numero_dente_fdi)).join(", ")
-          : "—";
-        const faceTexto = Array.isArray(item.faces) && item.faces.length
+          : "â€”";
+        const faces = Array.isArray(item.faces) && item.faces.length
           ? item.faces.map((face) => `${String(face.numero_dente_fdi)}(${faceFlagsText(face)})`).join(", ")
-          : "—";
-        const dataPlanejada = String(item.data_planejada || "").trim() || "—";
-        const dataExecucao = String(item.data_execucao || "").trim() || "—";
-        const observacao = String(item.observacao_resumida || "").trim() || "—";
+          : "";
+        const regiao = [dentes, faces ? `Faces ${faces}` : ""].filter(Boolean).join(" / ") || "â€”";
+        const data = formatDateBr(item.data_execucao || item.data_planejada || "");
+        const cirurgiao = item.prestador_id ? `Prestador ${num(item.prestador_id)}` : "â€”";
+        const descricaoBase = String(item.procedimento_nome || item.procedimento_id || "-").trim();
+        const observacao = String(item.observacao_resumida || "").trim();
+        const descricao = observacao ? `${descricaoBase} - ${observacao}` : descricaoBase;
         return `
-          <article class="odonto-v1-interv-card">
-            <div class="odonto-v1-interv-head">
-              <div class="odonto-v1-interv-core">
-                <span class="odonto-v1-interv-id">#${escHtml(num(item.id))}</span>
-                <span class="odonto-v1-interv-status ${escHtml(statusClass)}">${escHtml(status)}</span>
-                <strong class="odonto-v1-interv-proc">${escHtml(item.procedimento_nome || num(item.procedimento_id) || "-")}</strong>
-              </div>
-              <span class="odonto-v1-interv-prestador">Prestador ${escHtml(num(item.prestador_id) || "—")}</span>
-            </div>
-            <div class="odonto-v1-interv-meta">
-              <span><strong>Dentes:</strong> ${escHtml(denteTexto)}</span>
-              <span><strong>Faces:</strong> ${escHtml(faceTexto)}</span>
-              <span><strong>Planejada:</strong> ${escHtml(dataPlanejada)}</span>
-              <span><strong>Execucao:</strong> ${escHtml(dataExecucao)}</span>
-            </div>
-            <div class="odonto-v1-interv-obs">${escHtml(observacao)}</div>
-          </article>
+          <tr>
+            <td>${escHtml(data)}</td>
+            <td>${escHtml(cirurgiao)}</td>
+            <td>${escHtml(regiao)}</td>
+            <td><strong>${escHtml(descricao)}</strong>${status && status !== "-" ? `<div class="odonto-v1-muted">${escHtml(status)}</div>` : ""}</td>
+          </tr>
         `;
       })
       .join("");
-    cfg.intervencoes.innerHTML = `<div class="odonto-v1-interv-list">${cards}</div>`;
+    cfg.intervencoes.innerHTML = `
+      <table class="odonto-v1-interv-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>CirurgiÃ£o</th>
+            <th>RegiÃ£o</th>
+            <th>DescriÃ§Ã£o do procedimento</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  function renderLowerCatalog() {
+    const cfg = getPanelElements();
+    if (!cfg.procedureList || !cfg.specialtyStrip || !cfg.symbolStrip) return;
+
+    const catalogo = state.catalogoInferior || {};
+    const tabelas = Array.isArray(catalogo.tabelas) ? catalogo.tabelas : [];
+    const especialidades = Array.isArray(catalogo.especialidades) ? catalogo.especialidades : [];
+    const procedimentos = Array.isArray(catalogo.procedimentos) ? catalogo.procedimentos : [];
+    const simbolos = Array.isArray(catalogo.simbolos) ? catalogo.simbolos : [];
+    const tabelaSelecionadaId = String(catalogo.tabelaSelecionadaId || "").trim();
+    const especialidadeSelecionada = String(catalogo.especialidadeSelecionada || "").trim();
+
+    renderLowerOption(
+      cfg.lowerTabela,
+      tabelas,
+      (item) => item?.id ?? "",
+      (item) => {
+        const nome = String(item?.nome || "").trim();
+        const sigla = String(item?.indice_sigla || "").trim();
+        return nome && sigla ? `${nome} (${sigla})` : (nome || String(item?.id || ""));
+      },
+      tabelaSelecionadaId,
+      "Tabela padrÃ£o"
+    );
+
+    renderLowerOption(
+      cfg.lowerEspecialidade,
+      especialidades,
+      (item) => item?.codigo ?? "",
+      (item) => `${String(item?.codigo || "").trim()}${String(item?.nome || "").trim() ? ` - ${String(item.nome).trim()}` : ""}`,
+      especialidadeSelecionada,
+      "Todas as especialidades"
+    );
+
+    cfg.specialtyStrip.innerHTML = especialidades.length
+      ? especialidades.map((item) => {
+          const codigo = String(item.codigo || "").trim();
+          const nome = String(item.nome || "").trim();
+          const active = codigo && codigo === especialidadeSelecionada ? " active" : "";
+          return `<button type="button" class="odonto-v1-specialty-chip${active}" data-especialidade="${escHtml(codigo)}">${escHtml(nome || codigo)}</button>`;
+        }).join("")
+      : '<div class="odonto-v1-procedure-empty">Nenhuma especialidade disponÃ­vel.</div>';
+    cfg.specialtyStrip.querySelectorAll(".odonto-v1-specialty-chip").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const especialidade = String(btn.getAttribute("data-especialidade") || "").trim();
+        state.catalogoInferior.especialidadeSelecionada = especialidade;
+        await loadCatalogoInferior(true);
+      });
+    });
+
+    cfg.procedureList.innerHTML = procedimentos.length
+      ? procedimentos.map((item) => {
+          const codigo = String(item.codigo || "").trim();
+          const nome = String(item.nome || "").trim();
+          const especialidade = String(item.especialidade || "").trim();
+          const tabela = String(item.tabela_id || "").trim();
+          const simbolo = String(item.simbolo_grafico || "").trim();
+          return `
+            <div class="odonto-v1-procedure-row" title="${escHtml(nome)}">
+              <span class="odonto-v1-procedure-code">${escHtml(codigo || "â€”")}</span>
+              <span class="odonto-v1-procedure-name">${escHtml(nome || "â€”")}</span>
+              <span class="odonto-v1-procedure-meta">${escHtml(especialidade || "â€”")}</span>
+              <span class="odonto-v1-procedure-meta">${escHtml(tabela || simbolo || "â€”")}</span>
+            </div>
+          `;
+        }).join("")
+      : '<div class="odonto-v1-procedure-empty">Nenhum procedimento encontrado para a tabela selecionada.</div>';
+
+    const simbolosFiltrados = especialidadeSelecionada
+      ? simbolos.filter((item) => {
+          const esp = String(item.especialidade || "").trim();
+          return !esp || esp === especialidadeSelecionada;
+        })
+      : simbolos;
+    cfg.symbolStrip.innerHTML = simbolosFiltrados.length
+      ? simbolosFiltrados.map((item) => {
+          const nome = String(item.descricao || item.codigo || "").trim();
+          const imagem = String(item.imagem_url || "").trim();
+          const legenda = String(item.tipo_marca_label || item.tipo_marca || "").trim();
+          return `
+            <div class="odonto-v1-symbol-card" title="${escHtml(nome)}">
+              ${imagem ? `<img src="${escHtml(imagem)}" alt="${escHtml(nome)}">` : `<div class="odonto-v1-symbol-empty" style="display:flex;align-items:center;justify-content:center;min-height:42px;font-weight:700">${escHtml((nome.slice(0, 2) || "â€¢").toUpperCase())}</div>`}
+              <span>${escHtml(nome || "â€”")}</span>
+              ${legenda ? `<span class="odonto-v1-muted">${escHtml(legenda)}</span>` : ""}
+            </div>
+          `;
+        }).join("")
+      : '<div class="odonto-v1-symbol-empty">Nenhum sÃ­mbolo disponÃ­vel para a especialidade selecionada.</div>';
   }
 
   function renderEmpty(message) {
     const cfg = getPanelElements();
-    if (cfg.arcada) cfg.arcada.innerHTML = `<div class="odonto-v1-empty">${escHtml(message)}</div>`;
-    if (cfg.intervencoes) cfg.intervencoes.innerHTML = `<div class="odonto-v1-empty">${escHtml(message)}</div>`;
+    const renderer = window.BranaOdontoArcadaV1;
+    if (cfg.arcada && renderer && typeof renderer.render === "function") {
+      renderer.render(cfg.arcada, [], {
+        emptyMessage: String(message || "Selecione um paciente para carregar o odontograma.").trim(),
+        superiorLabel: "Arcada superior",
+        inferiorLabel: "Arcada inferior",
+        intervencoes: [],
+      });
+    } else if (cfg.arcada) {
+      cfg.arcada.innerHTML = `<div class="odonto-v1-empty">${escHtml(message)}</div>`;
+    }
     renderSummaryHeader();
     renderLegend();
+    renderLowerCatalog();
   }
 
   function render() {
     renderSummaryHeader();
     renderLegend();
     renderArcada();
-    renderIntervencoes();
+    renderLowerCatalog();
     setFeedback(state.error || state.notice || "Odontograma carregado em modo de leitura.", !!state.error);
   }
 
@@ -414,15 +770,16 @@
     const tratamentoId = num(state.selectedTreatmentId);
     if (!pacienteId || !clinicaId) {
       state.resumo = null;
-      state.error = "Selecione um paciente válido para abrir o odontograma.";
+      state.error = "Selecione um paciente vÃ¡lido para abrir o odontograma.";
       render();
       return false;
     }
     if (!tratamentoId) {
       state.resumo = null;
-      state.error = state.tratamentos.length ? "Selecione um tratamento para visualizar o odontograma." : "Nenhum tratamento encontrado para este paciente.";
+      state.error = "";
+      state.notice = state.tratamentos.length ? "Selecione um tratamento para visualizar o odontograma." : "Nenhum tratamento encontrado para este paciente.";
       render();
-      return false;
+      return true;
     }
 
     state.loading = true;
@@ -499,13 +856,13 @@
       }
 
       if (!state.selectedTreatmentId) {
-        state.selectedTreatmentId = 1;
-        state.notice = "Nenhum tratamento cadastrado; exibindo leitura de referência vazia.";
+        state.notice = "Nenhum tratamento cadastrado; exibindo odontograma vazio.";
       }
 
       syncTreatmentSelect();
 
       state.statusLookup = await loadStatusLookup();
+      await loadCatalogoInferior(true);
       await loadResumo(false);
       return true;
     } catch (err) {
@@ -520,13 +877,16 @@
 
   function syncTreatmentSelect() {
     const cfg = getPanelElements();
-    if (!cfg.tratamento) return;
+    if (!cfg.tratamento && !cfg.treatmentTabs) return;
     const options = [];
+    const tabs = [];
     if (!state.tratamentos.length) {
       const refId = num(state.selectedTreatmentId || 1) || 1;
-      options.push(`<option value="${escHtml(refId)}">Referência vazia (tratamento ${escHtml(refId)})</option>`);
-      cfg.tratamento.innerHTML = options.join("");
-      cfg.tratamento.value = String(refId);
+      options.push(`<option value="${escHtml(refId)}">ReferÃªncia vazia (tratamento ${escHtml(refId)})</option>`);
+      tabs.push(`<button type="button" class="odonto-v1-treatment-tab active empty" data-treatment-id="${escHtml(refId)}">Sem tratamentos</button>`);
+      if (cfg.tratamento) cfg.tratamento.innerHTML = options.join("");
+      if (cfg.tratamento) cfg.tratamento.value = String(refId);
+      if (cfg.treatmentTabs) cfg.treatmentTabs.innerHTML = tabs.join("");
       return;
     }
     options.push('<option value="">Selecione um tratamento</option>');
@@ -534,9 +894,26 @@
       const value = num(item.id);
       const selected = value === num(state.selectedTreatmentId) ? " selected" : "";
       options.push(`<option value="${escHtml(value)}"${selected}>${escHtml(formatTratamentoLabel(item))}</option>`);
+      const active = value === num(state.selectedTreatmentId) ? " active" : "";
+      const title = escHtml(String(item?.rotulo || item?.situacao || "").trim() || formatTratamentoLabel(item));
+      tabs.push(`<button type="button" class="odonto-v1-treatment-tab${active}" data-treatment-id="${escHtml(value)}" title="${title}">${escHtml(formatTratamentoLabel(item))}</button>`);
     });
-    cfg.tratamento.innerHTML = options.join("");
-    cfg.tratamento.value = String(state.selectedTreatmentId || "");
+    if (cfg.tratamento) {
+      cfg.tratamento.innerHTML = options.join("");
+      cfg.tratamento.value = String(state.selectedTreatmentId || "");
+    }
+    if (cfg.treatmentTabs) {
+      cfg.treatmentTabs.innerHTML = tabs.join("");
+      cfg.treatmentTabs.querySelectorAll(".odonto-v1-treatment-tab").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const treatmentId = num(btn.getAttribute("data-treatment-id"));
+          if (!treatmentId || treatmentId === num(state.selectedTreatmentId)) return;
+          state.selectedTreatmentId = treatmentId;
+          syncTreatmentSelect();
+          await loadResumo(true);
+        });
+      });
+    }
   }
 
   async function resolvePacienteSnapshot(force = false) {
@@ -568,7 +945,7 @@
     try {
       if (typeof ensurePanelChrome === "function") ensurePanelChrome(state.panel);
     } catch {}
-    state.paciente = null;
+    state.paciente = getPacienteSnapshot();
     state.tratamentos = [];
     state.statusLookup = [];
     state.resumo = null;
@@ -576,11 +953,16 @@
     state.error = "";
     state.notice = "";
     if (window.BranaOdontoPacienteSearchV1 && typeof window.BranaOdontoPacienteSearchV1.setCurrentPatient === "function") {
-      window.BranaOdontoPacienteSearchV1.setCurrentPatient(null);
+      window.BranaOdontoPacienteSearchV1.setCurrentPatient(state.paciente || null);
     }
-    renderEmpty("Selecione um paciente para carregar o odontograma.");
+    if (state.paciente) {
+      void refresh(true);
+    } else {
+      renderEmpty("Selecione um paciente para carregar o odontograma.");
+      void loadCatalogoInferior(true);
+    }
     if (typeof footerMsg !== "undefined" && footerMsg) {
-      footerMsg.textContent = "Odontograma V1 aberto sem paciente selecionado.";
+      footerMsg.textContent = state.paciente ? "Odontograma V1 carregando paciente ativo." : "Odontograma V1 aberto sem paciente selecionado.";
     }
   }
 
@@ -599,177 +981,38 @@
     }
   }
 
-  const ENTRY_HOST_ID = "odonto-v1-entrada-isolada-host";
-
-  const MODULOS_ENTRADA_ODONTOLOGICA = Object.freeze([
-    "/frontend/js/modules/tela-principal-odontologica-contratos.js",
-    "/frontend/js/modules/tela-principal-odontologica-assets.js",
-    "/frontend/js/modules/tela-principal-odontologica-estado.js",
-    "/frontend/js/modules/tela-principal-odontologica-odontograma.js",
-    "/frontend/js/modules/tela-principal-odontologica-layout.js",
-    "/frontend/js/modules/tela-principal-odontologica-entrada.js",
-  ]);
-
-  function carregarScriptEntradaOdontologica(src) {
-    return new Promise((resolve, reject) => {
-      if (typeof document === "undefined") {
-        reject(new Error("Document indisponivel para carregamento dinamico."));
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = src;
-      script.async = false;
-      script.dataset.odontoEntradaScript = "1";
-      script.onload = () => {
-        script.dataset.odontoEntradaScriptLoaded = "1";
-        resolve({ ok: true, status: "carregado", src });
-      };
-      script.onerror = () => reject(new Error("Falha ao carregar " + src));
-      const alvo = document.head || document.body || document.documentElement;
-      if (!alvo || typeof alvo.appendChild !== "function") {
-        reject(new Error("Sem alvo de insercao para carregamento dinamico."));
-        return;
-      }
-      alvo.appendChild(script);
-    });
-  }
-
-  async function carregarModulosEntradaOdontologica() {
-    if (typeof window !== "undefined" && (typeof window.abrirTelaPrincipalOdontologicaNoWorkspace === "function" || typeof window.abrirTelaPrincipalOdontologicaPorPaciente === "function")) {
-      return { ok: true, status: "entrada-isolada-ja-disponivel" };
-    }
-    if (typeof window !== "undefined" && window.__odontoEntradaIsoladaLoadPromise) {
-      return window.__odontoEntradaIsoladaLoadPromise;
-    }
-    const promessa = (async () => {
-      for (const src of MODULOS_ENTRADA_ODONTOLOGICA) {
-        await carregarScriptEntradaOdontologica(src);
-      }
-      if (typeof window === "undefined" || (typeof window.abrirTelaPrincipalOdontologicaNoWorkspace !== "function" && typeof window.abrirTelaPrincipalOdontologicaPorPaciente !== "function")) {
-        throw new Error("Entrada isolada indisponivel apos carregamento dos modulos.");
-      }
-      return { ok: true, status: "entrada-isolada-carregada" };
-    })();
-    if (typeof window !== "undefined") {
-      window.__odontoEntradaIsoladaLoadPromise = promessa.catch((erro) => {
-        window.__odontoEntradaIsoladaLoadPromise = null;
-        throw erro;
-      });
-      return window.__odontoEntradaIsoladaLoadPromise;
-    }
-    return promessa;
-  }
-
-  function obterContextoEntradaOdontologica() {
-    const fichaAtual = typeof ficha !== "undefined" ? ficha : null;
-    const paciente = state.paciente || null;
-    const nome = [
-      String(paciente?.nome || "").trim(),
-      String(paciente?.sobrenome || "").trim(),
-    ].filter(Boolean).join(" ").trim() || String(fichaAtual?.nome?.value || "").trim();
-    return {
-      origem: "ficha-pessoal-historico",
-      modo: "visual-estatico",
-      comPaciente: !!(paciente || nome || String(fichaAtual?.codigo?.value || "").trim()),
-      pacienteId: paciente?.id ?? paciente?.paciente_id ?? "",
-      pacienteCodigo: String(paciente?.codigo ?? paciente?.codigo_paciente ?? fichaAtual?.codigo?.value ?? "").trim(),
-      pacienteNome: nome || String(fichaAtual?.nome?.value || "").trim(),
-      container: null,
-    };
-  }
-
-  function obterOuCriarHostEntradaOdontologica() {
-    let host = document.getElementById(ENTRY_HOST_ID);
-    if (host && host.isConnected) return host;
-    host = document.createElement("section");
-    host.id = ENTRY_HOST_ID;
-    host.setAttribute("data-odonto-v1-entrada-isolada", "1");
-    host.style.cssText = [
-      "position:fixed",
-      "inset:8px",
-      "z-index:5300",
-      "display:block",
-      "background:#f6f7fb",
-      "border:1px solid #9fb0c2",
-      "box-shadow:0 16px 34px rgba(15,23,42,.18)",
-      "overflow:auto",
-      "box-sizing:border-box",
-    ].join(";");
-    document.body.appendChild(host);
-    return host;
-  }
-
-  function removerHostEntradaOdontologica() {
-    const host = document.getElementById(ENTRY_HOST_ID);
-    if (host?.isConnected) host.remove();
-  }
-
   async function tentarAbrirEntradaOdontologicaIsolada() {
-    let carregamento = null;
+    const pacienteAtivo =
+      state.paciente && num(state.paciente.id)
+        ? { ...state.paciente }
+        : (() => {
+            const fonteHeader = typeof window !== "undefined" ? window.BranaPacienteEmUsoHeaderV1?.getSources?.() : null;
+            const pacienteId = num(fonteHeader?.id || 0);
+            if (!pacienteId) return null;
+            return {
+              id: pacienteId,
+              codigo: String(fonteHeader?.numero || "").trim(),
+              nome_completo: String(fonteHeader?.nome || "").trim(),
+            };
+          })();
+    openPanel();
+    if (pacienteAtivo && num(pacienteAtivo.id)) {
+      state.paciente = pacienteAtivo;
+      try {
+        window.BranaOdontoPacienteSearchV1?.setCurrentPatient?.(pacienteAtivo);
+      } catch {}
+      try {
+        window.BranaPacienteEmUsoHeaderV1?.sync?.(pacienteAtivo);
+      } catch {}
+    }
     try {
-      carregamento = await carregarModulosEntradaOdontologica();
-    } catch (erro) {
-      removerHostEntradaOdontologica();
-      openPanel();
-      return {
-        ok: false,
-        status: "entrada-isolada-carregamento-falhou",
-        erro: String(erro?.message || erro || ""),
-        fallback: "legacy",
-      };
-    }
-
-    if (!carregamento || !carregamento.ok) {
-      removerHostEntradaOdontologica();
-      openPanel();
-      return {
-        ok: false,
-        status: carregamento?.status || "entrada-isolada-indisponivel",
-        fallback: "legacy",
-      };
-    }
-
-    const abrirEntrada = typeof window !== "undefined" ? (window.abrirTelaPrincipalOdontologicaNoWorkspace || window.abrirTelaPrincipalOdontologicaPorPaciente) : null;
-    if (typeof abrirEntrada !== "function") {
-      removerHostEntradaOdontologica();
-      openPanel();
-      return { ok: false, status: "entrada-isolada-indisponivel", fallback: "legacy" };
-    }
-
-    const contexto = {
-      ...obterContextoEntradaOdontologica(),
-      origemSecundaria: "ficha-pessoal-historico",
-      container: null,
+      await refresh(true);
+    } catch {}
+    return {
+      ok: true,
+      status: "odontograma-v1-aberto",
+      fallback: "odontograma-v1",
     };
-
-    try {
-      const resultado = await Promise.resolve(abrirEntrada(contexto));
-      if (resultado && resultado.ok) {
-        if (typeof footerMsg !== "undefined" && footerMsg) {
-          footerMsg.textContent = "Odontograma aberto na area principal.";
-        }
-        return {
-          ok: true,
-          status: resultado.status || "entrada-isolada-aberta",
-          resultado,
-        };
-      }
-      openPanel();
-      return {
-        ok: false,
-        status: resultado?.status || "fallback-legacy-opened",
-        resultado,
-        fallback: "legacy",
-      };
-    } catch (erro) {
-      openPanel();
-      return {
-        ok: false,
-        status: "fallback-legacy-opened",
-        erro: String(erro?.message || erro || ""),
-        fallback: "legacy",
-      };
-    }
   }
 
   function interceptButtonClick(ev) {

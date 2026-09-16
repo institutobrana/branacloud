@@ -38,8 +38,9 @@
 
   function formatPacienteLabel(paciente) {
     if (!paciente) return "Sem paciente selecionado.";
+    const extra = paciente.extra && typeof paciente.extra === "object" ? paciente.extra : {};
     const codigo = String(paciente.codigo ?? "").trim();
-    const nomeCompleto = String(paciente.nome_completo || "").trim();
+    const nomeCompleto = String(extra.PRINOM || extra.NOMRES || paciente.nome_completo || "").trim();
     const nome = nomeCompleto || String(`${paciente.nome || ""} ${paciente.sobrenome || ""}`).trim();
     const base = [codigo ? `#${codigo}` : "", nome].filter(Boolean).join(" - ");
     return base || `Paciente #${num(paciente.id) || "-"}`;

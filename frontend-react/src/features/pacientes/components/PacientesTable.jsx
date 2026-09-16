@@ -1,8 +1,9 @@
 import { Empty, Spin, Tag, Typography } from 'antd';
+import { memo } from 'react';
 import { BranaTable } from '../../../components/BranaTable.jsx';
 import { PacientesAlphabet } from './PacientesAlphabet.jsx';
 
-export function PacientesTable({
+export const PacientesTable = memo(function PacientesTable({
   items,
   loading,
   error,
@@ -71,7 +72,11 @@ export function PacientesTable({
             rowKey="id"
             className="module-table auxiliary-compact-table pacientes-table"
             loading={loading}
-            pagination={false}
+            pagination={{
+              pageSize: 50,
+              showSizeChanger: false,
+              showTotal: (total) => `${total} pacientes`,
+            }}
             size="small"
             tableLayout="fixed"
             scroll={{ y: 480 }}
@@ -109,4 +114,4 @@ export function PacientesTable({
       </div>
     </div>
   );
-}
+});

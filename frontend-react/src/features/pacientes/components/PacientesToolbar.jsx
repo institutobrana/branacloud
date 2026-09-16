@@ -1,5 +1,6 @@
 import { Button, Input, Select, Space, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
 
 function optionLabel(item) {
   return item?.label || item?.name || item?.titulo || String(item?.id ?? '');
@@ -17,6 +18,12 @@ export function PacientesToolbar({
   onNew,
   onEdit,
 }) {
+  const [localQuery, setLocalQuery] = useState(queryDraft || '');
+
+  useEffect(() => {
+    setLocalQuery(queryDraft || '');
+  }, [queryDraft]);
+
   const cirurgiaoOptions = (optionSets?.cirurgioes?.length
     ? optionSets.cirurgioes
     : [{ id: 0, label: '<<Todos>>' }]
@@ -105,13 +112,13 @@ export function PacientesToolbar({
           <Space.Compact block>
             <Input
               allowClear
-              value={queryDraft}
+              value={localQuery}
               prefix={<SearchOutlined />}
               placeholder="Digite nome, número ou sobrenome"
-              onChange={(event) => onSearchChange?.(event.target.value)}
-              onPressEnter={(event) => onSearchApply?.(event.target.value)}
+              onChange={(event) => setLocalQuery(event.target.value)}
+              onPressEnter={() => onSearchApply?.(localQuery)}
             />
-            <Button type="primary" onClick={() => onSearchApply?.(queryDraft)}>
+            <Button type="primary" onClick={() => onSearchApply?.(localQuery)}>
               Buscar
             </Button>
           </Space.Compact>

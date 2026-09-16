@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Tabs } from 'antd';
 
 const tabs = [
@@ -5,7 +6,7 @@ const tabs = [
   { key: 'complementares', label: 'Dados complementares' },
   { key: 'anotacoes', label: 'Anotacoes' },
   { key: 'anamnese', label: 'Anamnese', locked: true },
-  { key: 'historico', label: 'Historico', locked: true },
+  { key: 'historico', label: 'Histórico', locked: true },
 ];
 
 export function FichaPessoalTabs({ activeTab, onChange, hasPersistedPaciente }) {

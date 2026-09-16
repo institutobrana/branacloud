@@ -23,13 +23,45 @@
       .replace(/'/g, "&#39;");
   }
 
+  function normalizePaciente(paciente = null) {
+    if (!paciente || typeof paciente !== "object") return null;
+    const extra = paciente.extra && typeof paciente.extra === "object" ? paciente.extra : {};
+    const numero = String(
+      paciente.numero ??
+      paciente.codigo ??
+      paciente.cod_paciente ??
+      paciente.codPaciente ??
+      ""
+    ).trim();
+    const nomeBase = String(
+      extra.PRINOM ||
+      extra.NOMRES ||
+      paciente.nome_completo ||
+      paciente.nome ||
+      ""
+    ).trim();
+    const nomeCompleto = nomeBase || String(`${paciente.nome || ""} ${paciente.sobrenome || ""}`).trim();
+    const nome = nomeCompleto;
+    const id = num(paciente.id ?? paciente.paciente_id ?? paciente.NROPAC ?? 0);
+    if (!numero && !nome && !id) return null;
+    return {
+      ...paciente,
+      extra,
+      id: id || paciente.id || paciente.paciente_id || null,
+      numero,
+      nome,
+      source: String(paciente.source || paciente.origem || "").trim(),
+      nome_completo: nomeCompleto,
+    };
+  }
+
   function ensureStyle() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
       .brana-paciente-em-uso-header{
-        display:grid;
+        display:none;
         grid-template-columns:auto minmax(110px,150px) minmax(0,1fr);
         gap:8px;
         align-items:center;
@@ -82,7 +114,7 @@
 
   function getSources() {
     const odonto = typeof BranaOdontoV1Module !== "undefined" ? BranaOdontoV1Module : null;
-    const pacienteOdonto = odonto?.state?.paciente || null;
+    const pacienteOdonto = normalizePaciente(odonto?.state?.paciente || null);
     const pacienteId = num(typeof fichaPacienteAtualId !== "undefined" ? fichaPacienteAtualId : 0);
     const fichaObj = typeof ficha !== "undefined" ? ficha : null;
     const codigoFicha = String(
@@ -97,11 +129,10 @@
     ).replace(/^Ficha pessoal\s*-\s*/i, "").trim();
 
     if (pacienteOdonto) {
-      const numero = String(pacienteOdonto.codigo ?? pacienteOdonto.numero ?? "").trim();
-      const nomeCompleto = String(pacienteOdonto.nome_completo || "").trim();
-      const nome = nomeCompleto || String(`${pacienteOdonto.nome || ""} ${pacienteOdonto.sobrenome || ""}`).trim();
+      const numero = String(pacienteOdonto.numero || "").trim();
+      const nome = String(pacienteOdonto.nome || "").trim();
       if (numero || nome) {
-        return { numero, nome, source: "odontograma", id: num(pacienteOdonto.id) };
+        return { ...pacienteOdonto, numero, nome, source: "odontograma", id: num(pacienteOdonto.id) };
       }
     }
 
@@ -122,16 +153,26 @@
   function ensureMounted() {
     ensureStyle();
     if (mounted && rootEl) return rootEl;
-    const panel = document.getElementById("odontograma-panel");
-    if (!panel) return null;
-    const shell = panel.querySelector(".odonto-v1-shell");
-    if (!shell) return null;
+    const anchor = document.getElementById("brana-paciente-em-uso-anchor");
+    const shell = document.querySelector(".shell");
     let root = document.getElementById(ROOT_ID);
     if (!root) {
       root = document.createElement("div");
       root.id = ROOT_ID;
       root.className = "brana-paciente-em-uso-header";
-      shell.insertBefore(root, shell.firstChild);
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(root, anchor);
+        anchor.remove();
+      } else if (shell) {
+        const main = shell.querySelector("main.workspace");
+        if (main && main.parentNode === shell) {
+          shell.insertBefore(root, main);
+        } else {
+          shell.insertBefore(root, shell.firstChild);
+        }
+      } else {
+        return null;
+      }
     }
     rootEl = root;
     mounted = true;
@@ -141,7 +182,7 @@
 
   function render(paciente = null) {
     if (!rootEl) return null;
-    const ativo = paciente || lastPaciente || getSources();
+    const ativo = normalizePaciente(paciente || lastPaciente || getSources());
     lastPaciente = ativo || null;
     const numero = String(ativo?.numero || "").trim();
     const nome = String(ativo?.nome || "").trim();
@@ -156,7 +197,7 @@
   }
 
   function sync(paciente = null) {
-    const current = paciente || getSources();
+    const current = normalizePaciente(paciente || getSources());
     const target = ensureMounted();
     if (!target) return null;
     return render(current);
@@ -178,5 +219,22 @@
     sync,
     getSources,
     getStatus,
+    normalizePaciente,
   });
+
+  void (function autoMountPacienteHeader() {
+    const run = () => {
+      try {
+        sync();
+      } catch (err) {
+        console.warn(`[${MODULE_NAME}] Falha ao montar cabeçalho.`, err);
+      }
+    };
+    if (typeof document === "undefined") return;
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", run, { once: true });
+      return;
+    }
+    run();
+  })();
 })();
