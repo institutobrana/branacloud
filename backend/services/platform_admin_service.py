@@ -18,7 +18,7 @@ def normalize_plano_value(plano: str) -> tuple[str, str, int]:
     if value in {"ANUAL", "YEARLY", "ANNUAL"}:
         return "ANUAL", "Anual", 365
     if value in {"SUPER ADMIN", "SUPERADMIN", "MASTER", "OWNER", "VITALICIA", "VITALÍCIA"}:
-        return "SUPERADMIN", "Super Admin", 36500
+        return "SUPERADMIN", "Super Admin", 365
     raise ValueError("Plano invalido. Use: DEMO, Mensal, Anual ou Super Admin.")
 
 

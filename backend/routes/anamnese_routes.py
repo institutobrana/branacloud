@@ -435,7 +435,7 @@ def listar_respostas_paciente(
             .scalar()
         )
     if not qid:
-        return {"questionario_id": None, "questionario_nome": "", "itens": []}
+        return {"questionario_id": None, "questionario_nome": "", "has_persisted_questionnaire": False, "itens": []}
 
     questionario = _questionario_or_404(db, current_user.clinica_id, int(qid))
     perguntas = (
@@ -456,6 +456,7 @@ def listar_respostas_paciente(
         )
         .all()
     )
+    has_persisted_questionnaire = bool(respostas)
     respostas_map = {int(r.pergunta_id): str(r.resposta or "") for r in respostas}
     itens = [
         {
@@ -472,6 +473,7 @@ def listar_respostas_paciente(
     return {
         "questionario_id": int(questionario.id),
         "questionario_nome": str(questionario.nome or "").strip(),
+        "has_persisted_questionnaire": has_persisted_questionnaire,
         "itens": itens,
     }
 

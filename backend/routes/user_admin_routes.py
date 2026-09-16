@@ -39,6 +39,9 @@ from security.permissions import (
     parse_permissions_json,
     sanitize_easy_permissions,
     sanitize_permissions,
+    sanitize_function_permissions,
+    merge_function_permissions,
+    get_module_function_schema,
 )
 from security.system_accounts import SYSTEM_USER_CODIGO, is_system_prestador, is_system_user
 from services.access_profiles_service import ensure_access_profiles
@@ -113,6 +116,7 @@ class AdminChangePasswordRequest(BaseModel):
 
 class AdminUpdatePermissionsRequest(BaseModel):
     permissoes: dict[str, str] | None = None
+    functions: dict[str, dict[str, str]] | None = None
     easy_modules: dict[str, str] | None = None
     easy_funcoes: dict[str, str] | None = None
     easy_mode: bool | None = None
@@ -469,6 +473,7 @@ def _permission_schema_payload() -> dict:
         "levels": list(PERMISSION_LEVELS),
         "profiles": get_access_profile_templates(),
         "functions_by_module": get_module_function_hints(),
+        "function_schema_by_module": get_module_function_schema(),
     }
     easy_schema = get_easy_permission_schema()
     if easy_schema:
@@ -643,6 +648,8 @@ def admin_update_user(
         tipo_usuario=tipo_usuario_normalizado,
         is_admin=bool(payload.is_admin),
     )
+    raw_functions = raw_permissions.get("functions") if isinstance(raw_permissions.get("functions"), dict) else {}
+    functions = sanitize_function_permissions(raw_functions)
     usuario.permissoes_json = dump_permissions_json(
         merge_permissions_payload(raw_permissions, internal_permissions)
     )
@@ -668,6 +675,10 @@ def admin_get_user_permissions(
         tipo_usuario=usuario.tipo_usuario,
         is_admin=bool(usuario.is_admin),
     )
+    try:
+        functions = sanitize_function_permissions(raw_permissions.get("functions"))
+    except ValueError:
+        functions = {}
     easy_modules, easy_funcoes = extract_easy_permissions(raw_permissions, internal_permissions)
     return {
         "user_id": usuario.id,
@@ -676,6 +687,7 @@ def admin_get_user_permissions(
         "tipo_usuario": usuario.tipo_usuario,
         "is_system_user": is_system_user(usuario),
         "permissoes": internal_permissions,
+        "functions": functions,
         "easy_modules": easy_modules,
         "easy_funcoes": easy_funcoes,
         **_permission_schema_payload(),
@@ -700,18 +712,30 @@ def admin_update_user_permissions(
         permissoes = compute_internal_permissions_from_easy(easy_modules)
     else:
         permissoes = sanitize_permissions(
-            payload.permissoes or {},
+            raw_permissions if payload.permissoes is None else payload.permissoes,
             tipo_usuario=usuario.tipo_usuario,
             is_admin=bool(usuario.is_admin),
         )
+    if payload.functions is not None:
+        try:
+            functions = sanitize_function_permissions(payload.functions)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+    else:
+        functions = sanitize_function_permissions(raw_permissions.get("functions"))
+    merged_functions = merge_function_permissions(raw_permissions, functions)
+    stored = merge_permissions_payload(raw_permissions, permissoes, easy_modules=easy_modules, easy_funcoes=easy_funcoes)
+    if payload.functions is not None:
+        stored["functions"] = merged_functions
     usuario.permissoes_json = dump_permissions_json(
-        merge_permissions_payload(raw_permissions, permissoes, easy_modules=easy_modules, easy_funcoes=easy_funcoes)
+        stored
     )
     db.commit()
     return {
         "detail": "Permissões atualizadas com sucesso.",
         "user_id": usuario.id,
         "permissoes": permissoes,
+        "functions": merged_functions,
     }
 
 

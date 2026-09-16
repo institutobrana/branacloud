@@ -108,6 +108,19 @@ MODULE_FUNCTION_HINTS = {
     ],
 }
 
+# Códigos modernos estáveis. Não são IDs do Easy e não são derivados em runtime.
+MODULE_FUNCTION_CODES = {
+    "usuarios": ["inserir_usuario", "alterar_usuario", "eliminar_usuario", "alterar_senha", "configurar_permissoes"],
+    "prestadores": ["inserir_prestador", "alterar_prestador", "eliminar_prestador", "configurar_credenciamento", "configurar_comissao"],
+    "agenda": ["inserir_agendamento", "alterar_agendamento", "eliminar_agendamento", "agenda_contatos", "quadro_avisos", "controle_retornos"],
+    "financeiro": ["inserir_lancamento", "alterar_lancamento", "eliminar_lancamento", "baixa_lancamento", "emitir_recibo", "contas_receber", "comissoes_internas"],
+    "materiais": ["inserir_item", "alterar_item", "eliminar_item", "inserir_movimentacao", "alterar_movimentacao", "eliminar_movimentacao"],
+    "procedimentos": ["inserir_intervencoes", "alterar_intervencoes", "eliminar_intervencoes", "criacao_tratamento", "alteracao_tratamento", "orcamento", "especialidades"],
+    "anamnese": ["alterar_resposta", "inserir_medicamento", "alterar_medicamento", "eliminar_medicamento", "restricoes_terapeuticas", "questionarios_anamnese"],
+    "relatorios": ["pesquisa_pacientes", "pesquisa_contatos", "tratamentos", "financeiros", "estatisticos", "agendas", "estoques", "proteticos", "fichas_em_branco", "mala_direta"],
+    "configuracao": ["preferencias", "tabelas_auxiliares", "convenios_planos", "unidades_atendimento", "chat_interno"],
+}
+
 ROOT_DIR = Path(__file__).resolve().parents[3]
 EASY_MODULES_CSV = ROOT_DIR / "sis_modulo_sql.csv"
 EASY_FUNCOES_CSV = ROOT_DIR / "sis_funcao_sql.csv"
@@ -327,6 +340,12 @@ def merge_permissions_payload(
 ) -> dict[str, dict]:
     raw = existing_raw if isinstance(existing_raw, dict) else {}
     payload: dict[str, dict] = {"modules": dict(internal_permissions)}
+    if isinstance(raw.get("functions"), dict):
+        payload["functions"] = {
+            str(module): dict(values)
+            for module, values in raw["functions"].items()
+            if isinstance(values, dict)
+        }
     if easy_modules is not None or "easy_modules" in raw:
         payload["easy_modules"] = dict(easy_modules or raw.get("easy_modules") or {})
     if easy_funcoes is not None or "easy_funcoes" in raw:
@@ -473,3 +492,48 @@ def get_access_profile_templates() -> list[dict]:
 
 def get_module_function_hints() -> dict:
     return {codigo: list(funcoes) for codigo, funcoes in MODULE_FUNCTION_HINTS.items()}
+
+
+def get_module_function_schema() -> dict[str, list[dict[str, str]]]:
+    return {
+        module: [
+            {"codigo": code, "nome": label}
+            for code, label in zip(MODULE_FUNCTION_CODES[module], MODULE_FUNCTION_HINTS[module])
+        ]
+        for module in MODULE_FUNCTION_HINTS
+    }
+
+
+def sanitize_function_permissions(value: dict | None) -> dict[str, dict[str, str]]:
+    incoming = value if isinstance(value, dict) else {}
+    schema = get_module_function_schema()
+    sanitized: dict[str, dict[str, str]] = {}
+    unknown_modules = set(incoming) - set(schema)
+    if unknown_modules:
+        raise ValueError(f"Módulo de função desconhecido: {sorted(unknown_modules)[0]}")
+    for module, functions in incoming.items():
+        if not isinstance(functions, dict):
+            raise ValueError(f"Funções inválidas para o módulo '{module}'.")
+        allowed = {item["codigo"] for item in schema[module]}
+        unknown_functions = set(functions) - allowed
+        if unknown_functions:
+            raise ValueError(f"Função desconhecida: {module}.{sorted(unknown_functions)[0]}")
+        sanitized[module] = {}
+        for function, level in functions.items():
+            normalized = str(level or "").strip().lower()
+            if normalized not in PERMISSION_LEVELS:
+                raise ValueError(f"Nível inválido para função '{module}.{function}'.")
+            sanitized[module][function] = normalized
+    return sanitized
+
+
+def merge_function_permissions(existing_raw: dict | None, functions: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
+    current = existing_raw if isinstance(existing_raw, dict) else {}
+    merged = {
+        module: dict(values)
+        for module, values in (current.get("functions") or {}).items()
+        if isinstance(values, dict)
+    }
+    for module, values in functions.items():
+        merged.setdefault(module, {}).update(values)
+    return merged

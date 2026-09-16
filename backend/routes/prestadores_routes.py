@@ -10,14 +10,16 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento
 from models.convenio_odonto import ConvenioOdonto
+from models.agenda_legado import AgendaLegadoBloqueio, AgendaLegadoEvento
 from models.financeiro import ItemAuxiliar
+from models.financeiro import Lancamento
 from models.prestador_odonto import (
     PrestadorComissaoOdonto,
     PrestadorCredenciamentoOdonto,
     PrestadorOdonto,
 )
+from models.odontograma_model import OdontogramaIntervencao
 from models.procedimento_generico import ProcedimentoGenerico
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
@@ -1029,6 +1031,12 @@ def _contar_vinculos_prestador(db: Session, clinica_id: int, prestador_id: int, 
 
     checks: list[tuple[str, Any]] = [
         (
+            "lançamentos financeiros",
+            db.query(Lancamento.id).filter(
+                Lancamento.prestador_id == int(prestador_id),
+            ),
+        ),
+        (
             "credenciamentos",
             db.query(PrestadorCredenciamentoOdonto.id).filter(
                 PrestadorCredenciamentoOdonto.clinica_id == int(clinica_id),
@@ -1069,6 +1077,13 @@ def _contar_vinculos_prestador(db: Session, clinica_id: int, prestador_id: int, 
                 PrestadorOdonto.clinica_id == int(clinica_id),
                 PrestadorOdonto.id == int(prestador_id),
                 PrestadorOdonto.usuario_id.isnot(None),
+            ),
+        ),
+        (
+            "odontograma",
+            db.query(OdontogramaIntervencao.id).filter(
+                OdontogramaIntervencao.clinica_id == int(clinica_id),
+                OdontogramaIntervencao.prestador_id == int(prestador_id),
             ),
         ),
         (

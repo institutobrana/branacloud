@@ -31,4 +31,3 @@ def ensure_allowed_profile() -> None:
     policy = resolve_runtime_policy()
     if policy.profile not in {"local", "dev", "development", "schema", "homologation"}:
         raise SystemExit(f"Perfil nao permitido: {policy.profile}")
-

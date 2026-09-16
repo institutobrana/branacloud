@@ -27,6 +27,7 @@ class TrialMiddleware(BaseHTTPMiddleware):
             "/login",
             "/auth/google/login",
             "/auth/google/callback",
+            "/auth/google/calendar/callback",
             "/signup/request-code",
             "/signup/confirm",
             "/password/forgot",
