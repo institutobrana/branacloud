@@ -1,0 +1,57 @@
+.agenda-search-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agenda-search-modal > label {
+  display: block;
+  margin: 0;
+  color: var(--ant-color-text, #163328);
+  font-weight: 500;
+}
+
+.agenda-search-modal__query {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agenda-search-modal__query .ant-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.agenda-search-modal__filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+  padding: 0 2px 2px;
+}
+
+.agenda-search-modal__filters .ant-checkbox-wrapper {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.agenda-search-modal .ant-table-wrapper {
+  width: 100%;
+  min-height: 0;
+}
+
+.agenda-search-modal__patient-header {
+  white-space: nowrap;
+}
+
+.agenda-search-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+@media (max-width: 640px) {
+  .agenda-search-modal__filters {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,506 @@
+.agenda-spike-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  gap: 4px;
+}
+
+.agenda-unified-shell {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d7d0c4;
+  border-radius: 14px;
+  background: #f5f0e6;
+  overflow: hidden;
+}
+
+.agenda-clinica-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid #c9d2dc;
+  background: #fff;
+}
+.agenda-clinica-column { min-width: 180px; border-right: 1px solid #c9d2dc; }
+.agenda-clinica-column__header { position: sticky; top: 0; z-index: 2; padding: 6px; background: #eef3f7; border-bottom: 1px solid #c9d2dc; font-size: 12px; font-weight: 700; text-align: center; }
+.agenda-clinica-column__body { display: grid; grid-template-columns: 52px minmax(0, 1fr); position: relative; }
+.agenda-clinica-column__times, .agenda-clinica-column__events { position: relative; }
+.agenda-clinica-time, .agenda-clinica-slot { height: 22px; box-sizing: border-box; border-bottom: 1px solid #edf1f6; }
+.agenda-clinica-time { padding: 3px 4px; color: #4d5b6d; font-size: 11px; }
+.agenda-clinica-slot { background: #fff; }
+.agenda-clinica-event { position: absolute; left: 2px; right: 2px; min-height: 22px; overflow: hidden; padding: 3px 4px; box-sizing: border-box; background: #dcecff; border: 1px solid #8db3db; color: #18324d; font-size: 11px; line-height: 1.2; }
+.agenda-clinica-empty { padding: 20px; color: var(--brana-text-secondary); }
+
+.agenda-view-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  min-height: 36px;
+  flex: 0 0 36px;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.agenda-view-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 12px 12px 0 0;
+  margin: 0 2px 0 0;
+  background: var(--brana-surface-panel);
+  color: var(--brana-text-primary);
+  font: 14px/22px Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 22px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  box-shadow: inset 0 -1px 0 rgba(148, 163, 184, 0.18);
+  cursor: default;
+}
+
+.agenda-view-tab--active {
+  background: var(--brana-surface-modal);
+  border-color: var(--brana-border-subtle);
+  border-bottom-color: var(--brana-surface-modal);
+  box-shadow: inset 0 -2px 0 var(--brana-teal);
+}
+
+.agenda-view-tab:not(.agenda-view-tab--active) {
+  border-color: var(--brana-border-subtle);
+}
+
+.agenda-scheduler-content {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+}
+
+.agenda-scheduler-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.agenda-dia-heading {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 4px 8px;
+  color: var(--brana-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.agenda-dia-calendar {
+  flex: 0 0 220px;
+  align-self: flex-start;
+  padding: 8px;
+  border: 1px solid var(--brana-border-subtle);
+  background: var(--brana-surface-panel);
+}
+
+.agenda-dia-calendar__title {
+  margin-bottom: 8px;
+  color: var(--brana-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.agenda-dia-calendar__weekdays,
+.agenda-dia-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.agenda-dia-calendar__weekdays {
+  margin-bottom: 2px;
+  color: var(--brana-text-secondary);
+  font-size: 10px;
+  text-align: center;
+}
+
+.agenda-dia-calendar__day {
+  min-height: 25px;
+  padding: 2px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--brana-text-primary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.agenda-dia-calendar__day.is-other-month {
+  color: var(--brana-text-secondary);
+  opacity: 0.55;
+}
+
+.agenda-dia-calendar__day.is-selected {
+  border-color: var(--brana-teal);
+  background: var(--brana-teal);
+  color: #fff;
+}
+
+.agenda-spike-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  min-height: 30px;
+  height: 30px;
+}
+
+.agenda-temporal-navigation,
+.agenda-functional-commands,
+.agenda-toolbar-filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+
+.agenda-temporal-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.agenda-toolbar-icon-button,
+.agenda-temporal-label {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 20px;
+  padding: 0 3px;
+  white-space: nowrap;
+}
+
+.agenda-toolbar-icon-button {
+  width: 18px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 19px;
+}
+
+.agenda-toolbar-icon-button:hover,
+.agenda-temporal-label:hover { background: rgba(255,255,255,.12); border-radius: 3px; }
+
+.agenda-temporal-label { font-size: 12px; font-weight: 600; cursor: pointer; }
+
+.agenda-functional-commands .auxiliary-shell-button {
+  min-height: 24px;
+  padding: 2px 3px;
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.agenda-functional-commands .agenda-functional-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  padding: 2px;
+  font-size: 16px;
+}
+
+.agenda-toolbar-filters { gap: 2px; }
+
+.agenda-toolbar-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.35);
+  margin: 0 4px;
+}
+
+.agenda-toolbar-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.agenda-toolbar-filter select {
+  min-width: 70px;
+  max-width: 110px;
+  height: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 6px;
+  padding: 1px 5px;
+  background: #fff;
+  color: #1f2937;
+}
+
+.agenda-toolbar-error { color: #ffe4e4; font-size: 12px; }
+
+/* O workspace global é auto-height para páginas comuns; o spike precisa
+   ocupar a área restante abaixo da banda para que o Scheduler possa calcular
+   linhas, eventos e scroll temporal. */
+.brana-workspace-content:has(.agenda-spike-shell) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.agenda-spike-shell {
+  width: 100%;
+}
+
+.agenda-spike-status {
+  min-height: 20px;
+  color: var(--brana-text-muted);
+  font-size: 12px;
+}
+
+.agenda-spike-shell .fc {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+/* A grade usa o motor do FullCalendar, mas mantém a leitura espacial compacta
+   da Agenda legada: horário estreito, dias delimitados e linhas leves por slot. */
+.agenda-spike-shell .fc-timegrid {
+  border: 1px solid #c9d2dc;
+  background: #fff;
+}
+
+.agenda-spike-shell .fc-col-header-cell {
+  background: #eef3f7;
+  border-color: #c9d2dc;
+  padding: 5px 3px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.agenda-spike-shell [role='columnheader'][data-date] {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.agenda-spike-shell [role='columnheader'][data-date] > div {
+  width: 100%;
+  text-align: center;
+}
+
+.agenda-spike-shell [role='columnheader'][aria-current='date'] {
+  background: #eef4fc;
+  color: #0f3f7f;
+  font-weight: 900;
+}
+
+.agenda-spike-shell .fc-timegrid-axis {
+  width: 58px;
+  min-width: 58px;
+  background: #f7f9fb;
+}
+
+.agenda-spike-shell .fc-timegrid-slot-label {
+  color: #44515f;
+  font-size: 11px;
+  padding: 0 5px 0 2px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.agenda-spike-shell .fc-timegrid-slot,
+.agenda-spike-shell .fc-timegrid-col {
+  border-color: #dbe2e9;
+}
+
+.agenda-spike-shell .fc-timegrid-slot-minor {
+  border-top-style: solid;
+  border-top-color: #edf1f5;
+}
+
+.agenda-spike-shell .fc-timegrid-col-frame {
+  background: #fff;
+}
+
+.agenda-spike-shell .fc-scroller {
+  scrollbar-width: thin;
+}
+
+.agenda-spike-event-content {
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  min-width: 0;
+  min-height: 0;
+  gap: 0;
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 3px;
+  line-height: .9;
+  font-family: Tahoma, sans-serif;
+  white-space: nowrap;
+}
+
+.agenda-event-content-line {
+  display: block;
+  min-width: 0;
+  font-family: Tahoma, sans-serif;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.agenda-event-content-line--primary { font-weight: 700; }
+.agenda-event-content-line--name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: .9; font-weight: 600; }
+.agenda-event-content-line--secondary { font-size: .92em; opacity: .9; }
+.agenda-event-content-day-cols { display: grid; grid-template-columns: minmax(0, 56%) minmax(0, 20%) minmax(0, 24%); gap: 6px; min-width: 0; }
+.agenda-event-content-day-cols .agenda-event-content-line { font-weight: 400; }
+.agenda-event-content-day-cols .agenda-event-content-line--patient { font-weight: 700; }
+
+.agenda-spike-shell .fc-event,
+.agenda-spike-shell .fc-event-main,
+.agenda-spike-shell .fc-event-main-frame {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.agenda-spike-shell .fc-timegrid-event {
+  margin: 1px 2px;
+  border-width: 1px;
+}
+
+/* FullCalendar 7 usa classes internas compactadas. Estes seletores usam a
+   estrutura pública da grade (roles e data attributes), mantendo a intenção
+   do legado: eixo estreito, seis colunas iguais e linhas por intervalo. */
+.agenda-spike-shell [role="grid"] {
+  border: 1px solid #cfd8e3;
+  background: #fff;
+}
+
+.agenda-spike-shell [role="columnheader"] {
+  min-width: 0;
+  height: 30px;
+  box-sizing: border-box;
+  padding: 5px 3px;
+  border-left: 1px solid #cfd8e3;
+  border-bottom: 1px solid #cfd8e3;
+  background: #f2f6fb;
+  color: #344454;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.agenda-spike-shell [role="grid"] > [role="rowgroup"]:first-child [role="row"] > div:first-child {
+  width: 59px !important;
+  min-width: 59px;
+  box-sizing: border-box;
+  border-right: 1px solid #cfd8e3;
+  background: #f8fafc;
+}
+
+.agenda-spike-shell [role="rowheader"] {
+  width: 58px !important;
+  min-width: 58px;
+  box-sizing: border-box;
+  border-right: 1px solid #cfd8e3;
+  background: #f8fafc;
+}
+
+.agenda-spike-shell [role="rowheader"] + div,
+.agenda-spike-shell [role="gridcell"][data-date] {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.agenda-spike-shell [role="gridcell"][data-date] {
+  border-left: 1px solid #dbe2e9;
+  background-color: #fff;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #edf1f6 0,
+    #edf1f6 1px,
+    transparent 1px,
+    transparent calc(var(--agenda-visible-slot-height, 42px) - 1px),
+    transparent var(--agenda-visible-slot-height, 42px)
+  );
+}
+
+.agenda-spike-shell [role="rowgroup"] div:has(> div > [data-time] > .fc-Qo) {
+  border-bottom: 1px solid #edf1f6;
+}
+
+.agenda-spike-shell [role="gridcell"][data-date]:last-of-type {
+  border-right: 1px solid #dbe2e9;
+}
+
+.agenda-spike-shell [data-time] {
+  color: #44515f;
+  font-size: 11px;
+  line-height: 19px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.agenda-spike-shell [role="gridcell"][data-date] > div > div:has(.agenda-spike-event-content) {
+  left: 2px !important;
+  right: 2px !important;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, .38);
+  border-radius: 1px;
+  box-sizing: border-box;
+}
+
+.agenda-spike-event-content strong,
+.agenda-spike-event-content small {
+  opacity: 0.85;
+}
+
+.agenda-spike-event-content strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.agenda-spike-event-content small {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 10px;
+}
+
+.agenda-event-short {
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  align-items: start;
+}
+
+.agenda-event-short strong {
+  font-size: 10px;
+}

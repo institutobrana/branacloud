@@ -1,0 +1,22 @@
+.google-agenda-publish-modal .ant-modal-content{border-radius:10px;overflow:hidden}
+.google-agenda-publish-modal .ant-modal-header{text-align:center;padding:16px 24px 12px}
+.google-agenda-publish-modal .ant-modal-title{font-size:20px;font-weight:600}
+.google-agenda-publish-modal .ant-modal-body{padding:0 24px 18px}
+.google-agenda-publish-modal__content{display:flex;flex-direction:column;gap:14px}
+.google-agenda-publish-modal__top-row{display:grid;grid-template-columns:minmax(170px,1fr) minmax(250px,1.35fr) auto;align-items:end;gap:18px;padding:4px 0 12px;border-bottom:1px solid var(--ant-color-border,#d9d9d9)}
+.google-agenda-publish-modal__account,.google-agenda-publish-modal__period{display:flex;flex-direction:column;gap:5px;min-width:0}
+.google-agenda-publish-modal__readonly{height:24px;border:1px solid var(--ant-color-border,#d9d9d9);padding:2px 8px;background:var(--ant-color-fill-quaternary,#f5f5f5);color:var(--ant-color-text,#1f2937);border-radius:6px}
+.google-agenda-publish-modal__date-fields{display:flex;align-items:center;gap:6px}
+.google-agenda-publish-modal__date-fields input{height:24px;min-width:130px;border:1px solid var(--ant-color-border,#d9d9d9);padding:2px 6px;border-radius:6px}
+.google-agenda-publish-modal__label{font-weight:600}
+.google-agenda-publish-modal__value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.google-agenda-publish-modal__status-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.google-agenda-publish-modal__table-section{border:1px solid var(--ant-color-border,#d9d9d9);padding:0}
+.google-agenda-publish-modal__table .ant-table{font-size:12px}
+.google-agenda-publish-modal__table .ant-table-thead>tr>th,.google-agenda-publish-modal__table .ant-table-tbody>tr>td{padding:4px 8px;line-height:18px}
+.google-agenda-publish-modal__table .ant-table-thead>tr>th:nth-child(1),.google-agenda-publish-modal__table .ant-table-tbody>tr>td:nth-child(1){width:96px}
+.google-agenda-publish-modal__table .ant-table-thead>tr>th:nth-child(2),.google-agenda-publish-modal__table .ant-table-tbody>tr>td:nth-child(2){width:62px}
+.google-agenda-publish-modal__table .ant-table-body{scrollbar-gutter:stable}
+.google-agenda-publish-modal__footer{display:flex;justify-content:flex-end;gap:8px;padding-top:2px}
+.google-agenda-publish-modal__loading{display:flex;justify-content:center;padding:48px}
+@media (max-width:600px){.google-agenda-publish-modal{max-width:calc(100vw - 24px)}.google-agenda-publish-modal .ant-modal-body{padding:0 14px 14px}.google-agenda-publish-modal__top-row{grid-template-columns:1fr;gap:10px}.google-agenda-publish-modal__top-row>.ant-btn{justify-self:end}.google-agenda-publish-modal__table-section{padding-left:6px;padding-right:6px}}

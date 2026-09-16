@@ -22,7 +22,7 @@ function TimeField({ label, value, onChange, onCommit, invalid }) {
   );
 }
 
-function NumberField({ label, value, min, step, onChange, unit = '', className = '' }) {
+function NumberField({ label, value, min, max, step, onChange, unit = '', className = '' }) {
   return (
     <label className={`agenda-configuracao-inline-field agenda-configuracao-inline-field--number ${className}`.trim()}>
       <span className="agenda-configuracao-inline-label">{label}</span>
@@ -30,6 +30,7 @@ function NumberField({ label, value, min, step, onChange, unit = '', className =
         <InputNumber
           value={value}
           min={min}
+          max={max}
           step={step}
           controls
           className="agenda-configuracao-number-input"
@@ -65,8 +66,8 @@ export function AgendaEscalaTab({ draft = AGENDA_ESCALA_DEFAULTS, updateDraft })
     updateDraft?.({ [field]: normalized === '' ? '' : normalized });
   };
 
-  const setNumber = (field, value, min) => {
-    const next = Number.isFinite(value) ? Math.max(min, Math.trunc(value)) : min;
+  const setNumber = (field, value, min, max = Number.POSITIVE_INFINITY) => {
+    const next = Number.isFinite(value) ? Math.min(max, Math.max(min, Math.trunc(value))) : min;
     updateDraft?.({ [field]: next });
   };
 
@@ -102,8 +103,9 @@ export function AgendaEscalaTab({ draft = AGENDA_ESCALA_DEFAULTS, updateDraft })
               label=" "
               value={escala.duracao}
               min={5}
-              step={5}
-              onChange={(value) => setNumber('duracao', value, 5)}
+              max={60}
+              step={1}
+              onChange={(value) => setNumber('duracao', value, 5, 60)}
               unit="minutos"
               className="agenda-configuracao-number-field--compact"
             />
