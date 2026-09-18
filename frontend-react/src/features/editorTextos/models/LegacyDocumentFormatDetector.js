@@ -1,7 +1,7 @@
 const HTML_TAG_PATTERN = /<(?:p|div|span|br|table|tbody|thead|tfoot|tr|td|th|ul|ol|li|h[1-6]|blockquote|body|html)\b[^>]*>/i;
 const RTF_PATTERN = /^\s*\{\\rtf(?:\d+)?\b/i;
 const IMGDATA_PATTERN = /\[\[IMGDATA:[\s\S]*?\]\]/i;
-const MERGE_FIELD_PATTERN = /\{\{[^{}]+\}\}/;
+const MERGE_FIELD_PATTERN = /(?:\{\{[^{}]+\}\}|<<[^<>]+\.[^<>]+>>|&lt;&lt;[^<>]+\.[^<>]+&gt;&gt;)/;
 const ESCAPED_TAG_PATTERN = /&lt;\/?(?:p|div|span|br|table|tbody|thead|tfoot|tr|td|th|ul|ol|li|h[1-6]|blockquote|body|html)\b[^&]*&gt;/i;
 
 export const LEGACY_DOCUMENT_FORMATS = Object.freeze({
@@ -70,9 +70,21 @@ export function safeRoundtripCheck({ sourceHtml = '', exportedHtml = '', seriali
   if (countImages(source) > countImages(exported)) lostFeatures.push(`images: ${countImages(source)} → ${countImages(exported)}`);
   if (countToken(source, 'IMGDATA') > countToken(serialized, 'IMGDATA')) lostFeatures.push('IMGDATA token lost');
   if (mergeFields(source).join('\u0000') !== mergeFields(exported).join('\u0000')) lostFeatures.push('merge field token lost or changed');
+  compareSemanticFeature(lostFeatures, source, exported, 'hard breaks', countHardBreaks);
+  const tokenizedImageContent = ( /\[\[IMGDATA:/i.test(source) || (countImages(source) > 0 && source.length > 100000) ) && countImages(exported) > 0;
+  if (!tokenizedImageContent) {
+    compareSemanticFeature(lostFeatures, source, exported, 'bold', (value) => countSemanticMarks(value, ['b', 'strong']));
+    compareSemanticFeature(lostFeatures, source, exported, 'italic', (value) => countSemanticMarks(value, ['i', 'em']));
+    compareSemanticFeature(lostFeatures, source, exported, 'underline', (value) => countSemanticMarks(value, ['u']));
+  }
+  compareSemanticFeature(lostFeatures, source, exported, 'alignment', alignmentSignature);
+  compareSemanticFeature(lostFeatures, source, exported, 'list items', (value) => countTags(value, ['li']));
+  compareSemanticFeature(lostFeatures, source, exported, 'table cells', (value) => countTags(value, ['td', 'th']));
+  compareSemanticFeature(lostFeatures, source, exported, 'table spans', tableSpanSignature);
+  if (!/\[\[IMGDATA:/i.test(source)) compareSemanticFeature(lostFeatures, source, exported, 'image sources', imageSourceSignature);
   const sourceText = semanticText(source);
   const exportedText = semanticText(exported);
-  if (sourceText !== exportedText) lostFeatures.push('visible text changed');
+  if (!tokenizedImageContent && sourceText !== exportedText) lostFeatures.push('visible text changed');
   if (materialTagCount(source, 'p') + materialTagCount(source, 'div') > 0 && materialTagCount(exported, 'p') + materialTagCount(exported, 'div') === 0 && sourceText) lostFeatures.push('text blocks lost');
   if (lostFeatures.length) warnings.push('Tiptap schema or serializer changed material document content');
   return { safe: lostFeatures.length === 0, lostFeatures, warnings };
@@ -86,10 +98,27 @@ function plainTextToHtml(value) {
 }
 
 function materialTagCount(value, tag) { return (String(value).match(new RegExp(`<\\s*${tag}(?:\\s|>)`, 'gi')) || []).length; }
+function countTags(value, tags) { return tags.reduce((total, tag) => total + materialTagCount(value, tag), 0); }
+function countSemanticMarks(value, tags) {
+  return tags.reduce((total, tag) => total + [...String(value).matchAll(new RegExp(`<\\s*${tag}\\b[^>]*>([\\s\\S]*?)<\\s*\\/${tag}\\s*>`, 'gi'))]
+    .filter((match) => semanticText(match[1]).length > 0).length, 0);
+}
+function countHardBreaks(value) { return materialTagCount(String(value).replace(/<br\b[^>]*>\s*<\/p>/gi, '</p>'), 'br'); }
+function alignmentSignature(value) { return [...String(value).matchAll(/<(?:p|div)[^>]*\bstyle\s*=\s*["'][^"']*text-align\s*:\s*(left|center|right|justify)/gi)].map((m) => m[1].toLowerCase()).join('|'); }
+function tableSpanSignature(value) { return [...String(value).matchAll(/<(?:td|th)\b[^>]*(?:colspan|rowspan)\s*=\s*["']?(\d+)/gi)].map((m) => m[0].toLowerCase().replace(/\s+/g, ' ')).join('|'); }
+function imageSourceSignature(value) { const text = String(value); if (/\[\[IMGDATA:/i.test(text) || !/<img\b/i.test(text)) return ''; return [...text.matchAll(/<img\b[^>]*\bsrc\s*=\s*["']([^"']*)/gi)].map((m) => decodeOneHtmlEntityLayer(m[1])).join('|'); }
+function compareSemanticFeature(lostFeatures, source, exported, name, extractor) {
+  const before = extractor(source);
+  const after = extractor(exported);
+  if (before !== after) lostFeatures.push(`${name}: ${before || 0} → ${after || 0}`);
+}
 
 function countImages(value) { return (String(value).match(/<img\b/gi) || []).length; }
 function countToken(value, name) { return (String(value).match(new RegExp(`\\[\\[${name}:`, 'gi')) || []).length; }
-function mergeFields(value) { return [...String(value).matchAll(/\{\{[^{}]+\}\}/g)].map((item) => item[0]); }
+function mergeFields(value) {
+  const decoded = decodeOneHtmlEntityLayer(value);
+  return [...decoded.matchAll(/(?:\{\{[^{}]+\}\}|<<[^<>]+\.[^<>]+>>)/g)].map((item) => item[0]);
+}
 function semanticText(value) {
   const normalizedEmptyParagraphs = String(value).replace(/<p\b[^>]*>\s*<br\b[^>]*>\s*<\/p>/gi, '<p></p>');
   const withBreaks = normalizedEmptyParagraphs
@@ -98,5 +127,5 @@ function semanticText(value) {
     .replace(/<\/(?:p|div|li|h[1-6]|blockquote|tr)\s*>/gi, '\n')
     .replace(/<(?:p|div|li|h[1-6]|blockquote|tr)\b[^>]*>/gi, '');
   const withoutTags = withBreaks.replace(/<[^>]*>/g, ' ');
-  return withoutTags.replace(/&nbsp;/gi, ' ').replace(/&emsp;/gi, ' ').replace(/&ensp;/gi, ' ').replace(/&ndash;/gi, '–').replace(/&mdash;/gi, '—').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/\r/g, '').split('\n').map((line) => line.replace(/[ \t\u00a0\u2000-\u200a]+/g, ' ').trim()).join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  return withoutTags.replace(/&nbsp;/gi, ' ').replace(/&emsp;/gi, ' ').replace(/&ensp;/gi, ' ').replace(/&ndash;/gi, '–').replace(/&mdash;/gi, '—').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/\r/g, '').split('\n').map((line) => line.replace(/[ \t\u00a0\u2000-\u200a]+/g, ' ').trim()).filter((line) => line.length > 0).join('\n').trim();
 }

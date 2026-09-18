@@ -2,6 +2,7 @@ import { useEditor } from '@tiptap/react';
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
+import HardBreak from '@tiptap/extension-hard-break';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
 import Underline from '@tiptap/extension-underline';
@@ -40,6 +41,7 @@ const extensions = [
   Document,
   Paragraph,
   Text,
+  HardBreak,
   Bold,
   Italic,
   Underline,
@@ -69,12 +71,13 @@ const extensions = [
 ];
 
 export function EditorTextosPage() {
+  const manualLegacyTestMode = new URLSearchParams(window.location.search).get('legacy_test') === '1';
   const [errorMessage, setErrorMessage] = useState('');
   const editor = useEditor({ extensions, content: '<p></p>', immediatelyRender: false });
   const engineAdapter = useMemo(() => createEditorEngineAdapter(editor), [editor]);
   const selectionAdapter = useMemo(() => createEditorSelectionAdapter(editor), [editor]);
   const clipboardAdapter = useMemo(() => createEditorClipboardAdapter(editor), [editor]);
-  const lifecycle = useEditorDocumentLifecycle({ engineAdapter, onError: (error) => setErrorMessage(error.message) });
+  const lifecycle = useEditorDocumentLifecycle({ engineAdapter, manualLegacyTestMode, onError: (error) => setErrorMessage(error.message) });
   const { documentState, setDocumentState } = lifecycle;
   const [pageSetupVisible, setPageSetupVisible] = useState(false);
   const [tableDialogVisible, setTableDialogVisible] = useState(false);
@@ -84,6 +87,16 @@ export function EditorTextosPage() {
   useEffect(() => {
     editor?.setEditable(documentState.importSafety?.editable !== false);
   }, [editor, documentState.importSafety?.editable]);
+
+  useEffect(() => {
+    const effectiveEditable = documentState.importSafety?.editable !== false || (manualLegacyTestMode && documentState.importSafety?.manualLegacyTestAllowed === true);
+    editor?.setEditable(effectiveEditable);
+  }, [editor, documentState.importSafety?.editable, documentState.importSafety?.manualLegacyTestAllowed, manualLegacyTestMode]);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('brana-editor-textos-document-safety', { detail: { ...documentState.importSafety, manualLegacyTestMode } }));
+  }, [documentState.importSafety, manualLegacyTestMode]);
+
 
   const insertImage = ({ src, width, height, fitPage }) => {
     if (!editor) return;
@@ -181,8 +194,9 @@ export function EditorTextosPage() {
 
   return (
     <section className="editor-textos-page-root" aria-label="Editor de Textos">
-      <EditorTextosFormatToolbar />
-      {!documentState.importSafety?.editable && <div role="alert" className="editor-textos-protected-warning">Este documento usa um formato legado que ainda não pode ser editado com segurança no novo Editor de Textos.</div>}
+      <EditorTextosFormatToolbar editor={editor} />
+      {manualLegacyTestMode && documentState.importSafety?.manualLegacyTestAllowed && <div role="status" className="editor-textos-manual-legacy-warning">Modo de homologação de documento legado. Alterações não serão salvas.</div>}
+      {!documentState.importSafety?.editable && !manualLegacyTestMode && <div role="alert" className="editor-textos-protected-warning">Este documento usa um formato legado que ainda não pode ser editado com segurança no novo Editor de Textos.</div>}
       <EditorTextosWorkspace editor={editor} pageConfig={documentState.pageConfig} />
       <EditorTextosTableInsertDialog open={tableDialogVisible} onCancel={() => setTableDialogVisible(false)} onInsert={handleTableInsert} />
       <input ref={imageInput} type="file" accept="image/bmp,image/jpeg,image/png,image/gif,image/webp" hidden onChange={handleNativeImagePick} />

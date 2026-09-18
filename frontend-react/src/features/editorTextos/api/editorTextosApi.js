@@ -17,6 +17,21 @@ async function requestJson(path, options = {}) {
 }
 
 export const editorTextosApi = {
+  listMergeFields() { return requestJson('/editor-textos/campos'); },
+  mergeEditorTextContent({ content, patientId = null, surgeonId = null, extras = {}, preserveUnresolved = true, mode = 'html' }) {
+    return requestJson('/editor-textos/mesclar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        conteudo: String(content ?? ''),
+        conteudo_formato: mode,
+        paciente_id: patientId,
+        cirurgiao_id: surgeonId,
+        extras,
+        preservar_nao_resolvido: preserveUnresolved,
+      }),
+    });
+  },
   listDocuments() { return requestJson('/editor-textos/modelos'); },
   getDocument(id) { return requestJson(`/editor-textos/modelos/${encodeURIComponent(String(id))}`); },
   createDocument(payload) {

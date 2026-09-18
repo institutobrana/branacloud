@@ -7,7 +7,7 @@ import { NEW_TEXT_TYPES, normalizeModelName } from '../models/editorTextosModalM
 import { normalizePageConfig } from '../models/pageConfig.js';
 import { safeRoundtripCheck } from '../models/LegacyDocumentFormatDetector.js';
 
-export function useEditorDocumentLifecycle({ engineAdapter, onError }) {
+export function useEditorDocumentLifecycle({ engineAdapter, onError, manualLegacyTestMode = false }) {
   const [documentState, setDocumentState] = useState(createEmptyEditorDocument);
   const [openItems, setOpenItems] = useState([]);
   const [openVisible, setOpenVisible] = useState(false);
@@ -24,12 +24,15 @@ export function useEditorDocumentLifecycle({ engineAdapter, onError }) {
     engineAdapter?.loadContent(content, { emitUpdate: false });
     const exported = engineAdapter?.getContent() || content;
     const roundtrip = document.importSafety?.editable ? safeRoundtripCheck({ sourceHtml: content, exportedHtml: exported, serializedLegacyHtml: LegacyHtmlAdapter.serializeToLegacyHtml(exported) }) : { safe: false, lostFeatures: [], warnings: [] };
-    const importSafety = document.importSafety?.editable && roundtrip.safe
+    const legacyTestOverride = manualLegacyTestMode && document.importSafety?.manualLegacyTestAllowed === true;
+    const importSafety = legacyTestOverride
+      ? { ...document.importSafety, editable: false, resaveAllowed: false, manualLegacyTestAllowed: true, safeRoundTrip: roundtrip.safe, lostFeatures: roundtrip.lostFeatures, warnings: roundtrip.warnings, reason: 'modo de homologação: alterações não serão salvas' }
+      : document.importSafety?.editable && roundtrip.safe
       ? { ...document.importSafety, safeRoundTrip: true, lostFeatures: [], warnings: [] }
       : { ...(document.importSafety || {}), editable: false, resaveAllowed: false, safeRoundTrip: false, lostFeatures: roundtrip.lostFeatures, warnings: roundtrip.warnings, reason: document.importSafety?.reason || 'conteúdo material não sobreviveu ao roundtrip do editor' };
     setDocumentState({ ...document, importSafety, pageConfig: normalizePageConfig(document.pageConfig), content, dirty: false, loading: false, saving: false });
     if (focus) engineAdapter?.focus();
-  }, [engineAdapter]);
+  }, [engineAdapter, manualLegacyTestMode]);
 
   const newDocument = useCallback(() => {
     if (documentState.dirty) return false;
@@ -41,7 +44,7 @@ export function useEditorDocumentLifecycle({ engineAdapter, onError }) {
     setDocumentState((current) => ({ ...current, loading: true }));
     try {
       const dto = await editorTextosApi.getDocument(id);
-      applyDocument(documentDtoToModel(dto), { focus: true });
+      applyDocument(documentDtoToModel(dto, { manualLegacyTestMode }), { focus: true });
       setOpenVisible(false);
       return true;
     } catch (error) {
