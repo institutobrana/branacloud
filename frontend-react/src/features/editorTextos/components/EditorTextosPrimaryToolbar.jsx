@@ -54,10 +54,13 @@ const LAYOUT_ACTIONS = [
 
 export function EditorTextosPrimaryToolbar({ onAction, enabledActions = {} }) {
   const [activeFormats, setActiveFormats] = useState({});
+  const [manualLegacyTestMode, setManualLegacyTestMode] = useState(false);
   useEffect(() => {
     const onState = (event) => setActiveFormats(event.detail || {});
     window.addEventListener('brana-editor-textos-format-state', onState);
-    return () => window.removeEventListener('brana-editor-textos-format-state', onState);
+    const onSafety = (event) => setManualLegacyTestMode(Boolean(event.detail?.manualLegacyTestMode || event.detail?.manualLegacyTestAllowed));
+    window.addEventListener('brana-editor-textos-document-safety', onSafety);
+    return () => { window.removeEventListener('brana-editor-textos-format-state', onState); window.removeEventListener('brana-editor-textos-document-safety', onSafety); };
   }, []);
   const formatCommand = (key) => {
     if (['recortar', 'copiar', 'colar'].includes(key)) {
@@ -75,7 +78,7 @@ export function EditorTextosPrimaryToolbar({ onAction, enabledActions = {} }) {
         <button
           type="button"
           className={`auxiliary-shell-button${index === 0 ? ' primary' : ''}`}
-          disabled={!action.enabled && !enabledActions[action.key]}
+          disabled={manualLegacyTestMode && ['salvar', 'salvar-como'].includes(action.key) || (!action.enabled && !enabledActions[action.key])}
           aria-label={action.label}
           title={action.label}
           onClick={() => onAction?.(action.key)}
