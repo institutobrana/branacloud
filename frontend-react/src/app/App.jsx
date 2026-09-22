@@ -1,5 +1,5 @@
 import { Button, ConfigProvider, Input, Modal, Select, Typography, message } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BranaThemeModeProvider, useBranaThemeMode } from '../theme/branaThemeMode.jsx';
 import { getBranaTheme } from '../theme/branaTheme.js';
 import { BranaIconRail, branaMainGroups } from '../layout/BranaIconRail.jsx';
@@ -80,6 +80,7 @@ import { ConveniosPlanosPage } from '../features/conveniosPlanos/ConveniosPlanos
 import { ConveniosPlanosToolbar } from '../features/conveniosPlanos/components/ConveniosPlanosToolbar.jsx';
 import { EditorTextosPage } from '../features/editorTextos/EditorTextosPage.jsx';
 import { EditorTextosPrimaryToolbar } from '../features/editorTextos/components/EditorTextosPrimaryToolbar.jsx';
+import { EditorTextosOasisTabBar } from '../features/editorTextos/oasis/EditorTextosOasisTabBar.jsx';
 
 const contextualMenus = {
   atendimento: [
@@ -390,9 +391,21 @@ function AppContent() {
   const [fichaPessoalMode, setFichaPessoalMode] = useState('new');
   const { patient: patientInUse, setPatient: setPatientInUse, clearPatient: clearPatientInUse } = usePatientInUse();
   const [patientMenuOpen, setPatientMenuOpen] = useState(false);
+  const [editorPatientMenuOpen, setEditorPatientMenuOpen] = useState(false);
+  const editorPatientSelectionResolverRef = useRef(null);
   const [pendingFichaNewTreatment, setPendingFichaNewTreatment] = useState(false);
   const [fichaNewTreatmentOpen, setFichaNewTreatmentOpen] = useState(false);
   const patientEntryPromptedRef = useRef(false);
+
+  const requestEditorPatientSelection = useCallback(() => new Promise((resolve) => {
+    editorPatientSelectionResolverRef.current = resolve;
+    setEditorPatientMenuOpen(true);
+  }), []);
+  const finishEditorPatientSelection = useCallback((patient) => {
+    const resolve = editorPatientSelectionResolverRef.current;
+    editorPatientSelectionResolverRef.current = null;
+    resolve?.(patient || null);
+  }, []);
 
   const openNewPatient = () => {
     setFichaPessoalPatientId(null);
@@ -1391,7 +1404,7 @@ function AppContent() {
       return <ServicosProteticoPage />;
     }
     if (screen === 'editor-textos') {
-      return <EditorTextosPage />;
+      return <EditorTextosPage patientInUse={patientInUse} onRequestPatientSelection={requestEditorPatientSelection} />;
     }
     return <DashboardPage key={dashboardVersion} />;
   }, [
@@ -1404,6 +1417,7 @@ function AppContent() {
     fichaNewTreatmentOpen,
     loading,
     materiaisEstoqueToolbarState,
+    patientInUse,
     procedimentosGenericosEspecialidade,
     procedimentosGenericosNovoToken,
     procedimentosGenericosSearch,
@@ -1414,14 +1428,18 @@ function AppContent() {
     prestadoresState.selectedId,
     screen,
     simbolosGraficosCreateOpen,
+    requestEditorPatientSelection,
     user,
   ]);
 
   const auxiliaryTopBarContent = useMemo(() => {
     if (screen === 'editor-textos') {
+      const tiptapSelected = new URLSearchParams(window.location.search).get('editor_engine') === 'tiptap';
       return (
         <div className="brana-shell-band auxiliary-shell-band" aria-label="Barra operacional do Editor de Textos">
-          <EditorTextosPrimaryToolbar enabledActions={{ abrir: true, salvar: true, 'salvar-como': true, pagina: true }} onAction={(action) => window.dispatchEvent(new CustomEvent('brana-editor-textos-action', { detail: { action } }))} />
+          {tiptapSelected
+            ? <EditorTextosPrimaryToolbar enabledActions={{ abrir: true, salvar: true, 'salvar-como': true, pagina: true }} onAction={(action) => window.dispatchEvent(new CustomEvent('brana-editor-textos-action', { detail: { action } }))} />
+            : <EditorTextosOasisTabBar />}
         </div>
       );
     }
@@ -2094,6 +2112,18 @@ function AppContent() {
                 setFichaNewTreatmentOpen(true);
                 setPendingFichaNewTreatment(false);
               }
+            }}
+          />
+          <MenuPacientesModal
+            open={screen === 'editor-textos' && editorPatientMenuOpen}
+            onCancel={() => {
+              setEditorPatientMenuOpen(false);
+              finishEditorPatientSelection(null);
+            }}
+            onSelect={(patient) => {
+              setPatientInUse(patient);
+              setEditorPatientMenuOpen(false);
+              finishEditorPatientSelection(patient);
             }}
           />
           <AgendaSearchModal

@@ -36,6 +36,7 @@ import { insertTable, isInTable } from './table/tableCommands.js';
 import { calculateInitialSize, readFileAsDataUrl, readImageDimensions } from './adapters/EditorImageAdapter.js';
 import { createEmptyEditorDocument } from './models/editorTextosState.js';
 import './styles/editorTextos.css';
+import { OasisEditorPilot } from './oasis/OasisEditorPilot.jsx';
 
 const extensions = [
   Document,
@@ -70,7 +71,12 @@ const extensions = [
   ResizableImageExtension,
 ];
 
-export function EditorTextosPage() {
+export function EditorTextosPage({ patientInUse = null, onRequestPatientSelection } = {}) {
+  const editorEngine = new URLSearchParams(window.location.search).get('editor_engine');
+  return editorEngine === 'tiptap' ? <TiptapEditorTextosPage /> : <OasisEditorPilot patientInUse={patientInUse} onRequestPatientSelection={onRequestPatientSelection} />;
+}
+
+function TiptapEditorTextosPage() {
   const manualLegacyTestMode = new URLSearchParams(window.location.search).get('legacy_test') === '1';
   const [errorMessage, setErrorMessage] = useState('');
   const editor = useEditor({ extensions, content: '<p></p>', immediatelyRender: false });

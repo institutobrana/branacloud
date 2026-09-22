@@ -1,0 +1,1 @@
+export function createPaginationScheduler(publish) { let frame = null; let pending = null; return { schedule(task) { pending = task; if (frame == null) frame = requestAnimationFrame(() => { frame = null; const next = pending; pending = null; if (next) publish(next()); }); }, cancel() { if (frame != null) cancelAnimationFrame(frame); frame = null; pending = null; } }; }

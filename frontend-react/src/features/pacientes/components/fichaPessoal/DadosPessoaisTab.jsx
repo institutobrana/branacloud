@@ -28,11 +28,11 @@ const normalizeWhatsAppNumber = (value) => {
 function Field({ label, children, className = '' }) { return <label className={`ficha-dados-field ${className}`}><span>{label}</span>{children}</label>; }
 function TextField({ label, value, onChange, className, readOnly, onBlur, onKeyDown, maxLength }) { return <Field label={label} className={className}><Input value={value} maxLength={maxLength} readOnly={readOnly} onChange={(e) => onChange(e.target.value)} onBlur={onBlur} onKeyDown={onKeyDown} /></Field>; }
 function SelectField({ label, value, options, onChange, className, loading, disabled, popupClassName }) { return <Field label={label} className={className}><Select value={value || undefined} options={options} loading={loading} disabled={disabled} placeholder="Selecione..." popupClassName={popupClassName} onChange={onChange} /></Field>; }
-export function DateField({ label, value, onChange, className }) {
+export function DateField({ label, value, onChange, className, 'aria-label': ariaLabel = label }) {
   const commit = (event) => onChange(normalizeFichaDateInput(event.target.value));
   const selectText = (event) => requestAnimationFrame(() => event.target.select());
   const parsedValue = value ? (dayjs.isDayjs(value) ? value : normalizeFichaDateInput(value)) : null;
-  return <Field label={label} className={className}><DatePicker value={parsedValue} format="DD/MM/YYYY" onChange={onChange} onFocus={selectText} onClick={selectText} onBlur={commit} /></Field>;
+  return <Field label={label} className={className}><DatePicker aria-label={ariaLabel} value={parsedValue} format="DD/MM/YYYY" onChange={onChange} onFocus={selectText} onClick={selectText} onBlur={commit} /></Field>;
 }
 
 function EmailField({ value, onChange }) {

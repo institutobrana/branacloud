@@ -21,6 +21,7 @@
     "@tiptap/starter-kit": "^3.30.5",
     "antd": "^5.26.0",
     "dayjs": "^1.11.13",
+    "oasis-editor": "0.0.191",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "temporal-polyfill": "^1.0.1"

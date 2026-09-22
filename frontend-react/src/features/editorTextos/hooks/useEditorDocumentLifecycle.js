@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { editorTextosApi } from '../api/editorTextosApi.js';
+import { deleteEditorTextModel, renameEditorTextModel } from '../api/editorTextosModelActions.js';
 import { documentDtoToModel, documentModelToPayload } from '../models/documentModel.js';
 import { LegacyHtmlAdapter } from '../adapters/LegacyHtmlAdapter.js';
 import { createEmptyEditorDocument } from '../models/editorTextosState.js';
@@ -155,18 +156,15 @@ export function useEditorDocumentLifecycle({ engineAdapter, onError, manualLegac
     return true;
   }, [applyDocument, openDocument, openItems]);
 
-  const renameDocument = useCallback(async (item) => {
-    const name = window.prompt('Renomear modelo:', item?.nome || item?.nome_exibicao || '');
-    if (name == null || !name.trim()) return false;
-    await editorTextosApi.renameDocument(item.id, name.trim());
-    await refreshOpenItems();
+  const renameDocument = useCallback(async (item, name) => {
+    const result = await renameEditorTextModel(item, name);
+    setOpenItems(result.items);
     return true;
-  }, [refreshOpenItems]);
+  }, []);
 
   const deleteDocument = useCallback(async (item) => {
-    if (!window.confirm(`Tem certeza de que deseja excluir "${item?.nome || item?.nome_exibicao || ''}"?`)) return false;
-    await editorTextosApi.deleteDocument(item.id);
-    setOpenItems((current) => current.filter((entry) => entry.id !== item.id));
+    const id = await deleteEditorTextModel(item);
+    setOpenItems((current) => current.filter((entry) => Number(entry.id) !== id));
     return true;
   }, []);
 

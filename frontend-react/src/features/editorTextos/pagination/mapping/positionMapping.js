@@ -1,0 +1,2 @@
+export function pageForPosition(layout, position) { const match = layout?.pmPositionMap?.find((item) => position >= item.from && position <= item.to); return match?.page || 1; }
+export function selectionPageRange(layout, selection) { const from = pageForPosition(layout, selection?.from ?? 1); const to = pageForPosition(layout, selection?.to ?? selection?.from ?? 1); return [Math.min(from, to), Math.max(from, to)]; }

@@ -1,0 +1,387 @@
+diff --git a/dist/OasisEditorApp-CQRNpkya.js b/dist/OasisEditorApp-CQRNpkya.js
+index 195f3c68268ba4c13d182f8dd51cd8ec701a4bfa..bd812a9b4008d126d557f478d0925fb86d8920d0 100644
+--- a/dist/OasisEditorApp-CQRNpkya.js
++++ b/dist/OasisEditorApp-CQRNpkya.js	
+@@ -53503,6 +53503,39 @@ function getBoundaryParagraphInCell(cell, boundary) {
+ function createEditorNavigation(deps) {
+   return createEditorNavigationImpl(deps);
+ }
++function findAdjacentVisualLine(entries, paragraphOffset, caretViewportTop, desiredX, direction) {
++  const visualLines = entries.flatMap(
++    (entry) => entry.lines.map((line) => ({ line, entry }))
++  ).sort((left, right) => left.line.top - right.line.top);
++  const currentCandidates = visualLines.map(
++    (candidate, index) => ({ ...candidate, index })
++  ).filter(
++    (candidate) => paragraphOffset >= candidate.line.startOffset && paragraphOffset <= candidate.line.endOffset
++  );
++  if (currentCandidates.length === 0) return null;
++  const current = currentCandidates.reduce((best, candidate) => {
++    const distance = Number.isFinite(caretViewportTop) ? Math.abs(candidate.line.top - caretViewportTop) : 0;
++    return distance < best.distance ? { candidate, distance } : best;
++  }, { candidate: currentCandidates[0], distance: Number.POSITIVE_INFINITY }).candidate;
++  const target = visualLines[current.index + direction];
++  if (!target) return null;
++  let targetSlot = target.line.slots.length > 0 ? target.line.slots.reduce(
++    (best, slot) => Math.abs(desiredX - slot.left) < Math.abs(desiredX - best.left) ? slot : best,
++    target.line.slots[0]
++  ) : null;
++  if (targetSlot && targetSlot.offset === paragraphOffset) {
++    const distinctSlots = target.line.slots.filter((slot) => slot.offset !== paragraphOffset);
++    if (distinctSlots.length === 0) return null;
++    targetSlot = distinctSlots.reduce(
++      (best, slot) => Math.abs(desiredX - slot.left) < Math.abs(desiredX - best.left) ? slot : best,
++      distinctSlots[0]
++    );
++  }
++  return {
++    paragraph: target.entry.paragraph,
++    offset: targetSlot ? targetSlot.offset : target.line.startOffset
++  };
++}
+ function createEditorNavigationImpl(deps) {
+   const moveSelectionToParagraphBoundary = (boundary, extend) => {
+     const state = deps.state();
+@@ -53613,7 +53646,8 @@ function createEditorNavigationImpl(deps) {
+     const surfaceRef = deps.surfaceRef();
+     const surfaceRect = (surfaceRef == null ? void 0 : surfaceRef.getBoundingClientRect()) ?? null;
+     const preferredX = deps.preferredColumnX();
+-    const desiredX = preferredX === null ? deps.caretBox().left + ((surfaceRect == null ? void 0 : surfaceRect.left) ?? 0) : preferredX;
++    const caretBox = deps.caretBox();
++    const desiredX = preferredX === null ? caretBox.left + ((surfaceRect == null ? void 0 : surfaceRect.left) ?? 0) : preferredX;
+     const snapshot = surfaceRef ? deps.canvasSnapshotProvider.getCanvasLayoutSnapshot({
+       surface: surfaceRef,
+       state,
+@@ -53702,6 +53736,32 @@ function createEditorNavigationImpl(deps) {
+         }
+       }
+     }
++    if (!tableLocation && snapshot) {
++      const currentParagraph = paragraphs[currentIndex];
++      const currentEntries = getParagraphEntries(snapshot, currentParagraph.id);
++      if (currentEntries.length > 0 && !currentEntries.some((entry) => entry.verticalMode)) {
++        const paragraphOffset = positionToParagraphOffset(currentParagraph, state.selection.focus);
++        const adjacentVisualLine = findAdjacentVisualLine(
++          currentEntries,
++          paragraphOffset,
++          caretBox.top + ((surfaceRect == null ? void 0 : surfaceRect.top) ?? 0),
++          desiredX,
++          direction
++        );
++        if (adjacentVisualLine) {
++          deps.setPreferredColumnX(desiredX);
++          deps.resetTransactionGrouping();
++          deps.applyTransactionalState(
++            (current) => setSelection(current, {
++              anchor: extend ? current.selection.anchor : paragraphOffsetToPosition(adjacentVisualLine.paragraph, adjacentVisualLine.offset),
++              focus: paragraphOffsetToPosition(adjacentVisualLine.paragraph, adjacentVisualLine.offset)
++            })
++          );
++          deps.focusInput();
++          return true;
++        }
++      }
++    }
+     if (targetIndex < 0 || targetIndex >= paragraphs.length) {
+       return false;
+     }
+@@ -55772,7 +55832,10 @@ function createEditorKeyboardControllerImpl(deps) {
+             deps.focusInput();
+           }
+         } else if (!deps.moveVerticalByBlock(-1)) {
+-          deps.applyState(moveSelectionUp(currentState));
++          const nextVerticalStateUp = moveSelectionUp(currentState);
++          if (nextVerticalStateUp !== currentState) {
++            deps.applyState(nextVerticalStateUp);
++          }
+           deps.focusInput();
+         }
+         return;
+@@ -55785,7 +55848,10 @@ function createEditorKeyboardControllerImpl(deps) {
+             deps.focusInput();
+           }
+         } else if (!deps.moveVerticalByBlock(1)) {
+-          deps.applyState(moveSelectionDown(currentState));
++          const nextVerticalStateDown = moveSelectionDown(currentState);
++          if (nextVerticalStateDown !== currentState) {
++            deps.applyState(nextVerticalStateDown);
++          }
+           deps.focusInput();
+         }
+         return;
+@@ -56350,7 +56416,27 @@ function buildCoreFormattingCommands({
+     splitBlock: command("splitBlock", formatting.splitBlock),
+     setFontFamily: valueCommand(
+       "setFontFamily",
+-      (p) => formatting.setFontFamily(p || null),
++      (p) => {
++        if (p === "__BRANA_LOAD_LOCAL_FONTS__") {
++          if (typeof window !== "undefined" && typeof window.queryLocalFonts === "function") {
++            void window.queryLocalFonts().then((faces) => {
++              const seen = /* @__PURE__ */ new Set();
++              const families = (Array.isArray(faces) ? faces : []).map((face) => String(face?.family ?? "").trim()).filter((family) => {
++                const key = family.toLocaleLowerCase();
++                if (!family || seen.has(key)) return false;
++                seen.add(key);
++                return true;
++              }).sort((a, b) => a.localeCompare(b));
++              if (families.length > 0) {
++                window.__BRANA_OASIS_LOCAL_FONT_FAMILIES__ = families;
++                window.dispatchEvent(new Event("brana-oasis-local-fonts-ready"));
++              }
++            });
++          }
++          return false;
++        }
++        return formatting.setFontFamily(p || null);
++      },
+       () => s().fontFamily
+     ),
+     setFontSize: valueCommand(
+diff --git a/dist/app/client/OasisEditorClient.d.ts b/dist/app/client/OasisEditorClient.d.ts
+index 524650f39a804e564a5feacbe5fdf590177f2752..b128260c76faa55f9f37c42d9bfc41495ea66127 100644
+--- a/dist/app/client/OasisEditorClient.d.ts
++++ b/dist/app/client/OasisEditorClient.d.ts	
+@@ -1,6 +1,7 @@
+ import { EditorDocument, EditorSelection, EditorState } from '../../core/model.js';
+ import { Editor } from '../../core/Editor.js';
+ import { ToolbarCommandState } from '../../ui/components/Toolbar/schema/items.js';
++import { RibbonTabId } from '../../core/pluginUiTypes.js';
+ import { TypedCommandBus } from '../../core/commands/publicCommandTypes.js';
+ import { queryDocument, ApplyEditRequest, ApplyEditValue, DocumentRange, DocumentSelector, OasisResult, SemanticDocumentSnapshot } from './publicDocumentApi.js';
+ import { ToolbarRegistry } from '../../ui/components/Toolbar/registry/ToolbarRegistry.js';
+@@ -174,6 +175,13 @@ export interface OasisEditorUiApi {
+     update(patch: OasisEditorUiState): OasisEditorUiState;
+     /** @param value - Whether the editor should be read-only. */
+     setReadOnly(value: boolean): void;
++    /** Shared active-tab API backed by the toolbar registry state. */
++    ribbon: {
++        getActiveTab(): RibbonTabId;
++        /** Accepts only the seven primary ribbon tabs. */
++        setActiveTab(tabId: Extract<RibbonTabId, "file" | "home" | "insert" | "design" | "layout" | "references" | "plugins">): boolean;
++        onActiveTabChange(callback: (tabId: RibbonTabId) => void): () => void;
++    };
+     /** Zoom controls. */
+     zoom: {
+         get(): number;
+diff --git a/dist/index-K-7FcXvb.js b/dist/index-K-7FcXvb.js
+index 54568a66e5b43d8ee57d082b2d2a0d1bc2d8c54e..c309ee59c81b03d6f06c42b9d41048680c09c9e8 100644
+--- a/dist/index-K-7FcXvb.js
++++ b/dist/index-K-7FcXvb.js	
+@@ -5262,6 +5262,21 @@ function createOasisEditorClient() {
+         var _a2, _b2;
+         (_b2 = (_a2 = requireHost()).updateUiState) == null ? void 0 : _b2.call(_a2, { readOnly: value2 });
+       },
++      ribbon: {
++        getActiveTab: () => {
++          var _a2;
++          return ((_a2 = requireHost().toolbarRegistry) == null ? void 0 : _a2.getActiveTab()) ?? "home";
++        },
++        setActiveTab: (tabId) => {
++          var _a2;
++          if (!["file", "home", "insert", "design", "layout", "references", "plugins"].includes(tabId)) return false;
++          return ((_a2 = requireHost().toolbarRegistry) == null ? void 0 : _a2.setActiveTab(tabId)) ?? false;
++        },
++        onActiveTabChange: (callback) => {
++          var _a2;
++          return ((_a2 = requireHost().toolbarRegistry) == null ? void 0 : _a2.onActiveTabChange(callback)) ?? (() => void 0);
++        }
++      },
+       zoom: {
+         get: () => {
+           var _a2, _b2;
+@@ -5916,6 +5931,8 @@ class PluginUiRegistry {
+     __publicField(this, "activeSidePanelId", null);
+     __publicField(this, "listeners", /* @__PURE__ */ new Set());
+   }
++  register(item) {
++  }
+   registerFloatingAction(contribution) {
+     this.floatingActions = replaceById(this.floatingActions, contribution);
+     this.sort();
+@@ -8839,6 +8856,24 @@ function RenderSelect(props) {
+   const b = bindItem(props.item, props.api);
+   const onChange = (event) => {
+     const value2 = event.currentTarget.value;
++    if (value2 === "__BRANA_LOAD_LOCAL_FONTS__") {
++      if (typeof window !== "undefined" && typeof window.queryLocalFonts === "function") {
++        void window.queryLocalFonts().then((faces) => {
++          const seen = /* @__PURE__ */ new Set();
++          const families = (Array.isArray(faces) ? faces : []).map((face) => String(face?.family ?? "").trim()).filter((family) => {
++            const key = family.toLocaleLowerCase();
++            if (!family || seen.has(key)) return false;
++            seen.add(key);
++            return true;
++          }).sort((a, b) => a.localeCompare(b));
++          if (families.length > 0) {
++            window.__BRANA_OASIS_LOCAL_FONT_FAMILIES__ = families;
++            window.dispatchEvent(new Event("brana-oasis-local-fonts-ready"));
++          }
++        });
++      }
++      return;
++    }
+     props.api.commands.execute(props.item.command, value2);
+   };
+   return createComponent(Select, {
+@@ -9907,7 +9942,11 @@ const shouldAllowNativeMouseDown = (target) => target instanceof Element && targ
+ function Toolbar(props) {
+   const api = createToolbarApi(props.host, useI18n());
+   const [version2, setVersion2] = createSignal(0);
+-  const [activeTab, setActiveTab] = createSignal("home");
++  const activeTab = () => {
++    version2();
++    return props.registry.getActiveTab();
++  };
++  const setActiveTab = (tabId) => props.registry.setActiveTab(tabId);
+   const CONTEXTUAL_TAB_ENTRIES = Object.entries(CONTEXTUAL_TABS);
+   createEffect((prev) => {
+     const current = /* @__PURE__ */ new Map();
+@@ -9930,7 +9969,12 @@ function Toolbar(props) {
+   });
+   onMount(() => {
+     const unsubscribe = props.registry.onChange(() => setVersion2((v) => v + 1));
++    const onLocalFontsReady = () => setVersion2((v) => v + 1);
++    if (typeof window !== "undefined") window.addEventListener("brana-oasis-local-fonts-ready", onLocalFontsReady);
+     onCleanup(unsubscribe);
++    onCleanup(() => {
++      if (typeof window !== "undefined") window.removeEventListener("brana-oasis-local-fonts-ready", onLocalFontsReady);
++    });
+   });
+   const items = createMemo(() => {
+     version2();
+@@ -16606,7 +16650,8 @@ function resolveCanvasFontFamily(fontFamily) {
+   const preciseFirst = isPreciseFontModeEnabled() && isLocalFontFamilyAvailable(requested) && hasPreciseFont(requested);
+   const preciseBrowserFamily = preciseFirst ? getPreciseBrowserFontFamily(requested) : null;
+   const requestedFirst = preciseFirst || isRemoteWebFontActive(requested);
+-  const families = requested.toLowerCase() === metric.toLowerCase() ? [metric] : requestedFirst ? [requested, metric] : [metric, requested];
++  const explicitArial = requested.toLowerCase() === "arial";
++  const families = requested.toLowerCase() === metric.toLowerCase() ? [metric] : explicitArial || requestedFirst ? [requested, metric] : [metric, requested];
+   if (preciseBrowserFamily) {
+     families.unshift(preciseBrowserFamily);
+   }
+@@ -25716,10 +25761,10 @@ function probeLocalFontFamilies() {
+   return inFlight;
+ }
+ function classifyFaceStyle(font) {
+-  const descriptor = `${font.style ?? ""} ${font.fullName ?? ""}`.toLowerCase();
++  const descriptor = `${font.style ?? ""} ${font.fullName ?? ""} ${font.postscriptName ?? ""}`.toLowerCase();
+   return {
+-    bold: /\bbold\b/.test(descriptor),
+-    italic: /\b(italic|oblique)\b/.test(descriptor)
++    bold: /\b(bold|negrito|demibold|semibold|black|heavy)\b/.test(descriptor),
++    italic: /\b(italic|oblique|itálico|italico)\b/.test(descriptor)
+   };
+ }
+ function selectFaceProgram(bytes, font) {
+@@ -52879,6 +52924,23 @@ class ToolbarRegistryImpl {
+   constructor() {
+     __publicField(this, "entries", []);
+     __publicField(this, "listeners", /* @__PURE__ */ new Set());
++    __publicField(this, "activeTabListeners", /* @__PURE__ */ new Set());
++    __publicField(this, "activeTab", "home");
++  }
++  getActiveTab() {
++    return this.activeTab;
++  }
++  setActiveTab(tabId) {
++    if (!RIBBON_TABS.includes(tabId)) return false;
++    if (tabId === this.activeTab) return true;
++    this.activeTab = tabId;
++    this.emit();
++    for (const listener of this.activeTabListeners) listener(tabId);
++    return true;
++  }
++  onActiveTabChange(callback) {
++    this.activeTabListeners.add(callback);
++    return () => this.activeTabListeners.delete(callback);
+   }
+   register(item) {
+     const index = this.entries.findIndex(
+@@ -56323,25 +56385,58 @@ function parseFontSizePtToPx(pt2) {
+ }
+ const mod = /Mac/i.test(navigator.userAgent) ? "⌘" : "Ctrl";
+ const documentStyles = (api) => api.commands.state("documentStyles").value ?? [];
++const externalFontFamilyOptions = () => {
++  const families = globalThis.__BRANA_OASIS_LOCAL_FONT_FAMILIES__;
++  if (!Array.isArray(families) || families.length === 0) return null;
++  const seen = /* @__PURE__ */ new Set();
++  return families.map((family) => String(family ?? "").trim()).filter((family) => {
++    const key = family.toLocaleLowerCase();
++    if (!family || seen.has(key)) return false;
++    seen.add(key);
++    return true;
++  }).sort((a, b) => a.localeCompare(b));
++};
++const LOAD_LOCAL_FONTS_OPTION = "__BRANA_LOAD_LOCAL_FONTS__";
++const firstFontFamilyLabel = (value2) => {
++  const text = String(value2 ?? "").trim();
++  let quote = null;
++  for (let index = 0; index < text.length; index += 1) {
++    const char = text[index];
++    if ((char === "\"" || char === "'") && (index === 0 || text[index - 1] !== "\\")) quote = quote === char ? null : quote ?? char;
++    if (char === "," && !quote) return text.slice(0, index).trim().replace(/^([\"'])(.*)\1$/, "$2");
++  }
++  return text.replace(/^([\"'])(.*)\1$/, "$2");
++};
+ const fontFamilyOptions = (api) => {
+-  const values = /* @__PURE__ */ new Set([
++  const external = externalFontFamilyOptions();
++  const values = new Map((external ?? [
+     "Arial",
+-    "Calibri, sans-serif",
+-    "Calibri Light, sans-serif",
++    "Calibri",
++    "Calibri Light",
+     "Georgia",
+     "Inter",
+-    "Open Sans, sans-serif",
++    "Open Sans",
+     "Times New Roman",
+     "Courier New"
+-  ]);
++  ]).map((value2) => [firstFontFamilyLabel(value2).toLocaleLowerCase(), { value: value2, label: firstFontFamilyLabel(value2) }]));
+   for (const s of documentStyles(api)) {
+-    if (s.fontFamily) values.add(s.fontFamily);
++    if (s.fontFamily) {
++      const label = firstFontFamilyLabel(s.fontFamily);
++      const key = label.toLocaleLowerCase();
++      if (!values.has(key)) values.set(key, { value: s.fontFamily, label });
++    }
+   }
+   const current = String(
+     api.commands.state("setFontFamily").value ?? ""
+   ).trim();
+-  if (current) values.add(current);
+-  return Array.from(values).sort((a, b) => a.localeCompare(b)).map((value2) => ({ value: value2, label: value2 }));
++  if (current) {
++    const label = firstFontFamilyLabel(current);
++    const key = label.toLocaleLowerCase();
++    values.set(key, { value: current, label });
++  }
++  const options = Array.from(values.values()).sort((a, b) => a.label.localeCompare(b.label));
++  if (!external) options.push({ value: LOAD_LOCAL_FONTS_OPTION, label: "Carregar fontes do computador" });
++  return options;
+ };
+ const fontSizeOptions = (api) => {
+   const values = new Set(STANDARD_FONT_SIZES_PT);
+diff --git a/dist/ui/components/Toolbar/registry/ToolbarRegistry.d.ts b/dist/ui/components/Toolbar/registry/ToolbarRegistry.d.ts
+index 97a1353f9e6aea0eb16a015364d994d085c6f177..0082737a24c5c5acf9d5e0b1aae28f1f352ffaf3 100644
+--- a/dist/ui/components/Toolbar/registry/ToolbarRegistry.d.ts
++++ b/dist/ui/components/Toolbar/registry/ToolbarRegistry.d.ts	
+@@ -1,4 +1,4 @@
+-import { ToolbarItem } from '../schema/items.js';
++import { RibbonTabId, ToolbarItem } from '../schema/items.js';
+ 
+ /** Target for moving a toolbar item: an absolute index or relative to another item. */
+ export type ToolbarMoveTarget = number | {
+@@ -8,6 +8,9 @@ export type ToolbarMoveTarget = number | {
+ };
+ /** Registry for managing toolbar items with positional insertion and mutation subscriptions. */
+ export interface ToolbarRegistry {
++    getActiveTab(): RibbonTabId;
++    setActiveTab(tabId: RibbonTabId): boolean;
++    onActiveTabChange(callback: (tabId: RibbonTabId) => void): () => void;
+     /**
+      * Add or update by id (last-write-wins). New items append, then sort by `order`.
+      * @param item - The toolbar item to register.

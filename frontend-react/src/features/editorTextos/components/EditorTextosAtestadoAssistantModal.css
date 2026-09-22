@@ -1,0 +1,35 @@
+.editor-textos-attestado-assistant.ant-modal { max-width: calc(100vw - 24px); }
+.editor-textos-attestado-assistant .ant-modal-content { padding: 0; }
+.editor-textos-attestado-assistant .ant-modal-header { padding: 9px 14px 7px; margin-bottom: 0; }
+.editor-textos-attestado-assistant .ant-modal-body { padding: 9px 14px 8px; max-height: min(68vh, 560px); overflow-y: auto; }
+.editor-textos-attestado-assistant .ant-modal-footer { padding: 0 14px 10px; margin-top: 0; }
+.editor-textos-attestado-assistant .ant-modal-footer .ant-btn { height: 29px; padding-inline: 10px; }
+.editor-textos-attestado-assistant__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 10px; }
+.editor-textos-attestado-assistant__grid > label,
+.editor-textos-attestado-assistant__grid > section { display: grid; gap: 3px; min-width: 0; color: var(--brana-text-primary); }
+.editor-textos-attestado-assistant__wide { grid-column: 1 / -1; }
+.editor-textos-attestado-assistant__inline { display: flex; gap: 6px; }
+.editor-textos-attestado-assistant__inline .ant-input { min-width: 0; }
+.editor-textos-attestado-assistant__period { display: grid; grid-template-columns: minmax(105px, 1fr) auto minmax(105px, 1fr) auto auto minmax(82px, .75fr) auto minmax(82px, .75fr); align-items: end; gap: 5px; }
+.editor-textos-attestado-assistant__period .ant-input { min-width: 0; }
+.editor-textos-attestado-assistant__period .ficha-dados-field { display: grid; gap: 3px; min-width: 0; }
+.editor-textos-attestado-assistant__period .ficha-dados-field > span { font-size: 12px; }
+.editor-textos-attestado-assistant__period .ant-picker { width: 100%; height: 28px; padding-block: 2px; }
+.editor-textos-attestado-assistant__grid .ant-input,
+.editor-textos-attestado-assistant__grid .ant-input-affix-wrapper { min-height: 28px; height: 28px; padding-block: 2px; }
+.editor-textos-attestado-assistant__grid .ant-select-single { height: 28px; }
+.editor-textos-attestado-assistant__grid .ant-select-single .ant-select-selector { height: 28px; padding-inline: 8px; }
+.editor-textos-attestado-assistant__grid .ant-select-single .ant-select-selection-item,
+.editor-textos-attestado-assistant__grid .ant-select-single .ant-select-selection-placeholder { line-height: 26px; }
+.editor-textos-attestado-assistant__grid textarea.ant-input { height: auto; min-height: 44px; line-height: 18px; padding: 4px 8px; resize: vertical; }
+.editor-textos-attestado-assistant__grid small { color: var(--brana-text-secondary); font-size: 12px; }
+.editor-textos-attestado-assistant__loading { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.editor-textos-attestado-cid-menu__search { display: flex; gap: 8px; margin-bottom: 8px; }
+.editor-textos-attestado-cid-menu__search .ant-input { min-width: 0; }
+.editor-textos-attestado-cid-menu .pacientes-alphabet { margin-bottom: 8px; overflow-x: auto; }
+.editor-textos-attestado-cid-menu__preferred { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .editor-textos-attestado-assistant__grid { grid-template-columns: 1fr; }
+  .editor-textos-attestado-assistant__wide { grid-column: auto; }
+  .editor-textos-attestado-assistant__period { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+}

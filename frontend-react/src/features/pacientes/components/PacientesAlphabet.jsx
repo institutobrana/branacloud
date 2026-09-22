@@ -1,6 +1,6 @@
-export function PacientesAlphabet({ options, activeValue, onChange }) {
+export function PacientesAlphabet({ options, activeValue, onChange, ariaLabel = 'Filtro alfabético de pacientes', entityLabel = 'pacientes' }) {
   return (
-    <div className="pacientes-alphabet" role="toolbar" aria-label="Filtro alfabético de pacientes">
+    <div className="pacientes-alphabet" role="toolbar" aria-label={ariaLabel}>
       {(options || []).map((option) => {
         const value = Number(option?.id ?? 0) || 0;
         const label = String(option?.label || '*');
@@ -11,7 +11,7 @@ export function PacientesAlphabet({ options, activeValue, onChange }) {
             type="button"
             className={`pacientes-alphabet-button${active ? ' is-active' : ''}`}
             aria-pressed={active}
-            aria-label={value === 0 ? 'Todos os pacientes' : `Pacientes com ${label}`}
+            aria-label={value === 0 ? `Todos os ${entityLabel}` : `${entityLabel} com ${label}`}
             onClick={() => onChange?.(value)}
           >
             {label}

@@ -1,0 +1,61 @@
+.editor-textos-new-document-modal .ant-modal {
+  width: min(312px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px);
+  padding-bottom: 0;
+}
+
+.editor-textos-new-document-modal .ant-modal-content {
+  padding: 12px 24px 0;
+}
+
+.editor-textos-new-document-modal .ant-modal-body {
+  height: auto;
+  padding: 14px 20px 10px;
+}
+
+.editor-textos-new-document-options {
+  display: grid;
+  gap: 8px;
+}
+
+.editor-textos-new-document-type-column {
+  width: 200px;
+  margin: 4px 0 0 24px;
+}
+
+.editor-textos-new-document-type-list {
+  box-sizing: border-box;
+  display: block;
+  width: 200px;
+  height: 106px;
+  overflow-y: hidden;
+}
+
+.editor-textos-new-document-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 200px;
+  margin-top: 8px;
+}
+
+@media (max-width: 420px) {
+  .editor-textos-new-document-modal .ant-modal {
+    width: min(312px, calc(100vw - 24px)) !important;
+  }
+
+  .editor-textos-new-document-modal .ant-modal-body {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .editor-textos-new-document-type-column {
+    width: min(200px, calc(100% - 16px));
+    margin-left: 16px;
+  }
+
+  .editor-textos-new-document-type-list,
+  .editor-textos-new-document-actions {
+    width: 100%;
+  }
+}

@@ -1,5 +1,7 @@
 from pathlib import Path
 import json
+import hashlib
+import copy
 import logging
 import os
 import re
@@ -42,6 +44,15 @@ from services.receituario_pdf_template_service import (
     generate_receituario_acroform_pdf_bytes,
 )
 from services.model_document_storage import resolve_model_file_info as shared_resolve_model_file_info
+from services.editor_catalog_diagnostics import (
+    CATALOG_EXTENSIONS,
+    MAX_PREVIEW_CHARS,
+    MAX_SNIFF_BYTES,
+    OFFICE_BINARY_EXTENSIONS,
+    SNIFFABLE_CATALOG_EXTENSIONS,
+    classify_catalog_bytes,
+    registered_catalog_path,
+)
 
 logger = logging.getLogger("brana.editor_textos")
 
@@ -57,6 +68,7 @@ MODEL_STORAGE_DIR = PROJECT_DIR / "storage" / "modelos"
 EDITOR_TEXTOS_DEBUG = str(os.getenv("EDITOR_TEXTOS_DEBUG", "") or "").strip().lower() in {"1", "true", "yes", "on"}
 EDITOR_TEXTOS_TMP_DIR = PROJECT_DIR / "backend" / "tmp" / "editor_textos"
 TEXT_EXTENSIONS = {".txt", ".rtf", ".mod"}
+EDITOR_CATALOG_EXTENSIONS = TEXT_EXTENSIONS | (set(CATALOG_EXTENSIONS) - TEXT_EXTENSIONS)
 RTF_RICH_EXTENSIONS = {".rtf", ".mod"}
 RUNTIME_RECURSIVE_CANDIDATE_EXTENSIONS = {".mod", ".rtf", ".txt", ".html", ".htm", ".doc", ".docx"}
 IMPORTABLE_RUNTIME_EXTENSIONS = {".mod", ".rtf", ".txt", ".html", ".htm"}
@@ -316,8 +328,16 @@ class ModeloTextoSalvarPayload(BaseModel):
     pagina_config: dict | None = None
 
 
+class ModeloTextoSaveAsPayload(ModeloTextoSalvarPayload):
+    replace_model_id: int | None = Field(default=None, gt=0)
+
+
 class ModeloTextoRenomearPayload(BaseModel):
     nome: str = Field(default="", max_length=180)
+
+
+class RtfImportPayload(BaseModel):
+    content: str = Field(min_length=8, max_length=2_000_000)
 
 
 class MesclarTextoPayload(BaseModel):
@@ -957,6 +977,7 @@ def _listar_medicamentos_contexto(
                     "codigo": "",
                     "nome": nome,
                     "grupo": str(row.grupo or "").strip(),
+                    "apresentacao": str(row.apresentacao or "").strip(),
                     "prescricao_adulto": str(row.posologia_adulto or ""),
                     "prescricao_crianca": str(row.posologia_crianca or ""),
                     "quantidade_adulto": str(row.quantidade_padrao_adulto or "").strip(),
@@ -996,6 +1017,7 @@ def _listar_medicamentos_contexto(
                 "codigo": codigo,
                 "nome": nome,
                 "grupo": nome,
+                "apresentacao": "",
                 "prescricao_adulto": "",
                 "prescricao_crianca": "",
                 "quantidade_adulto": "",
@@ -1521,7 +1543,7 @@ def _looks_like_rtf(content: str) -> bool:
 
 def _normalize_content_format(value: str | None) -> str:
     raw = str(value or "").strip().lower()
-    if raw in {"html", "text"}:
+    if raw in {"html", "text", "oasis_json"}:
         return raw
     return "text"
 
@@ -1633,14 +1655,66 @@ def _rtf_to_html(content: str) -> str:
     if not rtf:
         return "<p></p>"
 
+    groups, controls = _scan_rtf_structure(rtf)
+    group_at = {group["start"]: group for group in groups}
+    list_hints = {}
+    for item in _rtf_list_group_kinds(rtf, groups, controls):
+        if item["kind"]:
+            list_hints[item["group"]["start"]] = (item["kind"], 0)
+    image_groups = {}
+    image_keys = {}
+    for group in groups:
+        destination = group["destination"]
+        if destination in {"pict", "shppict", "nonshppict"}:
+            image_groups[group["start"]] = group
+            raw_group = rtf[group["start"]:group["end"] or group["start"]]
+            image_keys[group["start"]] = "rtf-image:" + hashlib.sha256(re.sub(r"\s+", "", raw_group).lower().encode("utf-8")).hexdigest()
+        elif destination == "wptools":
+            raw_group = rtf[group["start"]:group["end"] or group["start"]]
+            if re.search(r"TWPOImage|5457504F496D616765", raw_group, flags=re.IGNORECASE):
+                image_groups[group["start"]] = group
+                image_keys[group["start"]] = "wptools-image:" + hashlib.sha256(re.sub(r"\s+", "", raw_group).lower().encode("utf-8")).hexdigest()
+        elif destination == "field":
+            instruction = _rtf_field_instruction(rtf, groups, group)
+            feature_id, _ = _rtf_field_kind(instruction)
+            if feature_id == "field_linked_image":
+                image_groups[group["start"]] = group
+                raw_group = rtf[group["start"]:group["end"] or group["start"]]
+                match = re.search(r"\bINCLUDEPICTURE\s+([\"'])(.*?)\1", raw_group, flags=re.IGNORECASE | re.DOTALL)
+                if match and match.group(2).strip():
+                    source_path = re.sub(r"\\\\", r"\\", match.group(2).strip())
+                    logical_path = re.sub(r"[\\/]+", "/", source_path).casefold()
+                    image_keys[group["start"]] = "linked-image:" + logical_path
+                else:
+                    image_keys[group["start"]] = "linked-image-group:" + hashlib.sha256(re.sub(r"\s+", "", raw_group).lower().encode("utf-8")).hexdigest()
+
     out: list[str] = []
-    stack: list[tuple[bool, int, dict, str]] = []
+    stack: list[tuple[bool, int, dict, str, int | None, float | None, dict, list, str, list]] = []
     ignorable = False
     ucskip = 1
     curskip = 0
     state = {"b": False, "i": False, "u": False}
+    rendered_state = {"b": False, "i": False, "u": False}
     align = "left"
     para_open = False
+    para_has_content = False
+    para_list_hint = None
+    pending_list_hint = None
+    paragraph_indents = {"left": None, "right": None, "first": None}
+    paragraph_layout = {"before": None, "after": None, "line": None, "line_raw": None, "line_rule": None, "line_mult": None, "borders": {}, "between": None}
+    paragraph_tabs: list[dict] = []
+    pending_tab_alignment = "left"
+    border_target: list[str] = []
+    seen_image_keys: set[str] = set()
+    font_names = _rtf_font_names(rtf)
+    default_font_match = re.search(r"\\deff(\d+)", rtf, flags=re.IGNORECASE)
+    font_id = int(default_font_match.group(1)) if default_font_match else None
+    font_size_pt = None
+    font_span_open = False
+    table_open = False
+    table_row_open = False
+    table_cell_open = False
+    image_placeholder_in_cell = False
     idx = 0
 
     def normalize_align(value: str) -> str:
@@ -1653,62 +1727,173 @@ def _rtf_to_html(content: str) -> str:
         return "left"
 
     def open_para() -> None:
-        nonlocal para_open
+        nonlocal para_open, para_has_content, para_list_hint, pending_list_hint
         if para_open:
             return
         style = ""
         if align != "left":
             style = f' style="text-align:{align}"'
-        out.append(f"<p{style}>")
+        attrs = ""
+        if pending_list_hint:
+            kind, level = pending_list_hint
+            attrs = f' data-rtf-list-kind="{kind}" data-rtf-list-level="{level}"'
+            para_list_hint = pending_list_hint
+            pending_list_hint = None
+        indent_attrs = "".join(
+            f' data-rtf-indent-{key}-pt="{value:g}"'
+            for key, value in paragraph_indents.items()
+            if value is not None
+        )
+        layout_attrs = "".join(
+            f' data-rtf-spacing-{key}-pt="{paragraph_layout[key]:g}"'
+            for key in ("before", "after") if paragraph_layout[key] is not None
+        )
+        if paragraph_layout["line"] is not None:
+            layout_attrs += f' data-rtf-line-spacing="{paragraph_layout["line"]:g}" data-rtf-line-rule="{paragraph_layout["line_rule"] or "exact"}"'
+        if paragraph_tabs:
+            layout_attrs += f' data-rtf-tabs="{html_escape(json.dumps(paragraph_tabs, separators=(",", ":")), quote=True)}"'
+        if paragraph_layout["borders"]:
+            layout_attrs += f' data-rtf-borders="{html_escape(json.dumps(paragraph_layout["borders"], separators=(",", ":")), quote=True)}"'
+        if paragraph_layout["between"]:
+            layout_attrs += f' data-rtf-border-between="{html_escape(json.dumps(paragraph_layout["between"], separators=(",", ":")), quote=True)}"'
+        out.append(f"<p{attrs}{indent_attrs}{layout_attrs}{style}>")
         para_open = True
+        para_has_content = False
+        apply_state(state)
+
+    def close_font_span() -> None:
+        nonlocal font_span_open
+        if font_span_open:
+            out.append("</span>")
+            font_span_open = False
+
+    def open_font_span() -> None:
+        nonlocal font_span_open
+        if font_span_open:
+            return
+        family = font_names.get(font_id) if font_id is not None else None
+        if family is None and font_size_pt is None:
+            return
+        attrs = ""
+        if family:
+            attrs += f' data-rtf-font-family="{html_escape(family, quote=True)}"'
+        if font_size_pt is not None and 0 < font_size_pt <= 200:
+            attrs += f' data-rtf-font-size-pt="{font_size_pt:g}"'
+        out.append(f"<span{attrs}>")
+        font_span_open = True
+
+    def discard_empty_para() -> None:
+        nonlocal para_open, para_has_content, para_list_hint
+        if not para_open or para_has_content:
+            return
+        if out and out[-1] == "</p>":
+            out.pop()
+        if out and out[-1].startswith("<p"):
+            out.pop()
+        para_open = False
+        para_list_hint = None
 
     def close_para() -> None:
-        nonlocal para_open
+        nonlocal para_open, para_has_content, para_list_hint, state
         if para_open:
+            logical_state = state.copy()
+            apply_state({"b": False, "i": False, "u": False})
+            state = logical_state
+            close_font_span()
             out.append("</p>")
             para_open = False
+            para_has_content = False
+            para_list_hint = None
+
+    def close_table() -> None:
+        nonlocal table_open
+        if table_open:
+            out.append("</tbody></table>")
+            table_open = False
+
+    def append_text(value: str) -> None:
+        nonlocal para_has_content
+        open_para()
+        open_font_span()
+        out.append(value)
+        if value:
+            para_has_content = True
 
     def apply_state(target: dict) -> None:
-        nonlocal state
+        nonlocal state, rendered_state
         # fecha primeiro na ordem inversa
-        if state["u"] and not target["u"]:
+        if para_open and rendered_state["u"] and not target["u"]:
             out.append("</u>")
-        if state["i"] and not target["i"]:
+        if para_open and rendered_state["i"] and not target["i"]:
             out.append("</em>")
-        if state["b"] and not target["b"]:
+        if para_open and rendered_state["b"] and not target["b"]:
             out.append("</strong>")
         # abre na ordem fixa
-        if not state["b"] and target["b"]:
+        if para_open and not rendered_state["b"] and target["b"]:
             out.append("<strong>")
-        if not state["i"] and target["i"]:
+        if para_open and not rendered_state["i"] and target["i"]:
             out.append("<em>")
-        if not state["u"] and target["u"]:
+        if para_open and not rendered_state["u"] and target["u"]:
             out.append("<u>")
         state = {"b": bool(target["b"]), "i": bool(target["i"]), "u": bool(target["u"])}
+        if para_open:
+            rendered_state = state.copy()
 
     def break_paragraph() -> None:
         apply_state({"b": False, "i": False, "u": False})
         close_para()
         open_para()
 
-    open_para()
     while idx < len(rtf):
         ch = rtf[idx]
         if ch == "{":
-            stack.append((ignorable, ucskip, state.copy(), align))
+            group = group_at.get(idx)
+            if group and idx in list_hints:
+                if para_open and not para_has_content:
+                    discard_empty_para()
+                pending_list_hint = list_hints[idx]
+                idx = group["end"] or (idx + 1)
+                continue
+            if group and idx in image_groups:
+                if table_open and not table_cell_open and not table_row_open:
+                    close_table()
+                image_key = image_keys.get(idx)
+                if (table_cell_open and image_placeholder_in_cell) or (image_key and image_key in seen_image_keys):
+                    idx = group["end"] or (idx + 1)
+                    continue
+                append_text(html_escape("[Imagem não importada]"))
+                if image_key:
+                    seen_image_keys.add(image_key)
+                if table_cell_open:
+                    image_placeholder_in_cell = True
+                idx = group["end"] or (idx + 1)
+                continue
+            if group and group["destination"] == "pntext":
+                if para_open and not para_has_content:
+                    discard_empty_para()
+                idx = group["end"] or (idx + 1)
+                continue
+            stack.append((ignorable, ucskip, state.copy(), align, font_id, font_size_pt, copy.deepcopy(paragraph_layout), paragraph_tabs.copy(), pending_tab_alignment, border_target.copy()))
             idx += 1
             continue
         if ch == "}":
             if stack:
-                prev_ignorable, prev_ucskip, prev_state, prev_align = stack.pop()
+                prev_ignorable, prev_ucskip, prev_state, prev_align, prev_font_id, prev_font_size_pt, prev_layout, prev_tabs, prev_tab_alignment, prev_border_target = stack.pop()
                 if not ignorable:
                     if align != prev_align:
                         apply_state({"b": False, "i": False, "u": False})
                         close_para()
                         align = normalize_align(prev_align)
-                        open_para()
                     apply_state(prev_state)
+                if font_id != prev_font_id or font_size_pt != prev_font_size_pt:
+                    close_font_span()
+                    font_id, font_size_pt = prev_font_id, prev_font_size_pt
+                paragraph_layout, paragraph_tabs = prev_layout, prev_tabs
+                pending_tab_alignment, border_target = prev_tab_alignment, prev_border_target
                 ignorable, ucskip = prev_ignorable, prev_ucskip
+            idx += 1
+            continue
+        if ch in "\r\n":
             idx += 1
             continue
         if ch == "\\":
@@ -1718,8 +1903,7 @@ def _rtf_to_html(content: str) -> str:
             ctrl = rtf[idx]
             if ctrl in "\\{}":
                 if not ignorable and curskip <= 0:
-                    open_para()
-                    out.append(html_escape(ctrl))
+                    append_text(html_escape(ctrl))
                 elif curskip > 0:
                     curskip -= 1
                 idx += 1
@@ -1736,8 +1920,7 @@ def _rtf_to_html(content: str) -> str:
                     except Exception:
                         decoded = ""
                     if not ignorable and curskip <= 0:
-                        open_para()
-                        out.append(html_escape(decoded))
+                        append_text(html_escape(decoded))
                     elif curskip > 0:
                         curskip -= 1
                 idx += 3
@@ -1749,21 +1932,57 @@ def _rtf_to_html(content: str) -> str:
                 arg_num = int(arg_txt) if arg_txt and arg_txt.lstrip("-").isdigit() else None
                 idx += len(m.group(0))
 
-                if word in {"par"} and not ignorable:
-                    break_paragraph()
+                if word == "trowd" and not ignorable:
+                    if para_open and not para_has_content:
+                        discard_empty_para()
+                    close_para()
+                    if not table_open:
+                        out.append("<table><tbody>")
+                        table_open = True
+                    out.append("<tr>")
+                    table_row_open = True
+                    image_placeholder_in_cell = False
+                elif word == "intbl" and not ignorable and table_row_open and not table_cell_open:
+                    out.append("<td>")
+                    table_cell_open = True
+                    image_placeholder_in_cell = False
+                elif word == "cell" and not ignorable and table_cell_open:
+                    close_para()
+                    out.append("</td>")
+                    table_cell_open = False
+                    image_placeholder_in_cell = False
+                elif word == "row" and not ignorable and table_row_open:
+                    close_para()
+                    if table_cell_open:
+                        out.append("</td>")
+                        table_cell_open = False
+                    out.append("</tr>")
+                    table_row_open = False
+                elif word == "par" and not ignorable:
+                    if table_cell_open:
+                        break_paragraph()
+                    else:
+                        close_table()
+                        break_paragraph()
                 elif word in {"line"} and not ignorable:
                     open_para()
                     out.append("<br>")
+                    para_has_content = True
                 elif word == "tab" and not ignorable:
-                    open_para()
-                    out.append("&emsp;")
+                    append_text("&emsp;")
+                elif word in {"tqc", "tqr", "tqdec", "tqbar"} and not ignorable:
+                    pending_tab_alignment = {"tqc": "center", "tqr": "right", "tqdec": "decimal", "tqbar": "bar"}[word]
+                elif word == "tx" and not ignorable and arg_num is not None:
+                    if para_open and not para_has_content:
+                        discard_empty_para()
+                    paragraph_tabs.append({"positionPt": arg_num / 20, "type": pending_tab_alignment})
+                    pending_tab_alignment = "left"
                 elif word == "uc" and arg_num is not None:
                     ucskip = max(0, arg_num)
                 elif word == "u" and arg_num is not None:
                     if not ignorable:
                         cp = arg_num if arg_num >= 0 else arg_num + 65536
-                        open_para()
-                        out.append(html_escape(chr(cp)))
+                        append_text(html_escape(chr(cp)))
                     curskip = ucskip
                 elif word == "b" and not ignorable:
                     target = state.copy()
@@ -1805,6 +2024,77 @@ def _rtf_to_html(content: str) -> str:
                         close_para()
                         align = "justify"
                         open_para()
+                elif word == "pard" and not ignorable:
+                    if table_open and not table_cell_open and not table_row_open:
+                        close_table()
+                    if para_open and not para_has_content:
+                        discard_empty_para()
+                    align = "left"
+                    paragraph_indents = {"left": None, "right": None, "first": None}
+                    paragraph_layout = {"before": None, "after": None, "line": None, "line_raw": None, "line_rule": None, "line_mult": None, "borders": {}, "between": None}
+                    paragraph_tabs = []
+                    pending_tab_alignment = "left"
+                    border_target = []
+                elif word == "f" and not ignorable and arg_num is not None:
+                    close_font_span()
+                    font_id = arg_num
+                elif word == "fs" and not ignorable and arg_num is not None:
+                    close_font_span()
+                    font_size_pt = arg_num / 2
+                elif word == "plain" and not ignorable:
+                    close_font_span()
+                    font_id = int(default_font_match.group(1)) if default_font_match else None
+                    font_size_pt = None
+                elif word in {"li", "ri", "fi"} and not ignorable and arg_num is not None:
+                    key = {"li": "left", "ri": "right", "fi": "first"}[word]
+                    if para_open and not para_has_content:
+                        discard_empty_para()
+                    paragraph_indents[key] = arg_num / 20
+                elif word in {"sb", "sa"} and not ignorable and arg_num is not None:
+                    if para_open and not para_has_content:
+                        discard_empty_para()
+                    paragraph_layout["before" if word == "sb" else "after"] = arg_num / 20
+                elif word == "sl" and not ignorable and arg_num is not None:
+                    if para_open and not para_has_content:
+                        discard_empty_para()
+                    paragraph_layout["line_raw"] = arg_num
+                    if arg_num == 1000 and paragraph_layout.get("line_mult") != 1:
+                        # RTF's legacy \sl1000 sentinel means natural single-line
+                        # spacing. It is not a literal 1000-twip (50 pt) height.
+                        paragraph_layout["line"] = None
+                        paragraph_layout["line_rule"] = None
+                    else:
+                        paragraph_layout["line"] = abs(arg_num) / 240 if paragraph_layout.get("line_mult") == 1 else abs(arg_num) / 20
+                        paragraph_layout["line_rule"] = "auto" if paragraph_layout.get("line_mult") == 1 else ("atLeast" if arg_num < 0 else "exact")
+                elif word == "slmult" and not ignorable and arg_num is not None:
+                    paragraph_layout["line_mult"] = arg_num
+                    if paragraph_layout["line_raw"] is not None:
+                        raw_line = paragraph_layout["line_raw"]
+                        if raw_line == 1000 and arg_num != 1:
+                            paragraph_layout["line"] = None
+                            paragraph_layout["line_rule"] = None
+                        else:
+                            paragraph_layout["line"] = abs(raw_line) / 240 if arg_num == 1 else abs(raw_line) / 20
+                            paragraph_layout["line_rule"] = "auto" if arg_num == 1 else ("atLeast" if raw_line < 0 else "exact")
+                elif word in {"box", "brdrt", "brdrb", "brdrl", "brdrr", "brdrbtw"} and not ignorable:
+                    side_map = {"brdrt": "top", "brdrb": "bottom", "brdrl": "left", "brdrr": "right"}
+                    if word == "box":
+                        border_target = ["top", "right", "bottom", "left"]
+                    elif word == "brdrbtw":
+                        border_target = ["between"]
+                    else:
+                        border_target = [side_map[word]]
+                elif word == "brdrs" and not ignorable:
+                    for side in border_target:
+                        target = paragraph_layout["between"] if side == "between" else paragraph_layout["borders"].setdefault(side, {})
+                        if isinstance(target, dict):
+                            target["style"] = "solid"
+                elif word == "brdrw" and not ignorable and arg_num is not None:
+                    # RTF border width is expressed in eighths of a point.
+                    for side in border_target:
+                        target = paragraph_layout["between"] if side == "between" else paragraph_layout["borders"].setdefault(side, {})
+                        if isinstance(target, dict):
+                            target["widthPt"] = max(0, arg_num / 8)
                 elif word in RTF_DESTINATIONS_TO_IGNORE:
                     ignorable = True
                 continue
@@ -1815,16 +2105,597 @@ def _rtf_to_html(content: str) -> str:
             idx += 1
             continue
         if not ignorable:
-            open_para()
-            out.append(html_escape(ch))
+            append_text(html_escape(ch))
         idx += 1
 
     apply_state({"b": False, "i": False, "u": False})
     close_para()
+    if table_cell_open:
+        out.append("</td>")
+    if table_row_open:
+        out.append("</tr>")
+    close_table()
     html = "".join(out).strip()
     if not html:
         return "<p></p>"
     return html
+
+
+def _rtf_font_table_and_span(rtf: str) -> tuple[tuple[int, int] | None, dict[int, int]]:
+    marker = re.search(r"(?<!\\)\\fonttbl\b", rtf, flags=re.IGNORECASE)
+    if not marker:
+        return None, {}
+    start = rtf.rfind("{", 0, marker.start())
+    if start < 0:
+        raise ValueError("A tabela de fontes RTF está malformada.")
+    depth = 0
+    child_start = None
+    charsets: dict[int, int] = {}
+    idx = start
+    while idx < len(rtf):
+        char = rtf[idx]
+        if char == "\\":
+            if idx + 1 < len(rtf) and rtf[idx + 1] == "'":
+                idx += 4
+            else:
+                idx += 2
+            continue
+        if char == "{":
+            if depth == 1:
+                child_start = idx
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 1 and child_start is not None:
+                entry = rtf[child_start:idx + 1]
+                font_id = re.search(r"\\f(\d+)", entry)
+                charset = re.search(r"\\fcharset(\d+)", entry, flags=re.IGNORECASE)
+                if font_id:
+                    charsets[int(font_id.group(1))] = int(charset.group(1)) if charset else 0
+                child_start = None
+            if depth == 0:
+                return (start, idx + 1), charsets
+        idx += 1
+    raise ValueError("A tabela de fontes RTF está desbalanceada.")
+
+
+def _rtf_font_names(rtf: str) -> dict[int, str]:
+    groups, _ = _scan_rtf_structure(rtf)
+    font_table = next((group for group in groups if group["destination"] == "fonttbl"), None)
+    if not font_table:
+        return {}
+    names = {}
+    for group in groups:
+        if group["parent"] != font_table["id"]:
+            continue
+        raw = rtf[group["start"]:group["end"] or group["start"]]
+        font_id = re.search(r"\\f(\d+)(?![a-zA-Z])", raw)
+        if not font_id:
+            continue
+        decoded = re.sub(
+            r"\\'([0-9a-fA-F]{2})",
+            lambda match: bytes.fromhex(match.group(1)).decode("cp1252", errors="replace"),
+            raw,
+        )
+        name = re.sub(r"\\[a-zA-Z]+-?\d* ?", "", decoded).replace("{", " ").replace("}", " ").replace(";", " ").strip()
+        name = re.sub(r"\s+", " ", name)
+        if name and re.fullmatch(r"[\w ,._-]{1,80}", name, flags=re.UNICODE):
+            names[int(font_id.group(1))] = name
+    return names
+
+
+_RTF_IGNORABLE_DESTINATIONS = {
+    "colortbl", "datastore", "fonttbl", "info", "stylesheet", "themedata",
+    "xmlattrname", "xmlattrvalue", "xmlopen", "listtable", "listoverridetable",
+    "pnseclvl",
+}
+_RTF_KNOWN_FORMATTING_CONTROLS = {
+    "ansi", "ansicpg", "b", "blue", "cf", "cpg", "deff", "deflang", "deftab",
+    "f", "fcharset", "fi", "fs", "froman", "fswiss", "green", "i", "li", "lin",
+    "margb", "margf", "margh", "margl", "margr", "margt", "paperh", "paperw",
+    "pgwsxn", "pghsxn", "marglsxn", "margrsxn", "margtsxn", "margbsxn", "lndscpsxn",
+    "pard", "plain", "ql", "qc", "qr", "qj", "red", "ri", "sa", "sb", "sl",
+    "tab", "u", "uc", "ul", "ul0", "ulnone", "rtf", "par", "line", "tx",
+    "lang", "langfe", "ltrch", "rtlch", "super", "sub", "nosupersub", "strike",
+    "striked", "caps", "scaps", "expnd", "expndtw", "kerning", "outl", "shadow",
+    "embo", "impr", "chcbpat", "chcfpat", "highlight", "ulc", "uldb", "uld",
+    "ulw", "ulwave", "slmult", "keep", "keepn", "widctlpar", "nowidctlpar",
+    "pagew", "pageh", "landscape", "facingp", "margmirror", "viewkind", "viewscale",
+    # WPTools version metadata and standard RTF header/footer distances do not
+    # carry body content. Header/footer destinations remain structurally guarded.
+    "wptoolsver", "headery", "footery",
+    # RTF paragraph tab leaders/alignment and paragraph/side borders are
+    # presentation controls. The current HTML/Oasis path may approximate or
+    # omit their appearance, but they do not carry independent document text.
+    "tqc", "tqr", "tqdec", "tqbar", "toc", "brdrbtw", "box", "brdrs",
+    "brdrt", "brdrb", "brdrl", "brdrr", "brdrw", "brdrcf", "brsp",
+}
+_RTF_STRUCTURAL_CONTROL_WORDS = {
+    "annotation", "atrfend", "atrfstart", "bin", "cell", "cellx", "endnhere", "field",
+    "fldinst", "fldrslt", "footnote", "ftnsep", "ftnsepc", "header", "headerf",
+    "headerl", "headerr", "footer", "footerf", "footerl", "footerr", "formfield",
+    "ffdata", "ffname", "fftype", "intbl", "listtable", "listoverridetable", "ls",
+    "ilvl", "nonshppict", "object", "objdata", "objclass", "page", "pagebb", "pict",
+    "pntext", "pntxta", "pntxtb", "pndec", "pnlcltr", "pnlcrm", "pnlvl", "pnseclvl",
+    "pnstart", "pnucltr", "pnucrm", "row", "shp", "shpinst", "shppict", "shprslt",
+    "shptxt", "trowd", "v", "deleted", "revised", "revauth", "revdttm", "sect",
+    "sectd", "trgaph", "trleft", "wptools", "wptable", "wpprheadfoot",
+}
+
+# RTF font charsets describe the selected font's character repertoire; they
+# are not, by themselves, the document's byte-decoding codepage. ANSI escaped
+# bytes continue to be decoded using the document codepage (currently
+# Windows-1252 only). These Windows charset identifiers occur in EasyDental
+# font tables, including fallback fonts that are not necessarily used for the
+# document's Portuguese text.
+_RTF_SUPPORTED_FONT_CHARSETS = {
+    0,    # ANSI
+    1,    # DEFAULT
+    2,    # SYMBOL (rendered through its declared font)
+    161,  # GREEK
+    162,  # TURKISH
+    163,  # VIETNAMESE
+    177,  # HEBREW
+    178,  # ARABIC
+    186,  # BALTIC
+    204,  # RUSSIAN / CYRILLIC
+    238,  # EASTERN EUROPE
+}
+
+
+def _scan_rtf_structure(rtf: str) -> tuple[list[dict], list[dict]]:
+    """Tokenize groups/control words so feature decisions ignore escaped text."""
+    groups: list[dict] = []
+    controls: list[dict] = []
+    stack: list[int] = []
+    idx = 0
+    max_depth = 0
+    while idx < len(rtf):
+        char = rtf[idx]
+        if char == "{":
+            parent = stack[-1] if stack else None
+            group_id = len(groups)
+            groups.append({"id": group_id, "parent": parent, "children": [], "start": idx, "end": None, "destination": None, "ignorable": False})
+            if parent is not None:
+                groups[parent]["children"].append(group_id)
+            stack.append(group_id)
+            max_depth = max(max_depth, len(stack))
+            if max_depth > 256:
+                raise ValueError("O RTF excede a profundidade máxima segura de grupos.")
+            idx += 1
+            continue
+        if char == "}":
+            if not stack:
+                raise ValueError("O RTF possui grupos desbalanceados.")
+            groups[stack.pop()]["end"] = idx + 1
+            idx += 1
+            continue
+        if char != "\\":
+            idx += 1
+            continue
+        if idx + 1 >= len(rtf):
+            raise ValueError("O RTF termina em uma sequência de escape incompleta.")
+        next_char = rtf[idx + 1]
+        if next_char == "'":
+            if idx + 3 >= len(rtf) or not re.fullmatch(r"[0-9a-fA-F]{2}", rtf[idx + 2:idx + 4]):
+                raise ValueError("O RTF contém um escape hexadecimal inválido.")
+            idx += 4
+            continue
+        if next_char in "{}\\":
+            idx += 2
+            continue
+        if next_char == "*":
+            if stack:
+                groups[stack[-1]]["ignorable"] = True
+            idx += 2
+            continue
+        if not next_char.isalpha():
+            idx += 2
+            continue
+        match = re.match(r"([a-zA-Z]+)(-?\d+)? ?", rtf[idx + 1:])
+        if not match:
+            raise ValueError("O RTF contém uma palavra de controle inválida.")
+        word = match.group(1).lower()
+        argument = int(match.group(2)) if match.group(2) else None
+        token = {"word": word, "argument": argument, "start": idx, "group": stack[-1] if stack else None}
+        controls.append(token)
+        if stack:
+            current_group = groups[stack[-1]]
+            if current_group["destination"] is None:
+                current_group["destination"] = word
+        idx += 1 + len(match.group(0))
+        if word == "bin":
+            if argument is None or argument < 0 or idx + argument > len(rtf):
+                raise ValueError("O RTF contém um bloco binário com tamanho inválido.")
+            idx += argument
+    if stack:
+        raise ValueError("O RTF possui grupos desbalanceados.")
+    roots = [group for group in groups if group["parent"] is None]
+    if len(roots) != 1 or rtf[:roots[0]["start"]].strip() or rtf[roots[0]["end"]:].strip():
+        raise ValueError("O RTF precisa conter um único grupo de documento completo.")
+    return groups, controls
+
+
+def _rtf_group_is_within(groups: list[dict], group_id: int | None, destinations: set[str]) -> bool:
+    while group_id is not None:
+        group = groups[group_id]
+        if group["destination"] in destinations:
+            return True
+        group_id = group["parent"]
+    return False
+
+
+def _rtf_group_descends_from(groups: list[dict], group_id: int, ancestor_id: int) -> bool:
+    parent = groups[group_id]["parent"]
+    while parent is not None:
+        if parent == ancestor_id:
+            return True
+        parent = groups[parent]["parent"]
+    return False
+
+
+def _rtf_field_instruction(rtf: str, groups: list[dict], field_group: dict) -> str:
+    instruction_groups = [
+        group for group in groups
+        if group["destination"] == "fldinst" and _rtf_group_descends_from(groups, group["id"], field_group["id"])
+    ]
+    if not instruction_groups:
+        return ""
+    raw = rtf[instruction_groups[0]["start"]:instruction_groups[0]["end"] or instruction_groups[0]["start"]]
+    return re.sub(r"\\[a-zA-Z]+-?\d* ?", " ", raw).replace("{", " ").replace("}", " ").upper()
+
+
+def _rtf_field_kind(instruction: str) -> tuple[str, str]:
+    if re.search(r"\bINCLUDEPICTURE\b", instruction):
+        return "field_linked_image", "imagem vinculada por campo do documento"
+    if re.search(r"\bMERGEFIELD\b", instruction):
+        return "field_merge", "campo Word de mesclagem"
+    if re.search(r"\bHYPERLINK\b", instruction):
+        return "field_hyperlink", "hiperlink estruturado"
+    if re.search(r"\b(?:DATE|TIME|PAGE|NUMPAGES|SECTION|REF|SEQ|FORMTEXT|FORMCHECKBOX)\b", instruction):
+        return "field_dynamic", "campo Word dinâmico"
+    return "field_unknown", "campo Word sem semântica reconhecida"
+
+
+def _rtf_list_group_kinds(rtf: str, groups: list[dict], controls: list[dict]) -> list[dict]:
+    """Recognize only explicit legacy list instances with a known marker type."""
+    candidates = [
+        group for group in groups
+        if group["destination"] in {"pn", "pntext"}
+        and not _rtf_group_is_within(groups, group["parent"], {"pnseclvl", "listtable", "listoverridetable"})
+    ]
+    result = []
+    for group in candidates:
+        inside = [
+            token for token in controls
+            if group["start"] < token["start"] < (group["end"] or group["start"])
+            and token["word"] in {"pnlvlblt", "pndec", "pnucltr", "pnucrm", "pnlcltr", "pnlcrm"}
+        ]
+        kind = "bullet" if any(token["word"] == "pnlvlblt" for token in inside) else ("ordered" if inside else None)
+        if group["destination"] == "pntext" or kind:
+            result.append({"group": group, "kind": kind})
+    for item in result:
+        if item["kind"]:
+            continue
+        group = item["group"]
+        peers = [other for other in result if other["kind"] and abs(other["group"]["start"] - group["start"]) <= 512]
+        if peers:
+            item["kind"] = min(peers, key=lambda other: abs(other["group"]["start"] - group["start"]))["kind"]
+    return result
+
+
+def _rtf_table_structure_is_supported(controls: list[dict], groups: list[dict]) -> bool:
+    visible = [token for token in controls if not _rtf_group_is_within(groups, token["group"], _RTF_IGNORABLE_DESTINATIONS)]
+    in_row = False
+    expected_cells = actual_cells = 0
+    saw_table = False
+    for token in visible:
+        word = token["word"]
+        if word == "trowd":
+            if in_row:
+                return False
+            in_row = True
+            expected_cells = actual_cells = 0
+            saw_table = True
+        elif word == "cellx" and in_row:
+            expected_cells += 1
+        elif word == "cell" and in_row:
+            actual_cells += 1
+        elif word == "row":
+            if not in_row or expected_cells == 0 or actual_cells != expected_cells:
+                return False
+            in_row = False
+        elif word in {"intbl", "cellx", "cell", "row"} and not in_row:
+            return False
+    return saw_table and not in_row
+
+
+def analyze_rtf_capabilities(content: str) -> dict:
+    """Single source of truth for safe/partial/unsupported RTF import decisions."""
+    rtf = str(content or "")
+    if len(rtf) > 2_000_000:
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": "O arquivo RTF excede o limite seguro de 2 MB de texto."}
+    normalized_rtf = rtf.rstrip(" \t\r\n\x00")
+    trailing_padding = rtf[len(normalized_rtf):]
+    if len(trailing_padding) > 16 or "\x00" in normalized_rtf:
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": "O RTF contém bytes nulos fora do preenchimento final permitido; a importação foi bloqueada."}
+    rtf = normalized_rtf
+    if not re.match(r"^\s*\{\\rtf\d+(?=[\\\s{}])", rtf):
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": "O conteúdo não possui um cabeçalho RTF válido."}
+
+    try:
+        groups, controls = _scan_rtf_structure(rtf)
+    except ValueError as exc:
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": str(exc)}
+
+    codepages = {token["argument"] for token in controls if token["word"] in {"ansicpg", "cpg"} and token["argument"] is not None}
+    if codepages - {1252}:
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": "Este RTF declara uma codepage diferente de Windows-1252; a importação foi bloqueada para evitar corrupção de texto."}
+
+    font_span, font_charsets = _rtf_font_table_and_span(rtf)
+    body_for_font_use = rtf if not font_span else rtf[:font_span[0]] + rtf[font_span[1]:]
+    used_fonts = {int(value) for value in re.findall(r"\\f(\d+)(?![a-zA-Z])", body_for_font_use)}
+    default_font = re.search(r"\\deff(\d+)", body_for_font_use, flags=re.IGNORECASE)
+    if default_font:
+        used_fonts.add(int(default_font.group(1)))
+    if font_span and used_fonts - set(font_charsets):
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": "Este RTF seleciona uma fonte sem codificação verificável; a importação foi bloqueada para evitar corrupção de caracteres."}
+    used_charsets = {font_charsets[font_id] for font_id in used_fonts if font_id in font_charsets}
+    if used_charsets - _RTF_SUPPORTED_FONT_CHARSETS:
+        return {"classification": "RTF_INVALID", "supported": False, "features": [], "cosmetic_loss_features": [], "structural_loss_features": [], "warnings": [], "reason": "Este RTF usa um charset de fonte não suportado; a importação foi bloqueada para evitar corrupção de caracteres."}
+
+    features: set[str] = {"text"}
+    cosmetic: set[str] = set()
+    structural: dict[str, str] = {}
+    visible_controls = [token for token in controls if not _rtf_group_is_within(groups, token["group"], _RTF_IGNORABLE_DESTINATIONS)]
+    words = {token["word"] for token in visible_controls}
+
+    if words & {"par", "line"}:
+        features.add("paragraphs_and_line_breaks")
+    if re.search(r"<<[^<>\r\n]{1,120}>>", _rtf_to_text(rtf)):
+        features.add("literal_merge_tokens")
+    if "\x00" in trailing_padding:
+        features.add("trailing_legacy_padding_removed")
+    if words & {"tab", "deftab", "tx"}:
+        features.add("tabs_approximated")
+        cosmetic.add("tab_alignment")
+    if words & {"f", "fs", "deff"}:
+        cosmetic.add("font_family_or_size")
+    if words & {
+        "b", "i", "ul", "ul0", "ulnone", "ulc", "uldb", "uld", "ulw", "ulwave",
+        "strike", "striked", "super", "sub", "nosupersub", "caps", "scaps",
+        "expnd", "expndtw", "kerning", "outl", "shadow", "embo", "impr",
+        "chcbpat", "chcfpat", "highlight", "cf",
+    }:
+        cosmetic.add("inline_character_formatting")
+    if words & {"ql", "qc", "qr", "qj"}:
+        cosmetic.add("paragraph_alignment")
+    if words & {"li", "ri", "fi", "lin", "rin", "sa", "sb", "sl", "slmult", "keep", "keepn", "widctlpar", "nowidctlpar"}:
+        cosmetic.add("paragraph_spacing_or_indents")
+    if words & {"lang", "langfe", "ltrch"}:
+        cosmetic.add("language_or_text_direction")
+    if words & {"tqc", "tqr", "tqdec", "tqbar"}:
+        cosmetic.add("tab_alignment")
+    if "toc" in words:
+        cosmetic.add("paragraph_style_metadata")
+    if words & {"brdrbtw", "box", "brdrs", "brdrt", "brdrb", "brdrl", "brdrr", "brdrw", "brdrcf", "brsp"}:
+        cosmetic.add("paragraph_borders")
+    if words & {"margl", "margr", "margt", "margb", "margf", "margh", "paperw", "paperh", "landscape", "pgwsxn", "pghsxn", "marglsxn", "margrsxn", "margtsxn", "margbsxn", "lndscpsxn", "headery", "footery"}:
+        cosmetic.add("page_geometry")
+    if "wptoolsver" in words:
+        features.add("wptools_version_metadata")
+
+    field_groups = [group for group in groups if group["destination"] == "field"]
+    for field_group in field_groups:
+        instruction = _rtf_field_instruction(rtf, groups, field_group)
+        feature_id, label = _rtf_field_kind(instruction)
+        if feature_id == "field_linked_image":
+            features.add("image_placeholder")
+            cosmetic.add("image_placeholder")
+        else:
+            structural[feature_id] = label
+
+    table_words = {"trowd", "intbl", "cellx", "trgaph", "trleft", "wptable", "cell", "row"}
+    if words & table_words:
+        if _rtf_table_structure_is_supported(controls, groups):
+            features.add("simple_table")
+        else:
+            structural["table_unsupported_shape"] = "estrutura de tabela fora do subconjunto experimental suportado"
+    elif "wptable" in words:
+        structural["wptable_without_table"] = "estrutura WPTools de tabela sem linhas RTF recuperáveis"
+    image_destinations = {"pict", "shppict", "nonshppict"}
+    if any(group["destination"] in image_destinations for group in groups) or words & image_destinations:
+        features.add("image_placeholder")
+        cosmetic.add("image_placeholder")
+    if words & {"object", "objdata", "objclass"} or any(group["destination"] == "object" for group in groups):
+        structural["object"] = "objeto incorporado"
+    for group in groups:
+        if group["destination"] == "wptools":
+            group_text = rtf[group["start"]:group["end"] or group["start"]]
+            if re.search(r"TWPOImage|5457504F496D616765", group_text, flags=re.IGNORECASE):
+                features.add("image_placeholder")
+                cosmetic.add("image_placeholder")
+            else:
+                structural["wptools_payload"] = "conteúdo proprietário estrutural do formato legado"
+    list_instances = _rtf_list_group_kinds(rtf, groups, controls)
+    if list_instances:
+        if any(item["kind"] not in {"bullet", "ordered"} for item in list_instances):
+            structural["list_instance_unknown"] = "instância de lista sem marcador reconhecido"
+        else:
+            features.add("list_instances")
+    elif words & {"ls", "ilvl"}:
+        structural["list_instance_unknown"] = "referência de lista sem definição de instância suportada"
+    elif any(group["destination"] in {"pnseclvl", "listtable", "listoverridetable"} for group in groups) or words & {"listtable", "listoverridetable", "pntxta", "pntxtb", "pndec", "pnlcltr", "pnlcrm", "pnlvl", "pnstart", "pnucltr", "pnucrm"}:
+        features.add("list_definitions_metadata_only")
+    if words & {"page", "pagebb", "sect", "sectd"}:
+        structural["page_break_or_section"] = "quebra de página ou seção"
+    wpprheadfoot = [token for token in visible_controls if token["word"] == "wpprheadfoot"]
+    has_standard_header_footer = any(group["destination"] in {"header", "headerf", "headerl", "headerr", "footer", "footerf", "footerl", "footerr"} for group in groups)
+    if has_standard_header_footer or any(token["argument"] != 0 for token in wpprheadfoot):
+        structural["header_footer"] = "cabeçalho ou rodapé não coberto pelo marcador WPTools zero"
+    elif wpprheadfoot:
+        features.add("wpprheadfoot0_metadata")
+    if any(group["destination"] in {"annotation", "atrfstart", "atrfend", "footnote", "endnote"} for group in groups):
+        structural["annotation_or_note"] = "anotação ou nota vinculada"
+    if words & {"v", "deleted", "revised", "revauth", "revdttm"}:
+        structural["hidden_or_revision_text"] = "texto oculto ou alterações controladas"
+    if "rtlch" in words:
+        structural["right_to_left_text"] = "texto com direção da direita para a esquerda"
+    if any(token["word"] == "bin" for token in visible_controls):
+        structural["binary_payload"] = "conteúdo binário incorporado"
+
+    known_words = _RTF_KNOWN_FORMATTING_CONTROLS | _RTF_STRUCTURAL_CONTROL_WORDS | {
+        "fonttbl", "colortbl", "datastore", "themedata", "stylesheet", "info", "fldinst", "fldrslt",
+        "pict", "shppict", "nonshppict", "field", "object", "objdata", "objclass", "formfield",
+        "ffdata", "ffname", "fftype", "cellx", "row", "cell", "bin", "listtable", "listoverridetable",
+        "trowd", "intbl", "trgaph", "trleft", "wptools", "wptable", "wpprheadfoot", "easy", "logo",
+        "sectdefaultcl", "endnhere", "pnhang", "pnindent", "pn", "pnlvlblt", "pnf", "pnfs",
+    }
+    unsupported_group_destinations = {
+        "annotation", "atrfend", "atrfstart", "field", "fldinst", "fldrslt", "footnote", "ftnsep",
+        "ftnsepc", "header", "headerf", "headerl", "headerr", "footer", "footerf", "footerl",
+        "footerr", "listtable", "listoverridetable", "nonshppict", "object", "pict", "shppict",
+        "wptools", "pn", "pntext", "pnseclvl",
+    }
+    unknown_controls: list[str] = []
+    for token in visible_controls:
+        # This control is safe as a document-root WPTools version marker only.
+        # Do not treat similarly named nested payload controls as ignorable.
+        if token["word"] == "wptoolsver" and token["group"] != 0:
+            if token["word"] not in unknown_controls:
+                unknown_controls.append(token["word"])
+            continue
+        if token["word"] in known_words or _rtf_group_is_within(groups, token["group"], unsupported_group_destinations):
+            continue
+        if token["word"] not in {"*"}:
+            if token["word"] not in unknown_controls:
+                unknown_controls.append(token["word"])
+    if unknown_controls:
+        structural["unknown_control"] = "controle(s) RTF ainda não suportado(s): " + ", ".join(f"\\{word}" for word in unknown_controls[:8])
+
+    warnings: list[str] = []
+    if cosmetic:
+        warnings.append("Importação RTF parcial: texto e parágrafos são importados, mas detalhes visuais podem variar no Oasis.")
+    warning_by_feature = {
+        "image_placeholder": "Imagens RTF não são carregadas; um placeholder textual explícito foi inserido.",
+        "font_family_or_size": "Família e tamanho de fonte são transferidos ao Oasis; a renderização pode variar conforme fontes disponíveis.",
+        "inline_character_formatting": "Negrito, itálico, sublinhado e outros estilos inline podem variar.",
+        "paragraph_alignment": "Alinhamento, recuos e espaçamentos básicos são transferidos ao Oasis; diferenças de renderização ainda podem ocorrer.",
+        "paragraph_spacing_or_indents": "Recuos e espaçamentos RTF básicos são mapeados; detalhes avançados de layout podem variar.",
+        "tab_alignment": "Tabulações: stops declarados são transferidos ao Oasis; cada controle de tabulação no texto usa espaçamento visual aproximado.",
+        "page_geometry": "A geometria física e as margens RTF são aplicadas; detalhes avançados de seção podem variar.",
+        "paragraph_style_metadata": "Metadados de nível/estilo de sumário do parágrafo são preservados como texto, mas a semântica de navegação/sumário não é recriada.",
+        "paragraph_borders": "Bordas simples são mapeadas; cor, espaçamento, bordas entre parágrafos e variantes avançadas podem variar.",
+    }
+    warnings.extend(warning_by_feature[item] for item in sorted(cosmetic) if item in warning_by_feature)
+    unsupported_labels = list(dict.fromkeys(structural.values()))
+    reason = ""
+    if structural:
+        details = ", ".join(unsupported_labels)
+        reason = f"Este documento contém recursos que ainda não podem ser importados com segurança: {details}. O original foi preservado."
+        classification = "RTF_UNSUPPORTED_STRUCTURED"
+        supported = False
+    elif cosmetic:
+        classification = "RTF_PARTIAL_FORMATTING"
+        supported = True
+    else:
+        classification = "RTF_SAFE_TEXTUAL"
+        supported = True
+    return {
+        "detected_format": "rtf",
+        "classification": classification,
+        "supported": supported,
+        "features": sorted(features | set(cosmetic) | set(structural)),
+        "cosmetic_loss_features": sorted(cosmetic),
+        "structural_loss_features": sorted(structural),
+        "warnings": warnings,
+        "reason": reason,
+    }
+
+
+def _validate_rtf_import_source(content: str) -> list[str]:
+    analysis = analyze_rtf_capabilities(content)
+    if not analysis["supported"]:
+        raise ValueError(analysis["reason"])
+    return analysis["warnings"]
+
+
+def _convert_rtf_for_import(content: str) -> dict:
+    analysis = analyze_rtf_capabilities(content)
+    if not analysis["supported"]:
+        raise ValueError(analysis["reason"])
+    rtf_for_conversion = str(content or "").rstrip(" \t\r\n\x00")
+    page_config = _rtf_page_config(rtf_for_conversion)
+    return {
+        "html": _rtf_to_html(rtf_for_conversion),
+        "warnings": analysis["warnings"],
+        "format": "rtf",
+        "persisted": False,
+        "classification": analysis["classification"],
+        "features": analysis["features"],
+        "page_config": page_config,
+        "page_settings": _rtf_page_settings(page_config) if page_config else None,
+    }
+
+
+def _rtf_page_config(rtf: str) -> dict | None:
+    """Extract effective standard RTF page geometry; values in page_config are mm."""
+    try:
+        _, controls = _scan_rtf_structure(rtf)
+    except ValueError:
+        return None
+
+    base_words = {"paperw": "largura_mm", "paperh": "altura_mm", "margl": "margem_esquerda_mm", "margr": "margem_direita_mm", "margt": "margem_superior_mm", "margb": "margem_inferior_mm"}
+    section_words = {"pgwsxn": "largura_mm", "pghsxn": "altura_mm", "marglsxn": "margem_esquerda_mm", "margrsxn": "margem_direita_mm", "margtsxn": "margem_superior_mm", "margbsxn": "margem_inferior_mm"}
+    twips = {"largura_mm": 12240, "altura_mm": 15840, "margem_esquerda_mm": 1440, "margem_direita_mm": 1440, "margem_superior_mm": 1440, "margem_inferior_mm": 1440}
+    section_values: dict[str, int] = {}
+    orientation = None
+    for token in controls:
+        word, argument = token["word"], token["argument"]
+        if word in {"landscape", "lndscpsxn"}:
+            orientation = "Paisagem" if argument != 0 else "Retrato"
+        elif word == "pgnstarts":
+            continue
+        elif word in base_words and argument is not None:
+            twips[base_words[word]] = argument
+        elif word in section_words and argument is not None:
+            section_values[section_words[word]] = argument
+    twips.update(section_values)
+    width, height = twips["largura_mm"], twips["altura_mm"]
+    if not (1 <= width <= 200000 and 1 <= height <= 200000):
+        return None
+    if any(value < 0 or value > 200000 for value in twips.values()):
+        return None
+    effective_orientation = orientation or ("Paisagem" if width > height else "Retrato")
+    if (effective_orientation == "Paisagem" and width < height) or (effective_orientation == "Retrato" and width > height):
+        twips["largura_mm"], twips["altura_mm"] = height, width
+    return {
+        "tipo_papel": "Definido pelo usuário",
+        "orientacao": effective_orientation,
+        **{key: round(value * 25.4 / 1440, 2) for key, value in twips.items()},
+    }
+
+
+def _rtf_page_settings(page_config: dict) -> dict:
+    """Translate physical mm geometry to Oasis CSS-pixel document units."""
+    mm_to_px = lambda value: round(float(value) * 96 / 25.4, 4)
+    return {
+        "width": mm_to_px(page_config["largura_mm"]),
+        "height": mm_to_px(page_config["altura_mm"]),
+        "orientation": "landscape" if page_config["orientacao"] == "Paisagem" else "portrait",
+        "margins": {
+            "left": mm_to_px(page_config["margem_esquerda_mm"]),
+            "right": mm_to_px(page_config["margem_direita_mm"]),
+            "top": mm_to_px(page_config["margem_superior_mm"]),
+            "bottom": mm_to_px(page_config["margem_inferior_mm"]),
+            # The RTF importer does not create header/footer content. Reserving
+            # Oasis's 48px defaults here can consume the entire body on a small
+            # label page and force every paragraph onto a separate page.
+            "header": 0,
+            "footer": 0,
+            "gutter": 0,
+        },
+    }
 
 
 def _escape_rtf_text(text: str) -> str:
@@ -2080,6 +2951,8 @@ def _load_content_bundle_from_path(abs_path: Path | None) -> dict:
     meta = _load_editor_meta_from_abs(abs_path)
     pagina_cfg = _normalize_page_config(meta.get("pagina_config", {}))
     meta_html = str(meta.get("conteudo_html") or "")
+    if str(meta.get("conteudo_formato") or "").strip().lower() == "oasis_json":
+        return {"text": raw, "html": "", "format": "oasis_json", "pagina_config": pagina_cfg}
     if ext in {".html", ".htm"}:
         html = meta_html.strip() or raw
         return {
@@ -2118,6 +2991,121 @@ def _load_content_bundle_from_path(abs_path: Path | None) -> dict:
     }
 
 
+def _resolve_editor_catalog_file(item: ModeloDocumento) -> tuple[Path | None, str]:
+    extension = str(item.extensao or "").strip().lower()
+    root = (MODEL_STORAGE_DIR / "clinicas" / str(int(item.clinica_id))) if item.clinica_id is not None else (MODEL_STORAGE_DIR / "base")
+    if extension in TEXT_EXTENSIONS:
+        info = _resolve_model_file_info(item)
+        candidate = info.get("path") if isinstance(info, dict) else None
+        if isinstance(candidate, Path):
+            # The shared resolver already restricts these formats to the tenant/base root.
+            safe = registered_catalog_path(candidate, root=root, filename=candidate.name, extension=candidate.suffix)
+            if safe is not None:
+                return safe, str(info.get("source") or "registered")
+    registered = _safe_relative_path(str(item.caminho_arquivo or ""))
+    safe = registered_catalog_path(
+        registered,
+        root=root,
+        filename=str(item.nome_arquivo or ""),
+        extension=extension,
+    )
+    if safe is None:
+        return None, "invalid_or_unresolved_registered_path"
+    return safe, "registered"
+
+
+def _catalog_diagnostic_response(item: ModeloDocumento, *, extension: str, path: Path | None, reason: str, detected_format: str | None = None, preview: str = "", metadata: dict | None = None) -> dict:
+    response = _serialize_item(item)
+    file_exists = bool(path and path.is_file())
+    size_bytes = 0
+    if file_exists:
+        try:
+            size_bytes = int(path.stat().st_size)
+        except OSError:
+            file_exists = False
+    response.update({
+        "conteudo": "",
+        "conteudo_html": "",
+        "conteudo_formato": "diagnostic",
+        "pagina_config": _normalize_page_config((metadata or {}).get("pagina_config", {})),
+        "diagnostico": {
+            "mode": "diagnostic",
+            "read_only": True,
+            "file_exists": file_exists,
+            "size_bytes": size_bytes,
+            "extension": extension,
+            "detected_format": detected_format or extension.lstrip("."),
+            "reason": reason,
+            "preview": str(preview or "")[:MAX_PREVIEW_CHARS],
+            "preview_truncated": len(str(preview or "")) > MAX_PREVIEW_CHARS,
+            "metadata": {"conteudo_formato": str((metadata or {}).get("conteudo_formato") or "")},
+        },
+    })
+    return response
+
+
+def _load_catalog_model_detail(item: ModeloDocumento, extension: str, path: Path | None) -> dict:
+    if not path or not path.is_file():
+        return _catalog_diagnostic_response(item, extension=extension, path=path, reason="Arquivo físico associado ao registro não foi encontrado.", detected_format="missing")
+
+    try:
+        size_bytes = int(path.stat().st_size)
+    except OSError:
+        size_bytes = 0
+    if not size_bytes:
+        return _catalog_diagnostic_response(item, extension=extension, path=path, reason="Arquivo físico vazio ou inacessível.", detected_format="empty")
+
+    if extension in OFFICE_BINARY_EXTENSIONS:
+        return _catalog_diagnostic_response(
+            item,
+            extension=extension,
+            path=path,
+            reason="Formato Office/imagem sem conversor seguro. O binário não foi decodificado nem enviado ao editor.",
+            detected_format=extension.lstrip("."),
+        )
+
+    if extension in SNIFFABLE_CATALOG_EXTENSIONS:
+        if size_bytes > MAX_SNIFF_BYTES:
+            return _catalog_diagnostic_response(item, extension=extension, path=path, reason="Arquivo excede o limite de inspeção segura; nenhuma conversão foi tentada.", detected_format="oversize")
+        try:
+            raw_bytes = path.read_bytes()
+        except OSError:
+            return _catalog_diagnostic_response(item, extension=extension, path=path, reason="Arquivo físico inacessível.", detected_format="unreadable")
+        metadata = _load_editor_meta_from_abs(path)
+        classification = classify_catalog_bytes(raw_bytes, extension, str(metadata.get("conteudo_formato") or ""))
+        if classification["kind"] == "diagnostic":
+            return _catalog_diagnostic_response(item, extension=extension, path=path, reason=classification["reason"], detected_format=classification["detected_format"], preview=classification.get("preview", ""), metadata=metadata)
+        if classification["kind"] == "oasis_json":
+            content = _load_content_bundle_from_path(path)
+        elif classification["kind"] == "rtf":
+            raw_text = str(classification.get("content") or "")
+            content = {"text": _rtf_to_text(raw_text), "html": _rtf_to_html(raw_text), "format": "html", "pagina_config": _normalize_page_config(metadata.get("pagina_config", {}))}
+        elif classification["kind"] == "html":
+            raw_html = str(classification.get("content") or "")
+            content = {"text": _html_to_text(raw_html), "html": raw_html, "format": "html", "pagina_config": _normalize_page_config(metadata.get("pagina_config", {}))}
+        else:
+            if str(metadata.get("conteudo_html") or "").strip():
+                content = _load_content_bundle_from_path(path)
+            else:
+                content = {"text": str(classification.get("content") or ""), "html": "", "format": "text", "pagina_config": _normalize_page_config(metadata.get("pagina_config", {}))}
+        response = _serialize_item(item)
+        response.update({"conteudo": content["text"], "conteudo_html": content["html"], "conteudo_formato": content["format"], "pagina_config": content.get("pagina_config"), "conteudo_formato_detectado": classification["detected_format"]})
+        return response
+
+    try:
+        raw_bytes = path.read_bytes()
+    except OSError:
+        return _catalog_diagnostic_response(item, extension=extension, path=path, reason="Arquivo físico inacessível.", detected_format="unreadable")
+    metadata = _load_editor_meta_from_abs(path)
+    classification = classify_catalog_bytes(raw_bytes, extension, str(metadata.get("conteudo_formato") or ""))
+    if classification["kind"] == "diagnostic":
+        return _catalog_diagnostic_response(item, extension=extension, path=path, reason=classification["reason"], detected_format=classification["detected_format"], preview=classification.get("preview", ""), metadata=metadata)
+    content = _load_content_bundle_from_path(path)
+    response = _serialize_item(item)
+    response.update({"conteudo": content["text"], "conteudo_html": content["html"], "conteudo_formato": content["format"], "pagina_config": content.get("pagina_config"), "conteudo_formato_detectado": classification["detected_format"]})
+    return response
+
+
 def _load_content_bundle(item: ModeloDocumento) -> dict:
     abs_path = _resolve_model_file_path(item)
     return _load_content_bundle_from_path(abs_path)
@@ -2150,17 +3138,19 @@ def _normalize_page_config(value) -> dict:
     tipo_papel = str(raw.get("tipo_papel", "Definido pelo usuario") or "Definido pelo usuario").strip()
     orientacao_raw = str(raw.get("orientacao", "Retrato") or "Retrato").strip().lower()
     orientacao = "Paisagem" if orientacao_raw == "paisagem" else "Retrato"
-    altura = max(50.0, _to_float(raw.get("altura_mm", 279.4), 279.4))
-    largura = max(50.0, _to_float(raw.get("largura_mm", 215.9), 215.9))
+    altura = max(1.0, _to_float(raw.get("altura_mm", 279.4), 279.4))
+    largura = max(1.0, _to_float(raw.get("largura_mm", 215.9), 215.9))
     margem_sup = max(0.0, _to_float(raw.get("margem_superior_mm", 25.4), 25.4))
     margem_esq = max(0.0, _to_float(raw.get("margem_esquerda_mm", 33.16), 33.16))
     margem_dir = max(0.0, _to_float(raw.get("margem_direita_mm", 33.16), 33.16))
+    margem_inf = max(0.0, _to_float(raw.get("margem_inferior_mm", 25.4), 25.4))
     return {
         "tipo_papel": tipo_papel,
         "orientacao": orientacao,
         "altura_mm": round(float(altura), 2),
         "largura_mm": round(float(largura), 2),
         "margem_superior_mm": round(float(margem_sup), 2),
+        "margem_inferior_mm": round(float(margem_inf), 2),
         "margem_esquerda_mm": round(float(margem_esq), 2),
         "margem_direita_mm": round(float(margem_dir), 2),
     }
@@ -2184,7 +3174,7 @@ def _load_editor_meta(item: ModeloDocumento) -> dict:
     return _load_editor_meta_from_abs(abs_path)
 
 
-def _save_editor_meta(abs_path: Path | None, *, conteudo_html=None, pagina_config=None) -> None:
+def _save_editor_meta(abs_path: Path | None, *, conteudo_html=None, conteudo_formato=None, pagina_config=None) -> None:
     if not abs_path:
         return
     meta_path = _build_editor_meta_path(abs_path)
@@ -2195,6 +3185,8 @@ def _save_editor_meta(abs_path: Path | None, *, conteudo_html=None, pagina_confi
             data["conteudo_html"] = html
         else:
             data.pop("conteudo_html", None)
+    if conteudo_formato is not None:
+        data["conteudo_formato"] = str(conteudo_formato or "text")
     if pagina_config is not None:
         data["pagina_config"] = _normalize_page_config(pagina_config)
     if not data:
@@ -2230,6 +3222,31 @@ def _find_display_name_conflict(
     if int(exclude_id or 0) > 0:
         query = query.filter(ModeloDocumento.id != int(exclude_id))
     return query.first()
+
+
+def _next_available_storage_filename(
+    db: Session, clinica_id: int, tipo_modelo: str, filename: str, *, exclude_id: int
+) -> str:
+    stem = Path(filename).stem
+    ext = Path(filename).suffix
+    candidate = filename
+    counter = 2
+    while True:
+        registered = (
+            db.query(ModeloDocumento.id)
+            .filter(
+                ModeloDocumento.clinica_id == int(clinica_id),
+                ModeloDocumento.tipo_modelo == str(tipo_modelo),
+                ModeloDocumento.nome_arquivo == candidate,
+                ModeloDocumento.id != int(exclude_id),
+            )
+            .first()
+        )
+        physical = MODEL_STORAGE_DIR / "clinicas" / str(int(clinica_id)) / str(tipo_modelo) / candidate
+        if not registered and not physical.exists():
+            return candidate
+        candidate = f"{stem} {counter}{ext}"
+        counter += 1
 
 
 def _ensure_editable_item(db: Session, current_user: Usuario, source: ModeloDocumento) -> ModeloDocumento:
@@ -2292,7 +3309,7 @@ def _query_visible_models(db: Session, current_user: Usuario):
                 ModeloDocumento.clinica_id == int(current_user.clinica_id),
                 ModeloDocumento.clinica_id.is_(None),
             ),
-            ModeloDocumento.extensao.in_(tuple(TEXT_EXTENSIONS)),
+            ModeloDocumento.extensao.in_(tuple(EDITOR_CATALOG_EXTENSIONS)),
         )
         .order_by(ModeloDocumento.nome_exibicao.asc(), ModeloDocumento.id.asc())
         .all()
@@ -2345,6 +3362,18 @@ def _find_base_fallback_item(db: Session, item: ModeloDocumento) -> ModeloDocume
             .first()
         )
     return None
+
+
+@router.post("/import/rtf")
+def importar_rtf_para_oasis(payload: RtfImportPayload):
+    """Convert raw RTF text in memory; this endpoint never creates a model or writes a file."""
+    try:
+        return _convert_rtf_for_import(payload.content)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.warning("RTF import conversion rejected after parser failure: %s", type(exc).__name__)
+        raise HTTPException(status_code=422, detail="Não foi possível converter este RTF com segurança.") from exc
 
 
 @router.post("/mesclar")
@@ -2544,84 +3573,25 @@ def detalhar_modelo_editor_textos(
     if not item:
         raise HTTPException(status_code=404, detail="Modelo nao encontrado.")
     ext = str(item.extensao or "").strip().lower()
-    if ext not in TEXT_EXTENSIONS:
-        raise HTTPException(status_code=400, detail="Formato de arquivo nao editavel no editor interno.")
-    path_info = _resolve_model_file_info(item)
-    abs_path = path_info.get("path") if isinstance(path_info.get("path"), Path) else None
-    original_path = path_info.get("original_path") if isinstance(path_info.get("original_path"), Path) else None
-    source = str(path_info.get("source") or "none")
-    tamanho_arquivo = 0
-    try:
-        if abs_path and abs_path.exists() and abs_path.is_file():
-            tamanho_arquivo = int(abs_path.stat().st_size)
-    except Exception:
-        tamanho_arquivo = 0
-    original_size = int(path_info.get("original_size") or 0)
-    fallback_motivo = str(path_info.get("fallback_reason") or "")
-    recursive_choice = path_info.get("chosen_recursive_candidate") if isinstance(path_info, dict) else None
-    fallback_usado = source in {"registered_alias", "recursive", "base"}
-
-    if source == "recursive" and isinstance(recursive_choice, dict):
-        _editor_textos_load_log("BACKEND MODELO FALLBACK RECURSIVO USADO", {
-            "id": int(item.id or 0),
-            "nome": str(item.nome_exibicao or "").strip(),
-            "caminho_original": str(item.caminho_arquivo or ""),
-            "candidato_escolhido": str(recursive_choice.get("path") or ""),
-            "extensao": str(recursive_choice.get("ext") or ""),
-            "tamanho": int(recursive_choice.get("size") or 0),
-        })
-    elif source == "base":
-        fallback_base = _find_base_fallback_item(db, item)
-        _editor_textos_load_log("BACKEND MODELO FALLBACK BASE USADO", {
-            "id_original": int(item.id or 0),
-            "nome_original": str(item.nome_exibicao or "").strip(),
-            "caminho_original": str(item.caminho_arquivo or ""),
-            "caminho_original_resolvido": str(original_path or ""),
-            "tamanho_original": original_size,
-            "motivo": fallback_motivo,
-            "id_base": int(fallback_base.id or 0) if fallback_base else None,
-            "caminho_base": str(abs_path or ""),
-            "tamanho_base": tamanho_arquivo,
-        })
-    elif source == "none" or not abs_path or not abs_path.exists() or not abs_path.is_file() or tamanho_arquivo <= 0:
-        logger.warning("%s %s", "[BACKEND MODELO SEM CONTEUDO]", json.dumps({
-            "id": int(item.id or 0),
-            "nome": str(item.nome_exibicao or "").strip(),
-            "caminho_resolvido": str(abs_path or ""),
-            "existe": bool(abs_path and abs_path.exists() and abs_path.is_file()),
-            "tamanho": tamanho_arquivo,
-        }, ensure_ascii=False, default=str))
-    _editor_textos_load_log("BACKEND EDITOR LOAD REQUEST", {
+    if ext not in EDITOR_CATALOG_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Formato não pertence ao catálogo do Editor de Textos.")
+    abs_path, resolution_source = _resolve_editor_catalog_file(item)
+    if resolution_source == "invalid_or_unresolved_registered_path":
+        return _catalog_diagnostic_response(
+            item,
+            extension=ext,
+            path=None,
+            reason="O caminho registrado não pôde ser validado dentro do armazenamento autorizado do modelo.",
+            detected_format="unsafe_or_unresolved_path",
+        )
+    _editor_textos_load_log("BACKEND EDITOR CATALOG OPEN", {
         "id": int(item.id or 0),
-        "nome": str(item.nome_exibicao or "").strip(),
-        "nomeArquivo": str(item.nome_arquivo or "").strip(),
-        "tipoModelo": str(item.tipo_modelo or "").strip(),
-        "caminhoSolicitado": str(item.caminho_arquivo or ""),
-        "caminhoOriginalResolvido": str(original_path or ""),
-        "tamanhoOriginal": original_size,
-        "caminhoResolvido": str(abs_path or ""),
-        "existe": bool(abs_path and abs_path.exists() and abs_path.is_file()),
-        "tamanhoArquivo": tamanho_arquivo,
-        "resolutionSource": source,
-        "fallbackBaseUsado": fallback_usado,
-        "fallbackMotivo": fallback_motivo,
-        "storageBase": str(MODEL_STORAGE_DIR),
-        "projectDir": str(PROJECT_DIR),
+        "extensao": ext,
+        "existe": bool(abs_path and abs_path.is_file()),
+        "resolutionSource": resolution_source,
+        "diagnosticReadOnly": ext not in TEXT_EXTENSIONS,
     })
-    content = _load_content_bundle_from_path(abs_path)
-    response = _serialize_item(item)
-    response["conteudo"] = content["text"]
-    response["conteudo_html"] = content["html"]
-    response["conteudo_formato"] = content["format"]
-    response["pagina_config"] = content.get("pagina_config")
-    _editor_textos_load_log("BACKEND EDITOR LOAD RESPONSE", {
-        "camposRetornados": list(response.keys()),
-        "conteudoHtmlLength": len(str(response.get("conteudo_html") or "")),
-        "conteudoLength": len(str(response.get("conteudo") or "")),
-        "previewConteudoHtml": _editor_textos_debug_preview(str(response.get("conteudo_html") or "")),
-        "previewConteudo": _editor_textos_debug_preview(str(response.get("conteudo") or "")),
-    })
-    return response
+    return _load_catalog_model_detail(item, ext, abs_path)
 
 
 @router.post("/modelos")
@@ -2661,6 +3631,7 @@ def criar_modelo_editor_textos(
     _save_editor_meta(
         abs_path,
         conteudo_html=(str(payload.conteudo or "") if content_format == "html" else ""),
+        conteudo_formato=content_format,
         pagina_config=payload.pagina_config,
     )
 
@@ -2686,6 +3657,60 @@ def criar_modelo_editor_textos(
     response["conteudo_formato"] = loaded["format"]
     response["pagina_config"] = loaded.get("pagina_config")
     return response
+
+
+@router.post("/modelos/save-as")
+def salvar_como_modelo_editor_textos(
+    payload: ModeloTextoSaveAsPayload,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Create a new Oasis model, or explicitly replace a same-name clinic model."""
+    nome = str(payload.nome or "").strip()
+    if not nome:
+        raise HTTPException(status_code=400, detail="Informe o nome do modelo.")
+
+    if payload.replace_model_id is None:
+        conflicts = (
+            db.query(ModeloDocumento)
+            .filter(
+                or_(ModeloDocumento.clinica_id == int(current_user.clinica_id), ModeloDocumento.clinica_id.is_(None)),
+                ModeloDocumento.ativo.is_(True),
+                func.lower(func.trim(ModeloDocumento.nome_exibicao)) == nome.lower(),
+            )
+            .order_by(ModeloDocumento.clinica_id.is_(None), ModeloDocumento.id.asc())
+            .all()
+        )
+        if conflicts:
+            raise HTTPException(
+                status_code=409,
+                detail={"code": "MODEL_NAME_COLLISION", "models": [_serialize_item(item) for item in conflicts]},
+            )
+        return criar_modelo_editor_textos(payload, current_user, db)
+
+    target = (
+        db.query(ModeloDocumento)
+        .filter(
+            ModeloDocumento.id == int(payload.replace_model_id),
+            ModeloDocumento.ativo.is_(True),
+            ModeloDocumento.clinica_id == int(current_user.clinica_id),
+        )
+        .first()
+    )
+    if not target:
+        raise HTTPException(status_code=409, detail="Somente um modelo ativo da clínica pode ser substituído; escolha outro nome.")
+    if str(target.nome_exibicao or "").strip().lower() != nome.lower():
+        raise HTTPException(status_code=409, detail="O modelo escolhido não corresponde ao nome em colisão.")
+
+    replacement = ModeloTextoSalvarPayload(
+        nome=str(target.nome_exibicao or "").strip(),
+        conteudo=payload.conteudo,
+        conteudo_formato=payload.conteudo_formato,
+        tipo_modelo=str(target.tipo_modelo or "outros"),
+        extensao=".txt",
+        pagina_config=payload.pagina_config,
+    )
+    return salvar_modelo_editor_textos(int(target.id), replacement, current_user, db)
 
 
 @router.put("/modelos/{modelo_id}")
@@ -2727,9 +3752,16 @@ def salvar_modelo_editor_textos(
         editable.nome_exibicao = nome[:180]
     ext = _normalize_extensao(payload.extensao, str(editable.extensao or ".txt"))
     if ext != str(editable.extensao or "").lower():
-        editable.extensao = ext
         stem = Path(str(editable.nome_arquivo or "modelo")).stem
-        editable.nome_arquivo = f"{stem}{ext}"
+        candidate = _next_available_storage_filename(
+            db,
+            int(current_user.clinica_id),
+            str(editable.tipo_modelo or "outros"),
+            f"{stem}{ext}",
+            exclude_id=int(editable.id or 0),
+        )
+        editable.extensao = ext
+        editable.nome_arquivo = candidate
         rel, _ = _build_clinic_model_path(int(current_user.clinica_id), str(editable.tipo_modelo or "outros"), str(editable.nome_arquivo))
         editable.caminho_arquivo = rel
 
@@ -2754,6 +3786,7 @@ def salvar_modelo_editor_textos(
     _save_editor_meta(
         abs_path,
         conteudo_html=(str(payload.conteudo or "") if content_format == "html" else ""),
+        conteudo_formato=content_format,
         pagina_config=payload.pagina_config,
     )
 

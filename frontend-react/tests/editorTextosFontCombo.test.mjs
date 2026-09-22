@@ -7,7 +7,11 @@ const helper = fs.readFileSync(new URL('../src/features/relatoriosConfiguracao/c
 
 test('combo Fonte usa a infraestrutura F2 e não consulta no mount', () => {
   assert.match(toolbar, /loadLocalFontFamilies/);
-  assert.match(toolbar, /onFocus=\{ensureFontsLoaded\}/);
+  assert.match(toolbar, /Carregar fontes do computador/);
+  assert.match(toolbar, /onClick=\{ensureFontsLoaded\}/);
+  assert.match(toolbar, /brana-oasis-load-local-fonts/);
+  assert.match(toolbar, /brana-oasis-local-fonts-ready/);
+  assert.doesNotMatch(toolbar, /onFocus=\{ensureFontsLoaded\}/);
   const mountEffect = toolbar.match(/useEffect\(\(\) => \{[\s\S]*?\}, \[\]\);/)?.[0] || '';
   assert.doesNotMatch(mountEffect, /loadLocalFontFamilies/);
   assert.match(toolbar, /onChange=\{\(event\) => execute\('setFontFamily', event\.target\.value\)\}/);

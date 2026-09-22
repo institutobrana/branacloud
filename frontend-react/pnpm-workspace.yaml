@@ -1,2 +1,4 @@
 allowBuilds:
   esbuild: set this to true or false
+patchedDependencies:
+  oasis-editor@0.0.191: patches/oasis-editor@0.0.191.patch

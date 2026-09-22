@@ -78,7 +78,16 @@ export function EditorTextosFormatToolbar({ editor }) {
       return active && !result.families.includes(active) ? [active, ...result.families] : result.families;
     });
     setFontSource(result.source);
+    if (result.source === 'local') {
+      window.__BRANA_OASIS_LOCAL_FONT_FAMILIES__ = result.families;
+      window.dispatchEvent(new Event('brana-oasis-local-fonts-ready'));
+    }
   };
+  useEffect(() => {
+    const onNativeFontLoadRequest = () => { void ensureFontsLoaded(); };
+    window.addEventListener('brana-oasis-load-local-fonts', onNativeFontLoadRequest);
+    return () => window.removeEventListener('brana-oasis-load-local-fonts', onNativeFontLoadRequest);
+  }, []);
   const execute = (command, attrs) => window.dispatchEvent(new CustomEvent('brana-editor-textos-format-command', { detail: { command, attrs } }));
   const openMergeDialog = () => {
     const selection = editor?.state?.selection;
@@ -105,10 +114,11 @@ export function EditorTextosFormatToolbar({ editor }) {
     <div className="editor-textos-format-toolbar" role="toolbar" aria-label="Formatação do editor">
       <label className="editor-textos-format-control">
         <span>Fonte:</span>
-        <select aria-label="Fonte" value={activeFontFamily} onFocus={ensureFontsLoaded} onChange={(event) => execute('setFontFamily', event.target.value)} data-font-source={fontSource}>
+        <select aria-label="Fonte" value={activeFontFamily} onChange={(event) => execute('setFontFamily', event.target.value)} data-font-source={fontSource}>
           {mixed.fontFamily && <option value="">Misto</option>}
           {fontOptions.map((font) => <option key={font} value={font}>{font}</option>)}
         </select>
+        <button type="button" className="editor-textos-load-local-fonts" onClick={ensureFontsLoaded} disabled={fontLoadStarted.current} title="Usar as famílias instaladas neste computador">Carregar fontes do computador</button>
       </label>
 
       <label className="editor-textos-format-control">

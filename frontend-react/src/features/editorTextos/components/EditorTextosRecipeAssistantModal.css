@@ -1,0 +1,55 @@
+.editor-textos-recipe-assistant-root .ant-modal-mask { background: rgba(18, 28, 43, .24) !important; }
+.editor-textos-recipe-assistant.ant-modal { max-width: calc(100vw - 24px); }
+.editor-textos-recipe-assistant .ant-modal-content { padding: 0; }
+.editor-textos-recipe-assistant .ant-modal-header { padding: 9px 14px 7px; margin-bottom: 0; }
+.editor-textos-recipe-assistant .ant-modal-body { padding: 9px 14px 8px; max-height: min(68vh, 560px); overflow-y: auto; }
+.editor-textos-recipe-assistant__drag-handle { cursor: move; touch-action: none; user-select: none; }
+.editor-textos-recipe-assistant__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 10px; }
+.editor-textos-recipe-assistant__grid > label, .editor-textos-recipe-assistant__grid section { display: grid; gap: 3px; min-width: 0; }
+.editor-textos-recipe-assistant__grid > label { line-height: 1.2; }
+.editor-textos-recipe-assistant__grid .ant-input,
+.editor-textos-recipe-assistant__grid .ant-input-affix-wrapper { min-height: 28px; height: 28px; padding-block: 2px; }
+.editor-textos-recipe-assistant__grid .ant-select-single { height: 28px; }
+.editor-textos-recipe-assistant__grid .ant-select-single .ant-select-selector { height: 28px; padding-inline: 8px; }
+.editor-textos-recipe-assistant__grid .ant-select-single .ant-select-selection-item,
+.editor-textos-recipe-assistant__grid .ant-select-single .ant-select-selection-placeholder { line-height: 26px; }
+.editor-textos-recipe-assistant__grid textarea.ant-input { height: auto; min-height: 44px; line-height: 18px; padding: 4px 8px; resize: vertical; }
+.editor-textos-recipe-assistant__grid .ant-radio-wrapper { margin-inline-end: 12px; line-height: 20px; }
+.editor-textos-recipe-assistant__wide { grid-column: 1 / -1; }
+.editor-textos-recipe-assistant__inline { display: flex; gap: 6px; }
+.editor-textos-recipe-assistant__inline .ant-select { flex: 1; min-width: 0; }
+.editor-textos-recipe-assistant__inline .ant-btn { height: 28px; padding-inline: 8px; }
+.editor-textos-recipe-assistant__loading { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.editor-textos-recipe-assistant__error { margin-bottom: 6px; color: #b42318; }
+.editor-textos-recipe-assistant__actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
+.editor-textos-recipe-assistant__actions .ant-btn { height: 29px; padding-inline: 10px; }
+.editor-textos-medication-menu.ant-modal { max-width: calc(100vw - 32px); }
+.editor-textos-medication-menu .ant-modal-content { min-height: min(735px, calc(100vh - 24px)); }
+.editor-textos-medication-menu .ant-modal-header { padding: 12px 18px 8px; margin-bottom: 0; }
+.editor-textos-medication-menu .ant-modal-body { padding: 8px 16px 10px; }
+.editor-textos-medication-menu .ant-modal-footer { padding: 8px 16px 10px; margin-top: 0; }
+.editor-textos-medication-menu .ant-modal-footer .ant-btn { height: 30px; padding-inline: 12px; }
+.editor-textos-medication-menu .ant-modal-footer .ant-btn + .ant-btn { margin-inline-start: 6px; }
+.editor-textos-medication-menu__filters { display: grid; grid-template-columns: minmax(190px, 0.72fr) minmax(240px, 1.28fr); gap: 10px; margin-bottom: 6px; }
+.editor-textos-medication-menu__filters label { display: grid; gap: 3px; min-width: 0; color: var(--brana-text-primary); font-weight: 500; }
+.editor-textos-medication-menu__filters .ant-select { width: 100%; }
+.editor-textos-medication-menu__filters .ant-select-single .ant-select-selector { height: 30px; }
+.editor-textos-medication-menu__filters .ant-select-single .ant-select-selection-item,
+.editor-textos-medication-menu__filters .ant-select-single .ant-select-selection-placeholder { line-height: 28px; }
+.editor-textos-medication-menu__filters .ant-input-affix-wrapper,
+.editor-textos-medication-menu__filters input.ant-input { min-height: 30px; height: 30px; }
+.editor-textos-medication-menu .pacientes-alphabet { display: grid; grid-template-columns: repeat(27, minmax(0, 1fr)); gap: 0; justify-content: stretch; min-height: 29px; padding: 1px 5px; overflow-x: hidden; border: 1px solid var(--brana-border-subtle); border-bottom: 0; border-radius: 6px 6px 0 0; }
+.editor-textos-medication-menu .pacientes-alphabet-button { width: 100%; min-width: 0; height: 24px; min-height: 24px; font-size: 11px; line-height: 22px; }
+.editor-textos-medication-menu__error { margin-bottom: 6px; }
+.editor-textos-medication-menu__table { border: 1px solid var(--brana-border-subtle); border-radius: 0 0 6px 6px; overflow: hidden; }
+.editor-textos-medication-menu__table.ant-table-wrapper .ant-table-thead > tr > th.ant-table-cell { height: 26px; padding: 3px 10px; font-size: 13px; line-height: 18px; font-weight: 600; vertical-align: middle; }
+.editor-textos-medication-menu__table.ant-table-wrapper .ant-table-tbody > tr:not(.ant-table-measure-row) { height: 22px; }
+.editor-textos-medication-menu__table.ant-table-wrapper .ant-table-tbody > tr:not(.ant-table-measure-row) > td { height: 22px; min-height: 0; padding: 1px 10px; font-size: 13px; line-height: 18px; vertical-align: middle; }
+.editor-textos-medication-menu__table.ant-table-wrapper .ant-table-tbody > tr.ant-table-measure-row,
+.editor-textos-medication-menu__table.ant-table-wrapper .ant-table-tbody > tr.ant-table-measure-row > td { height: 0; padding-top: 0; padding-bottom: 0; border: 0; line-height: 0; visibility: collapse; }
+.editor-textos-medication-menu__table .ant-table-tbody > tr { cursor: pointer; }
+.editor-textos-medication-menu__table .ant-table-tbody > tr.is-selected > td { background: var(--brana-surface-selected, #e8f2ff); }
+.editor-textos-medication-menu__table .ant-table-tbody > tr:focus-visible > td { outline: 2px solid var(--brana-primary); outline-offset: -2px; }
+.editor-textos-medication-menu__summary { padding: 4px 2px 0; color: var(--brana-text-secondary); font-size: 12px; line-height: 18px; }
+@media (max-width: 640px) { .editor-textos-medication-menu__filters { grid-template-columns: 1fr; gap: 8px; } }
+@media (max-width: 560px) { .editor-textos-recipe-assistant__grid { grid-template-columns: 1fr; } .editor-textos-recipe-assistant__wide { grid-column: auto; } .editor-textos-recipe-assistant__inline { flex-wrap: wrap; } }

@@ -1,0 +1,50 @@
+.editor-textos-oasis{display:flex;flex-direction:column;min-height:calc(100vh - 120px);background:var(--brana-surface-muted,#eef2f7)}
+.editor-textos-oasis--dirty .oasis-editor-persistence-status{visibility:hidden}
+.editor-textos-oasis--dirty .oasis-editor-persistence-status::after{content:"Não salvo";display:inline-block;visibility:visible;color:#b54708;font-size:11px}
+.editor-textos-oasis__dirty-announcement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.editor-textos-oasis__surface{flex:1;min-height:0;overflow:auto;padding:0 18px 18px}
+.editor-textos-oasis__surface .oasis-editor-docs .oasis-editor-stage{padding-top:4px}
+.editor-textos-oasis--tabs-api-ready .oasis-editor-toolbar-view-ribbon{height:84px;min-height:84px}
+.editor-textos-oasis__command-error{flex:none;margin:6px 18px;padding:8px 10px;border:1px solid var(--brana-danger,#b42318);border-radius:4px;background:var(--brana-danger-surface,#fef2f2);color:var(--brana-danger,#b42318);font-size:12px}
+.editor-textos-oasis__compatibility{flex:none;margin:5px 18px;padding:7px 10px;border:1px solid var(--brana-warning,#d89b2b);border-radius:4px;background:var(--brana-warning-surface,#fff8e6);color:var(--brana-text-primary,#334155);font-size:11px;line-height:1.45}
+.editor-textos-oasis__compatibility ul{margin:4px 0 0;padding-left:18px}
+.editor-textos-oasis__compatibility details{margin-top:5px}
+.editor-textos-oasis__compatibility pre{max-height:240px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding:8px;background:#fff;border:1px solid var(--brana-border,#d1d5db);font:11px/1.4 ui-monospace,Consolas,monospace}
+.editor-textos-sign-pdf-form{display:grid;gap:12px}.editor-textos-sign-pdf-form>p{margin:0;color:var(--brana-text-secondary,#526173);font-size:12px;line-height:1.5}.editor-textos-sign-pdf-form>label{display:grid;gap:5px;color:var(--brana-text-primary,#526173);font-size:12px;font-weight:600}.editor-textos-sign-pdf-form>label>input[type=file]{box-sizing:border-box;width:100%;padding:6px;border:1px solid var(--brana-border,#d1d9e5);border-radius:4px;background:var(--brana-surface-card,#fff);font:inherit;font-size:11px}
+.editor-textos-oasis-tabbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:1;min-width:0;min-height:36px}
+.editor-textos-oasis-tabbar__tabs{display:flex;align-items:center;gap:2px;min-width:0;white-space:nowrap}
+.editor-textos-oasis-tab{height:34px;padding:0 11px;border:0;border-bottom:3px solid transparent;border-radius:3px 3px 0 0;background:transparent;color:var(--brana-text-inverse,#fff);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.editor-textos-oasis-tab:hover:not(:disabled){background:rgba(255,255,255,.12)}
+.editor-textos-oasis-tab.is-active{border-bottom-color:#fff;background:rgba(255,255,255,.16);color:#fff}
+.editor-textos-oasis-tab:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.editor-textos-oasis-tab:disabled{opacity:.55;cursor:wait}
+.editor-textos-oasis--tabs-api-ready .oasis-editor-ribbon-tabs{display:none!important}
+@media(max-width:1100px){.editor-textos-oasis-tab{padding-inline:7px;font-size:12px}.editor-textos-oasis-tabbar{gap:3px}}
+.editor-textos-oasis--tabs-api-ready .oasis-editor-shell{gap:0}
+.editor-textos-oasis--tabs-api-ready .oasis-editor-app{padding-top:0;--oasis-editor-gutter-top:26px}
+.editor-textos-oasis-ruler{position:absolute;z-index:8;height:24px;box-sizing:border-box;pointer-events:none;color:#465363;font:10px/1 system-ui,sans-serif;user-select:none}
+.editor-textos-oasis-ruler__track{position:absolute;inset:0 0 1px;overflow:hidden;border:1px solid #c8d0d9;border-radius:2px;background:#fff;box-sizing:border-box}
+.editor-textos-oasis-ruler__margin{position:absolute;inset-block:0;background:#e9edf2}
+.editor-textos-oasis-ruler__content{position:absolute;inset-block:0;background:#fff}
+.editor-textos-oasis-ruler__tick{position:absolute;bottom:0;width:1px;height:6px;background:#8d99a8}
+.editor-textos-oasis-ruler__tick.is-half{height:4px;background:#aeb8c4}
+.editor-textos-oasis-ruler__tick.is-major{height:9px;background:#687789}
+.editor-textos-oasis-ruler__tick>span{position:absolute;top:2px;left:3px;color:#596575;font-size:9px;line-height:1}
+.editor-textos-oasis-ruler__marker{position:absolute;z-index:2;top:0;width:20px;height:20px;margin:0;padding:0;border:0;background:transparent;transform:translateX(-50%);pointer-events:auto;touch-action:none;cursor:col-resize;color:inherit}
+.editor-textos-oasis-ruler__marker:before{position:absolute;left:50%;width:0;height:0;content:"";transform:translateX(-50%)}
+.editor-textos-oasis-ruler__marker.is-left:before,.editor-textos-oasis-ruler__marker.is-right:before{top:10px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #258b9b}
+.editor-textos-oasis-ruler__marker.is-first-line:before{top:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #258b9b}
+.editor-textos-oasis-ruler__marker.is-left,.editor-textos-oasis-ruler__marker.is-right{top:10px;height:14px}
+.editor-textos-oasis-ruler__marker.is-first-line{height:10px}
+.editor-textos-oasis-ruler__marker:focus-visible{outline:2px solid #174e58;outline-offset:-1px;border-radius:3px}
+.editor-textos-oasis-ruler__tooltip{position:absolute;left:50%;top:20px;z-index:3;display:none;transform:translateX(-50%);padding:3px 5px;border-radius:3px;background:#233241;color:#fff;font-size:10px;white-space:nowrap;box-shadow:0 1px 4px #0003}
+.editor-textos-oasis-ruler__marker:hover .editor-textos-oasis-ruler__tooltip,.editor-textos-oasis-ruler__marker:focus-visible .editor-textos-oasis-ruler__tooltip,.editor-textos-oasis-ruler__marker:active .editor-textos-oasis-ruler__tooltip{display:block}
+.editor-textos-oasis-ruler__unit{position:absolute;right:4px;top:2px;color:#697586;font-size:8px}
+.editor-textos-oasis-font-probe{position:fixed;z-index:10000;inset:58px 12px auto auto;width:min(780px,calc(100vw - 24px));max-height:calc(100vh - 82px);overflow:auto;padding:12px;border:1px solid #66819a;border-radius:7px;background:#fff;box-shadow:0 6px 24px #0004;color:#233241;font:12px/1.35 system-ui,sans-serif}
+.editor-textos-oasis-font-probe__header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.editor-textos-oasis-font-probe__header button{border:0;background:transparent;font-size:20px;line-height:1;cursor:pointer;color:#526173}
+.editor-textos-oasis-font-probe__samples{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.editor-textos-oasis-font-probe__sample{min-width:0;padding:8px;border:1px solid #d5dde6;border-radius:5px;background:#f8fafc}.editor-textos-oasis-font-probe__text{margin:8px 0;font-size:16px;white-space:nowrap}.editor-textos-oasis-font-probe dl{display:grid;grid-template-columns:auto 1fr;gap:2px 6px;margin:0;font:10px/1.25 ui-monospace,SFMono-Regular,Consolas,monospace}.editor-textos-oasis-font-probe dt{font-weight:700}.editor-textos-oasis-font-probe dd{margin:0;overflow-wrap:anywhere}.editor-textos-font-probe-oasis-sample{margin-top:10px;padding:8px;border-top:1px solid #d5dde6;font-size:16px}.editor-textos-font-probe-oasis-sample div{margin-top:4px}
+@media(max-width:700px){.editor-textos-oasis-font-probe__samples{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.editor-textos-oasis-font-probe__header button:first-child{padding:5px 8px;border:1px solid #aab8c7;border-radius:4px;background:#f4f7fa;font:11px system-ui,sans-serif}
+.editor-textos-font-probe-oasis-sample small{display:block;margin-top:8px;font-size:11px}.editor-textos-font-probe-oasis-sample pre,.editor-textos-font-probe-comparison pre{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;font:10px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace}.editor-textos-font-probe-comparison{margin-top:10px;padding-top:8px;border-top:1px solid #d5dde6}.editor-textos-font-probe-comparison__lines{display:grid;grid-template-columns:1fr 1fr;gap:8px}.editor-textos-font-probe-comparison__lines pre{padding:6px;background:#f8fafc;border:1px solid #d5dde6;border-radius:4px}
+.editor-textos-oasis-font-probe__arial-modes{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0;padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc}.editor-textos-oasis-font-probe__arial-modes legend{padding:0 4px;font-weight:700}.editor-textos-oasis-font-probe__arial-modes label{white-space:nowrap}.editor-textos-oasis-font-probe__arial-modes small{flex-basis:100%;color:#475569}
+.editor-textos-oasis-font-probe__system-audit{display:grid;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:12px}.editor-textos-oasis-font-probe__system-audit button{justify-self:start}.editor-textos-oasis-font-probe__system-audit div{display:grid;gap:3px}.editor-textos-oasis-font-probe__system-audit span,.editor-textos-oasis-font-probe__system-audit small{color:#475569}

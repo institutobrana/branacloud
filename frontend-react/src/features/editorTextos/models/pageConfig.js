@@ -5,14 +5,14 @@ export const PAGE_PAPER_PRESETS = {
   'Definido pelo usuário': { altura_mm: 279.4, largura_mm: 215.9 },
 };
 
-export const DEFAULT_PAGE_CONFIG = Object.freeze({ tipo_papel: 'Definido pelo usuário', orientacao: 'Retrato', altura_mm: 279.4, largura_mm: 215.9, margem_superior_mm: 25.4, margem_esquerda_mm: 33.16, margem_direita_mm: 33.16 });
+export const DEFAULT_PAGE_CONFIG = Object.freeze({ tipo_papel: 'Definido pelo usuário', orientacao: 'Retrato', altura_mm: 279.4, largura_mm: 215.9, margem_superior_mm: 25.4, margem_inferior_mm: 25.4, margem_esquerda_mm: 33.16, margem_direita_mm: 33.16 });
 
-export function normalizePageConfig(value = {}) {
+export function normalizePageConfig(value = {}, { minimumPageMm = 50 } = {}) {
   const source = { ...DEFAULT_PAGE_CONFIG, ...(value || {}) };
   const tipo_papel = PAGE_PAPER_PRESETS[source.tipo_papel] ? source.tipo_papel : DEFAULT_PAGE_CONFIG.tipo_papel;
   const orientacao = source.orientacao === 'Paisagem' ? 'Paisagem' : 'Retrato';
   const number = (input, fallback, minimum) => { const parsed = typeof input === 'number' ? input : Number(String(input ?? '').replace(/\./g, '').replace(',', '.')); return Number.isFinite(parsed) ? Math.max(minimum, parsed) : fallback; };
-  return { tipo_papel, orientacao, altura_mm: number(source.altura_mm, DEFAULT_PAGE_CONFIG.altura_mm, 50), largura_mm: number(source.largura_mm, DEFAULT_PAGE_CONFIG.largura_mm, 50), margem_superior_mm: number(source.margem_superior_mm, DEFAULT_PAGE_CONFIG.margem_superior_mm, 0), margem_esquerda_mm: number(source.margem_esquerda_mm, DEFAULT_PAGE_CONFIG.margem_esquerda_mm, 0), margem_direita_mm: number(source.margem_direita_mm, DEFAULT_PAGE_CONFIG.margem_direita_mm, 0) };
+  return { tipo_papel, orientacao, altura_mm: number(source.altura_mm, DEFAULT_PAGE_CONFIG.altura_mm, minimumPageMm), largura_mm: number(source.largura_mm, DEFAULT_PAGE_CONFIG.largura_mm, minimumPageMm), margem_superior_mm: number(source.margem_superior_mm, DEFAULT_PAGE_CONFIG.margem_superior_mm, 0), margem_inferior_mm: number(source.margem_inferior_mm, DEFAULT_PAGE_CONFIG.margem_inferior_mm, 0), margem_esquerda_mm: number(source.margem_esquerda_mm, DEFAULT_PAGE_CONFIG.margem_esquerda_mm, 0), margem_direita_mm: number(source.margem_direita_mm, DEFAULT_PAGE_CONFIG.margem_direita_mm, 0) };
 }
 
 export function formatPageMm(value) { return Number(value).toFixed(2).replace('.', ','); }
