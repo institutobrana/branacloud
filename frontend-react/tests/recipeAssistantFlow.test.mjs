@@ -111,7 +111,8 @@ test('Atestado assistant reuses authenticated context/CID endpoints and legacy d
     assert.ok(modal.includes(field), `missing field: ${field}`);
   }
   assert.match(modal, /onClick=\{onCancel\}/);
-  assert.match(modal, /disabled>Ok/);
+  assert.match(modal, /disabled=\{!canConfirm\}/);
+  assert.match(modal, /const canConfirm = Boolean\(patientId && surgeonId && modelId && !loading && !submitting\)/);
   assert.equal(normalizeAttestadoDate('29022024'), '29/02/2024');
   assert.equal(normalizeAttestadoDate('31/02/2024'), '');
   assert.equal(normalizeAttestadoTime('930'), '09:30');
@@ -124,7 +125,7 @@ test('Atestado assistant reuses the global DateField contract for both dates and
   const css = read('components/EditorTextosAtestadoAssistantModal.css');
   assert.match(modal, /import \{ DateField \} from .*DadosPessoaisTab/);
   assert.equal((modal.match(/<DateField label="Data (?:inicial|final)"/g) || []).length, 2);
-  assert.match(modal, /width=\{520\}/);
+  assert.match(modal, /width=\{480\}/);
   assert.match(css, /\.editor-textos-attestado-assistant \.ant-modal-body \{ padding: 9px 14px 8px/);
   assert.match(css, /\.editor-textos-attestado-assistant__grid \.ant-input[\s\S]*min-height: 28px/);
 });

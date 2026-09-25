@@ -3,6 +3,7 @@ import 'oasis-editor/style.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createOasisNewDocument, getPersistableDocumentSnapshot } from '../engines/OasisEditorAdapter.js';
 import { editorTextosApi } from '../api/editorTextosApi.js';
+import { prepareLocalPdf, createLocalPairing, getLocalPairingStatus, createLocalSignatureOperation, signLocalOperation, getLocalSignatureResult, revokeLocalSession } from '../api/localSignatureBridgeApi.js';
 import { deleteEditorTextModel, renameEditorTextModel } from '../api/editorTextosModelActions.js';
 import { decodeOasisEnvelope, encodeOasisEnvelope } from '../persistence/oasisDocumentEnvelope.js';
 import { detectEditorDocumentFormat, EDITOR_DOCUMENT_FORMATS } from '../models/editorDocumentFormatDetector.js';
@@ -22,6 +23,9 @@ import { OasisHorizontalRuler } from './OasisHorizontalRuler.jsx';
 import { findNewTextTemplate, getNewTextType } from '../models/editorTextosModalModels.js';
 import { findSaveAsNameCollisions } from '../models/saveAsNameCollision.js';
 import { getPatientDisplayName, resolveRecipeAssistantPatient } from '../models/recipeAssistantFlow.js';
+import { buildAttestadoBody } from '../models/atestadoAssistant.js';
+
+const LOCAL_SIGNATURE_EXPERIMENT_ENABLED = false;
 import { hasOasisMergeSeparatorInText, joinOasisTextNodes, mergeOasisTextNodes } from '../models/recipeAssistantDraft.js';
 import './oasisEditorPilot.css';
 
@@ -240,6 +244,7 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
   const [mergeVisible, setMergeVisible] = useState(false);
   const [signVisible, setSignVisible] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
+  const [localPairing, setLocalPairing] = useState(null);
   const [commandError, setCommandError] = useState('');
   const [compatibilityStatus, setCompatibilityStatus] = useState(null);
   const [tabsApiReady, setTabsApiReady] = useState(false);
@@ -802,6 +807,63 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
     return true;
   }, [installRecipePreview]);
 
+  const generateAttestado = useCallback(async (payload) => {
+    const client = clientRef.current;
+    if (!client) throw new Error('O editor Oasis não está disponível.');
+    const patientId = Number(payload.patientId) || 0;
+    if (!patientId || !Number(payload.modelId) || !Number(payload.surgeonId)) throw new Error('Selecione paciente, modelo e cirurgião antes de confirmar.');
+    const snapshot = {
+      document: structuredClone(client.getDocument()), documentId: documentIdRef.current, documentName: documentNameRef.current,
+      documentType: documentTypeRef.current, oasisDocumentId: oasisDocumentIdRef.current, pageConfig: structuredClone(pageConfigRef.current),
+      source: structuredClone(sourceRef.current), savedSnapshot: savedSnapshotRef.current, dirty: dirtyRef.current,
+      readOnly: Boolean(sourceRef.current.legacyDocumentId && !sourceRef.current.conversionVersion), compatibilityStatus,
+    };
+    try {
+      const dto = await editorTextosApi.getDocument(Number(payload.modelId));
+      const detection = detectEditorDocumentFormat(dto);
+      const body = buildAttestadoBody({
+        ...payload.fields,
+        patientName: getPatientDisplayName(payload.patient), reason: payload.reason, cid: payload.cid?.codigo || payload.cid?.descricao || '',
+        observations: payload.observations,
+      });
+      if (!body.trim()) throw new Error('Não foi possível montar o corpo do atestado.');
+      let document;
+      let pageConfig = normalizePageConfig(dto?.pagina_config || DEFAULT_PAGE_CONFIG);
+      if (detection.format === EDITOR_DOCUMENT_FORMATS.OASIS) {
+        document = decodeOasisEnvelope(dto?.conteudo).document;
+        const merged = await editorTextosApi.mergeEditorTextContent({ content: joinOasisTextNodes(document), mode: 'text', patientId, surgeonId: Number(payload.surgeonId), extras: { 'Atestado.Corpo': body }, preserveUnresolved: true });
+        if (typeof merged?.conteudo !== 'string') throw new Error('O serviço de mesclagem não retornou o conteúdo do atestado.');
+        document = mergeOasisTextNodes(document, merged.conteudo);
+      } else {
+        let content = detection.content;
+        const isRtf = detection.format === EDITOR_DOCUMENT_FORMATS.RTF;
+        let rtfPageConfig = null;
+        if (isRtf) {
+          const converted = await editorTextosApi.convertRtfImport(content);
+          if (!converted || typeof converted.html !== 'string' || converted.persisted !== false) throw new Error('O serviço não confirmou a conversão temporária segura do modelo RTF.');
+          content = converted.html;
+          rtfPageConfig = converted.page_config;
+        }
+        const merged = await editorTextosApi.mergeEditorTextContent({ content, mode: isRtf || detection.format === EDITOR_DOCUMENT_FORMATS.HTML ? 'html' : 'text', patientId, surgeonId: Number(payload.surgeonId), extras: { 'Atestado.Corpo': body }, preserveUnresolved: true });
+        if (typeof merged?.conteudo !== 'string') throw new Error('O serviço de mesclagem não retornou o conteúdo do atestado.');
+        if (isRtf) document = convertRtfHtmlToOasis(merged.conteudo, { createDocument, createParagraph, createTable, title: 'Atestado' }).document;
+        else if (detection.format === EDITOR_DOCUMENT_FORMATS.HTML) document = convertLegacyHtmlToOasis(merged.conteudo, { createDocument, createParagraph, title: 'Atestado' }).document;
+        else document = convertPlainTextToOasis(merged.conteudo, { createDocument, createParagraph, title: 'Atestado' }).document;
+        pageConfig = normalizePageConfig(rtfPageConfig || dto?.pagina_config || DEFAULT_PAGE_CONFIG, { minimumPageMm: 1 });
+      }
+      if (!document?.sections?.length) throw new Error('O modelo não produziu um documento Oasis válido.');
+      documentIdRef.current = null;
+      documentNameRef.current = `Atestado — ${getPatientDisplayName(payload.patient) || 'Paciente'}`;
+      documentTypeRef.current = 'outros'; oasisDocumentIdRef.current = document.id; pageConfigRef.current = pageConfig;
+      sourceRef.current = { format: 'oasis', origin: 'atestado-assistant', legacyDocumentId: null, conversionVersion: null };
+      savedSnapshotRef.current = null; setCompatibilityStatus(null); client.ui.setReadOnly(false); client.document.set(document); client.history.clear(); client.focus.focus(); dirtyRef.current = true; setDirty(true);
+      setAtestadoAssistantVisible(false); setAtestadoAssistantPatient(null); setCommandError('');
+    } catch (error) {
+      client.document.set(snapshot.document); client.history.clear(); client.focus.focus();
+      throw error;
+    }
+  }, [compatibilityStatus]);
+
   const requestNewOasisDocument = useCallback(() => {
     if (sourceRef.current.legacyDocumentId && !sourceRef.current.conversionVersion) {
       setCommandError('Este documento está em diagnóstico somente leitura. Abra um documento Oasis ou crie uma cópia antes de iniciar outro.');
@@ -988,6 +1050,33 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
     }
   }, []);
 
+  const prepareCurrentDocumentForLocalBridge = useCallback(async () => {
+    const client = clientRef.current;
+    if (!client) return;
+    setSignLoading(true); setCommandError('');
+    try {
+      const name = documentNameRef.current || 'Documento';
+      const baseName = name.replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '_').trim() || 'Documento';
+      const pdfFilename = `${baseName}.pdf`;
+      const exported = await client.io.export({ format: 'pdf', filename: pdfFilename });
+      if (!exported?.ok || !exported.value?.blob) throw new Error(exported?.error?.message || 'Não foi possível gerar o PDF do Oasis.');
+      const prepared = await prepareLocalPdf({ pdf: exported.value.blob, pdfFilename, documentName: name });
+      const pairing = await createLocalPairing();
+      const approvedPairing = await getLocalPairingStatus({ pairing });
+      if (approvedPairing.state === 'APPROVED' && approvedPairing.session_id) {
+        const operation = await createLocalSignatureOperation({ pairing: approvedPairing, prepared });
+        await signLocalOperation({ pairing: approvedPairing, operationId: operation.operation_id, prepared });
+        const result = await getLocalSignatureResult({ pairing: approvedPairing, operationId: operation.operation_id, prepared });
+        setLocalPairing({ prepared, pairing: approvedPairing, operation, result });
+        setCommandError('PDF preparado e resultado fake recuperado. Assinatura real não executada.');
+      } else {
+        setLocalPairing({ prepared, pairing: approvedPairing });
+        setCommandError('PDF preparado. A aprovação local está pendente.');
+      }
+    } catch (error) { setCommandError(error.message || 'Não foi possível preparar para o bridge local.'); }
+    finally { setSignLoading(false); }
+  }, []);
+
   return <section ref={rootRef} className={`editor-textos-oasis${tabsApiReady ? ' editor-textos-oasis--tabs-api-ready' : ''}${isDirty ? ' editor-textos-oasis--dirty' : ''}`}>
     <div ref={hostRef} className="editor-textos-oasis__surface" />
     <input ref={importInputRef} type="file" accept={UNIFIED_IMPORT_ACCEPT} hidden aria-label="Importar documento" onChange={handleImportFileSelected} onCancel={restoreImportPickerSelection} />
@@ -1021,6 +1110,7 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
     {atestadoAssistantVisible && <EditorTextosAtestadoAssistantModal
       open
       patient={atestadoAssistantPatient || patientInUse}
+      onConfirm={generateAttestado}
       onSelectPatient={async () => {
         if (typeof onRequestPatientSelection !== 'function') return null;
         try {
@@ -1036,6 +1126,6 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
     />}
     {openVisible && <EditorTextosOpenDialog items={openItems} loading={openLoading} error={openError} onClose={() => setOpenVisible(false)} onRefresh={showOpenOasis} onOpen={(id) => void openOasis(id)} onRename={renameOasisModel} onDelete={deleteOasisModel} onProperties={showOasisProperties} />}
     {mergeVisible && <EditorTextosMergeFieldDialog open onCancel={() => setMergeVisible(false)} onConfirm={insertMergeField} />}
-    {signVisible && <EditorTextosSignPdfDialog open loading={signLoading} error={commandError} onCancel={() => { if (!signLoading) setSignVisible(false); }} onSign={signCurrentDocument} />}
+    {signVisible && <EditorTextosSignPdfDialog open loading={signLoading} error={commandError} localEnabled={LOCAL_SIGNATURE_EXPERIMENT_ENABLED} onCancel={() => { if (!signLoading) { revokeLocalSession({ pairing: localPairing?.pairing, sessionId: localPairing?.pairing?.session_id }).catch(() => {}); setLocalPairing(null); setSignVisible(false); } }} onSign={signCurrentDocument} onPrepareLocal={prepareCurrentDocumentForLocalBridge} />}
   </section>;
 }

@@ -13,11 +13,21 @@ function patientIdOf(patient) {
 }
 
 function maskTime(value) {
-  const digits = String(value || '').replace(/\D/g, '').slice(0, 4);
-  return digits.length <= 2 ? digits : `${digits.slice(0, 2)}:${digits.slice(2)}`;
+  return String(value || '').replace(/[^\d:]/g, '').slice(0, 5);
 }
 
-export function EditorTextosAtestadoAssistantModal({ open, patient, onSelectPatient, onCancel }) {
+function AttestadoTimeField({ label, value, onChange }) {
+  const commit = () => onChange(normalizeAttestadoTime(value));
+  const handleKeyDown = (event) => {
+    if (event.key === 'Tab') commit();
+  };
+
+  return <Input className="editor-textos-attestado-assistant__time-input" aria-label={label} inputMode="numeric" maxLength={5} placeholder="00:00" value={value}
+    onChange={(event) => onChange(maskTime(event.target.value))}
+    onKeyDown={handleKeyDown} onBlur={commit} />;
+}
+
+export function EditorTextosAtestadoAssistantModal({ open, patient, onSelectPatient, onConfirm, onCancel }) {
   const [context, setContext] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,12 +42,15 @@ export function EditorTextosAtestadoAssistantModal({ open, patient, onSelectPati
   const [surgeonId, setSurgeonId] = useState(undefined);
   const [modelId, setModelId] = useState(undefined);
   const [fields, setFields] = useState({ startDate: '', endDate: '', startTime: '', endTime: '', reasonId: undefined, cid: null, observations: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     if (!open) return undefined;
     let active = true;
     setLoading(true);
     setError('');
+    setSubmitError('');
     editorTextosApi.getAtestadoAssistantContext({ patientId: patientIdOf(patient) })
       .then((data) => {
         if (!active) return;
@@ -76,7 +89,6 @@ export function EditorTextosAtestadoAssistantModal({ open, patient, onSelectPati
     { title: 'Descrição', dataIndex: 'descricao', ellipsis: true },
   ], []);
   const update = (key, value) => setFields((current) => ({ ...current, [key]: value }));
-
   const chooseCid = () => {
     if (!selectedCid) return;
     update('cid', selectedCid);
@@ -88,23 +100,41 @@ export function EditorTextosAtestadoAssistantModal({ open, patient, onSelectPati
     if (selected) setError('');
   };
 
+  const selectedReason = (context?.motivos_atestado || []).find((item) => Number(item.id) === Number(fields.reasonId));
+  const patientId = patientIdOf(patient || context?.paciente);
+  const canConfirm = Boolean(patientId && surgeonId && modelId && !loading && !submitting);
+  const confirm = async () => {
+    if (!canConfirm || typeof onConfirm !== 'function') return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      await onConfirm({ patientId, patient: patient || context?.paciente, surgeonId, modelId, fields, reason: selectedReason?.descricao || selectedReason?.codigo || '', cid: fields.cid, observations: fields.observations });
+    } catch (cause) {
+      setSubmitError(cause?.message || 'Não foi possível gerar o atestado.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return <>
-    <Modal open={open} title="Assistente de atestado" width={520} centered destroyOnClose onCancel={onCancel} className="editor-textos-attestado-assistant"
-      footer={<><Button onClick={onCancel}>Cancelar</Button><Button type="primary" disabled>Ok</Button></>}>
+    <Modal open={open} title="Assistente de atestado" width={480} centered destroyOnClose onCancel={submitting ? undefined : onCancel} className="editor-textos-attestado-assistant"
+      footer={<><Button onClick={onCancel} disabled={submitting}>Cancelar</Button><Button type="primary" loading={submitting} disabled={!canConfirm} onClick={() => void confirm()}>Ok</Button></>}>
       {loading ? <div className="editor-textos-attestado-assistant__loading"><Spin /> Carregando dados do assistente...</div> : null}
       {error ? <Alert type="error" showIcon message={error} /> : null}
+      {submitError ? <Alert type="error" showIcon message={submitError} /> : null}
       {!error && <div className="editor-textos-attestado-assistant__grid" aria-busy={loading}>
         <label>Cirurgião<Select aria-label="Cirurgião" loading={loading} value={surgeonId} options={(context?.cirurgioes || []).map((item) => ({ value: item.id, label: item.nome || item.nome_completo }))} onChange={setSurgeonId} /></label>
         <label>Modelo de atestado<Select aria-label="Modelo de atestado" loading={loading} value={modelId} options={(context?.modelos_atestado || []).map((item) => ({ value: item.id, label: item.nome }))} onChange={setModelId} /></label>
         <label className="editor-textos-attestado-assistant__wide">Paciente<div className="editor-textos-attestado-assistant__inline"><Input aria-label="Paciente" readOnly value={getPatientDisplayName(patient) || context?.paciente?.nome || ''} /><Button onClick={() => void changePatient()}>Selecionar paciente</Button></div></label>
         <section className="editor-textos-attestado-assistant__wide"><label>Período de afastamento</label><div className="editor-textos-attestado-assistant__period">
           <DateField label="Data inicial" aria-label="Data inicial" value={fields.startDate} onChange={(value) => update('startDate', value?.format('DD/MM/YYYY') || '')} />
-          <span>[ a</span>
+          <span>[</span><span>a</span>
           <DateField label="Data final" aria-label="Data final" value={fields.endDate} onChange={(value) => update('endDate', value?.format('DD/MM/YYYY') || '')} />
           <span>]</span><span>das</span>
-          <Input aria-label="Hora inicial" inputMode="numeric" maxLength={5} placeholder="00:00" value={fields.startTime} onChange={(event) => update('startTime', maskTime(event.target.value))} onBlur={() => update('startTime', normalizeAttestadoTime(fields.startTime))} />
+          <AttestadoTimeField label="Hora inicial" value={fields.startTime} onChange={(value) => update('startTime', value)} />
           <span>às</span>
-          <Input aria-label="Hora final" inputMode="numeric" maxLength={5} placeholder="00:00" value={fields.endTime} onChange={(event) => update('endTime', maskTime(event.target.value))} onBlur={() => update('endTime', normalizeAttestadoTime(fields.endTime))} />
+          <AttestadoTimeField label="Hora final" value={fields.endTime} onChange={(value) => update('endTime', value)} />
+          <span>horas</span>
         </div></section>
         <label className="editor-textos-attestado-assistant__wide">Motivo<Select aria-label="Motivo" allowClear value={fields.reasonId} options={(context?.motivos_atestado || []).map((item) => ({ value: item.id, label: item.descricao || item.codigo }))} onChange={(value) => update('reasonId', value)} /></label>
         <label className="editor-textos-attestado-assistant__wide">CID (Código Internacional de Doenças)<div className="editor-textos-attestado-assistant__inline"><Input aria-label="CID" readOnly value={fields.cid ? `${fields.cid.codigo ? `${fields.cid.codigo} - ` : ''}${fields.cid.descricao || ''}` : ''} /><Button onClick={() => setCidOpen(true)}>Selecionar CID</Button></div></label>

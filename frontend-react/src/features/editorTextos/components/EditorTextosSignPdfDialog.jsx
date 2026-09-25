@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Input } from 'antd';
 import { BranaModal } from '../../../components/BranaModal.jsx';
 
-export function EditorTextosSignPdfDialog({ open, loading = false, error = '', onCancel, onSign }) {
+export function EditorTextosSignPdfDialog({ open, loading = false, error = '', localEnabled = false, onCancel, onSign, onPrepareLocal }) {
   const [certificate, setCertificate] = useState(null);
   const [password, setPassword] = useState('');
 
@@ -23,6 +23,7 @@ export function EditorTextosSignPdfDialog({ open, loading = false, error = '', o
       {error && <div role="alert" className="editor-textos-dialog-error">{error}</div>}
       <div className="editor-textos-dialog-actions">
         <Button htmlType="button" onClick={onCancel} disabled={loading}>Cancelar</Button>
+        {localEnabled && <Button htmlType="button" onClick={onPrepareLocal} disabled={loading}>Preparar para bridge local</Button>}
         <Button htmlType="submit" type="primary" loading={loading} disabled={!certificate || !password}>Gerar e assinar PDF</Button>
       </div>
     </form>
