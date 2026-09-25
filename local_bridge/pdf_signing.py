@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import io
 import os
 from datetime import datetime
@@ -8,21 +9,128 @@ from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.pdf_utils.text import TextBoxStyle
 from pyhanko.sign.fields import SigFieldSpec, SigSeedSubFilter
 from pyhanko.sign.signers import PdfSignatureMetadata, PdfSigner
+from pyhanko.sign.ades.api import CAdESSignedAttrSpec
+from pyhanko.sign.ades import cades_asn1
 from pyhanko.sign.signers.pdf_cms import Signer
 from pyhanko.sign.timestamps import HTTPTimeStamper
 from pyhanko.stamp import TextStampStyle
 from pyhanko_certvalidator import ValidationContext
 from pyhanko_certvalidator.registry import SimpleCertificateStore
+from .policy_provisioner import default_policy_path
 
-from cert_store import (
-    WindowsCertificateStoreError,
-    get_windows_certificate_bundle,
-    sign_data_with_windows_certificate,
-)
+try:
+    from .cert_store import (
+        WindowsCertificateStoreError,
+        get_windows_certificate_bundle,
+        sign_data_with_windows_certificate,
+    )
+except ImportError:  # legacy direct-script import compatibility
+    from cert_store import (
+        WindowsCertificateStoreError,
+        get_windows_certificate_bundle,
+        sign_data_with_windows_certificate,
+    )
 
 
 class WindowsPdfSigningError(Exception):
     """Erro controlado durante a assinatura PDF com certificado do Windows."""
+    def __init__(self, message, *, diagnostic=None):
+        super().__init__(message)
+        self.diagnostic = diagnostic
+
+
+PREPARED_POLICY_OID = "2.16.76.1.7.1.11.1.3"
+PREPARED_POLICY_DER_SHA256 = "23da544aef71f7a75dc85fa6e17a83875741e4baef41ec178258a5c86ace54dd"
+PREPARED_POLICY_DER = str(default_policy_path())
+PREPARED_POLICY_INTERNAL_HASH_ALGORITHM = "sha256"
+
+
+def _der_children(data: bytes) -> list[tuple[int, bytes]]:
+    """Return the immediate DER children of one constructed value."""
+    if len(data) < 2 or data[0] != 0x30:
+        raise ValueError("policy root is not a SEQUENCE")
+    length_byte = data[1]
+    offset = 2
+    if length_byte & 0x80:
+        width = length_byte & 0x7F
+        if width == 0 or offset + width > len(data):
+            raise ValueError("invalid policy length")
+        length = int.from_bytes(data[offset:offset + width], "big")
+        offset += width
+    else:
+        length = length_byte
+    end = offset + length
+    if end != len(data):
+        raise ValueError("policy DER has trailing or truncated bytes")
+    children = []
+    while offset < end:
+        if offset + 2 > end:
+            raise ValueError("truncated policy child")
+        tag = data[offset]
+        start = offset
+        offset += 1
+        first_length = data[offset]
+        offset += 1
+        if first_length & 0x80:
+            width = first_length & 0x7F
+            if width == 0 or offset + width > end:
+                raise ValueError("invalid policy child length")
+            child_length = int.from_bytes(data[offset:offset + width], "big")
+            offset += width
+        else:
+            child_length = first_length
+        child_end = offset + child_length
+        if child_end > end:
+            raise ValueError("policy child exceeds parent")
+        children.append((tag, data[start:child_end]))
+        offset = child_end
+    return children
+
+
+def _extract_policy_internal_hash(policy_der: bytes) -> bytes:
+    """Extract PA DER SEQUENCE[2], the policy's internal hash field."""
+    children = _der_children(policy_der)
+    if len(children) != 3 or children[2][0] != 0x04:
+        raise ValueError("policy internal hash field is not SEQUENCE[2] OCTET STRING")
+    digest = children[2][1][2:]
+    if len(digest) != 32:
+        raise ValueError("policy internal hash must be 32 bytes")
+    return digest
+
+
+def build_offline_pades_policy(*, der_path: str | None = None):
+    """Build the CAdES policy identifier strictly from a local DER artifact."""
+    der_path = der_path or str(default_policy_path())
+    try:
+        with open(der_path, "rb") as policy_file:
+            policy_der = policy_file.read()
+    except (OSError, TypeError) as exc:
+        raise WindowsPdfSigningError("POLICY_DER_UNAVAILABLE") from exc
+    if not policy_der:
+        raise WindowsPdfSigningError("POLICY_DER_INVALID")
+    try:
+        file_digest = hashlib.sha256(policy_der).digest()
+        if file_digest.hex() != PREPARED_POLICY_DER_SHA256:
+            raise WindowsPdfSigningError("POLICY_DER_HASH_MISMATCH")
+        digest = _extract_policy_internal_hash(policy_der)
+        policy_identifier = cades_asn1.SignaturePolicyIdentifier(
+            {
+                "signature_policy_id": {
+                    "sig_policy_id": PREPARED_POLICY_OID,
+                    "sig_policy_hash": {
+                        "digest_algorithm": {"algorithm": "sha256"},
+                        "digest": digest,
+                    },
+                }
+            }
+        )
+        return CAdESSignedAttrSpec(
+            signature_policy_identifier=policy_identifier
+        )
+    except WindowsPdfSigningError:
+        raise
+    except Exception as exc:
+        raise WindowsPdfSigningError("POLICY_DER_INVALID") from exc
 
 
 def _env_flag(name: str, default: bool) -> bool:
@@ -40,7 +148,7 @@ def _signature_defaults() -> dict:
         "location": str(os.getenv("BRANA_PDF_SIGN_LOCATION", "Brana SaaS")).strip() or "Brana SaaS",
         "contact_info": str(os.getenv("BRANA_PDF_SIGN_CONTACT", "")).strip() or None,
         "tsa_url": tsa_url or None,
-        "allow_fetching": _env_flag("BRANA_PDF_SIGN_ALLOW_FETCHING", True),
+        "allow_fetching": False,
         "timestamp_format": str(os.getenv("BRANA_PDF_SIGN_TIMESTAMP_FORMAT", "%d/%m/%Y %H:%M:%S")).strip()
         or "%d/%m/%Y %H:%M:%S",
         "profile": str(os.getenv("BRANA_PDF_SIGN_PROFILE", "pades")).strip().lower() or "pades",
@@ -119,7 +227,7 @@ class WindowsStoreSigner(Signer):
                 digest_algorithm=digest_algorithm,
             )
         except WindowsCertificateStoreError as exc:
-            raise WindowsPdfSigningError(str(exc)) from exc
+            raise WindowsPdfSigningError("WINDOWS_PROVIDER_FAILED", diagnostic=exc.diagnostic) from exc
 
 
 def _page_box_from_writer(writer, page_index: int = 0) -> tuple[object, float, float]:
@@ -232,16 +340,42 @@ def sign_pdf_windows_store_invisible(
     signature_box_hint: dict | None = None,
     use_existing_field: bool = False,
     signature_profile: str | None = None,
+    policy_oid: str | None = None,
+    new_field_spec=None,
+    policy_der_path: str | None = None,
+    allow_fetching: bool = False,
 ) -> bytes:
     if not pdf_bytes:
         raise WindowsPdfSigningError("Arquivo PDF vazio.")
 
     defaults = _signature_defaults()
     field_name = str(field_name or "").strip() or "Signature1"
-    signer = WindowsStoreSigner(
-        thumbprint=thumbprint,
-        digest_algorithm=digest_algorithm or defaults["md_algorithm"],
-    )
+    prepared_mode = str(signature_profile or "").strip().lower() == "pades-ad-rb-1.3"
+    if prepared_mode:
+        if field_name != "BranaSignature_1" or use_existing_field is not True:
+            raise WindowsPdfSigningError("PREPARED_FIELD_CONTRACT_INVALID")
+        if new_field_spec is not None:
+            raise WindowsPdfSigningError("PREPARED_NEW_FIELD_SPEC_FORBIDDEN")
+        if policy_oid != PREPARED_POLICY_OID:
+            raise WindowsPdfSigningError("PREPARED_POLICY_CONTRACT_INVALID")
+        if allow_fetching is not False:
+            raise WindowsPdfSigningError("PREPARED_NETWORK_FORBIDDEN")
+        cades_signed_attr_spec = build_offline_pades_policy(
+            der_path=policy_der_path or PREPARED_POLICY_DER
+        )
+    else:
+        cades_signed_attr_spec = None
+    try:
+        signer = WindowsStoreSigner(
+            thumbprint=thumbprint,
+            digest_algorithm=digest_algorithm or defaults["md_algorithm"],
+        )
+    except WindowsPdfSigningError:
+        raise
+    except Exception as exc:
+        raise WindowsPdfSigningError(
+            "SIGNER_INITIALIZATION_FAILED", diagnostic=getattr(exc, "diagnostic", None)
+        ) from exc
 
     input_buf = io.BytesIO(pdf_bytes)
     output_buf = io.BytesIO()
@@ -249,7 +383,7 @@ def sign_pdf_windows_store_invisible(
     try:
         writer = IncrementalPdfFileWriter(input_buf)
         validation_context = _build_validation_context(signer, defaults)
-        timestamper = _build_timestamper(defaults)
+        timestamper = None if prepared_mode else _build_timestamper(defaults)
         signature_meta = PdfSignatureMetadata(
             field_name=field_name,
             md_algorithm=defaults["md_algorithm"],
@@ -261,6 +395,7 @@ def sign_pdf_windows_store_invisible(
             use_pades_lta=bool(timestamper),
             validation_context=validation_context,
             ac_validation_context=validation_context,
+            cades_signed_attr_spec=cades_signed_attr_spec,
         )
         pdf_signer_kwargs = {
             "signature_meta": signature_meta,
@@ -268,7 +403,9 @@ def sign_pdf_windows_store_invisible(
             "timestamper": timestamper,
             "stamp_style": _build_stamp_style(defaults),
         }
-        if not use_existing_field:
+        if new_field_spec is not None:
+            pdf_signer_kwargs["new_field_spec"] = new_field_spec
+        elif not use_existing_field:
             page_index = int((_coerce_box_hint(signature_box_hint) or {}).get("page_index", 0))
             pdf_signer_kwargs["new_field_spec"] = SigFieldSpec(
                 sig_field_name=field_name,
@@ -281,7 +418,7 @@ def sign_pdf_windows_store_invisible(
         raise
     except Exception as exc:
         raise WindowsPdfSigningError(
-            f"Falha ao assinar PDF com o certificado do Windows: {exc}"
+            "PDF_SIGNING_FAILED", diagnostic=getattr(exc, "diagnostic", None)
         ) from exc
 
     signed_pdf = output_buf.getvalue()

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+    <Page Include="ApprovalWindow.xaml" />
+    <Compile Include="App.xaml.cs" />
+    <Compile Include="ApprovalModels.cs" />
+    <Compile Include="ApprovalWindow.xaml.cs" />
+    <Compile Include="NamedPipeAdapter.cs" />
+    <Compile Include="UiProtocolDto.cs" />
+    <Compile Include="UiProtocolGuard.cs" />
+    <Compile Include="WindowsMutex.cs" />
+  </ItemGroup>
+</Project>
