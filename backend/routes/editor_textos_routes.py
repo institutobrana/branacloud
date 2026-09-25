@@ -38,6 +38,16 @@ from services.editor_pdf_service import (
     generate_editor_pdf_bytes,
     strip_signature_tokens,
 )
+from services.editor_signature_workflow_service import (
+    SignatureWorkflowError,
+    prepare_and_invoke_signer,
+)
+from services.editor_signature_anchor_service import (
+    DEFAULT_FIELD_NAME as SIGNATURE_ANCHOR_FIELD_NAME,
+    MAX_PDF_BYTES as SIGNATURE_ANCHOR_MAX_PDF_BYTES,
+    SignatureAnchorError,
+    prepare_signature_anchor,
+)
 from services.platform_admin_service import registrar_auditoria
 from services.receituario_pdf_template_service import (
     ReceituarioPdfTemplateError,
@@ -499,7 +509,7 @@ def _build_merge_values(
     _set_merge_value(values, ["Data.DiaHoje"], now.strftime("%d"))
     _set_merge_value(values, ["Data.DiaSemana"], dia_semana)
     _set_merge_value(values, ["Data.MesHoje", "Data.MêsHoje"], now.strftime("%m"))
-    _set_merge_value(values, ["Data.MesExt", "Data.MêsExt"], mes_nome)
+    _set_merge_value(values, ["Data.MesExt", "Data.MêsExt", "Data.MesExtenso", "Data.MêsExtenso"], mes_nome)
     _set_merge_value(values, ["Data.AnoHoje"], now.strftime("%Y"))
 
     clinica = (
@@ -3949,6 +3959,105 @@ def exportar_pdf_template_assistente_receitas(
     return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
 
 
+def _sign_pdf_with_optional_anchor(
+    *,
+    pdf_bytes: bytes,
+    pfx_bytes: bytes,
+    pfx_password: str,
+    field_name: str,
+    signature_box_hint: dict | None,
+    use_existing_field: bool,
+    signature_profile: str,
+    prepare_signature_anchor_requested: bool,
+) -> bytes:
+    if not prepare_signature_anchor_requested:
+        return sign_pdf_a1_invisible(
+            pdf_bytes=pdf_bytes,
+            pfx_bytes=pfx_bytes,
+            pfx_password=pfx_password,
+            field_name=field_name,
+            signature_box_hint=signature_box_hint,
+            use_existing_field=use_existing_field,
+            signature_profile=signature_profile,
+        )
+
+    def sign_existing_field(
+        prepared_pdf_bytes: bytes,
+        *,
+        field_name: str,
+        use_existing_field: bool,
+    ) -> bytes:
+        return sign_pdf_a1_invisible(
+            pdf_bytes=prepared_pdf_bytes,
+            pfx_bytes=pfx_bytes,
+            pfx_password=pfx_password,
+            field_name=field_name,
+            signature_box_hint=None,
+            use_existing_field=use_existing_field,
+            signature_profile=signature_profile,
+        )
+
+    result = prepare_and_invoke_signer(
+        pdf_bytes,
+        sign_existing_field,
+        field_name="BranaSignature_1",
+    )
+    return result.signer_result
+
+
+def _build_prepared_signature_filename(document_name: str | None) -> str:
+    raw_name = str(document_name or "").strip()
+    if any(character in raw_name for character in ("\r", "\n", "/", "\\", '"')):
+        raw_name = "documento"
+    source_name = _build_pdf_export_filename(raw_name)
+    stem = Path(source_name).stem or "documento"
+    return f"{stem}-signature-prepared.pdf"
+
+
+@router.post("/preparar-pdf-assinatura-local")
+async def preparar_pdf_assinatura_local_editor_textos(
+    pdf_file: UploadFile = File(...),
+    document_name: str = Form(default=""),
+    current_user: Usuario = Depends(get_current_user),
+):
+    _ = current_user
+    try:
+        pdf_bytes = await pdf_file.read(SIGNATURE_ANCHOR_MAX_PDF_BYTES + 1)
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="PDF_UPLOAD_READ_FAILED") from exc
+    finally:
+        await pdf_file.close()
+    if not pdf_bytes:
+        raise HTTPException(status_code=400, detail="PDF_EMPTY")
+    if len(pdf_bytes) > SIGNATURE_ANCHOR_MAX_PDF_BYTES:
+        raise HTTPException(status_code=400, detail="PDF_TOO_LARGE")
+    try:
+        prepared = await run_in_threadpool(
+            prepare_signature_anchor,
+            pdf_bytes,
+            field_name=SIGNATURE_ANCHOR_FIELD_NAME,
+        )
+    except SignatureAnchorError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    filename_hint = str(document_name or "").strip() or str(getattr(pdf_file, "filename", "") or "").strip()
+    filename = _build_prepared_signature_filename(filename_hint)
+    exposed_headers = (
+        "Content-Disposition, X-Prepared-Pdf-SHA256, X-Pdf-Field-Name, "
+        "X-Pdf-Field-Page, X-Pdf-Field-Rect, X-Preparation-Contract"
+    )
+    headers = {
+        "Content-Disposition": f'attachment; filename="{filename}"',
+        "X-Prepared-Pdf-SHA256": prepared.sha256,
+        "X-Pdf-Field-Name": prepared.field_name,
+        "X-Pdf-Field-Page": str(prepared.page_index),
+        "X-Pdf-Field-Rect": json.dumps(list(prepared.signature_rect), separators=(",", ":")),
+        "X-Preparation-Contract": "brana-signature-prepared-v1",
+        "Cache-Control": "no-store",
+        "Access-Control-Expose-Headers": exposed_headers,
+    }
+    return Response(content=prepared.pdf_bytes, media_type="application/pdf", headers=headers)
+
+
 @router.post("/assinar-pdf")
 async def assinar_pdf_editor_textos(
     pdf_file: UploadFile | None = File(default=None),
@@ -3958,6 +4067,7 @@ async def assinar_pdf_editor_textos(
     field_name: str = Form(default="Signature1"),
     signature_box_hint_json: str = Form(default=""),
     use_existing_field: bool = Form(default=False),
+    prepare_signature_anchor: bool = Form(default=False),
     signature_profile: str = Form(default="pades"),
     use_editor_content: bool = Form(default=False),
     conteudo: str = Form(default=""),
@@ -4008,7 +4118,7 @@ async def assinar_pdf_editor_textos(
                 conteudo_formato=str(conteudo_formato or "text"),
                 pagina_config=pagina_config,
                 document_name=audit_document_name,
-                strip_signature_placeholders=True,
+                strip_signature_placeholders=not bool(prepare_signature_anchor),
             )
         except EditorPdfRenderError as exc:
             _registrar_auditoria_editor_pdf(
@@ -4048,7 +4158,7 @@ async def assinar_pdf_editor_textos(
 
     try:
         signed_pdf = await run_in_threadpool(
-            sign_pdf_a1_invisible,
+            _sign_pdf_with_optional_anchor,
             pdf_bytes=pdf_bytes,
             pfx_bytes=pfx_bytes,
             pfx_password=str(pfx_password or ""),
@@ -4056,8 +4166,9 @@ async def assinar_pdf_editor_textos(
             signature_box_hint=signature_box_hint,
             use_existing_field=bool(use_existing_field),
             signature_profile=str(signature_profile or "pades"),
+            prepare_signature_anchor_requested=bool(prepare_signature_anchor),
         )
-    except DigitalSignatureError as exc:
+    except (DigitalSignatureError, SignatureWorkflowError) as exc:
         _registrar_auditoria_editor_pdf(
             db,
             current_user,
