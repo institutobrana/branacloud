@@ -6839,3 +6839,11 @@ Observacoes:
 - **GOOGLE SYNC CONTRACT:** documentado apenas como contrato conceitual congelado; `GOOGLE_SYNC_REAL_EXECUTION_CLAIMED = NÃO`.
 - **CLASSIFICAÇÃO DO FREEZE:** código e contratos Agenda estão `IMPLEMENTED`; evidências estáticas estão `TESTED`; o runtime local existente está `RUNTIME_VALIDATED`; a validação runtime end-to-end do id_token e a escrita/exportação Google permanecem fora desta resolução e `NOT_YET_RELEASED`.
 - Referências canônicas: `docs/agenda/AGENDA_FREEZE_2026-09-05.md` e commit de freeze `62cf1fa51f72c0be229458f18a6f543d7042ba48`; a contagem lógica histórica de 86 entradas não representa a contagem física de arquivos do commit.
+
+## Checkpoint de assinatura local — 2026-09-25
+
+- **ASSINATURA SINTÉTICA LOCAL:** PDF produzido pelo helper .NET Store-only, com WPF aprovado, uma chamada `/sign` e `/result` recuperado antes do encerramento. Artefato, hash e limites estão em `docs/checkpoint_assinatura_real_2026-09-25.md`.
+- **POLICY AD-RB 1.3:** correção aplicada em `local_bridge/pdf_signing.py` para usar o hash interno da Política de Assinatura; o SHA-256 do DER completo permanece apenas como integridade/proveniência.
+- **ITI:** `AGUARDANDO_RELATÓRIO`; nenhum resultado local substitui o relatório referente ao SHA-256 exato do novo PDF.
+- **PRÓXIMO GATE:** obter e conferir o relatório ITI; somente depois retomar Oasis, homologação de documento de teste, empacotamento e outra máquina.
+- **BLOQUEIOS EXPLÍCITOS:** Vite HTTPS 5173 teve ausência de listener em checagem recente; instalador, clone limpo e deploy SaaS permanecem fora de homologação.

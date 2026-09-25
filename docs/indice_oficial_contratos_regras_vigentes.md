@@ -94,6 +94,12 @@ Antes de qualquer alteraÃ§Ã£o em uma Ã¡rea do sistema, o Codex deve:
 - Status: vigente.
 - ObservaÃ§Ã£o: mapa operacional de evoluÃ§Ã£o.
 
+### `docs/checkpoint_assinatura_real_2026-09-25.md`
+- Função: checkpoint documental do bridge local, policy AD-RB 1.3, helper Store-only e artefato sintético assinado.
+- Quando consultar: antes de retomar validação ITI, Oasis, nova assinatura ou empacotamento do bridge.
+- Status: vigente como registro de evidência; não substitui relatório ITI.
+- Observação: mantém `enable_real_signing=False` como default e lista os gates de retomada.
+
 ### `docs/auditoria_tabela_procedimentos_frontend_react.md`
 - Função: consolidar a auditoria funcional, visual e arquitetural da frente `Tabelas -> Tabela de procedimentos` no React.
 - Quando consultar: antes de implementar a frente ou revisar o contrato extraido do legado.
