@@ -483,20 +483,6 @@ app.include_router(superadmin_router)
 app.include_router(user_admin_router)
 app.include_router(usuario_certificado_router)
 
-# CORS para ambiente local
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:8000",
-        "http://localhost:8000",
-        "http://127.0.0.1:5173",
-        "http://localhost:5173",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Middleware SaaS (ordem importa)
 app.add_middleware(TenantMiddleware)
 app.add_middleware(TrialMiddleware)
@@ -604,3 +590,19 @@ def health():
         "schema_bootstrap_enabled": RUN_SCHEMA_BOOTSTRAP,
         "runtime_bootstrap_enabled": RUN_RUNTIME_BOOTSTRAP,
     }
+
+
+# CORS deve ser o middleware externo para responder preflight antes de autenticação.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+        "https://192.168.3.41:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
