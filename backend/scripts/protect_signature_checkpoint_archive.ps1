@@ -73,11 +73,21 @@ function Set-RestrictedAcl {
     }
 }
 
+function Assert-RestrictedPath {
+    param([string]$Path)
+    $acl = Get-Acl -LiteralPath $Path
+    if (-not $acl.AreAccessRulesProtected) { throw "ARCHIVE_ACL_BACKUP_INHERITANCE_REMAINS:$Path" }
+    foreach ($rule in @($acl.Access)) {
+        if ($BroadSids -contains (Get-SidValue $rule.IdentityReference)) { throw "ARCHIVE_ACL_BACKUP_BROAD_ACCESS_REMAINS:$Path" }
+    }
+}
+
 function Save-Backup {
     param([string]$Root,[string]$Destination,[string]$TelAccountSid)
     if (Test-Path -LiteralPath $Destination) { throw 'ARCHIVE_ACL_BACKUP_EXISTS' }
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
     Set-RestrictedAcl -Path $Destination -TelAccountSid $TelAccountSid
+    Assert-RestrictedPath -Path $Destination
     $records = @(Get-ArchiveFiles $Root | ForEach-Object { Get-DescriptorRecord $Root $_ })
     $manifest = [pscustomobject]@{ ArchivePath=$Root; TelSid=$TelAccountSid; Records=$records }
     $manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $Destination 'ACL-SDDL.json') -Encoding UTF8
