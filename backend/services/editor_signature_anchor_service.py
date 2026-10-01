@@ -201,31 +201,35 @@ def _locate(pdf_bytes: bytes) -> tuple[int, fitz.Rect, float, str]:
     return page_index, fitz_rect, difference, label
 
 
-def _validate_rect(page: fitz.Page, anchor: fitz.Rect) -> tuple[fitz.Rect, bool]:
+def _validate_rect(page: fitz.Page, anchor: fitz.Rect) -> tuple[fitz.Rect, bool, str]:
     width = DEFAULT_WIDTH_PT
     height = DEFAULT_HEIGHT_PT
-    reduced = False
-    available_width = page.rect.width - anchor.x0
-    available_height = page.rect.height - anchor.y0
-    if anchor.x0 + width > page.rect.width:
-        width = available_width
-        reduced = True
-    if anchor.y0 + height > page.rect.height:
-        height = available_height
-        reduced = True
-    if width < MIN_WIDTH_PT or height < MIN_HEIGHT_PT:
-        raise _fail("SIGNATURE_RECT_TOO_SMALL")
-    rect = fitz.Rect(anchor.x0, anchor.y0, anchor.x0 + width, anchor.y0 + height)
-    if not page.rect.contains(rect):
-        raise _fail("SIGNATURE_RECT_OUT_OF_BOUNDS")
-    for word in page.get_text("words"):
-        word_rect = fitz.Rect(word[:4])
-        if word_rect.intersects(rect) and not word_rect.intersects(anchor):
-            raise _fail("SIGNATURE_RECT_OVERLAPS_NEIGHBOR")
-    return rect, reduced
+    gap = 8.0
+    words = [fitz.Rect(word[:4]) for word in page.get_text("words")]
+
+    def fit_candidate(x0: float, y0: float) -> fitz.Rect | None:
+        rect = fitz.Rect(x0, y0, x0 + width, y0 + height)
+        if not page.rect.contains(rect):
+            return None
+        if any(word.intersects(rect) and not word.intersects(anchor) for word in words):
+            return None
+        return rect
+
+    # Order is stable and keeps the field visually adjacent to the anchor.
+    candidates = (
+        (anchor.x0, anchor.y1 + gap, "below"),
+        (anchor.x0, anchor.y0 - height - gap, "above"),
+        (anchor.x1 + gap, anchor.y0, "right"),
+        (anchor.x0 - width - gap, anchor.y0, "left"),
+    )
+    for x0, y0, placement in candidates:
+        rect = fit_candidate(x0, y0)
+        if rect is not None:
+            return rect, False, placement
+    raise _fail("SIGNATURE_RECT_NO_SAFE_SPACE")
 
 
-def prepare_signature_anchor(pdf_bytes: bytes, field_name: str = DEFAULT_FIELD_NAME) -> PreparedSignaturePdf:
+def prepare_signature_anchor(pdf_bytes: bytes, field_name: str = DEFAULT_FIELD_NAME, signature_boxes: list[dict[str, object]] | None = None) -> PreparedSignaturePdf:
     if not isinstance(pdf_bytes, (bytes, bytearray)) or not pdf_bytes:
         raise _fail("PDF_EMPTY")
     if len(pdf_bytes) > MAX_PDF_BYTES:
@@ -236,16 +240,46 @@ def prepare_signature_anchor(pdf_bytes: bytes, field_name: str = DEFAULT_FIELD_N
     try:
         source = bytes(pdf_bytes)
         _validate_unsigned_source(source)
-        page_index, anchor, difference, locator = _locate(source)
-        document = fitz.open(stream=source, filetype="pdf")
-        signature_rect, reduced = _validate_rect(document[page_index], anchor)
-        document[page_index].add_redact_annot(anchor, fill=(1, 1, 1))
-        document[page_index].apply_redactions()
+        if signature_boxes is not None:
+            if len(signature_boxes) != 1:
+                raise _fail("SIGNATURE_BOX_MAP_COUNT_INVALID")
+            box = signature_boxes[0]
+            box_id = str(box.get("id") or "").strip()
+            rect_values = box.get("rect")
+            page_value = box.get("page")
+            if not box_id or not box_id.startswith("brana-signature-") or not isinstance(rect_values, (list, tuple)) or len(rect_values) != 4:
+                raise _fail("SIGNATURE_BOX_MAP_INVALID")
+            try:
+                page_index = int(page_value)
+                mapped_rect = fitz.Rect(*(float(value) for value in rect_values))
+            except (TypeError, ValueError):
+                raise _fail("SIGNATURE_BOX_MAP_INVALID")
+            document = fitz.open(stream=source, filetype="pdf")
+            if page_index < 0 or page_index >= document.page_count:
+                raise _fail("SIGNATURE_BOX_PAGE_INVALID")
+            page = document[page_index]
+            if not page.rect.contains(mapped_rect) or abs(mapped_rect.width - DEFAULT_WIDTH_PT) > LOCATOR_TOLERANCE_PT or abs(mapped_rect.height - DEFAULT_HEIGHT_PT) > LOCATOR_TOLERANCE_PT:
+                raise _fail("SIGNATURE_BOX_GEOMETRY_INVALID")
+            words = [fitz.Rect(word[:4]) for word in page.get_text("words")]
+            if any(word.intersects(mapped_rect) for word in words):
+                raise _fail("SIGNATURE_BOX_OVERLAPS_CONTENT")
+            anchor = fitz.Rect(mapped_rect)
+            difference = 0.0
+            locator = "layout-map"
+        else:
+            page_index, anchor, difference, locator = _locate(source)
+            document = fitz.open(stream=source, filetype="pdf")
+        signature_rect = anchor if signature_boxes is not None else _validate_rect(document[page_index], anchor)[0]
+        reduced = False if signature_boxes is not None else _validate_rect(document[page_index], anchor)[1]
+        placement = "layout-map" if signature_boxes is not None else _validate_rect(document[page_index], anchor)[2]
+        if signature_boxes is None:
+            document[page_index].add_redact_annot(anchor, fill=(1, 1, 1))
+            document[page_index].apply_redactions()
         redacted = io.BytesIO()
         document.save(redacted, garbage=4, deflate=True)
         document.close()
         prepared = fitz.open(stream=redacted.getvalue(), filetype="pdf")
-        if any(token in "".join(page.get_text() for page in prepared) for token in (CANONICAL_TOKEN, ALIAS_TOKEN)):
+        if signature_boxes is None and any(token in "".join(page.get_text() for page in prepared) for token in (CANONICAL_TOKEN, ALIAS_TOKEN)):
             raise _fail("ANCHOR_REDACTION_INCOMPLETE")
         widget = fitz.Widget()
         widget.field_name = name
@@ -262,7 +296,7 @@ def prepare_signature_anchor(pdf_bytes: bytes, field_name: str = DEFAULT_FIELD_N
         if len(widgets) != 1 or CANONICAL_TOKEN in final_text or ALIAS_TOKEN in final_text or widgets[0].field_value:
             raise _fail("SIGNATURE_FIELD_VALIDATION_FAILED")
         check.close()
-        return PreparedSignaturePdf(result, hashlib.sha256(result).hexdigest(), page_index, tuple(float(x) for x in signature_rect), name, {"locator": locator, "rect_reduced": reduced, "locator_difference_pt": round(difference, 6), "token_count": 1})
+        return PreparedSignaturePdf(result, hashlib.sha256(result).hexdigest(), page_index, tuple(float(x) for x in signature_rect), name, {"locator": locator, "rect_reduced": reduced, "placement": placement, "token_count": 0 if signature_boxes is not None else 1, "box_id": box_id if signature_boxes is not None else None})
     except SignatureAnchorError:
         raise
     except Exception as exc:

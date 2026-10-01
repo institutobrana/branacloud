@@ -4018,6 +4018,7 @@ def _build_prepared_signature_filename(document_name: str | None) -> str:
 async def preparar_pdf_assinatura_local_editor_textos(
     pdf_file: UploadFile = File(...),
     document_name: str = Form(default=""),
+    signature_boxes_json: str = Form(default=""),
     current_user: Usuario = Depends(get_current_user),
 ):
     _ = current_user
@@ -4031,11 +4032,26 @@ async def preparar_pdf_assinatura_local_editor_textos(
         raise HTTPException(status_code=400, detail="PDF_EMPTY")
     if len(pdf_bytes) > SIGNATURE_ANCHOR_MAX_PDF_BYTES:
         raise HTTPException(status_code=400, detail="PDF_TOO_LARGE")
+    signature_boxes = None
+    raw_boxes = str(signature_boxes_json or "").strip()
+    if raw_boxes:
+        try:
+            parsed_boxes = json.loads(raw_boxes)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail="SIGNATURE_BOX_MAP_INVALID") from exc
+        if isinstance(parsed_boxes, dict):
+            if str(parsed_boxes.get("pdf_sha256") or "").lower() != hashlib.sha256(pdf_bytes).hexdigest():
+                raise HTTPException(status_code=400, detail="SIGNATURE_BOX_MAP_HASH_MISMATCH")
+            parsed_boxes = parsed_boxes.get("boxes")
+        if not isinstance(parsed_boxes, list):
+            raise HTTPException(status_code=400, detail="SIGNATURE_BOX_MAP_INVALID")
+        signature_boxes = parsed_boxes
     try:
         prepared = await run_in_threadpool(
             prepare_signature_anchor,
             pdf_bytes,
             field_name=SIGNATURE_ANCHOR_FIELD_NAME,
+            signature_boxes=signature_boxes,
         )
     except SignatureAnchorError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

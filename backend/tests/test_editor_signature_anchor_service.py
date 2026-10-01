@@ -253,6 +253,31 @@ def test_additional_semantic_stability():
     assert first.diagnostic == second.diagnostic
 
 
+def test_signature_rect_moves_to_first_safe_adjacent_area():
+    document = fitz.open()
+    page = document.new_page(width=595.3, height=841.9)
+    page.insert_text((100, 600), CANONICAL_TOKEN, fontsize=10)
+    page.insert_text((100, 640), "content below anchor", fontsize=10)
+    output = io.BytesIO()
+    document.save(output)
+    result = prepare_signature_anchor(output.getvalue())
+    assert result.diagnostic["placement"] == "above"
+    rect = fitz.Rect(result.signature_rect)
+    assert rect.width == DEFAULT_WIDTH_PT
+    assert rect.height == DEFAULT_HEIGHT_PT
+    assert rect.y1 <= 841.9
+
+
+def test_signature_rect_fails_closed_when_all_adjacent_areas_are_unavailable():
+    document = fitz.open()
+    page = document.new_page(width=300, height=180)
+    page.insert_text((20, 90), CANONICAL_TOKEN, fontsize=8)
+    output = io.BytesIO()
+    document.save(output)
+    with pytest.raises(SignatureAnchorError, match="SIGNATURE_RECT_NO_SAFE_SPACE"):
+        prepare_signature_anchor(output.getvalue())
+
+
 def test_tamper_after_hash_is_detected():
     result = prepare_signature_anchor(pdf_with(CANONICAL_TOKEN))
     tampered = bytearray(result.pdf_bytes); tampered[-1] ^= 1
