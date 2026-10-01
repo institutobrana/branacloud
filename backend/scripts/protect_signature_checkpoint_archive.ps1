@@ -77,16 +77,18 @@ function Save-Backup {
     param([string]$Root,[string]$Destination,[string]$TelAccountSid)
     if (Test-Path -LiteralPath $Destination) { throw 'ARCHIVE_ACL_BACKUP_EXISTS' }
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
+    Set-RestrictedAcl -Path $Destination -TelAccountSid $TelAccountSid
     $records = @(Get-ArchiveFiles $Root | ForEach-Object { Get-DescriptorRecord $Root $_ })
     $manifest = [pscustomobject]@{ ArchivePath=$Root; TelSid=$TelAccountSid; Records=$records }
     $manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $Destination 'ACL-SDDL.json') -Encoding UTF8
-    Set-RestrictedAcl -Path $Destination -TelAccountSid $TelAccountSid
     return (Join-Path $Destination 'ACL-SDDL.json')
 }
 
 function Restore-Backup {
     param([string]$Root,[string]$Source)
-    $manifest = Get-Content -LiteralPath (Join-Path $Source 'ACL-SDDL.json') -Raw | ConvertFrom-Json
+    $manifestPath = Join-Path $Source 'ACL-SDDL.json'
+    $json = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes($manifestPath)).TrimStart([char]0xFEFF)
+    $manifest = $json | ConvertFrom-Json
     foreach ($record in @($manifest.Records)) {
         $target = Join-Path $Root ($record.Path.Replace('/','\'))
         if (-not (Test-Path -LiteralPath $target)) { throw "ARCHIVE_ACL_REVERT_TARGET_MISSING:$($record.Path)" }
@@ -115,6 +117,23 @@ function Assert-RestrictedArchive {
     return $items.Count
 }
 
+function Assert-ManifestHashes {
+    param([string]$Root)
+    $manifestPath = Join-Path $Root 'MANIFEST.json'
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw 'ARCHIVE_ACL_MANIFEST_MISSING' }
+    $json = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes($manifestPath)).TrimStart([char]0xFEFF)
+    $manifest = $json | ConvertFrom-Json
+    $checked = 0
+    foreach ($entry in @($manifest.files)) {
+        $target = Join-Path (Join-Path $Root 'payload') ($entry.path.Replace('/','\'))
+        if (-not (Test-Path -LiteralPath $target -PathType Leaf)) { throw "ARCHIVE_ACL_MANIFEST_FILE_MISSING:$($entry.path)" }
+        $actual = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($actual -ne ([string]$entry.sha256).ToLowerInvariant()) { throw "ARCHIVE_ACL_MANIFEST_HASH_MISMATCH:$($entry.path)" }
+        $checked++
+    }
+    return $checked
+}
+
 function Invoke-TestOnly {
     $root = Join-Path ([IO.Path]::GetTempPath()) ('archive-acl-test-' + [guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path (Join-Path $root 'nested') -Force | Out-Null
@@ -141,16 +160,19 @@ if ($Mode -eq 'TestOnly') { Invoke-TestOnly; exit 0 }
 $sid = Resolve-TelSid
 if ($Mode -eq 'Preflight') {
     $items = @(Get-ArchiveFiles $ArchivePath)
-    "ARCHIVE_ACL_PREFLIGHT=PASS;COUNT=$($items.Count);TEL_SID=$sid"
+    $manifestCount = Assert-ManifestHashes $ArchivePath
+    "ARCHIVE_ACL_PREFLIGHT=PASS;COUNT=$($items.Count);MANIFEST_FILES=$manifestCount;TEL_SID=$sid"
     exit 0
 }
 if ($Mode -eq 'Apply') {
     if (-not $BackupPath) { $BackupPath = Join-Path (Split-Path $ArchivePath -Parent) ('archive-acl-backup-' + (Get-Date -Format 'yyyyMMdd-HHmmss')) }
+    $manifestCount = Assert-ManifestHashes $ArchivePath
     $manifestPath = Save-Backup $ArchivePath $BackupPath $sid
     try {
         foreach ($item in @(Get-ArchiveFiles $ArchivePath)) { Set-RestrictedAcl $item.FullName $sid }
         $count = Assert-RestrictedArchive $ArchivePath $sid
-        "ARCHIVE_ACL=PASS;COUNT=$count;BACKUP=$manifestPath"
+        $postManifestCount = Assert-ManifestHashes $ArchivePath
+        "ARCHIVE_ACL=PASS;COUNT=$count;MANIFEST_FILES=$postManifestCount;BACKUP=$manifestPath"
     } catch {
         throw
     }
