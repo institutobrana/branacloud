@@ -62,14 +62,19 @@ def _require_real_wiring(candidate_selector, operational_signer_factory):
         raise RuntimeError("REAL_WIRING_REQUIRED")
 
 
-def create_secure_bridge_runtime(*, cert_pem: bytes, key_pem: bytes, signer=None, candidate_selector=None, operational_signer_factory=None, ui: ApprovalUI | None = None, wpf_executable: str | None = None, lock: InstanceLock | None = None, tls_config: TLSRuntimeConfig = TLSRuntimeConfig(), production_mode: bool = False, enable_real_signing: bool = False, dotnet_helper_executable: str | None = None, enable_dotnet_store_helper: bool = False) -> SecureBridgeRuntime:
+def create_secure_bridge_runtime(*, cert_pem: bytes, key_pem: bytes, signer=None, candidate_selector=None, operational_signer_factory=None, public_certificate_provider=None, ui: ApprovalUI | None = None, wpf_executable: str | None = None, lock: InstanceLock | None = None, tls_config: TLSRuntimeConfig = TLSRuntimeConfig(), production_mode: bool = False, enable_real_signing: bool = False, dotnet_helper_executable: str | None = None, enable_dotnet_store_helper: bool = False, policy_der_path: str | None = None, helper_event_sink=None, online_authorization_consumer=None, require_online_authorization: bool = False, reservation_challenge_forwarder=None, enable_test_reservation_challenge: bool = False) -> SecureBridgeRuntime:
+    # A production signer is never reachable without the backend authorization
+    # channel.  The caller may inject the consumer only in an explicitly
+    # provisioned runtime; absence therefore fails closed at /sign.
+    if production_mode and enable_real_signing:
+        require_online_authorization = True
     if production_mode and operational_signer_factory is None and candidate_selector is not None:
         if enable_dotnet_store_helper:
             if not dotnet_helper_executable:
                 raise RuntimeError("DOTNET_HELPER_PATH_REQUIRED")
             from .security.dotnet_sha256_signer import create_explicit_store_only_dotnet_factory
             operational_signer_factory = create_explicit_store_only_dotnet_factory(
-                executable=dotnet_helper_executable, enabled=True)
+                executable=dotnet_helper_executable, enabled=True, policy_der_path=policy_der_path, event_sink=helper_event_sink)
         else:
             from .security.windows_prepared_signer import create_real_operational_windows_prepared_signer
             operational_signer_factory = create_real_operational_windows_prepared_signer()
@@ -89,7 +94,16 @@ def create_secure_bridge_runtime(*, cert_pem: bytes, key_pem: bytes, signer=None
             raise RuntimeError("OPERATIONAL_SIGNER_FACTORY_REQUIRED")
     if lock is None:
         lock = WindowsNamedMutexAdapter()
-    service = HttpProtocolService(ui=ui or PendingApprovalUI(), signer=signer, signing_enabled=(not production_mode) or enable_real_signing)
+    service = HttpProtocolService(
+        ui=ui or PendingApprovalUI(),
+        signer=signer,
+        public_certificate_provider=public_certificate_provider,
+        signing_enabled=(not production_mode) or enable_real_signing,
+        online_authorization_consumer=online_authorization_consumer,
+        require_online_authorization=require_online_authorization,
+        reservation_challenge_forwarder=reservation_challenge_forwarder,
+        enable_test_reservation_challenge=enable_test_reservation_challenge,
+    )
     runtime = SecureBridgeRuntime(cert_pem=cert_pem, key_pem=key_pem, service=service, lock=lock, tls_config=tls_config)
     if '_wpf_process' in locals():
         runtime._wpf_process = _wpf_process

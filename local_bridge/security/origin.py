@@ -9,7 +9,8 @@ ALLOWED_METHODS = ("GET", "POST", "DELETE", "OPTIONS")
 ALLOWED_HEADERS = (
     "Content-Type", "X-Brana-Bridge-Protocol", "X-Brana-Session",
     "X-Brana-Timestamp", "X-Brana-Request-Nonce", "X-Brana-Request-MAC",
-    "X-Brana-Content-SHA256",
+    "X-Brana-Content-SHA256", "X-Brana-Operation-Id", "X-Brana-Field-Name",
+    "X-Brana-Policy-OID", "X-Brana-Profile",
 )
 EXPOSED_HEADERS = ("Content-Disposition", "X-Brana-Bridge-Protocol", "X-Brana-Session-Expires")
 

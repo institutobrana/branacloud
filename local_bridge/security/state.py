@@ -67,10 +67,13 @@ class Operation:
     started_at: float | None = None
     result: bytes | None = None
     result_expires_at: float | None = None
+    certificate_der_sha256: str | None = None
+    authorization_id: str | None = None
+    certificate_source: str = "WINDOWS_STORE"
 
     @property
     def binding_digest(self) -> str:
-        value = "|".join((self.session_id, self.operation_id, self.prepared_pdf_sha256, self.field_name, self.policy_oid, self.profile, self.origin, self.certificate_binding))
+        value = "|".join((self.session_id, self.operation_id, self.prepared_pdf_sha256, self.field_name, self.policy_oid, self.profile, self.origin, self.certificate_source, self.certificate_der_sha256 or self.certificate_binding))
         return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
@@ -138,12 +141,21 @@ class BridgeState:
             if operation.session_id == session_id and operation.state not in {State.COMPLETED, State.FAILED, State.CANCELLED}:
                 operation.state = State.REVOKED
 
-    def create_operation(self, *, session_id: str, origin: str, operation_id: str, prepared_pdf_sha256: str, field_name: str, policy_oid: str, profile: str, certificate_binding: str) -> Operation:
+    def create_operation(self, *, session_id: str, origin: str, operation_id: str, prepared_pdf_sha256: str, field_name: str, policy_oid: str, profile: str, certificate_binding: str, certificate_der_sha256: str | None = None, authorization_id: str | None = None, certificate_source: str = "WINDOWS_STORE") -> Operation:
+        if certificate_source not in {"WINDOWS_STORE", "FILE_PKCS12"}:
+            raise StateError("CERTIFICATE_SOURCE_REQUIRED")
+        if certificate_source == "FILE_PKCS12":
+            raise StateError("FILE_PKCS12_SIGNER_NOT_CONFIGURED")
+        if certificate_der_sha256 is not None:
+            normalized = certificate_der_sha256.strip().lower()
+            if len(normalized) != 64 or any(ch not in "0123456789abcdef" for ch in normalized):
+                raise StateError("CERTIFICATE_DER_HASH_INVALID")
+            certificate_der_sha256 = normalized
         self._require_session(session_id, origin)
         existing = self.operations.get(operation_id)
         if existing:
-            candidate = (session_id, operation_id, prepared_pdf_sha256, field_name, policy_oid, profile, origin, certificate_binding)
-            current = (existing.session_id, existing.operation_id, existing.prepared_pdf_sha256, existing.field_name, existing.policy_oid, existing.profile, existing.origin, existing.certificate_binding)
+            candidate = (session_id, operation_id, prepared_pdf_sha256, field_name, policy_oid, profile, origin, certificate_binding, certificate_der_sha256, authorization_id, certificate_source)
+            current = (existing.session_id, existing.operation_id, existing.prepared_pdf_sha256, existing.field_name, existing.policy_oid, existing.profile, existing.origin, existing.certificate_binding, existing.certificate_der_sha256, existing.authorization_id, existing.certificate_source)
             if candidate != current:
                 raise StateError("IDEMPOTENCY_CONFLICT" if prepared_pdf_sha256 == existing.prepared_pdf_sha256 else "CONTENT_CONFLICT")
             return existing
@@ -153,7 +165,7 @@ class BridgeState:
                 if active.state is State.SIGNING:
                     raise StateError("BRIDGE_BUSY")
             now = self.clock()
-            item = Operation(operation_id, session_id, origin, prepared_pdf_sha256, field_name, policy_oid, profile, certificate_binding, now, now + self.APPROVAL_TTL)
+            item = Operation(operation_id, session_id, origin, prepared_pdf_sha256, field_name, policy_oid, profile, certificate_binding, now, now + self.APPROVAL_TTL, certificate_der_sha256=certificate_der_sha256, authorization_id=authorization_id, certificate_source=certificate_source)
             self.operations[operation_id] = item
             return item
 

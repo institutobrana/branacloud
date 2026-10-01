@@ -20,7 +20,9 @@ MAX_FRAME = 1_048_576
 
 
 class DotnetHelperError(DirectCspError):
-    pass
+    def __init__(self, code, *, phase="provider_sign", retryable=False, diagnostic=None):
+        super().__init__(code, phase=phase, retryable=retryable)
+        self.diagnostic = diagnostic or {}
 
 
 def _frame(payload: bytes) -> bytes:
@@ -42,12 +44,33 @@ def _read_frame(stream) -> bytes:
     return data
 
 
+def _parse_helper_events(stderr: bytes, event_sink):
+    diagnostic = {}
+    for raw in stderr.splitlines():
+        if not raw.startswith(b"BRANA_HELPER_EVENT:"):
+            continue
+        try:
+            event = json.loads(raw.split(b":", 1)[1].decode("ascii"))
+        except (ValueError, UnicodeDecodeError):
+            continue
+        phase = event.get("phase")
+        state = event.get("state")
+        if isinstance(phase, str) and isinstance(state, str):
+            event_sink(f"HELPER_{phase.upper()}_{state.upper()}")
+            if state == "failed":
+                diagnostic = {"phase": phase, "win32_error": event.get("win32_error"), "hresult": event.get("hresult")}
+                event_sink("HELPER_DIAGNOSTIC phase={};win32={};hresult={}".format(
+                    phase, diagnostic.get("win32_error"), diagnostic.get("hresult")))
+    return diagnostic
+
+
 class DotnetSha256Boundary:
     """One-process/one-frame boundary. It is never selected implicitly."""
 
     def __init__(self, *, executable: str, certificate_der_sha256: str,
                  approved: bool, process_factory: Callable = subprocess.Popen,
-                 explicit_enabled: bool = False, timeout: float = 120.0):
+                 explicit_enabled: bool = False, timeout: float = 120.0,
+                 event_sink: Callable[[str], None] | None = None):
         """Create the one-shot helper boundary.
 
         120 seconds is finite but allows a native provider prompt to be
@@ -67,6 +90,7 @@ class DotnetSha256Boundary:
         self.certificate_der_sha256 = certificate_der_sha256.lower()
         self.process_factory = process_factory
         self.timeout = timeout
+        self.event_sink = event_sink or (lambda _event: None)
         self.calls = 0
         self.process = None
 
@@ -80,15 +104,21 @@ class DotnetSha256Boundary:
                               "data_b64": base64.b64encode(data).decode("ascii")}, separators=(",", ":")).encode()
         process = None
         try:
+            self.event_sink("HELPER_PROCESS_CREATE_BEGIN")
             process = self.process_factory([self.executable, "--explicit-authorized-run"], stdin=subprocess.PIPE,
                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             self.process = process
+            self.event_sink("HELPER_PROCESS_STARTED")
             stdout, stderr = process.communicate(_frame(request), timeout=self.timeout)
-            if process.returncode != 0 or stderr:
-                raise DotnetHelperError("DOTNET_HELPER_FAILED", phase="provider_sign", retryable=False)
+            diagnostic = _parse_helper_events(stderr, self.event_sink)
+            if process.returncode != 0:
+                self.event_sink("HELPER_PROCESS_FAILED")
+                raise DotnetHelperError("DOTNET_HELPER_FAILED", phase=diagnostic.get("phase", "provider_sign"), retryable=False, diagnostic=diagnostic)
             response = _read_frame(_BytesReader(stdout))
             if len(response) != 256:
+                self.event_sink("HELPER_RESPONSE_INVALID")
                 raise DotnetHelperError("RSA_SIGNATURE_LENGTH_INVALID", phase="provider_sign", retryable=False)
+            self.event_sink("HELPER_RESPONSE_ACCEPTED")
             return response
         except subprocess.TimeoutExpired as exc:
             if process is not None:
@@ -98,8 +128,12 @@ class DotnetSha256Boundary:
         except DotnetHelperError:
             raise
         except Exception as exc:
-            raise DotnetHelperError("DOTNET_HELPER_PROTOCOL_FAILED", phase="provider_sign", retryable=False) from None
+            code = getattr(exc, "winerror", None) or getattr(exc, "errno", None)
+            self.event_sink("HELPER_PROCESS_CREATE_FAILED")
+            raise DotnetHelperError("DOTNET_HELPER_PROCESS_CREATE_FAILED", phase="process_create", retryable=False,
+                                    diagnostic={"phase": "process_create", "win32_error": code, "hresult": None}) from None
         finally:
+            self.event_sink("HELPER_PROCESS_ENDED")
             self.process = None
 
     def close(self):
@@ -188,7 +222,7 @@ def create_ephemeral_test_signer(*, executable: str, production_mode: bool = Fal
     return signer
 
 
-def create_explicit_store_only_dotnet_factory(*, executable: str, enabled: bool = False):
+def create_explicit_store_only_dotnet_factory(*, executable: str, enabled: bool = False, policy_der_path: str | None = None, event_sink: Callable[[str], None] | None = None, require_certificate_der_sha256: bool = False):
     """Build the opt-in production graph for the Store-only .NET helper.
 
     The helper is never selected by the default runtime.  It receives only the
@@ -210,8 +244,22 @@ def create_explicit_store_only_dotnet_factory(*, executable: str, enabled: bool 
     import io
 
     def factory(candidate_selector):
+        if event_sink:
+            event_sink("FACTORY_ENTERED")
         async def sign(request, _http_hash):
-            candidate = candidate_selector()
+            expected_identity = str(request.certificate_binding or "").strip().lower()
+            if require_certificate_der_sha256 and (len(expected_identity) != 64 or any(ch not in "0123456789abcdef" for ch in expected_identity)):
+                raise DotnetHelperError("CERTIFICATE_DER_HASH_REQUIRED", phase="certificate_resolution", retryable=False)
+            if event_sink:
+                event_sink("CANDIDATE_SELECTION_BEGIN")
+            try:
+                candidate = candidate_selector()
+            except Exception as exc:
+                if event_sink:
+                    event_sink("CANDIDATE_SELECTION_FAILED")
+                raise DotnetHelperError("CANDIDATE_SELECTION_FAILED", phase="certificate_resolution", retryable=False) from exc
+            if event_sink:
+                event_sink("CANDIDATE_SELECTED")
             if candidate.get("store") != "CurrentUser\\My" or candidate.get("chain_valid") is not True:
                 raise DotnetHelperError("CERTIFICATE_SELECTION_REQUIRED", phase="certificate_resolution", retryable=False)
             der = candidate.get("certificate_der") or candidate.get("der")
@@ -221,18 +269,58 @@ def create_explicit_store_only_dotnet_factory(*, executable: str, enabled: bool 
             actual = hashlib.sha256(bytes(der)).hexdigest()
             if actual != identity.lower():
                 raise DotnetHelperError("PUBLIC_CERTIFICATE_IDENTITY_MISMATCH", phase="certificate_resolution", retryable=False)
+            if require_certificate_der_sha256 and expected_identity != actual:
+                raise DotnetHelperError("CERTIFICATE_DER_HASH_MISMATCH", phase="certificate_resolution", retryable=False)
             boundary = DotnetSha256Boundary(executable=executable, certificate_der_sha256=identity,
-                                            approved=True, explicit_enabled=True)
-            cert = x509.Certificate.load(bytes(der))
-            signer = PyHankoDotnetSigner(signing_cert=cert, cert_registry=SimpleCertificateStore(), boundary=boundary)
+                approved=True, explicit_enabled=True, event_sink=event_sink)
+            if event_sink:
+                event_sink("ADAPTER_CREATED")
             try:
-                meta = PdfSignatureMetadata(field_name="BranaSignature_1", md_algorithm="sha256",
-                    subfilter=SigSeedSubFilter.PADES, cades_signed_attr_spec=build_offline_pades_policy())
+                if event_sink:
+                    event_sink("SIGNER_CONFIG_BEGIN")
+                try:
+                    cert = x509.Certificate.load(bytes(der))
+                except Exception:
+                    if event_sink:
+                        event_sink("SIGNER_CONFIG_FAILED code=CERTIFICATE_DER_INVALID")
+                    raise DotnetHelperError("CERTIFICATE_DER_INVALID", phase="pyhanko_setup", retryable=False) from None
+                if event_sink:
+                    event_sink("SIGNER_CERTIFICATE_LOADED")
+                    event_sink("SIGNER_ADAPTER_BEGIN")
+                try:
+                    signer = PyHankoDotnetSigner(signing_cert=cert, cert_registry=SimpleCertificateStore(), boundary=boundary)
+                except Exception:
+                    if event_sink:
+                        event_sink("SIGNER_ADAPTER_FAILED code=SIGNER_CONFIGURATION_FAILED")
+                    raise DotnetHelperError("SIGNER_CONFIGURATION_FAILED", phase="pyhanko_setup", retryable=False) from None
+                if event_sink:
+                    event_sink("SIGNER_ADAPTER_CREATED")
+                    event_sink("POLICY_LOAD_BEGIN")
+                try:
+                    policy = build_offline_pades_policy(der_path=policy_der_path)
+                    meta = PdfSignatureMetadata(field_name="BranaSignature_1", md_algorithm="sha256",
+                        subfilter=SigSeedSubFilter.PADES, cades_signed_attr_spec=policy)
+                except Exception:
+                    if event_sink:
+                        event_sink("POLICY_LOAD_FAILED code=POLICY_LOAD_FAILED")
+                    raise DotnetHelperError("POLICY_LOAD_FAILED", phase="policy_load", retryable=False) from None
+                if event_sink:
+                    event_sink("POLICY_LOADED")
                 writer = IncrementalPdfFileWriter(io.BytesIO(request.pdf_bytes))
                 output = io.BytesIO()
+                if event_sink:
+                    event_sink("PDF_SIGNER_ENTERED")
                 await PdfSigner(signature_meta=meta, signer=signer).async_sign_pdf(
                     writer, existing_fields_only=True, output=output)
+                if event_sink:
+                    event_sink("PDF_SIGNER_COMPLETED")
                 return output.getvalue()
+            except DotnetHelperError:
+                raise
+            except Exception:
+                if event_sink:
+                    event_sink("PDF_SIGNER_FAILED code=PDF_SIGNER_EXECUTION_FAILED")
+                raise DotnetHelperError("PDF_SIGNER_EXECUTION_FAILED", phase="pyhanko_setup", retryable=False) from None
             finally:
                 # The helper process is created by the first non-dry-run call.
                 # Its boundary owns exactly that process and no retry is possible.

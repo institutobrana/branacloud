@@ -230,7 +230,7 @@ def create_operational_windows_prepared_signer(
     return WindowsPreparedPdfSigner(deferred)
 
 
-def create_real_operational_windows_prepared_signer(*, public_provider=None, context_factory=None, boundary_api=None):
+def create_real_operational_windows_prepared_signer(*, public_provider=None, context_factory=None, boundary_api=None, require_certificate_der_sha256: bool = False):
     """Concrete CSP graph. Native calls remain replaceable only at the CryptoAPI seam."""
     from ..cert_store import PublicCertificateContextFactory, Win32PublicCertificateProvider, resolve_windows_user_candidate, _public_context_identity
     from .direct_csp_adapter import PublicCspMetadata, Win32CspBoundary, PyHankoCspSigner
@@ -249,6 +249,9 @@ def create_real_operational_windows_prepared_signer(*, public_provider=None, con
 
         async def native_sign(request, digest):
             candidate = public_candidate()
+            expected_identity = str(request.certificate_binding or "").strip().lower()
+            if require_certificate_der_sha256 and (len(expected_identity) != 64 or any(ch not in "0123456789abcdef" for ch in expected_identity)):
+                raise CertificateSelectionRequired("CERTIFICATE_DER_HASH_REQUIRED")
             if candidate.get("store") != "CurrentUser\\My" or candidate.get("chain_valid") is not True:
                 raise CertificateSelectionRequired("CERTIFICATE_SELECTION_REQUIRED")
             identity = candidate.get("_stable_identity") or candidate.get("stable_identity")
@@ -268,6 +271,10 @@ def create_real_operational_windows_prepared_signer(*, public_provider=None, con
             if not certificate_der:
                 context.close()
                 raise WindowsPreparedSignerError("PUBLIC_CERTIFICATE_DER_UNAVAILABLE")
+            actual_identity = hashlib.sha256(bytes(certificate_der)).hexdigest()
+            if actual_identity != str(identity).lower() or (require_certificate_der_sha256 and expected_identity != actual_identity):
+                context.close()
+                raise CertificateSelectionRequired("CERTIFICATE_DER_HASH_MISMATCH")
             signing_cert = asn1_x509.Certificate.load(bytes(certificate_der))
             from pyhanko_certvalidator.registry import SimpleCertificateStore
             signer = PyHankoCspSigner(signing_cert=signing_cert, cert_registry=SimpleCertificateStore(), boundary=boundary, metadata=metadata, context_owner=context, signature_length=int(candidate.get("key_size", 2048)) // 8)

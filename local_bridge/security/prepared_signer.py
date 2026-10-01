@@ -16,6 +16,7 @@ class PreparedPdfSigningRequest:
     policy_oid: str
     operation_id: str
     certificate_binding: str
+    certificate_source: str = "WINDOWS_STORE"
 
 
 class PreparedPdfSigner(Protocol):
