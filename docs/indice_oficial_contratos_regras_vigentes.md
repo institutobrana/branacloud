@@ -447,3 +447,17 @@ Proposta, sem aplicaÃ§Ã£o nesta etapa:
 - Quando consultar: antes de cortar HTML, CSS ou binds remanescentes da toolbar antiga.
 - Status: vigente.
 - Observacao: documento de apoio para a segunda onda de limpeza da toolbar.
+
+## Regra permanente: campo de assinatura inline — 2026-09-26
+
+O campo de mesclagem **Assinatura digital** pode ser inserido pelo usuário em qualquer posição válida de qualquer documento. É um elemento inline com espaço reservado, persistido ao salvar/reabrir. A posição final da assinatura é determinada pelo campo após o layout e a paginação do documento atual; não existem coordenadas, página, alinhamento ou distância de outros campos fixados por modelo, e o usuário não precisa deslocar a âncora nem reservar linhas manualmente. O PDF preparado deve conter `BranaSignature_1` na área efetivamente ocupada por esse campo no PDF exportado.
+
+Documentos antigos com `<<Cirurgião.AssinaturaDigital>>` permanecem compatíveis. A integração usa `insertInlineTextBox`, exporta a geometria produzida pelo mesmo layout e vincula o mapa ao hash do PDF; o backend rejeita ausência, duplicidade, divergência, saída da página e sobreposição. A prova editor→PDF e a inspeção visual da aba real ainda aguardam uma única inserção manual.
+
+## Contrato de geometria exportada — 2026-09-26
+
+`exportPdfWithLayout()` deve produzir o PDF e `signatureBoxes` na mesma execução de layout. O retângulo usa pontos com origem top-left e inclui a posição acumulada do bloco/parágrafo, espaçamento e insets usados pelo desenho. O backend compara os mesmos bytes e rejeita palavras/blocos externos que intersectem a caixa. A ação dev de diagnóstico baixa PDF e manifesto vinculados por SHA-256 e não chama preparação, bridge ou `/sign`.
+
+## Auditoria geométrica Oasis — 2026-09-27
+
+A posição continua sendo derivada do layout/paginação de cada documento. O PDF final `ac95bf5be5a6c532496d0ac4abb45b07d0ab7f8ef371c803cb2699ba7d0c8623` tem `BranaSignature_1` na página 0, origem top-left `[346.846466, 300.535400, 566.846497, 372.535370]`. O manifesto/PDF disponíveis têm outro hash (`18af5d0ba836f2d6a8876eb6843b192c3ec71a103a691606d535b286fd212bfa`); não há evidência da primeira etapa que mudou a posição.

@@ -6807,6 +6807,15 @@ Observacoes:
 - O registro atual dos contratos está em `docs/contrato_fechamento_opcoes_sistema_react.md`.
 - `SEC-001` permanece `PROVEN_NON_BLOCKER` / `LEGACY_NO_MODERN_CONSUMER`; isso não reabre o módulo.
 
+## Checkpoint — Assinatura digital / Etapa 4 pausada
+
+- **PAUSADA / PARCIAL** — a infraestrutura local mTLS e o fluxo de autorização foram preparados, mas a inicialização do serviço não foi homologada.
+- Evidências registradas: WinSW normalmente `Stopped/Disabled`, papel dedicado e conexão PostgreSQL verificados, `MTLS_POSTFLIGHT=PASS`, XML/configuração alinhados e `MTLS_ACL_APPLY=PASS`.
+- Após a ACL, o SCM registrou `7034`; o WinSW iniciou `python.exe` (PID `13300`), mas o stderr registrou `No Python at ...`. O `pyvenv.cfg` aponta para Python 3.10.11 no perfil de Tel.
+- Pendências: Python base compartilhado, reconstrução/teste do runtime com lock e 42 wheels, e investigação separada do registro de eventos WinSW.
+- Nenhuma assinatura real, PIN, `/sign` real ou homologação operacional foi concluída.
+- Documento: `docs/fechamento_assinatura_etapa4_pausada.md`.
+
 ## Fechamento CP7 — Cadastro / Convênios e planos React
 
 - **FUNCTIONAL = COMPLETE** — Convênios e planos React encerrado em
@@ -6840,10 +6849,34 @@ Observacoes:
 - **CLASSIFICAÇÃO DO FREEZE:** código e contratos Agenda estão `IMPLEMENTED`; evidências estáticas estão `TESTED`; o runtime local existente está `RUNTIME_VALIDATED`; a validação runtime end-to-end do id_token e a escrita/exportação Google permanecem fora desta resolução e `NOT_YET_RELEASED`.
 - Referências canônicas: `docs/agenda/AGENDA_FREEZE_2026-09-05.md` e commit de freeze `62cf1fa51f72c0be229458f18a6f543d7042ba48`; a contagem lógica histórica de 86 entradas não representa a contagem física de arquivos do commit.
 
+## Evidência adicional — smoke Oasis → WPF sem assinatura (2026-09-26)
+
+Pairing e operação foram aprovados por `ApproveClick` em janelas WPF distintas; os POSTs e GETs autenticados retornaram `200`, com vínculo do `operation_id` confirmado. O fluxo não chamou `/sign` e não acessou Store/chave/PIN. A homologação do botão para assinatura real permanece pendente; a alteração de apresentação apenas separa sucesso (`role=status`) de erro (`role=alert`).
+
+O build React temporário foi posteriormente concluído em 2m13s; o aparente travamento era processamento normal do grafo de 3.829 módulos, não falha comprovada do código. Os quatro testes Oasis pertinentes passaram.
+
+A ação operacional `Assinar com certificado Windows` foi ligada ao fluxo local existente e continua desativada por padrão pela flag `VITE_ENABLE_LOCAL_SIGNATURE`. Ela é distinta do formulário legado PFX/P12 e dos botões dev. A prova sintética do contrato e o build passaram; a homologação humana no navegador e qualquer assinatura real permanecem pendentes.
+
 ## Checkpoint de assinatura local — 2026-09-25
 
 - **ASSINATURA SINTÉTICA LOCAL:** PDF produzido pelo helper .NET Store-only, com WPF aprovado, uma chamada `/sign` e `/result` recuperado antes do encerramento. Artefato, hash e limites estão em `docs/checkpoint_assinatura_real_2026-09-25.md`.
 - **POLICY AD-RB 1.3:** correção aplicada em `local_bridge/pdf_signing.py` para usar o hash interno da Política de Assinatura; o SHA-256 do DER completo permanece apenas como integridade/proveniência.
-- **ITI:** `AGUARDANDO_RELATÓRIO`; nenhum resultado local substitui o relatório referente ao SHA-256 exato do novo PDF.
-- **PRÓXIMO GATE:** obter e conferir o relatório ITI; somente depois retomar Oasis, homologação de documento de teste, empacotamento e outra máquina.
+- **ITI:** `APROVADO_NO_RELATORIO_CONFERIDO`; o relatório `Relatorio - new-corrected-signed.pdf` identifica o SHA-256 exato `e233e8045aea8e4d4c58f5ce6ec7689c4e21fd82f6265057f25e4944bb678853` e registra assinatura aprovada, sem alertas.
+- **PRÓXIMO GATE:** executar o teste humano do botão Oasis com signer real somente mediante autorização separada; depois homologar documento de teste, empacotamento e outra máquina.
 - **BLOQUEIOS EXPLÍCITOS:** Vite HTTPS 5173 teve ausência de listener em checagem recente; instalador, clone limpo e deploy SaaS permanecem fora de homologação.
+
+## Gate permanente do campo de assinatura inline — 2026-09-26
+
+O campo **Assinatura digital** funciona em qualquer posição válida e página, participando do fluxo e da paginação como elemento inline persistido. Sua posição no PDF é derivada do layout atual, sem coordenadas fixas ou pressupostos sobre outros campos. O preparador cria `BranaSignature_1` exatamente nessa área e rejeita mapas ausentes, duplicados, inconsistentes, fora da página ou sobrepostos; o token textual legado continua suportado.
+
+Entrada do gate: instrumentação do handler do menu e uma única inserção manual na aba atual. Saída: eventos sanitizados de handler, `insertInlineTextBox`, atualização do modelo e renderização visível; somente depois executar salvar/reabrir, mudança de paginação, exportação e correspondência geométrica. Assinatura, bridge, WPF, Store e `/sign` permanecem fora deste gate.
+
+### Resultado do gate de geometria — 2026-09-26
+
+`PASS` para o documento atual e para a matriz sintética de posições/páginas. O erro foi localizado no mapa, não no detector de sobreposição. A correção reconstrói `cursorY` por coluna e aplica espaçamento/inset antes de converter px→pt. O próximo gate continua separado: homologação humana do botão Oasis e assinatura real somente com autorização específica.
+
+## Rastreabilidade geométrica da assinatura Oasis — 2026-09-27
+
+- **PASS:** PDF final `RECEITA_TEL_BRANA-assinado.pdf`, 234758 bytes, SHA-256 `ac95bf5be5a6c532496d0ac4abb45b07d0ab7f8ef371c803cb2699ba7d0c8623`, com `BranaSignature_1` na página 0 em `[346.846466, 300.535400, 566.846497, 372.535370]` (top-left).
+- **PENDENTE:** correlação same-run de PDF exportado, `signatureBoxes`, PDF preparado e trace; os artefatos disponíveis têm outro hash (`18af...`). O primeiro ponto da divergência permanece não comprovado.
+- Não usar coordenadas fixas nem executar nova assinatura como substituto dessa evidência.
