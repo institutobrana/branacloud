@@ -157,6 +157,13 @@ Revisão cruzada realizada contra `README.md`, `docs/00_master_guide.md`, `docs/
 - Scripts/diagnósticos mTLS não foram publicados nesta rodada: o bootstrap depende do pacote/runtime operacional e de ACLs protegidas que ainda não estão no Git; os testes locais dependem do mesmo ambiente descartável. Nenhum segredo, chave, certificado, dump, log ou staging foi incluído.
 - O estado permanece **ETAPA 4 = PAUSADA / PARCIAL**. Retomada: separar os hunks de `main.py`, fechar a proveniência do `dist` Oasis, validar o pacote/runtime mTLS e somente então preparar novos commits seletivos.
 
+## Preservação do Editor — 2026-10-01
+
+- O fluxo Oasis e seus testes React foram versionados no commit `93d6f5c9`. O commit inclui `package.json`/lock e não inclui `frontend-react/vendor`.
+- A cópia de retomada do vendor e dos arquivos ainda locais está em `D:\BRANA ARQUIVOS\BRANA CLOUD ARQUIVO MORTO\assinatura-editor-checkpoint-20261001`, com `MANIFEST.json` SHA-256 `618fab19533aa33273e61e2cc1c15d98c97b4d5fc7da88bcc3df0cf4ba0b4c6c`. O vendor foi preservado sem `node_modules`; o Git sozinho ainda não reproduz essa dependência.
+- O pacote não contém PEM, certificados ou URLs PostgreSQL com senha; artefatos `bin/`, `obj/` e `tmp/` não entram no Git. A restauração deve conferir os SHA-256 do manifesto antes de copiar qualquer arquivo.
+- `backend/main.py` e os scripts/runtime mTLS continuam fora do commit: o registro de rotas está misturado com CORS e a etapa mTLS permanece pausada. Nenhuma assinatura operacional foi habilitada.
+
 ## Smoke Oasis → WPF sem assinatura — 2026-09-26
 
 - **PAIRING:** `PAIRING_REQUEST`, ID abreviado `nfWYT4jp…`, nonce abreviado `AXL7B67S…`; `ApproveClick`; POST `200`; GET autenticado `200`.
