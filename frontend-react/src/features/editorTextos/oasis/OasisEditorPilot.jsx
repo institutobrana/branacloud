@@ -3,7 +3,7 @@ import 'oasis-editor/style.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createOasisNewDocument, getPersistableDocumentSnapshot } from '../engines/OasisEditorAdapter.js';
 import { editorTextosApi } from '../api/editorTextosApi.js';
-import { prepareLocalPdf, createLocalPairing, getLocalPairingStatus, createLocalSignatureOperation, signLocalOperation, getLocalSignatureResult, revokeLocalSession } from '../api/localSignatureBridgeApi.js';
+import { prepareLocalPdf, checkLocalBridgeConnection, getAvailableSignatureCertificates, getWindowsPublicCertificates, crossSignatureIdentities, createLocalSignatureReservationRequest, getLocalSignatureReservationRequest, bindLocalSignatureReservation, confirmLocalSignatureAuthorization, createLocalPairing, waitForLocalPairingApproval, createLocalSignatureOperation, waitForLocalOperationApproval, signLocalOperation, getLocalSignatureResult, isRecoveredPdfValid, revokeLocalSession } from '../api/localSignatureBridgeApi.js';
 import { deleteEditorTextModel, renameEditorTextModel } from '../api/editorTextosModelActions.js';
 import { decodeOasisEnvelope, encodeOasisEnvelope } from '../persistence/oasisDocumentEnvelope.js';
 import { detectEditorDocumentFormat, EDITOR_DOCUMENT_FORMATS } from '../models/editorDocumentFormatDetector.js';
@@ -24,8 +24,32 @@ import { findNewTextTemplate, getNewTextType } from '../models/editorTextosModal
 import { findSaveAsNameCollisions } from '../models/saveAsNameCollision.js';
 import { getPatientDisplayName, resolveRecipeAssistantPatient } from '../models/recipeAssistantFlow.js';
 import { buildAttestadoBody } from '../models/atestadoAssistant.js';
+import { runDevFakeSignatureFlow } from '../api/devFakeSignatureHarness.js';
 
-const LOCAL_SIGNATURE_EXPERIMENT_ENABLED = false;
+const LOCAL_SIGNATURE_EXPERIMENT_ENABLED = typeof import.meta !== 'undefined' && import.meta.env?.VITE_ENABLE_LOCAL_SIGNATURE === 'true';
+const DEV_FAKE_HOMOLOGATION_ENABLED = typeof import.meta !== 'undefined' && Boolean(import.meta.env?.DEV);
+const DEV_WPF_APPROVAL_ENABLED = DEV_FAKE_HOMOLOGATION_ENABLED;
+
+async function sha256HexForBlob(blob) {
+  const digest = await crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function downloadDevArtifact(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = window.document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function emitSignatureInsertionTrace(event, detail = {}) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('brana-signature-insertion-trace', {
+    detail: { event, ...detail, at: Date.now() },
+  }));
+}
 import { hasOasisMergeSeparatorInText, joinOasisTextNodes, mergeOasisTextNodes } from '../models/recipeAssistantDraft.js';
 import './oasisEditorPilot.css';
 
@@ -245,6 +269,15 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
   const [signVisible, setSignVisible] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
   const [localPairing, setLocalPairing] = useState(null);
+  const [devTrace, setDevTrace] = useState([]);
+  const [signSuccess, setSignSuccess] = useState('');
+  const [availableCertificates, setAvailableCertificates] = useState([]);
+  const [activeCertificateBindings, setActiveCertificateBindings] = useState([]);
+  const [localPairingAttempted, setLocalPairingAttempted] = useState(false);
+  const [certificatesLoading, setCertificatesLoading] = useState(false);
+  const [certificateError, setCertificateError] = useState('');
+  const [authorizationEndpointsAvailable, setAuthorizationEndpointsAvailable] = useState(false);
+  const [localApproval, setLocalApproval] = useState(null);
   const [commandError, setCommandError] = useState('');
   const [compatibilityStatus, setCompatibilityStatus] = useState(null);
   const [tabsApiReady, setTabsApiReady] = useState(false);
@@ -1009,13 +1042,63 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
   const insertMergeField = useCallback(({ category, field }) => {
     const client = clientRef.current;
     const token = String(field?.token || '').trim();
+    emitSignatureInsertionTrace('MENU_HANDLER_ENTERED', { fieldType: category || 'unknown' });
     if (!client || !token) {
       setCommandError('O campo selecionado não possui um token de origem válido.');
       return;
     }
     try {
       if (mergeSelectionRef.current) client.selection.set(mergeSelectionRef.current);
-      client.commands.execute('insertText', token);
+      const isDigitalSignature = token === '<<Cirurgião.AssinaturaDigital>>';
+      if (isDigitalSignature && mergeSelectionRef.current?.anchor?.paragraphId && client.edit?.apply) {
+        const id = `brana-signature-${crypto.randomUUID()}`;
+        const position = mergeSelectionRef.current.anchor;
+        emitSignatureInsertionTrace('APPLY_REQUESTED', { operation: 'insertInlineTextBox' });
+        const result = client.edit.apply({
+          operations: [{
+            op: 'insertInlineTextBox',
+            target: { nodeId: position.paragraphId },
+            offset: position.offset,
+            id,
+            // Oasis layout is in CSS px; the contract sent to the backend is pt.
+            // 96 CSS px = 72 pt, so reserve exactly 220 x 72 pt in the PDF.
+            width: 293.333333,
+            height: 96,
+            // The Oasis model requires at least one nested paragraph for a text box;
+            // an empty blocks array is rejected by document validation.
+            textBox: {
+              blocks: [createParagraph('')],
+              paragraphStyle: {},
+              textStyle: {},
+              shape: { preset: 'rect', fill: '#F8FAFC', borderColor: '#94A3B8', borderWidthPt: 0.75 },
+            },
+          }],
+          origin: { type: 'brana-signature-field', actorId: id, label: 'Assinatura digital' },
+        });
+        const complete = (outcome) => {
+          if (outcome?.ok === false) {
+            emitSignatureInsertionTrace('APPLY_REJECTED', { operation: 'insertInlineTextBox', code: outcome.error?.code || 'EDIT_REJECTED' });
+            throw new Error(outcome.error?.code || 'INSERT_INLINE_TEXTBOX_FAILED');
+          }
+          emitSignatureInsertionTrace('MODEL_UPDATED', { operation: 'insertInlineTextBox', created: true });
+          requestAnimationFrame(() => emitSignatureInsertionTrace('LAYOUT_RENDER_EXPECTED', { operation: 'insertInlineTextBox' }));
+          client.focus.focus();
+          setMergeVisible(false);
+          setCommandError('');
+        };
+        if (result && typeof result.then === 'function') {
+          result.then(complete).catch((error) => {
+            const code = error?.message || 'INSERT_INLINE_TEXTBOX_FAILED';
+            emitSignatureInsertionTrace('APPLY_ERROR', { operation: 'insertInlineTextBox', code });
+            setCommandError(code);
+          });
+          return;
+        }
+        complete(result);
+      } else {
+        // Legacy documents and non-signature merge fields retain textual behavior.
+        client.commands.execute('insertText', token);
+      }
       client.focus.focus();
       setMergeVisible(false);
       setCommandError('');
@@ -1050,30 +1133,183 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
     }
   }, []);
 
-  const prepareCurrentDocumentForLocalBridge = useCallback(async () => {
+  useEffect(() => {
+    if (!signVisible || !LOCAL_SIGNATURE_EXPERIMENT_ENABLED) return undefined;
+    let cancelled = false;
+    setCertificatesLoading(true); setCertificateError(''); setAuthorizationEndpointsAvailable(false); setAvailableCertificates([]);
+    void getAvailableSignatureCertificates().then((payload) => {
+      if (cancelled) return;
+      setActiveCertificateBindings(payload.certificates);
+      setAvailableCertificates([]);
+      // A lista pública não habilita o fluxo por si só. O backend precisa
+      // anunciar explicitamente que reserva, bind, confirmação e consumo
+      // autenticados estão implantados; a rota atual não anuncia isso.
+      setAuthorizationEndpointsAvailable(payload.authorization_flow_enabled === true);
+      if (payload.authorization_flow_enabled !== true) {
+        setCertificateError('Backend de autorização incompleto; assinatura Windows permanece fechada.');
+      }
+    }).catch((error) => {
+      if (cancelled) return;
+      setCertificateError('Backend de autorização indisponível; o fluxo Windows permanece fechado.');
+      setCommandError(error?.code || 'SIGNATURE_AUTHORIZATION_UNAVAILABLE');
+    }).finally(() => { if (!cancelled) setCertificatesLoading(false); });
+    return () => { cancelled = true; };
+  }, [signVisible]);
+
+  const consultLocalIdentities = useCallback(async () => {
+    if (!authorizationEndpointsAvailable || certificatesLoading || signLoading) return;
+    setLocalPairingAttempted(true); setCertificatesLoading(true); setCertificateError(''); setCommandError(''); setAvailableCertificates([]);
+    try {
+      const pairing = await createLocalPairing();
+      const approvedPairing = await waitForLocalPairingApproval({ pairing });
+      const localCertificates = await getWindowsPublicCertificates({ pairing: approvedPairing });
+      const options = crossSignatureIdentities({ activeBindings: activeCertificateBindings, windowsCertificates: localCertificates.certificates, authorizationFlowEnabled: authorizationEndpointsAvailable });
+      setLocalPairing({ pairing: approvedPairing });
+      setAvailableCertificates(options);
+    } catch (error) {
+      setCertificateError(error?.code === 'NO_AUTHORIZED_SIGNATURE_IDENTITIES' ? 'Nenhuma identidade autorizada está disponível neste computador.' : 'Não foi possível consultar as identidades deste computador.');
+      setCommandError(error?.code || 'WINDOWS_CERTIFICATE_LIST_UNAVAILABLE');
+      setLocalPairing(null);
+    } finally { setCertificatesLoading(false); }
+  }, [activeCertificateBindings, authorizationEndpointsAvailable, certificatesLoading, signLoading]);
+
+  const prepareCurrentDocumentForLocalBridge = useCallback(async (selectedCertificate) => {
     const client = clientRef.current;
     if (!client) return;
+    if (!authorizationEndpointsAvailable || !selectedCertificate?.certificateDerSha256 || !selectedCertificate?.source || !selectedCertificate?.bindingId) {
+      setCommandError('Assinatura Windows indisponível: backend de autorização não está pronto. Nenhum pareamento foi iniciado.');
+      return;
+    }
     setSignLoading(true); setCommandError('');
     try {
       const name = documentNameRef.current || 'Documento';
       const baseName = name.replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '_').trim() || 'Documento';
       const pdfFilename = `${baseName}.pdf`;
-      const exported = await client.io.export({ format: 'pdf', filename: pdfFilename });
-      if (!exported?.ok || !exported.value?.blob) throw new Error(exported?.error?.message || 'Não foi possível gerar o PDF do Oasis.');
-      const prepared = await prepareLocalPdf({ pdf: exported.value.blob, pdfFilename, documentName: name });
-      const pairing = await createLocalPairing();
-      const approvedPairing = await getLocalPairingStatus({ pairing });
-      if (approvedPairing.state === 'APPROVED' && approvedPairing.session_id) {
-        const operation = await createLocalSignatureOperation({ pairing: approvedPairing, prepared });
-        await signLocalOperation({ pairing: approvedPairing, operationId: operation.operation_id, prepared });
-        const result = await getLocalSignatureResult({ pairing: approvedPairing, operationId: operation.operation_id, prepared });
-        setLocalPairing({ prepared, pairing: approvedPairing, operation, result });
-        setCommandError('PDF preparado e resultado fake recuperado. Assinatura real não executada.');
-      } else {
-        setLocalPairing({ prepared, pairing: approvedPairing });
-        setCommandError('PDF preparado. A aprovação local está pendente.');
-      }
+      const exported = await client.export.withLayout();
+      if (!exported?.blob) throw new Error('Não foi possível gerar o PDF do Oasis.');
+      const prepared = await prepareLocalPdf({ pdf: exported.blob, pdfFilename, documentName: name, signatureBoxes: exported.signatureBoxes });
+      const operationId = crypto.randomUUID();
+      const pending = await createLocalSignatureReservationRequest({ operationId, preparedPdfSha256: prepared.sha256, certificateDerSha256: selectedCertificate.certificateDerSha256, certificateSource: selectedCertificate.source });
+      const approvedPairing = localPairing?.pairing || await waitForLocalPairingApproval({ pairing: await createLocalPairing() });
+      const bound = await bindLocalSignatureReservation({ pairing: approvedPairing, requestId: pending.request_id, challenge: pending.challenge, operationId, preparedPdfSha256: prepared.sha256, certificateDerSha256: selectedCertificate.certificateDerSha256, certificateSource: selectedCertificate.source });
+      const reservation = await getLocalSignatureReservationRequest({ requestId: pending.request_id });
+      if (reservation.status !== 'RESERVED' || reservation.authorization_id !== bound.authorization_id) throw new Error('RESERVATION_NOT_RESERVED');
+      const operation = await createLocalSignatureOperation({ pairing: approvedPairing, prepared, operationId, authorizationId: bound.authorization_id, certificateDerSha256: selectedCertificate.certificateDerSha256, certificateSource: selectedCertificate.source });
+      const approvedOperation = await waitForLocalOperationApproval({ pairing: approvedPairing, operationId: operation.operation_id, prepared });
+      if (approvedOperation.state !== 'APPROVED') throw new Error('Operação local não foi aprovada.');
+      setLocalApproval({ prepared, pairing: approvedPairing, operation: approvedOperation, authorizationId: bound.authorization_id, operationId, certificateDerSha256: selectedCertificate.certificateDerSha256, certificateSource: selectedCertificate.source, bindingId: selectedCertificate.bindingId });
+      setSignSuccess('Operação WPF aprovada. Confirme com sua senha individual Brana para continuar.');
+      return;
     } catch (error) { setCommandError(error.message || 'Não foi possível preparar para o bridge local.'); }
+    finally { setSignLoading(false); }
+  }, [authorizationEndpointsAvailable, localPairing]);
+
+  const confirmLocalSignature = useCallback(async ({ password }) => {
+    if (!localApproval || typeof password !== 'string' || !password) return;
+    setSignLoading(true); setCommandError('');
+    try {
+      await confirmLocalSignatureAuthorization({ authorizationId: localApproval.authorizationId, password, operationId: localApproval.operationId, preparedPdfSha256: localApproval.prepared.sha256, certificateDerSha256: localApproval.certificateDerSha256, certificateSource: localApproval.certificateSource });
+      const signResponse = await signLocalOperation({ pairing: localApproval.pairing, operationId: localApproval.operationId, authorizationId: localApproval.authorizationId, certificateDerSha256: localApproval.certificateDerSha256, certificateSource: localApproval.certificateSource, prepared: localApproval.prepared });
+      if (signResponse?.state !== 'COMPLETED') throw new Error('Assinatura local não foi concluída.');
+      const result = await getLocalSignatureResult({ pairing: localApproval.pairing, operationId: localApproval.operationId });
+      if (!(await isRecoveredPdfValid({ blob: result.blob, prepared: localApproval.prepared }))) throw new Error('Resultado recuperado não é um PDF assinado íntegro.');
+      setLocalPairing({ prepared: localApproval.prepared, pairing: localApproval.pairing, operation: localApproval.operation, result });
+      setLocalApproval(null); setSignVisible(false);
+    } catch (error) { setCommandError(error.message || 'Não foi possível confirmar a assinatura.'); }
+    finally { setSignLoading(false); }
+  }, [localApproval]);
+
+  const runDevFakeHomologation = useCallback(async () => {
+    const client = clientRef.current;
+    if (!client) return;
+    setSignLoading(true); setCommandError('');
+    try {
+      const exported = await client.io.export({ format: 'pdf', filename: 'oasis-dev-homologation.pdf' });
+      if (!exported?.ok || !exported.value?.blob) throw new Error('Não foi possível exportar o PDF sintético.');
+      const trace = [];
+      const fake = await runDevFakeSignatureFlow({ pdfBlob: exported.value.blob, onTrace: (event) => trace.push(event) });
+      if (fake.marker !== 'brana-dev-fake-bridge-v1' || fake.signCalls !== 1 || !fake.trace.some((event) => event.event === 'RESULT_RECOVERED')) throw new Error('Bridge fake não identificado com segurança.');
+      const url = URL.createObjectURL(fake.result);
+      const link = window.document.createElement('a'); link.href = url; link.download = 'oasis-dev-homologation-simulation.pdf'; link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      if (typeof window !== 'undefined') window.__BRANA_DEV_HOMOLOGATION_TRACE__ = trace;
+      setDevTrace(trace);
+      setCommandError('Simulação fake concluída; o PDF baixado não possui assinatura digital.');
+    } catch (error) { setCommandError(error.message || 'Homologação fake indisponível.'); }
+    finally { setSignLoading(false); }
+  }, []);
+
+  const runDevWpfApproval = useCallback(async () => {
+    const client = clientRef.current;
+    if (!client) return;
+    setSignLoading(true); setCommandError(''); setSignSuccess('');
+    try {
+      const name = documentNameRef.current || 'Documento';
+      const baseName = name.replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '_').trim() || 'Documento';
+      const exported = await client.io.export({ format: 'pdf', filename: `${baseName}.pdf` });
+      if (!exported?.ok || !exported.value?.blob) throw new Error('Não foi possível exportar o PDF do Oasis.');
+      const prepared = await prepareLocalPdf({ pdf: exported.value.blob, pdfFilename: `${baseName}.pdf`, documentName: name });
+      const pairing = await createLocalPairing();
+      const approvedPairing = await waitForLocalPairingApproval({ pairing });
+      const operation = await createLocalSignatureOperation({ pairing: approvedPairing, prepared });
+      const approvedOperation = await waitForLocalOperationApproval({ pairing: approvedPairing, operationId: operation.operation_id });
+      if (approvedOperation.state !== 'APPROVED') throw new Error('Operação WPF não aprovada.');
+      setLocalPairing({ prepared, pairing: approvedPairing, operation: approvedOperation });
+      setSignSuccess('WPF aprovou a operação. Nenhuma chamada /sign foi feita.');
+    } catch (error) { setSignSuccess(''); setCommandError(error.message || 'Não foi possível concluir a aprovação WPF.'); }
+    finally { setSignLoading(false); }
+  }, []);
+
+  const runDevPrepareOnly = useCallback(async () => {
+    const client = clientRef.current;
+    if (!client) return;
+    setSignLoading(true); setCommandError('');
+    try {
+      const name = documentNameRef.current || 'Documento de teste';
+      const baseName = name.replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '_').trim() || 'Documento-teste';
+      const exported = await client.export.withLayout();
+      if (!exported?.blob || !Array.isArray(exported.signatureBoxes)) throw new Error('EXPORT_GEOMETRY_UNAVAILABLE');
+      if (exported.signatureBoxes.length !== 1) throw new Error('SIGNATURE_BOX_COUNT_INVALID');
+      const box = exported.signatureBoxes[0];
+      if (!box?.id || !Number.isInteger(box.page) || !Array.isArray(box.rect) || box.rect.length !== 4) throw new Error('SIGNATURE_BOX_GEOMETRY_INVALID');
+      const prepared = await prepareLocalPdf({ pdf: exported.blob, pdfFilename: `${baseName}.pdf`, documentName: name, signatureBoxes: exported.signatureBoxes });
+      const samePage = Number(prepared.page) === Number(box.page);
+      const sameRect = JSON.stringify(prepared.rect) === JSON.stringify(box.rect);
+      if (!samePage || !sameRect) throw new Error('SIGNATURE_BOX_PDF_RECT_MISMATCH');
+      const trace = { event: 'PREPARE_GEOMETRY', box: { id: box.id, page: box.page, rect: box.rect }, prepared: { fieldName: prepared.fieldName, page: prepared.page, rect: prepared.rect, sha256: prepared.sha256, size: prepared.blob.size }, samePage, sameRect, pairingCreated: false, signCalls: 0 };
+      if (typeof window !== 'undefined') window.__BRANA_DEV_PREPARE_TRACE__ = trace;
+      setCommandError(`Preparação dev concluída: ${box.id}, página ${box.page}, retângulo ${box.rect.join(',')}; ${prepared.fieldName} coincidente. Nenhum pairing foi iniciado.`);
+    } catch (error) { setCommandError(error.message || 'Não foi possível preparar o PDF de teste.'); }
+    finally { setSignLoading(false); }
+  }, []);
+
+  const runDevGeometryExport = useCallback(async () => {
+    const client = clientRef.current;
+    if (!client) return;
+    setSignLoading(true); setCommandError(''); setSignSuccess('');
+    try {
+      const exported = await client.export.withLayout();
+      if (!exported?.blob || !Array.isArray(exported.signatureBoxes)) throw new Error('EXPORT_GEOMETRY_UNAVAILABLE');
+      const pdfSha256 = await sha256HexForBlob(exported.blob);
+      const boxes = exported.signatureBoxes.map((box) => ({ id: box.id, page: box.page, rect: box.rect, widthPt: box.widthPt, heightPt: box.heightPt }));
+      const manifest = new Blob([JSON.stringify({ schema: 'brana-geometry-diagnostic-v1', pdf_sha256: pdfSha256, boxes }, null, 2)], { type: 'application/json' });
+      const baseName = (documentNameRef.current || 'documento').replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '_').trim() || 'documento';
+      downloadDevArtifact(exported.blob, `${baseName}-geometry-diagnostic.pdf`);
+      downloadDevArtifact(manifest, `${baseName}-geometry-diagnostic.json`);
+      const trace = { event: 'GEOMETRY_EXPORT_READY', pdf_sha256: pdfSha256, pdf_size: exported.blob.size, box_count: boxes.length, boxes, prepareCalled: false, pairingCreated: false, signCalls: 0 };
+      if (typeof window !== 'undefined') window.__BRANA_DEV_GEOMETRY_EXPORT_TRACE__ = trace;
+      setCommandError(`Diagnóstico exportado: ${boxes.length} caixa(s), PDF ${pdfSha256.slice(0, 12)}…; arquivos PDF e mapa vinculados foram baixados. Nenhuma preparação ou operação foi iniciada.`);
+    } catch (error) { setCommandError(error.message || 'Não foi possível exportar o diagnóstico de geometria.'); }
+    finally { setSignLoading(false); }
+  }, []);
+
+  const runDevBridgeCheck = useCallback(async () => {
+    setSignLoading(true); setCommandError('');
+    try {
+      const result = await checkLocalBridgeConnection();
+      const detail = result.status ? `HTTP ${result.status}` : `erro de rede (${result.error})`;
+      setCommandError(`Bridge: ${detail}. URL ${result.url}. ${result.timestamp}. Nenhuma operação foi criada.`);
+    } catch (error) { setCommandError(error.message || 'Não foi possível testar o bridge.'); }
     finally { setSignLoading(false); }
   }, []);
 
@@ -1126,6 +1362,6 @@ export function OasisEditorPilot({ patientInUse = null, onRequestPatientSelectio
     />}
     {openVisible && <EditorTextosOpenDialog items={openItems} loading={openLoading} error={openError} onClose={() => setOpenVisible(false)} onRefresh={showOpenOasis} onOpen={(id) => void openOasis(id)} onRename={renameOasisModel} onDelete={deleteOasisModel} onProperties={showOasisProperties} />}
     {mergeVisible && <EditorTextosMergeFieldDialog open onCancel={() => setMergeVisible(false)} onConfirm={insertMergeField} />}
-    {signVisible && <EditorTextosSignPdfDialog open loading={signLoading} error={commandError} localEnabled={LOCAL_SIGNATURE_EXPERIMENT_ENABLED} onCancel={() => { if (!signLoading) { revokeLocalSession({ pairing: localPairing?.pairing, sessionId: localPairing?.pairing?.session_id }).catch(() => {}); setLocalPairing(null); setSignVisible(false); } }} onSign={signCurrentDocument} onPrepareLocal={prepareCurrentDocumentForLocalBridge} />}
+    {signVisible && <EditorTextosSignPdfDialog open loading={signLoading} error={commandError} success={signSuccess} devTrace={devTrace} localEnabled={LOCAL_SIGNATURE_EXPERIMENT_ENABLED} legacyMode={false} localConfirmation={Boolean(localApproval)} availableCertificates={availableCertificates} certificatesLoading={certificatesLoading} certificateError={certificateError} authorizationEndpointsAvailable={authorizationEndpointsAvailable} localPairingAttempted={localPairingAttempted} showDevDiagnostics={import.meta.env.DEV && typeof window !== 'undefined' && window.__BRANA_SHOW_SIGNATURE_DIAGNOSTICS__ === true} devFakeEnabled={DEV_FAKE_HOMOLOGATION_ENABLED} devWpfApprovalEnabled={DEV_WPF_APPROVAL_ENABLED} onCancel={() => { if (!signLoading) { revokeLocalSession({ pairing: localPairing?.pairing, sessionId: localPairing?.pairing?.session_id }).catch(() => {}); setLocalPairing(null); setLocalApproval(null); setSignVisible(false); } }} onSign={signCurrentDocument} onPrepareLocal={prepareCurrentDocumentForLocalBridge} onConfirmLocal={confirmLocalSignature} onConsultIdentities={consultLocalIdentities} onDevPrepare={runDevPrepareOnly} onDevGeometryExport={runDevGeometryExport} onDevBridgeCheck={runDevBridgeCheck} onDevFake={runDevFakeHomologation} onDevWpfApproval={runDevWpfApproval} />}
   </section>;
 }
