@@ -1,0 +1,5 @@
+# Runtime-only dependencies for backend/isolated_mtls_service.py.
+# Install in a dedicated environment; this file is not the test environment.
+-r requirements.txt
+anycorn==0.20.1
+httpx==0.27.2
