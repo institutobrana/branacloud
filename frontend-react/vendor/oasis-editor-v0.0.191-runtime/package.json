@@ -1,0 +1,26 @@
+{
+  "name": "oasis-editor",
+  "version": "0.0.191",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/oasis-editor.umd.cjs",
+  "module": "./dist/oasis-editor.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/oasis-editor.js",
+      "require": "./dist/oasis-editor.umd.cjs"
+    },
+    "./style.css": "./dist/oasis-editor.css"
+  },
+  "peerDependencies": {
+    "react": ">=17",
+    "vue": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "vue": { "optional": true }
+  },
+  "files": ["dist"]
+}
