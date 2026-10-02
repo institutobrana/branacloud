@@ -91,6 +91,7 @@ from routes.superadmin_routes import router as superadmin_router
 from routes.user_admin_routes import router as user_admin_router
 from routes.usuario_certificado_routes import router as usuario_certificado_router
 from routes.session_instance_routes import router as session_instance_router
+from routes.clinical_lock_routes import router as clinical_lock_router
 from routes.unidades_atendimento_routes import router as unidades_atendimento_router
 from security.tenant import TenantMiddleware
 from security.trial_middleware import TrialMiddleware
@@ -486,6 +487,7 @@ app.include_router(superadmin_router)
 app.include_router(user_admin_router)
 app.include_router(usuario_certificado_router)
 app.include_router(session_instance_router)
+app.include_router(clinical_lock_router)
 
 # Middleware SaaS (ordem importa)
 app.add_middleware(TenantMiddleware)

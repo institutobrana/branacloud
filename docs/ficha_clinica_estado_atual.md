@@ -369,3 +369,21 @@ Os hashes completos estão no manifesto `docs/checkpoints/ficha_clinica_fc2_d2_r
 ### Regra de rollback
 
 Em caso de regressão futura, comparar primeiro com este checkpoint, identificar o diff da região afetada, preservar alterações posteriores não relacionadas, restaurar seletivamente apenas o contrato regressivo, executar os testes do checkpoint e repetir a validação visual. Não usar `git reset --hard` como procedimento padrão.
+
+### FC3-D2 — Clinical Patient Lease
+
+FC3-D2 = `HOMOLOGATED`.
+
+O backend implementa o lease clínico parcial por `(clinica_id, paciente_id)`:
+
+- `POST /clinical-locks/{patient_id}/acquire` adquire ownership, é idempotente para o mesmo owner e retorna `RESTRICTED` para outra sessão;
+- `GET /clinical-locks/{patient_id}` consulta `AVAILABLE`, `OWNER` ou `RESTRICTED`;
+- `POST /clinical-locks/{patient_id}/release` libera somente com instância e token atuais;
+- aquisição concorrente mantém exatamente um owner;
+- lease expirado pode ser assumido por outra sessão;
+- token obsoleto não libera lease atual;
+- validação de sessão, paciente e clínica é feita no backend;
+- isolamento multi-clínica e privacidade foram validados em PostgreSQL descartável;
+- T1–T15: `15 PASS`, `0 FAIL`.
+
+A camada frontend ainda não usa visualmente `OWNER`/`RESTRICTED`. Heartbeat, renovação, polling, guards clínicos e promoção automática permanecem reservados para FC3-D3 e fases posteriores.
