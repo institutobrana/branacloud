@@ -42,3 +42,14 @@ def release_lease(
     db: Session = Depends(get_db),
 ):
     return lease_service.release(db, current_user, patient_id, x_session_instance_id, x_clinical_lease_token)
+
+
+@router.post("/{patient_id}/heartbeat")
+def heartbeat_lease(
+    patient_id: int,
+    x_session_instance_id: str = Header(..., alias="X-Session-Instance-Id"),
+    x_clinical_lease_token: str = Header(..., alias="X-Clinical-Lease-Token"),
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return lease_service.heartbeat(db, current_user, patient_id, x_session_instance_id, x_clinical_lease_token)

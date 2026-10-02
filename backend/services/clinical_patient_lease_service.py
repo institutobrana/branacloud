@@ -1,17 +1,15 @@
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 import secrets
 
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, update
 
 from models.authenticated_session_instance import AuthenticatedSessionInstance
 from models.clinical_patient_lease import ClinicalPatientLease
 from models.paciente import Paciente
-
-
-LEASE_DURATION_SECONDS = 90
+from services.clinical_patient_lease_config import CLINICAL_LEASE_DURATION_SECONDS
 
 
 def _error(status_code: int, code: str):
@@ -42,7 +40,7 @@ def _token() -> str:
 
 
 def _expiry():
-    return func.current_timestamp() + timedelta(seconds=LEASE_DURATION_SECONDS)
+    return func.current_timestamp() + timedelta(seconds=CLINICAL_LEASE_DURATION_SECONDS)
 
 
 def _payload(state: str, patient_id: int, lease=None, include_token=False):
@@ -67,7 +65,6 @@ def acquire(db: Session, current_user, patient_id: int, instance_id: str):
     instance, _ = validate_context(db, current_user, patient_id, instance_id)
     clinic_id = int(current_user.clinica_id)
     user_id = int(current_user.id)
-    now = datetime.now(timezone.utc)
     token = _token()
 
     lease = db.query(ClinicalPatientLease).filter(
@@ -84,7 +81,7 @@ def acquire(db: Session, current_user, patient_id: int, instance_id: str):
             owner_session_instance_id=instance.id,
             acquired_at=func.current_timestamp(),
             last_heartbeat_at=func.current_timestamp(),
-            expires_at=func.current_timestamp() + timedelta(seconds=LEASE_DURATION_SECONDS),
+            expires_at=func.current_timestamp() + timedelta(seconds=CLINICAL_LEASE_DURATION_SECONDS),
             lease_token=token,
             created_at=func.current_timestamp(),
             updated_at=func.current_timestamp(),
@@ -100,7 +97,11 @@ def acquire(db: Session, current_user, patient_id: int, instance_id: str):
             ).with_for_update().first()
 
     if not created:
-        expired = lease.expires_at <= now
+        expired = db.query(
+            ClinicalPatientLease.expires_at <= func.current_timestamp()
+        ).filter(
+            ClinicalPatientLease.id == lease.id,
+        ).scalar()
         same_owner = (
             lease.owner_usuario_id == user_id
             and lease.owner_session_instance_id == instance.id
@@ -110,7 +111,7 @@ def acquire(db: Session, current_user, patient_id: int, instance_id: str):
             lease.owner_session_instance_id = instance.id
             lease.acquired_at = func.current_timestamp()
             lease.last_heartbeat_at = func.current_timestamp()
-            lease.expires_at = func.current_timestamp() + timedelta(seconds=LEASE_DURATION_SECONDS)
+            lease.expires_at = func.current_timestamp() + timedelta(seconds=CLINICAL_LEASE_DURATION_SECONDS)
             lease.lease_token = token
             lease.updated_at = func.current_timestamp()
         elif same_owner:
@@ -136,8 +137,9 @@ def status(db: Session, current_user, patient_id: int, instance_id: str):
     lease = db.query(ClinicalPatientLease).filter(
         ClinicalPatientLease.clinica_id == int(current_user.clinica_id),
         ClinicalPatientLease.paciente_id == int(patient_id),
+        ClinicalPatientLease.expires_at > func.current_timestamp(),
     ).first()
-    if lease is None or lease.expires_at <= datetime.now(timezone.utc):
+    if lease is None:
         return _payload("AVAILABLE", patient_id)
     if lease.owner_usuario_id == int(current_user.id) and lease.owner_session_instance_id == instance.id:
         return _payload("OWNER", patient_id, lease, include_token=True)
@@ -162,3 +164,52 @@ def release(db: Session, current_user, patient_id: int, instance_id: str, lease_
     db.delete(lease)
     db.commit()
     return _payload("AVAILABLE", patient_id)
+
+
+def heartbeat(db: Session, current_user, patient_id: int, instance_id: str, lease_token: str):
+    instance, _ = validate_context(db, current_user, patient_id, instance_id)
+    clinic_id = int(current_user.clinica_id)
+    user_id = int(current_user.id)
+    lease_id = ClinicalPatientLease.id
+    result = db.execute(
+        update(ClinicalPatientLease)
+        .where(
+            ClinicalPatientLease.clinica_id == clinic_id,
+            ClinicalPatientLease.paciente_id == int(patient_id),
+            ClinicalPatientLease.owner_usuario_id == user_id,
+            ClinicalPatientLease.owner_session_instance_id == instance.id,
+            ClinicalPatientLease.lease_token == (lease_token or ""),
+            ClinicalPatientLease.expires_at > func.current_timestamp(),
+        )
+        .values(
+            last_heartbeat_at=func.current_timestamp(),
+            expires_at=func.current_timestamp() + timedelta(seconds=CLINICAL_LEASE_DURATION_SECONDS),
+            updated_at=func.current_timestamp(),
+        )
+        .returning(lease_id, ClinicalPatientLease.expires_at)
+    )
+    row = result.first()
+    if row is not None:
+        db.commit()
+        return {
+            "state": "OWNER",
+            "patient_id": int(patient_id),
+            "expires_at": row.expires_at,
+        }
+
+    db.rollback()
+    current = db.query(ClinicalPatientLease).filter(
+        ClinicalPatientLease.clinica_id == clinic_id,
+        ClinicalPatientLease.paciente_id == int(patient_id),
+    ).first()
+    if current is None:
+        raise _error(409, "CLINICAL_PATIENT_LEASE_LOST")
+    active = db.query(
+        ClinicalPatientLease.expires_at > func.current_timestamp()
+    ).filter(ClinicalPatientLease.id == current.id).scalar()
+    if not active or (
+        current.owner_usuario_id == user_id
+        and current.owner_session_instance_id == instance.id
+    ):
+        raise _error(409, "CLINICAL_PATIENT_LEASE_LOST")
+    raise _error(409, "CLINICAL_PATIENT_LEASE_NOT_OWNER")

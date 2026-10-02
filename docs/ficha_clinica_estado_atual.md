@@ -387,3 +387,20 @@ O backend implementa o lease clínico parcial por `(clinica_id, paciente_id)`:
 - T1–T15: `15 PASS`, `0 FAIL`.
 
 A camada frontend ainda não usa visualmente `OWNER`/`RESTRICTED`. Heartbeat, renovação, polling, guards clínicos e promoção automática permanecem reservados para FC3-D3 e fases posteriores.
+
+### FC3-D3 — Heartbeat e expiração
+
+FC3-D3 = `HOMOLOGATED`.
+
+- O owner envia heartbeat pelo endpoint `POST /clinical-locks/{patient_id}/heartbeat`.
+- Os headers são `Authorization`, `X-Session-Instance-Id` e `X-Clinical-Lease-Token`.
+- O intervalo frontend é de 20 segundos e a duração do lease é de 90 segundos.
+- PostgreSQL é a autoridade exclusiva de tempo; decisões usam `CURRENT_TIMESTAMP`.
+- Heartbeat renova `last_heartbeat_at`, `expires_at` e `updated_at` atomically.
+- O token permanece igual durante o mesmo ownership.
+- Lease expirado não pode ser ressuscitado por heartbeat.
+- Focus e visibility revalidam ownership.
+- Falha de rede leva o estado interno para `UNKNOWN`, em fail-closed.
+- Não foram adicionados guards D4 de mutação clínica nem UI D5 de OWNER/RESTRICTED.
+
+Antes da D3, a comparação de expiração da D2 foi alinhada do relógio Python local para `PostgreSQL CURRENT_TIMESTAMP`. A regressão crítica D2 permaneceu em 10/10 PASS.

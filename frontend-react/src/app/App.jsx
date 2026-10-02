@@ -19,6 +19,7 @@ import { FichaClinicaContextBar, FichaClinicaPage } from '../features/fichaClini
 import { MenuPacientesModal } from '../features/menuPacientes/components/MenuPacientesModal.jsx';
 import { PatientInUseProvider, usePatientInUse } from '../shared/patientInUse/PatientInUseContext.jsx';
 import { SessionInstanceProvider } from '../shared/sessionInstance/SessionInstanceProvider.jsx';
+import { ClinicalLeaseProvider } from '../shared/clinicalLease/ClinicalLeaseProvider.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
 import { ProcedimentosPage } from '../features/procedimentos/ProcedimentosPage.jsx';
@@ -2314,7 +2315,9 @@ function SessionIdentityBoundary() {
   return (
     <SessionInstanceProvider token={token} authenticated={isAuthenticated}>
       <PatientInUseProvider>
-        <AppContent />
+        <ClinicalLeaseProvider>
+          <AppContent />
+        </ClinicalLeaseProvider>
       </PatientInUseProvider>
     </SessionInstanceProvider>
   );
