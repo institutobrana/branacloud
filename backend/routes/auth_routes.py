@@ -9,7 +9,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse
 from fastapi import Response
@@ -20,6 +20,7 @@ from database import get_db
 from models.clinica import Clinica
 from models.email_code import EmailCode
 from models.usuario import Usuario
+from models.authenticated_session_instance import AuthenticatedSessionInstance
 from security.admin_password import verify_admin_password, verify_internal_password
 from security.hash import hash_password, verify_password
 from security.jwt_handler import create_access_token, decode_token
@@ -887,9 +888,23 @@ def renew_auth_token(
 
 @router.post("/logout")
 def logout(
+    x_session_instance_id: str | None = Header(default=None),
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # D1 invalida somente a instância autenticada informada pelo cliente;
+    # o JWT continua sendo a única autoridade de autenticação.
+    instance_id = (x_session_instance_id or "").strip()
+    if instance_id:
+        row = db.query(AuthenticatedSessionInstance).filter(
+            AuthenticatedSessionInstance.id == instance_id,
+            AuthenticatedSessionInstance.usuario_id == int(current_user.id),
+            AuthenticatedSessionInstance.clinica_id == int(current_user.clinica_id),
+            AuthenticatedSessionInstance.status == "ACTIVE",
+        ).first()
+        if row:
+            row.status = "INVALIDATED"
+            row.invalidated_at = datetime.now(timezone.utc)
     usuario = db.query(Usuario).filter(Usuario.id == current_user.id).first()
     if usuario and usuario.online:
         usuario.online = False

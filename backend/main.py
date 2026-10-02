@@ -57,6 +57,8 @@ from models.tiss_tipo_atendimento import TissTipoAtendimento, seed_tiss_tipo_ate
 from models.unidade_atendimento import UnidadeAtendimento  # noqa: F401
 from models.usuario_perfil_acesso import UsuarioPerfilAcesso  # noqa: F401
 from models.usuario_certificado import UsuarioCertificado  # noqa: F401
+from models.authenticated_session_instance import AuthenticatedSessionInstance  # noqa: F401
+from models.clinical_patient_lease import ClinicalPatientLease  # noqa: F401
 from models.relatorio_config import RelatorioConfig  # noqa: F401
 from routes.auth_routes import router as auth_router
 from routes.cadastros_routes import router as cadastros_router
@@ -88,6 +90,7 @@ from routes.historico_paciente_routes import router as historico_paciente_router
 from routes.superadmin_routes import router as superadmin_router
 from routes.user_admin_routes import router as user_admin_router
 from routes.usuario_certificado_routes import router as usuario_certificado_router
+from routes.session_instance_routes import router as session_instance_router
 from routes.unidades_atendimento_routes import router as unidades_atendimento_router
 from security.tenant import TenantMiddleware
 from security.trial_middleware import TrialMiddleware
@@ -482,6 +485,7 @@ app.include_router(historico_paciente_router)
 app.include_router(superadmin_router)
 app.include_router(user_admin_router)
 app.include_router(usuario_certificado_router)
+app.include_router(session_instance_router)
 
 # Middleware SaaS (ordem importa)
 app.add_middleware(TenantMiddleware)

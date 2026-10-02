@@ -239,6 +239,25 @@ Arquivo: frontend-react/tests/fichaClinicaPatientInUse.test.mjs.
 
 Não usar reset Git nem sobrescrever arquivos cegamente; comparar o delta e restaurar somente a regra comprovadamente regressiva.
 
+## FC3-D1 — identidade operacional por aba
+
+Status: `HOMOLOGATED`.
+
+A FC3-D1 implementa somente a fundação da identidade operacional da aba:
+
+- o backend registra e valida `session_instance_id` associado ao usuário e à clínica;
+- cada aba possui identidade própria;
+- F5 preserva a identidade da mesma aba;
+- nova aba recebe identidade independente;
+- duplicação de aba resolve a colisão automaticamente, mantendo a aba original;
+- `BroadcastChannel` coordena a colisão entre abas, sem autenticar, autorizar ou conceder lease;
+- existe fallback seguro quando `BroadcastChannel` não está disponível;
+- logout invalida a instância;
+- renew preserva a mesma instância;
+- `PatientInUse` permanece independente e inalterado.
+
+Esta fase não implementa o `clinical patient lease`, aquisição/liberação de lease, heartbeat, expiração, guards clínicos, modo OWNER/RESTRICTED ou bloqueio de Tratamento/Odontograma. Esses itens pertencem às fases posteriores e não estão ativos neste checkpoint.
+
 ## Documentos relacionados
 
 Foram encontrados documentos históricos ou de auditoria relacionados, incluindo:

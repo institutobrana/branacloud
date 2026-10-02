@@ -18,6 +18,7 @@ import { DashboardOperationalStrip, DashboardPage } from '../features/dashboard/
 import { FichaClinicaContextBar, FichaClinicaPage } from '../features/fichaClinica/FichaClinicaPage.jsx';
 import { MenuPacientesModal } from '../features/menuPacientes/components/MenuPacientesModal.jsx';
 import { PatientInUseProvider, usePatientInUse } from '../shared/patientInUse/PatientInUseContext.jsx';
+import { SessionInstanceProvider } from '../shared/sessionInstance/SessionInstanceProvider.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
 import { ProcedimentosPage } from '../features/procedimentos/ProcedimentosPage.jsx';
@@ -2302,11 +2303,20 @@ function BranaAppThemeProvider() {
   return (
     <ConfigProvider theme={getBranaTheme(themeMode)}>
       <AuthProvider>
-        <PatientInUseProvider>
-          <AppContent />
-        </PatientInUseProvider>
+        <SessionIdentityBoundary />
       </AuthProvider>
     </ConfigProvider>
+  );
+}
+
+function SessionIdentityBoundary() {
+  const { token, isAuthenticated } = useAuth();
+  return (
+    <SessionInstanceProvider token={token} authenticated={isAuthenticated}>
+      <PatientInUseProvider>
+        <AppContent />
+      </PatientInUseProvider>
+    </SessionInstanceProvider>
   );
 }
 

@@ -1,5 +1,6 @@
 import { buildApiUrl } from '../../services/api.js';
 import { getAuthToken } from './authStorage.js';
+import { getSessionInstanceId } from '../../shared/sessionInstance/sessionInstanceStorage.js';
 
 async function requestJson(path, options = {}) {
   let response;
@@ -86,9 +87,22 @@ export async function getMe(token) {
 export async function logout(token) {
   return requestJson('/logout', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}`, 'X-Session-Instance-Id': getSessionInstanceId() },
+  });
+}
+
+export async function registerSessionInstance(token) {
+  return requestJson('/session-instances/register', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function validateSessionInstance(token, instanceId) {
+  return requestJson('/session-instances/validate', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ instance_id: instanceId }),
   });
 }
 

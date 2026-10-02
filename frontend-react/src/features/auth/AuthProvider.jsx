@@ -4,6 +4,7 @@ import { getMe, login as loginRequest, logout as logoutRequest, renewAuthToken }
 import { createAuthRenewalController } from './authRenewalController.js';
 import { shouldRunAuthRenewal } from './authProviderSession.js';
 import { createAuthBrowserSessionSync } from './authBrowserSessionSync.js';
+import { clearSessionInstanceId } from '../../shared/sessionInstance/sessionInstanceStorage.js';
 
 const AuthContext = createContext(null);
 
@@ -254,6 +255,7 @@ export function AuthProvider({ children }) {
     } catch {
       // logout visual segue mesmo se o backend ja tiver invalidado a sessao
     } finally {
+      clearSessionInstanceId();
       clearToken();
       setTokenState('');
       setUser(null);
