@@ -19,7 +19,7 @@ import { FichaClinicaContextBar, FichaClinicaPage } from '../features/fichaClini
 import { MenuPacientesModal } from '../features/menuPacientes/components/MenuPacientesModal.jsx';
 import { PatientInUseProvider, usePatientInUse } from '../shared/patientInUse/PatientInUseContext.jsx';
 import { SessionInstanceProvider } from '../shared/sessionInstance/SessionInstanceProvider.jsx';
-import { ClinicalLeaseProvider } from '../shared/clinicalLease/ClinicalLeaseProvider.jsx';
+import { ClinicalLeaseProvider, useClinicalLease } from '../shared/clinicalLease/ClinicalLeaseProvider.jsx';
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
 import { ProcedimentosPage } from '../features/procedimentos/ProcedimentosPage.jsx';
@@ -392,12 +392,14 @@ function AppContent() {
   const [fichaPessoalPatientId, setFichaPessoalPatientId] = useState(null);
   const [fichaPessoalMode, setFichaPessoalMode] = useState('new');
   const { patient: patientInUse, setPatient: setPatientInUse, clearPatient: clearPatientInUse } = usePatientInUse();
+  const { release: releaseClinicalLease } = useClinicalLease();
   const [patientMenuOpen, setPatientMenuOpen] = useState(false);
   const [editorPatientMenuOpen, setEditorPatientMenuOpen] = useState(false);
   const editorPatientSelectionResolverRef = useRef(null);
   const [pendingFichaNewTreatment, setPendingFichaNewTreatment] = useState(false);
   const [fichaNewTreatmentOpen, setFichaNewTreatmentOpen] = useState(false);
   const patientEntryPromptedRef = useRef(false);
+  const patientSwitchSequenceRef = useRef(0);
 
   const requestEditorPatientSelection = useCallback(() => new Promise((resolve) => {
     editorPatientSelectionResolverRef.current = resolve;
@@ -408,6 +410,25 @@ function AppContent() {
     editorPatientSelectionResolverRef.current = null;
     resolve?.(patient || null);
   }, []);
+
+  const closeFichaClinica = useCallback(async () => {
+    setPatientMenuOpen(false);
+    await releaseClinicalLease();
+    clearPatientInUse();
+  }, [clearPatientInUse, releaseClinicalLease]);
+
+  const switchPatientInUse = useCallback(async (nextPatient) => {
+    const sequence = patientSwitchSequenceRef.current + 1;
+    patientSwitchSequenceRef.current = sequence;
+    await releaseClinicalLease();
+    if (patientSwitchSequenceRef.current !== sequence) return;
+    setPatientInUse(nextPatient || null);
+  }, [releaseClinicalLease, setPatientInUse]);
+
+  const signOutWithClinicalRelease = useCallback(async () => {
+    await releaseClinicalLease();
+    await signOut();
+  }, [releaseClinicalLease, signOut]);
 
   const openNewPatient = () => {
     setFichaPessoalPatientId(null);
@@ -1976,7 +1997,7 @@ function AppContent() {
         <div className="brana-shell-topbar">
           <BranaActionTopbar
             user={user}
-            onSignOut={signOut}
+            onSignOut={signOutWithClinicalRelease}
             loading={loading}
             onNavigate={handleNavigate}
             onPlaceholder={() => message.info('Funcionalidade em breve.')}
@@ -2013,7 +2034,7 @@ function AppContent() {
             agendaSemanalTopBar
           ) : screen === 'ficha-clinica' ? (
             <div className="brana-shell-band auxiliary-shell-band ficha-clinica-shell-band" aria-label="Barra operacional da Ficha Clínica">
-          <FichaClinicaContextBar onRequestNewPatient={openNewPatientFromFicha} onOpenPersonalRecord={(patient) => openExistingPatient(patient?.id)} onCloseFichaClinica={() => { setPatientMenuOpen(false); clearPatientInUse(); }} onRequestPatientSelection={() => setPatientMenuOpen(true)} onRequestNewTreatment={() => {
+          <FichaClinicaContextBar onRequestNewPatient={openNewPatientFromFicha} onOpenPersonalRecord={(patient) => openExistingPatient(patient?.id)} onCloseFichaClinica={closeFichaClinica} onRequestPatientSelection={() => setPatientMenuOpen(true)} onRequestNewTreatment={() => {
             setFichaNewPatientContext(false);
             setFichaPessoalOpen(false);
             if (patientInUse) {
@@ -2083,7 +2104,7 @@ function AppContent() {
             mode={fichaPessoalMode}
             onClose={closeFichaPessoal}
             onSaved={(saved) => {
-              if (fichaPessoalMode === 'existing' && saved) setPatientInUse(saved);
+              if (fichaPessoalMode === 'existing' && saved) void switchPatientInUse(saved);
             }}
             onCreated={(created) => {
               closeFichaPessoal();
@@ -2100,15 +2121,15 @@ function AppContent() {
           >
             <p>Deseja abrir o novo paciente na Ficha Clínica?</p>
             <div className="brana-new-patient-decision-actions">
-              <Button type="primary" onClick={() => { setPatientInUse(newPatientDecision); setNewPatientDecision(null); }}>Abrir novo paciente</Button>
+              <Button type="primary" onClick={() => { void switchPatientInUse(newPatientDecision); setNewPatientDecision(null); }}>Abrir novo paciente</Button>
               <Button onClick={() => setNewPatientDecision(null)}>{patientInUse ? 'Manter paciente atual' : 'Continuar sem paciente'}</Button>
             </div>
           </Modal>
           <MenuPacientesModal
             open={screen === 'ficha-clinica' && patientMenuOpen}
             onCancel={() => setPatientMenuOpen(false)}
-            onSelect={(patient) => {
-              setPatientInUse(patient);
+            onSelect={async (patient) => {
+              await switchPatientInUse(patient);
               setPatientMenuOpen(false);
               if (pendingFichaNewTreatment) {
                 setFichaNewTreatmentOpen(true);
@@ -2122,8 +2143,8 @@ function AppContent() {
               setEditorPatientMenuOpen(false);
               finishEditorPatientSelection(null);
             }}
-            onSelect={(patient) => {
-              setPatientInUse(patient);
+            onSelect={async (patient) => {
+              await switchPatientInUse(patient);
               setEditorPatientMenuOpen(false);
               finishEditorPatientSelection(patient);
             }}

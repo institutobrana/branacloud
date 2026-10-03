@@ -425,3 +425,139 @@ O único caller React protegido atualmente é o novo tratamento. Ele obtém a se
 O frontend legado em `frontend/` é somente referência funcional/contratual (`REFERENCE_ONLY`) e não participa de D1–D4. Clients React futuros de edição, intervenção e aprovação deverão cumprir o mesmo contrato de session instance, token memory-only e headers clínicos.
 
 Antes da D3, a comparação de expiração da D2 foi alinhada do relógio Python local para `PostgreSQL CURRENT_TIMESTAMP`. A regressão crítica D2 permaneceu em 10/10 PASS.
+
+# FC3-D5 — consolidação final atual
+
+Esta seção consolida o estado técnico comprovado da FC3-D5. A fase está homologada pela matriz final atual; as definições históricas V9–V12 permanecem não recuperadas.
+
+Escopo: `TREATMENT_ODONTOGRAM_WRITE_DOMAIN`.
+
+Estados do clinical lease:
+
+- `AVAILABLE`: paciente disponível para aquisição.
+- `OWNER`: sessão proprietária; mutations protegidas liberadas.
+- `RESTRICTED`: outra sessão é proprietária; leitura permanece disponível e mutations protegidas ficam bloqueadas.
+- `UNKNOWN`: disponibilidade não pôde ser confirmada; comportamento fail-closed.
+
+Em `RESTRICTED` há banner compacto com o nome do owner quando disponível. Não existe overlay global. Ficha Pessoal, Histórico, leituras, parcela financeira e print permanecem fora do bloqueio clínico.
+
+## Segurança e endpoints protegidos
+
+Mutation protegida exige `OWNER`. O backend é a autoridade final; o frontend apenas representa o estado.
+
+Endpoints protegidos homologados em D4:
+
+1. `POST /tratamentos/novo`
+2. `PUT /tratamentos/{tratamento_id}`
+3. `PATCH /orcamento/tratamentos/{tratamento_id}/intervencoes/{intervencao_id}`
+4. `POST /orcamento/tratamentos/{tratamento_id}/aprovar`
+
+## Lifecycle
+
+Release explícito comprovado:
+
+- fechar Ficha Clínica;
+- troca de paciente;
+- logout.
+
+Release best-effort comprovado:
+
+- `pagehide`;
+- fechamento de aba;
+- fechamento de navegador;
+- navegação externa;
+- F5/reload.
+
+`pagehide` não é garantia. Crash, perda de energia e falha abrupta de rede/processo continuam dependendo do TTL final de 90 segundos.
+
+Quando `event.persisted === true`, o release não é enviado, pois a página pode retornar preservada pelo BFCache.
+
+Heartbeat de `OWNER`: 20 segundos. `RESTRICTED` não envia heartbeat; executa recheck periódico de 20 segundos, além dos gatilhos de foco/visibilidade.
+
+## Aquisição concorrente
+
+Não existe fila nem garantia FIFO. A política é `FIRST_SUCCESSFUL_ACQUIRE`.
+
+Se A é `OWNER` e B/C são `RESTRICTED`, após a liberação B e C podem detectar `AVAILABLE` e competir. A primeira aquisição válida torna-se `OWNER`; a outra permanece `RESTRICTED`. O backend garante exatamente um owner válido.
+
+Takeover emergencial, incluindo “Assumir acesso clínico”, não faz parte do escopo atual da D5 e não foi implementado.
+
+## Status de validação
+
+- V1–V8: `PASS`.
+- R1B auto-acquire: `PASS`.
+- R1D fechamento da ficha: `PASS`.
+- R1E troca de paciente/logout: `PASS`.
+- R1F polling e promoção sem F5: `PASS`.
+- pagehide/keepalive e cenários de fechamento: `PASS`.
+- Cleanup da instrumentação temporária: `COMPLETE`.
+
+As definições históricas V9–V12 não foram recuperadas. Elas não são reconstruídas por inferência e permanecem `UNRECOVERED`.
+
+## Incidente de runtime
+
+Durante o diagnóstico R1F, o Vite estava servindo o worktree correto, mas o serviço interno esbuild havia parado e um módulo retornava HTTP 500. A única instância Vite oficial foi reiniciada de forma controlada; o backend não foi tocado, o esbuild foi recuperado e o polling passou a funcionar. Esse fato é somente um incidente de runtime, não um requisito funcional.
+
+## Matriz final pendente
+
+Os testes abaixo são uma nova matriz atual, não uma reconstrução de V9–V12 históricos:
+
+### D5-FINAL-1 — Acesso normal de OWNER
+
+Pré-condição: paciente sem lease ativo.
+
+Passos: abrir a Ficha Clínica, selecionar paciente livre e aguardar aquisição normal.
+
+Resultado esperado: `OWNER`, nenhum banner, Novo Tratamento liberado, patient visível, sem `UNKNOWN` e sem F5.
+
+Status: `PASS`.
+
+### D5-FINAL-2 — Segunda sessão bloqueada corretamente
+
+Pré-condição: A já é `OWNER` do paciente X.
+
+Passos: B abre o mesmo paciente e observa a Ficha Clínica.
+
+Resultado esperado: B `RESTRICTED`, banner correto, Novo Tratamento bloqueado, patient e leituras visíveis, Ficha Pessoal e Histórico acessíveis, sem mutation protegida.
+
+Status: `PASS`.
+
+### D5-FINAL-3 — Promoção automática após liberação
+
+Pré-condição: A `OWNER`, B `RESTRICTED`.
+
+Passos: A libera X por fechamento, troca, logout ou fechamento da página; B permanece aberta e aguarda o recheck.
+
+Resultado esperado: B consulta, tenta acquire se disponível, torna-se `OWNER` se vencer, remove o banner e libera Novo Tratamento sem F5. O recheck é de 20 segundos, sem garantia rígida em aba suspensa/background.
+
+Subcenário: com B e C `RESTRICTED`, não exigir qual sessão vence; exigir apenas first successful acquire e exatamente um owner.
+
+Status: `PASS`.
+
+### D5-FINAL-4 — Indisponibilidade de confirmação clínica
+
+Resultado esperado: `UNKNOWN`, mensagem “Não foi possível confirmar a disponibilidade para alterações clínicas.”, patient visível, Novo Tratamento e mutations protegidas bloqueados, sem owner otimista e com recuperação por revalidação posterior.
+
+Não foi definida reprodução manual segura sem interromper infraestrutura, rede ou código. O teste pode ser avaliado por contratos e evidências existentes, ou permanecer `NOT_MANUALLY_REPRODUCED`.
+
+Status: `NOT_MANUALLY_REPRODUCED`.
+
+## Estado de homologação
+
+`HISTORICAL_V9_V12_DEFINITIONS_FOUND = NÃO`
+
+`HISTORICAL_V9_V12_STATUS = UNRECOVERED`
+
+`D5_FINAL_1 = PASS`
+
+`D5_FINAL_2 = PASS`
+
+`D5_FINAL_3 = PASS`
+
+`D5_FINAL_4 = NOT_MANUALLY_REPRODUCED`
+
+`FC3_D5_HOMOLOGATION = HOMOLOGATED`
+
+`FC3_D5_OVERALL_STATUS = HOMOLOGATED`
+
+Nenhuma implementação D5 adicional é declarada nesta consolidação.

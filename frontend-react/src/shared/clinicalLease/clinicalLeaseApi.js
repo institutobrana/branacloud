@@ -33,9 +33,27 @@ export function getClinicalLeaseStatus(token, patientId, instanceId) {
   });
 }
 
+export function acquireClinicalLease(token, patientId, instanceId) {
+  return requestJson(`/clinical-locks/${encodeURIComponent(String(patientId))}/acquire`, token, {
+    method: 'POST',
+    headers: { 'X-Session-Instance-Id': instanceId },
+  });
+}
+
 export function sendClinicalLeaseHeartbeat(token, patientId, instanceId, leaseToken) {
   return requestJson(`/clinical-locks/${encodeURIComponent(String(patientId))}/heartbeat`, token, {
     method: 'POST',
+    headers: {
+      'X-Session-Instance-Id': instanceId,
+      'X-Clinical-Lease-Token': leaseToken,
+    },
+  });
+}
+
+export function releaseClinicalLease(token, patientId, instanceId, leaseToken, options = {}) {
+  return requestJson(`/clinical-locks/${encodeURIComponent(String(patientId))}/release`, token, {
+    method: 'POST',
+    keepalive: options.keepalive === true,
     headers: {
       'X-Session-Instance-Id': instanceId,
       'X-Clinical-Lease-Token': leaseToken,

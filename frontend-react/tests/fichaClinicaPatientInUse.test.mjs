@@ -26,7 +26,8 @@ test('entrada sem paciente monta a ficha e abre o modal uma vez', () => {
 });
 
 test('selecao, limpeza e reidratacao usam a fonte compartilhada', () => {
-  assert.match(app, /setPatientInUse\(patient\)/);
+  assert.match(app, /const switchPatientInUse = useCallback\(async \(nextPatient\) => \{[\s\S]*?setPatientInUse\(nextPatient \|\| null\);[\s\S]*?\}, \[releaseClinicalLease, setPatientInUse\]\);/);
+  assert.match(app, /onSelect=\{async \(patient\) => \{[\s\S]*?await switchPatientInUse\(patient\);/);
   assert.match(page, /usePatientInUse/);
   assert.match(page, /clearPatient\(\)/);
   assert.match(context, /sessionStorage/);
@@ -35,10 +36,11 @@ test('selecao, limpeza e reidratacao usam a fonte compartilhada', () => {
 
 test('acoes contextuais abrem edicao do paciente atual e limpam sem navegar', () => {
   assert.match(app, /onOpenPersonalRecord=\{\(patient\) => openExistingPatient\(patient\?\.id\)\}/);
-  assert.match(app, /onCloseFichaClinica=\{\(\) => \{ setPatientMenuOpen\(false\); clearPatientInUse\(\); \}\}/);
+  assert.match(app, /const closeFichaClinica = useCallback\(async \(\) => \{[\s\S]*?await releaseClinicalLease\(\);[\s\S]*?clearPatientInUse\(\);[\s\S]*?\}, \[clearPatientInUse, releaseClinicalLease\]\);/);
+  assert.match(app, /onCloseFichaClinica=\{closeFichaClinica\}/);
   assert.match(app, /mode=\{fichaPessoalMode\}/);
   assert.match(app, /patientId=\{fichaPessoalPatientId\}/);
-  assert.match(app, /onSaved=\{\(saved\) => \{[\s\S]*setPatientInUse\(saved\)/);
+  assert.match(app, /onSaved=\{\(saved\) => \{[\s\S]*?void switchPatientInUse\(saved\)/);
   assert.doesNotMatch(app, /onCloseFichaClinica=\{\(\) => handleNavigate\('dashboard'\)\}/);
   assert.match(page, /key: 'open-personal-record'/);
   assert.match(page, /key: 'close-ficha-clinica'/);

@@ -21,8 +21,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { usePatientInUse } from '../../shared/patientInUse/PatientInUseContext.jsx';
+import { useClinicalLease } from '../../shared/clinicalLease/ClinicalLeaseProvider.jsx';
 import { calculatePatientAge } from '../../shared/patientInUse/patientInUseUtils.js';
 import { NovoTratamentoModal } from './NovoTratamentoModal.jsx';
+import { ClinicalLeaseStatusBanner } from '../../shared/clinicalLease/ClinicalLeaseStatusBanner.jsx';
 import './fichaClinica.css';
 
 function formatNomeCompleto(item) {
@@ -808,6 +810,7 @@ export function FichaClinicaPage({ onBackHome, onRequestPatientSelection, openNo
   return (
     <>
     <div className="ficha-clinica-page">
+      <ClinicalLeaseStatusBanner />
       <div className={`ficha-clinica-stage${isPatientRailCollapsed ? ' is-patient-rail-collapsed' : ''}`}>
         <section className="ficha-clinica-board ficha-clinica-odontogram-board">
           <UpperOdontogramPanel />
@@ -1037,6 +1040,7 @@ export function FichaClinicaPage({ onBackHome, onRequestPatientSelection, openNo
 
 export function FichaClinicaContextBar({ onRequestNewPatient, onRequestPatientSelection, onRequestNewTreatment, onOpenPersonalRecord, onCloseFichaClinica }) {
   const { patient } = usePatientInUse();
+  const { state: leaseState, revalidate } = useClinicalLease();
   const patientLabel = patient ? formatNomeCompleto(patient) || `Paciente ${patient.id ?? ''}`.trim() : 'Nenhum paciente em uso';
   const handleAction = (label) => {
     if (!patient) {
@@ -1044,6 +1048,14 @@ export function FichaClinicaContextBar({ onRequestNewPatient, onRequestPatientSe
       return;
     }
     message.info(`${label}: fluxo em implantacao no Brana Cloude.`);
+  };
+  const handleNewTreatment = async () => {
+    if (leaseState !== 'OWNER') {
+      message.warning('Não foi possível confirmar a disponibilidade para alterações clínicas.');
+      await revalidate();
+      return;
+    }
+    onRequestNewTreatment?.();
   };
   return (
     <div className="ficha-clinica-context-bar">
@@ -1082,7 +1094,7 @@ export function FichaClinicaContextBar({ onRequestNewPatient, onRequestPatientSe
         </Dropdown>
       </div>
       <div className="ficha-clinica-action-bar">
-        <OdontogramToolbar onAction={handleAction} onRequestNewPatient={onRequestNewPatient} onRequestNewTreatment={onRequestNewTreatment} onRequestPatientSelection={onRequestPatientSelection} />
+      <OdontogramToolbar onAction={handleAction} onRequestNewPatient={onRequestNewPatient} onRequestNewTreatment={handleNewTreatment} onRequestPatientSelection={onRequestPatientSelection} />
       </div>
     </div>
   );
