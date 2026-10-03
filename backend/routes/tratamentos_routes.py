@@ -3,7 +3,7 @@ import unicodedata
 from datetime import date, datetime
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
@@ -26,6 +26,7 @@ from services.indices_service import (
     listar_indices,
     resolver_numero_indice,
 )
+from services.clinical_patient_lease_guard import require_clinical_patient_lease_owner
 
 router = APIRouter(
     prefix="/tratamentos",
@@ -711,11 +712,14 @@ def carregar_combos_novo_tratamento(
 @router.post("/novo")
 def salvar_novo_tratamento(
     payload: NovoTratamentoPayload,
+    x_session_instance_id: str = Header(..., alias="X-Session-Instance-Id"),
+    x_clinical_lease_token: str = Header(..., alias="X-Clinical-Lease-Token"),
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
     paciente = _paciente_or_404(db, clinica_id, int(payload.paciente_id))
+    require_clinical_patient_lease_owner(db, current_user, int(paciente.id), x_session_instance_id, x_clinical_lease_token)
 
     tabelas = _listar_tabelas(db, clinica_id)
     tabela_codigo = _resolver_tabela_codigo(payload.tabela_codigo, tabelas, default=int(paciente.tabela_codigo or 1))
@@ -824,6 +828,8 @@ def salvar_novo_tratamento(
 def atualizar_tratamento(
     tratamento_id: int,
     payload: NovoTratamentoPayload,
+    x_session_instance_id: str = Header(..., alias="X-Session-Instance-Id"),
+    x_clinical_lease_token: str = Header(..., alias="X-Clinical-Lease-Token"),
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -840,6 +846,7 @@ def atualizar_tratamento(
         raise HTTPException(status_code=404, detail="Tratamento nao encontrado.")
 
     paciente = _paciente_or_404(db, clinica_id, int(item.paciente_id))
+    require_clinical_patient_lease_owner(db, current_user, int(paciente.id), x_session_instance_id, x_clinical_lease_token)
 
     tabelas = _listar_tabelas(db, clinica_id)
     tabela_codigo = _resolver_tabela_codigo(payload.tabela_codigo, tabelas, default=int(item.tabela_codigo or paciente.tabela_codigo or 1))

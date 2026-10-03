@@ -24,6 +24,6 @@ export function loadSystemOptions() {
   return requestJson('/system-options');
 }
 
-export function createNovoTratamento(payload) {
-  return requestJson('/tratamentos/novo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+export function createNovoTratamento(payload, { instanceId, leaseToken } = {}) {
+  return requestJson('/tratamentos/novo', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Session-Instance-Id': instanceId || '', 'X-Clinical-Lease-Token': leaseToken || '' }, body: JSON.stringify(payload) });
 }

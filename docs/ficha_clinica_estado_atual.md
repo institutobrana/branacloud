@@ -403,4 +403,25 @@ FC3-D3 = `HOMOLOGATED`.
 - Falha de rede leva o estado interno para `UNKNOWN`, em fail-closed.
 - Não foram adicionados guards D4 de mutação clínica nem UI D5 de OWNER/RESTRICTED.
 
+## FC3-D4 — estado homologado
+
+FC3-D4 = HOMOLOGATED. O escopo protegido é `TREATMENT_ODONTOGRAM_WRITE_DOMAIN`.
+
+O backend exige ownership clínico comprovado para as quatro mutations atuais:
+
+- `POST /tratamentos/novo`
+- `PUT /tratamentos/{tratamento_id}`
+- `PATCH /orcamento/tratamentos/{tratamento_id}/intervencoes/{intervencao_id}`
+- `POST /orcamento/tratamentos/{tratamento_id}/aprovar`
+
+O guard central está em `backend/services/clinical_patient_lease_guard.py`. Ele valida tenant do paciente, sessão ativa, usuário owner, sessão owner, token e lease vigente com `expires_at > CURRENT_TIMESTAMP` no PostgreSQL, usando `SELECT ... FOR UPDATE`. Guard, mutation e commit compartilham a mesma Session/transação; o guard não adquire, renova, libera nem commita lease.
+
+O contrato é fail-closed: paciente fora do tenant retorna `PATIENT_NOT_FOUND_IN_CLINIC`; sessão inválida retorna `SESSION_INSTANCE_INVALID`; lease ausente/expirado retorna `CLINICAL_PATIENT_LEASE_LOST`; owner, sessão ou token divergente retorna `CLINICAL_PATIENT_LEASE_NOT_OWNER`.
+
+Parcelas, Ficha Pessoal, Histórico, leituras de tratamento/orçamento e impressão permanecem fora do guard. A validação final registrou 21/21 testes aplicáveis D4, regressão D3 5/5, regressão crítica D2 5/5 e G20 PASS com mutation HTTP real, lock PostgreSQL, espera concorrente e zero partial write.
+
+O único caller React protegido atualmente é o novo tratamento. Ele obtém a session instance do provider D1 e o token em memória do `ClinicalLeaseProvider` D3, enviando os dois headers somente para a mutation protegida. Não há interceptor global, novo storage ou UI D5.
+
+O frontend legado em `frontend/` é somente referência funcional/contratual (`REFERENCE_ONLY`) e não participa de D1–D4. Clients React futuros de edição, intervenção e aprovação deverão cumprir o mesmo contrato de session instance, token memory-only e headers clínicos.
+
 Antes da D3, a comparação de expiração da D2 foi alinhada do relógio Python local para `PostgreSQL CURRENT_TIMESTAMP`. A regressão crítica D2 permaneceu em 10/10 PASS.

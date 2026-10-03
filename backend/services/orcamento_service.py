@@ -478,6 +478,7 @@ def atualizar_intervencao_orcamento(
     tratamento_id: int,
     intervencao_id: int,
     payload: OrcamentoIntervencaoUpdatePayload,
+    commit: bool = True,
 ) -> dict[str, Any]:
     tratamento = _tratamento_or_404(db, int(current_user.clinica_id), int(tratamento_id))
     intervencao = _intervencao_or_404(db, int(current_user.clinica_id), int(tratamento_id), int(intervencao_id))
@@ -516,7 +517,10 @@ def atualizar_intervencao_orcamento(
     intervencoes[str(int(intervencao_id))] = override
     blob["intervencoes"] = intervencoes
     _save_orcamento_blob(tratamento, blob)
-    db.commit()
+    if commit:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(intervencao)
     return carregar_orcamento(db, current_user, int(tratamento_id))
 
@@ -556,7 +560,9 @@ def aprovar_orcamento_service(
         tratamento,
         list(orcamento.get("parcelas") or []),
         gerar_conta_corrente=bool(payload.gerar_conta_corrente),
+        commit=False,
     )
+    db.commit()
     orcamento_atualizado = carregar_orcamento(db, current_user, int(tratamento_id))
     return {
         "detail": aprovacao["detail"],

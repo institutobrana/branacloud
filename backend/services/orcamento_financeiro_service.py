@@ -284,6 +284,7 @@ def registrar_aprovacao_orcamento(
     tratamento: Tratamento,
     parcelas: list[dict[str, Any]],
     gerar_conta_corrente: bool = True,
+    commit: bool = True,
 ) -> dict[str, Any]:
     blob = _orcamento_blob(tratamento)
     categoria = _categoria_orcamento_or_404(db, int(current_user.clinica_id))
@@ -321,7 +322,8 @@ def registrar_aprovacao_orcamento(
                 db.add(item)
                 db.flush()
                 lancamentos_ids.append(int(item.id))
-            db.commit()
+            if commit:
+                db.commit()
             conta_corrente_aberta = bool(lancamentos_ids)
         else:
             conta_corrente_aberta = True
@@ -333,7 +335,8 @@ def registrar_aprovacao_orcamento(
     if lancamentos_ids:
         blob["lancamentos_ids"] = lancamentos_ids
     _save_orcamento_blob(tratamento, blob)
-    db.commit()
+    if commit:
+        db.commit()
 
     return {
         "detail": "Orcamento aprovado.",

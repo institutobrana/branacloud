@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -18,6 +18,8 @@ from services.orcamento_service import (
     listar_tratamentos_orcamento,
     preparar_impressao_orcamento_service,
 )
+from services.clinical_patient_lease_guard import require_clinical_patient_lease_owner
+from models.tratamento import Tratamento
 
 
 router = APIRouter(
@@ -55,10 +57,18 @@ def alterar_intervencao_do_orcamento(
     tratamento_id: int,
     intervencao_id: int,
     payload: OrcamentoIntervencaoUpdatePayload,
+    x_session_instance_id: str = Header(..., alias="X-Session-Instance-Id"),
+    x_clinical_lease_token: str = Header(..., alias="X-Clinical-Lease-Token"),
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return atualizar_intervencao_orcamento(db, current_user, int(tratamento_id), int(intervencao_id), payload)
+    tratamento = db.query(Tratamento).filter(Tratamento.id == int(tratamento_id), Tratamento.clinica_id == int(current_user.clinica_id)).first()
+    if tratamento is None:
+        raise HTTPException(status_code=404, detail="Tratamento nao encontrado.")
+    require_clinical_patient_lease_owner(db, current_user, int(tratamento.paciente_id), x_session_instance_id, x_clinical_lease_token)
+    result = atualizar_intervencao_orcamento(db, current_user, int(tratamento_id), int(intervencao_id), payload, commit=False)
+    db.commit()
+    return result
 
 
 @router.patch("/tratamentos/{tratamento_id}/parcelas/{numero_parcela}")
@@ -76,9 +86,15 @@ def alterar_parcela_do_orcamento(
 def aprovar_orcamento(
     tratamento_id: int,
     payload: OrcamentoAprovacaoPayload,
+    x_session_instance_id: str = Header(..., alias="X-Session-Instance-Id"),
+    x_clinical_lease_token: str = Header(..., alias="X-Clinical-Lease-Token"),
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    tratamento = db.query(Tratamento).filter(Tratamento.id == int(tratamento_id), Tratamento.clinica_id == int(current_user.clinica_id)).first()
+    if tratamento is None:
+        raise HTTPException(status_code=404, detail="Tratamento nao encontrado.")
+    require_clinical_patient_lease_owner(db, current_user, int(tratamento.paciente_id), x_session_instance_id, x_clinical_lease_token)
     return aprovar_orcamento_service(db, current_user, int(tratamento_id), payload)
 
 
