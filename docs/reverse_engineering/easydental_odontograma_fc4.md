@@ -1,0 +1,562 @@
+# FC4 — dossiê técnico EasyDental / odontograma
+
+STATUS = CONSOLIDATED_FOR_REVIEW
+Baseline Brana: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1.
+CANONICAL_FLOW_STATUS = PROVEN_WITH_NON_BLOCKING_GAPS.
+Escopo P0D: preservação documental + revalidação direcionada; nenhuma gravação,
+execução de binário, instrumentação nova, trace novo ou modificação de runtime.
+
+## 1. Proveniência e confiança
+
+Este dossiê preserva o conhecimento disponível das fases P0/P0A/P0B/R2/R3/R4/P0C
+e do pedido P0D. Não afirma que todas as provas anteriores foram reexecutadas
+nesta rodada. Informação de relatório anterior conserva essa origem e confiança.
+P0B.R1 não dispõe de relatório exclusivo recuperado: não inventar detalhes.
+
+PROVEN: evidência direta ou convergente identificada. STRONG: sequência técnica
+forte, sem prometer caminhos universais. PARTIAL: candidato/limite explícito.
+UNPROVEN: sem prova suficiente. Estar documentado não promove confiança.
+Tipos: RUNTIME, USER_OBSERVATION, BINARY, RESOURCE, SQL, SCHEMA, DATA, LOG, MANUAL,
+HISTORICAL_DOCUMENT, INFERENCE. Não transformar INFERENCE em contrato implementável.
+
+## 2. Executável e identidade reproduzida em P0D
+
+- SOURCE: C:\EDS70\EDS70.exe; FileVersion/ProductVersion: 7.6.0.1001; ProductName: EasyDental.
+- SIZE: 13.543.424 bytes.
+- SHA-256: 9e0dfd33d89dd62f08bdf6ad35f2cdbc79ae119fc32c84f035ba2ed50e6a54bb.
+- PE Machine 0x014C: x86; ImageBase 0x400000; Delphi nativo/VCL.
+- Sections (RVA / raw size): CODE 0x1000/6992384; DATA 0x6AD000/76800;
+  BSS 0x6C0000/0; .idata 0x6C4000/18432; .tls 0x6C9000/0;
+  .rdata 0x6CA000/512; .reloc 0x6CB000/475648; .rsrc 0x740000/5978624.
+- 329 ocorrências de assinatura TPF0 (contagem de bytes, não afirmar 329 forms únicos).
+- Imports pertinentes: EDCAP70.DLL, EDCAP70RTL.DLL, crp32dll.dll, EasyPhLb.dll,
+  EasyCtrl.dll, GeraArqHTML; Win32 GDI/User32/Comctl32, OLE, Wininet/Wsock32.
+  Importar DLL não prova papel clínico; inventário anterior não foi repetido.
+- Ferramentas existentes P0D: Python, pefile, Pillow; capstone/distorm3/iced_x86
+  não disponíveis nesse Python. Sem instalação. Leitura PE + bytes + decodificação
+  pontual de operandos x86, não decompilação completa.
+
+VA = endereço virtual com esse ImageBase; file offset é posição física. Nunca
+subtrair ImageBase e chamar o resultado de file offset sem mapear a seção.
+
+## 3. Fontes preservadas
+
+| SOURCE | Tipo | Uso/limite |
+|---|---|---|
+| C:\EDS70\EDS70.exe | BINARY/RESOURCE/SQL | Executável revalidado; somente leitura |
+| C:\EDS70\Help\Manual_EDS70_CAP_02.pdf | MANUAL | Fonte histórica R2–R4; 3.554.441 bytes, existência reconfirmada |
+| C:\EDS70\Help\Manual_EDS70_CAP_05.pdf | MANUAL | Marcação/odontograma; 910.412 bytes, existência reconfirmada |
+| C:\EDS70\eds70.dsn | Configuração | Conexão histórica comprovada; credenciais omitidas |
+| C:\EDS70\Temp\INSPIRON-15_eds70.log | LOG | Fonte histórica; 293.118 bytes na verificação; não truncar/logar segredos |
+| Y:\EDS70\Dados\eds70.sql | SCHEMA | DDL histórico; 106.681 bytes; não representa sozinho algoritmo |
+| Y:\EDS70\Dados\eds75_*.sql | SCHEMA | Histórico de builds, não substituir schema vivo automaticamente |
+| D:\BRANA ARQUIVOS\BRANA CLOUD ARQUIVO MORTO\EASYDENTAL_BACKUP_ATUAL | Histórico | Fonte externa anterior; não copiar backups ao repo |
+| Arquivo Morto / candidatos pertinentes | HISTORICAL_DOCUMENT | Inventário pertinente encerrado na R4; sem nova varredura genérica |
+| Relatos assistidos P0B/R2–R4 | USER_OBSERVATION | Slot vazio, multisseleção, modal e Grava esta/todas; sem inventar trace |
+
+Builds presentes em Dados: eds75_build_0809_1..8.sql; 090415_1/2; 090505;
+090514_1/2; 090617; 091123; 100115_1/2/3. Não executar esses scripts.
+
+Instância anterior: PID 10732, C:\EDS70\EDS70.exe, janela EasyDental 7.6.
+DSN apontava SQL Server / DELL_SERVIDOR\EDS70 / database eds70. Isso é evidência
+histórica de conexão real, não nova verificação de PID ou login P0D. Usuário escolheu
+registro para observação; dados pessoais/credenciais não reproduzidos aqui.
+Falha de espaço PRIMARY na inserção USRLOG = KNOWN_ENVIRONMENT_CONDITION.
+Não confundir audit write USRLOG com mutação clínica; não corrigir filegroup.
+
+Snapshot anterior R4 preservado: catálogo válido sem NROSIM NULL/0/orphan, 698
+itens de tabela e 81 símbolos na evidência relatada. Não é consulta DB atual P0D.
+Dados históricos provaram relações, mas dados isolados não provam algoritmo.
+
+## 4. Formulário de propriedades
+
+Classe TfrPropriedadesInterv; resource TFRPROPRIEDADESINTERV, RT_RCDATA (10),
+RVA 0xAD43C0, tamanho 7.231 bytes, prefixo TPF0. Reconfirmado em P0D.
+
+Componentes reconfirmados por bytes do resource: btOk, btGravatodas, btCancela,
+lcTabela, lcPrestador, lcIntervencao, lcStatus, roRegiao, meDatacad, meDatafin,
+mmObserv, mePreco, cxOrcamento, meValorRepasse, pbSimbolo, roTimeStampIns,
+roTimeStampUpd. O texto/modal anterior também contém tabela, cirurgião, intervenção,
+região, situação, marcação, finalização, observações, inclusão e alteração.
+
+| Método | VA | File offset | Origem/confiança |
+|---|---|---|---|
+| FormGravaTodasClick | 0x663D28 | 0x263128 | Handler literal no resource + R3/R4, PROVEN |
+| FormOk | 0x663E44 | 0x263244 | Método/VMT da análise anterior, STRONG no call graph |
+| FormCancel | 0x666A48 | 0x265E48 | Método anterior; não literal no resource, STRONG |
+| pbSimboloPaint | 0x666A60 | 0x265E60 | Handler literal no resource, PROVEN |
+| EscolheIntervencao | 0xA94138 | Referência VA | Análise anterior, STRONG |
+
+FormOk/FormCancel não aparecerem literalmente nesse DFM não contradiz binding
+herdado/método VMT. Não alegar que os quatro handlers foram lidos por nome no DFM.
+pbSimboloPaint é preview do modal, não todo renderer odontológico.
+
+## 5. Gravação e seleção interna
+
+FormOk: entrada → validações → tratamento/intervenção → INSERT/UPDATE INTERVENCAO
+→ writer de marcação → HISTORICO → transação → refresh → avanço/fechamento.
+Referências preservadas: +0x3C2, +0x3C0, +0x56C; 0x6646DE, 0x66474C, 0x664777;
+refresh 0xA94204. Esses offsets não foram renomeados por inferência P0D.
+
+FormGravaTodasClick: índice atual/último → chamada VMT +0x134 (FormOk) → repetição.
+Grava esta grava o contexto corrente e avança ao próximo marcado. Grava todas
+reutiliza esse caminho. Transações de FormOk, não única transação externa provada.
+Continuidade universal após erro não provada; não inventar comportamento.
+
+Seleção interna: registros inline stride 12 bytes; slot inicial, final e flag
+processado. +0x3D4 é índice/pointer corrente na análise; +0x3C8 último;
++0x3C4 delimita os trechos por arcada para Segmento. Referências:
+dispatcher 0x66322C; flag processado 0x6645F4; construtor 0x662D08;
+caller FormShow 0x661FDB; tabela de despacho 0x662D8E.
+
+| Tipo | Entrada construtor | Persistência/render |
+|---|---|---|
+| FACE (1) | 0x662DAA | Writer FACE 0x6650AC; cinco flags |
+| DENTE (2) | 0x662E2C | Elemento individual |
+| GRUPO (3) | 0x662E95 | Runs contíguos, quebra em lacuna/16–17 |
+| ARCADA (4) | 0x66312F | [1,16] / [17,32], um contexto por arcada |
+| GERAL (5) | 0x663201 | Sem writer DENTE/FACE no caminho |
+| SEGMENTO (6) | 0x662FBF–0x66312A | União de runs por arcada |
+
+SEGMENTO: writer 0x6653D4 percorre os trechos do contexto sob mesmo NROINTPAC,
+marca processados/avança até fronteira; referência adicional 0x665CEC.
+Região 0xA9CB7C; resolução de numeração do tratamento 0xA9C490; fallback de
+numeração referenciado em 0xA9D2E4. Não identificar slot com FDI automaticamente.
+Grupo = uma intervenção por run; Segmento = uma por arcada com vários runs;
+Arcada = uma por arcada completa, 16 associações DENTE. Lacunas de Segmento não
+recebem associação/render. Geral não obriga DENTE/FACE.
+
+## 6. Faces — prova binária reproduzida P0D
+
+SHA do executável deve coincidir com seção 2 antes de reutilizar endereços.
+FACE_SLOT_ORIENTATION_TABLE_STATUS = PROVEN.
+
+Tabela em VA 0xABE080 (file offset 0x6BC680): cinco DWORDs little-endian:
+0xA9D36C, 0xA9D398, 0xA9D3C4, 0xA9D3F0, 0xA9D41C.
+
+| Campo | VA / file offset | 32 bytes ASCII |
+|---|---|---|
+| FACE1 | 0xA9D36C / 0x69C76C | VVVVVVVVVVVVVVVVLLLLLLLLLLLLLLLL |
+| FACE2 | 0xA9D398 / 0x69C798 | MMMMMMMMDDDDDDDDMMMMMMMMDDDDDDDD |
+| FACE3 | 0xA9D3C4 / 0x69C7C4 | PPPPPPPPPPPPPPPPVVVVVVVVVVVVVVVV |
+| FACE4 | 0xA9D3F0 / 0x69C7F0 | DDDDDDDDMMMMMMMMDDDDDDDDMMMMMMMM |
+| FACE5 | 0xA9D41C / 0x69C81C | OOOOOIIIIIIOOOOOOOOOOIIIIIIOOOOO |
+
+V vestibular, L lingual, P palatina, M mesial, D distal, I incisal, O oclusal.
+Tabela de faixas exata está no contrato. O teste P0D comparou as cinco sequências
+com as 32 posições esperadas e obteve True. Converter 0xA9D440 (file 0x69C840):
+bytes 8B 04 85 80 E0 AB 00 = MOV EAX,[EAX*4+0xABE080], selecionando a sequência;
+busca caractere pelo slot (caminho de substring/cópia) dentro de loop de cinco
+flags. Em 0x66339A, E8 A1 A0 43 00 decodifica CALL 0xA9D440.
+Writer FACE 0x6650AC é referência de persistência anterior; não se encontrou CALL
+direto ao converter no intervalo de 900 bytes examinado P0D. Não inventar esse CALL.
+
+Reprodução somente leitura (não gera arquivo nem executa EXE):
+
+```python
+import pefile, struct, hashlib
+data = open(r'C:\EDS70\EDS70.exe', 'rb').read()
+assert hashlib.sha256(data).hexdigest() == '9e0dfd33d89dd62f08bdf6ad35f2cdbc79ae119fc32c84f035ba2ed50e6a54bb'
+pe = pefile.PE(data=data)
+def read_va(va, size):
+    off = pe.get_offset_from_rva(va - pe.OPTIONAL_HEADER.ImageBase)
+    return data[off:off + size]
+ptrs = struct.unpack('<5I', read_va(0xABE080, 20))
+expected = ['V'*16+'L'*16, 'M'*8+'D'*8+'M'*8+'D'*8,
+            'P'*16+'V'*16, 'D'*8+'M'*8+'D'*8+'M'*8,
+            'O'*5+'I'*6+'O'*10+'I'*6+'O'*5]
+assert [read_va(p, 32).decode('ascii') for p in ptrs] == expected
+assert bytes.fromhex('8b048580e0ab00') in read_va(0xA9D440, 150)
+assert read_va(0x66339A, 5) == bytes.fromhex('e8a1a04300')
+```
+
+Importador Brana com conversão fixa FACE1..5 não é fonte dessa prova. Nenhum dado
+importado foi corrigido; eventual compatibilidade é decisão futura de design.
+
+## 7. Símbolos e render recuperado
+
+INTERVENCAO.(NROTAB,NROINT) → TAB_PRC_ITEM.NROSIM → _SIMBOLO_ODONTO → TIPMARCA/
+TIPSIMB → BITMAP1/BITMAP2/BITMAP3/ICONE → alvo → status/cor.
+Schema de símbolo inclui descrição, especialidade, sobreposição e recursos.
+TIPSIMB e TIPMARCA são conceitos distintos; ícone não é compositor clínico.
+
+Referências: preparação recursos/DENTE 0x6654C8; pintura faces 0xA87D58;
+refresh 0xA94204; arc_faces. Aplicação de cores/configurações:
+Observada 0xA87F27/0xA87F55 (CorObserv); Realizar 0xA87F88/0xA87FB6
+(CorRealizar); Realizada 0xA87FE6/0xA88014 (CorRealizado).
+Defaults históricos verde/azul/vermelho; configuráveis.
+
+FACE pinta faces; DENTE no elemento; GRUPO compõe run; SEGMENTO compõe seus runs
+sem preencher gaps; ARCADA superior/inferior inteira; GERAL área geral da boca.
+Detalhes de composição e bitmap pixel-a-pixel são não bloqueantes para contrato.
+Próteses podem alterar aparência/ocultar base; não universalizar simples overlay
+nem inventar mudança anatômica persistida por causa de um exemplo visual.
+
+Símbolo inválido: lookup 0x550DE0 retorna -1; leitura 0x550E30 indexa registro
+de 44 bytes. Análise R4 de 16 callers não mostrou fallback seguro universal.
+Catálogo válido anterior sem referências nulas/zero/orphan. Não provocar inválido
+em banco real. Gap não bloqueante fora do contrato válido; sem fallback inventado.
+
+## 8. Orçamento, financeiro e histórico
+
+TfrOrcamento.FormLoadData 0x783FC4: caminho em 0x784338–0x784339 descarta status
+Observada; 0x784351–0x784353 descarta ORCAMENTO diferente de zero. Usa própria
+INTERVENCAO; não INSERT financeiro imediato simplesmente por gravar intervenção.
+
+Modal Financeiro: mePreco→VALOR_PACIENTE; meValorRepasse→VALOR_REPASSE;
+meDataRepasse→DATA_REPASSE; cxOrcamento (“Não incluir”)→ORCAMENTO;
+edGlosa→COD_GLOSA; edMsgAutorizacao→MSG_AUTOR. Aprovação posterior gera contextos
+CCPACIENTE/parcelas separados. Não generalizar integração financeira além disso.
+
+Histórico helper 0x665E20: situação 2 insere; edição atualiza data/auditoria;
+situação diferente remove vínculo no caminho recuperado. Finalização adicional
+0x668244: STATUS=2 + DATFIN + HISTORICO + refresh. Fases intermediárias podem
+registrar histórico sem finalizar integralmente.
+
+## 9. Exclusão, interrupção e cópia
+
+Hard delete 0xA8A4B0; referências 0xA8A516–0xA8A53D; helper 0x524010 de
+autorização/convênio. Limpezas CustomData/HISTORICO, cascade DENTE/FACE/HISTORICO,
+refresh/auditoria. Há verificações de permissão, tratamento finalizado, orçamento
+aprovado e situação realizada; não afirmar exclusão sempre permitida.
+
+Orçamento consultado de INTERVENCAO perde item deletado; não há reversão automática
+de parcelas comprovada. Aprovação/financeiro separado: risco deve aparecer no
+futuro contrato de exclusão, não extrapolar toda contabilidade.
+
+Não foi encontrada operação dedicada Interromper intervenção ou Repetir
+intervenção no conjunto auditado dessa versão (forms/resources/status/manual/SQL).
+Interromper é tratamento. “Repetir” encontrado na Agenda não prova ação clínica.
+Conclusão negativa limitada à versão/conjunto auditado, não todas as versões.
+
+Cópia: FormSaveRecord 0x65BFB0 → helper 0x65CC34 → INSERT SELECT INTERVENCAO/DENTE/
+FACE de situação 3 para novo tratamento e novos IDs. Não copiar como feature
+isolada de repetição de intervenção sem decisão futura explícita.
+
+## 10. SQL embutido e schema
+
+Offsets SQL abaixo são **file offsets**, recuperados novamente em P0D:
+
+| Offset | Operação | Campos/efeito |
+|---|---|---|
+| 0x25C504 | INSERT INTERVENCAO SELECT | Cópia de tratamento; contexto, prestador, tabela/procedimento, valores e comissão |
+| 0x263CA4 | INSERT INTERVENCAO VALUES | NROPAC,NROINTPAC,NROTRA,ID_PRESTADOR,NROTAB,NROINT,DATCAD,DATFIN,STATUS,ORCAMENTO,VALOR_PACIENTE,VALOR_REPASSE,DATA_REPASSE,COD_GLOSA,MSG_AUTOR,OBSERV,auditoria,índices/comissão |
+| 0x261010 | INSERT DENTE VALUES | NROPAC,NROINTPAC,NRODEN,BITMAP |
+| 0x25C768 | INSERT DENTE SELECT | Cópia das associações |
+| 0x260F54 | INSERT FACE VALUES | NROPAC,NROINTPAC,NRODEN,FACE1..FACE5 |
+| 0x25C7F4 | INSERT FACE SELECT | Cópia das flags |
+| 0x2656AC | INSERT HISTORICO VALUES | REGISTRO,ID_PRESTADOR,NROPAC,NROINTPAC,DATA,DESCRICAO,NRODENTE,auditoria |
+| 0x1D2F04 | INSERT HISTORICO VALUES | Outro caminho sem NROINTPAC listado; não universalizar |
+| 0x68A048 | DELETE INTERVENCAO | SQL concatenado/contexto; não substituir por template inventado |
+| 0x11AFDC | UPDATE INTERVENCAO | Valores/comissão por NROPAC/NROINTPAC; não único updater |
+
+Quantidade encontrada por busca case-insensitive: INSERT INTERVENCAO=2,
+UPDATE INTERVENCAO=7, DELETE INTERVENCAO=1, INSERT DENTE=2, INSERT FACE=2,
+INSERT HISTORICO=5. Presença de SQL não prova caller ou execução runtime.
+Textos completos dos templates selecionados ficam no apêndice gerado abaixo.
+
+DDL histórico eds70.sql: ARCADA linha 135; DENTE 473; FACE 515; HISTORICO 527;
+INTERVENCAO 543; _SIMBOLO_ODONTO 1403; _STATUS_INTERV 1440.
+FK_DENTE_INTERVENCAO linha 2750; FK_FACE_INTERVENCAO 2814;
+FK_HISTORICO_INTERVENCAO 2825; INTERVENCAO→status/prestador/TAB_PRC_ITEM/tratamento
+no bloco 2860–2886. Tabelas relevantes adicionais: TRATAMENTO, TAB_PRC,
+TAB_PRC_ITEM, TAB_GEN_ITEM, USRLOG, CCPACIENTE e ITEMPERIO (CREATE TABLE na linha 574,
+reconfirmado em P0D). Modelo por contexto:
+paciente NROPAC, tratamento NROTRA, intervenção NROINTPAC, procedimento NROTAB/NROINT,
+slot NRODEN; FACE cinco flags. Schema sozinho não define cardinalidade de gravação.
+
+Evidência anterior R4: triggers encontrados ligados a estoque/custo, não geração
+financeira automática no fluxo intervenção; CCPACIENTE sem FK direto a intervenção
+nesse recorte. Não declarar ausência universal de lógica em todas as versões.
+
+## 11. Matriz de regras e confiança
+
+| RULE_ID | RULE | EVIDENCE_TYPE / SOURCE | TECHNICAL_REFERENCE | CONFIDENCE | IMPLEMENTATION_IMPACT |
+|---|---|---|---|---|---|
+| R01 | Slot independente de imagem/FDI | USER_OBSERVATION + BINARY R2–R4 | Seleção/records | PROVEN anterior | Modelar identidade/hitbox |
+| R02 | Desktop atalhos versus Cloud explícito | USER_OBSERVATION / MANUAL anterior | Referências separadas | STRONG | UX ainda não decidida |
+| R03 | Seis marcações | RESOURCE/BINARY + código Brana | 0x662D8E | PROVEN anterior | Dispatcher/alvos |
+| R04 | Grupo contíguo | BINARY/MANUAL R4 | 0x662E95 | PROVEN anterior | Uma por run |
+| R05 | Segmento união por arcada | BINARY/MANUAL R4 | 0x662FBF,0x6653D4 | PROVEN anterior | Preservar gaps |
+| R06 | Arcada 1–16/17–32 | BINARY/MANUAL R4 | 0x66312F | PROVEN anterior | Uma por arcada |
+| R07 | FormOk fluxo principal | BINARY/SQL R3–R4 | 0x663E44 | STRONG | Transação por gravação |
+| R08 | Grava todas reutiliza FormOk | RESOURCE/BINARY R3–R4 | 0x663D28,VMT+0x134 | PROVEN anterior | Sem atomicidade externa prometida |
+| R09 | Faces por slot | BINARY P0D | 0xABE080/0xA9D440 | PROVEN revalidado | Orientação anatômica |
+| R10 | Tratamento selecionado destino | BINARY/MANUAL anterior | NROTRA/modal | STRONG | Não usar filtro como destino |
+| R11 | Status 1/2/3 e cores | SCHEMA/RESOURCE/BINARY anterior | CorObserv/Realizar/Realizado | PROVEN anterior | Sem Interrompida |
+| R12 | Procedimento→símbolo | SCHEMA/BINARY + snapshot | NROSIM/TIPMARCA/TIPSIMB | PROVEN estrutural | Não usar nome como algoritmo |
+| R13 | Render por alvo | BINARY/MANUAL R4 | 0x6654C8,0xA87D58 | STRONG | Contrato suficiente; pixel futuro |
+| R14 | Símbolo inválido | BINARY/DATA anterior | 0x550DE0/0x550E30 | PARTIAL fora do válido | Não inventar fallback |
+| R15 | Orçamento filtro | BINARY R4 | 0x783FC4,0x784338/351 | PROVEN anterior | Excluir Observada |
+| R16 | Histórico/finalização | BINARY/SQL anterior | 0x665E20/0x668244 | STRONG | Limitar ao caminho |
+| R17 | Hard delete | BINARY/SQL/SCHEMA anterior | 0xA8A4B0 | PROVEN anterior | Sem estorno presumido |
+| R18 | Interrupt/repeat não dedicados | RESOURCE/MANUAL/SQL anterior | Conjunto auditado R4 | STRONG, versão limitada | Não inventar ações |
+| R19 | Cópia situação 3 | BINARY/SQL anterior | 0x65BFB0→0x65CC34 | PROVEN anterior | Novo tratamento, não repeat isolado |
+| R20 | Assets snapshot correlacionados | DATA/arquivo interno + metadados P0D | 81/79; hashes/callers | PROVEN documental | Matriz de autorização |
+| R21 | Brana gaps e orçamento | CODE P0C/P0D | models/odontograma_model.py,orcamento_service.py | PROVEN estático | Design futuro; não corrigido |
+| R22 | OWNER obrigatório | CODE/documentação FC3-D5 | Guard/domain | PROVEN homologado | Não reabrir D5 |
+
+Os detalhes de runtime/manual/data/log anteriores são fontes de evidência histórica;
+não foram inventados novos timestamps, traces ou dados pessoais para preencher
+lacunas. ASSET authorization C é UNPROVEN documentado e não uma regra liberada.
+
+## 12. Limites, exaustão e continuidade
+
+R4 encerrou investigação pertinente com PROVEN_WITH_NON_BLOCKING_GAPS. Não reabrir
+sem contradição objetiva. Persistem desenho gráfico fino, caso inválido fora do
+catálogo e negativas limitadas à versão. Call graph STRONG não vira PROVEN por
+transferência documental. Não instalar ferramentas para tornar esta fase implementação.
+
+Brana: crosswalk completo no contrato; matrizes por hash e símbolo separadas.
+Acervo já autorizado A/B e histórico C separados; autorização C não demonstrada
+não é autorização negativa jurídica nem dispensa aprovação futura.
+Retomada: [continuação](../ficha_clinica/odontograma_continuacao.md).
+
+## Apêndice A — SQL literal recuperado em P0D
+
+Templates estáticos; somente leitura dos bytes. Sem execução SQL. Fragmento interrompido por controle/NUL é preservado como fragmento, sem completar concatenações por inferência. Espaços finais de linha foram normalizados para diff documental; o texto não é dump binário byte-a-byte.
+
+### File offset 0x25c504
+
+```sql
+INSERT INTO INTERVENCAO ( NROPAC, NROINTPAC, NROTRA, ID_PRESTADOR, NROTAB, NROINT, VALOR_PACIENTE, VALOR_REPASSE, DATCAD, STATUS, OBSERV, ORCAMENTO, ID_INDICE_TAB, VALOR_TAB_REP, VALOR_TAB_PAC, VALOR_INDICE, VALOR_COMISSAO, ID_INDICE_COMISSAO, TIPO_COMISSAO ) SELECT NROPAC,
+```
+
+### File offset 0x263ca4
+
+```sql
+INSERT INTO INTERVENCAO ( NROPAC, NROINTPAC, NROTRA, ID_PRESTADOR, NROTAB, NROINT, DATCAD, DATFIN, STATUS, ORCAMENTO, VALOR_PACIENTE, VALOR_REPASSE, DATA_REPASSE, COD_GLOSA, MSG_AUTOR, OBSERV, TIME_STAMP_INS, USER_STAMP_INS, ID_INDICE_TAB, VALOR_TAB_REP, VALOR_TAB_PAC, VALOR_INDICE, VALOR_COMISSAO, ID_INDICE_COMISSAO, TIPO_COMISSAO ) VALUES ( [pNROPAC], [pNROINTPAC], [pNROTRA], [pID_PRESTADOR], [pNROTAB], [pNROINT], [pDATCAD], [pDATFIN], [pSTATUS], [pORCAMENTO], [pVALOR_PACIENTE], [pVALOR_REPASSE], [pDATA_REPASSE], [pCOD_GLOSA], [pMSG_AUTOR], [pOBSERV], [pTIME_STAMP], [pUSER_STAMP], [pID_INDICE_TAB], [pVALOR_TAB_REP], [pVALOR_TAB_PAC], [pVALOR_INDICE], [pVALOR_COMISSAO], [pID_INDICE_COMISSAO], [pTIPO_COMISSAO] )
+```
+
+### File offset 0xe0820
+
+```sql
+UPDATE INTERVENCAO SET ID_INDICE_COMISSAO = 255 WHERE VALOR_COMISSAO > 0
+```
+
+### File offset 0x11afdc
+
+```sql
+Update Intervencao set VALOR_PACIENTE = [pVALOR_PACIENTE], VALOR_REPASSE = [pVALOR_REPASSE], VALOR_COMISSAO = [pVALOR_COMISSAO], ID_INDICE_COMISSAO = [pID_INDICE_COMISSAO] where Nropac = [pNropac] and Nrointpac = [pNrointpac]
+```
+
+### File offset 0x122298
+
+```sql
+UPDATE INTERVENCAO SET VALOR_COMISSAO = [pVALOR_COMISSAO], ID_INDICE_COMISSAO = [pID_INDICE_COMISSAO], TIPO_COMISSAO = [pTIPO_COMISSAO] WHERE NROPAC = [pNROPAC] AND NROINTPAC = [pNROINTPAC]
+```
+
+### File offset 0x263f80
+
+```sql
+UPDATE INTERVENCAO SET ID_PRESTADOR = [pID_PRESTADOR], NROTAB = [pNROTAB], NROINT = [pNROINT], DATCAD = [pDATCAD], DATFIN = [pDATFIN], STATUS = [pSTATUS], ORCAMENTO = [pORCAMENTO], VALOR_PACIENTE = [pVALOR_PACIENTE], VALOR_REPASSE = [pVALOR_REPASSE], DATA_REPASSE = [pDATA_REPASSE], COD_GLOSA = [pCOD_GLOSA], MSG_AUTOR = [pMSG_AUTOR], OBSERV = [pOBSERV], TIME_STAMP_UPD = [pTIME_STAMP], USER_STAMP_UPD = [pUSER_STAMP], ID_INDICE_TAB = [pID_INDICE_TAB], VALOR_TAB_REP = [pVALOR_TAB_REP], VALOR_TAB_PAC = [pVALOR_TAB_PAC], VALOR_INDICE = [pVALOR_INDICE], VALOR_COMISSAO = [pVALOR_COMISSAO], ID_INDICE_COMISSAO = [pID_INDICE_COMISSAO], TIPO_COMISSAO = [pTIPO_COMISSAO] WHERE NROPAC = [pNROPAC] AND NROINTPAC = [pNROINTPAC]
+```
+
+### File offset 0x268094
+
+```sql
+Update Intervencao set Status = [pStatus], Datfin = [pDatfin], TIME_STAMP_UPD = [pTIME_STAMP_UPD], USER_STAMP_UPD = [pUSER_STAMP_UPD], ID_PRESTADOR = [pID_PRESTADOR], VALOR_COMISSAO = [pVALOR_COMISSAO], ID_INDICE_COMISSAO = [pID_INDICE_COMISSAO], TIPO_COMISSAO = [pTIPO_COMISSAO] where Nropac = [pNropac] and Nrointpac = [pNrointpac]
+```
+
+### File offset 0x54eca0
+
+```sql
+UPDATE INTERVENCAO SET CD_GUIA_TISS = [pCD_GUIA_TISS] WHERE NROPAC = [pNROPAC] AND NROTRA = [pNROTRA] AND NROINTPAC = [pNROINTPAC]
+```
+
+### File offset 0x69dbc0
+
+```sql
+UPDATE INTERVENCAO SET S_DENTES = [pS_DENTES], S_FACES = [pS_FACES] WHERE NROPAC = [pNROPAC] AND NROTRA = [pNROTRA] AND NROINTPAC = [pNROINTPAC]
+```
+
+### File offset 0x68a048
+
+```sql
+Delete from Intervencao where Nropac =
+```
+
+### File offset 0x25c768
+
+```sql
+INSERT INTO DENTE ( NROPAC, NROINTPAC, NRODEN, BITMAP ) SELECT NROPAC,
+```
+
+### File offset 0x261010
+
+```sql
+Insert into Dente ( Nropac, Nrointpac, Nroden, Bitmap ) values ( [pNropac], [pNrointpac], [pNroden], [pBitmap] )
+```
+
+### File offset 0x25c7f4
+
+```sql
+INSERT INTO FACE ( NROPAC, NROINTPAC, NRODEN, FACE1, FACE2, FACE3, FACE4, FACE5 ) SELECT NROPAC,
+```
+
+### File offset 0x260f54
+
+```sql
+Insert into Face ( Nropac, Nrointpac, Nroden, Face1, Face2, Face3, Face4, Face5 ) values ( [pNropac], [pNrointpac], [pNroden], [pFace1], [pFace2], [pFace3], [pFace4], [pFace5] )
+```
+
+### File offset 0x1d2f04
+
+```sql
+INSERT INTO HISTORICO ( REGISTRO, NROPAC, DATA, NRODENTE, DESCRICAO, ID_PRESTADOR, USER_STAMP_INS, TIME_STAMP_INS ) VALUES ( [pREGISTRO], [pNROPAC], [pDATA], [pNRODENTE], [pDESCRICAO], [pID_PRESTADOR], [pUSER_STAMP], [pTIME_STAMP] )
+```
+
+### File offset 0x2656ac
+
+```sql
+Insert into Historico ( REGISTRO, ID_PRESTADOR, Nropac, Nrointpac, Data, Descricao, Nrodente, USER_STAMP_INS, TIME_STAMP_INS ) values ( [pREGISTRO], [pID_PRESTADOR], [pNropac], [pNrointpac], [pData], [pDescricao], [pNrodente], [pUSER_STAMP_INS], [pTIME_STAMP_INS] )
+```
+
+### File offset 0x2682f8
+
+```sql
+INSERT INTO HISTORICO ( REGISTRO, Nropac, Nrointpac, Data, Descricao, Nrodente, ID_PRESTADOR, USER_STAMP_INS, TIME_STAMP_INS ) VALUES ( [pREGISTRO], [pNropac], [pNrointpac], [pData], [pDescricao], [pNrodente], [pID_PRESTADOR], [pUSER_STAMP_INS], [pTIME_STAMP_INS] )
+```
+
+### File offset 0x360fc8
+
+```sql
+INSERT INTO HISTORICO ( REGISTRO, NROPAC, DATA, DESCRICAO, ID_PRESTADOR, USER_STAMP_INS, TIME_STAMP_INS ) VALUES ( [pREGISTRO], [pNROPAC], [pDATA], [pDESCRICAO], [pID_PRESTADOR], [pUSER_STAMP_INS], [pTIME_STAMP_INS] )
+```
+
+### File offset 0x6a138c
+
+```sql
+INSERT INTO HISTORICO ( REGISTRO, NROPAC, DATA, DESCRICAO, ID_PRESTADOR, USER_STAMP_INS, TIME_STAMP_INS ) VALUES ( [pREGISTRO], [pNROPAC], [pDATA], [pDESCRICAO], [pID_PRESTADOR], [pUSER_STAMP_INS], [pTIME_STAMP_INS] )
+```
+
+### File offset 0x1d32ec
+
+```sql
+DELETE FROM HISTORICO WHERE REGISTRO =
+```
+
+### File offset 0x265980
+
+```sql
+Delete from Historico where Nropac = [pNropac] and Nrointpac = [pNrointpac]
+```
+
+### File offset 0x325c94
+
+```sql
+Delete from Historico where Nropac = [pNropac]
+```
+
+### File offset 0x682484
+
+```sql
+Delete from Historico where Nropac =
+```
+
+### File offset 0x68a1d0
+
+```sql
+Delete from Historico where Nropac =
+```
+
+## Apêndice B — documentação existente localizada
+
+Inventário de descoberta, não alegação de leitura integral de todos os documentos. Documentos técnicos V1 anteriores são de leitura/legado; contrato operacional FC4 separado.
+
+- docs/14_especificacao_tela_orcamento_easy_dental.md
+- docs/15_plano_execucao_orcamento.md
+- docs/16_checklist_execucao_orcamento.md
+- docs/auditoria_biblioteca_editor_simbolos_graficos_easydental.md
+- docs/auditoria_bloco_02_odontograma.md
+- docs/auditoria_composicao_grade_simbolos_graficos_scope_biblioteca.md
+- docs/auditoria_editor_legacy_web_simbolos_graficos.md
+- docs/auditoria_funcional_catalogo_simbolos_graficos_easydental_brana_cloud.md
+- docs/auditoria_integracao_editor_legacy_web_simbolos_graficos.md
+- docs/auditoria_shell_visual_blocos_laterais_odontograma.md
+- docs/auditoria_simbolos_graficos_brana_cloud.md
+- docs/auditoria_simbolos_graficos_easydental.md
+- docs/brana_odontograma_checklist_execucao_por_commit.md
+- docs/brana_odontograma_especificacao_implementacao_modular.md
+- docs/brana_odontograma_plano_subtarefas_implementacao.md
+- docs/checkpoints/ficha_clinica_fc2_d2_r5_checkpoint.md
+- docs/checkpoints/ficha_clinica_patient_lock_fc3_d1_checkpoint.md
+- docs/checkpoints/ficha_clinica_patient_lock_fc3_d2_checkpoint.md
+- docs/checkpoints/ficha_clinica_patient_lock_fc3_d3_checkpoint.md
+- docs/checkpoints/ficha_clinica_patient_lock_fc3_d4_checkpoint.md
+- docs/checkpoints/ficha_clinica_patient_lock_fc3_d5_checkpoint.md
+- docs/checkpoints/ficha_clinica_patient_lock_fc3_d5_final_matrix.md
+- docs/comparativo_simbolos_graficos_easydental_brana_cloud.md
+- docs/continuidade_fases_origem_simbolos_graficos.md
+- docs/contrato_exclusao_biblioteca_simbolos_graficos.md
+- docs/contrato_funcional_grade_simbolos_graficos_pos_rollback.md
+- docs/contrato_funcional_simbolos_graficos_frontend_react.md
+- docs/contrato_normalizacao_catalogo_simbolos_graficos_brana_cloud.md
+- docs/diagnostico_post_reload_lista_simbolos_graficos.md
+- docs/easydental_investigacao_tela_principal_odontograma_y_eds70.md
+- docs/easydental_tela_principal_odontograma_auditoria_prints_fontes_locais.md
+- docs/easydental_tela_principal_odontograma_mapeamento_e_plano.md
+- docs/easydental_tela_principal_odontologica_auditoria_implementacao_antiga_odontograma.md
+- docs/easydental_tela_principal_odontologica_contrato_entrada_isolada_botao_odontograma.md
+- docs/easydental_tela_principal_odontologica_inventario_assets_odontograma.md
+- docs/easydental_tela_principal_odontologica_subetapa_d1f2_assets_locais_odontograma.md
+- docs/easydental_tela_principal_odontologica_subetapa_d1f4_correcao_paths_assets_odontograma.md
+- docs/easydental_tela_principal_odontologica_subetapa_d1f_refino_visual_odontograma.md
+- docs/fase_2_preferencias_configuracoes_subetapa_6_implementacao_pref_valores_padrao_odontograma.md
+- docs/fase_2_preferencias_configuracoes_subetapa_7_validacao_pref_valores_padrao_odontograma.md
+- docs/fase_g3d_homologacao_runtime_crud_simbolos_graficos.md
+- docs/fechamento_botao_excluir_biblioteca_simbolos_graficos.md
+- docs/ficha_clinica_estado_atual.md
+- docs/ficha_clinica_odontograma_estado_atual.md
+- docs/ficha_clinica_odontograma_mapeamento_icones_intervencoes.md
+- docs/ficha_clinica_odontograma_refino_visual_easy_referencia_assets.md
+- docs/ficha_clinica_odontograma_refino_visual_residual_ordem_barras_toolbar.md
+- docs/ficha_clinica_odontograma_toolbar_superior_refino_visual.md
+- docs/frontend_react_ficha_clinica_analise_inicial_easy_dental.md
+- docs/mapeamento_referencias_simbolos_graficos_frontend_react.md
+- docs/matriz_origens_simbolos_graficos.md
+- docs/modulos/simbolos_graficos_novo_auditoria_easydental.md
+- docs/modulos/simbolos_graficos_novo_contrato_funcional.md
+- docs/modulos/simbolos_graficos_novo_plano_implementacao.md
+- docs/odontograma_assets_easy_auditoria.md
+- docs/odontograma_assets_easy_inspecao_visual_bmps.md
+- docs/odontograma_brana_contrato_minimo_implementacao_modular.md
+- docs/odontograma_brana_contrato_modelagem_futura.md
+- docs/odontograma_brana_contrato_tecnico_final_v1.md
+- docs/odontograma_easydental_auditoria_armazenamento_estados_cores_tabelas.md
+- docs/odontograma_easydental_diagrama_relacional_contrato_modelagem_brana.md
+- docs/odontograma_easydental_diagramas_mermaid.md
+- docs/odontograma_easydental_validacao_dente_face_status_intervencao.md
+- docs/odontograma_v1_backend_contracts_models_schemas.md
+- docs/odontograma_v1_backend_rotas_leitura_fechamento_commit.md
+- docs/odontograma_v1_busca_paciente_modular.md
+- docs/odontograma_v1_conferencia_pos_migration.md
+- docs/odontograma_v1_fluxo_abertura_paciente_e_tela_vazia.md
+- docs/odontograma_v1_frontend_bootstrap_leitura.md
+- docs/odontograma_v1_migration_minima_contrato_execucao.md
+- docs/odontograma_v1_refino_geometria_arcada_por_referencia_easy.md
+- docs/odontograma_v1_refino_visual_arcada_leitura.md
+- docs/odontograma_v1_reorganizacao_layout_clinico.md
+- docs/odontograma_v1_shell_modularizacao.md
+- docs/odontograma_v1_validacao_rotas_backend_leitura.md
+- docs/plano_implementacao_simbolos_graficos_frontend_react.md
+- docs/reavaliacao_pos_fechamento_simbolos_graficos_proximo_modulo.md
+- docs/recomendacao_proximo_modulo_pos_simbolos_graficos.md
+- docs/rollback_microetapa_d_para_marco_c_simbolos_graficos.md
+- docs/rollback_simbolos_graficos_marco_estavel_2c_3_8_1.md
+- docs/simbolos_graficos_retomada_pos_preferencias_estado_atual.md
+- docs/simbolos_graficos_retomada_subetapa_0_diagnostico_validar_tipo_marca.md
+- docs/simbolos_graficos_subetapa_0_mapeamento_monolitico.md
+- docs/simbolos_graficos_subetapa_10_fechamento_pos_validar_tipo_marca.md
+- docs/simbolos_graficos_subetapa_1_namespace_passivo.md
+- docs/simbolos_graficos_subetapa_2_fronteiras_contratos.md
+- docs/simbolos_graficos_subetapa_3_helpers_puros_passivos.md
+- docs/simbolos_graficos_subetapa_4_integracao_helper_normalizar_texto.md
+- docs/simbolos_graficos_subetapa_5_integracao_helper_eh_sistema.md
+- docs/simbolos_graficos_subetapa_6_integracao_helper_url_imagem.md
+- docs/simbolos_graficos_subetapa_7_consolidacao_helpers.md
+- docs/simbolos_graficos_subetapa_8_biblioteca_helpers_remanescentes.md
+- docs/simbolos_graficos_subetapa_8_documental_helpers_remanescentes.md
+- docs/simbolos_graficos_subetapa_9_documental_validar_tipo_marca_simbolo.md
+- docs/varredura_modulos_nao_iniciados_pos_simbolos_graficos.md
+- docs/varredura_modulos_realmente_nao_iniciados_pos_simbolos_graficos.md

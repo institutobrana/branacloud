@@ -6880,3 +6880,38 @@ Entrada do gate: instrumentação do handler do menu e uma única inserção man
 - **PASS:** PDF final `RECEITA_TEL_BRANA-assinado.pdf`, 234758 bytes, SHA-256 `ac95bf5be5a6c532496d0ac4abb45b07d0ab7f8ef371c803cb2699ba7d0c8623`, com `BranaSignature_1` na página 0 em `[346.846466, 300.535400, 566.846497, 372.535370]` (top-left).
 - **PENDENTE:** correlação same-run de PDF exportado, `signatureBoxes`, PDF preparado e trace; os artefatos disponíveis têm outro hash (`18af...`). O primeiro ponto da divergência permanece não comprovado.
 - Não usar coordenadas fixas nem executar nova assinatura como substituto dessa evidência.
+
+## FC4 — Odontograma operacional / P0D documental
+
+- Baseline: `1e8f31c2ce9e313a425bd4948b93dc8f01d120e1`, branch `modularizacao-segura-fase-1`.
+- FC3-D5 permanece **HOMOLOGATED**, sem reabertura ou alteração funcional.
+- P0: auditoria inicial PARTIAL; P0A: runtime/conexão PARTIAL; P0B: engenharia
+  reversa, consolidada até R4 COMPLETE / PROVEN_WITH_NON_BLOCKING_GAPS.
+- P0C: PARTIAL originalmente; **COMPLETE documentalmente em P0D**, com tabela
+  binária de faces, matriz individual de assets e snapshot correlacionado.
+- P0D: consolidação documental concluída; P0E revisou e fechou o checkpoint
+  documental em `THIS_COMMIT`. Implementação FC4 não iniciada; nenhuma migration
+  criada.
+- Estado canônico: `docs/ficha_clinica_odontograma_estado_atual.md`.
+- Retomada: `docs/ficha_clinica/odontograma_continuacao.md`.
+- Próxima fase segura: **FC4-P1 — design de schema/API**, planejada e não iniciada.
+
+### Fases futuras propostas — não iniciadas
+
+| Fase | Escopo |
+|---|---|
+| P1 | Design schema/API e validações |
+| P2 | Backend foundation e guards |
+| P3 | Slots/seleção/multisseleção |
+| P4 | Procedure picker/modal |
+| P5 | Persistência Grava esta/todas |
+| P6 | Clinical renderer |
+| P7 | Edit/finalize/delete |
+| P8 | Budget/history |
+| P9 | Regression/homologation |
+
+**FC4-P3 introduz alterações visuais e requer homologação manual.** Avisar o
+usuário antes dessa fase. UX = PENDING_USER_DECISION (Desktop-like / Cloud-like /
+Hybrid). Assets históricos sem autorização comprovada continuam não liberados.
+O roadmap V1 anterior registra leitura já existente, não implementação desta
+nova frente operacional. Não iniciar nenhuma fase futura automaticamente.
