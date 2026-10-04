@@ -2486,3 +2486,22 @@ ASSET_GAPS=nenhuma referência gráfica ausente no snapshot; máscaras/cobertura
 COMPOSITION_RULE_GAPS=hitboxes, máscaras/recoloração e compositor ainda futuros.
 AUTHORIZATION_GAPS=Categoria C/UNPROVEN explicitamente classificada; não bloqueia documentação, mas bloqueia escolha desses arquivos sem autorização.
 Ver [símbolos](odontograma_symbol_assets_matrix.md) e [contratos](odontograma_contracts.md).
+
+## Continuidade P0H — representação aplicada e autorização
+
+CURRENT_BASELINE = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
+Inventário/aliases/callers/categorias A/B/C/D e os 181 hashes com caminho autorizado
+permanecem os de P0D. Nenhum asset foi copiado, alterado ou liberado nesta evolução.
+Categoria C permanece UNPROVEN; existência de um caminho não é autorização.
+
+LEGACY_EVIDENCE: catálogo/representação histórica HYBRID. Recomendação Brana para
+P1: referência ao catálogo separada da representação aplicada/versionada. Não
+resolver o render histórico somente pelo asset atualmente escolhido no catálogo.
+Isso ainda requer design, não modifica a matriz nem prova snapshot integral legado.
+
+Hitboxes, orientação, máscaras, recoloração e compositor são requisitos visuais
+futuros; não bloqueiam design P1. O subset A/B classificado pode apoiar o render
+inicial, sem prometer cobertura integral do Desktop ou autorização das variantes C.
+FIRST_VISUAL_IMPLEMENTATION_PHASE=FC4-P3; avisar o usuário antes; homologação
+manual obrigatória. UX continua pendente. Slot vazio mantém alvo estável mesmo
+sem imagem; renumeração/FDI não reidentificam uma associação clínica histórica.

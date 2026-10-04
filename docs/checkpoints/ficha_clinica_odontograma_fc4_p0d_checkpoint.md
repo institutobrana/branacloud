@@ -53,3 +53,41 @@ Build/testes funcionais não executados: não há source alterado.
 Próxima fase segura: FC4-P1 — design de schema/API, somente sob autorização
 separada. Não implementar P1/P3 automaticamente, não reabrir regras provadas sem
 contradição e não usar confiança documental para elevar STRONG a PROVEN.
+
+## Referência posterior — consolidação P0H pré-P1
+
+O conteúdo acima é o checkpoint histórico P0D/P0E, preservado sem reescrever
+BASELINE, CHECKPOINT_SCOPE, CHECKPOINT_COMMIT ou conclusões daquele momento.
+Esta referência posterior não pretende ser hash de um novo commit: P0H não
+cria commit/push. CURRENT_BASELINE posterior = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
+
+P0F=COMPLETE; P0G=PARTIAL investigativo; P0G.R1=STOPPED sem mutação;
+P0G.R2=COMPLETE. A evolução inclui prestador default do usuário vinculado
+(STRONG + caso USER_OBSERVATION), slot lógico histórico, datas clínicas/técnicas,
+catálogo HYBRID, valores próprios e vínculo de histórico web inequívoco 0..N.
+Requisitos Brana futuros separados: híbrido explícito, atomicidade por unidade,
+lote com resultados parciais/STOP proposto, retry seletivo, idempotência BOTH,
+versão/CAS além do OWNER lease. Política delete não bloqueia design, mas bloqueia
+implementação da exclusão com financeiro. Não há estorno automático comprovado.
+
+Ver [estado atual](../ficha_clinica_odontograma_estado_atual.md),
+[contratos](../ficha_clinica/odontograma_contracts.md),
+[dossiê, seção 13](../reverse_engineering/easydental_odontograma_fc4.md) e
+[continuação](../ficha_clinica/odontograma_continuacao.md) para evidências,
+limites, checklist de design e blockers por fase.
+
+TECHNICAL_BLOCKERS_BEFORE_P1=NENHUM; READY_FOR_FC4_P1=SIM — DESIGN SOMENTE.
+P1 NOT STARTED; implementação/visual/schema/migration não iniciados.
+Primeira fase visual FC4-P3: avisar o usuário antes e homologar manualmente.
+Assets/matrizes P0D preservados, sem promoção da categoria C. FC3-D5 congelada.
+
+### Versionamento posterior P0I
+
+FC4_P0H_STATUS = COMPLETE.
+BASELINE_PRE_P0H = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
+FC4_P0H_DOCUMENTATION_COMMIT = THIS_COMMIT.
+FC4_P1_BASELINE = FC4_P0H_DOCUMENTATION_COMMIT.
+THIS_COMMIT neste adendo é o checkpoint P0I da consolidação P0H, não uma
+reescrita do checkpoint P0D acima. P0H não fez commit/push; P0I versiona os oito
+documentos autorizados. P1 continua NOT STARTED, liberada somente para design
+mediante autorização separada. Nenhum novo contrato clínico, source ou migration.

@@ -1,10 +1,13 @@
 # FC4 — dossiê técnico EasyDental / odontograma
 
-STATUS = CONSOLIDATED_FOR_REVIEW
+STATUS = P0H_CONSOLIDATED_FOR_REVIEW
 Baseline Brana: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1.
 CANONICAL_FLOW_STATUS = PROVEN_WITH_NON_BLOCKING_GAPS.
 Escopo P0D: preservação documental + revalidação direcionada; nenhuma gravação,
 execução de binário, instrumentação nova, trace novo ou modificação de runtime.
+CURRENT_BASELINE = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
+As seções 1–12 e apêndices preservam o dossiê P0D. A seção 13 registra a evolução
+P0F/P0G/P0G.R1/P0G.R2 consolidada em P0H, sem nova execução dessas investigações.
 
 ## 1. Proveniência e confiança
 
@@ -311,6 +314,140 @@ Brana: crosswalk completo no contrato; matrizes por hash e símbolo separadas.
 Acervo já autorizado A/B e histórico C separados; autorização C não demonstrada
 não é autorização negativa jurídica nem dispensa aprovação futura.
 Retomada: [continuação](../ficha_clinica/odontograma_continuacao.md).
+
+## 13. Evolução posterior — P0F/P0G/R1/R2 consolidada em P0H
+
+### Origem e limites
+
+P0F = COMPLETE; P0G = PARTIAL investigativo; P0G.R1 = STOPPED sem mutação;
+P0G.R2 = COMPLETE. Não confundir P0G.R1 com a referência anterior P0B.R1.
+P0G.R1 confirmou processo existente, mas a janela não pôde ser inspecionada:
+isso não significa ausência do runtime. Nenhuma gravação foi testada. P0G.R2
+fechou o prestador por relato manual autorizado, não por screenshot automatizado
+ou novo SELECT. P0H apenas incorpora esses resultados.
+
+Referências estáticas abaixo são endereços VA no EDS70.exe identificado na seção 2,
+não novos offsets de arquivo. Recuperação direcionada por leitura PE/desassemblagem
+x86 não equivale a decompilação completa de todos os callers. Schemas alternativos
+e validações históricas não provam o estado atual do banco produtivo.
+
+### Prestador — contrato fechado, generalização STRONG
+
+USER_OBSERVATION: usuário corrente Tel → cadastro vincula prestador Tel → modal
+Propriedades da intervenção abriu com Cirurgião Tel, sem alterar o combo.
+Nome é dado do caso, não default fixo.
+
+Convergência BINARY/RESOURCE/SCHEMA: TEasyLookupPrestador em 0xAA5528–0xAA55D0
+consulta o contexto do usuário para o default; lookup permite edição;
+INTERVENCAO.ID_PRESTADOR é NOT NULL no DDL legado auditado; INSERT 0x6648A4 e
+UPDATE 0x664B80 persistem ID_PRESTADOR. Default do usuário vinculado conforme
+configuração = STRONG. Valor inicial do caso = USER_OBSERVATION. Não foi feita
+correlação SQL independente nessa observação; não afirmar igualdade universal com
+responsável do tratamento ou último prestador utilizado.
+
+PROVIDER_REQUIRED=SIM; PROVIDER_NULL_ALLOWED=NÃO no legado; PROVIDER_EDITABLE=SIM;
+PROVIDER_HISTORY_MODEL=ID/FK persistido, nome sem snapshot integral;
+PROVIDER_CONTRACT_READY=SIM. No web, a FK opcional atual não implementa ainda a
+obrigatoriedade do futuro comando; usuário/prestador precisam ser validados por tenant.
+
+### Modal — valores observados, não defaults universais
+
+USER_OBSERVATION: PARTICULAR; Cimentação de Coroa Total Definitiva; Região 41;
+Realizar; Marcação 04/10/2026; Finalização vazia. Financeiro: paciente 150;
+convênio 0,00; previsão vazia; Não incluir no orçamento desmarcado. Um alvo:
+Grava esta habilitado, Grava todas desabilitado. GRAVA_TODAS_ENABLEMENT_RULE =
+PARTIAL / NON_BLOCKING. Isso não determina toda a lógica de habilitação nem prova
+persistência desses valores: não houve Grava esta/Grava todas nesse caso.
+
+### Catálogo, valores e identidade histórica
+
+LEGACY_EVIDENCE: consulta de edição 0x6618D0 lê valores próprios e NROSIM do
+catálogo; helper 0x663BD8 obtém preço inicial; INSERT/UPDATE 0x6648A4/0x664B80
+persistem valores da intervenção. Leituras 0xA8E2FC usam descrição/NROSIM atuais;
+0xA8E3FC lê bitmap DENTE; cópia em 0xA83F46/0xA843BB preserva recurso associado;
+0x6654C8 constrói chave de recurso. Orçamento 0x7B014C usa valores próprios e
+referências de catálogo. Convergência: INTERVENTION_CATALOG_HISTORY_MODEL=HYBRID,
+PRICE_HISTORY_RULE=valor próprio, SYMBOL_HISTORY_RULE=HYBRID (STRONG), sem prova
+de snapshot explícito completo do tipo de marcação aplicado.
+
+TECHNICAL_EXHAUSTION_FOR_CATALOG_POLICY = NÃO: caminhos recuperados são suficientes
+para recomendar design conservador, não uma auditoria de todo comportamento
+após mudança de catálogo. Não promover essa limitação a prova de catálogo sempre
+vivo ou de snapshot integral. BRANA_ARCHITECTURE_RECOMMENDATION: híbrido explícito
+com referência atual e representação aplicada separadas; detalhar versionamento em P1.
+
+Renumeração: 0xA88A52/0xA88A83 atualizam ARCADA.NROODONTO sem reidentificar as
+associações DENTE/FACE.NRODEN nesses caminhos. HISTORICAL_SLOT_IDENTITY_RULE=slot
+lógico original; FDI/número exibido não são identidade (STRONG). Não extrapolar
+remapeamento integral de imagens/textos históricos. Brana deve preservar slot
+estável, número/FDI separados e condição do elemento na aplicação.
+
+### Datas, histórico e unidade clínica
+
+Semântica consolidada por forms, SQL e casos históricos: DATCAD marcação/entrada
+clínica; DATFIN execução completa; TIME_STAMP_INS/UPD inclusão/alteração técnicas;
+HISTORICO.DATA fase/evento realizado. DATE_SEMANTICS_READY=SIM.
+
+Helper 0x665E20: situação 2 insere ao criar/entrar em Realizada (STRONG); situação
+1/3 não cria nesse caminho (STRONG). UPDATE em 0x666045 modifica DATA/auditoria
+quando permanece Realizada (SQL PROVEN); não comprova sincronização automática
+de descrição/região/prestador. DELETE em 0x6661A8 remove vínculos ao sair de 2
+para 1/3 (STRONG). Finalizador 0x668244 registra fase/histórico e, na finalização
+completa, STATUS=2/DATFIN (STRONG). Hard delete/cascades relacionados são os
+documentados nas seções 9–10 (PROVEN para vínculos auditados, não estorno financeiro).
+Matriz por evento e limites em [contratos](../ficha_clinica/odontograma_contracts.md).
+
+FormOk: início transacional 0x663F37; helper histórico chamado em 0x6646DE;
+commit 0x6646FA / rollback 0x664708. Cadeia STRONG, sem provar propagação de erro
+em todas as rotinas/lotes. HISTORY_TRANSACTION_BOUNDARY proposto para Brana:
+intervenção + alvos + histórico automático numa unidade clínica atomicamente
+consistente. Não converter requisito seguro em prova arquitetural total do legado.
+
+Evidência DATA preservada, não reconsultada em P0H: casos de tratamentos 11, 638,
+3025, 4035 e validação histórica em
+[documento de dados](../odontograma_easydental_validacao_dente_face_status_intervencao.md).
+Base histórica distinta do runtime atual. Suporta 0..N eventos/fases por
+intervenção; não usar dados pessoais nem um único caso como regra universal.
+
+### Financeiro e delete — limites separados do design
+
+INTERVENCAO possui valores paciente/repasse, ORCAMENTO (“Não incluir”), glosa,
+mensagem autorização e previsão repasse. Finalizador contém opção de lançamento
+CCPACIENTE, inicialmente desmarcada no recurso recuperado, condicionada a permissão:
+branch 0x668757 → seleção 0x668774 → INSERT 0x668803, commit 0x668B36.
+Evidência STRONG de lançamento opcional; não é parcela automática pelo orçamento.
+
+Delete 0xA8A4B0 contém verificações relativas a tratamento finalizado, orçamento
+aprovado e permissões (0xA8A4E2/0xA8A516/0xA8A54A/0xA8A695). Não foi comprovado
+estorno automático ou conjunto completo de restrições pós-pagamento/reconciliação.
+DELETE_POLICY_REQUIRED_BEFORE_P1=NÃO; BLOCKING_BEFORE_DELETE_IMPLEMENTATION=SIM.
+Bloqueio com lançamento/pagamento/reconciliação pendente é proposta Brana futura.
+
+### Brana atual e requisitos futuros
+
+[Modelo](../../backend/models/odontograma_model.py): DENTE/FACE por FDI sem alvo
+slot próprio; sem tipo aplicado/faixas/representação histórica completos.
+[Histórico](../../backend/models/historico_paciente.py): source_intervencao_id não
+é vínculo FK web inequívoco; separar origem legado e vínculo da intervenção, 0..N.
+[Serviço de orçamento](../../backend/services/orcamento_service.py): overrides
+JSON/fallback ao catálogo e previsão de tratamento = PARCIAL; caminho de soma não
+exclui explicitamente Observada. BUDGET_OBSERVED_MISMATCH=CONFIRMED;
+FIX_TYPE_EXPECTED=SERVICE_RULE. Propriedades próprias continuam requerendo design.
+
+Requisitos Brana, não LEGACY_EVIDENCE: BATCH_UNIT normalizada por marcação;
+transação por unidade; BATCH_ON_ERROR=STOP proposto; resultados parciais; retry
+só de falhas/pendentes. LEGACY_BATCH_ON_ERROR=UNPROVEN. Idempotência BOTH
+(comando/unidade), identidade+payload no escopo clínica/paciente/tratamento/operação;
+mesma identidade com payload diferente conflita. Versão esperada/CAS por
+intervenção além do OWNER lease, locks quando financeiro compartilhado exigir.
+
+TECHNICAL_BLOCKERS_BEFORE_P1=NENHUM; READY_FOR_FC4_P1=SIM — DESIGN SOMENTE.
+P1 deve resolver alvos/faixas, histórico/proveniência/transações, financeiro,
+catálogo/representação aplicada, idempotência, stale protection, comandos/read
+model/erros e roundtrip, inclusive renumeração/mudança de catálogo. Política delete
+fica bloqueante antes de implementá-lo; UX/hitboxes/composição/subset autorizado
+e homologação manual antes de FC4-P3. Avisar o usuário antes da primeira fase visual.
+Nenhuma nova capacidade, autorização de asset ou migration está implícita nisso.
 
 ## Apêndice A — SQL literal recuperado em P0D
 

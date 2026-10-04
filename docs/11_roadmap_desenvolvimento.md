@@ -6881,17 +6881,26 @@ Entrada do gate: instrumentação do handler do menu e uma única inserção man
 - **PENDENTE:** correlação same-run de PDF exportado, `signatureBoxes`, PDF preparado e trace; os artefatos disponíveis têm outro hash (`18af...`). O primeiro ponto da divergência permanece não comprovado.
 - Não usar coordenadas fixas nem executar nova assinatura como substituto dessa evidência.
 
-## FC4 — Odontograma operacional / P0D documental
+## FC4 — Odontograma operacional / consolidação documental P0H
 
 - Baseline: `1e8f31c2ce9e313a425bd4948b93dc8f01d120e1`, branch `modularizacao-segura-fase-1`.
+- CURRENT_BASELINE: `b47114f9cc60c54981391c7c23baa21d83a0aeb6` (fechamento documental P0E).
 - FC3-D5 permanece **HOMOLOGATED**, sem reabertura ou alteração funcional.
 - P0: auditoria inicial PARTIAL; P0A: runtime/conexão PARTIAL; P0B: engenharia
   reversa, consolidada até R4 COMPLETE / PROVEN_WITH_NON_BLOCKING_GAPS.
 - P0C: PARTIAL originalmente; **COMPLETE documentalmente em P0D**, com tabela
   binária de faces, matriz individual de assets e snapshot correlacionado.
 - P0D: consolidação documental concluída; P0E revisou e fechou o checkpoint
-  documental em `THIS_COMMIT`. Implementação FC4 não iniciada; nenhuma migration
+  documental em `b47114f9cc60c54981391c7c23baa21d83a0aeb6`. Implementação FC4 não iniciada; nenhuma migration
   criada.
+- P0F = COMPLETE; P0G = PARTIAL investigativo; P0G.R1 = STOPPED sem mutação;
+  P0G.R2 = COMPLETE. Prestador fechado por observação manual + evidência estática;
+  regras e recomendações incorporadas em P0H documental, sem commit na rodada P0H.
+- P0H = COMPLETE. P0I é o fechamento documental posterior dessa consolidação:
+  `FC4_P0H_DOCUMENTATION_COMMIT = THIS_COMMIT`; esse checkpoint é o baseline P1.
+  A base pré-P0H permanece `b47114f9cc60c54981391c7c23baa21d83a0aeb6`.
+- READY_FOR_P1 = SIM — DESIGN SOMENTE; TECHNICAL_BLOCKERS_BEFORE_P1 = NENHUM.
+  P1 = NOT STARTED. Implementação, visual, alteração de schema e migration = NÃO.
 - Estado canônico: `docs/ficha_clinica_odontograma_estado_atual.md`.
 - Retomada: `docs/ficha_clinica/odontograma_continuacao.md`.
 - Próxima fase segura: **FC4-P1 — design de schema/API**, planejada e não iniciada.
@@ -6900,7 +6909,7 @@ Entrada do gate: instrumentação do handler do menu e uma única inserção man
 
 | Fase | Escopo |
 |---|---|
-| P1 | Design schema/API e validações |
+| P1 | Design schema/API: slot vazio/alvos/faixas/faces, histórico/proveniência, financeiro próprio, catálogo/representação aplicada, idempotência comando/unidade, versão/CAS, locks/transações, read model/comandos/erros, roundtrip dos seis tipos e mudanças posteriores de slot/catálogo |
 | P2 | Backend foundation e guards |
 | P3 | Slots/seleção/multisseleção |
 | P4 | Procedure picker/modal |
@@ -6915,3 +6924,27 @@ usuário antes dessa fase. UX = PENDING_USER_DECISION (Desktop-like / Cloud-like
 Hybrid). Assets históricos sem autorização comprovada continuam não liberados.
 O roadmap V1 anterior registra leitura já existente, não implementação desta
 nova frente operacional. Não iniciar nenhuma fase futura automaticamente.
+
+### Requisitos e blockers incorporados em P0H
+
+Contratos consolidados: prestador default por usuário vinculado; DATCAD clínica,
+DATFIN finalização; timestamps técnicos; slot lógico histórico separado de FDI;
+valores por intervenção; histórico web 0..N com vínculo inequívoco e origem separada.
+LEGACY_EVIDENCE: catálogo/símbolo HYBRID, tipo sem snapshot completo, erro de lote
+UNPROVEN. Recomendação Brana: híbrido explícito, unidade clínica atômica,
+STOP proposto com resultado parcial/retry seletivo, idempotência BOTH e proteção
+stale por versão/CAS; lease sozinho não basta. Nenhum desses requisitos foi implementado.
+
+BLOCKING_BEFORE_P1 = NENHUM.
+BLOCKING_BEFORE_BACKEND_IMPLEMENTATION = alvos/faixas; histórico/transações;
+ownership financeiro; regra Observada; batch/retry; idempotência; versão/stale
+update; validações tenant/paciente/tratamento/prestador.
+BLOCKING_BEFORE_DELETE_IMPLEMENTATION = aprovação; lançamento; pagamento;
+reconciliação; permissões; histórico relacionado. Sem reversão automática comprovada.
+BLOCKING_BEFORE_P3_VISUAL = UX; hitboxes; composição; símbolo versionado;
+subset de assets autorizado; homologação manual.
+FIRST_VISUAL_IMPLEMENTATION_PHASE = FC4-P3.
+VISUAL_IMPLEMENTATION_REQUIRES_MANUAL_HOMOLOGATION = SIM.
+ANTES DE FC4-P3: AVISAR O USUÁRIO. P1 não depende de nova sessão EasyDental.
+Não reabrir contratos congelados sem contradição PROVEN; decisões de design
+continuam distintas de comportamento legado e de autorização de implementar.

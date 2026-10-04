@@ -172,3 +172,21 @@ ID é NROSIM legado, não PK web. TIPSIMB usa tiposim. Sem consulta DB. ICONE=pr
 Símbolos=81; nomes gráficos únicos=79; referências ausentes=0.
 SYMBOL_ASSET_MATRIX_STATUS=COMPLETE. Existência COMPLETE; composição clínica PARTIAL. Todos os alvos por TIPMARCA classificados. UNPROVEN de autorização não foi promovido a SIM.
 Ver [mapa](odontograma_assets_map.md) para metadados/hash/aliases/callers.
+
+## Continuidade P0H — snapshot documental versus aplicação clínica
+
+CURRENT_BASELINE = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
+As linhas, IDs, nomes, caminhos e autorização do snapshot P0D permanecem intactos:
+81 símbolos, 79 nomes gráficos, 0 referências ausentes. Snapshot documental do
+catálogo não equivale a snapshot persistido por intervenção.
+
+LEGACY_EVIDENCE: SYMBOL_HISTORY_RULE=HYBRID; tipo aplicado sem snapshot explícito
+completo. BRANA_ARCHITECTURE_RECOMMENDATION: preservar representação aplicada e
+tipo de marcação na intervenção, mantendo referência ao catálogo separada.
+P1 deve definir identidade/versionamento e read model para que alteração futura
+do procedimento/símbolo não reinterprete silenciosamente a associação histórica.
+Não é prova de preservação integral legado, escolha de schema ou novo renderer.
+
+Autorização A/B/C/D não muda com essa recomendação. Categoria C/UNPROVEN não foi
+promovida; ícone de picker não substitui recurso clínico composto. Primeira fase
+visual FC4-P3, com aviso prévio e homologação manual; composição permanece futura.

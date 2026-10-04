@@ -1,7 +1,8 @@
 # FC4 — contratos funcionais canônicos recuperados
 
-STATUS = CONSOLIDATED_FOR_REVIEW; implementação FC4 não iniciada.
-Baseline: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1.
+STATUS = P0H_CONSOLIDATED_FOR_REVIEW; implementação FC4 não iniciada.
+Baseline funcional FC3-D5: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1.
+CURRENT_BASELINE = b47114f9cc60c54981391c7c23baa21d83a0aeb6 (P0E documental).
 Referência: Desktop EasyDental 7.6 auditado; Cloud é referência UX separada.
 Detalhes técnicos/confiança estão no [dossiê](../reverse_engineering/easydental_odontograma_fc4.md).
 
@@ -102,6 +103,175 @@ dos valores/exclusão e compatibilizar o tratamento de Observada; não corrigir 
 - Repetir intervenção dedicado: NÃO na versão auditada. Copiar intervenções Realizar
   do tratamento anterior ao criar novo tratamento: SIM, incluindo DENTE/FACE.
 
+## Prestador e observação manual P0G.R2
+
+PROVIDER_REQUIRED = SIM.
+PROVIDER_NULL_ALLOWED = NÃO no legado INTERVENCAO auditado.
+PROVIDER_EDITABLE = SIM.
+DEFAULT_PROVIDER_SOURCE = prestador vinculado ao usuário corrente, conforme cadastro/configuração do usuário.
+PROVIDER_HISTORY_MODEL = ID/FK persistido; nome não é snapshot integral.
+PROVIDER_CONTRACT_READY = SIM.
+
+USER_OBSERVATION: usuário corrente Tel → prestador vinculado Tel → modal abriu
+com Cirurgião Tel, antes de alteração manual. Não generalizar o nome Tel.
+Regra geral STRONG por convergência do relato autorizado, TEasyLookupPrestador,
+DDL e INSERT/UPDATE recuperados. Não é uma nova captura automatizada ou consulta
+ao banco realizada em P0H. A nulabilidade atual do modelo web não é a regra do legado.
+
+Também USER_OBSERVATION, somente nesse caso: Tabela de preços PARTICULAR;
+Intervenção Cimentação de Coroa Total Definitiva; Região 41; Situação Realizar;
+Marcação 04/10/2026; Finalização vazia. Financeiro: Receber do paciente 150;
+Receber do convênio 0,00; Previsão de recebimento vazia; Não incluir no orçamento
+desmarcado. Com um alvo selecionado, Grava esta habilitado e Grava todas desabilitado.
+GRAVA_TODAS_ENABLEMENT_RULE = PARTIAL / NON_BLOCKING: não extrapolar uma regra
+universal de habilitação. Nenhuma gravação faz parte dessa evidência.
+
+## Identidade histórica e datas
+
+HISTORICAL_SLOT_IDENTITY_RULE = slot lógico original.
+FDI_IS_IDENTITY = NÃO. DISPLAY_NUMBER_IS_IDENTITY = NÃO.
+SLOT_RENUMBERING_EFFECT_ON_HISTORY = não reidentificar a associação clínica histórica.
+Requisito Brana: identidade estável do slot + FDI/número exibido separados +
+condição do elemento no momento da aplicação. Isso não promete remapeamento
+pixel-a-pixel de todos os bitmaps históricos do legado.
+
+DATCAD = data clínica de marcação/entrada.
+DATFIN = finalização/execução completa.
+TIME_STAMP_INS = inclusão técnica. TIME_STAMP_UPD = alteração técnica.
+HISTORICO.DATA = fase/evento realizado, não necessariamente execução completa.
+DATE_SEMANTICS_READY = SIM. Design P1 deve mapear esses conceitos aos campos web;
+não usar timestamps técnicos como substitutos das datas clínicas.
+
+## Catálogo e representação histórica — evidência versus recomendação
+
+LEGACY_EVIDENCE:
+
+- INTERVENTION_CATALOG_HISTORY_MODEL = HYBRID.
+- PRICE_HISTORY_RULE = valor próprio persistido por intervenção.
+- SYMBOL_HISTORY_RULE = HYBRID: consultas ao catálogo coexistem com recursos
+  preservados em associações; não afirmar snapshot integral nem catálogo sempre vivo.
+- MARKING_TYPE_HISTORY_RULE = sem snapshot explícito completo no legado.
+
+BRANA_ARCHITECTURE_RECOMMENDATION para P1: modelo híbrido explícito. Manter
+referência ao catálogo/procedimento atual separada da representação aplicada:
+tipo de marcação aplicado, slots/alvos, faixas ordenadas por arcada,
+faces/orientação, valores próprios, símbolo/representação aplicada/versionada e
+contexto histórico suficiente. Não é comportamento legado PROVEN nem schema
+já aprovado/implementado. Mudança posterior do catálogo não pode ser confundida
+com alteração deliberada de uma intervenção histórica.
+
+## Histórico web e lifecycle
+
+CURRENT_HISTORY_LINK_SUFFICIENT = NÃO.
+WEB_INTERVENTION_HISTORY_LINK_REQUIREMENT = vínculo web inequívoco à intervenção + legacy source id separado.
+CARDINALITY = 0..N.
+
+O campo source_intervencao_id atual registra origem, sem FK web inequívoca. Ver
+[modelo atual](../../backend/models/historico_paciente.py) e
+[serviço atual](../../backend/services/historico_paciente_service.py).
+Separar proveniência automática, fase e narrativa manual antes de desenhar
+update/delete: a matriz abaixo descreve o helper legado, não autoriza apagar
+todo histórico do paciente.
+
+| Evento no fluxo recuperado | Efeito vinculado | Confiança / limite |
+|---|---|---|
+| CREATE Observada | NONE | STRONG; helper condicionado à situação |
+| CREATE Realizar | NONE | STRONG; mesmo caminho |
+| CREATE Realizada | INSERT | STRONG; convergência helper/SQL |
+| Observada/Realizar → Realizada | INSERT | STRONG; transição no helper |
+| Realizada → Realizar | DELETE vinculado | STRONG; caminho recuperado, não narrativa global |
+| Realizada → Observada | DELETE vinculado | STRONG; mesmo limite |
+| EDIT Realizada | UPDATE data/auditoria | PROVEN no SQL recuperado; não comprova atualização automática de descrição/região/prestador |
+| FINALIZE | Histórico conforme fase/realização | STRONG; fase pode não concluir a intervenção |
+| DELETE | Limpeza dos vínculos relacionados | PROVEN para hard delete/cascades auditados; não para estorno financeiro |
+
+HISTORY_TRANSACTION_BOUNDARY = uma unidade clínica completa.
+BRANA_SAFE_REQUIREMENT = intervenção + alvos + histórico automático atomicamente
+consistentes. É requisito futuro Brana; não prova arquitetura transacional total
+de todas as ações legado. A capacidade web atual é PARTIAL e requer design do vínculo
+e integração do lifecycle, não apenas reaproveitar o commit do serviço manual.
+
+## Propriedades financeiras e exclusão
+
+INTERVENTION_FINANCIAL_PROPERTY_OWNER = INTERVENCAO no legado.
+Inclui valor paciente, valor repasse, não incluir, glosa, mensagem autorização e
+previsão repasse. BUDGET_VALUE_AUTHORITY = INTERVENCAO no contrato legado/futuro.
+Preço de catálogo não é autoridade histórica quando existir valor próprio.
+
+Brana atual: source_payload/overrides = PARCIAL; valores podem recorrer ao catálogo,
+e previsão existente no tratamento não equivale à propriedade por intervenção.
+BUDGET_OBSERVED_MISMATCH = CONFIRMED: caminho auditado soma itens incluídos sem
+exclusão explícita de Observada. FIX_TYPE_EXPECTED = SERVICE_RULE. Separar esse
+ajuste de cálculo do design das propriedades financeiras; nenhum foi implementado.
+Referência: [serviço de orçamento](../../backend/services/orcamento_service.py).
+
+DELETE_POLICY_REQUIRED_BEFORE_P1 = NÃO.
+BLOCKING_BEFORE_DELETE_IMPLEMENTATION = SIM.
+Proposta segura: bloquear exclusão com lançamento/pagamento/reconciliação pendente
+até fluxo financeiro explícito. Aprovação, permissões e vínculos históricos também
+precisam de precondições. Não prometer exclusão irrestrita ou reversão automática.
+Finalização pode opcionalmente lançar CCPACIENTE; isso não equivale a orçamento
+gerar parcela automaticamente.
+
+## Lote, idempotência e concorrência — requisitos Brana futuros
+
+BATCH_UNIT = unidade normalizada por marcação, preservando as cardinalidades acima.
+BATCH_TRANSACTION_BOUNDARY = uma unidade clínica completa.
+BATCH_ON_ERROR = STOP — proposta segura, não regra legado comprovada.
+LEGACY_BATCH_ON_ERROR = UNPROVEN.
+PARTIAL_RESULT_REQUIRED = SIM.
+BATCH_RETRY = reprocessar somente falhas/pendentes, preservando sucessos confirmados.
+Grava todas não implica transação externa única; comandos deverão identificar
+unidades e devolver resultado por unidade sem duplicar sucessos.
+
+CREATE_IDEMPOTENCY_REQUIRED = SIM.
+IDEMPOTENCY_SCOPE = BOTH — comando e unidade.
+Escopo: clínica/paciente/tratamento/operação. Mesma identidade + mesmo payload
+→ mesmo resultado; mesma identidade + payload diferente → conflito. P1 deve
+definir identidade e equivalência de payload, sem escolher mecanismo aqui.
+
+STALE_UPDATE_PROTECTION_REQUIRED = SIM.
+LEASE_ALONE_IS_SUFFICIENT = NÃO.
+Versão esperada/compare-and-swap por intervenção, além do clinical lease.
+Locks transacionais quando contexto financeiro compartilhado exigir. Não afirmar
+que a exclusividade de sessão detecta formulário antigo, reenvio ou edição stale.
+
+## Prontidão e decisões de P1 — design somente
+
+TECHNICAL_BLOCKERS_BEFORE_P1 = NENHUM.
+BLOCKING_BEFORE_P1 = NENHUM.
+READY_FOR_FC4_P1 = SIM — DESIGN SOMENTE.
+IMPLEMENTATION_STARTED = NÃO. SCHEMA_CHANGED = NÃO. MIGRATION_CREATED = NÃO.
+
+P1_DESIGN_DECISIONS_REQUIRED:
+
+- associação intervenção↔slot e slot vazio;
+- target e tipo de marcação aplicado;
+- faixas ordenadas/agrupadas por arcada e faces/orientação;
+- vínculo/proveniência do histórico e propriedades financeiras próprias;
+- referência ao catálogo e representação/símbolo aplicado/versionado;
+- idempotência de comando/unidade e versão otimista;
+- locks/transações, read model, write commands e erros de domínio;
+- roundtrip completo dos seis tipos;
+- renumeração de slot e mudança posterior de catálogo/preço/símbolo.
+
+BLOCKING_BEFORE_BACKEND_IMPLEMENTATION: modelo de alvos/faixas; histórico/transações;
+ownership financeiro; regra Observada; batch/retry; idempotência; versão/stale
+update; validações tenant/paciente/tratamento/prestador.
+
+BLOCKING_BEFORE_DELETE_IMPLEMENTATION: aprovação; lançamento; pagamento;
+reconciliação; permissões; histórico relacionado.
+
+BLOCKING_BEFORE_P3_VISUAL: escolha UX; hitboxes; composição; símbolo versionado;
+subset de assets autorizado; homologação manual.
+
+FIRST_VISUAL_IMPLEMENTATION_PHASE = FC4-P3.
+VISUAL_IMPLEMENTATION_REQUIRES_MANUAL_HOMOLOGATION = SIM.
+ANTES DE FC4-P3: AVISAR O USUÁRIO. UX/hitboxes não bloqueiam o design P1;
+pixel-a-pixel e refinamentos estéticos não são lacunas estruturais.
+Não reabrir contratos congelados sem contradição PROVEN. A ausência de blocker
+para design não significa exaustão global do legado ou implementação liberada.
+
 ## Segurança FC3-D5
 
 TREATMENT_ODONTOGRAM_WRITE_DOMAIN: mutação somente OWNER; RESTRICTED/UNKNOWN
@@ -122,13 +292,13 @@ FIRST_SUCCESSFUL_ACQUIRE; exatamente um owner; sem fila/FIFO/takeover.
 | marking type | Seis tipos | Tipo no símbolo | Modo selecionado | Dispatcher validado | Preservar tipo/alvo |
 | region | Descrição por faixas | Derivação FDI/override | Visualização fiel | Não reduzir a FDI ordenado | Representação explícita |
 | range | Trechos agrupados por tipo | Sem entidade própria | Seleção por trechos | Cardinalidade | Faixas/agrupamentos |
-| symbol | NROSIM, recursos e tipo | Catálogo e preview | Renderer clínico | Read/render suficiente | Base existente, integração pendente |
+| symbol | NROSIM e recursos; história HYBRID | Catálogo e preview | Renderer da representação aplicada | Read/render histórico suficiente | Representação aplicada/versionada a desenhar |
 | status | 1/2/3 | Lookup | Cor/ações | Efeitos de lifecycle | Mapear código, não assumir PK |
 | treatment | Selecionado define destino | Modelo/criação | Guia/contexto | Validar destino | Base existente |
 | budget | Intervenção filtrada | Serviço/overrides | Sincronização | Regra Observada/exclusão | Valores/exclusão próprios |
-| history | Helpers por ação | Fluxo equivalente não completo | Exibição consistente | Efeitos atômicos | Avaliar persistência atual |
-| provider | ID_PRESTADOR | Relação prestador | Seleção | Tenant/validade | Base existente |
-| dates | DATCAD/DATFIN/auditoria | Planejada/execução/timestamps | Entrada correta | Semântica de finalização | Avaliar campos adicionais |
+| history | Helpers por ação, 0..N | Source id sem FK web inequívoca | Exibição/proveniência | Lifecycle atômico | Vínculo web separado da origem legado |
+| provider | ID obrigatório; default usuário vinculado STRONG | FK opcional na intervenção; usuário vinculado | Default/edição | Tenant/validade/obrigatoriedade | Validar contrato web em P1 |
+| dates | Clínica, finalização, timestamps, fase | Planejada/execução/timestamps | Entrada correta | Separar data clínica/técnica/fase | Mapear sem perda em P1 |
 | values | Valores próprios da intervenção | Catálogo+JSON | Propriedades | Ownership dos overrides | Contrato normalizado pendente |
 | lease | Não transplantar lock Desktop | FC3-D5 homologada | OWNER gating | Guard existente/futuras rotas | Sem mudança D5 |
 
