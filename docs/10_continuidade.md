@@ -1,5 +1,27 @@
 # 10 - Continuidade
 
+## Estado vigente do ciclo PG-S7 — 2026-10-05
+
+LAST_COMPLETED_MODULE = PROCEDIMENTOS GENERICOS.
+MODULE_STATUS = CLOSED_AND_HOMOLOGATED.
+PG_S6_MANUAL_HOMOLOGATION = PASS — informado pelo usuário.
+BASELINE_INICIAL_PG_S7 = 4483cbba428e847562b9a149ca16ca2af772a177.
+PROCEDIMENTOS_GENERICOS_BASELINE = commit que contém o checkpoint PG-S7 (THIS_COMMIT).
+Fonte de retomada: [checkpoint PG-S7](checkpoints/procedimentos_genericos_pg_s7_checkpoint.md)
+e [contrato vigente](contrato_implementacao_procedimentos_genericos_frontend_react.md#contrato-vigente-pg-s7--ciclo-fechado-e-homologado).
+
+NEXT_SAFE_MODULE = PROCEDIMENTOS.
+NEXT_SAFE_PHASE = PROCEDIMENTOS-SIMBOLOS-P0 — READ-ONLY AUDIT.
+PROCEDIMENTOS_STARTED = NÃO.
+FC4_STATUS = PAUSED_AFTER_P1_R1.
+FC4_RESUME = NÃO nesta fase.
+
+A próxima auditoria, somente após autorização, deverá quantificar procedimentos
+sem símbolo, identificar registros/tabelas e validação atual, verificar relação
+com procedimento genérico/classificação de cobrança e símbolos existentes,
+e planejar regularização preservando dados, sem inventar símbolos ou alterar banco.
+Não iniciar agora. O histórico abaixo continua preservado em suas próprias frentes.
+
 ## Como um novo dev deve comecar
 
 1. Ler `README.md`.

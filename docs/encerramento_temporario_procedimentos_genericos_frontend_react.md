@@ -1,5 +1,14 @@
 # Encerramento temporario - Procedimentos genericos
 
+> Registro histórico do encerramento documentado em
+> `339ec59ee2c64e956b3a5587edb47b2e1d87212f`, não descrição isolada do estado vigente.
+> Houve regressão posterior, causa comprovada em PG-S0 e restauração em PG-S1.
+> O ciclo PG-S5/PG-S5.R1 foi homologado manualmente pelo usuário em PG-S6.
+> Estado vigente: **CLOSED_AND_HOMOLOGATED**, consolidado no
+> [checkpoint PG-S7](checkpoints/procedimentos_genericos_pg_s7_checkpoint.md).
+> O conteúdo abaixo preserva o que foi registrado na época; a pausa temporária
+> original foi sucedida pelo fechamento atual, sem autorização de novas funções.
+
 ## 1. Objetivo
 
 Registrar o fechamento temporario da frente `Tabelas -> Procedimentos genericos` no novo frontend React do Brana Cloud.

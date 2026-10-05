@@ -341,6 +341,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       label: 'Tempo total de execução:',
       input: (
         <Input
+          aria-label="Tempo total de execução:"
           value={String(state.tempo ?? 0)}
           onChange={(event) => updateField('tempo', Math.max(0, Number(event.target.value || 0)))}
           inputMode="numeric"
@@ -359,6 +360,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       label: 'Custo de protético:',
       input: (
         <Input
+          aria-label="Custo de protético:"
           value={formatDecimal(state.custo_lab)}
           onChange={(event) => updateField('custo_lab', normalizeQuantidade(event.target.value))}
         />
@@ -392,26 +394,24 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
       destroyOnClose
       onCancel={onClose}
       footer={null}
+      title={title}
+      styles={{ body: { padding: '8px 10px 10px' } }}
       className={`procedimento-generico-modal is-tab-${activeKey}`}
       confirmLoading={saving}
     >
-      <div className="procedimento-generico-modal-header brana-modal-section">
-        <Typography.Title level={3} className="procedimento-generico-modal-title">
-          {title}
-        </Typography.Title>
-      </div>
-
       <Tabs
         activeKey={activeKey}
         onChange={setActiveKey}
+        type="card"
+        animated={false}
         className="procedimento-generico-modal-tabs"
         items={[
           {
             key: 'principal',
             label: 'Principal',
             children: (
-              <Form form={form} layout="vertical" className="procedimento-generico-modal-form brana-form-surface">
-                <div className="procedimento-generico-principal-top brana-modal-section">
+              <Form form={form} layout="vertical" className="procedimento-generico-modal-form">
+                <div className="procedimento-generico-principal-top">
                   <div className="procedimento-generico-symbol-box brana-preview-surface">
                     <SymbolPreview simbolos={simbolos} state={state} />
                   </div>
@@ -421,7 +421,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
                   </Form.Item>
                 </div>
 
-                <div className="procedimento-generico-principal-body brana-tab-content">
+                <div className="procedimento-generico-principal-body">
                   <div className="procedimento-generico-principal-row">
                     <Form.Item name="codigo" label="Código genérico:" rules={[{ required: true, message: 'Informe o código genérico.' }]}>
                       <Input value={state.codigo} onChange={(event) => updateField('codigo', event.target.value)} />
@@ -502,14 +502,18 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             key: 'custos',
             label: 'Custos diretos',
             children: (
-              <div className="procedimento-generico-costs brana-tab-content">
+              <div className="procedimento-generico-costs">
                 {custoRows.map((row) => (
                   <div className="procedimento-generico-cost-row" key={row.key}>
                     <span className="procedimento-generico-cost-label">{row.label}</span>
                     <span className="procedimento-generico-cost-currency">{row.key.includes('custo') || row.key === 'cfph' ? 'R$' : ''}</span>
-                    <div className={`procedimento-generico-cost-value${row.accent ? ' is-accent' : ''}`}>
-                      {row.input || row.value}
-                    </div>
+                    {row.input ? (
+                      <div className="procedimento-generico-cost-value is-editable">{row.input}</div>
+                    ) : (
+                      <output className="procedimento-generico-cost-value is-readonly" aria-label={row.label}>
+                        {row.value}
+                      </output>
+                    )}
                     <span className="procedimento-generico-cost-suffix">{row.suffix || ''}</span>
                   </div>
                 ))}
@@ -520,7 +524,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
             key: 'vinculos',
             label: 'Vínculos',
             children: (
-              <div className="procedimento-generico-links brana-tab-content">
+              <div className="procedimento-generico-links">
                 <div className="procedimento-generico-links-table">
                   <Table
                     rowKey={(record) => `${record.tabela_id}-${record.codigo}-${record.nome}`}
@@ -539,7 +543,7 @@ export function ProcedimentoGenericoModal({ open, mode = 'novo', itemId = null, 
         ]}
       />
 
-      <div className="procedimento-generico-modal-actions brana-modal-section">
+      <div className="procedimento-generico-modal-actions">
         <Button type="primary" loading={saving} onClick={() => void handleSave()}>
           Ok
         </Button>

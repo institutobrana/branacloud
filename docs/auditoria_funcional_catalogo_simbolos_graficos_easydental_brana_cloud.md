@@ -1,5 +1,16 @@
 # Auditoria funcional do catalogo de simbolos graficos
 
+> Auditoria histórica: contagens, caminhos e conclusões abaixo pertencem ao recorte
+> original e não são novas consultas em PG-S7. O diagnóstico antigo de duplicidades
+> foi qualificado pelo [contrato de normalização](contrato_normalizacao_catalogo_simbolos_graficos_brana_cloud.md),
+> que descarta normalização/importação como pré-requisito daquela tela.
+> Para Procedimentos Genéricos, a autoridade atual de preview e homologação é o
+> [checkpoint PG-S7](checkpoints/procedimentos_genericos_pg_s7_checkpoint.md).
+> A tabela da seção 6.5 preserva exemplos históricos `/assets/easy/...`;
+> esses caminhos **não são URLs universais válidas no React sob `/app/`**.
+> As referências antigas a helpers e à ordem de preview não substituem a resolução
+> vigente `resolveGenericSymbolPreviewCandidates` descrita no checkpoint.
+
 ## 1. Objetivo
 
 Registrar o contrato funcional e tecnico do catalogo de simbolos graficos usado por EasyDental, pelo legado Brana Cloud e pelo novo frontend React, com foco no uso em `Procedimentos` e `Procedimentos Genericos`.

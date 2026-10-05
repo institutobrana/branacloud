@@ -98,13 +98,13 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
     setModalFocusToken((current) => current + 1);
   };
 
-  const openEditModal = () => {
-    if (!selectedItem) {
+  const openEditModal = (target = selectedItem) => {
+    if (!target) {
       message.warning('Selecione um registro para alterar.');
       return;
     }
     setModalMode('editar');
-    setModalItemId(selectedItem.id);
+    setModalItemId(target.id);
     setModalOpen(true);
     setModalFocusToken((current) => current + 1);
   };
@@ -183,28 +183,29 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
       key: 'codigo',
       title: renderFilterTitle('codigo', 'Código'),
       dataIndex: 'codigo',
-      width: 110,
+      width: '16%',
       render: (value) => <Typography.Text strong>{value || '-'}</Typography.Text>,
     },
     {
       key: 'descricao',
       title: renderFilterTitle('descricao', 'Procedimento genérico'),
       dataIndex: 'descricao',
-      width: 240,
+      ellipsis: true,
       render: (value) => value || '-',
     },
     {
       key: 'especialidade',
       title: renderFilterTitle('especialidade', 'Especialidade'),
       dataIndex: 'especialidade',
-      width: 180,
+      width: '28%',
+      ellipsis: true,
       render: (value) => especialidadeNomePorCodigo.get(String(value || '').trim()) || value || '-',
     },
     {
       key: 'status',
       title: renderFilterTitle('status', 'Status', true),
       dataIndex: 'inativo',
-      width: 72,
+      width: 40,
       align: 'center',
       render: (_, record) => statusDot(record.inativo),
     },
@@ -227,19 +228,31 @@ export function ProcedimentosGenericosPage({ q, especialidade, novoProcedimentoT
                 pagination={false}
                 size="small"
                 tableLayout="fixed"
+                scroll={{ y: 480 }}
                 dataSource={sortedItems}
                 columns={columns}
                 rowSelection={{
                   type: 'radio',
+                  columnWidth: 28,
                   selectedRowKeys: selectedItem ? [selectedItem.id] : [],
                   onChange: (keys) => setSelectedId(keys[0] ?? null),
                 }}
                 onRow={(record) => ({
                   className: selectedItem?.id === record.id ? 'users-table-row-selected' : '',
                   onClick: () => setSelectedId(record.id),
+                  onDoubleClick: (event) => {
+                    if (event.target.closest('input, button, a, select, textarea, label, [role="button"]')) return;
+                    setSelectedId(record.id);
+                    openEditModal(record);
+                  },
                 })}
                 locale={{ emptyText: 'Nenhum procedimento genérico cadastrado.' }}
               />
+              <div className="procedimentos-genericos-table-footer" aria-live="polite">
+                <Typography.Text type="secondary">
+                  {items.length} {items.length === 1 ? 'procedimento genérico' : 'procedimentos genéricos'}
+                </Typography.Text>
+              </div>
             </div>
           </div>
         </BranaCard>

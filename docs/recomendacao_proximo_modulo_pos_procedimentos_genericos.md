@@ -1,5 +1,13 @@
 # Recomendação do próximo módulo após Procedimentos Genéricos
 
+> Recomendação histórica do ciclo de helpers do frontend legado. A prioridade
+> Anamnese e o HEAD registrados abaixo pertencem àquele momento, não à retomada
+> atual do React. PG-S7 fecha Procedimentos Genéricos após PG-S6 homologado.
+> Próximo passo planejado vigente: **PROCEDIMENTOS-SIMBOLOS-P0 — READ-ONLY AUDIT**,
+> sob autorização separada, ainda não iniciado. FC4 permanece pausado.
+> Consulte o [checkpoint PG-S7](checkpoints/procedimentos_genericos_pg_s7_checkpoint.md)
+> e a [continuidade geral](10_continuidade.md).
+
 ## 1. Contexto
 O ciclo seguro inicial de Procedimentos Genéricos foi considerado finalizado nesta rodada, após a sequência documental e técnica que consolidou o namespace passivo, a correção monetária compartilhada e a auditoria/validação do payload sensível sem extração de `pgenPayloadFromState(state)`.
 

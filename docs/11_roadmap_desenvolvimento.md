@@ -6219,6 +6219,9 @@ Observacoes:
 - A prÃ³xima etapa recomendada Ã© o detalhamento dos fluxos de ediÃ§Ã£o quando o contrato visual exigir.
 ## Frente pausada temporariamente: Procedimentos genericos
 
+> Estado histórico, sucedido pelo fechamento PG-S7 ao final deste documento.
+> A implementação inicial, a pausa e os marcos anteriores não foram apagados.
+
 - O fechamento temporario da frente foi registrado em `docs/encerramento_temporario_procedimentos_genericos_frontend_react.md`.
 - A frente ficou consolidada o suficiente para pausa controlada, com listagem, shell, filtros, modal principal, fases e materiais ja integrados no novo frontend React.
 - O escopo atual nao abre nova funcionalidade e nao deve ser reativado sem nova prioridade ou novo contrato funcional.
@@ -7005,3 +7008,33 @@ Fontes vigentes: [contratos P1.R1](ficha_clinica/odontograma_contracts.md),
 [continuação](ficha_clinica/odontograma_continuacao.md) e
 [checkpoint P1.R1](checkpoints/ficha_clinica_odontograma_fc4_p1_r1_checkpoint.md).
 Não iniciar FC4-P2 nem Procedimentos nesta rodada.
+
+## Procedimentos Genéricos — fechamento PG-S7 (2026-10-05)
+
+PROCEDIMENTOS_GENERICOS_STATUS = COMPLETE / HOMOLOGATED.
+MODULE_STATUS = CLOSED_AND_HOMOLOGATED.
+BASELINE_INICIAL = 4483cbba428e847562b9a149ca16ca2af772a177.
+CHECKPOINT_COMMIT = THIS_COMMIT — baseline final resolvido pelo Git, sem hash recursivo.
+
+| Fase | Estado / proveniência |
+|---|---|
+| PG-S0 | COMPLETE — auditoria read-only e causa de regressão comprovada |
+| PG-S1 | COMPLETE — restauração do preview e campos de auditoria |
+| PG-S2 | HOMOLOGATED — homologação manual do usuário |
+| PG-S3A | COMPLETE — fix versionado em 4483cbba428e847562b9a149ca16ca2af772a177 |
+| PG-S4 | COMPLETE — auditoria read-only dos quatro ajustes |
+| PG-S5 | COMPLETE — duplo clique, tabela/contador, gap e padrão Preferências |
+| PG-S5.R1 | COMPLETE — custos readonly cianos e compactação Principal |
+| PG-S6 | HOMOLOGATED — declaração manual explícita do usuário |
+| PG-S7 | Fechamento documental/checkpoint atual; validação Git/remota no relatório final |
+
+Source/testes homologados, sem nova implementação em PG-S7. Suíte pertinente:
+60 PASS / 0 FAIL. Tabela 480 px (~15 linhas); gap auditoria 8 px; Principal
+566,84 → 517,42 px (−49,42 px); preview preservado e temas claro/escuro validados
+no ciclo técnico anterior. Histórico e resolução vigente documentados no
+[checkpoint PG-S7](checkpoints/procedimentos_genericos_pg_s7_checkpoint.md).
+
+NEXT_MODULE = PROCEDIMENTOS.
+NEXT_PHASE = PROCEDIMENTOS-SIMBOLOS-P0 — READ-ONLY AUDIT.
+PROCEDIMENTOS_STARTED = NÃO. Símbolo obrigatório/regularização somente em fase futura.
+FC4_STATUS = PAUSED_AFTER_P1_R1. FC4 não foi retomada. Não iniciar novos módulos aqui.

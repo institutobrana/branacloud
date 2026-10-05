@@ -1,5 +1,11 @@
 # Contrato de normalizacao do catalogo de simbolos graficos
 
+> As contagens e a decisão de implementação abaixo preservam a validação histórica.
+> Não houve nova auditoria de banco/catalogação em PG-S7. O próximo passo daquela
+> rodada não é autorização atual para iniciar Procedimentos.
+> A regra vigente de preview de Procedimentos Genéricos está na atualização abaixo
+> e no [checkpoint PG-S7](checkpoints/procedimentos_genericos_pg_s7_checkpoint.md).
+
 ## 1. Problema comprovado
 
 A auditoria anterior superestimou duplicidades ao agrupar `legacy_id NULL` como se fosse repeticao real. A validacao complementar mostrou:
@@ -214,3 +220,27 @@ Decisao tecnica final desta validacao autenticada:
 - manter o lookup do React preparado para resolver `legacy_id` quando existir e `codigo` como fallback;
 - preservar o preview atual e evitar qualquer mudanca de backend enquanto a frente nao exigir nova regra comprovada;
 - revalidar apenas se surgir novo caso de ambiguidade real no uso da tela.
+
+## 23. Atualização vigente PG-S7 — resolução de preview
+
+O contrato de dados e o endpoint `scope=genericos` foram preservados. A regressão
+era de resolução no consumidor React: `SymbolPreview` descartava a URL canônica
+`/desktop-assets/easy/...` e reconstruía `/assets/easy/...`, incompatível com a
+base `/app/` do runtime observado. PG-S0 comprovou o mecanismo, não uma falha de banco.
+
+PG-S1, versionado em `4483cbba428e847562b9a149ca16ca2af772a177`, mantém a URL
+canônica como candidata. A resolução vigente usa `import.meta.env.BASE_URL`:
+
+- fora de Vite DEV, a URL pública/canônica vem primeiro;
+- em Vite DEV, para URL canônica desktop, as cópias locais compatíveis com a base
+  vêm primeiro, mantendo a canônica na lista;
+- `/assets/...` público antigo é normalizado sob a base; URLs absolutas,
+  customizadas, `data:` e `blob:` são preservadas;
+- candidatos de arquivo usam família/aliases conhecidos; erro de imagem avança
+  deterministamente ao próximo candidato; esgotamento exibe `Sem imagem`;
+- seleção vazia não produz imagem. Não há símbolo inventado nem host hardcoded.
+
+No registro 0001, `sim_outras.bmp` carregou em `/app/assets/easy/sim_outras.bmp`,
+com dimensão natural 15×15. É exemplo observado, não hardcode universal.
+PG-S5/PG-S5.R1 preservaram esse fix; PG-S6 = HOMOLOGADO MANUALMENTE PELO USUÁRIO.
+O fechamento não altera catálogo, assets, API, backend ou validação obrigatória de símbolo.

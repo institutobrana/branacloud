@@ -1285,7 +1285,7 @@ body {
 }
 
 .procedimentos-genericos-grid {
-  width: min(1032px, calc(100% - 220px));
+  width: min(1032px, 100%);
   max-width: 1032px;
   min-width: 0;
   overflow: hidden;
@@ -1340,86 +1340,51 @@ body {
 .procedimentos-genericos-table .ant-table-thead > tr > th,
 .procedimentos-genericos-table .ant-table-tbody > tr > td {
   white-space: nowrap;
+  height: 32px;
+  padding: 0 4px !important;
 }
 
-.procedimento-generico-modal .ant-modal-content {
-  padding: 0 0 18px;
-  border-radius: 18px;
+.procedimentos-genericos-table .ant-table-tbody > tr > td {
   overflow: hidden;
-  border: 1px solid var(--brana-border-subtle);
-  background: var(--brana-surface-modal);
-  box-shadow: var(--brana-shadow-overlay);
+  text-overflow: ellipsis;
 }
 
-.procedimento-generico-modal .ant-modal-body {
-  padding: 0;
+.procedimentos-genericos-table .ant-table-body {
+  scrollbar-gutter: stable;
 }
 
-.procedimento-generico-modal-header {
-  padding: 18px 24px 14px;
-  border-bottom: 0;
-  background: var(--brana-surface-modal);
+.procedimentos-genericos-table-footer {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 10px;
+  border-top: 1px solid var(--brana-border-subtle);
+  background: var(--brana-surface-card);
 }
 
-.procedimento-generico-modal-title.ant-typography {
-  margin: 0;
-  text-align: center;
-  font-size: 19px;
-  font-weight: 800;
-  color: var(--brana-text-primary);
-  letter-spacing: 0.01em;
-}
-
-.procedimento-generico-modal .ant-modal-close {
-  top: 14px;
-  right: 14px;
-  inset-inline-end: 14px;
-  color: var(--brana-text-on-selected);
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  background: var(--brana-surface-table-row-selected);
-  box-shadow: 0 6px 14px rgba(67, 98, 69, 0.2);
-}
-
-.procedimento-generico-modal .ant-modal-close-x {
-  width: 100%;
-  height: 100%;
-  line-height: 26px;
-  border-radius: inherit;
-  color: var(--brana-text-on-selected);
-  display: grid;
-  place-items: center;
+.procedimentos-genericos-table-footer .ant-typography {
   font-size: 12px;
+  color: var(--brana-text-secondary);
 }
 
-.procedimento-generico-modal .ant-modal-close:hover {
-  color: var(--brana-text-on-selected);
-  background: var(--brana-surface-table-row-hover);
+.procedimento-generico-modal .ant-modal-content,
+.procedimento-generico-modal .ant-modal-header,
+.procedimento-generico-modal .ant-modal-body {
+  background: #f5f0e6;
 }
 
-.procedimento-generico-modal-tabs {
-  padding: 0 5px;
-}
-
-.procedimento-generico-modal-tabs .ant-tabs-nav {
-  margin: 0;
-}
-
-.procedimento-generico-modal-tabs .ant-tabs-tab {
-  padding-top: 7px;
-  padding-bottom: 7px;
+:root[data-brana-theme='dark'] .procedimento-generico-modal .ant-modal-content,
+:root[data-brana-theme='dark'] .procedimento-generico-modal .ant-modal-header,
+:root[data-brana-theme='dark'] .procedimento-generico-modal .ant-modal-body {
+  background: #142225;
 }
 
 .procedimento-generico-modal-tabs .ant-tabs-content-holder {
-  border: 1px solid var(--brana-border-subtle);
-  border-top: none;
-  padding: 4px 5px 4px;
-  background: var(--brana-surface-modal);
+  color: var(--brana-text-primary);
 }
 
 .procedimento-generico-modal.is-tab-principal .procedimento-generico-modal-tabs .ant-tabs-content-holder {
-  min-height: 306px;
+  min-height: 0;
 }
 
 .procedimento-generico-modal.is-tab-custos .procedimento-generico-modal-tabs .ant-tabs-content-holder {
@@ -1438,8 +1403,14 @@ body {
   margin-bottom: 1px;
 }
 
-.procedimento-generico-modal-form .ant-form-item-label > label {
+.procedimento-generico-modal .procedimento-generico-modal-form .ant-form-item-label {
+  padding: 0 0 2px;
+}
+
+.procedimento-generico-modal .procedimento-generico-modal-form .ant-form-item-label > label {
+  display: flex;
   line-height: 1.1;
+  height: auto;
   min-height: 0;
 }
 
@@ -1467,7 +1438,7 @@ body {
 .procedimento-generico-principal-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -1518,10 +1489,10 @@ body {
   margin-bottom: 0;
 }
 
-.procedimento-generico-dates {
+.procedimento-generico-modal .procedimento-generico-dates {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
+  gap: 0 8px;
 }
 
 .procedimento-generico-date-field {
@@ -1531,7 +1502,7 @@ body {
 
 .procedimento-generico-date-field > span {
   font-size: 0.68rem;
-  color: #44515c;
+  color: var(--brana-text-secondary);
 }
 
 .procedimento-generico-modal .procedimento-generico-date-box {
@@ -1567,12 +1538,12 @@ body {
 }
 
 .procedimento-generico-cost-label {
-  color: #22303d;
+  color: var(--brana-text-primary);
 }
 
 .procedimento-generico-cost-currency,
 .procedimento-generico-cost-suffix {
-  color: #36424e;
+  color: var(--brana-text-secondary);
   text-align: center;
 }
 
@@ -1587,8 +1558,20 @@ body {
   border-radius: 12px;
 }
 
-.procedimento-generico-cost-value.is-accent {
-  background: var(--brana-surface-panel);
+.procedimento-generico-modal .procedimento-generico-cost-value.is-readonly {
+  background: #54e5e9;
+  color: #0f172a;
+}
+
+:root[data-brana-theme='dark'] .procedimento-generico-modal .procedimento-generico-cost-value.is-readonly {
+  background: #34d7df;
+  color: #081521;
+}
+
+.procedimento-generico-modal .procedimento-generico-cost-value.is-editable {
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .procedimento-generico-cost-value .ant-input,
@@ -1598,11 +1581,7 @@ body {
 }
 
 .procedimento-generico-cost-value .ant-input {
-  border: 0;
-  box-shadow: none;
-  background: var(--brana-surface-table-row);
   text-align: right;
-  padding: 0;
 }
 
 .procedimento-generico-links {
@@ -1627,9 +1606,7 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 2px 10px 4px;
-  border-top: 1px solid var(--brana-border-subtle);
-  background: var(--brana-surface-panel);
+  margin-top: 10px;
 }
 
 .procedimento-generico-modal .ant-input,
