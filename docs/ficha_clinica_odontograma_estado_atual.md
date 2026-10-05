@@ -1,5 +1,113 @@
 # Brana Cloude — FC4 / Odontograma operacional
 
+STATUS = P1_R1_DOCUMENTATION_RECONCILED_FOR_REVIEW
+BRANCH = modularizacao-segura-fase-1
+CURRENT_BASELINE = 6e7cdd5de3551f4d1b120f5d0da579e364746d38
+FC3_D5_BASELINE = 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1
+CURRENT_STATUS = FC4-P1.R1 COMPLETE — design/documentação para revisão
+LAST_COMPLETED_PHASE = FC4-P1.R1
+NEXT_SAFE_PHASE = REVISÃO E FECHAMENTO DOCUMENTAL POSTERIOR, sob autorização
+MANUAL_DECISIONS_DOCUMENTED = 10/10
+CANONICAL_FLOW_STATUS = PROVEN_WITH_NON_BLOCKING_GAPS
+P1_DESIGN_CONTRADICTIONS_FIXED = 8
+P1_DESIGN_REMAINING_CONTRADICTIONS = 0
+REVISED_SCHEMA_DESIGN_STATUS = COMPLETE
+REVISED_API_DESIGN_STATUS = COMPLETE
+ROUNDTRIP_REVISED_STATUS = PASS — conceitual
+ROUNDTRIP_REVISED_LOSS_CASES = NENHUM nos casos projetados
+READY_FOR_P1_R1_CHECKPOINT = SIM
+AFTER_P1_R1_CHECKPOINT = PAUSE_FC4
+FC4_PAUSE_AFTER_CHECKPOINT = SIM
+NEXT_SEPARATE_MODULE = PROCEDIMENTOS
+IMPLEMENTATION_STARTED = NÃO
+VISUAL_IMPLEMENTATION_STARTED = NÃO
+DATABASE_MIGRATION_CREATED = NÃO
+SCHEMA_CHANGED = NÃO
+P2_STARTED = NÃO
+AUDITORIA_PROCEDIMENTOS_STARTED = NÃO
+COMMIT_CREATED_DURING_P1_R1 = NÃO
+PUSH_PERFORMED_DURING_P1_R1 = NÃO
+
+## Autoridade vigente P1.R1
+
+Brana Cloude: código continua fonte da verdade sobre implementação. Contratos
+alvo foram reconciliados com USER_MANUAL_RUNTIME_EVIDENCE fornecida pelo usuário.
+Testes/prints foram relatados no pedido; nenhum teste EasyDental foi reexecutado,
+nenhuma nova imagem/consulta ao banco foi obtida pelo Codex. Não solicitar repetição.
+
+Autoridade funcional e design completos: [contratos P1.R1](ficha_clinica/odontograma_contracts.md).
+Proveniência: [dossiê, seção 14](reverse_engineering/easydental_odontograma_fc4.md).
+Retomada: [continuação](ficha_clinica/odontograma_continuacao.md).
+Validações/escopo: [checkpoint P1.R1](checkpoints/ficha_clinica_odontograma_fc4_p1_r1_checkpoint.md).
+Os quadros de assets e símbolos preservam o snapshot documental P0D, não congelam
+catálogo vivo nem autorizam categoria C.
+
+## Dez decisões e requisitos adicionais incorporados
+
+| ID | Contrato vigente |
+|---|---|
+| D01 | Catálogo LIVE: nome/símbolo/dados cadastrais refletem mudanças; paciente/repasse próprios permanecem |
+| D02 | Slot estável é identidade; permanente/decíduo/vazio/dentição mista não deslocam intervenção |
+| D03 | Grava esta confirma atual/avança; Cancelar não desfaz; todas grava/fecha em sucesso; cobrança rege fluxo; Região não editável |
+| D04 | Usuário precisa prestador associado; default desse vínculo; ausência web é KNOWN_DEFECT_TO_FIX_LATER |
+| D05 | Marcação vigente na inclusão; Finalização vigente ao Realizada; ambas editáveis; timestamps técnicos separados |
+| D06 | Escala monetária de negócio 2; 200/3 = 66,67+66,67+66,66; soma preservada |
+| D07 | Fases auxiliares reutilizáveis via genérico; exclusão em uso bloqueada; fase/conclusão/manual com proveniência inequívoca |
+| D08 | Orçamento pendente durável/reaprovação; pagamento permanece; reconciliar diferença; sem veto genérico por pagamento |
+| D09 | Símbolo obrigatório; ausências web são gap; cobrança Intervenção desenha lateral, Elemento/Face no odontograma |
+| D10 | OWNER + idempotência + versão; novas intenções podem repetir procedimento/slot; ocorrências independentes |
+
+Cores: ODONTOGRAM_STATUS_COLOR_SOURCE = USER_PREFERENCE;
+INTERVENTION_STATUS_STORES_COLOR = NÃO; STATUS_STORES_SEMANTIC_STATE = SIM.
+Preferências incluem anomalias/observada/realizada/realizar, especialidade/filtro e
+apresentação. Shell precisa odontograma/lista/painéis/fases/ações/dentição/seleção/
+preferências/contexto, conforme lista de 17 requisitos nos contratos.
+SHELL_DECISION = PENDENTE. CURRENT_RECOMMENDATION = HYBRID: React moderno + Desktop.
+
+## Design revisado e gaps de implementação
+
+Intervenção referencia slot e catálogo; marcação/faixas/faces/alvos são persistidos,
+sem congelar nome/símbolo. Classificação de cobrança é distinta de TIPMARCA e determina
+seleção/painel; Intervenção não exige slot/não tem Grava todas. Financeiro próprio
+por ocorrência; revisão/aprovação de orçamento e reconciliação separadas da inclusão.
+Fases são catálogo referenciado, eventos 0..N. IDs por intenção, versão por ocorrência,
+histórico automático distinto do manual. Não há UNIQUE(tratamento,slot,procedimento).
+
+Gaps atuais continuam: associações por FDI, falta de alvos/faixas completos e vínculo
+web do histórico; financeiro parcial em overrides; regra Observada requer SERVICE_RULE.
+Acrescentados ao registro: usuário sem prestador é defeito; procedimento sem símbolo
+é DATA_INTEGRITY_GAP; fases inline atuais precisam conciliação com catálogo reutilizável;
+preferências/cobrança/reconciliação precisam integrar o futuro read/write model.
+Não quantificados ou corrigidos nesta rodada; módulo Procedimentos não iniciado.
+
+BLOCKING_BEFORE_P2 = revisão/design documentado, fechamento posterior, migração
+segura e writers, políticas técnicas e integração financeira/lease/versões.
+BLOCKING_BEFORE_P3 = auditoria/regularização de símbolos, shell/UX, hitboxes/
+composição/preferências, subset autorizado e homologação manual.
+BLOCKING_BEFORE_DELETE = implementação/testes de pendência, reaprovação/reconciliação,
+preservação de pagamentos/baixas/histórico e permissões/locks/versões. Não é veto
+genérico por pagamento. Delete de tratamento é operação distinta, não implementada.
+
+## Planejamento e preservação histórica
+
+P0D preservado; P0H/P0I pré-P1 preservados; P1 completo como design proposto em
+relatório da conversa; P1.R1 completo documentalmente após decisões manuais.
+P0D/P0H não são reescritos retroativamente. Recomendações antigas abaixo têm
+precedência histórica, não funcional. Só reabrir D01–D10 com PROVEN_CONTRADICTION.
+Após checkpoint/fechamento documental: PAUSE_FC4; próximo módulo separado:
+PROCEDIMENTOS sob autorização própria. Não iniciar P2 nem Procedimentos aqui.
+
+FIRST_VISUAL_IMPLEMENTATION_PHASE = FC4-P3.
+VISUAL_IMPLEMENTATION_REQUIRES_MANUAL_HOMOLOGATION = SIM.
+ANTES DE FC4-P3: AVISAR O USUÁRIO.
+FC3-D5 permanece HOMOLOGATED; OWNER obrigatório e RESTRICTED/UNKNOWN fail-closed.
+
+## Registro histórico P0H/P0I — conteúdo anterior preservado
+
+Tudo abaixo descreve a etapa anterior. Em divergência, P1.R1 acima prevalece.
+Os metadados THIS_COMMIT deste registro identificam o checkpoint P0I, não um
+commit criado em P1.R1. Nenhuma proposta superada deve ser reativada.
+
 STATUS = P0H_DOCUMENTATION_CONSOLIDATED_FOR_REVIEW
 BRANCH = modularizacao-segura-fase-1
 BASELINE = 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1

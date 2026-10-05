@@ -1,6 +1,9 @@
 # FC4 — dossiê técnico EasyDental / odontograma
 
-STATUS = P0H_CONSOLIDATED_FOR_REVIEW
+STATUS = P1_R1_MANUAL_EVIDENCE_RECONCILED_FOR_REVIEW
+CURRENT_BASELINE_P1_R1 = 6e7cdd5de3551f4d1b120f5d0da579e364746d38.
+Autoridade vigente posterior: seção 14 e contratos P1.R1. Seções 1–13 preservam
+o estado P0D/P0H, inclusive inferências/propostas superadas, não normas conflitantes.
 Baseline Brana: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1.
 CANONICAL_FLOW_STATUS = PROVEN_WITH_NON_BLOCKING_GAPS.
 Escopo P0D: preservação documental + revalidação direcionada; nenhuma gravação,
@@ -315,7 +318,7 @@ Acervo já autorizado A/B e histórico C separados; autorização C não demonst
 não é autorização negativa jurídica nem dispensa aprovação futura.
 Retomada: [continuação](../ficha_clinica/odontograma_continuacao.md).
 
-## 13. Evolução posterior — P0F/P0G/R1/R2 consolidada em P0H
+## 13. Evolução posterior — P0F/P0G/R1/R2 consolidada em P0H (registro histórico)
 
 ### Origem e limites
 
@@ -448,6 +451,78 @@ model/erros e roundtrip, inclusive renumeração/mudança de catálogo. Polític
 fica bloqueante antes de implementá-lo; UX/hitboxes/composição/subset autorizado
 e homologação manual antes de FC4-P3. Avisar o usuário antes da primeira fase visual.
 Nenhuma nova capacidade, autorização de asset ou migration está implícita nisso.
+
+## 14. P1.R1 — evidência manual posterior e reconciliação
+
+CURRENT_BASELINE_P1_R1 = 6e7cdd5de3551f4d1b120f5d0da579e364746d38.
+DOCUMENTATION_DATE = 2026-10-05; não presumir datas de execução dos testes.
+EVIDENCE_TYPE = USER_MANUAL_RUNTIME_EVIDENCE.
+Fonte: pedido FC4-ODONTOGRAMA-P1.R1, decisões manuais 1–10 e relatos adicionais.
+O usuário informa testes e prints do EasyDental Desktop; a evidência é incorporada
+como fornecida, não como teste/print capturado novamente pelo Codex. Não foram
+entregues nesta rodada anexos de imagem identificáveis por caminho/hash; não
+inventar IDs, timestamps, paciente, queries ou novas provas binárias. Não exigir
+repetição desses testes. Credenciais/dados clínicos pessoais não são necessários.
+
+Este adendo é posterior às seções 1–13 e aos apêndices preservados. Estes continuam
+historicamente verdadeiros quanto ao que se sabia/propôs naquele momento; catálogo
+HYBRID e proposta de congelamento não são normas vigentes depois desta evidência.
+PROVEN_CONTRADICTION = SIM entre as propostas específicas P1 e D01/D03/D04/D05/
+D08/D09 fornecidas agora; isso autoriza reconciliação dirigida, NÃO reauditoria geral.
+Não promover retrospectivamente offsets/call graphs STRONG a PROVEN.
+
+### Registro de evidência suficiente para continuidade
+
+| ID | Ação/teste relatado pelo usuário | Resultado preservado / consequência canônica |
+|---|---|---|
+| D01 | Alterou cadastro do procedimento após aplicação | Nome/descrição/símbolo e dados cadastrais/visuais mudaram nas intervenções; valores paciente/repasse próprios não seguiram catálogo |
+| D02 | Mudou representação do slot: outro dente, decíduo e sem dente | Intervenção permaneceu no mesmo lugar; slot estável, dentição mista e vazio suportados |
+| D03 | Selecionou vários slots; gravou atual, cancelou depois; usou todas; comparou cobrança | Esta grava atual/avança/modal permanece e Cancelar não desfaz; todas confirma selecionados/fecha; Região só exibe; Intervenção não exige slot/não tem todas |
+| D04 | Tentou cadastrar usuário sem prestador associado | Bloqueado: "Campo Associar a prestador não pode ser nulo."; default do prestador associado ao usuário corrente |
+| D05 | Inclusão e mudança de Situação para Realizada; edição das datas | Marcação recebe data vigente; Finalização recebe data vigente ao Realizada; ambas editáveis, não timestamps técnicos |
+| D06 | Observou valores e parcelamento de R$200,00 em três | Duas casas de negócio; 66,67/66,67/66,66 preservam total; precisão interna não demonstrada |
+| D07 | Cadastrou/associou fases auxiliares via genérico e observou lifecycle | Fases reutilizáveis, exclusão em uso bloqueada; baixas geram histórico sem concluir; conclusão completa, reabertura, edição e exclusão têm efeitos distintos |
+| D08 | Alterou/excluiu intervenções, reabriu orçamento, reaprovação com/sem pagamento | Pendência/aviso persistem até ajuste; pagamentos preservados; reaprovação recalcula débitos/reconcilia diferença; baixa clínica/cirurgião não muda; tratamento inteiro tem delete distinto |
+| D09 | Verificou simbolização obrigatória e apresentação por cobrança | Não há procedimento válido sem símbolo; Elemento/Face no odontograma, Intervenção no quadro lateral direito |
+| D10 | Confirmou inclusões conscientes repetidas e independência das ocorrências | Mesmo procedimento/slot permitido; orçamento/painel/editar/finalizar/excluir por ocorrência, símbolos podem se sobrepor; replay técnico não é nova intenção |
+
+Detalhes D07: Tabelas Auxiliares → Fases de procedimento → associação no Procedimento
+Genérico → procedimento da tabela → fases disponíveis na intervenção. Baixa de
+fase cria histórico e continua Realizar, podendo repetir em datas diferentes.
+Finaliza Toda ou Situação Realizada concluem. Voltar Realizada→Realizar remove
+histórico automático correspondente. Editar finalizada permitido; delete remove
+histórico automático relacionado, sem autorizar apagar narrativa manual.
+
+Detalhes D08: antes de baixa, conta corrente anterior permanece até nova aprovação.
+Depois de baixa, pago 2.000/orçamento 1.500 gera crédito paciente 500; pago
+2.000/orçamento 2.500 gera débito restante 500. Excluir intervenção não remove baixa
+realizada. Correção da baixa clínica/cirurgião é manual no módulo correspondente.
+Tratamento inteiro remove conjunto relacionado conforme observado; não universalizar
+escopo de baixa/todos módulos. Abrir/fechar tela/dispensar aviso não limpa pendência.
+
+Evidência adicional: Preferências > Odontograma permite cores por usuário para
+Anomalias/Observada/Realizada/A realizar (exemplo preto/verde/azul/vermelho, configuráveis),
+especialidade/filtro mais utilizados e apresentação. Estado clínico guarda semântica,
+não cor. Shell com 17 requisitos preservado nos [contratos](../ficha_clinica/odontograma_contracts.md).
+
+### Evidência versus decisões técnicas Brana
+
+D01–D10 são autoridade manual aceita, não propostas em aberto. Modelagem normalizada,
+FK/proveniência, revisão financeira, CAS, ledger de comando/unidade, locks e política
+de erro STOP são escolhas técnicas Brana ainda documentais. D10 preserva OWNER FC3-D5
+e requisitos de idempotência/versão/auditoria; não é claim de que o EasyDental possui
+ledger/CAS web. Aparência segue catálogo e paleta atuais; auditoria/manifest técnico
+não substitui comportamento LIVE. Ausências de símbolo/vínculo no web são gaps,
+não comportamentos legítimos do Desktop.
+
+Relatório P1 original não foi arquivo implementado. O quadro OLD_PROPOSAL →
+NEW_EVIDENCE → CORRECTED_DESIGN → IMPACT nos contratos preserva 8 contradições
+corrigidas e 6 complementações não contadas como contradição.
+P1_DESIGN_CONTRADICTIONS_FIXED = 8.
+P1_DESIGN_REMAINING_CONTRADICTIONS = 0.
+ROUNDTRIP_REVISED_STATUS = PASS, simulação conceitual A–U, sem banco/runtime.
+DO_NOT_REOPEN = D01–D10 sem PROVEN_CONTRADICTION = SIM e prova objetiva.
+Após checkpoint: PAUSE_FC4. Próximo módulo separado Procedimentos, NÃO iniciado.
 
 ## Apêndice A — SQL literal recuperado em P0D
 

@@ -1,6 +1,8 @@
 # FC4 — correlação individual do snapshot de símbolos
 
 STATUS = COMPLETE (snapshot documental, não render integral).
+CONTRACT_PRECEDENCE = P1.R1: símbolo obrigatório e catálogo LIVE; nota vigente no fim.
+Snapshot P0D preservado; recomendação de congelamento P0H é histórica superada.
 Fonte: backend/scripts/easy_simbolos_catalogo_atual_snapshot.json; SHA-256: 4c452e5145145b853572af787cbc4fb10d014f4c520a3fe29cc8ab3b137a026f
 ID é NROSIM legado, não PK web. TIPSIMB usa tiposim. Sem consulta DB. ICONE=preview/picker; BITMAP1/2/3=papéis declarados, não equivalência automática de ícone e símbolo aplicado.
 
@@ -173,7 +175,7 @@ Símbolos=81; nomes gráficos únicos=79; referências ausentes=0.
 SYMBOL_ASSET_MATRIX_STATUS=COMPLETE. Existência COMPLETE; composição clínica PARTIAL. Todos os alvos por TIPMARCA classificados. UNPROVEN de autorização não foi promovido a SIM.
 Ver [mapa](odontograma_assets_map.md) para metadados/hash/aliases/callers.
 
-## Continuidade P0H — snapshot documental versus aplicação clínica
+## Continuidade P0H — snapshot documental versus aplicação clínica (histórico superado)
 
 CURRENT_BASELINE = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
 As linhas, IDs, nomes, caminhos e autorização do snapshot P0D permanecem intactos:
@@ -190,3 +192,32 @@ Não é prova de preservação integral legado, escolha de schema ou novo render
 Autorização A/B/C/D não muda com essa recomendação. Categoria C/UNPROVEN não foi
 promovida; ícone de picker não substitui recurso clínico composto. Primeira fase
 visual FC4-P3, com aviso prévio e homologação manual; composição permanece futura.
+
+## P1.R1 — simbolização obrigatória e catálogo LIVE
+
+CURRENT_BASELINE_P1_R1 = 6e7cdd5de3551f4d1b120f5d0da579e364746d38.
+EVIDENCE_TYPE = USER_MANUAL_RUNTIME_EVIDENCE D01/D03/D09/D10.
+Snapshot P0D permanece intacto: 81 símbolos / 79 nomes gráficos / zero referências
+ausentes. MARKING_TARGET registra TIPMARCA naquele snapshot; NÃO é algoritmo
+suficiente para escolher painel operacional atual, que também depende da cobrança.
+SAFE_TO_REUSE/C/UNPROVEN não mudam. Não reauditar ou liberar automaticamente assets.
+
+PROCEDURE_SYMBOL_REQUIRED = SIM. VALID_PROCEDURE_WITHOUT_SYMBOL = NÃO.
+BRANA_EXISTING_PROCEDURES_WITHOUT_SYMBOL = DATA_INTEGRITY_GAP.
+Símbolo/descrição seguem cadastro vivo, inclusive em ocorrências já existentes;
+valores paciente/repasse não seguem catálogo. Não usar esta matriz documental
+como snapshot congelado de símbolo por intervenção. Versionar cache/manifest de
+asset é técnico; o renderer resolve o símbolo atual, sem fallback inventado.
+
+INTERVENTION_CLASS_SYMBOL_RENDER_TARGET = SIDE_PANEL.
+ELEMENT_FACE_SYMBOL_RENDER_TARGET = ODONTOGRAM.
+Unidades conscientes repetidas não se fundem; símbolos idênticos podem se sobrepor.
+Cor vem de USER_PREFERENCE, não da situação como cor clínica fixa.
+Tipos/alvos/faixas/faces aplicados ainda preservam identidade da seleção; mudança
+de catálogo não reidentifica slot. Compatibilidade de troca de classificação/
+TIPMARCA precisa validação técnica, não congelamento geral de nome/símbolo.
+
+Auditoria de símbolos nulos e regularização são módulo separado Procedimentos,
+NÃO iniciado. Primeira fase visual FC4-P3, avisar antes e homologar manualmente.
+Referência vigente: [contratos](odontograma_contracts.md) e
+[checkpoint P1.R1](../checkpoints/ficha_clinica_odontograma_fc4_p1_r1_checkpoint.md).

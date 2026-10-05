@@ -1,6 +1,8 @@
 # FC4 — mapa individual de assets odontológicos
 
 STATUS = COMPLETE: inventário classificado, não autorização universal/render implementado.
+CONTRACT_PRECEDENCE = P1.R1: catálogo LIVE e preferências; nota vigente no fim.
+Matrizes P0D preservadas; a recomendação P0H abaixo é histórica e superada.
 Baseline: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1. Deduplicação SHA-256 por bytes. Nenhuma cópia externa.
 
 ## Escopo e convenções
@@ -2487,7 +2489,7 @@ COMPOSITION_RULE_GAPS=hitboxes, máscaras/recoloração e compositor ainda futur
 AUTHORIZATION_GAPS=Categoria C/UNPROVEN explicitamente classificada; não bloqueia documentação, mas bloqueia escolha desses arquivos sem autorização.
 Ver [símbolos](odontograma_symbol_assets_matrix.md) e [contratos](odontograma_contracts.md).
 
-## Continuidade P0H — representação aplicada e autorização
+## Continuidade P0H — representação aplicada e autorização (histórico superado)
 
 CURRENT_BASELINE = b47114f9cc60c54981391c7c23baa21d83a0aeb6.
 Inventário/aliases/callers/categorias A/B/C/D e os 181 hashes com caminho autorizado
@@ -2505,3 +2507,32 @@ inicial, sem prometer cobertura integral do Desktop ou autorização das variant
 FIRST_VISUAL_IMPLEMENTATION_PHASE=FC4-P3; avisar o usuário antes; homologação
 manual obrigatória. UX continua pendente. Slot vazio mantém alvo estável mesmo
 sem imagem; renumeração/FDI não reidentificam uma associação clínica histórica.
+
+## P1.R1 — catálogo vivo, slot atual e preferências
+
+CURRENT_BASELINE_P1_R1 = 6e7cdd5de3551f4d1b120f5d0da579e364746d38.
+Fonte: USER_MANUAL_RUNTIME_EVIDENCE D01/D02/D09/D10 e preferências adicionais.
+Matrizes/aliases/hashes/callers A/B/C/D P0D intactos: 2.147 candidatos, 1.213
+únicos, 181 hashes com caminho autorizado. Nenhum novo asset foi copiado/liberado.
+O parágrafo P0H de representação aplicada congelada é histórico superado por D01.
+
+Catálogo atual resolve símbolo/descrição para ocorrências existentes; manifest,
+hash e cache de recurso são versionamento TÉCNICO, não snapshot funcional pinado
+à intervenção. Slot_id continua estável quando figura/FDI/dentição muda ou some;
+base atual pode ser permanente/decídua/vazia. Camada clínica não desaparece.
+Duplicatas conscientes são ocorrências distintas, mesmo quando símbolos se sobrepõem.
+
+CLASSIFICAÇÃO DE COBRANÇA decide destino visual:
+Elemento/Face → ODONTOGRAM; Intervenção → SIDE_PANEL direito, sem slot obrigatório.
+TIPMARCA organiza os alvos aplicáveis, não substitui a classificação.
+Símbolo obrigatório; ausência web é DATA_INTEGRITY_GAP, não autorização para no-op/
+fallback inventado. Auditar/regularizar no módulo Procedimentos, não nesta rodada.
+
+ODONTOGRAM_STATUS_COLOR_SOURCE = USER_PREFERENCE.
+INTERVENTION_STATUS_STORES_COLOR = NÃO. STATUS_STORES_SEMANTIC_STATE = SIM.
+Paleta por usuário + catálogo atual + slots atuais + alvos persistidos são entradas
+separadas do renderer. Hitboxes/máscaras/composição e imagens autorizadas para dentição
+mista exigem homologação visual; o teste Desktop não prova cobertura de assets web.
+SHELL_DECISION = PENDENTE; HYBRID é recomendação, não UX aprovada.
+FIRST_VISUAL_IMPLEMENTATION_PHASE = FC4-P3; avisar antes; homologação manual obrigatória.
+Após checkpoint P1.R1: PAUSE_FC4. Não iniciar P2/Procedimentos/visual.

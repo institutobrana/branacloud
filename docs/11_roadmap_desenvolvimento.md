@@ -6883,6 +6883,9 @@ Entrada do gate: instrumentação do handler do menu e uma única inserção man
 
 ## FC4 — Odontograma operacional / consolidação documental P0H
 
+REGISTRO HISTÓRICO P0H/P0I: o estado vigente posterior está na seção P1.R1 ao fim.
+Propostas de congelamento e blockers antigos não prevalecem sobre D01–D10.
+
 - Baseline: `1e8f31c2ce9e313a425bd4948b93dc8f01d120e1`, branch `modularizacao-segura-fase-1`.
 - CURRENT_BASELINE: `b47114f9cc60c54981391c7c23baa21d83a0aeb6` (fechamento documental P0E).
 - FC3-D5 permanece **HOMOLOGATED**, sem reabertura ou alteração funcional.
@@ -6948,3 +6951,57 @@ VISUAL_IMPLEMENTATION_REQUIRES_MANUAL_HOMOLOGATION = SIM.
 ANTES DE FC4-P3: AVISAR O USUÁRIO. P1 não depende de nova sessão EasyDental.
 Não reabrir contratos congelados sem contradição PROVEN; decisões de design
 continuam distintas de comportamento legado e de autorização de implementar.
+
+## FC4 — P1.R1 / reconciliação manual e checkpoint documental (2026-10-05)
+
+CURRENT_BASELINE = 6e7cdd5de3551f4d1b120f5d0da579e364746d38.
+FC3-D5 permanece HOMOLOGATED. P0D/P0H/P0I acima são registros históricos;
+"P1 NOT STARTED" e recomendações HYBRID/representação congelada daquele registro
+não são o estado vigente. P1 = COMPLETE — design proposto em relatório; P1.R1 =
+COMPLETE — design corrigido/documentado para revisão, não implementação.
+
+USER_MANUAL_RUNTIME_EVIDENCE D01–D10 incorporada integralmente:
+catálogo LIVE e valores próprios; slot/vazio/mista; Grava esta/todas por cobrança;
+vínculo usuário↔prestador obrigatório; defaults clínicos editáveis; centavos/soma;
+fases auxiliares reutilizáveis e história por proveniência; orçamento pendente/
+reaprovação/reconciliação preservando pagamento; símbolo obrigatório/painel lateral;
+OWNER + replay versus nova intenção + versão. Cores são preferências por usuário.
+Não pedir repetir os testes nem reabrir sem PROVEN_CONTRADICTION.
+
+MANUAL_DECISIONS_DOCUMENTED = 10/10.
+P1_DESIGN_CONTRADICTIONS_FIXED = 8.
+P1_DESIGN_REMAINING_CONTRADICTIONS = 0.
+ROUNDTRIP_REVISED_STATUS = PASS — conceitual A–U.
+IMPLEMENTATION_STARTED = NÃO.
+VISUAL_IMPLEMENTATION_STARTED = NÃO.
+DATABASE_MIGRATION_CREATED = NÃO.
+READY_FOR_P1_R1_CHECKPOINT = SIM — revisão documental, sem commit/push nesta rodada.
+SHELL_DECISION = PENDENTE; recomendação HYBRID: React moderno + Desktop.
+
+AFTER_P1_R1_CHECKPOINT = PAUSE_FC4.
+FC4_PAUSE_AFTER_CHECKPOINT = SIM.
+NEXT_SEPARATE_MODULE = PROCEDIMENTOS — sob autorização separada.
+Objetivo futuro: auditar/quantificar procedimentos sem símbolo, tabelas/regra de
+cadastro e validação obrigatória, planejar regularização sem inventar símbolos.
+AUDITORIA_PROCEDIMENTOS_STARTED = NÃO. P2 = NOT STARTED.
+
+BLOCKING_BEFORE_P2 = revisão/documentação/fechamento posterior; migração segura;
+writers atuais e políticas técnicas de compatibilidade/contexto/locks/retry/financeiro.
+BLOCKING_BEFORE_P3 = auditoria/regularização de símbolos; shell/UX; hitboxes/
+composição/preferências; autorização A/B e homologação manual.
+BLOCKING_BEFORE_DELETE = implementar/testar pendência/reaprovação/reconciliação,
+preservar pagamentos/baixas/histórico e garantir permissões/OWNER/versões/locks.
+Veto genérico de delete por pagamento FOI REMOVIDO. Delete de tratamento é distinto.
+
+Fases P2–P9 seguem PLANNED / NOT STARTED: P2 foundation; P3 slots/seleção/shell;
+P4 picker/modal; P5 gravação; P6 render; P7 editar/finalizar/excluir; P8 integração
+orçamento/histórico; P9 regressão/homologação. Consistência de histórico/orçamento
+deve existir desde a fundação/write, não aguardar P8 para corrigir o estado clínico.
+FIRST_VISUAL_IMPLEMENTATION_PHASE = FC4-P3.
+VISUAL_IMPLEMENTATION_REQUIRES_MANUAL_HOMOLOGATION = SIM.
+ANTES DE FC4-P3: AVISAR O USUÁRIO.
+
+Fontes vigentes: [contratos P1.R1](ficha_clinica/odontograma_contracts.md),
+[continuação](ficha_clinica/odontograma_continuacao.md) e
+[checkpoint P1.R1](checkpoints/ficha_clinica_odontograma_fc4_p1_r1_checkpoint.md).
+Não iniciar FC4-P2 nem Procedimentos nesta rodada.
