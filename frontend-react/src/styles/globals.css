@@ -1534,12 +1534,24 @@ body {
   color: #44515c;
 }
 
-.procedimento-generico-date-box {
-  min-height: 15px;
-  border: 1px solid var(--brana-border-subtle);
-  background: var(--brana-surface-disabled);
+.procedimento-generico-modal .procedimento-generico-date-box {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 28px;
+  height: 28px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #54e5e9;
   padding: 0 10px;
-  color: var(--brana-text-primary);
+  color: #0f172a;
+  font-size: 11px;
+  line-height: 1;
+}
+
+:root[data-brana-theme='dark'] .procedimento-generico-modal .procedimento-generico-date-box {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #34d7df;
+  color: #081521;
 }
 
 .procedimento-generico-costs {

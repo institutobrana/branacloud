@@ -142,46 +142,54 @@ function resolvePreviewFileName(fileName) {
   return aliasMap[normalized.toLowerCase()] || normalized;
 }
 
+function resolveGenericSymbolPreviewCandidates(simbolos, state, { baseUrl = '/', preferBundledAssets = false } = {}) {
+  const value = String(state.simbolo_grafico_legacy_id || state.simbolo_grafico || '').trim();
+  if (!value) return [];
+  const item = findSimboloByValue(simbolos, value);
+  const rawSrc = String(item?.imagem_url || '').trim();
+  const canonicalDesktop = rawSrc.startsWith('/desktop-assets/easy/');
+  const base = `${String(baseUrl || '/').replace(/\/+$/, '')}/`;
+  const publicSrc = rawSrc.startsWith('/assets/') ? `${base}${rawSrc.slice(1)}` : rawSrc;
+  const nomeArquivo = canonicalDesktop ? rawSrc.split(/[?#]/)[0].split('/').pop() : '';
+  const fallback = String(item?.icone || item?.bitmap1 || item?.bitmap2 || item?.bitmap3 || '').trim();
+  const codigo = String(item?.codigo || value || '').trim();
+  const fileName = resolvePreviewFileName(nomeArquivo || fallback || codigo);
+  const bundled = [];
+  if (/^[^/\\]+\.(bmp|png|jpe?g|gif|svg|ico|webp)$/i.test(fileName)) {
+    if (/^esp_/i.test(fileName)) {
+      bundled.push(`${base}assets/fichaClinica/odontograma/especialidades/${fileName}`);
+    } else {
+      bundled.push(`${base}assets/easy/${fileName}`);
+      if (!/^sim_/i.test(fileName)) bundled.push(`${base}assets/fichaClinica/odontograma/procedimentos/${fileName}`);
+    }
+  }
+  // Vite serves the bundled copies under BASE_URL; /desktop-assets belongs to the backend.
+  const next = preferBundledAssets && canonicalDesktop ? [...bundled, publicSrc] : [publicSrc, ...bundled];
+  return Array.from(new Set(next.filter(Boolean)));
+}
+
 function SymbolPreview({ simbolos, state }) {
   const [candidateIndex, setCandidateIndex] = useState(0);
   const value = String(state.simbolo_grafico_legacy_id || state.simbolo_grafico || '').trim();
+  const candidates = useMemo(() => resolveGenericSymbolPreviewCandidates(simbolos, state, {
+    baseUrl: import.meta.env.BASE_URL,
+    preferBundledAssets: import.meta.env.DEV,
+  }), [simbolos, value]);
 
   useEffect(() => {
     setCandidateIndex(0);
-  }, [value]);
-
-  const candidates = useMemo(() => {
-    if (!value) return [];
-    const item = findSimboloByValue(simbolos, value);
-    const rawSrc = String(item?.imagem_url || '').trim();
-    const nomeArquivo = rawSrc.split('/').filter(Boolean).pop() || '';
-    const fallback = String(item?.icone || item?.bitmap1 || item?.bitmap2 || item?.bitmap3 || '').trim();
-    const codigo = String(item?.codigo || value || '').trim();
-    const fileName = resolvePreviewFileName(nomeArquivo || fallback || codigo);
-    if (!fileName) return [];
-
-    const next = [];
-    if (rawSrc && !rawSrc.includes('/desktop-assets/easy/')) next.push(rawSrc);
-    if (/^sim_/i.test(fileName)) {
-      next.push(`/assets/easy/${fileName}`);
-    } else if (/^esp_/i.test(fileName)) {
-      next.push(`/assets/fichaClinica/odontograma/especialidades/${fileName}`);
-    } else {
-      next.push(`/assets/easy/${fileName}`);
-      next.push(`/assets/fichaClinica/odontograma/procedimentos/${fileName}`);
-    }
-    return Array.from(new Set(next.filter(Boolean)));
-  }, [simbolos, value]);
+  }, [candidates]);
 
   const src = candidates[candidateIndex] || '';
-  if (!src) return null;
+  if (!value) return null;
+  if (!src) return <Typography.Text type="secondary" role="status">Sem imagem</Typography.Text>;
 
   return (
     <img
       src={src}
-      alt=""
+      alt="Símbolo gráfico selecionado"
       className="procedimento-generico-symbol-preview-img"
-      onError={() => setCandidateIndex((current) => Math.min(current + 1, Math.max(candidates.length - 1, 0)))}
+      onError={() => setCandidateIndex((current) => Math.min(current + 1, candidates.length))}
     />
   );
 }
