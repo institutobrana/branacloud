@@ -22,6 +22,7 @@ from models.procedimento_generico import (
 from models.simbolo_grafico import SimboloGrafico
 from models.usuario import Usuario  # noqa: F401
 from services.simbolos_service import carregar_mapa_simbolos_por_legacy_id
+from services.procedimento_symbol_service import herdar_simbolo_se_vazio
 
 try:
     import pyodbc  # type: ignore
@@ -1034,8 +1035,10 @@ def _backfill_campos_procedimentos_por_generico(db: Session) -> int:
         if not str(getattr(proc, "especialidade", "") or "").strip() and str(getattr(generico, "especialidade", "") or "").strip():
             proc.especialidade = str(generico.especialidade or "").strip()
             mudou = True
-        if not str(getattr(proc, "simbolo_grafico", "") or "").strip() and str(getattr(generico, "simbolo_grafico", "") or "").strip():
-            proc.simbolo_grafico = str(generico.simbolo_grafico or "").strip()
+        if int(proc.clinica_id) == int(generico.clinica_id) and herdar_simbolo_se_vazio(
+            db, proc.clinica_id, proc, generico.simbolo_grafico,
+            getattr(generico, "simbolo_grafico_legacy_id", None),
+        ):
             mudou = True
         if bool(getattr(generico, "mostrar_simbolo", False)) and not bool(getattr(proc, "mostrar_simbolo", False)):
             proc.mostrar_simbolo = True
@@ -1183,11 +1186,12 @@ def garantir_metadados_tabela_particular(db: Session) -> int:
         if snapshot_meta and int(snapshot_meta.get("especial") or 0) > 0 and not str(proc.especialidade or "").strip():
             proc.especialidade = f"{int(snapshot_meta.get('especial') or 0):02d}"
             mudou = True
-        if generico_local and not str(proc.simbolo_grafico or "").strip() and str(generico_local.simbolo_grafico or "").strip():
-            proc.simbolo_grafico = str(generico_local.simbolo_grafico or "").strip()
+        if generico_local and herdar_simbolo_se_vazio(
+            db, proc.clinica_id, proc, generico_local.simbolo_grafico,
+            getattr(generico_local, "simbolo_grafico_legacy_id", None),
+        ):
             mudou = True
-        if simbolo_codigo and not str(proc.simbolo_grafico or "").strip():
-            proc.simbolo_grafico = simbolo_codigo
+        if simbolo_codigo and herdar_simbolo_se_vazio(db, proc.clinica_id, proc, simbolo_codigo, simbolo_legacy_id):
             mudou = True
         if (simbolo_codigo or bool((snapshot_meta or {}).get("mostrar_simbolo"))) and not bool(proc.mostrar_simbolo):
             proc.mostrar_simbolo = True

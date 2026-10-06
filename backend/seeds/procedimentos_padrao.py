@@ -7,6 +7,7 @@ from models.procedimento_tabela import ProcedimentoTabela
 from models.procedimento_generico import ProcedimentoGenerico
 from seeds.procedimentos_easy_tabelas import get_procedimentos_easy_por_tabela
 from seeds.procedimentos_brana import get_procedimentos_brana_padrao
+from services.procedimento_symbol_service import SYMBOL_FIELDS
 
 PRIVATE_TABLE_NAME = "Brana"
 
@@ -1293,7 +1294,7 @@ def _garantir_tabelas_procedimentos_iniciais(db: Session, clinica_id: int) -> in
             else:
                 changed = False
                 for field, value in payload.items():
-                    if field == "codigo":
+                    if field == "codigo" or field in SYMBOL_FIELDS:
                         continue
                     if getattr(proc, field) != value:
                         setattr(proc, field, value)

@@ -38,6 +38,7 @@ from services.procedimentos_legado_service import resolver_codigo_generico_parti
 from services.etiquetas_service import garantir_modelos_etiqueta_clinica, garantir_padroes_etiqueta
 from services.indices_service import garantir_indices_padrao_clinica
 from services.simbolos_service import carregar_mapa_simbolos_por_legacy_id
+from services.procedimento_symbol_service import resolver_referencia_simbolo
 from security.hash import hash_password
 
 DEFAULT_LIST_NAME = "Tabela Brana"
@@ -1472,6 +1473,9 @@ def _upsert_procedimentos_particular_na_clinica(db, clinica_id, seed, reset_prec
             )
         if codigo in existentes:
             continue
+        simbolo_seed, simbolo_legacy_seed = resolver_referencia_simbolo(
+            db, clinica_id, simbolo_seed, simbolo_legacy_seed,
+        )
         proc = Procedimento(
             codigo=codigo,
             nome=item["nome"],
@@ -1806,7 +1810,9 @@ def separar_tabela_exemplo_particular_todas_clinicas(db):
             removidos = conn.execute(
                 text(
                     "DELETE FROM procedimento "
-                    "WHERE clinica_id = :cid AND tabela_id = 1 AND codigo NOT IN :codigos"
+                    "WHERE clinica_id = :cid AND tabela_id = 1 AND codigo NOT IN :codigos "
+                    "AND (simbolo_grafico IS NULL OR btrim(simbolo_grafico) = '') "
+                    "AND simbolo_grafico_legacy_id IS NULL"
                 ),
                 {"cid": int(clinica_id), "codigos": tuple(sorted(codigos_exemplo))},
             ).rowcount
@@ -1816,7 +1822,9 @@ def separar_tabela_exemplo_particular_todas_clinicas(db):
             removidos = conn.execute(
                 text(
                     "DELETE FROM procedimento "
-                    "WHERE clinica_id = :cid AND tabela_id = :tabela_particular_id AND codigo NOT IN :codigos"
+                    "WHERE clinica_id = :cid AND tabela_id = :tabela_particular_id AND codigo NOT IN :codigos "
+                    "AND (simbolo_grafico IS NULL OR btrim(simbolo_grafico) = '') "
+                    "AND simbolo_grafico_legacy_id IS NULL"
                 ),
                 {
                     "cid": int(clinica_id),
@@ -1890,6 +1898,9 @@ def separar_tabela_exemplo_particular_todas_clinicas(db):
                     item = particular_por_codigo.get(codigo) or exemplo_por_codigo.get(codigo) or {}
                     simbolo_seed = str(item.get("simbolo_grafico") or "").strip()
                     simbolo_legacy_seed = int(item.get("simbolo_grafico_legacy_id") or 0) or None
+                    simbolo_seed, simbolo_legacy_seed = resolver_referencia_simbolo(
+                        db, clinica_id, simbolo_seed, simbolo_legacy_seed,
+                    )
                     mostrar_seed = bool(item.get("mostrar_simbolo")) or bool(simbolo_seed)
                     payload.append(
                         {

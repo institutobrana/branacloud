@@ -27,6 +27,12 @@ from models.procedimento_tabela import ProcedimentoTabela
 from models.tiss_tipo_tabela import TissTipoTabela
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
+from services.procedimento_symbol_service import (
+    campos_simbolo_explicitos,
+    herdar_simbolo_se_vazio,
+    referencia_simbolo_payload,
+    resolver_referencia_simbolo,
+)
 from services.indices_service import (
     DEFAULT_INDICE_NUMERO,
     dados_indice_por_numero,
@@ -568,6 +574,7 @@ def _aplicar_heranca_procedimento_generico(
     clinica_id: int,
     proc: Procedimento,
     sobrescrever_vinculos: bool,
+    herdar_simbolo: bool = True,
 ) -> None:
     generico_id = int(proc.procedimento_generico_id or 0)
     if generico_id <= 0:
@@ -586,10 +593,9 @@ def _aplicar_heranca_procedimento_generico(
 
     if not (proc.especialidade or "").strip() and (generico.especialidade or "").strip():
         proc.especialidade = str(generico.especialidade or "").strip()
-    if not (proc.simbolo_grafico or "").strip() and (generico.simbolo_grafico or "").strip():
-        proc.simbolo_grafico = str(generico.simbolo_grafico or "").strip()
-    if not int(proc.simbolo_grafico_legacy_id or 0) and int(getattr(generico, "simbolo_grafico_legacy_id", 0) or 0) > 0:
-        proc.simbolo_grafico_legacy_id = int(getattr(generico, "simbolo_grafico_legacy_id", 0) or 0)
+    if herdar_simbolo:
+        herdar_simbolo_se_vazio(db, clinica_id, proc, generico.simbolo_grafico,
+                               getattr(generico, "simbolo_grafico_legacy_id", None))
     if not int(proc.tempo or 0) and int(generico.tempo or 0) > 0:
         proc.tempo = int(generico.tempo or 0)
     if not float(proc.custo_lab or 0) and float(getattr(generico, "custo_lab", 0) or 0) > 0:
@@ -1003,6 +1009,14 @@ def _copiar_procedimentos_entre_tabelas(
     if not origem:
         return 0
 
+    # Validate every reference before creating any copy; this operation is same-clinic.
+    referencias = {}
+    for proc in origem:
+        if int(proc.clinica_id) != int(clinica_id):
+            raise HTTPException(status_code=400, detail="Origem de outra clínica.")
+        referencias[int(proc.id)] = resolver_referencia_simbolo(
+            db, clinica_id, proc.simbolo_grafico, proc.simbolo_grafico_legacy_id,
+        )
     mapa_ids: dict[int, int] = {}
     for proc in origem:
         novo = Procedimento(
@@ -1016,7 +1030,8 @@ def _copiar_procedimentos_entre_tabelas(
             tabela_id=tabela_destino_id,
             especialidade=_normalizar_especialidade(proc.especialidade) or None,
             procedimento_generico_id=proc.procedimento_generico_id,
-            simbolo_grafico=(proc.simbolo_grafico or "").strip() or None,
+            simbolo_grafico=referencias[int(proc.id)][0],
+            simbolo_grafico_legacy_id=referencias[int(proc.id)][1],
             mostrar_simbolo=bool(proc.mostrar_simbolo),
             garantia_meses=int(proc.garantia_meses or 0),
             forma_cobranca=_normalizar_forma_cobranca(proc.forma_cobranca),
@@ -1867,6 +1882,7 @@ def criar_procedimento(
             .first()
             is not None
         )
+    simbolo_codigo, simbolo_legacy_id = referencia_simbolo_payload(db, clinica_id, payload)
     proc = Procedimento(
         codigo=int(payload.codigo),
         nome=nome,
@@ -1877,8 +1893,8 @@ def criar_procedimento(
         tabela_id=int(tabela.id),
         especialidade=especialidade,
         procedimento_generico_id=generico_id,
-        simbolo_grafico=(payload.simbolo_grafico or "").strip() or None,
-        simbolo_grafico_legacy_id=int(payload.simbolo_grafico_legacy_id or 0) or None,
+        simbolo_grafico=simbolo_codigo,
+        simbolo_grafico_legacy_id=simbolo_legacy_id,
         mostrar_simbolo=bool(payload.mostrar_simbolo if payload.mostrar_simbolo is not None else (payload.simbolo_grafico or "").strip()),
         garantia_meses=int(payload.garantia_meses or 0),
         forma_cobranca=_normalizar_forma_cobranca(payload.forma_cobranca),
@@ -1947,6 +1963,8 @@ def atualizar_procedimento(
         )
         if not generico_existe:
             raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado para esta clínica.")
+    simbolo_codigo, simbolo_legacy_id = referencia_simbolo_payload(db, clinica_id, payload, atual=proc)
+    symbol_explicit = bool(campos_simbolo_explicitos(payload))
     proc.codigo = int(payload.codigo)
     proc.nome = nome
     proc.tabela_id = int(tabela.id)
@@ -1957,8 +1975,8 @@ def atualizar_procedimento(
     if payload.especialidade is not None:
         proc.especialidade = _normalizar_especialidade(payload.especialidade) or None
     proc.procedimento_generico_id = generico_novo or None
-    proc.simbolo_grafico = (payload.simbolo_grafico or "").strip() or None
-    proc.simbolo_grafico_legacy_id = int(payload.simbolo_grafico_legacy_id or 0) or None
+    proc.simbolo_grafico = simbolo_codigo
+    proc.simbolo_grafico_legacy_id = simbolo_legacy_id
     proc.mostrar_simbolo = bool(payload.mostrar_simbolo if payload.mostrar_simbolo is not None else proc.simbolo_grafico)
     proc.garantia_meses = int(payload.garantia_meses or 0)
     proc.forma_cobranca = _normalizar_forma_cobranca(payload.forma_cobranca)
@@ -1970,7 +1988,8 @@ def atualizar_procedimento(
     if not (proc.data_inclusao or "").strip():
         proc.data_inclusao = proc.data_alteracao
     if generico_novo:
-        _aplicar_heranca_procedimento_generico(db, clinica_id, proc, sobrescrever_vinculos=mudou_generico)
+        _aplicar_heranca_procedimento_generico(db, clinica_id, proc, sobrescrever_vinculos=mudou_generico,
+                                             herdar_simbolo=symbol_explicit)
         _sincronizar_generico_com_procedimento(db, clinica_id, proc)
     elif mudou_generico:
         (
