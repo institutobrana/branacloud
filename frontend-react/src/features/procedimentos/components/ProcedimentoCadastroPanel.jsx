@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Checkbox, Input, Select } from 'antd';
 import {
   resolveProcedimentoSymbolPreviewCandidates,
-  resolveProcedimentoSymbolSelectValue,
+  resolveProcedimentoSymbolSelectDisplay,
   resolveProcedimentoSymbolSelection,
   parseMoneyInput,
   toMoneyInputValue,
@@ -61,7 +61,7 @@ export function ProcedimentoCadastroPanel({
   onChange,
 }) {
   const values = form || {};
-  const symbolValue = resolveProcedimentoSymbolSelectValue(simboloOptions, values) || undefined;
+  const symbolValue = resolveProcedimentoSymbolSelectDisplay(simboloOptions, values);
   const { option: selectedSymbol, ambiguous } = resolveProcedimentoSymbolSelection(simboloOptions, values);
   const previewCandidates = resolveProcedimentoSymbolPreviewCandidates(simboloOptions, values);
 
@@ -132,13 +132,16 @@ export function ProcedimentoCadastroPanel({
             <span>Símbolo gráfico</span>
             <Select
               allowClear
+              labelInValue
+              virtual={false}
               placeholder="Selecione..."
               value={symbolValue}
               options={simboloOptions}
               showSearch
               optionFilterProp="label"
               disabled={disabled || loading}
-              onChange={(value) => {
+              onChange={(selection) => {
+                const value = selection?.value;
                 const nextOption = (Array.isArray(simboloOptions) ? simboloOptions : []).find(
                   (item) => Number(item.catalogId || item.value || 0) === Number(value || 0),
                 );
@@ -148,6 +151,7 @@ export function ProcedimentoCadastroPanel({
                 update('mostrar_simbolo', !!nextOption);
               }}
             />
+            {symbolValue && !selectedSymbol ? <span className="procedimento-editor-field-hint">Símbolo atual fora da lista de novas escolhas; referência preservada.</span> : null}
             {ambiguous ? <span className="procedimento-editor-field-hint">Símbolo com ambiguidade no contrato persistido.</span> : null}
           </label>
 

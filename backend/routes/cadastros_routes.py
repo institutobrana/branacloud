@@ -726,6 +726,20 @@ def _merge_extra_payload(paciente: Paciente, extra: dict[str, Any] | None) -> di
     return base or None
 
 
+# P7A.R2: materializacao nominal de ESPECIAL=10 no catalogo historico
+# _SIMBOLO_ODONTO (81 identidades). O seed normalizou esses itens para
+# especialidade=5 em algumas clinicas; esse campo local nao e o ESPECIAL
+# historico. Nunca deduplicar identidades por codigo/bitmap nem usar o
+# snapshot de procedimentos ou o catalogo completo como fallback do combo.
+PROCEDIMENTOS_ESPECIAL_HISTORICO_10_IDS = frozenset(range(60, 77)) | {80}
+PROCEDIMENTOS_COMBO_LABELS = {
+    46: "Hemissecção",
+    56: "Prótese (diversos)",
+    57: "Símbolo genérico (dente)",
+    58: "Símbolo genérico (grupo)",
+}
+
+
 @router.get("/simbolos-graficos", dependencies=[DEP_PROCEDIMENTOS])
 def listar_simbolos_graficos(
     q: str = Query(default=""),
@@ -742,6 +756,8 @@ def listar_simbolos_graficos(
         pass
     elif scope_norm == "genericos":
         catalogo = carregar_codigos_genericos() or carregar_codigos_catalogo_oficial()
+    elif scope_norm == "procedimentos-combo":
+        legacy_catalogo = carregar_legacy_ids_catalogo_oficial()
     elif scope_norm == "procedimentos":
         catalogo = carregar_codigos_procedimentos() or carregar_codigos_catalogo_oficial()
     else:
@@ -763,7 +779,14 @@ def listar_simbolos_graficos(
         descricao = str(row.descricao or "").strip()
         if not codigo or not descricao:
             continue
-        if scope_norm == "catalogo":
+        if scope_norm == "procedimentos-combo":
+            legacy_id = int(getattr(row, "legacy_id", 0) or 0)
+            # ESPECIAL historico <> 10, somente dentro do catalogo homologado.
+            # Ausencia da fonte oficial resulta em lista vazia, nunca ampla.
+            if legacy_id not in legacy_catalogo or legacy_id in PROCEDIMENTOS_ESPECIAL_HISTORICO_10_IDS:
+                continue
+            descricao = PROCEDIMENTOS_COMBO_LABELS.get(legacy_id, descricao)
+        elif scope_norm == "catalogo":
             legacy_id = int(getattr(row, "legacy_id", 0) or 0)
             # Catalogo oficial da tela "Configura simbolos": somente os 81 itens
             # vindos do snapshot EasyDental (_SIMBOLO_ODONTO) + simbolos criados
@@ -774,8 +797,8 @@ def listar_simbolos_graficos(
             codigo_key = codigo.lower()
             if catalogo:
                 if scope_norm == "procedimentos":
-                    # EasyDental: combo de simbolo grafico em procedimentos aceita
-                    # catalogo oficial + simbolos personalizados da clinica.
+                    # Compatibility for the legacy editor; the React combo opts
+                    # into procedimentos-combo without changing this consumer.
                     if codigo_key not in catalogo and _simbolo_eh_oficial(row):
                         continue
                 elif codigo_key not in catalogo:

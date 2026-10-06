@@ -1,5 +1,5 @@
 import { buildApiUrl } from '../../services/api.js';
-import { normalizeProcedimento, normalizeProcedimentoSymbol } from './procedimentosEditorMappers.js';
+import { buildProcedimentoSymbolCombo, normalizeProcedimento } from './procedimentosEditorMappers.js';
 import { normalizeProcedimentosFinanceiroResponse } from './procedimentosFinanceiroMappers.js';
 
 async function requestJson(path, options = {}) {
@@ -135,10 +135,10 @@ export async function listarProcedimentosGenericosCombos(q = '') {
 }
 
 export async function listarSimbolosGraficoProcedimentos() {
-  const data = await requestJson('/cadastros/simbolos-graficos?scope=procedimentos', {
+  const data = await requestJson('/cadastros/simbolos-graficos?scope=procedimentos-combo', {
     headers: getAuthHeaders(),
   });
-  return unwrapCollection(data).map(normalizeProcedimentoSymbol);
+  return buildProcedimentoSymbolCombo(unwrapCollection(data));
 }
 
 export async function obterProcedimentosDashboard({ signal } = {}) {

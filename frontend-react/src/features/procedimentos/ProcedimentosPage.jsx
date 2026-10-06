@@ -167,8 +167,9 @@ export function ProcedimentosPage() {
       setSimboloOptions(nextSimbolos);
       return nextSimbolos;
     } catch (err) {
+      setSimboloOptions([]);
       message.error(err?.message || 'Falha ao carregar combos do editor.');
-      return [];
+      throw err;
     }
   };
 
@@ -215,7 +216,7 @@ export function ProcedimentosPage() {
 
   useEffect(() => {
     void loadListas();
-    void loadLookups();
+    void loadLookups().catch(() => {}); // Load already reports the error; modal callers handle rejection.
   }, []);
 
   useEffect(() => {

@@ -198,6 +198,20 @@ export function buildProcedimentoSymbolCatalog(items) {
   return (Array.isArray(items) ? items : []).map(normalizeProcedimentoSymbol);
 }
 
+export function buildProcedimentoSymbolCombo(items) {
+  const catalog = buildProcedimentoSymbolCatalog(items);
+  // Contract guard, not a fallback/filter: reject an old backend's broad
+  // response to the new scope. These identities materialize the proved
+  // historical ESPECIAL <> 10 set. Missing local symbols are not invented.
+  const isExpected = (id) => (id >= 1 && id <= 59) || [77, 78, 79, 81].includes(id);
+  if (catalog.some((item) => !item.catalogId || !Number.isInteger(item.legacyId) || !isExpected(item.legacyId))
+    || new Set(catalog.map((item) => item.legacyId)).size !== catalog.length
+    || new Set(catalog.map((item) => item.catalogId)).size !== catalog.length) {
+    throw new Error('Lista de símbolos incompatível com o contexto de Procedimentos.');
+  }
+  return catalog;
+}
+
 export function buildProcedimentoSymbolLookups(items) {
   const catalog = buildProcedimentoSymbolCatalog(items);
   const byCatalogId = new Map();
@@ -262,6 +276,20 @@ export function resolveProcedimentoSymbolSelectValue(simbolos, state) {
   return option?.catalogId || undefined;
 }
 
+export function resolveProcedimentoSymbolSelectDisplay(simbolos, state) {
+  const { option, ambiguous } = resolveProcedimentoSymbolSelection(simbolos, state);
+  if (option) return { value: option.catalogId, label: option.label };
+  const codigo = String(state?.simbolo_grafico || '').trim();
+  const legacyId = Number(state?.simbolo_grafico_legacy_id || 0) || null;
+  if (!codigo && !legacyId) return undefined;
+  // Display-only current selection: not appended to the contextual options.
+  // Opening/cancelling or editing another field must not clear its identity.
+  return {
+    value: `existing:${legacyId || codigo}`,
+    label: String(state?.simbolo_descricao || '').trim() || `${codigo || 'Símbolo atual'}${legacyId ? ` (legado ${legacyId})` : ''}${ambiguous ? ' — ambíguo' : ''}`,
+  };
+}
+
 export function resolveProcedimentoSymbolPreviewCandidates(simbolos, state) {
   const { option } = resolveProcedimentoSymbolSelection(simbolos, state);
   if (!option) return [];
@@ -322,7 +350,7 @@ export function extractProcedimentoSymbolPayload(simbolos, state) {
       simbolo_catalogo_id: null,
       simbolo_grafico: String(state?.simbolo_grafico || '').trim() || null,
       simbolo_grafico_legacy_id: Number(state?.simbolo_grafico_legacy_id || 0) || null,
-      mostrar_simbolo: !!String(state?.simbolo_grafico || '').trim(),
+      mostrar_simbolo: typeof state?.mostrar_simbolo === 'boolean' ? state.mostrar_simbolo : !!String(state?.simbolo_grafico || '').trim(),
     };
   }
 
