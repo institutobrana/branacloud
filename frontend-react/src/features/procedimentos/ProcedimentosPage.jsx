@@ -37,6 +37,13 @@ import { ProcedimentoTabelaModal, createTabelaForm, validateTabelaForm, buildTab
 import { ProcedimentoReajusteModal, reajustePreviewKey } from './components/ProcedimentoReajusteModal.jsx';
 import './procedimentos.css';
 
+const TABLE_VISIBLE_ROWS = 15;
+// Minimum readable width; horizontal scrolling is only a narrow-workspace fallback.
+const TABLE_MIN_WIDTH = 900;
+// Initial compact density: 22px text + 4px padding + 1px border.
+// Replace this estimate with the rendered row height without changing its CSS.
+const TABLE_INITIAL_ROW_HEIGHT = 27;
+
 function formatMoney(value) {
   const next = Number(value || 0);
   return Number.isFinite(next) ? next.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0,00';
@@ -65,6 +72,8 @@ function buildProcedureGenericOptions(items) {
 }
 
 export function ProcedimentosPage() {
+  const tableGridRef = useRef(null);
+  const [tableScrollY, setTableScrollY] = useState(TABLE_VISIBLE_ROWS * TABLE_INITIAL_ROW_HEIGHT);
   const [tabelas, setTabelas] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [procedimentos, setProcedimentos] = useState([]);
@@ -600,19 +609,32 @@ export function ProcedimentosPage() {
     key: item.id,
   }));
 
+  useEffect(() => {
+    const row = tableGridRef.current?.querySelector('.ant-table-tbody > tr.ant-table-row');
+    if (!row || loading) return undefined;
+    const measure = () => {
+      const height = row.getBoundingClientRect().height;
+      if (height > 0) setTableScrollY(height * TABLE_VISIBLE_ROWS);
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(row);
+    return () => observer.disconnect();
+  }, [loading, sortedProcedimentos]);
+
   const columns = [
     {
       key: 'codigo',
       title: renderHeader('codigo', 'Código'),
       dataIndex: 'codigo',
-      width: 90,
+      width: 80,
       render: (value) => <Typography.Text strong>{formatCode(value)}</Typography.Text>,
     },
     {
       key: 'nome',
       title: renderHeader('nome', 'Procedimento'),
       dataIndex: 'nome',
-      width: 340,
       render: (value) => value || '-',
     },
     {
@@ -626,7 +648,7 @@ export function ProcedimentosPage() {
       key: 'tempo',
       title: renderHeader('tempo', 'Tempo'),
       dataIndex: 'tempo',
-      width: 82,
+      width: 70,
       align: 'center',
       render: (value) => String(value ?? 0),
     },
@@ -634,7 +656,7 @@ export function ProcedimentosPage() {
       key: 'preco',
       title: renderHeader('preco', 'Preço'),
       dataIndex: 'preco',
-      width: 112,
+      width: 104,
       align: 'right',
       render: (value) => formatMoney(value),
     },
@@ -642,7 +664,7 @@ export function ProcedimentosPage() {
       key: 'custo',
       title: renderHeader('custo', 'Custo'),
       dataIndex: 'custo',
-      width: 112,
+      width: 104,
       align: 'right',
       render: (value) => formatMoney(value),
     },
@@ -650,7 +672,7 @@ export function ProcedimentosPage() {
       key: 'custo_lab',
       title: renderHeader('custo_lab', 'Custo Lab.'),
       dataIndex: 'custo_lab',
-      width: 112,
+      width: 104,
       align: 'right',
       render: (value) => formatMoney(value),
     },
@@ -663,7 +685,8 @@ export function ProcedimentosPage() {
 
         <BranaCard className="auxiliary-main-card procedimentos-genericos-card">
           <div className="module-table-shell procedimentos-genericos-shell">
-            <div className="users-grid-shell procedimentos-genericos-grid" role="grid" aria-label="Listagem de procedimentos">
+            <div className="procedimentos-list-frame">
+            <div ref={tableGridRef} className="users-grid-shell procedimentos-genericos-grid procedimentos-main-grid" role="grid" aria-label="Listagem de procedimentos">
               <BranaTable
                 rowKey="id"
                 className="module-table auxiliary-compact-table procedimentos-table"
@@ -671,6 +694,7 @@ export function ProcedimentosPage() {
                 pagination={false}
                 size="small"
                 tableLayout="fixed"
+                scroll={{ x: TABLE_MIN_WIDTH, y: tableScrollY }}
                 dataSource={rows}
                 columns={columns}
                 rowSelection={{
@@ -688,6 +712,10 @@ export function ProcedimentosPage() {
                 })}
                 locale={{ emptyText: 'Nenhum procedimento cadastrado.' }}
               />
+            </div>
+            <div className="procedimentos-table-footer" aria-live="polite">
+              <Typography.Text type="secondary">{rows.length} {rows.length === 1 ? 'procedimento' : 'procedimentos'}</Typography.Text>
+            </div>
             </div>
           </div>
         </BranaCard>

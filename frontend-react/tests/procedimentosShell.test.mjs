@@ -38,10 +38,11 @@ for (const expanded of [false, true]) {
   }
 }
 
-test('não altera grid compartilhado homologado nem implementa scroll do Plan B', () => {
+test('Plan B usa scroll local sem alterar grid compartilhado homologado', () => {
   assert.match(globalCss, /width: min\(1032px, 100%\)/);
   const table = page.slice(page.indexOf('<BranaTable'), page.indexOf('locale={{ emptyText:', page.indexOf('<BranaTable')));
-  assert.doesNotMatch(table, /scroll=|480|height=/);
+  assert.match(table, /scroll=\{\{ x: TABLE_MIN_WIDTH, y: tableScrollY \}\}/);
+  assert.doesNotMatch(table, /height=/);
   assert.match(table, /pagination=\{false\}/);
   assert.match(table, /dataSource=\{rows\}/);
 });
