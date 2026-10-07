@@ -176,9 +176,11 @@ async function withPage(run) {
   const stored={id:123,codigo:123,nome:'Teste isolado',tabela_id:78,...outside};
   const writes=[];const errors=[];let modal;let table;let failLookups=false;
   const box=({children})=>React.createElement('div',null,children);
+  const unexpectedAction=()=>{throw new Error('Unexpected table/action request in symbol fixture');};
   const mocks={react:React,'react/jsx-runtime':await import('react/jsx-runtime'),
-    antd:{Typography:{Text:box},message:{error:(e)=>errors.push(e),warning:(e)=>errors.push(e),success:()=>{}}},
+    antd:{Typography:{Text:box,Paragraph:box},Alert:()=>null,message:{error:(e)=>errors.push(e),warning:(e)=>errors.push(e),success:()=>{}}},
     '../../components/BranaCard.jsx':{BranaCard:box},
+    '../../components/BranaModal.jsx':{BranaModal:()=>null},
     '../../components/BranaTable.jsx':{BranaTable:(props)=>{table=props;return null;}},
     '../../components/TableColumnFilterHeader.jsx':{TableColumnFilterHeader:()=>null},
     './procedimentosEditorMappers.js':mappers,
@@ -186,6 +188,14 @@ async function withPage(run) {
     './components/ProcedimentoEditorModal.jsx':{ProcedimentoEditorModal:(props)=>{
       modal=props;return props.open?React.createElement('div',{role:'dialog'},props.error || props.form.nome):null;
     }},
+    // R1 table/action modals are outside this fixture's symbol/editor scope.
+    './components/ProcedimentoTabelaModal.jsx':{
+      ProcedimentoTabelaModal:()=>null,createTabelaForm:()=>({}),
+      validateTabelaForm:unexpectedAction,buildTabelaPayload:unexpectedAction,
+    },
+    './components/ProcedimentoReajusteModal.jsx':{
+      ProcedimentoReajusteModal:()=>null,reajustePreviewKey:unexpectedAction,
+    },
     './procedimentos.css':{},
     './procedimentosApi.js':{
       listarProcedimentosFiltros:async()=>({tabelas:[{id:78,nome:'Teste'}],especialidades:[]}),
@@ -193,6 +203,9 @@ async function withPage(run) {
       listarSimbolosGraficoProcedimentos:async()=>{if(failLookups)throw new Error('lookup failure');return combo;},
       obterProcedimentoDetalhe:async()=>({...stored}),obterProximoCodigoProcedimento:async()=>124,
       salvarProcedimento:async(args)=>{writes.push(structuredClone(args));return {...stored,...args.payload};},
+      excluirProcedimento:unexpectedAction,criarTabelaProcedimentos:unexpectedAction,
+      atualizarTabelaProcedimentos:unexpectedAction,excluirTabelaProcedimentos:unexpectedAction,
+      previewReajusteTabela:unexpectedAction,aplicarReajusteTabela:unexpectedAction,
     }};
   const module={exports:{}};
   const code=transformSync(source('../src/features/procedimentos/ProcedimentosPage.jsx'),{loader:'jsx',format:'cjs',jsx:'automatic'}).code;

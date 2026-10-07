@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Typography, message } from 'antd';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, Typography, message } from 'antd';
 
 import { BranaCard } from '../../components/BranaCard.jsx';
 import { BranaTable } from '../../components/BranaTable.jsx';
+import { BranaModal } from '../../components/BranaModal.jsx';
 import { TableColumnFilterHeader } from '../../components/TableColumnFilterHeader.jsx';
 import {
   listarProcedimentos,
@@ -12,6 +13,12 @@ import {
   obterProcedimentoDetalhe,
   obterProximoCodigoProcedimento,
   salvarProcedimento,
+  excluirProcedimento,
+  criarTabelaProcedimentos,
+  atualizarTabelaProcedimentos,
+  excluirTabelaProcedimentos,
+  previewReajusteTabela,
+  aplicarReajusteTabela,
 } from './procedimentosApi.js';
 import {
   createEmptyProcedimentoForm,
@@ -26,6 +33,8 @@ import {
 } from './procedimentosEditorMappers.js';
 import { validateProcedimentoForm } from './procedimentosEditorValidators.js';
 import { ProcedimentoEditorModal } from './components/ProcedimentoEditorModal.jsx';
+import { ProcedimentoTabelaModal, createTabelaForm, validateTabelaForm, buildTabelaPayload } from './components/ProcedimentoTabelaModal.jsx';
+import { ProcedimentoReajusteModal, reajustePreviewKey } from './components/ProcedimentoReajusteModal.jsx';
 import './procedimentos.css';
 
 function formatMoney(value) {
@@ -84,8 +93,28 @@ export function ProcedimentosPage() {
   const [editorForm, setEditorForm] = useState(createEmptyProcedimentoForm());
   const [procedimentoGenericoOptions, setProcedimentoGenericoOptions] = useState([]);
   const [simboloOptions, setSimboloOptions] = useState([]);
+  const [indices, setIndices] = useState([]);
+  const [tiposTiss, setTiposTiss] = useState([]);
+  const [tabelaModal, setTabelaModal] = useState({ open: false, mode: 'new', codigo: null });
+  const [tabelaForm, setTabelaForm] = useState(createTabelaForm());
+  const [tabelaError, setTabelaError] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteError, setDeleteError] = useState('');
+  const [actionSaving, setActionSaving] = useState(false);
+  const actionInFlight = useRef(false);
+  const [reajusteOpen, setReajusteOpen] = useState(false);
+  const [reajusteForm, setReajusteForm] = useState({ tabela_id: null, percentual: '1,00', modo: 'aumentar' });
+  const [reajustePreview, setReajustePreview] = useState(null);
+  const [reajusteLoading, setReajusteLoading] = useState(false);
+  const [reajusteError, setReajusteError] = useState('');
+  const previewGeneration = useRef(0);
+  const listGeneration = useRef(0);
 
   const selectedItem = useMemo(() => procedimentos.find((item) => item.id === selectedId) || null, [procedimentos, selectedId]);
+  const selectedTabela = tabelas.find((item) => item.id === selectedTabelaId) || null;
+  const modalOpen = editorOpen || tabelaModal.open || Boolean(deleteTarget) || reajusteOpen;
+  const actionsBusy = loading || loadingListas || editorLoading || editorSaving || actionSaving || modalOpen;
+  const tabelaAtiva = Boolean(selectedTabela && !selectedTabela.inativo);
   const especialidadeNomePorCodigo = useMemo(() => createSpecialtyNameMap(especialidades), [especialidades]);
 
   const sortedProcedimentos = useMemo(() => {
@@ -173,28 +202,35 @@ export function ProcedimentosPage() {
     }
   };
 
-  const loadListas = async () => {
+  const loadListas = async (preferredId = null) => {
     setLoadingListas(true);
     try {
       const data = await listarProcedimentosFiltros();
       setTabelas(data.tabelas);
       setEspecialidades(data.especialidades);
-      setSelectedTabelaId((current) => current || data.tabelas[0]?.id || null);
+      setIndices(data.indices || []);
+      setTiposTiss(data.tiposTiss || []);
+      const nextId = data.tabelas.find((item) => item.id === (preferredId ?? selectedTabelaId))?.id || data.tabelas[0]?.id || null;
+      setSelectedTabelaId(nextId);
+      return nextId;
     } catch (err) {
       setTabelas([]);
       setEspecialidades([]);
       setSelectedTabelaId(null);
       setError(err?.message || 'Falha ao carregar filtros de procedimentos.');
       message.error(err?.message || 'Falha ao carregar filtros de procedimentos.');
+      return null;
     } finally {
       setLoadingListas(false);
     }
   };
 
   const loadProcedimentos = async (tabelaId = selectedTabelaId, especialidade = selectedEspecialidade, q = search) => {
+    const generation = ++listGeneration.current;
     if (!tabelaId) {
       setProcedimentos([]);
       setSelectedId(null);
+      setLoading(false);
       return;
     }
 
@@ -202,15 +238,17 @@ export function ProcedimentosPage() {
     setError('');
     try {
       const data = await listarProcedimentos({ tabelaId, especialidade, q });
+      if (generation !== listGeneration.current) return;
       setProcedimentos(data);
       setSelectedId((current) => (data.some((item) => item.id === current) ? current : data[0]?.id || null));
     } catch (err) {
+      if (generation !== listGeneration.current) return;
       setProcedimentos([]);
       setSelectedId(null);
       setError(err?.message || 'Falha ao carregar procedimentos.');
       message.error(err?.message || 'Falha ao carregar procedimentos.');
     } finally {
-      setLoading(false);
+      if (generation === listGeneration.current) setLoading(false);
     }
   };
 
@@ -220,7 +258,6 @@ export function ProcedimentosPage() {
   }, []);
 
   useEffect(() => {
-    if (!selectedTabelaId) return;
     void loadProcedimentos(selectedTabelaId, selectedEspecialidade, search);
   }, [selectedTabelaId, selectedEspecialidade, search]);
 
@@ -235,12 +272,21 @@ export function ProcedimentosPage() {
           search,
           loadingListas,
           selectedItemId: selectedItem?.id || null,
+          modalOpen,
+          canCreateProcedimento: tabelaAtiva && !actionsBusy,
+          canEditProcedimento: tabelaAtiva && Boolean(selectedItem) && !actionsBusy,
+          canDeleteProcedimento: tabelaAtiva && Boolean(selectedItem) && !actionsBusy,
+          canCreateTabela: !loadingListas && !actionsBusy,
+          canEditTabela: Boolean(selectedTabela) && !actionsBusy,
+          canDeleteTabela: Boolean(selectedTabela) && !actionsBusy,
+          canReajusteTabela: tabelaAtiva && !actionsBusy,
         },
       }),
     );
-  }, [especialidades, loadingListas, search, selectedEspecialidade, selectedItem?.id, selectedTabelaId, tabelas]);
+  }, [actionsBusy, modalOpen, tabelaAtiva, especialidades, loadingListas, search, selectedEspecialidade, selectedItem?.id, selectedTabelaId, tabelas]);
 
   const openNewModal = async () => {
+    if (actionsBusy || !tabelaAtiva) return;
     if (!selectedTabelaId) {
       message.warning('Selecione uma tabela.');
       return;
@@ -269,6 +315,7 @@ export function ProcedimentosPage() {
   };
 
   const openEditModal = async (procedimentoId = selectedItem?.id || null) => {
+    if (actionsBusy || !tabelaAtiva) return;
     const targetId = Number(procedimentoId || 0) || 0;
     const target = procedimentos.find((item) => item.id === targetId) || null;
     if (!target) {
@@ -303,20 +350,164 @@ export function ProcedimentosPage() {
     }
   };
 
+  const refreshTabela = async (codigo) => {
+    const nextId = await loadListas(codigo);
+    setSelectedId(null);
+    // A changed selection is loaded by the filter effect; refresh unchanged tables here.
+    if (nextId === selectedTabelaId) await loadProcedimentos(nextId);
+  };
+
+  const openTabelaModal = (mode) => {
+    if (actionsBusy || (mode === 'edit' && !selectedTabela)) return;
+    setTabelaForm(createTabelaForm(mode === 'edit' ? selectedTabela : null, indices, tiposTiss));
+    setTabelaError('');
+    setTabelaModal({ open: true, mode, codigo: mode === 'edit' ? selectedTabela.codigo : null });
+  };
+
+  const handleSaveTabela = async () => {
+    if (!tabelaModal.open || actionInFlight.current) return;
+    const validation = validateTabelaForm(tabelaForm, tabelaModal.mode, tabelas);
+    if (validation) { setTabelaError(validation); return; }
+    actionInFlight.current = true;
+    setActionSaving(true);
+    setTabelaError('');
+    try {
+      const payload = buildTabelaPayload(tabelaForm, tabelaModal.mode);
+      const saved = tabelaModal.mode === 'new'
+        ? await criarTabelaProcedimentos(payload)
+        : await atualizarTabelaProcedimentos(tabelaModal.codigo, payload);
+      setTabelaModal((current) => ({ ...current, open: false }));
+      message.success('Tabela salva com sucesso.');
+      await refreshTabela(saved.codigo);
+    } catch (err) {
+      setTabelaError(err?.message || 'Falha ao gravar tabela.');
+    } finally {
+      actionInFlight.current = false;
+      setActionSaving(false);
+    }
+  };
+
+  const openDelete = (kind) => {
+    if (actionsBusy) return;
+    if (kind === 'procedimento') {
+      if (!selectedItem || !tabelaAtiva) return;
+      setDeleteTarget({ kind, id: selectedItem.id, codigo: selectedItem.codigo, nome: selectedItem.nome });
+    } else {
+      if (!selectedTabela) return;
+      setDeleteTarget({ kind, codigo: selectedTabela.codigo, nome: selectedTabela.nome });
+    }
+    setDeleteError('');
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget || actionInFlight.current) return;
+    actionInFlight.current = true;
+    setActionSaving(true);
+    setDeleteError('');
+    try {
+      let result;
+      if (deleteTarget.kind === 'procedimento') {
+        result = await excluirProcedimento(deleteTarget.id);
+        setDeleteTarget(null);
+        await loadProcedimentos();
+      } else {
+        result = await excluirTabelaProcedimentos(deleteTarget.codigo);
+        setDeleteTarget(null);
+        await refreshTabela(null);
+      }
+      message.success(result?.detail || 'Exclusão concluída.');
+    } catch (err) {
+      setDeleteError(err?.message || 'Falha ao excluir.');
+    } finally {
+      actionInFlight.current = false;
+      setActionSaving(false);
+    }
+  };
+
+  const openReajuste = () => {
+    if (actionsBusy || !tabelaAtiva) return;
+    previewGeneration.current++;
+    setReajusteForm({ tabela_id: selectedTabela.codigo, percentual: '1,00', modo: 'aumentar' });
+    setReajustePreview(null);
+    setReajusteError('');
+    setReajusteOpen(true);
+  };
+
+  const changeReajuste = (field, value) => {
+    previewGeneration.current++;
+    setReajustePreview(null);
+    setReajusteError('');
+    setReajusteForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handlePreviewReajuste = async () => {
+    const tabela = tabelas.find((item) => item.id === reajusteForm.tabela_id);
+    if (!reajusteOpen || reajusteLoading || actionInFlight.current) return;
+    if (!tabela || tabela.inativo || parseMoneyInput(reajusteForm.percentual) <= 0) {
+      setReajusteError('Selecione uma tabela ativa e informe um percentual maior que zero.');
+      return;
+    }
+    const generation = ++previewGeneration.current;
+    const key = reajustePreviewKey(reajusteForm);
+    setReajusteLoading(true);
+    setReajustePreview(null);
+    setReajusteError('');
+    try {
+      const data = await previewReajusteTabela(reajusteForm);
+      if (generation === previewGeneration.current) setReajustePreview({ key, data });
+    } catch (err) {
+      if (generation === previewGeneration.current) setReajusteError(err?.message || 'Falha ao preparar reajuste.');
+    } finally {
+      setReajusteLoading(false);
+    }
+  };
+
+  const handleApplyReajuste = async () => {
+    const tabela = tabelas.find((item) => item.id === reajusteForm.tabela_id);
+    if (!reajusteOpen || actionInFlight.current || reajusteLoading || !tabela || tabela.inativo
+      || !reajustePreview?.data.total || reajustePreview.key !== reajustePreviewKey(reajusteForm)) return;
+    actionInFlight.current = true;
+    setActionSaving(true);
+    setReajusteError('');
+    try {
+      // Keep the public code from the form, never the local PK returned in the preview.
+      const result = await aplicarReajusteTabela({ ...reajusteForm, tabela_id: String(reajusteForm.tabela_id), confirmar: true });
+      setReajusteOpen(false);
+      message.success(result?.mensagem || 'Reajuste aplicado com sucesso.');
+      await refreshTabela(reajusteForm.tabela_id);
+    } catch (err) {
+      setReajusteError(err?.message || 'Falha ao aplicar reajuste.');
+    } finally {
+      previewGeneration.current++;
+      setReajustePreview(null);
+      actionInFlight.current = false;
+      setActionSaving(false);
+    }
+  };
+
   useEffect(() => {
     const onToolbarAction = (event) => {
+      if (actionsBusy) return;
       const action = String(event?.detail?.action || '').trim();
       if (action === 'novo') {
         void openNewModal();
       } else if (action === 'alterar') {
         void openEditModal(selectedItem?.id || null);
-      }
+      } else if (action === 'eliminar') openDelete('procedimento');
+      else if (action === 'nova-tabela') openTabelaModal('new');
+      else if (action === 'altera-tabela') openTabelaModal('edit');
+      else if (action === 'elimina-tabela') openDelete('tabela');
+      else if (action === 'reajusta-tabela') openReajuste();
     };
 
     const onToolbarFilter = (event) => {
+      if (modalOpen || actionInFlight.current) return;
       const field = String(event?.detail?.field || '').trim();
       const value = event?.detail?.value;
       if (field === 'tabela') {
+        listGeneration.current++;
+        setProcedimentos([]);
+        setSelectedId(null);
         setSelectedTabelaId(Number(value || 0) || null);
       } else if (field === 'especialidade') {
         setSelectedEspecialidade(String(value || ''));
@@ -331,7 +522,7 @@ export function ProcedimentosPage() {
       window.removeEventListener('brana-procedimentos-toolbar-action', onToolbarAction);
       window.removeEventListener('brana-procedimentos-toolbar-filter', onToolbarFilter);
     };
-  }, [selectedItem, selectedTabelaId, selectedEspecialidade]);
+  }, [actionsBusy, modalOpen, selectedItem, selectedTabelaId, selectedEspecialidade, tabelas, indices, tiposTiss]);
 
   const handleFieldChange = (field, value) => {
     setEditorForm((current) => {
@@ -520,6 +711,29 @@ export function ProcedimentosPage() {
           setEditorLoading(false);
         }}
       />
+      <ProcedimentoTabelaModal open={tabelaModal.open} mode={tabelaModal.mode} form={tabelaForm}
+        indices={indices} tiposTiss={tiposTiss} tabelas={tabelas} saving={actionSaving} error={tabelaError}
+        onChange={(field, value) => setTabelaForm((current) => ({ ...current, [field]: value }))}
+        onSave={() => void handleSaveTabela()}
+        onClose={() => { if (!actionInFlight.current) setTabelaModal((current) => ({ ...current, open: false })); }} />
+      <BranaModal open={Boolean(deleteTarget)} title={deleteTarget?.kind === 'tabela' ? 'Elimina tabela' : 'Elimina procedimento'}
+        maskClosable={false} closable={!actionSaving} confirmLoading={actionSaving}
+        okText="Sim" cancelText="Não" okButtonProps={{ danger: true }} cancelButtonProps={{ disabled: actionSaving }}
+        onOk={() => void handleConfirmDelete()}
+        onCancel={() => { if (!actionInFlight.current) setDeleteTarget(null); }}>
+        {deleteError ? <Alert type="error" message={deleteError} showIcon /> : null}
+        <Typography.Paragraph>Deseja eliminar “{deleteTarget?.nome}” (código {deleteTarget?.codigo})?</Typography.Paragraph>
+        {deleteTarget?.kind === 'tabela' ? <Typography.Paragraph>Todos os procedimentos desta tabela serão eliminados.</Typography.Paragraph> : null}
+      </BranaModal>
+      <ProcedimentoReajusteModal open={reajusteOpen} form={reajusteForm} tabelas={tabelas} preview={reajustePreview}
+        loading={reajusteLoading} saving={actionSaving} error={reajusteError} onChange={changeReajuste}
+        onPreview={() => void handlePreviewReajuste()} onApply={() => void handleApplyReajuste()}
+        onClose={() => {
+          if (actionInFlight.current || reajusteLoading) return;
+          previewGeneration.current++;
+          setReajusteOpen(false);
+          setReajustePreview(null);
+        }} />
     </div>
   );
 }

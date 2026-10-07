@@ -334,6 +334,14 @@ function AppContent() {
     search: '',
     loadingListas: false,
     selectedItemId: null,
+    modalOpen: false,
+    canCreateProcedimento: false,
+    canEditProcedimento: false,
+    canDeleteProcedimento: false,
+    canCreateTabela: false,
+    canEditTabela: false,
+    canDeleteTabela: false,
+    canReajusteTabela: false,
   });
   const [materiaisEstoqueToolbarState, setMateriaisEstoqueToolbarState] = useState({
     listas: [],
@@ -1620,14 +1628,15 @@ function AppContent() {
       <div className="brana-shell-band auxiliary-shell-band procedimentos-shell-band" aria-label="Barra operacional de procedimentos">
         <div className="materiais-estoque-toolbar-row" role="toolbar" aria-label="Acoes e filtros do modulo procedimentos">
           <div className="materiais-estoque-toolbar-actions procedimentos-toolbar-actions">
-            <button type="button" className="auxiliary-shell-button primary" onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'novo' } }))}>
+            <button type="button" className="auxiliary-shell-button primary" disabled={!procedimentosToolbarState.canCreateProcedimento} onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'novo' } }))}>
               Nova intervenção
             </button>
             <button
               type="button"
               className="auxiliary-shell-button"
               onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'alterar' } }))}
-              disabled={!procedimentosToolbarState.selectedItemId}
+              disabled={!procedimentosToolbarState.canEditProcedimento}
+              aria-label="Altera procedimento"
             >
               Altera
             </button>
@@ -1635,21 +1644,26 @@ function AppContent() {
               type="button"
               className="auxiliary-shell-button danger"
               onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'eliminar' } }))}
-              disabled={!procedimentosToolbarState.selectedItemId}
+              disabled={!procedimentosToolbarState.canDeleteProcedimento}
+              aria-label="Elimina procedimento"
             >
               Elimina
             </button>
             <span className="materiais-estoque-toolbar-divider" aria-hidden="true" />
-            <button type="button" className="auxiliary-shell-button" disabled>
+            <button type="button" className="auxiliary-shell-button" disabled={!procedimentosToolbarState.canCreateTabela}
+              onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'nova-tabela' } }))}>
               Nova tabela
             </button>
-            <button type="button" className="auxiliary-shell-button" disabled>
+            <button type="button" className="auxiliary-shell-button" aria-label="Altera tabela" disabled={!procedimentosToolbarState.canEditTabela}
+              onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'altera-tabela' } }))}>
               Altera
             </button>
-            <button type="button" className="auxiliary-shell-button danger" disabled>
+            <button type="button" className="auxiliary-shell-button danger" aria-label="Elimina tabela" disabled={!procedimentosToolbarState.canDeleteTabela}
+              onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'elimina-tabela' } }))}>
               Elimina
             </button>
-            <button type="button" className="auxiliary-shell-button" disabled>
+            <button type="button" className="auxiliary-shell-button" disabled={!procedimentosToolbarState.canReajusteTabela}
+              onClick={() => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: 'reajusta-tabela' } }))}>
               % Reajusta tabela
             </button>
             <button type="button" className="auxiliary-shell-button" disabled>
@@ -1662,6 +1676,7 @@ function AppContent() {
               <Select
                 value={procedimentosToolbarState.selectedTabelaId || undefined}
                 loading={procedimentosToolbarState.loadingListas}
+                disabled={procedimentosToolbarState.modalOpen}
                 options={tabelaOptions}
                 onChange={(value) => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-filter', { detail: { field: 'tabela', value } }))}
                 placeholder="Tabela"
@@ -1671,6 +1686,7 @@ function AppContent() {
             <label className="materiais-estoque-field procedimentos-field-especialidade">
               <Select
                 value={procedimentosToolbarState.selectedEspecialidade || undefined}
+                disabled={procedimentosToolbarState.modalOpen}
                 options={especialidadeOptions}
                 onChange={(value) => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-filter', { detail: { field: 'especialidade', value } }))}
                 allowClear
@@ -1682,6 +1698,7 @@ function AppContent() {
               <Input.Search
                 allowClear
                 value={procedimentosToolbarState.search}
+                disabled={procedimentosToolbarState.modalOpen}
                 onChange={(event) => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-filter', { detail: { field: 'search', value: event.target.value } }))}
                 onSearch={(value) => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-filter', { detail: { field: 'search', value } }))}
                 placeholder={selectedTabela ? `Buscar em ${selectedTabela.nome}` : 'Buscar procedimento'}

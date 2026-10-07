@@ -2009,7 +2009,17 @@ def excluir_procedimento(
     db: Session = Depends(get_db),
 ):
     proc = _load_proc_or_404(db, current_user.clinica_id, procedimento_id)
-    tabela = _load_tabela_or_404(db, current_user.clinica_id, int(proc.tabela_id or 1))
+    # tabela_id is the local PK; _load_tabela_or_404 accepts a public code.
+    tabela = (
+        db.query(ProcedimentoTabela)
+        .filter(
+            ProcedimentoTabela.id == int(proc.tabela_id or 0),
+            ProcedimentoTabela.clinica_id == current_user.clinica_id,
+        )
+        .first()
+    )
+    if not tabela:
+        raise HTTPException(status_code=404, detail="Tabela de procedimentos nao encontrada.")
     _validar_tabela_ativa(tabela)
     db.delete(proc)
     db.commit()

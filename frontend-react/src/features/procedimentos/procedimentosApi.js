@@ -37,12 +37,17 @@ function getAuthHeaders() {
 }
 
 function normalizeTabela(item) {
+  // This API's id is the public table code, not the database-local PK.
+  const codigo = Number(item?.codigo ?? item?.id ?? 0) || 0;
   return {
-    id: Number(item?.id || 0) || 0,
-    codigo: Number(item?.codigo || 0) || 0,
+    id: codigo,
+    codigo,
     nome: String(item?.nome || '').trim(),
-    nro_indice: Number(item?.nro_indice || 0) || 0,
+    nro_indice: Number(item?.nro_indice ?? item?.indice ?? item?.indice_id ?? 255),
+    indice_sigla: String(item?.indice_sigla || '').trim(),
     fonte_pagadora: String(item?.fonte_pagadora || '').trim(),
+    nro_credenciamento: String(item?.nro_credenciamento || '').trim(),
+    tipo_tiss_id: Number(item?.tipo_tiss_id ?? 1),
     inativo: Boolean(item?.inativo),
   };
 }
@@ -70,7 +75,42 @@ export async function listarProcedimentosFiltros() {
   return {
     tabelas: Array.isArray(data?.tabelas) ? data.tabelas.map(normalizeTabela) : [],
     especialidades: Array.isArray(data?.especialidades) ? data.especialidades.map(normalizeEspecialidade) : [],
+    indices: Array.isArray(data?.indices) ? data.indices.map((item) => ({ ...item, id: Number(item.numero ?? item.id) })) : [],
+    tiposTiss: Array.isArray(data?.tipos_tiss) ? data.tipos_tiss.map((item) => ({ ...item, id: Number(item.id) })) : [],
   };
+}
+
+export async function excluirProcedimento(id) {
+  return requestJson(`/procedimentos/${encodeURIComponent(id)}`, { method: 'DELETE', headers: getAuthHeaders() });
+}
+
+export async function criarTabelaProcedimentos(payload) {
+  const data = await requestJson('/procedimentos/tabelas', {
+    method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(payload),
+  });
+  return normalizeTabela(data);
+}
+
+export async function atualizarTabelaProcedimentos(codigo, payload) {
+  const data = await requestJson(`/procedimentos/tabelas/${encodeURIComponent(codigo)}`, {
+    method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(payload),
+  });
+  return normalizeTabela(data);
+}
+
+export async function excluirTabelaProcedimentos(codigo) {
+  return requestJson(`/procedimentos/tabelas/${encodeURIComponent(codigo)}`, { method: 'DELETE', headers: getAuthHeaders() });
+}
+
+export async function previewReajusteTabela({ tabela_id, modo, percentual }) {
+  const search = new URLSearchParams({ tabela_id: String(tabela_id), modo, percentual: String(percentual), limit: '20' });
+  return requestJson(`/procedimentos/tabelas/reajuste-preview?${search}`, { headers: getAuthHeaders() });
+}
+
+export async function aplicarReajusteTabela(payload) {
+  return requestJson('/procedimentos/tabelas/reajuste-aplicar', {
+    method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(payload),
+  });
 }
 
 export async function listarProcedimentos({ tabelaId, especialidade = '', q = '' }) {
