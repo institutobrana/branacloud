@@ -1,5 +1,7 @@
 # Contrato de Implementação - Procedimentos Genéricos
 
+> Precedência de domínio: [contrato canônico de Procedimentos/Genéricos](contrato_edicao_procedimentos_roundtrip.md). Afirmações anteriores conflitantes sobre herança/propagação cadastral, cópia própria de materiais, fases em todo save ou Mostrar símbolo são **SUPERSEDED**. Cadastro próprio do Genérico e homologações visuais PG-S7 permanecem; seus campos não se propagam ao Procedimento concreto.
+
 > As seções iniciais são o contrato da implementação inicial. Seu "próximo passo"
 > foi posteriormente executado; o contrato vigente do ciclo homologado está na
 > seção PG-S7 abaixo. Não usar os limites da etapa inicial para negar os modais

@@ -2,6 +2,10 @@
 
 Data: 2026-07-14
 
+Status: relato histórico **SUPERSEDED** pelo [contrato canônico](contrato_edicao_procedimentos_roundtrip.md) para herança/defaults cadastrais, aplicação em todo save e Mostrar símbolo. As conclusões abaixo registram o estado observado na data, não autorização para reativar o comportamento antigo.
+
+Nota R1.R2: o relato abaixo é histórico. O [contrato definitivo](contrato_edicao_procedimentos_roundtrip.md) revoga herança/defaults e sincronização de TODOS os campos cadastrais, inclusive tempo/laboratório. Genérico governa somente materiais por união dinâmica e fases por substituição na associação/troca; save comum e desvinculação preservam fases. Fases próprias são evolução futura, sem migration nesta rodada.
+
 ## Conclusao
 
 A heranca funcional do Procedimento generico nao e duplicada no React atual.
@@ -24,12 +28,12 @@ O fluxo observado foi:
 - Fases
 - Materiais
 
-## Regra confirmada
+## Regra vigente — R1.R2
 
-- prioridade local sobre o generico quando o campo local ja esta preenchido;
-- heranca ocorre quando o campo local esta vazio;
-- materiais e fases herdados sao compostos no backend e deduplicados por `material_id`;
-- ao remover o vinculo, a composicao deixa de usar o generico.
+- todos os campos cadastrais são locais, preenchidos ou vazios; não recebem defaults do Genérico e não propagam a ele/associados;
+- materiais herdados são compostos no backend e deduplicados por `material_id`, com prioridade/quantidade próprias;
+- fases são materializadas na associação/troca, não deduplicadas por material_id; desvinculação preserva todas as fases existentes;
+- ao remover o vínculo, materiais herdados deixam a composição sem apagar valores locais/materializados/próprios; não existe sincronização cadastral ativa.
 
 ## Evidencia tecnica
 

@@ -103,14 +103,21 @@ Antes de qualquer alteraÃ§Ã£o em uma Ã¡rea do sistema, o Codex deve:
 ### `docs/auditoria_tabela_procedimentos_frontend_react.md`
 - Função: consolidar a auditoria funcional, visual e arquitetural da frente `Tabelas -> Tabela de procedimentos` no React.
 - Quando consultar: antes de implementar a frente ou revisar o contrato extraido do legado.
-- Status: vigente.
+- Status: histórico para os temas de domínio SUPERSEDED pelo contrato canônico abaixo; apoio para arquitetura/visual não conflitantes.
 - Observação: complementa a auditoria anterior e registra evidencias do legado, backend e React.
 
 ### `docs/contrato_implementacao_tabela_procedimentos_frontend_react.md`
 - Função: definir o contrato de implementacao da frente `Tabelas -> Tabela de procedimentos` no React.
 - Quando consultar: antes de escrever componentes, hooks, servicos ou modais dessa frente.
-- Status: vigente.
-- Observação: documento mestre de implementacao da nova frente.
+- Status: complementar para arquitetura, shell e ações; regras de domínio conflitantes (inclusive seção 9) SUPERSEDED pelo contrato canônico.
+- Observação: não usar herança cadastral, scope antigo ou Mostrar símbolo deste documento como regra vigente.
+
+### `docs/contrato_edicao_procedimentos_roundtrip.md`
+- Função: contrato canônico único de Procedimentos/Genéricos, materiais, fases, campos locais, round-trip e símbolos.
+- Quando consultar: antes de alterar cadastro, associação/troca/desvinculação, composição ou renderização de símbolos de Procedimentos.
+- Status: CANÔNICO / VIGENTE / HOMOLOGADO, global para todos os tenants atuais e futuros.
+- Precedência: disposições antigas conflitantes são SUPERSEDED nos temas delimitados pelo canônico. Materiais = união dinâmica; fases = substituição na associação/troca; demais campos = locais; Mostrar símbolo = deprecated/interno.
+- Limites: obrigatoriedade do símbolo é futura; bootstrap tem contrato separado e a lista exata por política requer auditoria documental própria.
 
 ### `docs/matriz_mestre_prioridade_risco_refatoracao.md`
 - FunÃ§Ã£o: orientar prioridade e risco para refatoraÃ§Ãµes.

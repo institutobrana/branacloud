@@ -2,7 +2,6 @@ import json
 import unicodedata
 from datetime import datetime
 from types import SimpleNamespace
-from collections import defaultdict
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
 
@@ -28,8 +27,6 @@ from models.tiss_tipo_tabela import TissTipoTabela
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
 from services.procedimento_symbol_service import (
-    campos_simbolo_explicitos,
-    herdar_simbolo_se_vazio,
     referencia_simbolo_payload,
     resolver_referencia_simbolo,
 )
@@ -110,18 +107,17 @@ class ProcedimentoPayload(BaseModel):
     codigo: int
     nome: str
     tempo: int = 0
-    preco: float = 0
-    custo: float = 0
-    custo_lab: float = 0
+    preco: float = Field(default=0, allow_inf_nan=False)
+    custo: float = Field(default=0, allow_inf_nan=False)
+    custo_lab: float = Field(default=0, allow_inf_nan=False)
     tabela_id: str = "1"
     especialidade: str | None = None
     procedimento_generico_id: int | None = None
     simbolo_grafico: str | None = None
     simbolo_grafico_legacy_id: int | None = None
-    mostrar_simbolo: bool | None = None
     garantia_meses: int = 0
     forma_cobranca: str | None = None
-    valor_repasse: float = 0
+    valor_repasse: float = Field(default=0, allow_inf_nan=False)
     preferido: bool = False
     inativo: bool = False
     observacoes: str | None = None
@@ -526,7 +522,7 @@ def _procedimento_to_dict(db: Session, proc: Procedimento) -> dict:
         "procedimento_generico_id": proc.procedimento_generico_id,
         "simbolo_grafico": str(proc.simbolo_grafico or "").strip(),
         "simbolo_grafico_legacy_id": int(proc.simbolo_grafico_legacy_id or 0) or None,
-        "mostrar_simbolo": bool(proc.mostrar_simbolo),
+        "mostrar_simbolo": bool(proc.mostrar_simbolo),  # Deprecated compatibility metadata, never a rendering gate.
         "garantia_meses": int(proc.garantia_meses or 0),
         "forma_cobranca": str(_normalizar_forma_cobranca(proc.forma_cobranca) or "").strip(),
         "valor_repasse": float(proc.valor_repasse or 0),
@@ -569,12 +565,10 @@ def _procedimento_com_vinculos(db: Session, proc: Procedimento) -> dict:
     return data
 
 
-def _aplicar_heranca_procedimento_generico(
+def _aplicar_fases_procedimento_generico(
     db: Session,
     clinica_id: int,
     proc: Procedimento,
-    sobrescrever_vinculos: bool,
-    herdar_simbolo: bool = True,
 ) -> None:
     generico_id = int(proc.procedimento_generico_id or 0)
     if generico_id <= 0:
@@ -591,23 +585,10 @@ def _aplicar_heranca_procedimento_generico(
     if not generico:
         return
 
-    if not (proc.especialidade or "").strip() and (generico.especialidade or "").strip():
-        proc.especialidade = str(generico.especialidade or "").strip()
-    if herdar_simbolo:
-        herdar_simbolo_se_vazio(db, clinica_id, proc, generico.simbolo_grafico,
-                               getattr(generico, "simbolo_grafico_legacy_id", None))
-    if not int(proc.tempo or 0) and int(generico.tempo or 0) > 0:
-        proc.tempo = int(generico.tempo or 0)
-    if not float(proc.custo_lab or 0) and float(getattr(generico, "custo_lab", 0) or 0) > 0:
-        proc.custo_lab = float(getattr(generico, "custo_lab", 0) or 0)
-    if not (proc.observacoes or "").strip() and (generico.observacoes or "").strip():
-        proc.observacoes = generico.observacoes
-    if not bool(proc.mostrar_simbolo) and bool(generico.mostrar_simbolo):
-        proc.mostrar_simbolo = True
-
+    # Generic association governs phases only; cadastral fields stay local.
     (
         db.query(ProcedimentoFase)
-        .filter(ProcedimentoFase.procedimento_id == int(proc.id))
+        .filter(ProcedimentoFase.procedimento_id == int(proc.id), ProcedimentoFase.clinica_id == clinica_id)
         .delete(synchronize_session=False)
     )
     fases = (
@@ -631,73 +612,30 @@ def _aplicar_heranca_procedimento_generico(
             )
         )
 
-    if not sobrescrever_vinculos:
-        return
-
-    (
-        db.query(ProcedimentoMaterial)
-        .filter(ProcedimentoMaterial.procedimento_id == int(proc.id))
-        .delete(synchronize_session=False)
-    )
-    mats = (
-        db.query(ProcedimentoGenericoMaterial)
-        .join(Material, Material.id == ProcedimentoGenericoMaterial.material_id)
-        .filter(
-            ProcedimentoGenericoMaterial.procedimento_generico_id == generico_id,
-            ProcedimentoGenericoMaterial.clinica_id == clinica_id,
-            Material.lista.has(clinica_id=clinica_id),
-        )
-        .order_by(ProcedimentoGenericoMaterial.id.asc())
-        .all()
-    )
-    for vinc in mats:
-        db.add(
-            ProcedimentoMaterial(
-                procedimento_id=int(proc.id),
-                material_id=int(vinc.material_id),
-                quantidade=float(vinc.quantidade or 0),
-                clinica_id=clinica_id,
-            )
-        )
+    # Materials are composed dynamically by vinculos_materiais. Association
+    # never deletes own links or materializes inherited links as own data.
 
 
-def _sincronizar_generico_com_procedimento(
-    db: Session,
-    clinica_id: int,
-    proc: Procedimento,
-) -> None:
-    generico_id = int(proc.procedimento_generico_id or 0)
-    if generico_id <= 0:
-        return
-    generico = (
-        db.query(ProcedimentoGenerico)
-        .filter(
-            ProcedimentoGenerico.id == generico_id,
-            ProcedimentoGenerico.clinica_id == clinica_id,
-        )
-        .first()
-    )
-    if not generico:
-        return
-    tempo = max(0, int(proc.tempo or 0))
-    custo_lab = float(proc.custo_lab or 0)
-    generico.tempo = tempo
-    if hasattr(generico, "custo_lab"):
-        generico.custo_lab = custo_lab
-    (
-        db.query(Procedimento)
-        .filter(
-            Procedimento.clinica_id == clinica_id,
-            Procedimento.procedimento_generico_id == generico_id,
-        )
-        .update(
-            {
-                "tempo": tempo,
-                "custo_lab": custo_lab,
-            },
-            synchronize_session=False,
-        )
-    )
+def _campos_procedimento_explicitos(payload: ProcedimentoPayload) -> set[str]:
+    fields = getattr(payload, "model_fields_set", None)
+    return set(fields if fields is not None else getattr(payload, "__fields_set__", set()))
+
+
+def _validar_campos_edicao(db: Session, clinica_id: int, payload: ProcedimentoPayload, atual=None) -> tuple:
+    explicitos = _campos_procedimento_explicitos(payload)
+    especialidade = _normalizar_especialidade(payload.especialidade) or None
+    forma = _normalizar_forma_cobranca(payload.forma_cobranca)
+    if "especialidade" in explicitos and especialidade:
+        anterior = _normalizar_especialidade(getattr(atual, "especialidade", None)) or None
+        if especialidade != anterior and especialidade not in {
+            _normalizar_especialidade(item["codigo"]) for item in _listar_especialidades(db, clinica_id)
+        }:
+            raise HTTPException(status_code=400, detail="Especialidade não encontrada para esta clínica.")
+    if "forma_cobranca" in explicitos and forma:
+        anterior = _normalizar_forma_cobranca(getattr(atual, "forma_cobranca", None))
+        if forma != anterior and forma not in FORMAS_COBRANCA_PADRAO:
+            raise HTTPException(status_code=400, detail="Forma de cobrança inválida.")
+    return especialidade, forma
 
 
 def _load_proc_or_404(db: Session, clinica_id: int, procedimento_id: int) -> Procedimento:
@@ -1587,20 +1525,10 @@ def dashboard_lucratividade(
         .all()
     )
 
-    custo_material_por_proc: dict[int, float] = defaultdict(float)
-    vinculos = (
-        db.query(ProcedimentoMaterial)
-        .join(Material, Material.id == ProcedimentoMaterial.material_id)
-        .filter(ProcedimentoMaterial.clinica_id == clinica_id)
-        .all()
-    )
-    for vinc in vinculos:
-        custo_material_por_proc[int(vinc.procedimento_id)] += float(vinc.quantidade or 0) * float(
-            (vinc.material.custo if vinc.material else 0) or 0
-        )
-
     itens = [
-        _calcular_financeiro_dashboard(proc, cenario, custo_material_por_proc.get(int(proc.id), 0.0))
+        _calcular_financeiro_dashboard(
+            proc, cenario, float(_compor_materiais_vinculados_procedimento(db, proc).get("total_custo") or 0)
+        )
         for proc in procedimentos
     ]
     itens.sort(key=lambda x: _chave_ordenacao(x["nome"]))
@@ -1703,24 +1631,6 @@ def relatorio_tabela_procedimentos(
         query = query.filter(Procedimento.especialidade == especialidade_filtro)
     procedimentos = query.order_by(Procedimento.nome.asc(), Procedimento.id.asc()).all()
 
-    proc_ids = [int(x.id) for x in procedimentos]
-    generico_ids = [int(x.procedimento_generico_id or 0) for x in procedimentos if int(x.procedimento_generico_id or 0) > 0]
-    generico_codigo_por_id = {
-        int(gid): str(codigo or "").strip().zfill(4)
-        for gid, codigo in (
-            db.query(ProcedimentoGenerico.id, ProcedimentoGenerico.codigo)
-            .filter(
-                ProcedimentoGenerico.clinica_id == clinica_id,
-                ProcedimentoGenerico.id.in_(generico_ids or [0]),
-            )
-            .all()
-        )
-        if int(gid or 0) > 0 and str(codigo or "").strip()
-    }
-    custo_material_por_proc = _mapa_custo_material_por_proc(db, clinica_id, proc_ids)
-    custo_material_por_generico = _mapa_custo_material_por_generico(db, clinica_id, generico_ids)
-    custo_material_canonico = _carregar_custo_material_canonico_genericos()
-
     tabela_particular = (
         db.query(ProcedimentoTabela)
         .filter(
@@ -1751,14 +1661,7 @@ def relatorio_tabela_procedimentos(
         preco_particular = _resolver_preco_particular(proc, tabela_codigo, mapa_preco_particular)
         tempo = float(proc.tempo or 0)
         custo_fixo = cfpm_relatorio * tempo
-        generico_id = int(proc.procedimento_generico_id or 0)
-        custo_mat = float(custo_material_por_proc.get(int(proc.id), 0.0) or 0.0)
-        codigo_generico = generico_codigo_por_id.get(generico_id, "")
-        custo_mat_canonico = float(custo_material_canonico.get(codigo_generico, 0.0) or 0.0) if codigo_generico else 0.0
-        if custo_mat_canonico > 0:
-            custo_mat = custo_mat_canonico
-        elif custo_mat <= 0 and generico_id > 0:
-            custo_mat = float(custo_material_por_generico.get(generico_id, 0.0) or 0.0)
+        custo_mat = float(_compor_materiais_vinculados_procedimento(db, proc).get("total_custo") or 0)
         custo_prot = float(proc.custo_lab or 0)
         imp_diretos = 0.0
         custo_total = custo_fixo + custo_mat + custo_prot
@@ -1806,7 +1709,7 @@ def relatorio_tabela_procedimentos(
                 "observacao": (
                     "Val inter foi tratado como valor da tabela selecionada; "
                     "Val paciente como valor correspondente da tabela PARTICULAR; "
-                    "Cst mat usa vínculo direto do procedimento e, quando vazio, herda materiais do procedimento genérico; "
+                    "Cst mat usa a união dinâmica de materiais próprios e complementos do genérico atual, com precedência própria; "
                     "Imp. diretos permanece zerado nesta visualização para seguir o padrão observado no Easy; "
                     "Cst fixo deriva de CFPH/60 quando CFPH estiver preenchido para reduzir divergência por arredondamento do CFPM."
                 ),
@@ -1858,10 +1761,9 @@ def criar_procedimento(
     if _proc_codigo_em_uso(db, clinica_id, int(tabela.id), int(payload.codigo)):
         raise HTTPException(status_code=400, detail="O codigo informado ja esta em uso.")
 
-    especialidade = _normalizar_especialidade(payload.especialidade) or None
+    especialidade, forma_cobranca = _validar_campos_edicao(db, clinica_id, payload)
     agora = datetime.now().strftime("%d/%m/%Y %H:%M")
     generico_id = int(payload.procedimento_generico_id or 0) or None
-    tem_vinculos_generico = False
     if generico_id:
         generico_existe = (
             db.query(ProcedimentoGenerico.id)
@@ -1873,15 +1775,6 @@ def criar_procedimento(
         )
         if not generico_existe:
             raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado para esta clínica.")
-        tem_vinculos_generico = (
-            db.query(ProcedimentoGenericoMaterial.id)
-            .filter(
-                ProcedimentoGenericoMaterial.procedimento_generico_id == generico_id,
-                ProcedimentoGenericoMaterial.clinica_id == clinica_id,
-            )
-            .first()
-            is not None
-        )
     simbolo_codigo, simbolo_legacy_id = referencia_simbolo_payload(db, clinica_id, payload)
     proc = Procedimento(
         codigo=int(payload.codigo),
@@ -1895,9 +1788,8 @@ def criar_procedimento(
         procedimento_generico_id=generico_id,
         simbolo_grafico=simbolo_codigo,
         simbolo_grafico_legacy_id=simbolo_legacy_id,
-        mostrar_simbolo=bool(payload.mostrar_simbolo if payload.mostrar_simbolo is not None else (payload.simbolo_grafico or "").strip()),
         garantia_meses=int(payload.garantia_meses or 0),
-        forma_cobranca=_normalizar_forma_cobranca(payload.forma_cobranca),
+        forma_cobranca=forma_cobranca,
         valor_repasse=float(payload.valor_repasse or 0),
         preferido=bool(payload.preferido),
         inativo=bool(payload.inativo),
@@ -1909,8 +1801,7 @@ def criar_procedimento(
     db.add(proc)
     db.flush()
     if generico_id:
-        _aplicar_heranca_procedimento_generico(db, clinica_id, proc, sobrescrever_vinculos=tem_vinculos_generico)
-        _sincronizar_generico_com_procedimento(db, clinica_id, proc)
+        _aplicar_fases_procedimento_generico(db, clinica_id, proc)
     db.commit()
     db.refresh(proc)
     return _procedimento_com_vinculos(db, proc)
@@ -1926,6 +1817,7 @@ def atualizar_procedimento(
     clinica_id = current_user.clinica_id
     _garantir_tabelas_clinica(db, clinica_id)
     proc = _load_proc_or_404(db, clinica_id, procedimento_id)
+    explicitos = _campos_procedimento_explicitos(payload)
     tabela_atual = (
         db.query(ProcedimentoTabela)
         .filter(
@@ -1934,7 +1826,8 @@ def atualizar_procedimento(
         )
         .first()
     )
-    tabela_resolvida = _resolver_tabela_id(payload.tabela_id, default=int(tabela_atual.codigo if tabela_atual else 1))
+    codigo_atual = int(tabela_atual.codigo if tabela_atual else 1)
+    tabela_resolvida = _resolver_tabela_id(payload.tabela_id, default=codigo_atual) if "tabela_id" in explicitos else codigo_atual
     tabela = _load_tabela_or_404(db, clinica_id, tabela_resolvida)
     _validar_tabela_ativa(tabela)
     nome = (payload.nome or "").strip()
@@ -1950,7 +1843,7 @@ def atualizar_procedimento(
         raise HTTPException(status_code=400, detail="O codigo informado ja esta em uso.")
 
     generico_anterior = int(proc.procedimento_generico_id or 0)
-    generico_novo = int(payload.procedimento_generico_id or 0)
+    generico_novo = int(payload.procedimento_generico_id or 0) if "procedimento_generico_id" in explicitos else generico_anterior
     mudou_generico = generico_anterior != generico_novo
     if generico_novo:
         generico_existe = (
@@ -1964,39 +1857,33 @@ def atualizar_procedimento(
         if not generico_existe:
             raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado para esta clínica.")
     simbolo_codigo, simbolo_legacy_id = referencia_simbolo_payload(db, clinica_id, payload, atual=proc)
-    symbol_explicit = bool(campos_simbolo_explicitos(payload))
+    especialidade, forma_cobranca = _validar_campos_edicao(db, clinica_id, payload, atual=proc)
     proc.codigo = int(payload.codigo)
     proc.nome = nome
     proc.tabela_id = int(tabela.id)
-    proc.tempo = int(payload.tempo or 0)
-    proc.preco = float(payload.preco or 0)
-    proc.custo = float(payload.custo or 0)
-    proc.custo_lab = float(payload.custo_lab or 0)
-    if payload.especialidade is not None:
-        proc.especialidade = _normalizar_especialidade(payload.especialidade) or None
+    for field in ("tempo", "garantia_meses"):
+        if field in explicitos:
+            setattr(proc, field, int(getattr(payload, field)))
+    for field in ("preco", "custo", "custo_lab", "valor_repasse"):
+        if field in explicitos:
+            setattr(proc, field, float(getattr(payload, field)))
+    if "especialidade" in explicitos:
+        proc.especialidade = especialidade
     proc.procedimento_generico_id = generico_novo or None
     proc.simbolo_grafico = simbolo_codigo
     proc.simbolo_grafico_legacy_id = simbolo_legacy_id
-    proc.mostrar_simbolo = bool(payload.mostrar_simbolo if payload.mostrar_simbolo is not None else proc.simbolo_grafico)
-    proc.garantia_meses = int(payload.garantia_meses or 0)
-    proc.forma_cobranca = _normalizar_forma_cobranca(payload.forma_cobranca)
-    proc.valor_repasse = float(payload.valor_repasse or 0)
-    proc.preferido = bool(payload.preferido)
-    proc.inativo = bool(payload.inativo)
-    proc.observacoes = (payload.observacoes or "").strip() or None
+    if "forma_cobranca" in explicitos:
+        proc.forma_cobranca = forma_cobranca
+    for field in ("preferido", "inativo"):
+        if field in explicitos:
+            setattr(proc, field, bool(getattr(payload, field)))
+    if "observacoes" in explicitos:
+        proc.observacoes = (payload.observacoes or "").strip() or None
     proc.data_alteracao = datetime.now().strftime("%d/%m/%Y %H:%M")
     if not (proc.data_inclusao or "").strip():
         proc.data_inclusao = proc.data_alteracao
-    if generico_novo:
-        _aplicar_heranca_procedimento_generico(db, clinica_id, proc, sobrescrever_vinculos=mudou_generico,
-                                             herdar_simbolo=symbol_explicit)
-        _sincronizar_generico_com_procedimento(db, clinica_id, proc)
-    elif mudou_generico:
-        (
-            db.query(ProcedimentoFase)
-            .filter(ProcedimentoFase.procedimento_id == int(proc.id))
-            .delete(synchronize_session=False)
-        )
+    if generico_novo and mudou_generico:
+        _aplicar_fases_procedimento_generico(db, clinica_id, proc)
     db.commit()
     db.refresh(proc)
     return _procedimento_com_vinculos(db, proc)

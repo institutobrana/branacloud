@@ -32,7 +32,6 @@ function buildEmptyState(codigo = '') {
     peso: 0,
     simbolo_grafico: '',
     simbolo_grafico_legacy_id: null,
-    mostrar_simbolo: false,
     inativo: false,
     observacoes: '',
     data_inclusao: '',
@@ -61,7 +60,6 @@ function buildPayload(state) {
     peso: Number(state?.peso || 0),
     simbolo_grafico: String(state?.simbolo_grafico || '').trim(),
     simbolo_grafico_legacy_id: Number(state?.simbolo_grafico_legacy_id || 0) || null,
-    mostrar_simbolo: !!String(state?.simbolo_grafico || '').trim(),
     inativo: !!state?.inativo,
     observacoes: String(state?.observacoes || '').trim(),
     fases: Array.isArray(state?.fases)

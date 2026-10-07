@@ -10,7 +10,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from fastapi import HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import text
 
 BACKEND = Path(__file__).resolve().parents[1]
@@ -134,7 +134,7 @@ def symbol(legacy=22, clinic=13, code='int_bracket.bmp', active=True):
 
 def route_namespace(db, proc):
     ns = helpers()
-    ns.update({'BaseModel': BaseModel, 'Session': object, 'Usuario': object, 'Procedimento': Proc,
+    ns.update({'BaseModel': BaseModel, 'Field': Field, 'Session': object, 'Usuario': object, 'Procedimento': Proc,
                'Depends': lambda fn: None, 'get_current_user': lambda: None, 'get_db': lambda: None,
                'ProcedimentoTabela': Table, 'ProcedimentoGenerico': Generic,
                'ProcedimentoMaterial': Material, 'ProcedimentoFase': Phase, 'datetime': datetime,
@@ -146,11 +146,13 @@ def route_namespace(db, proc):
                '_proc_codigo_em_uso': lambda *a, **k: False,
                '_normalizar_especialidade': lambda value: value or '',
                '_normalizar_forma_cobranca': lambda value: value,
-               '_aplicar_heranca_procedimento_generico': lambda *a, **k: None,
-               '_sincronizar_generico_com_procedimento': lambda *a: None,
+               'FORMAS_COBRANCA_PADRAO': {'INTERVENCAO': 'Intervenção', 'ELEMENTO_FACE': 'Elemento / Face'},
+               '_listar_especialidades': lambda *a: [],
+               '_aplicar_fases_procedimento_generico': lambda *a, **k: None,
                '_procedimento_com_vinculos': lambda db, p: vars(p)})
     return load_functions('routes/procedimentos_routes.py', ns,
-                          {'ProcedimentoPayload', 'criar_procedimento', 'atualizar_procedimento', '_copiar_procedimentos_entre_tabelas'})
+                          {'ProcedimentoPayload', '_campos_procedimento_explicitos', '_validar_campos_edicao',
+                           'criar_procedimento', 'atualizar_procedimento', '_copiar_procedimentos_entre_tabelas'})
 
 
 class SymbolPreservationTests(unittest.TestCase):
@@ -183,9 +185,9 @@ class SymbolPreservationTests(unittest.TestCase):
         seen = []
         self.proc.procedimento_generico_id = 20
         self.db.rows['Generic'] = [Generic(id=20, clinica_id=13)]
-        self.route['_aplicar_heranca_procedimento_generico'] = lambda *a, **k: seen.append(k)
+        self.route['_aplicar_fases_procedimento_generico'] = lambda *a, **k: seen.append(k)
         self.route['atualizar_procedimento'](10, self.payload(procedimento_generico_id=20), SimpleNamespace(clinica_id=13), self.db)
-        self.assertEqual(seen[0]['herdar_simbolo'], False)
+        self.assertEqual(seen, [])  # Ordinary save must not reapply association at all.
 
     def test_explicit_valid_pair_updates_via_actual_route(self):
         self.route['atualizar_procedimento'](10, self.payload(simbolo_grafico='int_mordida.bmp', simbolo_grafico_legacy_id=37),
@@ -391,23 +393,16 @@ class SymbolPreservationTests(unittest.TestCase):
             if isinstance(fn, ast.FunctionDef) and fn.name in {'criar_procedimento', 'atualizar_procedimento'}:
                 self.assertIn('Depends(get_current_user)', ast.unparse(fn.args))
 
-    def test_actual_legacy_backfill_preserves_partial_pair(self):
-        self.proc.simbolo_grafico_legacy_id = None
-        generic = Generic(id=20, clinica_id=13, tempo=0, custo_lab=0., especialidade=None,
-                          simbolo_grafico='int_mordida.bmp', simbolo_grafico_legacy_id=37,
-                          mostrar_simbolo=False, observacoes=None, data_inclusao=None, data_alteracao=None)
-        class JoinedDB(DB):
-            def query(db, *classes):
-                if len(classes) == 2:
-                    return SimpleNamespace(join=lambda *a: SimpleNamespace(all=lambda: [(self.proc, generic)]))
-                return super().query(*classes)
-        db = JoinedDB(Symbol=self.db.rows['Symbol'])
-        ns = helpers()
-        ns.update({'Session': object, 'Procedimento': Proc, 'ProcedimentoGenerico': Generic})
-        load_functions('services/procedimentos_legado_service.py', ns, {'_backfill_campos_procedimentos_por_generico'})
-        before = copy.deepcopy(vars(self.proc))
-        self.assertEqual(ns['_backfill_campos_procedimentos_por_generico'](db), 0)
-        self.assertEqual(vars(self.proc), before)
+    def test_revoked_generic_backfill_cannot_restore_local_symbol_or_fields(self):
+        tree = ast.parse((BACKEND / 'services/procedimentos_legado_service.py').read_text(encoding='utf-8'))
+        names = {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
+        self.assertNotIn('_backfill_campos_procedimentos_por_generico', names)
+        writer = next(node for node in tree.body if isinstance(node, ast.FunctionDef)
+                      and node.name == 'garantir_metadados_tabela_particular')
+        self.assertNotIn('_backfill_campos_procedimentos_por_generico', ast.unparse(writer))
+        generic_reads = {node.attr for node in ast.walk(writer) if isinstance(node, ast.Attribute)
+                         and isinstance(node.value, ast.Name) and node.value.id == 'generico_local'}
+        self.assertEqual(generic_reads, {'id'})  # Association identity only, never cadastral defaults.
 
 
 if __name__ == '__main__':

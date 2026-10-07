@@ -1,5 +1,7 @@
 # Contrato funcional dos campos monetarios de Procedimentos
 
+Documento complementar ao [contrato canônico de Procedimentos/Genéricos](contrato_edicao_procedimentos_roundtrip.md). Disposições anteriores conflitantes são **SUPERSEDED**; campos cadastrais são locais e valores válidos zero/false/limpeza persistem conforme o domínio.
+
 ## Campos abrangidos
 
 - Valor de repasse
@@ -13,6 +15,8 @@
 3. O salvamento envia numeros no payload.
 4. A reabertura do modal apresenta os valores formatados.
 5. Valores vazios nao viram `0,00` enquanto o usuario ainda esta digitando.
+6. Ao salvar, vazio é zero no contrato numérico atual; zero explícito não é pedido de herança. Texto inválido/valor não finito bloqueia o save, sem conversão silenciosa para zero.
+7. Tempo/laboratório e demais campos cadastrais são locais ao Procedimento concreto. Editar/zerar/limpar altera somente o registro editado; Genérico não propaga nem repõe valores, inclusive na criação/associação/troca. Campo omitido preserva. Ver [contrato definitivo R1.R2](contrato_edicao_procedimentos_roundtrip.md).
 
 ## Payload confirmado
 
@@ -47,11 +51,11 @@ Os valores persistidos devem sobreviver a:
 A conversao de monetarios no `PUT` deve usar o mesmo parser da hidratacao/formulario, evitando perda do campo `preco` quando houver separador de milhar.
 O recálculo visual do Painel Financeiro deve vir do backend via `POST /procedimentos/dashboard-preview`, sem fórmula local no React.
 
-## Regra de origem transitória dos materiais
+## Regra de composição dinâmica dos materiais
 
-- `herdado` pode existir apenas como estado transitório antes do save.
-- Depois da materialização e reabertura, o item é tratado como vínculo comum do procedimento.
-- A interface não deve manter badge permanente nem bloqueio permanente por origem no pós-save.
+- Herdado pertence ao Genérico atual e entra na composição/cálculo sem cópia permanente como próprio, inclusive após save/reabertura.
+- Próprios permanecem na associação/troca; deduplicação por material_id e quantidade própria prevalecem. Ausência de badge não converte origem.
+- Edição por código continua limitada à quantidade dos vínculos; nenhuma substituição arbitrária de material é adicionada nesta fase.
 ## Validacao complementar de recomposicao
 
 No procedimento `66929 / TESTE HERANCA MATERIAL`:

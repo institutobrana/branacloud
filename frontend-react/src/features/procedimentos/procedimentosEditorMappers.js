@@ -70,7 +70,6 @@ export function normalizeProcedimento(item) {
     simbolo_grafico: String(item?.simbolo_grafico || '').trim(),
     simbolo_grafico_legacy_id: Number(item?.simbolo_grafico_legacy_id || 0) || null,
     simbolo_catalogo_id: Number(item?.simbolo_catalogo_id || 0) || null,
-    mostrar_simbolo: Boolean(item?.mostrar_simbolo),
     garantia_meses: Number(item?.garantia_meses || 0) || 0,
     forma_cobranca: String(item?.forma_cobranca || '').trim(),
     valor_repasse: Number(item?.valor_repasse || 0) || 0,
@@ -98,7 +97,6 @@ export function createEmptyProcedimentoForm({ tabelaId = null, especialidade = '
     simbolo_catalogo_id: null,
     simbolo_grafico: '',
     simbolo_grafico_legacy_id: null,
-    mostrar_simbolo: false,
     garantia_meses: 0,
     forma_cobranca: '',
     valor_repasse: '',
@@ -146,23 +144,21 @@ export function parseMoneyInput(value) {
     .replace(/\.(?=\d{3}(\D|$))/g, '')
     .replace(',', '.');
   const next = Number(normalized);
-  return Number.isFinite(next) ? next : 0;
+  return normalized && Number.isFinite(next) ? next : NaN;
 }
 
-export function buildProcedimentoPayload(form) {
-  return {
+export function buildProcedimentoPayload(form, { changedFields = null } = {}) {
+  const payload = {
     codigo: Number(form?.codigo || 0) || 0,
     nome: String(form?.nome || '').trim(),
     tempo: Number(form?.tempo || 0) || 0,
     preco: parseMoneyInput(form?.valor_paciente),
-    custo: 0,
     custo_lab: parseMoneyInput(form?.custo_lab),
     tabela_id: String(form?.tabela_id || 1).trim() || '1',
     especialidade: String(form?.especialidade || '').trim() || null,
     procedimento_generico_id: Number(form?.procedimento_generico_id || 0) || null,
     simbolo_grafico: String(form?.simbolo_grafico || '').trim() || null,
     simbolo_grafico_legacy_id: Number(form?.simbolo_grafico_legacy_id || 0) || null,
-    mostrar_simbolo: !!String(form?.simbolo_grafico || '').trim(),
     garantia_meses: Number(form?.garantia_meses || 0) || 0,
     forma_cobranca: String(form?.forma_cobranca || '').trim() || null,
     valor_repasse: parseMoneyInput(form?.valor_repasse),
@@ -170,6 +166,17 @@ export function buildProcedimentoPayload(form) {
     inativo: !!form?.inativo,
     observacoes: String(form?.observacoes || '').trim() || null,
   };
+  if (changedFields == null) return payload;
+  const changed = new Set(changedFields);
+  const stateKeys = { preco: 'valor_paciente' };
+  const symbolChanged = ['simbolo_catalogo_id', 'simbolo_grafico', 'simbolo_grafico_legacy_id'].some((key) => changed.has(key));
+  // Omission is meaningful to the backend. Do not retransmit stale defaults,
+  // hidden cost, partial symbol references or audit dates on an unrelated edit.
+  return Object.fromEntries(Object.entries(payload).filter(([key]) => {
+    if (['codigo', 'nome', 'tabela_id'].includes(key)) return true;
+    if (['simbolo_grafico', 'simbolo_grafico_legacy_id'].includes(key)) return symbolChanged;
+    return changed.has(stateKeys[key] || key);
+  }));
 }
 
 export function normalizeProcedimentoSymbol(item) {
@@ -254,6 +261,7 @@ export function resolveProcedimentoSymbolSelection(simbolos, state) {
   if (legacyId && rawCodigo) {
     const pair = lookups.byPair.get(`${String(legacyId)}::${rawCodigo.toLowerCase()}`) || null;
     if (pair) return { option: pair, ambiguous: false };
+    return { option: null, ambiguous: false };
   }
 
   if (legacyId) {
@@ -331,8 +339,8 @@ export function hydrateProcedimentoSymbolState(simbolos, item = {}) {
   const { option, ambiguous } = resolveProcedimentoSymbolSelection(simbolos, item);
   return {
     simbolo_catalogo_id: option?.catalogId || null,
-    simbolo_grafico: option?.codigo || String(item?.simbolo_grafico || '').trim(),
-    simbolo_grafico_legacy_id: option?.legacyId || Number(item?.simbolo_grafico_legacy_id || 0) || null,
+    simbolo_grafico: String(item?.simbolo_grafico || '').trim(),
+    simbolo_grafico_legacy_id: Number(item?.simbolo_grafico_legacy_id || 0) || null,
     simbolo_descricao: option?.descricao || '',
     simbolo_preview_src: resolveProcedimentoSymbolPreviewCandidates(simbolos, {
       simbolo_catalogo_id: option?.catalogId || null,
@@ -350,7 +358,6 @@ export function extractProcedimentoSymbolPayload(simbolos, state) {
       simbolo_catalogo_id: null,
       simbolo_grafico: String(state?.simbolo_grafico || '').trim() || null,
       simbolo_grafico_legacy_id: Number(state?.simbolo_grafico_legacy_id || 0) || null,
-      mostrar_simbolo: typeof state?.mostrar_simbolo === 'boolean' ? state.mostrar_simbolo : !!String(state?.simbolo_grafico || '').trim(),
     };
   }
 
@@ -358,7 +365,6 @@ export function extractProcedimentoSymbolPayload(simbolos, state) {
     simbolo_catalogo_id: option.catalogId,
     simbolo_grafico: option.codigo || null,
     simbolo_grafico_legacy_id: option.legacyId || null,
-    mostrar_simbolo: true,
   };
 }
 

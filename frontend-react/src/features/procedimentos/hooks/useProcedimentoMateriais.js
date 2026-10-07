@@ -27,6 +27,8 @@ const emptyEditor = Object.freeze({
   procedimentoId: null,
   listaId: null,
   materialId: null,
+  originalMaterialId: null,
+  originalCodigo: '',
   quantidade: '0',
   relacao: '',
   preco: '',
@@ -137,6 +139,8 @@ export function useProcedimentoMateriais({ procedimentoId, open, onMutate } = {}
           procedimentoId,
           listaId: nextListaId,
           materialId: Number(vinculo?.material_id || 0) || null,
+          originalMaterialId: mode === 'edit' ? Number(vinculo?.material_id || 0) || null : null,
+          originalCodigo: mode === 'edit' ? String(vinculo?.codigo || '').trim() : '',
           quantidade: String(vinculo?.quantidade ?? '0'),
           relacao: vinculo ? String(vinculo?.relacao ?? '') : '',
           preco: vinculo ? String(vinculo?.preco ?? '') : '',
@@ -357,6 +361,14 @@ export function useProcedimentoMateriais({ procedimentoId, open, onMutate } = {}
       return false;
     }
 
+    if (editor.mode === 'edit' && (Number(material.id) !== editor.originalMaterialId || !editor.originalCodigo)) {
+      setState((current) => ({
+        ...current,
+        editor: { ...current.editor, error: 'A edição altera somente a quantidade. Para trocar o material, remova o vínculo e adicione outro.' },
+      }));
+      return false;
+    }
+
     setState((current) => ({
       ...current,
       editor: { ...current.editor, saving: true, error: '' },
@@ -366,7 +378,7 @@ export function useProcedimentoMateriais({ procedimentoId, open, onMutate } = {}
       if (editor.mode === 'edit') {
         await atualizarVinculoMaterialProcedimento({
           procedimentoId: editor.procedimentoId,
-          codigo: material.codigo || resolveSelectedMaterial()?.codigo || '',
+          codigo: editor.originalCodigo,
           quantidade,
         });
       } else {

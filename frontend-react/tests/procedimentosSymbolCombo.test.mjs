@@ -49,13 +49,13 @@ test('API do modal solicita exclusivamente scope=procedimentos-combo, sem fallba
   } finally {globalThis.window=prior.window;globalThis.fetch=prior.fetch;}
 });
 
-test('hidratação e payload preservam símbolo fora do combo e mostrar_simbolo=false', () => {
+test('hidratação e payload preservam símbolo fora do combo sem opção histórica de exibição', () => {
   const original={...outside};
   const hydrated={...outside,...mappers.hydrateProcedimentoSymbolState(combo,outside)};
   const payload=mappers.extractProcedimentoSymbolPayload(combo,hydrated);
   assert.equal(payload.simbolo_grafico,original.simbolo_grafico);
   assert.equal(payload.simbolo_grafico_legacy_id,original.simbolo_grafico_legacy_id);
-  assert.equal(payload.mostrar_simbolo,false);
+  assert.equal('mostrar_simbolo' in payload,false);
   assert.deepEqual(outside,original);
 });
 
@@ -140,12 +140,31 @@ test('panel renderiza 63 escolhas e preserva referência externa sem emitir alte
   });
 });
 
+test('preview real usa 57/58/81 mesmo com false histórico, sem checkbox ou emissão do flag', async()=>{
+  for (const id of [57,58,81]) {
+    const symbol=combo.find((item)=>item.legacyId===id);
+    const sources=[];
+    for (const historical of [false,true]) {
+      await withPanel({simbolo_grafico:symbol.codigo,simbolo_grafico_legacy_id:id,mostrar_simbolo:historical},async({container,changes})=>{
+        assert.doesNotMatch(container.textContent,/Mostrar símbolo/);
+        const image=container.querySelector('img.procedimento-editor-symbol-preview');
+        assert.ok(image, `Símbolo ${id}, flag ${historical}`);
+        assert.ok(image.getAttribute('src').endsWith(symbol.codigo));
+        assert.equal(image.getAttribute('alt'), `Símbolo gráfico: ${symbol.descricao}`);
+        assert.deepEqual(changes,[]);
+        sources.push(image.getAttribute('src'));
+      });
+    }
+    assert.equal(sources[0],sources[1]);
+  }
+});
+
 test('escolha explícita do 58 produz par coerente, nunca usa ID do 57',async()=>{
   await withPanel({},async({props,changes})=>{
     const item=combo.find((r)=>r.legacyId===58);
     await act(async()=>props().onChange({value:item.value,label:item.label}));
     assert.deepEqual(changes,[['simbolo_catalogo_id',item.catalogId],['simbolo_grafico_legacy_id',58],
-      ['simbolo_grafico',item.codigo],['mostrar_simbolo',true]]);
+      ['simbolo_grafico',item.codigo]]);
   });
 });
 
@@ -154,7 +173,7 @@ test('limpeza acontece somente por ação explícita no seletor, não por filtro
     assert.deepEqual(changes,[]);
     await act(async()=>props().onChange(undefined));
     assert.deepEqual(changes,[['simbolo_catalogo_id',null],['simbolo_grafico_legacy_id',null],
-      ['simbolo_grafico',''],['mostrar_simbolo',false]]);
+      ['simbolo_grafico','']]);
   });
 });
 
@@ -214,7 +233,7 @@ async function withPage(run) {
   const root=createRoot(document.querySelector('#page'));
   try {
     await act(async()=>root.render(React.createElement(module.exports.ProcedimentosPage)));
-    await run({modal:()=>modal,table:()=>table,writes,errors,
+    await run({modal:()=>modal,table:()=>table,writes,errors,stored,
       fail:()=>{failLookups=true;},
       open:async()=>{await act(async()=>table.onRow(table.dataSource[0]).onDoubleClick());},
       newModal:async()=>{await act(async()=>window.dispatchEvent(new dom.window.CustomEvent('brana-procedimentos-toolbar-action',{detail:{action:'novo'}})));}});
@@ -235,14 +254,18 @@ test('integração React isolada: abrir/cancelar edição não salva nem limpa s
 });
 
 test('integração React isolada: salvar outro campo preserva símbolo fora do combo',async()=>{
-  await withPage(async({open,modal,writes})=>{
+  await withPage(async({open,modal,writes,stored})=>{
     await open();await act(async()=>modal().onChangeField('nome','Nome de teste'));
     await act(async()=>modal().onSave());
     assert.equal(writes.length,1);
     assert.equal(writes[0].payload.nome,'Nome de teste');
-    assert.equal(writes[0].payload.simbolo_grafico,outside.simbolo_grafico);
-    assert.equal(writes[0].payload.simbolo_grafico_legacy_id,60);
-    assert.equal(writes[0].payload.mostrar_simbolo,false);
+    assert.equal('simbolo_grafico' in writes[0].payload,false);
+    assert.equal('simbolo_grafico_legacy_id' in writes[0].payload,false);
+    assert.equal('mostrar_simbolo' in writes[0].payload,false);
+    const saved={...stored,...writes[0].payload};
+    assert.equal(saved.simbolo_grafico,outside.simbolo_grafico);
+    assert.equal(saved.simbolo_grafico_legacy_id,60);
+    assert.equal(saved.mostrar_simbolo,false);
   });
 });
 

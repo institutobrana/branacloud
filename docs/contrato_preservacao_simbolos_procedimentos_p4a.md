@@ -1,5 +1,7 @@
 # P4A — preservação de símbolos nos writers de Procedimentos
 
+Precedência vigente: [contrato canônico de Procedimentos/Genéricos](contrato_edicao_procedimentos_roundtrip.md). Disposições anteriores conflitantes são **SUPERSEDED**. A proteção P4A do par omitido permanece; escolha/limpeza explícita local não é reposta pelo Genérico. Os relatos de baseline/execução abaixo são históricos, não o estado deste fechamento.
+
 Alteração de source em revisão, sem aplicação de dados, commit, push ou
 reinício do runtime. Baseline: `a592703a3c008edda0c4ee77302547861605c9c6`.
 Brana Cloude permanece autoridade para todos os campos não relacionados ao
@@ -17,9 +19,13 @@ símbolo. EasyDental é somente referência de símbolo, não sincronização.
 - Cliente antigo que retransmite código inalterado, omitindo legacy ou enviando
   legacy nulo, não apaga a identidade já presente. Null de legacy sozinho não
   limpa um código preenchido. Código explicitamente vazio + legacy vazio pode
-  continuar limpando o par, conforme o contrato anterior. Se houver genérico,
-  a herança já existente pode preencher novamente o par vazio, agora validando
-  ambos os campos juntos no catálogo local.
+  continuar limpando o par. Pelo [contrato definitivo R1.R3](contrato_edicao_procedimentos_roundtrip.md),
+  edição/limpeza explícita não é reposta pelo Genérico. Omissão continua preservando
+  o par exatamente. CREATE sem escolha não herda referência do Genérico; símbolo
+  é local. "Mostrar símbolo" não existe como opção funcional: símbolo gráfico válido
+  sempre é utilizado/exibido, independentemente do flag histórico. A coluna pode
+  permanecer deprecated/interna, sem edição ou efeito de renderização. O ID local
+  nunca é gravado como legacy.
 - Cadastro sem símbolo continua permitido nesta regularização. Não há NOT NULL,
   constraint, validação obrigatória, restauração do símbolo 58 ou autorização C.
 - Seed sanitizado de novas contas continua criando símbolos vazios, mas o upsert
@@ -40,13 +46,14 @@ símbolo. EasyDental é somente referência de símbolo, não sincronização.
 | React e legado → POST/PUT `/procedimentos` | ACTIVE_PRODUCTION_WRITER | Proteção no servidor compartilhada; UI/payload não alterados |
 | `criar_procedimento`, `atualizar_procedimento` | ACTIVE_PRODUCTION_WRITER | Omissão preservada; escolha explícita local e coerente |
 | `_copiar_procedimentos_entre_tabelas` | ACTIVE_PRODUCTION_WRITER | Usado por criação autenticada de tabela; par local completo |
-| `_aplicar_heranca_procedimento_generico` | ACTIVE_PRODUCTION_WRITER | Sem mistura de referências; não herda símbolo omitido no PUT |
+| `_aplicar_fases_procedimento_generico` | ACTIVE_PRODUCTION_WRITER, fases somente | Não escreve símbolo ou outro campo cadastral; substitui fases na associação/troca |
 | `seed_procedimentos` / `_garantir_tabelas_procedimentos_iniciais` | SEED/BOOTSTRAP | Chamado pelo signup; par existente protegido |
 | Signup/provisionamento de conta nova | SEED/BOOTSTRAP | Usa seed protegido; não executado nesta rodada |
 | `_upsert_procedimentos_particular_na_clinica` | SEED/BOOTSTRAP | Registro existente não sobrescrito; criação validada localmente |
 | `_upsert_procedimentos_na_clinica` | DEAD/UNUSED no fluxo atual | Sem chamador atual encontrado; branch existente não escreve símbolo |
 | `separar_tabela_exemplo_particular_todas_clinicas` | SEED/BOOTSTRAP | Registrado nos jobs de runtime e CLI específico; DELETE exclui símbolo preenchido |
-| `garantir_metadados_tabela_particular`, `_backfill_campos_procedimentos_por_generico` | SEED/BOOTSTRAP | Registrados no bootstrap; referências preservadas/resolvidas em conjunto |
+| `garantir_metadados_tabela_particular` | SEED/BOOTSTRAP | Referências históricas locais preservadas/resolvidas em conjunto; não herda campos do Genérico atual |
+| `_backfill_campos_procedimentos_por_generico` | REMOVED R1.R2 | Reposição cadastral pelo Genérico revogada, inclusive em bootstrap |
 | `garantir_catalogo_simbolos`, `seed_simbolos_graficos` | SEED/BOOTSTRAP, outra entidade | Não escrevem par do procedimento; manutenção/deduplicação do catálogo fora do diff |
 | `backfill_procedimento_simbolo_legacy.py`, `migrar_simbolos_particular.py` | MIGRATION/HISTORICAL | Escrita direta manual; sem chamada produtiva encontrada; não executados/reativados |
 | `migrar_tabelas_procedimentos_easy.py`, `recriar_particular_easydental.py`, `migrar_particular_gleisson.py` | MIGRATION/HISTORICAL | Importação/recriação explícita one-shot; não executar sobre dados regularizados sem fase própria |

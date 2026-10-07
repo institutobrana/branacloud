@@ -22,6 +22,7 @@ import {
 } from './procedimentosApi.js';
 import {
   createEmptyProcedimentoForm,
+  buildProcedimentoPayload,
   createSpecialtyNameMap,
   extractProcedimentoSymbolPayload,
   hydrateProcedimentoSymbolState,
@@ -66,7 +67,6 @@ function buildProcedureGenericOptions(items) {
     custo_lab: Number(item?.custo_lab || 0) || 0,
     simbolo_grafico: String(item?.simbolo_grafico || '').trim(),
     simbolo_grafico_legacy_id: Number(item?.simbolo_grafico_legacy_id || 0) || null,
-    mostrar_simbolo: Boolean(item?.mostrar_simbolo),
     observacoes: String(item?.observacoes || '').trim(),
   }));
 }
@@ -100,6 +100,7 @@ export function ProcedimentosPage() {
   const [editorSaving, setEditorSaving] = useState(false);
   const [editorError, setEditorError] = useState('');
   const [editorForm, setEditorForm] = useState(createEmptyProcedimentoForm());
+  const editorChangedFields = useRef(new Set());
   const [procedimentoGenericoOptions, setProcedimentoGenericoOptions] = useState([]);
   const [simboloOptions, setSimboloOptions] = useState([]);
   const [indices, setIndices] = useState([]);
@@ -300,6 +301,7 @@ export function ProcedimentosPage() {
       message.warning('Selecione uma tabela.');
       return;
     }
+    editorChangedFields.current = new Set(selectedEspecialidade ? ['especialidade'] : []);
     setEditorOpen(true);
     setEditorMode('new');
     setEditorLoading(true);
@@ -331,13 +333,15 @@ export function ProcedimentosPage() {
       message.warning('Selecione um procedimento para alterar.');
       return;
     }
+    editorChangedFields.current = new Set();
     setEditorOpen(true);
     setEditorMode('edit');
     setEditorLoading(true);
     setEditorError('');
     try {
       const nextSimbolos = await loadLookups();
-      const detalhe = await obterProcedimentoDetalhe(target.id);
+      // Drop compatibility metadata even if an older API returns it; keep other fields unchanged.
+      const { mostrar_simbolo: _deprecatedFlag, ...detalhe } = await obterProcedimentoDetalhe(target.id);
       setEditorForm({
         ...createEmptyProcedimentoForm({
           tabelaId: detalhe.tabela_id || selectedTabelaId,
@@ -452,7 +456,8 @@ export function ProcedimentosPage() {
   const handlePreviewReajuste = async () => {
     const tabela = tabelas.find((item) => item.id === reajusteForm.tabela_id);
     if (!reajusteOpen || reajusteLoading || actionInFlight.current) return;
-    if (!tabela || tabela.inativo || parseMoneyInput(reajusteForm.percentual) <= 0) {
+    const percentual = parseMoneyInput(reajusteForm.percentual);
+    if (!tabela || tabela.inativo || !Number.isFinite(percentual) || percentual <= 0) {
       setReajusteError('Selecione uma tabela ativa e informe um percentual maior que zero.');
       return;
     }
@@ -534,6 +539,7 @@ export function ProcedimentosPage() {
   }, [actionsBusy, modalOpen, selectedItem, selectedTabelaId, selectedEspecialidade, tabelas, indices, tiposTiss]);
 
   const handleFieldChange = (field, value) => {
+    editorChangedFields.current.add(field);
     setEditorForm((current) => {
       if (field === 'simbolo_catalogo_id') {
         const nextOption = (Array.isArray(simboloOptions) ? simboloOptions : []).find((item) => Number(item.catalogId || item.value || 0) === Number(value || 0));
@@ -542,7 +548,6 @@ export function ProcedimentosPage() {
           simbolo_catalogo_id: Number(value || 0) || null,
           simbolo_grafico: nextOption?.codigo || '',
           simbolo_grafico_legacy_id: nextOption?.legacyId || null,
-          mostrar_simbolo: !!nextOption,
         };
       }
       if (field === 'simbolo_grafico_legacy_id' || field === 'simbolo_grafico') {
@@ -567,29 +572,15 @@ export function ProcedimentosPage() {
     setEditorSaving(true);
     setEditorError('');
     try {
-      const symbolPayload = extractProcedimentoSymbolPayload(simboloOptions, editorForm);
+      const payload = buildProcedimentoPayload(editorForm, { changedFields: editorChangedFields.current });
+      if ('simbolo_grafico' in payload) {
+        const symbolPayload = extractProcedimentoSymbolPayload(simboloOptions, editorForm);
+        payload.simbolo_grafico = symbolPayload.simbolo_grafico;
+        payload.simbolo_grafico_legacy_id = symbolPayload.simbolo_grafico_legacy_id;
+      }
       const saved = await salvarProcedimento({
         id: editorForm.id,
-        payload: {
-          codigo: Number(editorForm.codigo || 0) || 0,
-          nome: String(editorForm.nome || '').trim(),
-          tempo: Number(editorForm.tempo || 0) || 0,
-          preco: parseMoneyInput(editorForm.valor_paciente),
-          custo: 0,
-          custo_lab: parseMoneyInput(editorForm.custo_lab),
-          tabela_id: String(editorForm.tabela_id || selectedTabelaId || 1).trim() || '1',
-          especialidade: String(editorForm.especialidade || '').trim() || null,
-          procedimento_generico_id: Number(editorForm.procedimento_generico_id || 0) || null,
-          simbolo_grafico: symbolPayload.simbolo_grafico,
-          simbolo_grafico_legacy_id: symbolPayload.simbolo_grafico_legacy_id,
-          mostrar_simbolo: symbolPayload.mostrar_simbolo,
-          garantia_meses: Number(editorForm.garantia_meses || 0) || 0,
-          forma_cobranca: String(editorForm.forma_cobranca || '').trim() || null,
-          valor_repasse: parseMoneyInput(editorForm.valor_repasse),
-          preferido: !!editorForm.preferido,
-          inativo: !!editorForm.inativo,
-          observacoes: String(editorForm.observacoes || '').trim() || null,
-        },
+        payload,
       });
       message.success('Procedimento salvo com sucesso.');
       setEditorOpen(false);

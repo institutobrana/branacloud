@@ -169,7 +169,6 @@ class ProcedimentoGenericoPayload(BaseModel):
     custo_lab: float = 0
     peso: float = 0.0
     simbolo_grafico: str | None = None
-    mostrar_simbolo: bool = False
     inativo: bool = False
     observacoes: str | None = None
     fases: list["ProcedimentoGenericoFasePayload"] = Field(default_factory=list)
@@ -354,7 +353,7 @@ def _procedimento_generico_to_dict(
         "custo_lab": float(getattr(item, "custo_lab", 0) or 0),
         "peso": float(getattr(item, "peso", 0) or 0),
         "simbolo_grafico": str(item.simbolo_grafico or "").strip(),
-        "mostrar_simbolo": bool(item.mostrar_simbolo),
+        "mostrar_simbolo": bool(item.mostrar_simbolo),  # Deprecated compatibility metadata, never a rendering gate.
         "inativo": bool(getattr(item, "inativo", False)),
         "observacoes": item.observacoes or "",
         "data_inclusao": item.data_inclusao or "",
@@ -568,29 +567,6 @@ def _snapshot_materiais_payload(
             continue
         payload_por_material[material_id] = quantidade
     return sorted(payload_por_material.items(), key=lambda x: x[0])
-
-
-def _propagar_campos_generico_para_procedimentos(
-    db: Session,
-    clinica_id: int,
-    procedimento_generico_id: int,
-    tempo: int,
-    custo_lab: float,
-) -> None:
-    (
-        db.query(Procedimento)
-        .filter(
-            Procedimento.clinica_id == int(clinica_id),
-            Procedimento.procedimento_generico_id == int(procedimento_generico_id),
-        )
-        .update(
-            {
-                "tempo": max(0, int(tempo or 0)),
-                "custo_lab": float(custo_lab or 0),
-            },
-            synchronize_session=False,
-        )
-    )
 
 
 def _grupo_or_404(db: Session, clinica_id: int, grupo_id: int) -> GrupoFinanceiro:
@@ -2351,9 +2327,6 @@ def migrar_procedimentos_genericos(
         if simbolo_grafico and not str(atual.simbolo_grafico or "").strip():
             atual.simbolo_grafico = simbolo_grafico
             mudou = True
-        if mostrar_simbolo and not bool(atual.mostrar_simbolo):
-            atual.mostrar_simbolo = True
-            mudou = True
         if mudou:
             atual.data_alteracao = agora
             atualizados += 1
@@ -2407,7 +2380,6 @@ def criar_procedimento_generico(
         custo_lab=float(payload.custo_lab or 0),
         peso=max(0.0, float(payload.peso or 0)),
         simbolo_grafico=(payload.simbolo_grafico or "").strip() or None,
-        mostrar_simbolo=bool(payload.mostrar_simbolo or (payload.simbolo_grafico or "").strip()),
         inativo=bool(payload.inativo),
         observacoes=(payload.observacoes or "").strip() or None,
         data_inclusao=agora,
@@ -2462,8 +2434,6 @@ def editar_procedimento_generico(
     fases_novas = _snapshot_fases_payload(payload.fases)
     materiais_atual = _snapshot_materiais_procedimento_generico(list(item.materiais_vinculados or []))
     materiais_novos = _snapshot_materiais_payload(payload.materiais)
-    tempo_anterior = int(item.tempo or 0)
-    custo_lab_anterior = float(item.custo_lab or 0)
     item.codigo = codigo
     item.descricao = descricao
     item.especialidade = (payload.especialidade or "").strip() or None
@@ -2471,7 +2441,6 @@ def editar_procedimento_generico(
     item.custo_lab = float(payload.custo_lab or 0)
     item.peso = max(0.0, float(payload.peso or 0))
     item.simbolo_grafico = (payload.simbolo_grafico or "").strip() or None
-    item.mostrar_simbolo = bool(payload.mostrar_simbolo or item.simbolo_grafico)
     item.inativo = bool(payload.inativo)
     item.observacoes = (payload.observacoes or "").strip() or None
     item.data_alteracao = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -2481,8 +2450,6 @@ def editar_procedimento_generico(
         _sync_procedimento_generico_fases(db, item, clinica_id, payload.fases)
     if materiais_novos != materiais_atual:
         _sync_procedimento_generico_materiais(db, item, clinica_id, payload.materiais)
-    if tempo_anterior != int(item.tempo or 0) or custo_lab_anterior != float(item.custo_lab or 0):
-        _propagar_campos_generico_para_procedimentos(db, clinica_id, int(item.id), item.tempo, item.custo_lab)
     db.commit()
     db.refresh(item)
     return _procedimento_generico_to_dict(item, clinica_id=clinica_id, detalhado=True)

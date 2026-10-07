@@ -1,5 +1,7 @@
 # Combo de símbolos de Procedimentos — P7A.R4 / fechamento P7A.R5
 
+Contrato específico complementar ao [contrato canônico de Procedimentos/Genéricos](contrato_edicao_procedimentos_roundtrip.md). Regras anteriores conflitantes são **SUPERSEDED**; scope 63 e identidades históricas homologadas permanecem.
+
 O catálogo de símbolos do Brana Cloude é compartilhado. O catálogo histórico
 EasyDental contém 81 identidades; o combo homologado de Nova Intervenção /
 Procedimento contém 63, obtidas por **ESPECIAL histórico <> 10**. Os 18 excluídos
@@ -55,9 +57,15 @@ Nenhuma descrição persistida é alterada.
 
 O modal solicita o scope de Procedimentos. Uma referência existente fora dos 63
 é mostrada como seleção atual, com aviso, sem virar opção de nova escolha.
-Abrir/cancelar ou editar outro campo não limpa a referência nem modifica
-`mostrar_simbolo`; apenas uma ação explícita no seletor troca/limpa o símbolo,
+Abrir/cancelar ou editar outro campo não limpa a referência; apenas uma ação
+explícita no seletor troca/limpa o símbolo,
 conforme o contrato atual (a obrigatoriedade ainda não foi implementada).
+
+Pelo [contrato definitivo R1.R3](contrato_edicao_procedimentos_roundtrip.md), não
+existe opção "Mostrar símbolo". Símbolo válido sempre é utilizado/exibido;
+`mostrar_simbolo` permanece somente como metadado legado interno, sem efeito
+funcional, inclusive quando false. React não o edita/envia. A obrigatoriedade de
+símbolo ao salvar é regra futura, não implementada nesta rodada.
 
 Falha de carregamento esvazia as opções e propaga o erro ao modal; não reutiliza
 uma lista ampla anterior. Não há fallback de catálogo completo no frontend.

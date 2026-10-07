@@ -574,9 +574,6 @@ def _backfill_genericos_por_snapshot_particular(
         if int(row.get("especial") or 0) > 0 and not str(generico.especialidade or "").strip():
             generico.especialidade = f"{int(row.get('especial') or 0):02d}"
             mudou = True
-        if bool(row.get("mostrar_simbolo")) and not bool(generico.mostrar_simbolo):
-            generico.mostrar_simbolo = True
-            mudou = True
         if str(row.get("data_inclusao") or "").strip() and not str(generico.data_inclusao or "").strip():
             generico.data_inclusao = str(row.get("data_inclusao") or "").strip()
             mudou = True
@@ -633,9 +630,6 @@ def _garantir_vinculos_genericos_canonicos(db: Session) -> int:
             mudou = True
         if canonico.simbolo_grafico and not str(item.simbolo_grafico or "").strip():
             item.simbolo_grafico = canonico.simbolo_grafico
-            mudou = True
-        if canonico.mostrar_simbolo and not bool(item.mostrar_simbolo):
-            item.mostrar_simbolo = True
             mudou = True
         if canonico.data_inclusao and not str(item.data_inclusao or "").strip():
             item.data_inclusao = canonico.data_inclusao
@@ -817,15 +811,11 @@ def garantir_metadados_procedimentos_genericos(db: Session) -> int:
             mudou = False
             especialidade = str(meta.get("especialidade") or "").strip()
             simbolo_grafico = str(meta.get("simbolo_grafico") or "").strip()
-            mostrar_simbolo = bool(meta.get("mostrar_simbolo"))
             if especialidade and not str(item.especialidade or "").strip():
                 item.especialidade = especialidade
                 mudou = True
             if simbolo_grafico and not str(item.simbolo_grafico or "").strip():
                 item.simbolo_grafico = simbolo_grafico
-                mudou = True
-            if mostrar_simbolo and not bool(item.mostrar_simbolo):
-                item.mostrar_simbolo = True
                 mudou = True
             if mudou:
                 alterados += 1
@@ -1017,48 +1007,6 @@ def _resolver_simbolo_por_descricao(nome: str, simbolos: list[SimboloGrafico]) -
     return melhor_codigo
 
 
-def _backfill_campos_procedimentos_por_generico(db: Session) -> int:
-    alterados = 0
-    rows = (
-        db.query(Procedimento, ProcedimentoGenerico)
-        .join(ProcedimentoGenerico, ProcedimentoGenerico.id == Procedimento.procedimento_generico_id)
-        .all()
-    )
-    for proc, generico in rows:
-        mudou = False
-        if int(getattr(proc, "tempo", 0) or 0) <= 0 and int(getattr(generico, "tempo", 0) or 0) > 0:
-            proc.tempo = int(generico.tempo or 0)
-            mudou = True
-        if float(getattr(proc, "custo_lab", 0) or 0) <= 0 and float(getattr(generico, "custo_lab", 0) or 0) > 0:
-            proc.custo_lab = float(generico.custo_lab or 0)
-            mudou = True
-        if not str(getattr(proc, "especialidade", "") or "").strip() and str(getattr(generico, "especialidade", "") or "").strip():
-            proc.especialidade = str(generico.especialidade or "").strip()
-            mudou = True
-        if int(proc.clinica_id) == int(generico.clinica_id) and herdar_simbolo_se_vazio(
-            db, proc.clinica_id, proc, generico.simbolo_grafico,
-            getattr(generico, "simbolo_grafico_legacy_id", None),
-        ):
-            mudou = True
-        if bool(getattr(generico, "mostrar_simbolo", False)) and not bool(getattr(proc, "mostrar_simbolo", False)):
-            proc.mostrar_simbolo = True
-            mudou = True
-        if not str(getattr(proc, "observacoes", "") or "").strip() and str(getattr(generico, "observacoes", "") or "").strip():
-            proc.observacoes = str(generico.observacoes or "").strip()
-            mudou = True
-        if not str(getattr(proc, "data_inclusao", "") or "").strip() and str(getattr(generico, "data_inclusao", "") or "").strip():
-            proc.data_inclusao = str(generico.data_inclusao or "").strip()
-            mudou = True
-        if not str(getattr(proc, "data_alteracao", "") or "").strip() and str(getattr(generico, "data_alteracao", "") or "").strip():
-            proc.data_alteracao = str(generico.data_alteracao or "").strip()
-            mudou = True
-        if mudou:
-            alterados += 1
-    if alterados:
-        db.flush()
-    return alterados
-
-
 def garantir_metadados_tabela_particular(db: Session) -> int:
     garantir_metadados_procedimentos_genericos(db)
     particulares_csv = _carregar_particular_csv()
@@ -1119,14 +1067,14 @@ def garantir_metadados_tabela_particular(db: Session) -> int:
 
         nome_origem = origem["descricao"] or proc.nome or ""
         mapas_clinica = genericos_locais_por_clinica.get(int(proc.clinica_id or 0), {})
-        generico_local, simbolo_legacy_id = _resolver_generico(
+        generico_local, _ = _resolver_generico(
             nome_origem,
             mapas_clinica.get("por_desc", {}),
             mapas_clinica.get("por_desc_strip", {}),
             genericos_legado,
             mapas_clinica.get("por_codigo", {}),
         )
-        melhor_local = _MatchGenerico(generico_local, simbolo_legacy_id, 1.0 if generico_local else 0.0)
+        melhor_local = _MatchGenerico(generico_local, None, 1.0 if generico_local else 0.0)
         if melhor_local.item is None:
             melhor_local = _melhor_generico_local(
                 nome_origem,
@@ -1135,9 +1083,9 @@ def garantir_metadados_tabela_particular(db: Session) -> int:
                 genericos_legado_por_codigo,
             )
             generico_local = melhor_local.item
-            simbolo_legacy_id = melhor_local.legacy_id
-        if snapshot_meta and int(snapshot_meta.get("nrosim") or 0) > 0:
-            simbolo_legacy_id = int(snapshot_meta.get("nrosim") or 0)
+        # Historical procedure metadata may supply its own reference, never
+        # the reference of a matched Generic (current or historical).
+        simbolo_legacy_id = int((snapshot_meta or {}).get("nrosim") or 0) or None
         simbolo_codigo = simbolos_por_legacy_id.get(int(simbolo_legacy_id or 0))
         if not simbolo_codigo:
             simbolo_codigo = _resolver_simbolo_por_descricao(nome_origem, simbolos_catalogo)
@@ -1180,21 +1128,10 @@ def garantir_metadados_tabela_particular(db: Session) -> int:
                 proc.procedimento_generico_id = generico_por_codigo.id
                 generico_local = generico_por_codigo
                 mudou = True
-        if generico_local and not str(proc.especialidade or "").strip() and str(generico_local.especialidade or "").strip():
-            proc.especialidade = str(generico_local.especialidade or "").strip()
-            mudou = True
         if snapshot_meta and int(snapshot_meta.get("especial") or 0) > 0 and not str(proc.especialidade or "").strip():
             proc.especialidade = f"{int(snapshot_meta.get('especial') or 0):02d}"
             mudou = True
-        if generico_local and herdar_simbolo_se_vazio(
-            db, proc.clinica_id, proc, generico_local.simbolo_grafico,
-            getattr(generico_local, "simbolo_grafico_legacy_id", None),
-        ):
-            mudou = True
         if simbolo_codigo and herdar_simbolo_se_vazio(db, proc.clinica_id, proc, simbolo_codigo, simbolo_legacy_id):
-            mudou = True
-        if (simbolo_codigo or bool((snapshot_meta or {}).get("mostrar_simbolo"))) and not bool(proc.mostrar_simbolo):
-            proc.mostrar_simbolo = True
             mudou = True
         if forma_cobranca and not str(proc.forma_cobranca or "").strip():
             proc.forma_cobranca = forma_cobranca
@@ -1217,5 +1154,4 @@ def garantir_metadados_tabela_particular(db: Session) -> int:
 
     if alterados:
         db.flush()
-    alterados += _backfill_campos_procedimentos_por_generico(db)
     return alterados

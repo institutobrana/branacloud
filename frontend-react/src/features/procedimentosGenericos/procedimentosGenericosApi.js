@@ -55,7 +55,6 @@ function normalizeProcedimentoGenericoDetalhe(item) {
     peso: Number(item?.peso || 0) || 0,
     simbolo_grafico: String(item?.simbolo_grafico || '').trim(),
     simbolo_grafico_legacy_id: Number(item?.simbolo_grafico_legacy_id || 0) || null,
-    mostrar_simbolo: Boolean(item?.mostrar_simbolo),
     observacoes: String(item?.observacoes || '').trim(),
     data_inclusao: String(item?.data_inclusao || '').trim(),
     data_alteracao: String(item?.data_alteracao || '').trim(),

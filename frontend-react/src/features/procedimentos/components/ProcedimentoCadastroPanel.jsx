@@ -79,7 +79,8 @@ export function ProcedimentoCadastroPanel({
       update(field, '');
       return;
     }
-    update(field, toMoneyInputValue(parseMoneyInput(current)));
+    const parsed = parseMoneyInput(current);
+    if (Number.isFinite(parsed)) update(field, toMoneyInputValue(parsed));
   };
 
   return (
@@ -148,7 +149,6 @@ export function ProcedimentoCadastroPanel({
                 update('simbolo_catalogo_id', nextOption?.catalogId ?? null);
                 update('simbolo_grafico_legacy_id', nextOption?.legacyId ?? null);
                 update('simbolo_grafico', nextOption?.codigo || '');
-                update('mostrar_simbolo', !!nextOption);
               }}
             />
             {symbolValue && !selectedSymbol ? <span className="procedimento-editor-field-hint">Símbolo atual fora da lista de novas escolhas; referência preservada.</span> : null}

@@ -267,6 +267,15 @@ test('reajuste: preview GET, Aplicar só abre confirmação; Não e Cancela não
   assert.equal(writes(calls).length, 0);
 }));
 
+test('reajuste: percentual inválido continua bloqueando preview sem request', async () => withPage(async ({ action, modal, calls, click }) => {
+  await act(async () => action('reajusta-tabela'));
+  await act(async () => modal('reprice').onChange('percentual', 'abc'));
+  await act(async () => click('Preview'));
+  assert.match(modal('reprice').error, /percentual maior que zero/);
+  assert.equal(calls.filter(([name]) => name === 'preview').length, 0);
+  assert.equal(writes(calls).length, 0);
+}));
+
 for (const [field, value] of [['percentual', '2,00'], ['modo', 'diminuir'], ['tabela_id', 8]]) {
   test(`reajuste: mudar ${field} invalida preview e confirmação anterior`, async () => withPage(async ({ action, modal, calls, click }) => {
     await act(async () => action('reajusta-tabela'));
@@ -327,6 +336,15 @@ test('Nova intervenção e Altera continuam abrindo; símbolo existente fora do 
   assert.equal(writes(calls).length, 0);
 }));
 
+test('Nova intervenção preserva a especialidade preselecionada do filtro ao criar', async () => withPage(async ({ action, modal, filter, calls }) => {
+  await act(async () => filter('especialidade', '05'));
+  await act(async () => action('novo'));
+  assert.equal(modal('editor').form.especialidade, '05');
+  await act(async () => modal('editor').onChangeField('nome', 'Novo'));
+  await act(async () => modal('editor').onSave());
+  assert.equal(calls.find(([name]) => name === 'saveProcedure')[1].payload.especialidade, '05');
+}));
+
 test('confirmação congela seleção e bloqueia dupla gravação', async () => {
   let resolve;
   let count = 0;
@@ -355,13 +373,21 @@ test('resposta antiga de outra tabela não repõe seleção nem permite eliminar
     : Promise.resolve([{ id: 803, codigo: 3, nome: 'Tabela nova' }]) });
 });
 
-test('salvar outro campo do editor mantém par e mostrar_simbolo fora do combo', async () => withPage(async ({ action, modal, calls }) => {
+test('salvar outro campo do editor mantém par fora do combo sem transportar flag histórico', async () => withPage(async ({ action, modal, calls, api }) => {
   await act(async () => action('alterar'));
-  const before = { symbol: modal('editor').form.simbolo_grafico, legacy: modal('editor').form.simbolo_grafico_legacy_id, show: modal('editor').form.mostrar_simbolo };
+  let stored = { ...modal('editor').form };
+  api.salvarProcedimento = async (args) => { calls.push(['saveProcedure', args]); stored = { ...stored, ...args.payload }; return stored; };
+  api.obterProcedimentoDetalhe = async () => stored;
+  const before = { symbol: modal('editor').form.simbolo_grafico, legacy: modal('editor').form.simbolo_grafico_legacy_id };
+  assert.equal('mostrar_simbolo' in modal('editor').form, false);
   await act(async () => modal('editor').onChangeField('nome', 'Nome atualizado'));
   await act(async () => modal('editor').onSave());
   const saved = calls.find(([name]) => name === 'saveProcedure')[1];
-  assert.equal(saved.payload.simbolo_grafico, before.symbol);
-  assert.equal(saved.payload.simbolo_grafico_legacy_id, before.legacy);
-  assert.equal(saved.payload.mostrar_simbolo, before.show);
+  assert.equal('simbolo_grafico' in saved.payload, false);
+  assert.equal('simbolo_grafico_legacy_id' in saved.payload, false);
+  assert.equal('mostrar_simbolo' in saved.payload, false);
+  await act(async () => action('alterar'));
+  assert.equal(modal('editor').form.simbolo_grafico, before.symbol);
+  assert.equal(modal('editor').form.simbolo_grafico_legacy_id, before.legacy);
+  assert.equal('mostrar_simbolo' in modal('editor').form, false);
 }));

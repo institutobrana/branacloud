@@ -1,5 +1,7 @@
 # Contrato Funcional: Regras de Materiais entre Procedimentos Genericos e Intervencoes
 
+Autoridade de domínio de Procedimentos: [contrato canônico](contrato_edicao_procedimentos_roundtrip.md). Este documento detalha materiais; qualquer disposição conflitante é **SUPERSEDED** no escopo de Procedimentos. “Receber/herdar” significa união dinâmica sem cópia própria permanente, com identidade/quantidade próprias prevalecendo. Regras de outros fluxos clínicos não são ampliadas neste fechamento.
+
 ## 1. Objetivo
 Estabelecer o contrato funcional obrigatorio para as regras de materiais entre:
 
@@ -235,9 +237,16 @@ O erro `Tabela de procedimentos nao encontrada.` nao pode aparecer em vinculo va
 ### 9.37 Erro de gravacao do generico
 O erro `Falha ao gravar materiais do procedimento.` precisa ser tratado em correcao separada, mas sem violar este contrato.
 
-### 9.38 Estado transitório de origem
-O marcador `herdado` pode existir apenas como estado transitório de composição antes do save.
-Após a materialização e reabertura, os materiais passam a ser tratados como vínculos comuns do procedimento, sem bloqueio permanente por origem e sem badge persistente na interface.
+### 9.38 Origem na composição dinâmica — contrato definitivo R1.R2
+Contrato definitivo R1.R2: o Genérico governa somente materiais por composição dinâmica e fases por substituição na associação/troca. Todos os demais campos cadastrais do Procedimento são locais, sem defaults, reposição ou propagação pelo Genérico. A sincronização anterior de tempo/laboratório está revogada.
+
+Materiais herdados permanecem pertencendo ao Genérico atual, inclusive após salvar/reabrir. Não são copiados permanentemente para a lista própria por associação/troca. A apresentação sem badge não altera a origem técnica.
+
+Lista efetiva = próprios UNION materiais do Genérico atual que não existem nos próprios, por material_id. Em colisão, quantidade e vínculo próprios prevalecem (6.9/9.19/11.8). Trocar para um Genérico com menos materiais nunca reduz a lista própria.
+
+Editar a lista própria altera somente o Procedimento editado, sem modificar o Genérico/associados. Editar a lista do Genérico afeta somente os complementos dos atualmente associados, nunca suas listas próprias.
+
+Vínculos próprios mantêm os fluxos atuais de inclusão, edição de quantidade e remoção. O PUT por código continua aceitando somente quantidade; não substitui material_id. Remover um próprio que também existe no Genérico pode voltar a expor a ocorrência herdada, sem recriar vínculo próprio (seção 17). Ver também [precedência de edição](contrato_edicao_procedimentos_roundtrip.md).
 
 ## 10. Regras que nunca podem ser violadas
 
