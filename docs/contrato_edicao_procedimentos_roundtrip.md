@@ -9,20 +9,33 @@ As regras deste contrato valem para TODAS as clínicas/tenants atuais e futuros,
 - O Genérico governa somente materiais (união dinâmica) e fases (substituição na associação/troca). Todos os demais campos cadastrais pertencem ao Procedimento concreto, inclusive nome/código, especialidade, cobrança, símbolo, tempo, laboratório, custo, preço, repasse, garantia, observações, inativo e preferido.
 - Tempo e custo de laboratório são **locais**. Edição, zero e limpeza (zero no contrato numérico atual) alteram somente o Procedimento editado. Nunca propagam ao Genérico/associados, nem são repostos pelo Genérico. A decisão anterior de sincronização foi revogada; procedimentos do mesmo Genérico podem ter valores diferentes.
 - Associação/troca não aplica defaults de campos cadastrais do Genérico, mesmo quando o campo concreto está vazio, zero ou false. CREATE e UPDATE usam somente dados/defaults próprios do cadastro; não existe herança cadastral ativa.
-- Especialidade é opcional e pode ser limpa; observações vazias persistem. Essas regras são locais, sem propagação ou reposição pelo Genérico.
-- UPDATE distingue presença: omitido preserva; texto opcional vazio/NULL limpa; numérico vazio na UI vira zero; boolean false persiste. Nome/código continuam obrigatórios. Dinheiro inválido/não finito bloqueia o save. O React não retransmite campos não editados no UPDATE.
+- Especialidade é local e obrigatória no cadastro/alteração; observações são opcionais e vazias persistem. Não há propagação ou reposição pelo Genérico.
+- UPDATE distingue presença: omitido preserva quando o registro resultante é válido; texto opcional vazio/NULL limpa; numérico vazio na UI vira zero; boolean false persiste. Dinheiro inválido/não finito bloqueia o save. O React não retransmite campos não editados no UPDATE. Código continua sendo identidade técnica obrigatória.
 - Inclusão/Alteração são exclusivamente do servidor. Custo persistido não exibido não é zerado por edição do nome. Resultados financeiros e custos derivados continuam read-only, sem novas fórmulas/entradas.
 
 Inclusão = readonly; Alteração = readonly. Usuário não edita nem envia esses campos; o backend mantém autoridade sobre a auditoria.
 
+## Obrigatórios e defaults — evolução R2
+
+Regra global para TODAS as clínicas atuais e futuras, sem hardcode de tenant. Na criação e alteração, validar nesta ordem: **Nome > Procedimento genérico > Especialidade > Símbolo gráfico > Forma de cobrança**. Todos os demais campos cadastrais são opcionais, sem dispensar validações técnicas de identidade, permissão, tenant ou valores inválidos.
+
+- Nome NULL/vazio/whitespace é ausente. Genérico NULL/0 é ausente; referência deve existir na própria clínica. Especialidade NULL/vazia/0/00 é ausente; código deve resolver no catálogo da clínica. Símbolo é ausente quando não há código nem legacy_id válido; referência completa ou parcial deve resolver univocamente no catálogo ativo da própria clínica. Cobrança vazia/NULL é ausente; valores vigentes são INTERVENCAO e ELEMENTO_FACE (aliases históricos normalizados). Zero não é considerado ausente nos campos numéricos opcionais.
+- Gravar bloqueia no primeiro obrigatório ausente e abre o aviso oficial React: `Campo {NOME_DO_CAMPO} não pode ser nulo.`. OK fecha somente o aviso; o formulário e seu rascunho permanecem. Referências inválidas são rejeitadas, não corrigidas automaticamente.
+- Backend valida os cinco campos do registro resultante em CREATE/UPDATE antes de bootstrap ou mutação. Omissão no UPDATE preserva o existente, mas não permite salvar um registro inválido. Não há saneamento automático dos registros existentes/órfãos.
+- Novo cadastro inicia Genérico **vazio** e Forma de cobrança **INTERVENCAO / Intervenção**; edição mantém o valor existente. Primeiro item do combo não é default funcional. Usuário pode escolher outra cobrança válida.
+- Inclusão/Alteração usam o padrão ciano existente `ficha-dados-readonly-cyan`, sem nova tonalidade. Permanecem readonly, fora do payload.
+- Busca remota por nome mantém a semântica vigente e o dataset integral. Texto do input é local/imediato; somente consulta aguarda 200 ms, com Enter/limpeza imediatos. Nenhum limite de resultados é acrescentado.
+
+Esta evolução funcional/visual R2 aguarda homologação manual; a homologação registrada ao final é a do fechamento anterior.
+
 ## Símbolos
 
 - Combo vigente: `GET /cadastros/simbolos-graficos?scope=procedimentos-combo`; 63 identidades homologadas (`ESPECIAL` histórico <> 10). O relato de 141 itens/scope amplo no documento anterior é histórico e superado. Catálogo compartilhado/Genéricos não são truncados.
-- P4A continua protegendo o par omitido exatamente, inclusive parcial/fora do combo. Escolha/limpeza explícita prevalece. CREATE sem escolha não herda símbolo do Genérico; associação/troca e bootstrap não copiam campos do Genérico para o concreto.
-- Manter validação da própria clínica e distinção 57/58 e 18/81; não deduplicar por bitmap/resource. Nenhuma obrigatoriedade nova.
+- P4A continua protegendo o par omitido exatamente, inclusive parcial/fora do combo, desde que resolva uma referência válida. UPDATE não normaliza automaticamente o par omitido. Escolha explícita válida prevalece; limpeza é bloqueada pela obrigatoriedade R2. CREATE sem escolha é bloqueado, nunca herda símbolo do Genérico; associação/troca e bootstrap não copiam campos do Genérico para o concreto.
+- Manter validação da própria clínica e distinção 57/58 e 18/81; não deduplicar por bitmap/resource.
 - Todo procedimento que possui símbolo gráfico válido utiliza/exibe esse símbolo no odontograma. Não existe opção do usuário para ocultá-lo: a renderização não depende de `mostrar_simbolo`, mesmo quando o valor histórico é false.
 - `mostrar_simbolo` é **DEPRECATED_INTERNAL_FIELD** em Procedimento e Genérico: coluna/DTO/cópia histórica podem permanecer por compatibilidade, sem edição ou efeito no domínio. Clientes antigos que enviam esse campo são ignorados pelos schemas cadastrais; o React não o hidrata nem o envia. Parsers/seeds/importadores históricos podem conservar o metadado, nunca decidir renderização por ele. Não remover colunas ou executar migration nesta fase.
-- Regra futura: símbolo gráfico será obrigatório ao salvar/criar/alterar Procedimento, junto aos demais obrigatórios definidos. **Não implementar agora**: depende do saneamento e de fase própria. A existência de símbolo não dispensa validação de catálogo/clínica nem as regras gráficas restantes; esta rodada não implementa/retoma FC4.
+- A obrigatoriedade anteriormente planejada passa a valer no cadastro/alteração R2 junto aos cinco campos acima. A existência de símbolo não dispensa validação de catálogo/clínica nem as regras gráficas restantes; esta rodada não implementa/retoma FC4 e não modifica órfãos nem bootstrap.
 
 ## Materiais
 
@@ -36,7 +49,7 @@ Inclusão = readonly; Alteração = readonly. Usuário não edita nem envia esse
 
 - Associação inicial/troca substitui **todas** as fases pelas do novo Genérico. Genérico sem fases produz lista vazia. Save comum sem troca não recompõe fases.
 - Não há suporte operacional a fases próprias nesta frente; é evolução futura. Não criar coluna/tabela de origem, heurística ou migration.
-- Desvinculação é permitida pelo vínculo opcional. Pela decisão 3B/6 anterior do usuário, preservar valores concretos e **todas as fases materializadas**, sem seleção por origem. Não existe sincronização cadastral com nenhum Genérico. Próprios permanecem; materiais herdados deixam a composição.
+- Desvinculação por cadastro/alteração não é permitida a partir do R2: Genérico é obrigatório, e a tentativa é bloqueada antes de alterar valores, fases ou materiais. A decisão histórica de preservar valores concretos e fases ao desvincular fica SUPERSEDED para esse fluxo. A composição dinâmica continua sem copiar materiais; nenhuma migração ou limpeza de vínculos antigos é autorizada.
 
 ## Precedência documental
 
@@ -56,6 +69,14 @@ A mesma precedência aplica-se aos demais relatos, checkpoints e contratos antig
 
 ## Provisionamento — contrato separado
 
+Evolução R2B: consultar a seção vigente de alinhamento no contrato de seeds.
+Listagens/GET de Procedimentos são sem DML, inclusive resolução de índices;
+não executam bootstrap/repair implícito. `nome_tabela_procedimentos` é legado
+interno inerte, sem escolha/default/runtime ou auto-recriação de tabela.
+Cadastro explícito e bootstrap de nascimento continuam separados do alinhamento
+autorizado por manifesto. Todas as regras homologadas de edição, materiais,
+fases, símbolos e campos locais acima permanecem inalteradas.
+
 Novas clínicas não devem nascer com todas as tabelas da clínica ID 1. Cadastro/edição e provisão são contratos separados: consultar [seeds de novas contas](contrato_seeds_novas_contas_minimos_nome_codigo.md) e a evolução [signup com seed canônico Brana — 3I](intervencoes_procedimentos_seed_brana_subetapa_3i_signup_consumindo_seed_canonico_brana.md). O relato 3I registra Brana com seed versionado próprio e Tabela exemplo separada, sem dependência runtime da clínica 1/tabela 18 para a Brana.
 
 Fontes técnicas separadas: `backend/services/signup_service.py` (`_carregar_seed_procedimentos_particular`) e `backend/seeds/procedimentos_padrao.py` (`TABELAS_PROCEDIMENTOS_INICIAIS`, `_garantir_tabelas_procedimentos_iniciais`). A lista exata de tabelas por caminho/política de provisionamento exige auditoria documental própria: o contrato antigo menciona PARTICULAR, o relato 3I restringe-a a contas antigas e o registry atual tem evolução posterior. Não fixar uma lista neste contrato nem deduzir bootstrap a partir da regra global. Esta rodada não executa signup, altera seeds ou dados existentes.
@@ -73,8 +94,58 @@ Cobertura executável de regressão:
 
 - `backend/tests/test_procedimentos_edit_roundtrip.py`: campos locais/omitido/clear/zero/false, isolamento, união dinâmica/precedência/não materialização, troca/substituição de fases, save comum, auditoria readonly e fixtures de tenants novos sem dependência de IDs produtivos.
 - `frontend-react/tests/procedimentosEditRoundtrip.test.mjs`: controles, normalização, payloads e bloqueio de valores inválidos.
-- `frontend-react/tests/procedimentosShowSymbolDeprecated.test.mjs`: ausência da opção/payload, símbolo com flag histórico false, contrato global e adiamento da obrigatoriedade.
+- `frontend-react/tests/procedimentosShowSymbolDeprecated.test.mjs`: ausência da opção/payload, símbolo com flag histórico false e contrato global; obrigatoriedade agora regida pela evolução R2 acima.
 - `backend/tests/test_procedimento_symbol_preservation.py`, `backend/tests/test_procedimentos_symbol_combo_scope.py` e testes frontend de combo/preview: P4A, scope 63, identidades distintas 57/58/81 e clínica autenticada.
 - Testes Actions/API/Shell/TableScroll e Genéricos preservam Plano A, Plan B e fluxos já homologados.
 
-Testes mutáveis usam mocks/ORM doubles, sem importar bootstrap nem acessar banco produtivo. O fechamento não altera comportamento homologado, não implementa símbolo obrigatório e não retoma clínica 1/órfãos/FC4. A retomada da revisão manual é fase posterior ao gate Git/runtime.
+Testes mutáveis usam mocks/ORM doubles, sem importar bootstrap nem acessar banco produtivo. O fechamento anterior não implementou símbolo obrigatório; a evolução R2 acima substitui esse adiamento exclusivamente no cadastro/alteração. Não retomar clínica 1/órfãos/FC4 nesta rodada. A retomada da revisão manual é fase posterior à homologação/gate Git/runtime.
+
+## Recuperação histórica dedicada — ID4 / R3B
+
+Exceção operacional explicitamente autorizada, não regra de cadastro, bootstrap ou
+alinhamento padrão. O operador `recuperar_historico_procedimentos_clinica4.py`
+aceita somente a ID4. Conteúdo de outra clínica não participa da construção nem
+da decisão de reparo; snapshots externos são exclusivamente guards de exclusão.
+
+- Criar uma tabela própria ativa, **Histórico recuperado**, com código público
+  livre calculado no namespace da própria ID4 (max + 1; preflight atual: 5).
+  O ID físico é gerado pelo PostgreSQL, não copiado/restaurado de outro tenant.
+- Reparar apenas o `tabela_id` dos 56 procedimentos históricos quebrados;
+  preservar seus IDs, códigos, nomes, campos locais, auditoria, status e todos
+  os 1530 vínculos próprios de materiais, incluindo IDs/quantidades/metadados.
+  Nenhuma fusão, exclusão, recodificação ou alteração das duas tabelas anteriores.
+- Criar na própria ID4 `0207 — Sem classificação clínica histórica`, vazio de
+  materiais/fases, e trocar somente os 443 vínculos provisórios ao Genérico
+  `623 / 00200`. O Genérico 623 e os demais vínculos válidos permanecem intactos.
+- A neutralidade permanente é protegida pelo CRUD (erro 400) e por três triggers
+  revisados que recusam composição por INSERT/reapontamento UPDATE, alteração
+  de identidade e DELETE do ID físico gerado. Código/nome iguais em outro tenant
+  não recebem essa proteção. Os outros Genéricos continuam editáveis.
+- O scoped guard revisa definições, corpos das funções, parâmetros, estado ativo
+  e associação exatos dos triggers; não permite triggers desconhecidos/alterados.
+  A alteração de schema revisada pertence semanticamente somente à ID4. Campos
+  de negócio/auditoria continuam protegidos; somente `usuarios.last_seen_at`
+  permanece excluído. Administração privilegiada capaz de remover triggers/DDL
+  não é uma barreira coberta pelo CRUD; remoção/alteração exige revisão explícita.
+- Listagem e detalhe/editor usam normalmente a nova tabela, sem efeito colateral
+  de GET. Contextos clínicos continuam respeitando seleção de tabela e filtros
+  existentes; a recuperação não injeta seleção automática nem retoma FC4.
+- Produção exige snapshot/backup individual novo, checksums, restauração e
+  rollback atômico provados em PostgreSQL descartável, suíte pertinente PASS e
+  hashes do source iguais à prova. O manifesto permite somente dois INSERTs,
+  as alterações de vínculo especificadas e cinco DDLs de proteção. Qualquer
+  alteração adicional aborta; segunda passagem é exclusivamente leitura/zero DML.
+
+Os nomes/códigos dessa estrutura histórica são decisões autorizadas de recuperação
+da própria ID4, não evidência de uma tabela original de outra clínica. Não há
+proteção especial nem default clínico global para `00200`, `0200` ou `0207`.
+
+## Apresentação do seletor de tabelas — R5
+
+O seletor ativo de Procedimentos, em `App.jsx` / `procedimentosTopBar`, exibe
+somente `nome`, sem prefixo de código. `value` continua sendo `item.id` (código
+público tenant-scoped já resolvido pela API), nunca o nome. Código, ID físico,
+payload, filtros e persistência permanecem inalterados; nomes iguais não fundem
+identidades. A regra vale para todas as clínicas, inclusive **Histórico
+recuperado** da ID4. Esta alteração de apresentação aguarda homologação visual
+manual e não autoriza alteração de dados, seeds ou limpeza técnica.

@@ -7099,6 +7099,20 @@ PROCEDIMENTOS_GENERICOS_PADRAO = [{'codigo': '0001',
   'data_alteracao': None}]
 
 
+# Identidades originais comprovadas em R1A3; zeros são significativos.
+# Não são os códigos HOF 00200–00206. O writer mantém os defaults neutros
+# já contratados, sem importar materiais/fases ou atributos clínicos históricos.
+PROCEDIMENTOS_GENERICOS_PADRAO.extend([
+    {"codigo": "0200", "descricao": "Falta"},
+    {"codigo": "0201", "descricao": "Fenda palatina"},
+    {"codigo": "0202", "descricao": "Fixação temporária com fio de aço ou acrílico"},
+    {"codigo": "0203", "descricao": "Fixação temporária com resina fotopolimerizável"},
+    {"codigo": "0204", "descricao": "Fotos"},
+    {"codigo": "0205", "descricao": "Frat.complexo zigomático c/ reconst. assoalho órb."},
+    {"codigo": "0206", "descricao": "Frat.do arco zigomático - redução cirúrgica c/fix"},
+])
+
+
 def seed_procedimentos_genericos(db: Session, clinica_id: int) -> int:
     existentes = {
         str(item.codigo or "").strip(): item

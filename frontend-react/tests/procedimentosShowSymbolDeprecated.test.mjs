@@ -49,13 +49,14 @@ test('caminhos gráficos existentes não consultam flag legado; FC4 não é impl
   ]) assert.doesNotMatch(read(path), /mostrar_simbolo|show_symbol|showSymbol/);
 });
 
-test('contrato canônico retira opção, vale para futuros tenants e não implementa obrigatoriedade', () => {
+test('contrato canônico retira opção, vale para futuros tenants e registra obrigatoriedade R2 sem FC4', () => {
   const doc = read('../../docs/contrato_edicao_procedimentos_roundtrip.md');
   assert.match(doc, /TODAS as clínicas\/tenants atuais e futuros/);
   assert.match(doc, /Não existe opção do usuário para ocultá-lo/);
   assert.match(doc, /DEPRECATED_INTERNAL_FIELD/);
   assert.match(doc, /mesmo quando o valor histórico é false/);
-  assert.match(doc, /Não implementar agora/);
+  assert.match(doc, /Nome > Procedimento genérico > Especialidade > Símbolo gráfico > Forma de cobrança/);
+  assert.match(doc, /não implementa\/retoma FC4/);
   assert.match(doc, /Não remover colunas ou executar migration/);
 });
 

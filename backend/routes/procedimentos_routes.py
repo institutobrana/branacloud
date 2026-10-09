@@ -105,7 +105,7 @@ _GENERICO_CUSTO_MATERIAL_CANONICO = None
 
 class ProcedimentoPayload(BaseModel):
     codigo: int
-    nome: str
+    nome: str | None = None
     tempo: int = 0
     preco: float = Field(default=0, allow_inf_nan=False)
     custo: float = Field(default=0, allow_inf_nan=False)
@@ -230,15 +230,15 @@ def _resolver_nro_indice(
     default: int | None = None,
 ) -> int:
     fallback = int(default or _indice_default_id_por_fonte(fonte_pagadora))
-    return resolver_numero_indice(db, clinica_id, valor, default=fallback)
+    return resolver_numero_indice(db, clinica_id, valor, default=fallback, ensure_defaults=False)
 
 
 def _dados_indice_por_id(db: Session, clinica_id: int, nro_indice: int | str | None) -> dict:
-    return dados_indice_por_numero(db, clinica_id, nro_indice)
+    return dados_indice_por_numero(db, clinica_id, nro_indice, ensure_defaults=False)
 
 
 def _listar_indices_moeda(db: Session, clinica_id: int) -> list[dict]:
-    return listar_indices(db, clinica_id, include_inativos=True)
+    return listar_indices(db, clinica_id, include_inativos=True, ensure_defaults=False)
 
 
 def _carregar_custo_material_canonico_genericos() -> dict[str, float]:
@@ -622,19 +622,40 @@ def _campos_procedimento_explicitos(payload: ProcedimentoPayload) -> set[str]:
 
 
 def _validar_campos_edicao(db: Session, clinica_id: int, payload: ProcedimentoPayload, atual=None) -> tuple:
+    # Validate the resulting record, not only changed fields. Omitted values retain
+    # their identity (P4A), but cannot bypass the global cadastro requirements.
     explicitos = _campos_procedimento_explicitos(payload)
-    especialidade = _normalizar_especialidade(payload.especialidade) or None
-    forma = _normalizar_forma_cobranca(payload.forma_cobranca)
-    if "especialidade" in explicitos and especialidade:
-        anterior = _normalizar_especialidade(getattr(atual, "especialidade", None)) or None
-        if especialidade != anterior and especialidade not in {
-            _normalizar_especialidade(item["codigo"]) for item in _listar_especialidades(db, clinica_id)
-        }:
-            raise HTTPException(status_code=400, detail="Especialidade não encontrada para esta clínica.")
-    if "forma_cobranca" in explicitos and forma:
-        anterior = _normalizar_forma_cobranca(getattr(atual, "forma_cobranca", None))
-        if forma != anterior and forma not in FORMAS_COBRANCA_PADRAO:
-            raise HTTPException(status_code=400, detail="Forma de cobrança inválida.")
+    def efetivo(campo):
+        return getattr(payload, campo) if atual is None or campo in explicitos else getattr(atual, campo, None)
+
+    def exigir(valor, nome):
+        if not valor:
+            raise HTTPException(status_code=400, detail=f"Campo {nome} não pode ser nulo.")
+
+    exigir(str(payload.nome or "").strip(), "Nome")
+    generico_id = int(efetivo("procedimento_generico_id") or 0)
+    exigir(generico_id, "Procedimento genérico")
+    if not db.query(ProcedimentoGenerico.id).filter(
+        ProcedimentoGenerico.id == generico_id, ProcedimentoGenerico.clinica_id == clinica_id,
+    ).first():
+        raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado para esta clínica.")
+
+    especialidade = _normalizar_especialidade(efetivo("especialidade")) or None
+    exigir(especialidade, "Especialidade")
+    if especialidade not in {_normalizar_especialidade(item["codigo"]) for item in _listar_especialidades(db, clinica_id)}:
+        raise HTTPException(status_code=400, detail="Especialidade não encontrada para esta clínica.")
+
+    codigo = str(efetivo("simbolo_grafico") or "").strip()
+    legacy_id = efetivo("simbolo_grafico_legacy_id")
+    exigir(codigo or legacy_id, "Símbolo gráfico")
+    simbolo_codigo, simbolo_legacy_id = referencia_simbolo_payload(db, clinica_id, payload, atual=atual)
+    exigir(simbolo_codigo or simbolo_legacy_id, "Símbolo gráfico")
+    resolver_referencia_simbolo(db, clinica_id, simbolo_codigo, simbolo_legacy_id)
+
+    forma = _normalizar_forma_cobranca(efetivo("forma_cobranca"))
+    exigir(forma, "Forma de cobrança")
+    if forma not in FORMAS_COBRANCA_PADRAO:
+        raise HTTPException(status_code=400, detail="Forma de cobrança inválida.")
     return especialidade, forma
 
 
@@ -790,62 +811,6 @@ def _calcular_financeiro_dashboard(proc: Procedimento, cenario: Cenario | None, 
     }
 
 
-def _nome_tabela_extra_clinica(db: Session, clinica_id: int) -> str:
-    row = (
-        db.query(Clinica.nome_tabela_procedimentos)
-        .filter(Clinica.id == clinica_id)
-        .first()
-    )
-    nome = (row[0] if row else "") or ""
-    return nome.strip()
-
-
-def _garantir_tabelas_clinica(db: Session, clinica_id: int):
-    tabelas = (
-        db.query(ProcedimentoTabela)
-        .filter(ProcedimentoTabela.clinica_id == clinica_id)
-        .order_by(
-            case(ORDEM_TABELAS_PROCEDIMENTOS, value=ProcedimentoTabela.codigo, else_=100),
-            ProcedimentoTabela.codigo.asc(),
-        )
-        .all()
-    )
-    por_codigo = {int(t.codigo): t for t in tabelas if int(t.codigo or 0) > 0}
-    alterou = False
-
-    if 1 not in por_codigo:
-        t = ProcedimentoTabela(
-            clinica_id=clinica_id,
-            codigo=1,
-            nome="Tabela Exemplo",
-            nro_indice=255,
-            fonte_pagadora="particular",
-            inativo=False,
-            tipo_tiss_id=1,
-        )
-        db.add(t)
-        por_codigo[1] = t
-        alterou = True
-
-    nome_extra = _nome_tabela_extra_clinica(db, clinica_id)
-    if PRIVATE_TABLE_CODE not in por_codigo:
-        db.add(
-            ProcedimentoTabela(
-                clinica_id=clinica_id,
-                codigo=PRIVATE_TABLE_CODE,
-                nome=nome_extra or PRIVATE_TABLE_NAME,
-                nro_indice=255,
-                fonte_pagadora="particular",
-                inativo=False,
-                tipo_tiss_id=1,
-            )
-        )
-        alterou = True
-
-    if alterou:
-        db.commit()
-
-
 def _resolver_tabela_id(valor: str | int | None, default: int = 1) -> int:
     base = str(valor or "").strip()
     if not base or base in {"1", "__padrao__"}:
@@ -883,7 +848,6 @@ def _validar_tabela_ativa(tabela: ProcedimentoTabela):
 
 
 def _listar_tabelas_procedimentos(db: Session, clinica_id: int) -> list[dict]:
-    _garantir_tabelas_clinica(db, clinica_id)
     tipos_por_id: dict[int, TissTipoTabela] = {}
     try:
         tipos = db.query(TissTipoTabela).all()
@@ -1024,7 +988,6 @@ def criar_tabela_procedimentos(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
 
     nome = (payload.nome or "").strip()
     if not nome:
@@ -1098,7 +1061,6 @@ def renomear_tabela_procedimentos(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
 
     nome = (payload.nome or "").strip()
     if not nome:
@@ -1173,7 +1135,6 @@ def excluir_tabela_procedimentos(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
 
     tabela = _load_tabela_or_404(db, clinica_id, int(codigo))
     total_tabelas = (
@@ -1228,7 +1189,6 @@ def listar_procedimentos(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
     tabela_resolvida = _resolver_tabela_id(tabela_id, default=1)
     especialidade_filtro = _normalizar_especialidade(especialidade)
 
@@ -1254,7 +1214,6 @@ def proximo_codigo(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
     tabela_resolvida = _resolver_tabela_id(tabela_id, default=1)
     tabela = _load_tabela_or_404(db, clinica_id, tabela_resolvida)
     _validar_tabela_ativa(tabela)
@@ -1318,7 +1277,6 @@ def preview_reajuste_tabela(
     Computes before/after values for preco and valor_repasse for the selected table.
     """
     clinica_id = int(current_user.clinica_id)
-    _garantir_tabelas_clinica(db, clinica_id)
 
     tabela_resolvida = _resolver_tabela_id(tabela_id, default=0)
     if tabela_resolvida <= 0:
@@ -1402,7 +1360,6 @@ def aplicar_reajuste_tabela(
     - Does not touch materials/vinculos/genericos/custos
     """
     clinica_id = int(current_user.clinica_id)
-    _garantir_tabelas_clinica(db, clinica_id)
 
     tabela_resolvida = _resolver_tabela_id(payload.tabela_id, default=0)
     if tabela_resolvida <= 0:
@@ -1607,7 +1564,6 @@ def relatorio_tabela_procedimentos(
     db: Session = Depends(get_db),
 ):
     clinica_id = int(current_user.clinica_id)
-    _garantir_tabelas_clinica(db, clinica_id)
     tabela_codigo_param = _resolver_tabela_id(tabela_id, default=1)
     tabela_atual = _load_tabela_or_404(db, clinica_id, tabela_codigo_param)
     tabela_id_real = int(tabela_atual.id or 0)
@@ -1615,7 +1571,7 @@ def relatorio_tabela_procedimentos(
     tabela_codigo = int(tabela_atual.codigo or 0)
     tabela_nome = str(tabela_atual.nome or "").strip()
     indice_sigla = str(
-        (dados_indice_por_numero(db, clinica_id, tabela_atual.nro_indice) or {}).get("sigla") or "R$"
+        (dados_indice_por_numero(db, clinica_id, tabela_atual.nro_indice, ensure_defaults=False) or {}).get("sigla") or "R$"
     )
     especialidades_por_codigo = _mapa_especialidades(db, clinica_id)
     especialidade_filtro = _normalizar_especialidade(especialidade)
@@ -1722,7 +1678,6 @@ def listar_filtros(
     current_user: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    _garantir_tabelas_clinica(db, current_user.clinica_id)
     return {
         "tabelas": _listar_tabelas_procedimentos(db, current_user.clinica_id),
         "especialidades": _listar_especialidades(db, current_user.clinica_id),
@@ -1751,17 +1706,14 @@ def criar_procedimento(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
+    especialidade, forma_cobranca = _validar_campos_edicao(db, clinica_id, payload)
     tabela_resolvida = _resolver_tabela_id(payload.tabela_id, default=1)
     tabela = _load_tabela_or_404(db, clinica_id, tabela_resolvida)
     _validar_tabela_ativa(tabela)
     nome = (payload.nome or "").strip()
-    if not nome:
-        raise HTTPException(status_code=400, detail="Informe o nome.")
     if _proc_codigo_em_uso(db, clinica_id, int(tabela.id), int(payload.codigo)):
         raise HTTPException(status_code=400, detail="O codigo informado ja esta em uso.")
 
-    especialidade, forma_cobranca = _validar_campos_edicao(db, clinica_id, payload)
     agora = datetime.now().strftime("%d/%m/%Y %H:%M")
     generico_id = int(payload.procedimento_generico_id or 0) or None
     if generico_id:
@@ -1815,8 +1767,8 @@ def atualizar_procedimento(
     db: Session = Depends(get_db),
 ):
     clinica_id = current_user.clinica_id
-    _garantir_tabelas_clinica(db, clinica_id)
     proc = _load_proc_or_404(db, clinica_id, procedimento_id)
+    especialidade, forma_cobranca = _validar_campos_edicao(db, clinica_id, payload, atual=proc)
     explicitos = _campos_procedimento_explicitos(payload)
     tabela_atual = (
         db.query(ProcedimentoTabela)
@@ -1831,8 +1783,6 @@ def atualizar_procedimento(
     tabela = _load_tabela_or_404(db, clinica_id, tabela_resolvida)
     _validar_tabela_ativa(tabela)
     nome = (payload.nome or "").strip()
-    if not nome:
-        raise HTTPException(status_code=400, detail="Informe o nome.")
     if _proc_codigo_em_uso(
         db,
         clinica_id,
@@ -1857,7 +1807,6 @@ def atualizar_procedimento(
         if not generico_existe:
             raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado para esta clínica.")
     simbolo_codigo, simbolo_legacy_id = referencia_simbolo_payload(db, clinica_id, payload, atual=proc)
-    especialidade, forma_cobranca = _validar_campos_edicao(db, clinica_id, payload, atual=proc)
     proc.codigo = int(payload.codigo)
     proc.nome = nome
     proc.tabela_id = int(tabela.id)

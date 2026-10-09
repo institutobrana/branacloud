@@ -78,8 +78,11 @@ def _valor_atual_indice(db: Session, indice_id: int, *, reservado: bool) -> floa
     return 1.0 if reservado else 0.0
 
 
-def listar_indices(db: Session, clinica_id: int, *, include_inativos: bool = True) -> list[dict]:
-    garantir_indices_padrao_clinica(db, clinica_id)
+def listar_indices(
+    db: Session, clinica_id: int, *, include_inativos: bool = True, ensure_defaults: bool = True,
+) -> list[dict]:
+    if ensure_defaults:
+        garantir_indices_padrao_clinica(db, clinica_id)
     query = db.query(IndiceFinanceiro).filter(IndiceFinanceiro.clinica_id == int(clinica_id))
     if not include_inativos:
         query = query.filter(IndiceFinanceiro.ativo.is_(True))
@@ -98,8 +101,10 @@ def listar_indices(db: Session, clinica_id: int, *, include_inativos: bool = Tru
     ]
 
 
-def listar_indices_com_map(db: Session, clinica_id: int) -> tuple[list[dict], dict[int, dict], dict[str, int]]:
-    indices = listar_indices(db, clinica_id, include_inativos=True)
+def listar_indices_com_map(
+    db: Session, clinica_id: int, *, ensure_defaults: bool = True,
+) -> tuple[list[dict], dict[int, dict], dict[str, int]]:
+    indices = listar_indices(db, clinica_id, include_inativos=True, ensure_defaults=ensure_defaults)
     por_numero = {int(item["id"]): item for item in indices}
     por_sigla = {
         _norm_sigla(item.get("sigla")): int(item["id"])
@@ -115,8 +120,9 @@ def resolver_numero_indice(
     valor: int | str | None,
     *,
     default: int = DEFAULT_INDICE_NUMERO,
+    ensure_defaults: bool = True,
 ) -> int:
-    _, por_numero, por_sigla = listar_indices_com_map(db, clinica_id)
+    _, por_numero, por_sigla = listar_indices_com_map(db, clinica_id, ensure_defaults=ensure_defaults)
     fallback = default if default in por_numero else (next(iter(por_numero.keys()), default))
     if valor is None:
         return int(fallback)
@@ -134,8 +140,10 @@ def dados_indice_por_numero(
     db: Session,
     clinica_id: int,
     numero: int | str | None,
+    *,
+    ensure_defaults: bool = True,
 ) -> dict:
-    indices, por_numero, _ = listar_indices_com_map(db, clinica_id)
+    indices, por_numero, _ = listar_indices_com_map(db, clinica_id, ensure_defaults=ensure_defaults)
     fallback = por_numero.get(DEFAULT_INDICE_NUMERO) or (indices[0] if indices else None)
     try:
         num = int(numero or DEFAULT_INDICE_NUMERO)

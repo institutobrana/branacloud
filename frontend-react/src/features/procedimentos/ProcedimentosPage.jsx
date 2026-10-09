@@ -32,7 +32,7 @@ import {
   resolveProcedimentoSymbolPreviewCandidates,
   resolveSpecialtyName,
 } from './procedimentosEditorMappers.js';
-import { validateProcedimentoForm } from './procedimentosEditorValidators.js';
+import { getFirstProcedimentoRequiredIssue, validateProcedimentoForm } from './procedimentosEditorValidators.js';
 import { ProcedimentoEditorModal } from './components/ProcedimentoEditorModal.jsx';
 import { ProcedimentoTabelaModal, createTabelaForm, validateTabelaForm, buildTabelaPayload } from './components/ProcedimentoTabelaModal.jsx';
 import { ProcedimentoReajusteModal, reajustePreviewKey } from './components/ProcedimentoReajusteModal.jsx';
@@ -99,6 +99,7 @@ export function ProcedimentosPage() {
   const [editorLoading, setEditorLoading] = useState(false);
   const [editorSaving, setEditorSaving] = useState(false);
   const [editorError, setEditorError] = useState('');
+  const [requiredIssue, setRequiredIssue] = useState(null);
   const [editorForm, setEditorForm] = useState(createEmptyProcedimentoForm());
   const editorChangedFields = useRef(new Set());
   const [procedimentoGenericoOptions, setProcedimentoGenericoOptions] = useState([]);
@@ -561,6 +562,14 @@ export function ProcedimentosPage() {
   };
 
   const handleSave = async () => {
+    const issue = getFirstProcedimentoRequiredIssue(editorForm, {
+      genericOptions: procedimentoGenericoOptions,
+      specialtyOptions: especialidadeOptions,
+    });
+    if (issue) {
+      setRequiredIssue(issue);
+      return;
+    }
     const errors = validateProcedimentoForm(editorForm);
     if (errors.length) {
       const nextError = errors[0];
@@ -572,7 +581,7 @@ export function ProcedimentosPage() {
     setEditorSaving(true);
     setEditorError('');
     try {
-      const payload = buildProcedimentoPayload(editorForm, { changedFields: editorChangedFields.current });
+      const payload = buildProcedimentoPayload(editorForm, { changedFields: editorMode === 'new' ? null : editorChangedFields.current });
       if ('simbolo_grafico' in payload) {
         const symbolPayload = extractProcedimentoSymbolPayload(simboloOptions, editorForm);
         payload.simbolo_grafico = symbolPayload.simbolo_grafico;
@@ -728,8 +737,14 @@ export function ProcedimentosPage() {
           setEditorOpen(false);
           setEditorError('');
           setEditorLoading(false);
+          setRequiredIssue(null);
         }}
       />
+      <BranaModal open={Boolean(requiredIssue)} title="Aviso" okText="OK" maskClosable={false}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        onOk={() => setRequiredIssue(null)} onCancel={() => setRequiredIssue(null)}>
+        <Typography.Paragraph>{requiredIssue?.message}</Typography.Paragraph>
+      </BranaModal>
       <ProcedimentoTabelaModal open={tabelaModal.open} mode={tabelaModal.mode} form={tabelaForm}
         indices={indices} tiposTiss={tiposTiss} tabelas={tabelas} saving={actionSaving} error={tabelaError}
         onChange={(field, value) => setTabelaForm((current) => ({ ...current, [field]: value }))}

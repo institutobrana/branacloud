@@ -54,7 +54,8 @@ const initialTables = [
   { id: 8, codigo: 8, nome: 'Outra', nro_indice: 3, fonte_pagadora: 'particular', tipo_tiss_id: 1, inativo: false },
   { id: 9, codigo: 9, nome: 'Inativa', nro_indice: 255, tipo_tiss_id: 1, inativo: true },
 ];
-const initialRecords = [{ id: 701, codigo: 1, nome: 'Consulta', tabela_id: 4, preco: 100 }, { id: 702, codigo: 2, nome: 'Outro', tabela_id: 4 }];
+const initialRecords = [{ id: 701, codigo: 1, nome: 'Consulta', tabela_id: 4, preco: 100 }, { id: 702, codigo: 2, nome: 'Outro', tabela_id: 4 }]
+  .map((row) => ({ ...row, procedimento_generico_id: 20, especialidade: '05', forma_cobranca: 'INTERVENCAO' }));
 const preview = { tabela: { id: 88, codigo: 4 }, total: 2, amostra: [{ id: 701, nome: 'Consulta', preco_before: 100, preco_after: 101 }] };
 
 async function withPage(run, overrides = {}) {
@@ -65,9 +66,9 @@ async function withPage(run, overrides = {}) {
   let tables = structuredClone(initialTables);
   let records = structuredClone(initialRecords);
   const api = {
-    listarProcedimentosFiltros: async () => ({ tabelas: tables, especialidades: [], indices: [{ id: 255, sigla: 'R$', nome: 'Real' }], tiposTiss: [{ id: 9, codigo: '01', nome: 'TISS' }] }),
+    listarProcedimentosFiltros: async () => ({ tabelas: tables, especialidades: [{ codigo: '05', nome: 'Teste' }], indices: [{ id: 255, sigla: 'R$', nome: 'Real' }], tiposTiss: [{ id: 9, codigo: '01', nome: 'TISS' }] }),
     listarProcedimentos: async (args) => { calls.push(['list', args]); return records; },
-    listarProcedimentosGenericosCombos: async () => [],
+    listarProcedimentosGenericosCombos: async () => [{ value: 20, label: 'Genérico' }],
     listarSimbolosGraficoProcedimentos: async () => [],
     obterProximoCodigoProcedimento: async (id) => { calls.push(['next', id]); return 3; },
     obterProcedimentoDetalhe: async (id) => ({ ...records.find((item) => item.id === id), simbolo_grafico: 'old.bmp', simbolo_grafico_legacy_id: 77, mostrar_simbolo: true }),
@@ -341,6 +342,9 @@ test('Nova intervenção preserva a especialidade preselecionada do filtro ao cr
   await act(async () => action('novo'));
   assert.equal(modal('editor').form.especialidade, '05');
   await act(async () => modal('editor').onChangeField('nome', 'Novo'));
+  await act(async () => modal('editor').onChangeField('procedimento_generico_id', 20));
+  await act(async () => modal('editor').onChangeField('simbolo_grafico', 'old.bmp'));
+  await act(async () => modal('editor').onChangeField('simbolo_grafico_legacy_id', 77));
   await act(async () => modal('editor').onSave());
   assert.equal(calls.find(([name]) => name === 'saveProcedure')[1].payload.especialidade, '05');
 }));

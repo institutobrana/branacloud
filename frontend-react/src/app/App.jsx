@@ -23,6 +23,7 @@ import { ClinicalLeaseProvider, useClinicalLease } from '../shared/clinicalLease
 import { ProcedimentosGenericosPage } from '../features/procedimentosGenericos/ProcedimentosGenericosPage.jsx';
 import { listarProcedimentosGenericosEspecialidades } from '../features/procedimentosGenericos/procedimentosGenericosApi.js';
 import { ProcedimentosPage } from '../features/procedimentos/ProcedimentosPage.jsx';
+import { ProcedimentosSearchInput } from '../features/procedimentos/components/ProcedimentosSearchInput.jsx';
 import { DoencasCidPage } from '../features/doencasCid/DoencasCidPage.jsx';
 import { DoencaCidToolbar } from '../features/doencasCid/components/DoencaCidToolbar.jsx';
 import { PacientesPage } from '../features/pacientes/PacientesPage.jsx';
@@ -1617,7 +1618,7 @@ function AppContent() {
     const selectedTabela = procedimentosToolbarState.tabelas.find((item) => item.id === procedimentosToolbarState.selectedTabelaId) || null;
     const tabelaOptions = procedimentosToolbarState.tabelas.map((item) => ({
       value: item.id,
-      label: `${String(item.codigo || '').padStart(3, '0')} - ${item.nome}`,
+      label: item.nome,
     }));
     const especialidadeOptions = [
       { value: '', label: '<<Todas>>' },
@@ -1695,14 +1696,11 @@ function AppContent() {
               />
             </label>
             <label className="materiais-estoque-field grow procedimentos-field-search">
-              <Input.Search
-                allowClear
+              <ProcedimentosSearchInput
                 value={procedimentosToolbarState.search}
                 disabled={procedimentosToolbarState.modalOpen}
-                onChange={(event) => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-filter', { detail: { field: 'search', value: event.target.value } }))}
                 onSearch={(value) => window.dispatchEvent(new CustomEvent('brana-procedimentos-toolbar-filter', { detail: { field: 'search', value } }))}
                 placeholder={selectedTabela ? `Buscar em ${selectedTabela.nome}` : 'Buscar procedimento'}
-                size="small"
               />
             </label>
           </div>

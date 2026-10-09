@@ -118,3 +118,21 @@ escopo/autorização separada, não repetição dos testes já homologados.
 
 Próximo módulo planejado: PROCEDIMENTOS-SIMBOLOS-P0 — READ-ONLY AUDIT.
 Não iniciado. Não implementar símbolo obrigatório nem retomar FC4 neste fechamento.
+
+## Código literal — correção R3A
+
+O código de Procedimento Genérico é um identificador textual, único por clínica.
+Zeros à esquerda são significativos: `00200` e `0200` são entidades distintas,
+assim como cada par até `00206`/`0206` e, quando cadastrados, `0001`/`1`.
+CRUD, payload, persistência, resposta e recarga preservam o texto; somente espaços
+externos são removidos. Código vazio continua inválido. Não converter códigos
+existentes para número nem aplicar padding na gravação ou na comparação de identidade.
+
+O gerador de próximo código apenas sugere um novo código livre; ele não define
+equivalência entre códigos existentes. A pesquisa textual por substring permanece
+inalterada e pode retornar ambos os códigos sem fundir seus IDs. Não há migration
+nem alteração automática de códigos já persistidos nesta correção.
+
+Os tipos dos itens de Fases e Materiais são declarados antes do payload principal,
+com referências concretas. Isso mantém os mesmos campos/defaults e permite a
+validação HTTP do CRUD sem referências de tipos pendentes no FastAPI.

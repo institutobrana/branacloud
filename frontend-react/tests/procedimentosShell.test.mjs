@@ -61,7 +61,7 @@ test('toolbar real despacha as sete ações existentes e reflete somente flags d
   const module = { exports: {} };
   const stub = () => null;
   const jsx = await import('react/jsx-runtime');
-  vm.runInNewContext(compiled, { module, exports: module.exports, window: dom.window, CustomEvent: dom.window.CustomEvent, Select: stub, Input: { Search: stub }, require: (id) => id === 'react/jsx-runtime' ? jsx : React });
+  vm.runInNewContext(compiled, { module, exports: module.exports, window: dom.window, CustomEvent: dom.window.CustomEvent, Select: stub, ProcedimentosSearchInput: stub, Input: { Search: stub }, require: (id) => id === 'react/jsx-runtime' ? jsx : React });
   const flags = ['canCreateProcedimento', 'canEditProcedimento', 'canDeleteProcedimento', 'canCreateTabela', 'canEditTabela', 'canDeleteTabela', 'canReajusteTabela'];
   const state = { tabelas: [{ id: 4, codigo: 4, nome: 'PARTICULAR' }], especialidades: [], selectedTabelaId: 4, ...Object.fromEntries(flags.map((flag) => [flag, true])) };
   const received = [];

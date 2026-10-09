@@ -209,6 +209,11 @@ def environment(linked=True, clinic_id=1):
 
 def load_generic_editor(ns, db):
     # Only AST definitions: no app import, bootstrap, credentials or DB engine.
+    guard_tree = ast.parse((ROOT / 'services/historical_neutral_guard_service.py').read_text(encoding='utf-8'))
+    constants = [node for node in guard_tree.body if isinstance(node, ast.Assign)
+                 and any(isinstance(t, ast.Name) and t.id in {'NEUTRAL_CODE', 'NEUTRAL_NAME'} for t in node.targets)]
+    exec(compile(ast.Module(body=constants, type_ignores=[]), 'historical-neutral constants', 'exec'), ns)
+    load('services/historical_neutral_guard_service.py', ns, {'is_protected_historical_generic'})
     for generic in db.rows['Generic']:
         generic.codigo, generic.descricao = f'{generic.id:04d}', f'Genérico {generic.id}'
         generic.peso, generic.inativo = 0., False
@@ -268,7 +273,10 @@ class RoundtripTests(unittest.TestCase):
 
     def test_no_generic_edit_zero_remains_local(self):
         self.ns, self.db, self.proc = environment(False)
-        self.assertEqual(self.save(tempo=0, custo_lab=0)['custo_lab'], 0)
+        with self.assertRaisesRegex(HTTPException, '400'):
+            self.save(tempo=0, custo_lab=0)
+        self.assertEqual(self.db.events, [])
+        self.assertEqual(self.save(procedimento_generico_id=20, tempo=0, custo_lab=0)['custo_lab'], 0)
         self.assertEqual(self.db.rows['Generic'][0].custo_lab, 45)
 
     def test_code_name_persist_and_empty_name_rejects_before_mutation(self):
@@ -286,11 +294,11 @@ class RoundtripTests(unittest.TestCase):
         generics = copy.deepcopy(self.db.rows['Generic'])
         others = copy.deepcopy(self.db.rows['Proc'][1:])
         result = self.save(procedimento_generico_id=21, tempo=0, custo_lab=0,
-                           especialidade=None, observacoes=None, mostrar_simbolo=False,
-                           simbolo_grafico=None, simbolo_grafico_legacy_id=None)
+                           especialidade='06', observacoes=None, mostrar_simbolo=False,
+                           simbolo_grafico='int_raspagem.bmp', simbolo_grafico_legacy_id=81)
         self.assertEqual((result['tempo'], result['custo_lab']), (0, 0))
-        self.assertEqual((result['especialidade'], result['observacoes']), ('', ''))
-        self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id'], result['mostrar_simbolo']), ('', None, False))
+        self.assertEqual((result['especialidade'], result['observacoes']), ('06', ''))
+        self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id'], result['mostrar_simbolo']), ('int_raspagem.bmp', 81, False))
         self.assertEqual(self.db.rows['Generic'], generics)
         self.assertEqual(self.db.rows['Proc'][1:], others)
         self.assertEqual([phase['codigo'] for phase in result['fases_vinculadas']], ['B1', 'B2'])
@@ -299,8 +307,12 @@ class RoundtripTests(unittest.TestCase):
         result = self.save(especialidade='06', observacoes=' Novo texto ', forma_cobranca='ELEMENTO_FACE')
         self.assertEqual((result['especialidade'], result['observacoes'], result['forma_cobranca']), ('06', 'Novo texto', 'ELEMENTO_FACE'))
         for clear in (None, '', '   '):
-            result = self.save(especialidade=clear, observacoes=clear, forma_cobranca=clear)
-            self.assertEqual((result['especialidade'], result['observacoes'], result['forma_cobranca']), ('', '', ''))
+            before, events = copy.deepcopy(vars(self.proc)), list(self.db.events)
+            with self.assertRaises(HTTPException):
+                self.save(especialidade=clear, observacoes=clear, forma_cobranca=clear)
+            self.assertEqual(vars(self.proc), before)
+            self.assertEqual(self.db.events, events)
+            self.assertEqual(self.save(observacoes=clear)['observacoes'], '')
 
     def test_all_booleans_persist_false_and_true(self):
         for value in (True, False, True):
@@ -366,9 +378,11 @@ class RoundtripTests(unittest.TestCase):
             code = 'int_raspagem.bmp' if legacy == 81 else 'sim_outras.bmp'
             result = self.save(simbolo_grafico=code, simbolo_grafico_legacy_id=legacy, mostrar_simbolo=False)
             self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id'], result['mostrar_simbolo']), (code, legacy, False))
-        result = self.save(simbolo_grafico=None, simbolo_grafico_legacy_id=None)
-        self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id']), ('', None))
-        self.assertEqual(self.save(procedimento_generico_id=21)['simbolo_grafico'], '')
+        before = copy.deepcopy(vars(self.proc))
+        with self.assertRaises(HTTPException):
+            self.save(simbolo_grafico=None, simbolo_grafico_legacy_id=None)
+        self.assertEqual(vars(self.proc), before)
+        self.assertEqual(self.save(procedimento_generico_id=21)['simbolo_grafico'], 'int_raspagem.bmp')
 
     def test_associate_A_then_change_B_replaces_all_phases_not_materials(self):
         self.proc.procedimento_generico_id = None
@@ -386,18 +400,19 @@ class RoundtripTests(unittest.TestCase):
         self.db.rows['GenericPhase'] = []
         self.assertEqual(self.save(procedimento_generico_id=21)['fases_vinculadas'], [])
 
-    def test_unlink_preserves_values_phases_own_and_stops_sync(self):
+    def test_unlink_blocked_preserves_values_phases_own_and_no_sync(self):
         before = copy.deepcopy(vars(self.proc))
         phases, own = copy.deepcopy(self.db.rows['Phase']), copy.deepcopy(self.db.rows['Link'])
-        result = self.save(procedimento_generico_id=None)
-        self.assertIsNone(result['procedimento_generico_id'])
+        with self.assertRaises(HTTPException):
+            self.save(procedimento_generico_id=None)
+        self.assertEqual(vars(self.proc), before)
         self.assertEqual(self.db.rows['Phase'], phases)
         self.assertEqual(self.db.rows['Link'], own)
         for key in ('tempo', 'custo_lab', 'especialidade', 'observacoes', 'simbolo_grafico', 'mostrar_simbolo'):
             self.assertEqual(getattr(self.proc, key), before[key])
         self.save(tempo=0, custo_lab=0)
         self.assertEqual(self.db.rows['Generic'][0].tempo, 30)
-        self.assertEqual(len(result['materiais_vinculados']['itens']), 10)
+        self.assertEqual(len(self.ns['_procedimento_com_vinculos'](self.db, self.proc)['materiais_vinculados']['itens']), 11)
 
     def test_material_union_scenarios_A_B_C_D_E_own_quantity_wins(self):
         own = copy.deepcopy(self.db.rows['Link'])
@@ -428,13 +443,14 @@ class RoundtripTests(unittest.TestCase):
     def test_create_defaults_and_explicit_clear_zero_false_precedence(self):
         for explicit in (False, True):
             ns, db, proc = environment()
-            values = {'tempo': 0, 'custo_lab': 0, 'especialidade': None, 'observacoes': '',
-                      'simbolo_grafico': None, 'simbolo_grafico_legacy_id': None, 'mostrar_simbolo': False} if explicit else {}
-            payload = ns['ProcedimentoPayload'](codigo=90, nome='Novo', tabela_id='4', procedimento_generico_id=20, **values)
+            values = {'tempo': 0, 'custo_lab': 0, 'observacoes': '', 'mostrar_simbolo': False} if explicit else {}
+            payload = ns['ProcedimentoPayload'](codigo=90, nome='Novo', tabela_id='4', procedimento_generico_id=20,
+                                               especialidade='06', simbolo_grafico='int_raspagem.bmp',
+                                               simbolo_grafico_legacy_id=81, forma_cobranca='INTERVENCAO', **values)
             result = ns['criar_procedimento'](payload, self.user, db)
             self.assertEqual((result['tempo'], result['custo_lab']), (0, 0.))
-            self.assertEqual((result['especialidade'], result['observacoes']), ('', ''))
-            self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id']), ('', None))
+            self.assertEqual((result['especialidade'], result['observacoes']), ('06', ''))
+            self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id']), ('int_raspagem.bmp', 81))
             self.assertFalse(result['mostrar_simbolo'])
             self.assertEqual((db.rows['Generic'][0].tempo, db.rows['Generic'][0].custo_lab), (30, 45.))
             self.assertEqual([phase['codigo'] for phase in result['fases_vinculadas']], ['A1', 'A2', 'A3'])
@@ -466,7 +482,10 @@ class RoundtripTests(unittest.TestCase):
             setattr(self.proc, key, False)
         before = copy.deepcopy(vars(self.proc))
         for generic_id in (20, 21):
-            self.save(procedimento_generico_id=generic_id)
+            # The association helper must not inherit cadastral fields; the API
+            # separately rejects incomplete resulting cadastros in R2.
+            self.proc.procedimento_generico_id = generic_id
+            self.ns['_aplicar_fases_procedimento_generico'](self.db, 1, self.proc)
             for key, value in before.items():
                 if key not in {'procedimento_generico_id', 'data_alteracao'}:
                     self.assertEqual(getattr(self.proc, key), value, key)
@@ -548,7 +567,7 @@ class RoundtripTests(unittest.TestCase):
     def test_dashboard_and_report_use_current_union_not_own_only_or_canonical_cost(self):
         self.ns.update(Cenario=Scenario, Query=ApiQuery, SimpleNamespace=SimpleNamespace,
                        PRIVATE_TABLE_CODE=4, PROC_RELATORIO_CAMPOS=[],
-                       dados_indice_por_numero=lambda *args: {},
+                       dados_indice_por_numero=lambda *args, **kwargs: {},
                        _mapa_especialidades=lambda *args: {})
         self.db.rows['Table'][0].nome, self.db.rows['Table'][0].nro_indice = 'PARTICULAR', 1
         self.db.rows['Proc'][1].codigo = 2
@@ -572,9 +591,10 @@ class RoundtripTests(unittest.TestCase):
                 self.db.rows['GenericLink'][-1].quantidade = 4.  # Generic complement changes dynamically.
 
     def test_association_preserves_partial_symbol_pair_without_completing_it(self):
+        self.proc.simbolo_grafico = 'int_raspagem.bmp'
         self.proc.simbolo_grafico_legacy_id = None
         result = self.save(procedimento_generico_id=21)
-        self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id']), ('sim_outras.bmp', None))
+        self.assertEqual((result['simbolo_grafico'], result['simbolo_grafico_legacy_id']), ('int_raspagem.bmp', None))
         self.assertFalse(result['mostrar_simbolo'])
 
     def test_legacy_metadata_does_not_inherit_current_or_historical_generic_fields(self):
@@ -633,14 +653,14 @@ class RoundtripTests(unittest.TestCase):
                 self.assertEqual((items[-1]['origem'], items[-1]['quantidade']), ('herdado', 1.))
                 self.assertEqual(len(items), len({item['material_id'] for item in items}))
                 result = self.save(procedimento_generico_id=21, tempo=45, custo_lab=0,
-                                   especialidade=None, observacoes='', forma_cobranca='ELEMENTO_FACE',
+                                   especialidade='06', observacoes='', forma_cobranca='ELEMENTO_FACE',
                                    simbolo_grafico='int_raspagem.bmp', simbolo_grafico_legacy_id=81,
                                    preferido=False, inativo=False)
                 self.assertEqual([p['codigo'] for p in result['fases_vinculadas']], ['B1', 'B2'])
                 self.assertEqual([item['material_id'] for item in result['materiais_vinculados']['itens']], list(range(1, 11)))
                 self.assertEqual(self.db.rows['Link'], own, 'No Generic material may become an own link')
                 self.assertEqual((result['tempo'], result['custo_lab']), (45, 0.))
-                self.assertEqual((result['especialidade'], result['observacoes']), ('', ''))
+                self.assertEqual((result['especialidade'], result['observacoes']), ('06', ''))
                 self.assertEqual(result['forma_cobranca'], 'ELEMENTO_FACE')
                 self.assertEqual((result['simbolo_grafico_legacy_id'], result['mostrar_simbolo']), (81, False))
                 self.assertFalse(result['preferido'])

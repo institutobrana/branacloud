@@ -17,7 +17,6 @@ from services.runtime_profile_service import resolve_runtime_policy
 from services.etiquetas_service import garantir_etiquetas_padrao_modelos
 from services.indices_service import garantir_indices_padrao_todas_clinicas
 from services.modelos_service import sincronizar_catalogo_modelos_storage
-from services.procedimentos_legado_service import garantir_metadados_tabela_particular
 from services.signup_service import (
     garantir_anamnese_padrao_todas_clinicas,
     garantir_auxiliares_raw_todas_clinicas,
@@ -25,8 +24,6 @@ from services.signup_service import (
     garantir_especialidades_padrao_todas_clinicas,
     garantir_financeiro_padrao_todas_clinicas,
     garantir_lista_padrao_todas_clinicas,
-    garantir_procedimentos_padrao_todas_clinicas,
-    separar_tabela_exemplo_particular_todas_clinicas,
 )
 from services.simbolos_service import garantir_catalogo_simbolos
 
@@ -74,9 +71,6 @@ RUNTIME_BOOTSTRAP_JOBS: List[Tuple[str, Any]] = [
     ("garantir_etiquetas_padrao_modelos", garantir_etiquetas_padrao_modelos),
     ("garantir_catalogo_simbolos", garantir_catalogo_simbolos),
     ("garantir_lista_padrao_todas_clinicas", garantir_lista_padrao_todas_clinicas),
-    ("garantir_procedimentos_padrao_todas_clinicas", garantir_procedimentos_padrao_todas_clinicas),
-    ("separar_tabela_exemplo_particular_todas_clinicas", separar_tabela_exemplo_particular_todas_clinicas),
-    ("garantir_metadados_tabela_particular", garantir_metadados_tabela_particular),
     ("garantir_financeiro_padrao_todas_clinicas", garantir_financeiro_padrao_todas_clinicas),
     ("garantir_indices_padrao_todas_clinicas", garantir_indices_padrao_todas_clinicas),
     ("garantir_especialidades_padrao_todas_clinicas", garantir_especialidades_padrao_todas_clinicas),

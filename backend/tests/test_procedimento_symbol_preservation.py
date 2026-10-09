@@ -119,10 +119,10 @@ def helpers():
 
 def procedure(**kw):
     values = dict(id=10, codigo=10, nome='Test', clinica_id=13, tabela_id=78, tempo=0,
-                  preco=0., custo=0., custo_lab=0., lucro_hora=0., especialidade=None,
-                  procedimento_generico_id=None, simbolo_grafico='int_bracket.bmp',
+                  preco=0., custo=0., custo_lab=0., lucro_hora=0., especialidade='05',
+                  procedimento_generico_id=20, simbolo_grafico='int_bracket.bmp',
                   simbolo_grafico_legacy_id=22, mostrar_simbolo=False, garantia_meses=0,
-                  forma_cobranca=None, valor_repasse=0., preferido=False, inativo=False,
+                  forma_cobranca='INTERVENCAO', valor_repasse=0., preferido=False, inativo=False,
                   observacoes=None, data_inclusao='01/01/2026', data_alteracao='')
     values.update(kw)
     return Proc(**values)
@@ -147,7 +147,7 @@ def route_namespace(db, proc):
                '_normalizar_especialidade': lambda value: value or '',
                '_normalizar_forma_cobranca': lambda value: value,
                'FORMAS_COBRANCA_PADRAO': {'INTERVENCAO': 'Intervenção', 'ELEMENTO_FACE': 'Elemento / Face'},
-               '_listar_especialidades': lambda *a: [],
+               '_listar_especialidades': lambda *a: [{'codigo': '05'}],
                '_aplicar_fases_procedimento_generico': lambda *a, **k: None,
                '_procedimento_com_vinculos': lambda db, p: vars(p)})
     return load_functions('routes/procedimentos_routes.py', ns,
@@ -160,7 +160,7 @@ class SymbolPreservationTests(unittest.TestCase):
         self.ns = helpers()
         self.proc = procedure()
         self.db = DB(Symbol=[symbol(), symbol(37, code='int_mordida.bmp')],
-                     Proc=[self.proc], Table=[Table(id=78, codigo=4, clinica_id=13)])
+                     Proc=[self.proc], Table=[Table(id=78, codigo=4, clinica_id=13)], Generic=[Generic(id=20, clinica_id=13)])
         self.route = route_namespace(self.db, self.proc)
 
     def payload(self, **kwargs):
@@ -177,7 +177,10 @@ class SymbolPreservationTests(unittest.TestCase):
 
     def test_partial_update_preserves_empty_pair(self):
         self.proc.simbolo_grafico = self.proc.simbolo_grafico_legacy_id = None
-        self.route['atualizar_procedimento'](10, self.payload(), SimpleNamespace(clinica_id=13), self.db)
+        with self.assertRaises(HTTPException) as error:
+            self.route['atualizar_procedimento'](10, self.payload(), SimpleNamespace(clinica_id=13), self.db)
+        self.assertEqual(error.exception.detail, 'Campo Símbolo gráfico não pode ser nulo.')
+        self.assertEqual(self.db.commits, 0)
         self.assertIsNone(self.proc.simbolo_grafico)
         self.assertIsNone(self.proc.simbolo_grafico_legacy_id)
 
@@ -206,11 +209,13 @@ class SymbolPreservationTests(unittest.TestCase):
         for kw in ({'simbolo_grafico': 'int_bracket.bmp'}, {'simbolo_grafico': 'int_bracket.bmp', 'simbolo_grafico_legacy_id': None}):
             self.assertEqual(self.ns['referencia_simbolo_payload'](self.db, 13, self.payload(**kw), self.proc), ('int_bracket.bmp', 22))
 
-    def test_explicit_clear_still_allowed_without_generic(self):
-        self.route['atualizar_procedimento'](10, self.payload(simbolo_grafico=None, simbolo_grafico_legacy_id=None),
-                                            SimpleNamespace(clinica_id=13), self.db)
-        self.assertIsNone(self.proc.simbolo_grafico)
-        self.assertIsNone(self.proc.simbolo_grafico_legacy_id)
+    def test_explicit_clear_blocked_by_required_symbol(self):
+        with self.assertRaises(HTTPException) as error:
+            self.route['atualizar_procedimento'](10, self.payload(simbolo_grafico=None, simbolo_grafico_legacy_id=None),
+                                                SimpleNamespace(clinica_id=13), self.db)
+        self.assertEqual(error.exception.detail, 'Campo Símbolo gráfico não pode ser nulo.')
+        self.assertEqual((self.proc.simbolo_grafico, self.proc.simbolo_grafico_legacy_id), ('int_bracket.bmp', 22))
+        self.assertEqual(self.db.commits, 0)
 
     def test_explicit_clear_legacy_only_half_pair(self):
         self.proc.simbolo_grafico = None
@@ -242,13 +247,16 @@ class SymbolPreservationTests(unittest.TestCase):
         with self.assertRaises(HTTPException):
             self.ns['resolver_referencia_simbolo'](self.db, 13, 'int_faceta.bmp', 39)
 
-    def test_empty_creation_still_allowed(self):
-        data = self.route['criar_procedimento'](self.payload(), SimpleNamespace(clinica_id=13), self.db)
-        self.assertIsNone(data['simbolo_grafico'])
-        self.assertIsNone(data['simbolo_grafico_legacy_id'])
+    def test_empty_creation_blocked_by_required_symbol(self):
+        with self.assertRaises(HTTPException) as error:
+            self.route['criar_procedimento'](self.payload(procedimento_generico_id=20, especialidade='05', forma_cobranca='INTERVENCAO'), SimpleNamespace(clinica_id=13), self.db)
+        self.assertEqual(error.exception.detail, 'Campo Símbolo gráfico não pode ser nulo.')
+        self.assertEqual(self.db.commits, 0)
+        self.assertEqual(self.db.added, [])
 
     def test_explicit_creation_has_coherent_local_pair(self):
-        data = self.route['criar_procedimento'](self.payload(simbolo_grafico='int_mordida.bmp'), SimpleNamespace(clinica_id=13), self.db)
+        data = self.route['criar_procedimento'](self.payload(simbolo_grafico='int_mordida.bmp', procedimento_generico_id=20,
+                                                         especialidade='05', forma_cobranca='INTERVENCAO'), SimpleNamespace(clinica_id=13), self.db)
         self.assertEqual((data['simbolo_grafico'], data['simbolo_grafico_legacy_id']), ('int_mordida.bmp', 37))
 
     def test_custom_local_symbol_without_legacy_allowed(self):

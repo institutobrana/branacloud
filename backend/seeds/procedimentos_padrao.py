@@ -2,14 +2,12 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
-from models.procedimento import Procedimento
+from models.procedimento import Procedimento, ProcedimentoFase
+from models.financeiro import ItemAuxiliar
+from models.simbolo_grafico import SimboloGrafico
 from models.procedimento_tabela import ProcedimentoTabela
 from models.procedimento_generico import ProcedimentoGenerico
-from seeds.procedimentos_easy_tabelas import get_procedimentos_easy_por_tabela
-from seeds.procedimentos_brana import get_procedimentos_brana_padrao
-from services.procedimento_symbol_service import SYMBOL_FIELDS
-
-PRIVATE_TABLE_NAME = "Brana"
+from seeds.procedimentos_easy_tabelas import get_procedimentos_easy_por_tabela, TABELAS_EASY_CANONICAS
 
 
 PROCEDIMENTOS_PADRAO = [{'codigo': 1,
@@ -1149,18 +1147,8 @@ def _contar_procedimentos_tabela(db: Session, clinica_id: int, tabela_id: int) -
     )
 
 
-TABELAS_PROCEDIMENTOS_INICIAIS = (
-    {"codigo": 4, "nome": "Brana", "fonte_pagadora": "particular", "nro_indice": 255},
-    {"codigo": 1, "nome": "Banco do Brasil", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 2, "nome": "Banespa", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 3, "nome": "Bradesco", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 5, "nome": "Caixa Econ Federal", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 6, "nome": "CNCC", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 7, "nome": "Particular", "fonte_pagadora": "particular", "nro_indice": 255},
-    {"codigo": 8, "nome": "Petrobras", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 9, "nome": "Sindicato", "fonte_pagadora": "convenio", "nro_indice": 3},
-    {"codigo": 10, "nome": "Telebras", "fonte_pagadora": "convenio", "nro_indice": 3},
-)
+# Ordem/chaves do estado distribuído final aprovado; não usar Brana/336.
+TABELAS_PROCEDIMENTOS_INICIAIS = TABELAS_EASY_CANONICAS
 
 
 def _garantir_tabela_por_nome_ou_codigo(
@@ -1181,32 +1169,18 @@ def _garantir_tabela_por_nome_ou_codigo(
     nome_target = _nome_norm(nome)
     por_nome = [t for t in tabelas if _nome_norm(t.nome) == nome_target]
     por_codigo = [t for t in tabelas if int(t.codigo or 0) == int(codigo)]
-    candidatos = por_nome if por_nome else por_codigo
+    candidatos = por_codigo
 
     if candidatos:
-        # Se houver duplicidade historica, prioriza a que ja tem procedimentos.
-        escolhido = sorted(
-            candidatos,
-            key=lambda t: (-_contar_procedimentos_tabela(db, clinica_id, int(t.id)), int(t.id)),
-        )[0]
-        changed = False
-        if int(escolhido.codigo or 0) != int(codigo):
-            escolhido.codigo = int(codigo)
-            changed = True
-        if _nome_norm(escolhido.nome) != nome_target:
-            escolhido.nome = nome
-            changed = True
-        if int(escolhido.nro_indice or 0) != int(nro_indice or 0):
-            escolhido.nro_indice = int(nro_indice or 0)
-            changed = True
-        if _nome_norm(escolhido.fonte_pagadora) != _nome_norm(fonte_pagadora):
-            escolhido.fonte_pagadora = fonte_pagadora
-            changed = True
-        if changed:
-            db.add(escolhido)
-            db.flush()
+        if len(candidatos) != 1:
+            raise ValueError(f'Tabela ambígua no bootstrap: {codigo}.')
+        escolhido = candidatos[0]
+        # Código é a chave de nascimento; não repor nome/índice/pagador editados.
         print(f"USANDO EXISTENTE {nome} (id={int(escolhido.id)})")
         return int(escolhido.id)
+
+    if por_nome:
+        raise ValueError(f'Tabela {nome} existe sob outra identidade. Revisão necessária.')
 
     print(f"CRIANDO TABELA {nome}")
     tabela = ProcedimentoTabela(
@@ -1249,15 +1223,12 @@ def _sanitizar_procedimento_para_nova_conta(row: dict) -> dict:
 
 
 def _garantir_tabelas_procedimentos_iniciais(db: Session, clinica_id: int) -> int:
-    procedimentos_brana = get_procedimentos_brana_padrao()
     procedimentos_easy_por_tabela = get_procedimentos_easy_por_tabela()
     total = 0
+    referencias = None
     for tabela in TABELAS_PROCEDIMENTOS_INICIAIS:
         nome_tabela = str(tabela["nome"])
-        if _nome_norm(nome_tabela) == _nome_norm(PRIVATE_TABLE_NAME):
-            procedimentos_seed = procedimentos_brana
-        else:
-            procedimentos_seed = procedimentos_easy_por_tabela.get(nome_tabela, [])
+        procedimentos_seed = procedimentos_easy_por_tabela.get(nome_tabela, [])
         tabela_id = _garantir_tabela_por_nome_ou_codigo(
             db,
             int(clinica_id),
@@ -1276,12 +1247,13 @@ def _garantir_tabelas_procedimentos_iniciais(db: Session, clinica_id: int) -> in
             .all()
         }
         for row in procedimentos_seed:
-            payload = _sanitizar_procedimento_para_nova_conta(row)
-            codigo = int(payload["codigo"])
-            if codigo <= 0:
-                continue
+            codigo = int(row['codigo'])
             proc = existentes.get(codigo)
             if proc is None:
+                if referencias is None:
+                    referencias = _referencias_bootstrap(db, int(clinica_id))
+                payload = _sanitizar_procedimento_para_nova_conta(row)
+                payload.update(_campos_obrigatorios_bootstrap(row, referencias))
                 proc = Procedimento(
                     clinica_id=int(clinica_id),
                     tabela_id=int(tabela_id),
@@ -1291,18 +1263,60 @@ def _garantir_tabelas_procedimentos_iniciais(db: Session, clinica_id: int) -> in
                 db.add(proc)
                 existentes[codigo] = proc
                 total += 1
-            else:
-                changed = False
-                for field, value in payload.items():
-                    if field == "codigo" or field in SYMBOL_FIELDS:
-                        continue
-                    if getattr(proc, field) != value:
-                        setattr(proc, field, value)
-                        changed = True
-                if changed:
-                    db.add(proc)
+                generico = referencias['genericos'][row['procedimento_generico_codigo']]
+                if generico.fases:
+                    db.flush()
+                    for fase in generico.fases:
+                        if int(fase.clinica_id) != int(clinica_id):
+                            raise ValueError('Fase de Genérico pertence a outra clínica.')
+                        db.add(ProcedimentoFase(
+                            procedimento_id=proc.id, clinica_id=int(clinica_id),
+                            codigo=fase.codigo, descricao=fase.descricao,
+                            sequencia=fase.sequencia, tempo=fase.tempo,
+                        ))
+            # Existente: preservar todos os campos, materiais próprios e fases.
     db.flush()
     return total
+
+
+def _referencias_bootstrap(db: Session, clinica_id: int) -> dict:
+    genericos = db.query(ProcedimentoGenerico).filter(ProcedimentoGenerico.clinica_id == clinica_id).all()
+    simbolos = db.query(SimboloGrafico).filter(SimboloGrafico.clinica_id == clinica_id).all()
+    especiais = db.query(ItemAuxiliar).filter(
+        ItemAuxiliar.clinica_id == clinica_id, ItemAuxiliar.tipo.ilike('Especialidade'),
+    ).all()
+    por_identidade_simbolo = {}
+    for simbolo in simbolos:
+        if not simbolo.ativo:
+            continue
+        chave = (simbolo.legacy_id, simbolo.codigo)
+        if chave in por_identidade_simbolo:
+            raise ValueError(f'Identidade de Símbolo ambígua no bootstrap: {chave}.')
+        por_identidade_simbolo[chave] = simbolo
+    return {
+        'genericos': {g.codigo: g for g in genericos},
+        'simbolos': por_identidade_simbolo,
+        'especialidades': {e.codigo for e in especiais},
+    }
+
+
+def _campos_obrigatorios_bootstrap(row: dict, referencias: dict) -> dict:
+    nome = str(row.get('nome') or '').strip()
+    codigo_generico = row.get('procedimento_generico_codigo')
+    generico = referencias['genericos'].get(codigo_generico)
+    especialidade = row.get('especialidade')
+    codigo_simbolo = row.get('simbolo_grafico')
+    legacy_simbolo = row.get('simbolo_grafico_legacy_id')
+    forma = row.get('forma_cobranca')
+    if not nome or generico is None or especialidade not in referencias['especialidades']:
+        raise ValueError(f'Nome/Genérico/Especialidade não resolvido na seed: {row.get("codigo")}.')
+    if (legacy_simbolo, codigo_simbolo) not in referencias['simbolos']:
+        raise ValueError(f'Identidade de Símbolo não resolvida na seed: {row.get("codigo")}.')
+    if forma not in {'INTERVENCAO', 'ELEMENTO_FACE'}:
+        raise ValueError(f'Forma de cobrança inválida na seed: {row.get("codigo")}.')
+    return {'nome': nome, 'procedimento_generico_id': generico.id,
+            'especialidade': especialidade, 'simbolo_grafico': codigo_simbolo,
+            'simbolo_grafico_legacy_id': legacy_simbolo, 'forma_cobranca': forma}
 
 
 def seed_procedimentos(db: Session, clinica_id: int) -> int:
@@ -1311,5 +1325,7 @@ def seed_procedimentos(db: Session, clinica_id: int) -> int:
     if bool(db.info.get(guard_key)):
         print(f"USANDO EXISTENTE seed_procedimentos (clinica_id={int(clinica_id)})")
         return 0
+    total = _garantir_tabelas_procedimentos_iniciais(db, int(clinica_id))
+    # Só marcar sucesso; falha/rollback não pode envenenar uma nova tentativa.
     db.info[guard_key] = True
-    return _garantir_tabelas_procedimentos_iniciais(db, int(clinica_id))
+    return total

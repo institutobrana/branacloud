@@ -1831,16 +1831,10 @@ def seed_simbolos_graficos(db: Session, clinica_id: int) -> int:
     clinica_id = int(clinica_id or 0)
     if clinica_id <= 0:
         return 0
-    if (
-        db.query(SimboloGrafico.id)
-        .filter(SimboloGrafico.clinica_id == clinica_id)
-        .first()
-        is not None
-    ):
-        return 0
-
-    vistos_legacy: set[int] = set()
-    vistos_codigo: set[str] = set()
+    existentes = db.query(SimboloGrafico).filter(SimboloGrafico.clinica_id == clinica_id).all()
+    # Recurso gráfico não é identidade: 57/58 e 18/81 compartilham bitmap.
+    vistos_legacy = {int(s.legacy_id) for s in existentes if s.legacy_id is not None}
+    vistos_codigo = {str(s.codigo or '').strip().lower() for s in existentes if s.legacy_id is None}
     total = 0
     for row in SIMBOLOS_GRAFICOS_PADRAO:
         legacy_id = row.get("legacy_id")
@@ -1851,8 +1845,8 @@ def seed_simbolos_graficos(db: Session, clinica_id: int) -> int:
         if legacy_int is not None and legacy_int in vistos_legacy:
             continue
 
-        # Seed defensivo: evita codigos duplicados na carga inicial.
-        if codigo_key and codigo_key in vistos_codigo:
+        # Somente assets sem identidade legada usam o próprio código como chave.
+        if legacy_int is None and codigo_key and codigo_key in vistos_codigo:
             continue
 
         payload = {
@@ -1876,7 +1870,7 @@ def seed_simbolos_graficos(db: Session, clinica_id: int) -> int:
         db.add(item)
         if legacy_int is not None:
             vistos_legacy.add(legacy_int)
-        if codigo_key:
+        if legacy_int is None and codigo_key:
             vistos_codigo.add(codigo_key)
         total += 1
     db.flush()

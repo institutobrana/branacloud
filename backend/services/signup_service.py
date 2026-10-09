@@ -2447,7 +2447,7 @@ def provisionar_conta_saas(db, nome_clinica, admin_nome, admin_email, admin_senh
         )
         db.add(clinica)
         db.flush()
-        clinica.nome_tabela_procedimentos = PRIVATE_TABLE_NAME
+        clinica.nome_tabela_procedimentos = "Particular"
         _garantir_diretorios_modelos_clinica(clinica.id)
         storage_criado = True
         unidade_principal = _garantir_unidade_principal_clinica(db, clinica.id)
@@ -2480,13 +2480,13 @@ def provisionar_conta_saas(db, nome_clinica, admin_nome, admin_email, admin_senh
         _apply_user_links(db, usuario_admin, prestador_adm, unidade_principal)
 
         garantir_lista_padrao_clinica(db, clinica.id)
-        # Seed oficial estatico (extraido da conta modelo) para novas contas.
+        # Catálogos do tenant antes das referências obrigatórias dos Procedimentos.
+        garantir_especialidades_padrao_clinica(db, clinica.id)
         seed_simbolos_graficos(db, clinica.id)
         seed_procedimentos_genericos(db, clinica.id)
         seed_procedimentos(db, clinica.id)
         garantir_financeiro_padrao_clinica(db, clinica.id)
         garantir_indices_padrao_clinica(db, clinica.id)
-        garantir_especialidades_padrao_clinica(db, clinica.id)
         garantir_auxiliares_raw_clinica(db, clinica.id)
         garantir_convenios_planos_padrao_clinica(db, clinica.id)
         garantir_cid_padrao_clinica(db, clinica.id)

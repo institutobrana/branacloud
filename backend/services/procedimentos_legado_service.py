@@ -691,7 +691,8 @@ def _garantir_genericos_harmonizacao_facial(db: Session) -> int:
     alterados = 0
     for clinica_id in clinicas:
         for codigo, descricao in GENERICOS_HARMONIZACAO_CANONICOS:
-            codigo_antigo = codigo[1:] if codigo.startswith("0") else codigo
+            # 0200–0206 e 00200–00206 são entidades distintas comprovadas.
+            # Não inferir aliases removendo zeros nem migrar vínculos por aparência.
             item = (
                 db.query(ProcedimentoGenerico)
                 .filter(
@@ -700,56 +701,6 @@ def _garantir_genericos_harmonizacao_facial(db: Session) -> int:
                 )
                 .first()
             )
-            item_antigo = None
-            if codigo_antigo != codigo:
-                item_antigo = (
-                    db.query(ProcedimentoGenerico)
-                    .filter(
-                        ProcedimentoGenerico.clinica_id == clinica_id,
-                        ProcedimentoGenerico.codigo == codigo_antigo,
-                    )
-                    .first()
-                )
-            if item is not None and item_antigo is not None and int(item.id) != int(item_antigo.id):
-                (
-                    db.query(Procedimento)
-                    .filter(
-                        Procedimento.clinica_id == clinica_id,
-                        Procedimento.procedimento_generico_id == int(item_antigo.id),
-                    )
-                    .update({"procedimento_generico_id": int(item.id)}, synchronize_session=False)
-                )
-                if not list(item.fases or []) and list(item_antigo.fases or []):
-                    for fase_antiga in list(item_antigo.fases or []):
-                        db.add(
-                            ProcedimentoGenericoFase(
-                                procedimento_generico_id=int(item.id),
-                                clinica_id=clinica_id,
-                                codigo=str(fase_antiga.codigo or "").strip() or None,
-                                descricao=str(fase_antiga.descricao or "").strip(),
-                                sequencia=max(1, int(fase_antiga.sequencia or 1)),
-                                tempo=max(0, int(fase_antiga.tempo or 0)),
-                            )
-                        )
-                mats_destino = {int(getattr(v, "material_id", 0) or 0) for v in list(item.materiais_vinculados or [])}
-                for mat_antigo in list(item_antigo.materiais_vinculados or []):
-                    if int(getattr(mat_antigo, "material_id", 0) or 0) in mats_destino:
-                        continue
-                    db.add(
-                        ProcedimentoGenericoMaterial(
-                            procedimento_generico_id=int(item.id),
-                            material_id=int(mat_antigo.material_id),
-                            quantidade=float(mat_antigo.quantidade or 0),
-                            clinica_id=clinica_id,
-                        )
-                    )
-                db.delete(item_antigo)
-                item_antigo = None
-                alterados += 1
-            if item is None and item_antigo is not None:
-                item = item_antigo
-                item.codigo = codigo
-                alterados += 1
             if item is None:
                 db.add(
                     ProcedimentoGenerico(

@@ -68,7 +68,7 @@ test('display de referência atual não acrescenta opção fora dos 63', () => {
   assert.deepEqual(combo,before);
 });
 
-test('símbolo vazio continua permitido, sem obrigatoriedade nova', () => {
+test('mapper representa símbolo vazio sem inventar identidade; validação cadastral R2 bloqueia o save', () => {
   assert.equal(mappers.resolveProcedimentoSymbolSelectDisplay(combo,{}),undefined);
   assert.equal(mappers.extractProcedimentoSymbolPayload(combo,{}).simbolo_grafico,null);
 });
@@ -203,7 +203,7 @@ async function withPage(run) {
     '../../components/BranaTable.jsx':{BranaTable:(props)=>{table=props;return null;}},
     '../../components/TableColumnFilterHeader.jsx':{TableColumnFilterHeader:()=>null},
     './procedimentosEditorMappers.js':mappers,
-    './procedimentosEditorValidators.js':{validateProcedimentoForm:()=>[]},
+    './procedimentosEditorValidators.js':{validateProcedimentoForm:()=>[],getFirstProcedimentoRequiredIssue:()=>null},
     './components/ProcedimentoEditorModal.jsx':{ProcedimentoEditorModal:(props)=>{
       modal=props;return props.open?React.createElement('div',{role:'dialog'},props.error || props.form.nome):null;
     }},

@@ -28,6 +28,7 @@ from models.tiss_tipo_tabela import TissTipoTabela  # noqa: F401 - garante resol
 from models.usuario import Usuario
 from security.dependencies import get_current_user, require_module_access
 from services.plano_contas_system_groups import is_system_protected_group_name
+from services.historical_neutral_guard_service import is_protected_historical_generic
 from services.procedimentos_legado_service import carregar_metadados_genericos_legado
 from services.signup_service import garantir_auxiliares_raw_clinica
 from services.cep.service import CepLookupError, lookup_cep
@@ -161,20 +162,6 @@ class SimboloPayload(BaseModel):
     imagem_custom: str | None = None
 
 
-class ProcedimentoGenericoPayload(BaseModel):
-    codigo: str
-    descricao: str
-    especialidade: str | None = None
-    tempo: int = 0
-    custo_lab: float = 0
-    peso: float = 0.0
-    simbolo_grafico: str | None = None
-    inativo: bool = False
-    observacoes: str | None = None
-    fases: list["ProcedimentoGenericoFasePayload"] = Field(default_factory=list)
-    materiais: list["ProcedimentoGenericoMaterialPayload"] = Field(default_factory=list)
-
-
 class ProcedimentoGenericoFasePayload(BaseModel):
     codigo: str | None = None
     descricao: str
@@ -185,6 +172,20 @@ class ProcedimentoGenericoFasePayload(BaseModel):
 class ProcedimentoGenericoMaterialPayload(BaseModel):
     material_id: int
     quantidade: float = 1.0
+
+
+class ProcedimentoGenericoPayload(BaseModel):
+    codigo: str
+    descricao: str
+    especialidade: str | None = None
+    tempo: int = 0
+    custo_lab: float = 0
+    peso: float = 0.0
+    simbolo_grafico: str | None = None
+    inativo: bool = False
+    observacoes: str | None = None
+    fases: list[ProcedimentoGenericoFasePayload] = Field(default_factory=list)
+    materiais: list[ProcedimentoGenericoMaterialPayload] = Field(default_factory=list)
 
 
 class PacientePayload(BaseModel):
@@ -261,15 +262,8 @@ def _aux_tipo_canonico(tipo: str) -> str:
 
 
 def _norm_codigo_procedimento_generico(codigo: str) -> str:
-    base = (codigo or "").strip()
-    if not base:
-        return ""
-    if base.isdigit():
-        numero = int(base)
-        if numero <= 0:
-            return ""
-        return f"{numero:04d}"
-    return base
+    # Código é identidade textual: zeros à esquerda não são formatação.
+    return (codigo or "").strip()
 
 
 def _proximo_codigo_procedimento_generico(db: Session, clinica_id: int) -> str:
@@ -2413,6 +2407,9 @@ def editar_procedimento_generico(
     if not item:
         raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado.")
 
+    if is_protected_historical_generic(db, item):
+        raise HTTPException(status_code=400, detail="Genérico histórico neutro protegido: materiais, fases e identidade não podem ser alterados.")
+
     codigo = _norm_codigo_procedimento_generico(payload.codigo)
     descricao = (payload.descricao or "").strip()
     if not codigo or not descricao:
@@ -2472,6 +2469,8 @@ def excluir_procedimento_generico(
     )
     if not item:
         raise HTTPException(status_code=404, detail="Procedimento genérico não encontrado.")
+    if is_protected_historical_generic(db, item):
+        raise HTTPException(status_code=400, detail="Genérico histórico neutro protegido: materiais, fases e identidade não podem ser alterados.")
     em_uso = (
         db.query(Procedimento.id)
         .filter(

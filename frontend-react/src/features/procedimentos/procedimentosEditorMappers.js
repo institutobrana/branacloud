@@ -98,7 +98,7 @@ export function createEmptyProcedimentoForm({ tabelaId = null, especialidade = '
     simbolo_grafico: '',
     simbolo_grafico_legacy_id: null,
     garantia_meses: 0,
-    forma_cobranca: '',
+    forma_cobranca: 'INTERVENCAO',
     valor_repasse: '',
     valor_paciente: '',
     custo_lab: '',

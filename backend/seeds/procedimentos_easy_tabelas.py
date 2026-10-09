@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
+from pathlib import Path
 
 # Fonte: EasyDental virgem ('\\Sonyvaio\c\EDS70') / TAB_PRC e TAB_PRC_ITEM.
 # Nomes contratuais no Brana: Caixa Econ Federal, Telebras, Petrobras sem acento.
@@ -1293,6 +1295,30 @@ PROCEDIMENTOS_EASY_NOMES_ORIGINAIS = {
     'Telebras': 'Telebr?s',
     'Petrobras': 'Petrobr?s',
 }
+
+# O literal anterior é histórico. A fonte ativa é a matriz pristine final
+# aprovada em R1A2/R1A3, versionada com referências explícitas por identidade.
+_BOOTSTRAP = json.loads(
+    Path(__file__).with_name('procedimentos_bootstrap_canonico.json').read_text(encoding='utf-8')
+)
+TABELAS_EASY_CANONICAS = tuple(
+    {k: v for k, v in tabela.items() if k != 'procedimentos'}
+    for tabela in _BOOTSTRAP['tables']
+)
+OPCIONAIS_EASY_CANONICOS = _BOOTSTRAP['optional_fields']
+PROCEDIMENTOS_EASY_POR_TABELA = {
+    tabela['nome']: tabela['procedimentos'] for tabela in _BOOTSTRAP['tables']
+}
+if len(TABELAS_EASY_CANONICAS) != 9 or sum(map(len, PROCEDIMENTOS_EASY_POR_TABELA.values())) != 1263:
+    raise ValueError('Bootstrap canônico de Procedimentos inconsistente.')
+for _tabela, _rows in PROCEDIMENTOS_EASY_POR_TABELA.items():
+    if len({row['codigo'] for row in _rows}) != len(_rows):
+        raise ValueError(f'Código duplicado na seed: {_tabela}.')
+    for _row in _rows:
+        if not all(_row.get(k) for k in ('nome', 'procedimento_generico_codigo', 'especialidade',
+                                         'simbolo_grafico', 'simbolo_grafico_legacy_id', 'forma_cobranca')):
+            raise ValueError(f'Procedimento incompleto na seed: {_tabela}/{_row["codigo"]}.')
+
 
 def get_procedimentos_easy_por_tabela():
     return deepcopy(PROCEDIMENTOS_EASY_POR_TABELA)

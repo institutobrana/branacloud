@@ -54,17 +54,18 @@ async function withPage(run) {
   await withWorld(async ({ dom, root }) => {
     let stored = structuredClone(original);
     let editor;
+    let warning;
     const writes = [];
     const api = {
       listarProcedimentosFiltros: async () => ({ tabelas: [{ id: 4, codigo: 4, nome: 'Teste', inativo: false }], especialidades: [{ codigo: '05', nome: 'A' }, { codigo: '06', nome: 'B' }] }),
-      listarProcedimentos: async () => [stored], listarProcedimentosGenericosCombos: async () => [],
+      listarProcedimentos: async () => [stored], listarProcedimentosGenericosCombos: async () => [{ value: 20 }, { value: 21 }],
       listarSimbolosGraficoProcedimentos: async () => combo, obterProcedimentoDetalhe: async () => stored,
       obterProximoCodigoProcedimento: async () => 2,
       salvarProcedimento: async (args) => { writes.push(structuredClone(args)); stored = { ...stored, ...args.payload }; return stored; },
     };
     const antd = { Typography: { Text: box, Paragraph: box }, message: { error() {}, success() {}, warning() {} }, Alert: box };
     const Page = compile('ProcedimentosPage.jsx', {
-      antd, '../../components/BranaCard.jsx': { BranaCard: box }, '../../components/BranaModal.jsx': { BranaModal: () => null },
+      antd, '../../components/BranaCard.jsx': { BranaCard: box }, '../../components/BranaModal.jsx': { BranaModal: (props) => { if (props.title === 'Aviso') warning = props; return null; } },
       '../../components/BranaTable.jsx': { BranaTable: () => null }, '../../components/TableColumnFilterHeader.jsx': { TableColumnFilterHeader: () => null },
       './procedimentosApi.js': api, './procedimentosEditorMappers.js': mappers, './procedimentosEditorValidators.js': validators,
       './components/ProcedimentoEditorModal.jsx': { ProcedimentoEditorModal: (props) => { editor = props; return null; } },
@@ -74,7 +75,7 @@ async function withPage(run) {
     const action = async (value) => act(async () => dom.window.dispatchEvent(new dom.window.CustomEvent('brana-procedimentos-toolbar-action', { detail: { action: value } })));
     await act(async () => root.render(React.createElement(Page)));
     await action('alterar');
-    await run({ editor: () => editor, writes, stored: () => stored, api, action });
+    await run({ editor: () => editor, warning: () => warning, writes, stored: () => stored, api, action });
   });
 }
 
@@ -88,6 +89,44 @@ const cases = [
   ['inativo', false, 'inativo', false], ['preferido', false, 'preferido', false],
   ['observacoes', ' Nova nota ', 'observacoes', 'Nova nota'],
 ];
+for (const mode of ['novo', 'alterar']) {
+  for (const [field, label] of validators.PROCEDIMENTO_REQUIRED_FIELDS) {
+    test(`modal real ${mode}: aviso ${label}, OK mantém editor e rascunho, zero requests`, async () => withPage(async ({ editor, warning, writes, action }) => {
+      await act(async () => editor().onClose());
+      await action(mode);
+      if (mode === 'novo') {
+        for (const [key, value] of Object.entries(original)) {
+          if (['nome', 'procedimento_generico_id', 'especialidade', 'forma_cobranca'].includes(key)) await act(async () => editor().onChangeField(key, value));
+        }
+        await act(async () => editor().onChangeField('simbolo_catalogo_id', 1058));
+      }
+      await act(async () => editor().onChangeField('observacoes', 'Rascunho mantido'));
+      await act(async () => editor().onChangeField(field === 'simbolo_grafico' ? 'simbolo_catalogo_id' : field, ''));
+      const before = editor().form;
+      await act(async () => editor().onSave());
+      assert.equal(writes.length, 0);
+      assert.equal(warning().open, true);
+      assert.equal(warning().children.props.children, `Campo ${label} não pode ser nulo.`);
+      assert.equal(editor().open, true);
+      await act(async () => warning().onOk());
+      assert.equal(warning().open, false);
+      assert.equal(editor().open, true);
+      assert.equal(editor().form, before);
+    }));
+  }
+}
+
+test('novo real envia cobrança default e todos os campos necessários sem exigir dirty em cada controle', async () => withPage(async ({ editor, writes, action }) => {
+  await act(async () => editor().onClose());
+  await action('novo');
+  assert.equal(editor().form.procedimento_generico_id, null);
+  assert.equal(editor().form.forma_cobranca, 'INTERVENCAO');
+  for (const [field, value] of [['nome', 'Novo completo'], ['procedimento_generico_id', 20], ['especialidade', '05'], ['simbolo_catalogo_id', 1058]]) await act(async () => editor().onChangeField(field, value));
+  await act(async () => editor().onSave());
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].payload.forma_cobranca, 'INTERVENCAO');
+  assert.equal(writes[0].payload.simbolo_grafico_legacy_id, 58);
+}));
 for (const [field, value, key, expected] of cases) {
   test(`round-trip React ${field}: LOAD EDIT SAVE RELOAD`, async () => withPage(async ({ editor, writes, action }) => {
     await act(async () => editor().onChangeField(field, value));
@@ -104,15 +143,15 @@ for (const [field, value, key, expected] of cases) {
   }));
 }
 
-test('limpeza/zero/false explícitos entram; campos não editados são omitidos', async () => withPage(async ({ editor, writes, action }) => {
-  for (const [field, value] of [['custo_lab', ''], ['tempo', ''], ['especialidade', ''], ['observacoes', '  '], ['simbolo_catalogo_id', null]]) {
+test('limpeza/zero/false opcionais entram; campos não editados são omitidos', async () => withPage(async ({ editor, writes, action }) => {
+  for (const [field, value] of [['custo_lab', ''], ['tempo', ''], ['observacoes', '  ']]) {
     await act(async () => editor().onChangeField(field, value));
   }
   await act(async () => editor().onSave());
   const payload = writes[0].payload;
   assert.equal(payload.custo_lab, 0); assert.equal(payload.tempo, 0);
-  assert.equal(payload.especialidade, null); assert.equal(payload.observacoes, null);
-  assert.equal('mostrar_simbolo' in payload, false); assert.equal(payload.simbolo_grafico, null); assert.equal(payload.simbolo_grafico_legacy_id, null);
+  assert.equal('especialidade' in payload, false); assert.equal(payload.observacoes, null);
+  assert.equal('mostrar_simbolo' in payload, false); assert.equal('simbolo_grafico' in payload, false);
   assert.equal('preco' in payload, false); assert.equal('inativo' in payload, false);
   await action('alterar');
   assert.equal(mappers.parseMoneyInput(editor().form.custo_lab), 0);
@@ -120,9 +159,14 @@ test('limpeza/zero/false explícitos entram; campos não editados são omitidos'
 }));
 
 for (const [field, key, expected] of [['valor_paciente', 'preco', 0], ['valor_repasse', 'valor_repasse', 0], ['garantia_meses', 'garantia_meses', 0], ['forma_cobranca', 'forma_cobranca', null], ['procedimento_generico_id', 'procedimento_generico_id', null]]) {
-  test(`limpar ${field} persiste a semântica vigente sem repor o anterior`, async () => withPage(async ({ editor, writes, action }) => {
+  test(`limpar ${field}: opcional persiste, obrigatório bloqueia sem escrita`, async () => withPage(async ({ editor, writes, action }) => {
     await act(async () => editor().onChangeField(field, ''));
     await act(async () => editor().onSave());
+    if (expected === null) {
+      assert.equal(writes.length, 0);
+      assert.equal(editor().open, true);
+      return;
+    }
     assert.equal(writes[0].payload[key], expected);
     await action('alterar');
     const value = ['valor_paciente', 'valor_repasse'].includes(field) ? mappers.parseMoneyInput(editor().form[field]) : editor().form[field];
@@ -140,9 +184,9 @@ test('checkboxes persistem true e false em save/reload', async () => withPage(as
 }));
 
 test('código/nome vazios continuam bloqueados pela validação vigente', () => {
-  const form = mappers.createEmptyProcedimentoForm({ tabelaId: 4, codigo: '1', nome: 'Teste' });
+  const form = { ...mappers.createEmptyProcedimentoForm({ tabelaId: 4, codigo: '1', nome: 'Teste' }), ...original };
   for (const codigo of ['', 'abc', '1.5']) assert.match(validators.validateProcedimentoForm({ ...form, codigo }).join(' '), /codigo valido/);
-  assert.match(validators.validateProcedimentoForm({ ...form, nome: '   ' }).join(' '), /Informe o nome/);
+  assert.match(validators.validateProcedimentoForm({ ...form, nome: '   ' }).join(' '), /Campo Nome não pode ser nulo/);
 });
 
 test('cancelar não grava; reabrir limpa dirty fields; inclusão/alteração não entram no payload', async () => withPage(async ({ editor, writes, action }) => {
@@ -181,7 +225,7 @@ test('hidratação não corrige par parcial/inconsistente e descarta flag histó
   assert.equal('mostrar_simbolo' in mappers.buildProcedimentoPayload(original), false);
 });
 
-test('panel real: não há Mostrar símbolo, auditorias disabled e blur inválido não apaga', async () => withWorld(async ({ root }) => {
+test('panel real: não há Mostrar símbolo, auditorias readonly/ciano e blur inválido não apaga', async () => withWorld(async ({ root }) => {
   let controls = [];
   const input = (props) => { const i = controls.push(props)-1; return React.createElement('input', { 'data-control': i, value: props.value ?? '', disabled: props.disabled, readOnly: true }); };
   input.TextArea = input;
@@ -196,7 +240,8 @@ test('panel real: não há Mostrar símbolo, auditorias disabled e blur inválid
     const element = [...document.querySelectorAll('label')].find((node) => node.textContent === label);
     assert.ok(element, label); return controls[Number(element.querySelector('input').dataset.control)];
   };
-  assert.equal(control('Inclusão').disabled, true); assert.equal(control('Alteração').disabled, true);
+  assert.equal(control('Inclusão').readOnly, true); assert.equal(control('Alteração').readOnly, true);
+  assert.equal(document.querySelectorAll('.ficha-dados-readonly-cyan').length, 2);
   assert.doesNotMatch(document.body.textContent, /Mostrar símbolo/);
   control('Custo de laboratório').onBlur();
   assert.deepEqual(changes, []);

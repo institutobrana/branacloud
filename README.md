@@ -4,10 +4,10 @@ Brana Cloud is a web system for dental clinic management with a FastAPI backend 
 
 ## Current state
 - Login, internal password, and access profiles are validated.
-- Signup with Brana is validated.
-- Brana uses the canonical seed with 336 procedures.
-- Table example stays separate from Brana.
-- PARTICULAR remains for old accounts only.
+- New-clinic Procedures bootstrap: 9 official tables / 1263 complete procedures;
+  see `docs/contrato_seeds_novas_contas_minimos_nome_codigo.md` (R1B).
+- Brana/336 is historical and excluded from the new-clinic Procedures bootstrap.
+- Existing clinic customizations are preserved; real-clinic alignment is separate.
 - Safe deletions for test clinics 8, 9, 10, and 15 are documented.
 - The documentation audit was completed after the signup validation.
 

@@ -236,14 +236,14 @@ export function ProcedimentoCadastroPanel({
         </label>
 
         <div className="procedimento-editor-row procedimento-editor-row-two">
-          <label className="procedimento-editor-field">
+          <label className="procedimento-editor-field ficha-dados-readonly-cyan">
             <span>Inclusão</span>
-            <Input value={values.data_inclusao || ''} disabled />
+            <Input value={values.data_inclusao || ''} readOnly />
           </label>
 
-          <label className="procedimento-editor-field">
+          <label className="procedimento-editor-field ficha-dados-readonly-cyan">
             <span>Alteração</span>
-            <Input value={values.data_alteracao || ''} disabled />
+            <Input value={values.data_alteracao || ''} readOnly />
           </label>
         </div>
       </div>
