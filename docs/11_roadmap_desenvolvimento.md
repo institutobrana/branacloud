@@ -6886,6 +6886,11 @@ Entrada do gate: instrumentação do handler do menu e uma única inserção man
 
 ## FC4 — Odontograma operacional / consolidação documental P0H
 
+NOTA DE PRECEDÊNCIA P1.CLOSE: as seções FC4 P0H/P1.R1 e a pausa FC4 descrita
+em PG-S7 abaixo são registros históricos, não roadmap/contrato vigente.
+Autoridade atual: [contrato canônico FC4](ficha_clinica/odontograma_contracts.md),
+seções AA/AB. A consolidação P1.CLOSE ao final registra a próxima etapa.
+
 REGISTRO HISTÓRICO P0H/P0I: o estado vigente posterior está na seção P1.R1 ao fim.
 Propostas de congelamento e blockers antigos não prevalecem sobre D01–D10.
 
@@ -7038,3 +7043,21 @@ NEXT_MODULE = PROCEDIMENTOS.
 NEXT_PHASE = PROCEDIMENTOS-SIMBOLOS-P0 — READ-ONLY AUDIT.
 PROCEDIMENTOS_STARTED = NÃO. Símbolo obrigatório/regularização somente em fase futura.
 FC4_STATUS = PAUSED_AFTER_P1_R1. FC4 não foi retomada. Não iniciar novos módulos aqui.
+
+## FC4 — fechamento formal P1.CLOSE (2026-10-10)
+
+P1 = COMPLETE; READY_FOR_FC4_P2 = SIM; P2 = NOT_STARTED.
+Baseline pré-close: b9f4fee8a5f15ebdb5328b6f28d0f8abe7d9d777.
+R1–R5, D01–D10 e comandos reconciliados no único
+[contrato canônico](ficha_clinica/odontograma_contracts.md).
+Zero bloqueios contratuais; 20 deferidos rastreados com gates na seção AB.
+Segurança R1.1 homologada preservada. Procedimentos já concluído, sem reabertura.
+
+Sequência vigente (substitui roadmap histórico P2–P9 desta frente):
+P2 backend/persistência/services/APIs; P2.R2 checkpoint Procedimentos;
+P3 odontograma dinâmico; P3.R2 símbolos; P3.R3 lista; P4 histórico clínico;
+P5 Tratamento/Orçamento/integração Financeiro; P6 regressão/homologação.
+Consistência clínica, histórico/revisão necessários, tenant/OWNER/CAS/idempotência
+e Grava todas ALL_OR_NOTHING começam no núcleo P2, não são adiados até P5.
+Primeiro pacote recomendado e gates produtivos: seção AA do canônico.
+P3 exige aviso prévio e homologação manual. Não iniciar P2 automaticamente.

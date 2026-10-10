@@ -1,3 +1,29 @@
+# Brana Cloude — FC4 / onde continuar após P1.CLOSE
+
+CURRENT_STATUS = P1_COMPLETE
+LAST_COMPLETED_PHASE = FC4_P1_CLOSE
+NEXT_SAFE_PHASE = P2 — somente após autorização separada
+P2_STATUS = NOT_STARTED
+READY_FOR_FC4_P2 = SIM
+BASELINE_PRE_CLOSE = b9f4fee8a5f15ebdb5328b6f28d0f8abe7d9d777
+BRANCH = modularizacao-segura-fase-1
+
+Leia o [contrato canônico vigente](odontograma_contracts.md), especialmente
+D01–D10, AA (primeiro pacote P2) e AB (20 deferidos). Não criar contrato paralelo.
+P1 fecha contrato + segurança R1.1; não implementa writer, lista ou odontograma.
+P2 começa pelo inventário real de schema/dados/proveniência e prova isolada,
+não por DML produtivo. Procedimentos está COMPLETE no baseline acima.
+
+Grava esta confirma uma unidade e persiste; Grava todas confirma um procedimento
+× N unidades ALL_OR_NOTHING. TIPOCOBR não determina alvo; TIPMARCA determina.
+Preservar OWNER/tenant/módulo e futuros gates CAS/idempotência/rollback.
+Avisar antes de P3 visual e exigir homologação manual. Não iniciar P2 agora.
+
+## Registro histórico — superseded pelo P1.CLOSE
+
+Todo o conteúdo abaixo, inclusive “vigente”, pausa em Procedimentos, P1.R1 e
+planejamento P2–P9, é evidência histórica. Não é instrução atual de retomada.
+
 # FC4 — onde continuar
 
 CURRENT_BASELINE = 6e7cdd5de3551f4d1b120f5d0da579e364746d38

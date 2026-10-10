@@ -9,7 +9,7 @@ from schemas.odontograma_schema import (
     OdontogramaListaStatusResponse,
     OdontogramaResumoResponse,
 )
-from security.dependencies import get_current_user
+from security.dependencies import get_current_user, require_module_access
 from services.odontograma_service import (
     listar_arcada_slots_leitura,
     listar_intervencoes_leitura,
@@ -20,16 +20,17 @@ from services.odontograma_service import (
 router = APIRouter(
     prefix="/odontograma",
     tags=["odontograma"],
+    dependencies=[Depends(require_module_access("procedimentos"))],
 )
 
 
 def _resolver_clinica_id(current_user: Usuario, clinica_id: int | None) -> int:
-    if clinica_id is None:
-        return int(current_user.clinica_id)
-    alvo = int(clinica_id)
-    if not getattr(current_user, "is_admin", False) and alvo != int(current_user.clinica_id):
+    tenant_id = getattr(current_user, "clinica_id", None)
+    if isinstance(tenant_id, bool) or not isinstance(tenant_id, int) or tenant_id <= 0:
         raise HTTPException(status_code=403, detail="Clinica fora do contexto do usuario.")
-    return alvo
+    if clinica_id is not None and (type(clinica_id) is not int or clinica_id != tenant_id):
+        raise HTTPException(status_code=403, detail="Clinica fora do contexto do usuario.")
+    return tenant_id
 
 
 @router.get("/status", response_model=OdontogramaListaStatusResponse)

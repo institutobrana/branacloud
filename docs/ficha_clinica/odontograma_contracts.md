@@ -1,3 +1,453 @@
+# Brana Cloude — contrato canônico FC4 / Ficha Clínica / Odontograma
+
+STATUS = P1_COMPLETE
+LAST_COMPLETED_PHASE = FC4_P1_CLOSE
+READY_FOR_FC4_P2 = SIM
+P2_STATUS = NOT_STARTED
+BASELINE_PRE_CLOSE = b9f4fee8a5f15ebdb5328b6f28d0f8abe7d9d777
+BRANCH = modularizacao-segura-fase-1
+P1_BLOCKING_UNPROVEN_COUNT = 0
+P1_BLOCKING_CONTRADICTIONS_COUNT = 0
+P1_BLOCKING_BUSINESS_DECISIONS_COUNT = 0
+DEFERRED_NON_BLOCKING_ITEMS_COUNT = 20
+
+## Autoridade, proveniência e limite do fechamento
+
+Este é o único contrato funcional canônico vigente da FC4. Consolida R1–R5,
+as reconciliações de comandos da R4 e o fechamento P1.CLOSE. P1 completa significa
+contrato fechado, não writer novo, renderer operacional, migration executada ou
+certificação dos dados implantados. O código continua fonte da verdade sobre o
+que está implementado. P2 depende de autorização posterior e não foi iniciada.
+
+Origens usadas em cada seção:
+
+| Classificação | Significado |
+|---|---|
+| PROVEN_EASYDENTAL | Comportamento/recurso/código legado comprovado nos dossiês; não adoção automática no Brana |
+| PROVEN_BRANA_SOURCE | Comportamento presente no source atual, não prova do schema/dado implantado |
+| HOMOLOGATED_USER_DECISION | Contrato expressamente confirmado pelo usuário |
+| BRANA_TECHNICAL_DECISION | Regra técnica adotada para o futuro writer Brana, não comportamento histórico atribuído ao Desktop |
+| DEFERRED | Trabalho atribuído à fase responsável, com gate explícito |
+| UNPROVEN_NON_BLOCKING | Evidência não obtida; não é proibição nem capacidade implementada |
+
+PROVEN_LEGACY_BEHAVIOR é equivalente a PROVEN_EASYDENTAL. A confirmação manual
+da UI é preservada como HOMOLOGATED_USER_DECISION, sem inventar prova binária.
+As decisões técnicas candidatas da R5 passam a contrato alvo no P1.CLOSE;
+continuam sem implementação. ALL_OR_NOTHING é BRANA_TECHNICAL_DECISION homologada
+pelo usuário, nunca atomicidade comprovada do EasyDental.
+
+Fontes imutáveis de rastreabilidade: artefatos externos das fases
+FC4_P1_RESUME_RECONCILIATION_R1; FC4_P1_SECURITY_BLOCKERS_R1_1;
+FC4_P1_R2_ANATOMY_MARKING_CONTRACT; FC4_P1_R2_EASYDENTAL_REFERENCE_AUDIT;
+FC4_P1_R2_EASYDENTAL_ASSET_MAPPING_AND_CLOSE;
+FC4_P1_R3_PROCEDURE_LIST_ASSOCIATION_CONTRACT;
+FC4_P1_R3_EASY_TARGET_AND_FILTER_RULES_CLOSE;
+FC4_P1_R4_PERSISTENCE_HISTORY_COMMAND_CONTRACT;
+FC4_P1_R4_COMMAND_SEMANTICS_RECONCILIATION;
+FC4_P1_R4_COMMAND_SEMANTICS_DECISION_ALL_OR_NOTHING;
+FC4_P1_R5_FINAL_INTEGRATION_CONTRACT. Cada conjunto mantém seu evidence_index,
+report e summary; o índice/checksums do P1.CLOSE registra a cadeia sem os editar.
+
+Precedência: este fechamento incorpora a decisão ALL_OR_NOTHING, a reconciliação
+R4, os demais contratos R4/R5, R3 (alvos/filtros) e R2 (anatomia/imagem/faces).
+D01–D10 estão reconciliados abaixo. Todo o texto P1.R1/P0 preservado no final é
+histórico, inclusive schemas/APIs candidatos e generalizações superadas.
+Checkpoint antigo não é status atual. A nota P1 aberta em 06_seguranca.md pertence
+à R1.1 preservada por hash; o estado atual da P1 é o deste documento.
+
+## A. Escopo da FC4
+
+Origem: HOMOLOGATED_USER_DECISION + BRANA_TECHNICAL_DECISION, R4/R5.
+
+FC4 possui ocorrências clínicas, seus alvos aplicados, correções e histórico
+automático próprio. Referencia paciente, Tratamento, Procedimentos, prestador e
+catálogos existentes. Não duplica cadastro de procedimentos, não assume o módulo
+Tratamento, não cria pagamentos/parcelas, não movimenta estoque por inferência.
+Região permanece contexto/label quando necessário; não criar tabela genérica
+de região sem necessidade nova comprovada.
+
+## B. Anatomia e C. Identidade de slot
+
+Origem: PROVEN_EASYDENTAL + HOMOLOGATED_USER_DECISION, R2/R3.
+
+NRODEN é identidade interna do slot EasyDental (1–32), distinta do FDI/número
+exibido. Brana deve usar identidade estável equivalente, scoped ao contexto
+clínico; FDI ou posição na tela não são PK suficiente. Mudar figura, dentição,
+renumerar ou deixar vazio não desloca ocorrências nem elimina o slot.
+Não converter implante, prótese, exodontia ou bitmap em novo tipo anatômico.
+
+## D. Dentição e imagem
+
+Origem: PROVEN_EASYDENTAL + HOMOLOGATED_USER_DECISION, R2.
+
+TOOTH_IMAGE_IS_CLINICAL_TRUTH = NÃO. Figura é representação visual independente
+do procedimento/história. Troca dente percorre permanente → sem figura → decíduo
+quando há correspondente → permanente; posições posteriores 6/7/8 não possuem
+esse passo decíduo. Restaurar figura não desfaz exodontia. Símbolos de implante/
+prótese podem coexistir com figura ou slot visualmente vazio.
+
+Permanente, Decídua e Mista são apresentações. Heurística Desktop comprovada:
+até 5 anos Decídua; 6–13 Mista; 14+ Permanente, com alteração manual. É
+PROVEN_LEGACY_BEHAVIOR, não BRANA_FINAL_RULE de default. A adoção e o tratamento
+de nascimento inválido/inicialização ficam na UI de Tratamento (AB).
+
+## E. Faces
+
+Origem: PROVEN_EASYDENTAL + HOMOLOGATED_USER_DECISION, R2/R3.
+
+Cinco áreas funcionais: M, D, central, V e interna. Central é I nos anteriores/
+O nos posteriores; interna é P (Palatina) nos superiores/L (Lingual) nos inferiores.
+Não são seis ou sete faces. Faces podem ser selecionadas sem figura de dente.
+Face implica seu slot; várias faces pertencem à mesma ocorrência, não geram
+uma ocorrência por face. Conjunto efetivo é separado do texto exibido; ordem
+textual universal em todos os consumidores/importadores continua U13, sem
+colapsar identidades nem inventar equivalência pelo texto.
+
+## F. Seleção
+
+Origem: HOMOLOGATED_USER_DECISION, R2/R3 e reconciliação R4.
+
+Não há ordem obrigatória slot/faces → procedimento ou procedimento → slot/faces.
+Seleção é estado transitório: sozinha não grava. Confirmação explícita valida
+alvo efetivo compatível. Figura ausente não invalida seleção. Pendências de
+interface, destaque da linha e coordenadas pertencem a P3, não a este contrato.
+
+## G. Procedimentos e H. TIPOCOBR
+
+Origem: PROVEN_BRANA_SOURCE + PROVEN_EASYDENTAL + HOMOLOGATED_USER_DECISION,
+Procedimentos concluído, R3/R5.
+
+Procedimentos é a única fonte cadastral; FC4 referencia ID com ownership tenant.
+Nome, especialidade e símbolo são cadastro LIVE. Genérico governa somente
+materiais e catálogo de fases, não nome, especialidade, símbolo, cobrança,
+tempo/laboratório/preço ou outros campos locais. Código Genérico é identificador
+textual literal: 00200 != 0200; zeros significativos não são normalizados.
+
+TIPOCOBR é cobrança: 1 = Elemento/Face; 2 = Intervenção. Não determina sozinho
+alvo, exigência de slot, quadro lateral ou disponibilidade de Grava todas.
+Cobrança aplicada/valores próprios não sofrem repricing silencioso pelo catálogo.
+
+## I. TIPMARCA e unidades de alvo
+
+Origem: PROVEN_EASYDENTAL (R3 close) + BRANA_TECHNICAL_DECISION (normalização R4).
+
+Cadeia: procedimento → NROSIM → símbolo → TIPMARCA. Metadados, nunca nomes de
+procedimentos ou IDs legados hardcoded, determinam compatibilidade do alvo.
+
+| Tipo | Unidade normalizada / regra de confirmação |
+|---|---|
+| FACE | Um slot + conjunto efetivo não vazio de 1–5 faces |
+| DENTE | Uma unidade por slot |
+| GRUPO | Uma unidade por sequência contígua na mesma arcada; um slot é válido; não atravessa a fronteira 16/17 |
+| ARCADA | Uma unidade pela arcada inteira (16 slots); duas arcadas geram duas unidades |
+| GERAL | Uma unidade de contexto clínico, zero slots/faces; quadro lateral conforme filtro |
+| SEGMENTO | Uma unidade por subconjunto selecionado de uma arcada; mantém lacunas, não preenche slots intermediários |
+
+FACE comum exige faces efetivas. Presets comprovados MOD/MO/DO podem resolvê-las
+a partir do slot; não há fallback silencioso FACE → DENTE e não se copiam
+IDs 77/78/79 legados como PK web. Metadado desconhecido/incompatível: fail closed,
+não presumir GERAL. Consulta rastreada é GERAL; Ajuste oclusal por sessão tem
+TIPOCOBR Intervenção e TIPMARCA GRUPO, exigindo alvo odontográfico. Esses casos
+provam a distinção, não autorizam lista hardcoded por nome.
+
+## J. Ocorrência clínica
+
+Origem: HOMOLOGATED_USER_DECISION + BRANA_TECHNICAL_DECISION, R3/R4.
+
+Uma ocorrência é uma instância clínica com ID próprio, não catálogo, slot,
+símbolo ou linha por face. Pode ter membros/slots e múltiplas faces. O mesmo
+procedimento/alvo/faces pode repetir legitimamente em novo comando. Não impor
+UNIQUE do tuple clínico. Cada unidade normalizada confirmada gera ocorrência
+independente, correlacionada ao comando que a criou.
+
+## K. Lista e L. Filtros
+
+Origem: PROVEN_EASYDENTAL + HOMOLOGATED_USER_DECISION, R3.
+
+Uma linha é uma ocorrência; múltiplas faces ficam na mesma linha. Filtro explícito
+controla o escopo, não o último dente clicado. Nove opções comprovadas:
+
+| Filtro | Escopo |
+|---|---|
+| Condição observada no paciente | Observadas no histórico até o Tratamento selecionado |
+| Já realizado no paciente | Realizadas nesse histórico |
+| A realizar no paciente | A realizar nesse histórico |
+| Todas intervenções no paciente | Todos os três estados nesse histórico |
+| Condição observada no tratamento | Observadas somente no Tratamento selecionado |
+| Já realizado no tratamento | Realizadas somente nele |
+| A realizar no tratamento | A realizar somente nele |
+| Todas intervenções no tratamento | Todos os três estados somente nele |
+| Características e anomalias | Trilha própria de características/anomalias, não novo status financeiro |
+
+Paciente inclui tratamentos até o selecionado pela ordenação clínica legada
+documentada (data_inicio normalizada, nrotra, desempate estável ID), não por
+MAX(PK) nem comparação lexical de data DD/MM. Read filter não escolhe destino
+de escrita. Clique no dente não altera filtro nem grava; eventual destaque é P3.R3.
+
+## M. Comandos
+
+Origem: HOMOLOGATED_USER_DECISION (semântica clínica) +
+BRANA_TECHNICAL_DECISION (atomicidade integral homologada), R4 reconciliation.
+
+GRAVA_ESTA confirma somente a unidade corrente, persiste imediatamente e avança.
+Cancelar, fechar ou interromper não desfaz unidades confirmadas; não cria as
+pendentes. Cada confirmação individual é comando delimitado.
+
+GRAVA_TODAS usa UM procedimento × 1..N unidades selecionadas/remanescentes.
+Não aceita procedimentos diferentes na mesma ação. Cada unidade gera ID clínico
+próprio; várias faces continuam na mesma ocorrência.
+
+GRAVA_TODAS_ATOMICITY = ALL_OR_NOTHING. Escopo transacional: comando inteiro,
+ocorrências + histórico/revisão/auditoria necessária + recibo idempotente.
+Falha em uma unidade reverte todas as escritas dessa ação coletiva; não desfaz
+Grava esta anterior. Sucesso parcial/STOP por unidade é proposta SUPERSEDED.
+EASYDENTAL_FAILURE_ATOMICITY = UNPROVEN: não se atribui essa decisão ao Desktop.
+
+## N. Persistência e O. Idempotência
+
+Origem: BRANA_TECHNICAL_DECISION, R4/R5; referências existentes PROVEN_BRANA_SOURCE.
+
+Evoluir o agregado clínico existente (PK BigInteger), não criar cadastro/ocorrência
+paralela. Contrato mínimo: ID, tenant, paciente, Tratamento, procedimento, prestador,
+alvo aplicado, membros/slots quando pertinentes, faces, contexto, situação/datas,
+valores próprios, autoria, versão, comando e recibo. Isto não é schema final.
+
+LIVE resolve nome/símbolo/especialidade atuais. Alvo/membros/faces aplicados,
+cobrança/valores próprios e fatos históricos não mudam silenciosamente com catálogo.
+Se TIPMARCA atual fica incompatível, preservar ocorrência/alvo e sinalizar
+incompatibilidade; não converter, ocultar ou apagar. Novo comando valida catálogo
+atual. Não congelar símbolo aplicado como autoridade de apresentação.
+
+Mesmo command_id + mesmo payload retorna mesmo resultado, sem duplicar, recalcular
+defaults ou reexecutar efeitos. Mesmo ID + payload diferente conflita. Novo ID
+pode representar nova intenção legítima idêntica clinicamente. Uma ação coletiva
+tem identidade própria e correlação por unidade. Resposta perdida: consultar/
+retransmitir o mesmo comando, não inventar novo ID. Recibo/ledger sobrevive ao
+delete físico para impedir ressurreição por replay; schema será decidido em P2.
+
+## P. Concorrência/versionamento
+
+Origem: PROVEN_BRANA_SOURCE (lease FC3-D5) +
+BRANA_TECHNICAL_DECISION (aplicação e CAS do writer futuro), R4/R5.
+
+OWNER é lease clínico scoped a paciente/tenant/usuário/instância/token/expiração.
+RESTRICTED/UNKNOWN fail closed. Não é autorização cross-tenant nem substitui
+versão esperada/CAS, ordem determinística de locks e transação. Corrigir/finalizar/
+reabrir/excluir exige proteção stale; nenhum overwrite cego. Lease existente não
+prova writer novo nem os testes concorrentes futuros.
+
+## Q. Histórico e R. Correção
+
+Origem: HOMOLOGATED_USER_DECISION + BRANA_TECHNICAL_DECISION, D05/D07/R4.
+
+PHASE_HISTORY, FULL_COMPLETION_HISTORY e MANUAL são origens separadas. Fases
+reutilizáveis são catálogo; eventos repetidos têm IDs próprios, 0..N, não flag
+única. Correção atua na ocorrência específica, in-place + versão/auditoria;
+histórico automático afetado segue proveniência inequívoca. Reabrir remove
+finalização completa daquele ciclo, não todas as fases/manuais.
+
+Data clínica de marcação/conclusão é sugerida no momento e editável, separada
+de timestamps técnicos/autoria. Retry não recalcula default. Omissão preserva;
+null/clear deve ser explícito por campo, nunca apagamento amplo. Fuso clínico
+IANA implantado e adaptadores legados serão validados no preflight P2. Não
+interpretar source_intervencao_id legado Integer sem FK como web PK só por igualdade.
+
+## S. D07 / Exclusão
+
+Origem: HOMOLOGATED_USER_DECISION + BRANA_TECHNICAL_DECISION, R4/R5.
+
+Delete físico delimitado à ocorrência e dependências automáticas próprias
+comprovadas; rastreabilidade técnica/recibo preservados. Não remover narrativas/
+registros manuais, pagamentos, dados externos ou alheios. Proveniência incerta:
+fail closed antes de cascata. Pagamento não é veto universal à exclusão; D08
+exige revisão comercial durável e conciliação sem apagar pagamentos. Delete
+de Tratamento é operação distinta, não autorizado por este contrato.
+
+## T. Tenant/security e U. Permissões
+
+Origem: PROVEN_BRANA_SOURCE (R1.1/FC3-D5) +
+BRANA_TECHNICAL_DECISION (writer futuro).
+
+is_admin NÃO bypassa tenant. Resolver deve filtrar ownership na query e falhar
+fechado para tenant ausente/inválido. Paciente, Tratamento, ocorrência, procedimento,
+prestador e orçamento pertinente devem pertencer ao escopo autorizado; nunca
+confiar em clinica_id enviado pelo frontend. Nenhum superadmin global é presumido.
+
+Reutilizar autenticação e require_module_access oficiais: procedimentos na
+superfície FC4; financeiro adicional no caminho comercial/financeiro pertinente.
+Admin pode seguir política oficial de módulo, nunca dispensar tenant. Grant
+protegido é scoped a usuário/tenant/módulo; UI não é barreira.
+
+Metadata de funções inserir/alterar/eliminar intervenções existe, mas enforcement
+executável integral não foi comprovado. U20 exige decidir/reutilizar mecanismo
+oficial e provar recusa antes de expor novo writer; não criar sistema paralelo.
+Permissão funcional + ownership + OWNER + CAS são requisitos distintos.
+
+PATCH de orçamento homologado valida prestador existente no mesmo tenant;
+null/omissão mantêm comportamento existente. Não inventar exigência de ativo/
+unidade que não está comprovada. A correção R1.1 não certifica todo o orçamento.
+
+## V. Tratamento e Y. Prestador/autoria
+
+Origem: HOMOLOGATED_USER_DECISION + PROVEN_BRANA_SOURCE +
+BRANA_TECHNICAL_DECISION, R4/R5.
+
+Tratamento é contexto obrigatório, inclusive GERAL, mas FC4 não possui suas
+regras completas. Prestador clínico != usuário autor. Novos comandos exigem
+prestador válido scoped; default current_user.prestador_id, nunca user.id nem
+primeiro da lista. Troca permitida somente após validar a referência. Sem vínculo
+válido: falhar fechado. Requisito de ativo/unidade/vínculo extra não é inventado.
+Unidade é contexto opcional existente do Tratamento (label nullable), não nova FK
+obrigatória da ocorrência; Agenda não ganha FK obrigatória por inferência.
+
+## W. Orçamento, X. Financeiro e valores
+
+Origem: PROVEN_BRANA_SOURCE (estado atual) +
+HOMOLOGATED_USER_DECISION / BRANA_TECHNICAL_DECISION (D06/D08/R5).
+
+Ocorrência clínica != item comercial != pagamento. Hoje a grade de orçamento
+projeta intervenções e overrides em Tratamento.source_payload.orcamento; isso
+não prova item autônomo completo. Separar preço de catálogo (proposta inicial),
+valor próprio da ocorrência, ajuste comercial de orçamento e liquidação financeira.
+
+Duas casas exatas (Decimal/centavos), zero válido, sem float como contrato novo;
+200/3 = 66,67 + 66,67 + 66,66. Não reprecificar ocorrências por troca de catálogo.
+Não atribuir receber_convenio como repasse universal sem prova da fórmula.
+
+Observada fora do orçamento; Realizar/Realizada elegíveis salvo não incluir.
+Mudança clínica relevante invalida/revisa aprovação de forma durável e atômica
+com o core necessário; pagamento existente permanece, diferença é conciliada.
+Criar ocorrência não cria cobrança/parcela por inferência, nem liquida pagamento.
+P2 precisa adapter mínimo de valores/status/revisão e compatibilidade dos writers;
+aprovação, cálculo financeiro completo e reconciliação pertencem a P5.
+Fallback atual float/catálogo, regra Observada e revisão/CAS incompletos são U21,
+não correções implementadas pelo fechamento.
+
+## Z. Efeitos automáticos, materiais/fases/estoque
+
+Origem: PROVEN_BRANA_SOURCE + HOMOLOGATED_USER_DECISION +
+BRANA_TECHNICAL_DECISION, Procedimentos/R4/R5.
+
+Materiais próprios persistem; Genérico complementa faltantes sem duplicar por
+material_id; próprio prevalece. Associar/trocar Genérico substitui catálogo de
+fases do procedimento, não eventos de conclusão clínica. FC4 referencia composição;
+não materializa materiais nem consome estoque automaticamente.
+
+Separar CORE WRITE de DERIVED EFFECT. Exodontia pode ocultar figura no Desktop,
+mantendo símbolo/história; não é automação Brana implementada/adotada por inferência.
+Se efeito visual for adotado em P3, exige origem/versão, não sobrescrever override
+manual posterior. Efeitos obrigatórios de histórico/revisão/recibo pertencem à
+transação do comando; efeitos externos não autorizam commits clínicos parciais.
+
+## D01–D10 finais
+
+STATUS de cada decisão = FINALIZED. Texto histórico preservado abaixo não é
+regra concorrente. Origens: HOMOLOGATED_USER_DECISION; refinamentos técnicos
+identificados nas seções respectivas.
+
+| ID | CURRENT_CANONICAL_TEXT | SUPERSEDED_TEXT_IF_ANY | SOURCE_PHASE |
+|---|---|---|---|
+| D01 | Catálogo LIVE de nome/código/especialidade/símbolo; valores paciente/repasse próprios, sem repricing | Congelamento funcional geral de catálogo/símbolo | R1; R4 snapshot/reference; R5 |
+| D02 | Slot estável; FDI/figura/dentição/vazio não movem ocorrência | FDI/bitmap como identidade ou verdade clínica | R1; R2; R4 |
+| D03 | Grava esta individual persiste/avança; Grava todas um procedimento × N unidades ALL_OR_NOTHING; Região contextual | TIPOCOBR2 = sem slot/sem todas/lateral; batch heterogêneo; commit por unidade + STOP coletivo | R3 close; R4 reconciliation; decisão ALL_OR_NOTHING; R5 |
+| D04 | Prestador válido do vínculo do usuário, obrigatório em novos comandos/editável scoped; autor separado | Fallback user.id ou primeiro prestador | R1; R1.1 PATCH; R4; R5 |
+| D05 | Datas clínicas sugeridas/editáveis, timestamps separados; retry não recalcula; omissão/null explícitos | Confundir data clínica/técnica ou reaplicar default no replay | R1; R4; R5 |
+| D06 | Precisão monetária 2 exata, valores próprios, rateio preserva total | Float como contrato de precisão | R1; R4; R5 |
+| D07 | Fases reutilizáveis/eventos independentes; PHASE/FULL/MANUAL separados; correção versionada; reopen só full do ciclo; delete delimitado | Cascata ampla/manuais/pagamentos; trocar D07 pelo contrato D08 | R1; R4 history/delete; R5 |
+| D08 | Revisão/pending/reaprovação duráveis, pagamento preservado; Observada fora; elegibilidade Realizar/Realizada salvo não incluir | Veto universal por pagamento; delete/reprecificação financeira implícitos | R1; R4 budget effects; R5 |
+| D09 | Símbolo obrigatório LIVE; TIPMARCA controla alvo gráfico; GERAL lateral; imagem != história | TIPOCOBR → destino gráfico; gap de símbolos ainda aberto após Procedimentos concluído | R3 close; R4; R5 |
+| D10 | IDs por ocorrência/intenção, mesma retransmissão não duplica; OWNER + CAS; recibo comando/unidade | UNIQUE clínico ou lease sozinho contra stale | R1; R4; decisão ALL_OR_NOTHING; R5 |
+
+## AA. Boundaries e primeiro pacote P2 recomendado
+
+Origem: BRANA_TECHNICAL_DECISION, R5. PLANEJAMENTO; NÃO EXECUTAR NESTE FECHAMENTO.
+
+| Fase | Responsabilidade / gate |
+|---|---|
+| P2 | Backend/persistência/services/APIs; inventário real de schema/dados/proveniência/fuso, plano incremental, idempotência, versões, transações, segurança e prova isolada |
+| P2.R2 | Checkpoint de integração Procedimentos; catálogo e validadores scoped já são necessários desde o primeiro service, não segundo writer |
+| P3 | Odontograma dinâmico, seleção/layout/dentição; aviso prévio e homologação manual |
+| P3.R2 | Símbolos, assets autorizados, composição/camadas/preferências |
+| P3.R3 | Lista, colunas/ações/filtros e integração visual |
+| P4 | Histórico clínico e UI de correção/proveniência |
+| P5 | Tratamento/Orçamento; regras comerciais, aprovação/conciliação e integração Financeiro |
+| P6 | Regressão integrada, perfis/permissões e homologação |
+
+RECOMMENDED_FIRST_P2_PACKAGE = P2.A: inventário e plano mínimo aditivo + núcleo
+create/read de ocorrência, alvo estável/catalog scoped/valores próprios/prestador/
+autor/receipt e Grava todas ALL_OR_NOTHING, exclusivamente em prova isolada.
+P2.B: lifecycle/correção/exclusão/histórico/CAS, adapter/revisão e compatibilidade
+do writer de orçamento, enforcement de funções antes de exposição.
+
+Candidatos existentes, não instrução de criar cegamente: backend/models/odontograma_model.py,
+backend/schemas/odontograma_schema.py, repositório/services/read e
+backend/routes/odontograma_routes.py. Avaliar service de comando/ledger/proveniência
+e plano aditivo em backend/services/schema_deployment/ (mecanismo atual; não presumir
+Alembic). Preservar PKs/dados/raw; campos nullable-first onde legado exigir, com
+backfill somente autorizado. Não delete/reinsert de piloto. Tests futuros:
+migration/rollback, replay, concorrência, tenant/admin, OWNER/CAS, catálogo e D07.
+
+Antes de QUALQUER escrita produtiva P2: PostgreSQL descartável com migration,
+rollback, idempotência, concorrência, cross-tenant, Grava esta, Grava todas
+ALL_OR_NOTHING, D07 e regressão PASS; backup scoped vigente e autorização
+produtiva explícita de DDL/DML. P1 fechada não dispensa esses gates.
+
+## AB. Deferidos finais — 17 grupos técnicos/históricos + 3 escolhas = 20
+
+Origem: DEFERRED / UNPROVEN_NON_BLOCKING, inventários R1–R5.
+Nenhum é bloqueio de contrato P1; alguns bloqueiam o subpasso dependente indicado,
+não o início seguro do inventário/prova isolada de uma fase. BLOCKS_THAT_PHASE
+refere-se ao gate específico, não a autorização automática nem a toda fase.
+
+| ITEM | WHY_NOT_BLOCKING_P1 | TARGET_PHASE | BLOCKS_THAT_PHASE | REQUIRED_BEFORE_IMPLEMENTATION_OF |
+|---|---|---|---|---|
+| R5-U01 UI autenticada/render real | Aceite visual, não semântica clínica | P3/P6 | NÃO | Homologação final do fluxo real |
+| R5-U02 schema/FKs implantados | Inventário é primeiro passo P2, não schema final P1 | P2 preflight | SIM | Migration/modelo contra schema real |
+| R5-U03 dados REAL/TEST/LEGACY/integridade/proveniência | Sem banco consultado, sem correção presumida | P2 preflight | SIM | Backfill/migration/adapter seguro |
+| R5-U04 compositor/hitboxes/overlap/coords/replay/colunas/UI | Render posterior | P3/P3.R2/P3.R3 | SIM | Renderer/lista homologados |
+| R5-U07 fuso/datas legadas | Contrato data fechado, ambiente ainda não inventariado | P2 preflight | SIM | Defaults/normalização/importação |
+| R5-U08 perfis efetivos em runtime | Source/teste não substitui homologação por perfil | P6 | NÃO | Aceite final por perfil, obrigatório no gate de homologação |
+| R5-U09 writer/ledger/CAS/replay/rollback E2E | Ainda não implementado deliberadamente | P2/P4/P5 | SIM | Exposição/aceite de mutações e integração |
+| R5-U10 2D/3D/variantes/objetos/câmera | Só importa se recursos forem usados | P3.R2 | SIM | Uso das variantes escolhidas |
+| R5-U11 símbolos/famílias/frames/preferências/licença C | Inventário não autoriza todos os recursos | P3.R2 | SIM | Reutilização dos assets/render |
+| R5-U12 cadeia visual exodontia/nascimento inválido/Mista | Automação/default não adotados implicitamente | P3/Tratamento UI | NÃO | Automação/default, caso autorizados |
+| R5-U13 ordem FACE universal | Conjunto funcional fechado; formatter/importador posterior | P2 adapter/P3 | SIM | Importação dependente/formatter |
+| R5-U16 clique dente → destaque linha | Não muda filtro nem grava; detalhe UX | P3.R3 | NÃO | Destaque da lista se adotado |
+| R5-U17 falha Grava todas Desktop | UNPROVEN_LEGACY_ONLY; Brana ALL_OR_NOTHING decidido | Pesquisa histórica, sem fase obrigatória | NÃO | Nenhuma implementação Brana depende disso |
+| R5-U18 fórmulas/fator/receber_convenio/reconciliação | Ownership fechado, fórmula não inventada | P5 | SIM | Cálculo financeiro/conciliação |
+| R5-U19 efeito exodontia/override após correção | Core não depende de automação visual | P3 | NÃO | Efeito automático se adotado |
+| R5-U20 enforcement de função configurável | Metadata existe; implementar/provar antes de writer | P2 | SIM | Exposição de novas mutações |
+| R5-U21 orçamento own-values/status/revision/CAS | Gap source atribuído, não declarado corrigido | P2 adapter/revisão; P5 finanças | SIM | Integração/writer comercial e cálculo completo |
+| R1:B01 shell/layout | Escolha visual não altera contrato clínico | P3 | SIM | Shell final e homologação manual |
+| R1:B03 colunas/ações da lista | Contrato ocorrência/filtro fechado | P3.R3 | SIM | UX final da lista |
+| B-DEFAULT-DENTITION opção/default Novo Tratamento | Heurística Desktop não foi adotada como default Brana | Tratamento UI (P3/P5) | SIM | Mudança do default/apresentação, se necessária |
+
+U05 (taxonomia/face no vazio), U06 (precisão/data contratual), U14 (FACE efetiva) e
+U15 (catálogo LIVE incompatível) estão resolvidos como contrato, não somados aos 20.
+Aliases originais e 26 contradições históricas permanecem no inventário R5.
+Nenhum dado atual foi quantificado como zero por falta de consulta: readiness
+de registros/FKs implantados permanece UNPROVEN_NON_BLOCKING para P1 e gate P2.
+
+## Validação e encerramento
+
+R1.1 preservada byte a byte: resolver tenant/admin, guarda oficial de módulo e
+prestador PATCH. P1.CLOSE executa regressões pertinentes e build sem reiniciar
+runtime; resultados, lista autorizada, hashes e fechamento Git estão nos artefatos
+P1.CLOSE. Testes de source/sintéticos não provam futuro writer nem produção.
+Procedimentos permanece COMPLETE no baseline anterior, sem reabertura.
+P1 = COMPLETE; P2 = NOT_STARTED. Parar para revisão; não iniciar P2 automaticamente.
+
+## Histórico superseded P1.R1 / P0 — somente evidência
+
+O conteúdo abaixo é preservado, NÃO é contrato vigente. Inclusive onde usa
+“vigente”, “P1 aberta”, “Procedimentos não iniciado”, roadmap P2–P9, TIPOCOBR como
+regra de alvo ou STOP/commit por unidade, leia como formulação daquela fase,
+superseded pelas seções A–AB e D01–D10 acima. Não usar seus schemas/APIs candidatos
+como schema final nem sua prioridade antiga como autoridade atual.
+
+<details>
+<summary>Registro histórico anterior ao P1.CLOSE (conteúdo preservado)</summary>
+
 # FC4 — contratos funcionais canônicos recuperados
 
 STATUS = P1_R1_RECONCILED_FOR_REVIEW
@@ -777,3 +1227,5 @@ com guard. Capacidades futuras: create/apply, update de alvos, finalize, delete,
 render/read completo, history/budget; avaliar reutilização antes de criar endpoints.
 Backend novo não implementado; modelos aceitam vários dentes por intervenção,
 mas isso sozinho não preserva todas as seis marcações.
+
+</details>

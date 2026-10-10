@@ -1,7 +1,12 @@
 # FC4 — mapa individual de assets odontológicos
 
 STATUS = COMPLETE: inventário classificado, não autorização universal/render implementado.
-CONTRACT_PRECEDENCE = P1.R1: catálogo LIVE e preferências; nota vigente no fim.
+CONTRACT_PRECEDENCE = P1.CLOSE: [contrato vigente](odontograma_contracts.md).
+Este mapa é evidência de assets, não segundo contrato funcional. Notas P1.R1/P0
+abaixo são históricas, inclusive cobrança como destino gráfico e pausa FC4.
+TIPMARCA determina alvo; TIPOCOBR é cobrança. Catálogo LIVE e slots estáveis
+seguem o canônico; Procedimentos foi concluído. Nenhuma autorização de asset
+foi ampliada: categoria C/UNPROVEN continua condicionada à prova/autorização P3.
 Matrizes P0D preservadas; a recomendação P0H abaixo é histórica e superada.
 Baseline: 1e8f31c2ce9e313a425bd4948b93dc8f01d120e1. Deduplicação SHA-256 por bytes. Nenhuma cópia externa.
 

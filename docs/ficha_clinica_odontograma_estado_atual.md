@@ -1,3 +1,28 @@
+# Brana Cloude — FC4 / estado após P1.CLOSE
+
+FC4_P1_STATUS = COMPLETE
+FC4_CURRENT_PHASE = READY_FOR_P2
+P2_STATUS = NOT_STARTED
+READY_FOR_FC4_P2 = SIM
+BASELINE_PRE_CLOSE = b9f4fee8a5f15ebdb5328b6f28d0f8abe7d9d777
+P1_BLOCKING_UNPROVEN_COUNT = 0
+P1_BLOCKING_CONTRADICTIONS_COUNT = 0
+P1_BLOCKING_BUSINESS_DECISIONS_COUNT = 0
+DEFERRED_NON_BLOCKING_ITEMS_COUNT = 20
+
+Autoridade funcional única: [contrato canônico](ficha_clinica/odontograma_contracts.md).
+Retomada: [continuação](ficha_clinica/odontograma_continuacao.md).
+P1.R1–R5 e reconciliações de comandos estão consolidadas; R1.1 homologada preservada.
+Procedimentos está COMPLETE; não reabrir sua auditoria. Fechamento contratual não
+certifica schema/dados implantados nem implementa writer/renderer. Os 20 deferidos
+mantêm gates em P2–P6, detalhados somente no canônico. Não iniciar P2 nesta entrega.
+
+## Registro histórico — superseded pelo P1.CLOSE
+
+O estado P1.R1/P0 abaixo foi preservado como evidência, inclusive formulações
+de cobrança/alvo, pausa, gaps e roadmap já reconciliados. Nenhum “vigente” abaixo
+prevalece sobre o contrato P1.CLOSE; não é segundo contrato operacional ativo.
+
 # Brana Cloude — FC4 / Odontograma operacional
 
 STATUS = P1_R1_DOCUMENTATION_RECONCILED_FOR_REVIEW

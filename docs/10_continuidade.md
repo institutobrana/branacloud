@@ -1,6 +1,23 @@
 # 10 - Continuidade
 
-## Estado vigente do ciclo PG-S7 — 2026-10-05
+## Estado vigente FC4 — P1.CLOSE (2026-10-10)
+
+FC4_P1_STATUS = COMPLETE. READY_FOR_FC4_P2 = SIM. P2_STATUS = NOT_STARTED.
+Baseline pré-close: b9f4fee8a5f15ebdb5328b6f28d0f8abe7d9d777.
+Contrato único: [FC4 canônico](ficha_clinica/odontograma_contracts.md).
+Retomada: [continuação FC4](ficha_clinica/odontograma_continuacao.md).
+R1–R5 e comandos reconciliados; segurança R1.1 preservada. Grava todas é um
+procedimento × N unidades ALL_OR_NOTHING (decisão técnica Brana homologada).
+Zero bloqueios contratuais P1; 20 deferidos com gates P2–P6 no canônico.
+P2 começa por inventário/schema/proveniência e prova PostgreSQL descartável,
+somente sob autorização posterior. Não implementar nem escrever produção agora.
+Procedimentos está COMPLETE no baseline, com fechamento posterior ao PG-S7.
+
+Os registros abaixo são históricos; seus próximos módulos, pausas e status
+FC4 não são instruções vigentes. A nota P1 aberta em 06_seguranca.md pertence
+à R1.1, preservada por hash, não ao status atual. Não iniciar P2 automaticamente.
+
+## Registro histórico do ciclo PG-S7 — 2026-10-05
 
 LAST_COMPLETED_MODULE = PROCEDIMENTOS GENERICOS.
 MODULE_STATUS = CLOSED_AND_HOMOLOGATED.

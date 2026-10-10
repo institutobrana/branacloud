@@ -69,6 +69,26 @@ Regra obrigatoria para novas rotas:
 
 Rotas de `backend/routes/superadmin_routes.py` podem consultar informacoes de multiplas clinicas. Elas exigem validacao de superadmin/plataforma e devem ser revisadas com cuidado antes de qualquer alteracao.
 
+## FC4 P1 — leituras do odontograma e prestador no orçamento
+
+- Todas as rotas `/odontograma/*` exigem a dependência oficial
+  `require_module_access("procedimentos")`, inclusive o lookup de status.
+- `is_admin` conserva o acesso a módulos previsto em `get_module_access_level`,
+  mas nunca autoriza trocar de tenant. O resolver usa somente a clínica positiva
+  do usuário autenticado; contexto ausente/inválido ou outra clínica retorna o
+  `403` existente antes de chamar os serviços de leitura.
+- O PATCH de intervenção do orçamento valida o prestador por `id` e
+  `current_user.clinica_id` na própria query, antes de alterar a associação ou
+  persistir o override. Referência inexistente ou de outra clínica retorna
+  `400`, com a mensagem existente `Prestador inválido para a clínica.`
+- Ownership de tratamento/intervenção, módulos `procedimentos`/`financeiro` e
+  lease OWNER permanecem obrigatórios. Prestador omitido ou `null` no PATCH
+  continua significando **não alterar**; não limpa o vínculo e não autoriza
+  prestador nulo como novo estado clínico.
+- Não se acrescentam requisitos de unidade, atividade ou vínculo com usuário
+  ao PATCH sem contrato específico. D01–D10 continuam intactos; a P1 permanece
+  aberta e nenhuma persistência clínica nova é criada por estas correções.
+
 ## Arquivos sensiveis
 
 Nao versionar:

@@ -1,7 +1,11 @@
 # FC4 — correlação individual do snapshot de símbolos
 
 STATUS = COMPLETE (snapshot documental, não render integral).
-CONTRACT_PRECEDENCE = P1.R1: símbolo obrigatório e catálogo LIVE; nota vigente no fim.
+CONTRACT_PRECEDENCE = P1.CLOSE: [contrato vigente](odontograma_contracts.md).
+Matriz é snapshot documental, não contrato funcional concorrente. Notas P1.R1/P0
+abaixo são históricas/superseded quanto a cobrança → painel e gaps anteriores
+de Procedimentos. TIPMARCA determina alvo, TIPOCOBR é cobrança; símbolo é LIVE.
+Não alterar IDs legados em PK web nem ampliar autorização de assets por esta nota.
 Snapshot P0D preservado; recomendação de congelamento P0H é histórica superada.
 Fonte: backend/scripts/easy_simbolos_catalogo_atual_snapshot.json; SHA-256: 4c452e5145145b853572af787cbc4fb10d014f4c520a3fe29cc8ab3b137a026f
 ID é NROSIM legado, não PK web. TIPSIMB usa tiposim. Sem consulta DB. ICONE=preview/picker; BITMAP1/2/3=papéis declarados, não equivalência automática de ícone e símbolo aplicado.

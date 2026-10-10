@@ -489,6 +489,12 @@ def atualizar_intervencao_orcamento(
     if payload.tabela_codigo is not None:
         override["tabela_codigo"] = int(payload.tabela_codigo)
     if payload.cirurgiao_id is not None:
+        prestador = db.query(PrestadorOdonto).filter(
+            PrestadorOdonto.id == int(payload.cirurgiao_id),
+            PrestadorOdonto.clinica_id == int(current_user.clinica_id),
+        ).first()
+        if prestador is None:
+            raise HTTPException(status_code=400, detail="Prestador inválido para a clínica.")
         override["cirurgiao_id"] = int(payload.cirurgiao_id)
         intervencao.prestador_id = int(payload.cirurgiao_id)
     if payload.situacao is not None:
