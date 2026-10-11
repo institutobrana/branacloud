@@ -1,6 +1,7 @@
-from datetime import date
+from datetime import date, datetime
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 
 
 class OdontogramaIntervencaoStatusSchema(BaseModel):
@@ -101,3 +102,34 @@ class OdontogramaResumoResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     resumo: OdontogramaResumoSchema
+
+
+class OcorrenciaTargetPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    type: Literal["FACE", "DENTE", "GRUPO", "ARCADA", "GERAL", "SEGMENTO"]
+    slots: list[StrictInt] | None = None
+    # Semantic areas, never FDI/bitmap labels. I/O and P/L belong to presentation.
+    faces: list[Literal["M", "D", "CENTRAL", "V", "INTERNA"]] = Field(default_factory=list)
+
+    @field_validator("faces")
+    @classmethod
+    def no_duplicate_faces(cls, values):
+        if len(values) != len(set(values)):
+            raise ValueError("Repeated face")
+        return values
+
+
+class OcorrenciaCommandPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    command_id: StrictStr = Field(min_length=1, max_length=128)
+    mode: Literal["GRAVA_ESTA", "GRAVA_TODAS"]
+    paciente_id: StrictInt
+    tratamento_id: StrictInt
+    procedimento_id: StrictInt
+    prestador_id: StrictInt | None = None
+    targets: list[OcorrenciaTargetPayload] = Field(min_length=1)
+    status: Literal["observada", "realizar"] = "realizar"
+    data_clinica: datetime | None = None
+    valor_proprio: StrictStr | None = None
+    repasse_proprio: StrictStr | None = None
+    contexto: StrictStr | None = None

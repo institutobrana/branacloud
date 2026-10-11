@@ -8,10 +8,10 @@ even when a caller catches validation failures. No environment/engine/bootstrap.
 import hashlib
 import json
 from datetime import datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from sqlalchemy import text
+from services.fc4_procedure_resolver import TARGETS, resolve_procedure_target
 
-TARGETS = {1: "FACE", 2: "DENTE", 3: "GRUPO", 4: "ARCADA", 5: "GERAL", 6: "SEGMENTO"}
 FACE_BITS = {"M": 1, "D": 2, "CENTRAL": 4, "V": 8, "INTERNA": 16}
 
 
@@ -30,16 +30,23 @@ def _money(value):
         return None
     if not isinstance(value, (str, Decimal, int)) or isinstance(value, bool):
         raise ValueError("Money must be exact decimal, never float")
-    amount = Decimal(value)
-    if not amount.is_finite() or amount != amount.quantize(Decimal("0.01")) or abs(amount) >= Decimal("1000000000000"):
-        raise ValueError("Invalid money precision/range")
-    return format(amount.quantize(Decimal("0.01")), "f")
+    try:
+        amount = Decimal(value)
+        if not amount.is_finite() or abs(amount) >= Decimal("1000000000000"):
+            raise ValueError("Invalid money precision/range")
+        rounded = amount.quantize(Decimal("0.01"))
+        if amount != rounded:
+            raise ValueError("Invalid money precision/range")
+        return format(rounded, "f")
+    except InvalidOperation as error:
+        raise ValueError("Invalid decimal money") from error
 
 
 def persist_normalized_command(conn, user, command_id, *, paciente_id, tratamento_id,
                                procedimento_id, targets, status="realizar",
                                prestador_id=None, data_clinica=None,
-                               valor_proprio=None, repasse_proprio=None, contexto=None):
+                               valor_proprio=None, repasse_proprio=None, contexto=None,
+                               operation=None):
     """One procedure x normalized units, one caller-owned atomic transaction.
 
     Returns durable occurrence IDs, even if those occurrences were later deleted.
@@ -82,6 +89,10 @@ def persist_normalized_command(conn, user, command_id, *, paciente_id, tratament
                    data_clinica=data_clinica.isoformat() if data_clinica else None,
                    valor_proprio=_money(valor_proprio), repasse_proprio=_money(repasse_proprio),
                    contexto=contexto)
+    if operation is not None:
+        if operation not in ("GRAVA_ESTA", "GRAVA_TODAS"):
+            raise ValueError("Invalid command operation")
+        payload["operation"] = operation
     digest = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     with conn.begin_nested():
         if not conn.execute(text("SELECT 1 FROM usuarios WHERE id=:u AND clinica_id=:c"),
@@ -99,25 +110,10 @@ def persist_normalized_command(conn, user, command_id, *, paciente_id, tratament
             if previous["resultado"] is None:
                 raise CommandConflict("Incomplete receipt requires reconciliation")
             return list(previous["resultado"])  # No defaults/catalog recalculation.
-        procedure = conn.execute(text("""
-            SELECT * FROM procedimento WHERE id=:p AND clinica_id=:c
-        """), {"p": procedimento_id, "c": clinic}).mappings().first()
-        if not procedure or procedure["inativo"]:
-            raise ValueError("Invalid scoped procedure")
-        # Same strict tenant/code/legacy-pair contract as procedimento_symbol_service.
-        symbols = conn.execute(text("""
-            SELECT tipo_marca FROM simbolo_grafico_catalogo
-            WHERE clinica_id=:c AND ativo
-              AND (:code IS NOT NULL OR :legacy IS NOT NULL)
-              AND (:code IS NULL OR codigo=:code)
-              AND (:legacy IS NULL OR legacy_id=:legacy)
-        """), {"c": clinic, "code": procedure["simbolo_grafico"],
-               "legacy": procedure["simbolo_grafico_legacy_id"]}).scalars().all()
-        if len(symbols) != 1 or symbols[0] not in TARGETS:
-            raise ValueError("Unknown/ambiguous symbol target metadata")
-        if any(unit["type"] != TARGETS[symbols[0]] for unit in units):
+        procedure, target_type = resolve_procedure_target(conn, clinic, procedimento_id)
+        if any(unit["type"] != target_type for unit in units):
             raise ValueError("Applied target incompatible with live symbol metadata")
-        if TARGETS[symbols[0]] == "GERAL" and len(units) != 1:
+        if target_type == "GERAL" and len(units) != 1:
             raise ValueError("GENERAL is one context unit")
         provider = prestador_id if prestador_id is not None else getattr(user, "prestador_id", None)
         _id(provider)
